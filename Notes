@@ -1,0 +1,26 @@
+In general, do things in the order of:
+
+1. Make model changes.
+2. Aggregate changes and call *changed() accordingly.
+3. Relayout(Later) entities whose graphics representation may have changed.
+4. Change current entity or do other operations that rely on view.
+
+1 and 2 are often coalesced, since all high-level (non-silent) model changing functions do both.
+
+1/2 & 3 may also be coalesced, since many of the change-handling functions' base implementations relayout.
+
+It is very important that 4 goes last in any case. In cases where you make no explicit change to the entity or any of its dependencies' states, though you know it has changed, the relayout will have to be called explicitly. Following this you may set the current with one of the various methods.
+
+e.g. In Callable.cpp we have three statements that execute when "{" if pressed. We first change the view silently:
+
+	_e->codeScene()->viewKeys(this)["expanded"] = true;
+
+We then call relayoutLater() to notify the CodeScene that it needs to reconsider what the entity looks like:
+
+	_e->codeScene()->relayoutLater(this);
+
+Once this has been done we are able to change the current entity:
+
+	_e->codeScene()->setCurrent(body()->entity(0));
+
+If the last two are not done in this order, setCurrent will not be able to get the bounds for the object, and it may not scroll into view.

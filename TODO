@@ -1,0 +1,240 @@
+WEBSITE(!)
+
+LOGO
+
+API DOCUMENTATION
+
+TUTORIAL
+
+PAPER
+
+--------------------------------------------------------------------------------
+
+RELEASE M0 (July 2nd, 2008)
+
+================================================================================
+
+Multiple projects in a solution
+- Solution "explorer".
+- Project types: "Static Library", "Dynamic Library", "Executable".
+- Way of specifying entry point.
+
+--------------------------------------------------------------------------------
+
+RELEASE M1 (July 9th, 2008)
+
+================================================================================
+
+Dynamic code-loading (plugins).
+- Move everything over so that plugins use Martta-specific data types.
+  - Will need QRgb-like type & QHashSet type.
+  - Will need to move all decoration code into layout system and invent markup for it.
+- Include language-addition project type.
+
+--------------------------------------------------------------------------------
+
+RELEASE M2 (TBD)
+
+================================================================================
+
+Templates
+- Need to pass a template types hash through to the TypeEntity's isSimilarTo/isEquivalentTo.
+  - Initialised by Type's isSimilarTo.
+  - Initialised with all the "Template" entities's types.
+  - Template entities come before the Class/Callable and act similarly to a scope with Typedefs.
+    - All template type arguments must be given sensible defaults (used for checking against the implementations).
+  - The hash gets filled in through the similarity check.
+    - Template should provide an "isAllowed" for determining if the requested type is allowed in the wanted position according to this instantiation.
+    - Won't work 100% since it will "jump to conclusions"; this can be worked around initially through providing the template parameter explicitly.
+  - If the similarity check succeeds, the type remains unchanged (unlike currently), but the hash specifies the template types required.
+  - A Template will contain the entity it refers to, along with several TemplateTypeDefinitions.
+  - The TemplatedTypes will reference a TemplateTypeDefinition entity.
+    - When copying the TemplatedType entity, they will automatically find the equivalent ancestor in the new type and thereby find the equivalent TemplateTypeDefinition.
+    - When copying a Template entity, it must copy the TemplatedTypes first (to allow the latter point).
+  - The TemplateTypeDefinition entity contains a TextLabel and a TypeEntity (the default).
+- Also need ExplicitTemplate, 
+- Works similarly for TemplateValueDefinition.
+- Unit tests for template types.
+
+Default argument values.
+- Multiple method prototypes for methods with default arguments.
+- Need to have subnodes of a Function for each default parameter. This is a "dummy" Function object with the shortened arg list.
+  - These nodes have their own unique reference (built around the effective arg list) so can be properly identified.
+- Introducing operator overloads into classes.
+- Allow for method overloads.
+  - Make a "best fitting arg list" function.
+    - This should take over from what's in Binary/Unary Operation, since that's flawed.
+
+--------------------------------------------------------------------------------
+
+RELEASE M3 (TBD)
+
+================================================================================
+
+Multiple-selection.
+- Grouping and annotation.
+  - TODOs
+- Only need to be done for lists of homogenous items.
+  - Allows Cut, Copy, Paste
+- Insertion of Entities, either as parent or as sibling.
+- Move entities with D'n'D.
+Allow for entity insertion & appending.
+
+--------------------------------------------------------------------------------
+
+RELEASE M4 (TBD)
+
+================================================================================
+
+Actionify everything.
+- Provide Undo algorithms.
+- Or perhaps just save the diff.
+- Nice visualisation as a line with arrows between the action of each keypress.
+  - Goes along the top.
+  - e.g. "Create IntegeralLiteral 6" -> "Create SimpleBinaryOperation *" -> "Create Referenced (int i)"
+  - That way backspace deletes these things. 
+- Pluginable actions
+- Use deniedKinds when determining legitimacy of keyPress. Will need passing down with dispatchKeyPress.
+
+--------------------------------------------------------------------------------
+
+RELEASE M5 (TBD)
+
+================================================================================
+
+Problems infrastructure
+- No more bools returned for isValidEntityState; instead a List<Problem>.
+  - Problem should just include text initially.
+  - Expanded to include possible solutions later.
+- Mouse over to detail what's wrong.
+- Update TODO list dynamically.
+
+--------------------------------------------------------------------------------
+
+RELEASE M6 (TBD)
+
+================================================================================
+
+Better code() handling.
+- Allow Martta substatements instead of code().
+- Use configurable multi-pass system.
+
+--------------------------------------------------------------------------------
+
+RELEASE M7 (TBD)
+
+================================================================================
+
+View - Clever updates - perhaps remove picture cache?
+- Cache only new stuff and remember child stuff.
+- Note when alpha not needed (i.e. clear colour), and total slot for width.
+  - Go no further up tree have alpha || new width > slot.
+  - slot can be set lazily by parent; default it to last known width.
+  - Certain things cause item to be relaid out on slot-change
+    - e.g. centering, right-justify
+    - They never cause a parent-relayout (though slots of its children may change).
+
+--------------------------------------------------------------------------------
+
+RELEASE M8 (TBD)
+
+================================================================================
+
+=== OUTSTANDING API/IMPLEMENTATION ISSUES ===
+
+Recursive search for utilised.
+
+Split CodeScene from CodeView via. mixins?.
+
+Allow "usurption" for stuff like DefaultConstructedVariable to usurp Variable.
+- enum { NotUsurping = -1 };
+- int usurpsChild() const { return NotUsurping; }
+- key presses automatically rerouted to child (only at source to prevent recursion).
+- should handle situation of usurper usurped.
+- child loses ability to focus.
+
+Virtual base for Entity.
+- Allow Members to inherit principally from "Member", but also from Callable/Variable.
+
+updateAncestralDependencies(); only gets called when context changes.
+- Should get called when there's any possibility that the ancestor could be different.
+- When anything is added/removed/switched, check all ancestors to see if the have any (preferably ancestral; maybe keep a count or multiple lists?) dependents. If so, update all those children.
+
+What I have at the moment for DefaultConstructors, ImplicitCopyConstructors and AssignmentOperators is almost certainly non-canon regarding inheritance. Sort it out.
+- The same goes for Memberify's castability testing.
+
+Move the commitContextChange stuff from CodeScene's key event handler into the EKE on notifyKeyEvent changed.
+
+================================================================================
+
+=== MINOR TASKS ===
+
+"J" -> Joins next line to last [] in current.
+
+Move FundamentalOperator stuff into SimpleType and move over to standard SimpleOperator stuff.
+
+Currently MemberOperations' leftType needs only to be of type  "Class", rather than "Class&"?
+
+Allow code for "implicit" casting.
+- If string is used in a char const* position, it should use its toCString().
+
+Decent editors for Literal and TypeEntity-deriveds.
+- TypeEntity-deriveds should search based on name fragment and show a list of possibles.
+
+Rewrite and simplify code generation process in Callables.
+Remove ProgramModel.
+
+Iterator support for hashes and lists.
+
+Scoping.
+
+Misc
+- Static member function.
+- Function & memberify type editing.
+
+Make edited names safe
+- Proper scope checking
+
+Deletion of Variable/Function should replace all Referenced objects with placeholder objects.
+- Could do with a "remove" as well as a "replace".
+
+Inheritance
+- If overload's heritage changes, uncouple.
+  - just get it to check for that in the onChanged()
+- Make sure multiple overloads aren't in the list (only virtual bases)
+
+Operators/Operations
+- Handle comma operator (will need a new Entity).
+
+Remove (or make useful) m_location?
+
+================================================================================
+
+=== WISH LIST ===
+
+Unit test embedding in class/methods.
+
+Parameter names (and docs) need to make their way through to the Invocation, for display.
+
+Decent class view.
+
+Make automatic names safe (arguments, methods, classes, variables)
+
+Referenced objects should be able to construct new methods and variables appropriately.
+
+Hold down Alt to see the current Invocation implementation inline.
+
+Indication of intrinsic constness.
+
+Ability to determine referential transparency.
+
+Want "auto" or "var" keyword in initialising statement (defined as being type of the initialiser).
+
+Debugger
+- Need demangling code.
+- CodeBuilder class.
+  - Allows determination of line numbers.
+  - Passed in the code building stage, rather than returning a QString.
+  - Should be some way to hook into parent's code building. Probably virtuals are best; consider.
+
+- Data files

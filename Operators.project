@@ -1,0 +1,148 @@
+<!DOCTYPE MarttaProject>
+<project>
+    <includeproject name="Standard C" >
+        <include>/usr/include/stdlib.h</include>
+        <include>/usr/include/stdio.h</include>
+    </includeproject>
+    <entity kind="Martta::NamespaceEntity" >
+        <entity kind="Martta::TextLabel" text="Project" />
+        <entity kind="Martta::Class" >
+            <entity kind="Martta::TextLabel" text="Program" />
+            <entity kind="Martta::DefaultConstructor" qualifiers="0" />
+            <entity kind="Martta::ImplicitCopyConstructor" qualifiers="0" />
+            <entity kind="Martta::ImplicitAssignmentOperator" qualifiers="0" />
+            <entity kind="Martta::Method" qualifiers="0" >
+                <entity kind="Martta::TextLabel" text="main" />
+                <entity kind="Martta::Compound" >
+                    <entity kind="Martta::AssignmentOperation" >
+                        <entity specific="0" subject="::Project::Program::m_y" kind="Martta::Referenced" lastSet="16" />
+                        <entity kind="Martta::IntegerLiteral" range="0" value="21" />
+                    </entity>
+                    <entity kind="Martta::AssignedVariable" >
+                        <entity kind="Martta::Variable" index="3" qualifiers="0" >
+                            <entity kind="Martta::TextLabel" text="a" />
+                            <entity kind="Martta::SimpleType" id="16" />
+                        </entity>
+                        <entity kind="Martta::Invocation" >
+                            <entity specific="0" subject="::Project::Program::int(;;Project;;Program;;&amp;foo)(intconst&amp;)const" kind="Martta::Referenced" lastSet="35" />
+                            <entity kind="Martta::IntegerLiteral" range="0" value="2" />
+                        </entity>
+                    </entity>
+                    <entity kind="Martta::IfStatement" >
+                        <entity kind="Martta::SimpleBinaryOperation" operator="14" >
+                            <entity kind="Martta::SimpleBinaryOperation" operator="17" >
+                                <entity specific="0" subject="::Project::Program::void(;;Project;;Program;;&amp;main)()::3" kind="Martta::Referenced" lastSet="35" />
+                                <entity kind="Martta::IntegerLiteral" range="0" value="42" />
+                            </entity>
+                            <entity kind="Martta::BoolLiteral" value="1" />
+                        </entity>
+                        <entity kind="Martta::Compound" >
+                            <entity kind="Martta::Invocation" >
+                                <entity specific="0" subject="::int(&amp;printf)(charconst*,...)" kind="Martta::Referenced" lastSet="192" />
+                                <entity kind="Martta::StringLiteral" value="Yay!\n" />
+                            </entity>
+                            <entity kind="Martta::AssignedVariable" >
+                                <entity kind="Martta::Variable" index="5" qualifiers="0" >
+                                    <entity kind="Martta::TextLabel" text="x" />
+                                    <entity kind="Martta::SimpleType" id="16" />
+                                </entity>
+                                <entity kind="Martta::IntegerLiteral" range="0" value="2" />
+                            </entity>
+                            <entity kind="Martta::ForLoop" >
+                                <entity kind="Martta::AssignedVariable" >
+                                    <entity kind="Martta::Variable" index="4" qualifiers="0" >
+                                        <entity kind="Martta::TextLabel" text="i" />
+                                        <entity kind="Martta::SimpleType" id="16" />
+                                    </entity>
+                                    <entity kind="Martta::IntegerLiteral" range="0" value="0" />
+                                </entity>
+                                <entity kind="Martta::SimpleBinaryOperation" operator="24" >
+                                    <entity specific="0" subject="::Project::Program::void(;;Project;;Program;;&amp;main)()::4" kind="Martta::Referenced" lastSet="35" />
+                                    <entity kind="Martta::IntegerLiteral" range="0" value="10" />
+                                </entity>
+                                <entity kind="Martta::SimpleUnaryOperation" operator="7" >
+                                    <entity specific="0" subject="::Project::Program::void(;;Project;;Program;;&amp;main)()::4" kind="Martta::Referenced" lastSet="35" />
+                                </entity>
+                                <entity kind="Martta::Compound" >
+                                    <entity kind="Martta::SimpleBinaryOperation" operator="19" >
+                                        <entity specific="0" subject="::Project::Program::void(;;Project;;Program;;&amp;main)()::5" kind="Martta::Referenced" lastSet="35" />
+                                        <entity kind="Martta::SimpleBinaryOperation" operator="13" >
+                                            <entity kind="Martta::SimpleBinaryOperation" operator="12" >
+                                                <entity specific="0" subject="::Project::Program::void(;;Project;;Program;;&amp;main)()::4" kind="Martta::Referenced" lastSet="35" />
+                                                <entity kind="Martta::IntegerLiteral" range="0" value="9" />
+                                            </entity>
+                                            <entity kind="Martta::IntegerLiteral" range="0" value="4" />
+                                        </entity>
+                                    </entity>
+                                </entity>
+                            </entity>
+                        </entity>
+                    </entity>
+                </entity>
+                <entity kind="Martta::SimpleType" id="0" />
+                <entity access="0" kind="Martta::AccessLabel" />
+                <entity isConst="0" kind="Martta::ConstLabel" />
+            </entity>
+            <entity kind="Martta::Method" qualifiers="0" >
+                <entity kind="Martta::TextLabel" text="foo" />
+                <entity kind="Martta::Compound" >
+                    <entity kind="Martta::ReturnStatement" >
+                        <entity kind="Martta::SimpleBinaryOperation" operator="13" >
+                            <entity specific="0" subject="::Project::Program::int(;;Project;;Program;;&amp;foo)(intconst&amp;)const::0" kind="Martta::Referenced" lastSet="12" />
+                            <entity specific="0" subject="::Project::Program::m_y" kind="Martta::Referenced" lastSet="16" />
+                        </entity>
+                    </entity>
+                </entity>
+                <entity kind="Martta::SimpleType" id="16" />
+                <entity access="1" kind="Martta::AccessLabel" />
+                <entity isConst="1" kind="Martta::ConstLabel" />
+                <entity kind="Martta::Variable" index="0" qualifiers="0" >
+                    <entity kind="Martta::TextLabel" text="x" />
+                    <entity kind="Martta::Reference" >
+                        <entity kind="Martta::Const" >
+                            <entity kind="Martta::SimpleType" id="16" />
+                        </entity>
+                    </entity>
+                </entity>
+            </entity>
+            <entity kind="Martta::MemberVariable" qualifiers="0" >
+                <entity kind="Martta::TextLabel" text="y" />
+                <entity kind="Martta::SimpleType" id="16" />
+                <entity access="2" kind="Martta::AccessLabel" />
+            </entity>
+            <entity kind="Martta::Method" qualifiers="0" >
+                <entity kind="Martta::TextLabel" text="bar" />
+                <entity kind="Martta::Compound" >
+                    <entity kind="Martta::Statement" />
+                </entity>
+                <entity kind="Martta::SimpleType" id="0" />
+                <entity access="2" kind="Martta::AccessLabel" />
+                <entity isConst="0" kind="Martta::ConstLabel" />
+            </entity>
+            <entity kind="Martta::Method" qualifiers="0" >
+                <entity kind="Martta::TextLabel" text="get something" />
+                <entity kind="Martta::Compound" >
+                    <entity kind="Martta::Statement" />
+                </entity>
+                <entity kind="Martta::SimpleType" id="17" />
+                <entity access="2" kind="Martta::AccessLabel" />
+                <entity isConst="1" kind="Martta::ConstLabel" />
+            </entity>
+        </entity>
+        <entity kind="Martta::Class" >
+            <entity kind="Martta::TextLabel" text="test bed" />
+            <entity kind="Martta::ImplicitCopyConstructor" qualifiers="0" />
+            <entity kind="Martta::ImplicitAssignmentOperator" qualifiers="0" />
+            <entity kind="Martta::Constructor" qualifiers="0" >
+                <entity kind="Martta::Compound" >
+                    <entity kind="Martta::Invocation" >
+                        <entity specific="0" subject="::int(&amp;printf)(charconst*,...)" kind="Martta::Referenced" lastSet="192" />
+                        <entity kind="Martta::StringLiteral" value="Constructing testbed\n" />
+                    </entity>
+                </entity>
+                <entity access="0" kind="Martta::AccessLabel" />
+            </entity>
+        </entity>
+    </entity>
+    <program key="::Project::Program::void(;;Project;;Program;;&amp;main)()" />
+</project>

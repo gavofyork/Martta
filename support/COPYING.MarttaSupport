@@ -1,0 +1,16 @@
+The MarttaSupport license version 1.0
+This file is part of Martta, the C++-based Extensible Quasi-Graphical Symbolic Meta-Language. Copyright (C) 2008 quid pro code, Ltd. (UK).
+
+MarttaSupport is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 or (at your option) any later version.
+
+MarttaSupport is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with Martta; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+
+Linking MarttaSupport statically or dynamically with other modules, or including any part of it (including but not limited to macro-definitions, inline implementations and template implementations) is making a combined work based on MarttaSupport. Thus, the terms and conditions of the MarttaSupport license cover the whole combination.
+
+As a special exception, quid pro code, Ltd. may, at its discretion, license the Source Code of MarttaSupport, including Modifications incorporated therein, without such MarttaSupport Code becoming subject to the terms of this License, and may license such MarttaSupport Code on different terms from those contained in the GNU General Public License. 
+
+Note that people who make modified versions of the MarttaSupport Code are not obligated to grant this special exception for their modified versions; it is their choice whether to do so. The GNU General Public License, on which the MarttaSupport license is based, gives permission to release a modified version without this exception; this exception also makes it possible to release a modified version which carries forward this exception.
+
+This exception does not invalidate any other reasons why a work based on this file might be covered by the GNU General Public License.

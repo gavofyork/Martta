@@ -1,0 +1,101 @@
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: Martta License version 1.0
+ *
+ * The contents of this file are subject to the Martta License version 1.0
+ * (the "License"); you may not use this file except in compliance with the 
+ * License. You should have received a copy of the Martta License 
+ * "COPYING.Martta" along with Martta; if not you may obtain a copy of the
+ * License at http://quidprocode.co.uk/Martta/
+ *
+ * Software distributed under the License is distributed on an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+ * License for the specific language governing rights and limitations under 
+ * the License.
+ *
+ * The Initial Developer of the code in this file is Gavin Wood.
+ * Portions created by the Initial Developer are Copyright (C) 2008
+ * quid pro code, Ltd. All Rights Reserved.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+#pragma once
+
+#include "TypeEntity.h"
+
+namespace Martta
+{
+
+extern const int s_simpleIds[];
+extern const int s_simpleIdsCount;
+
+/**
+ * Enumeration of fundamental types.
+ *
+ * Because any (non-const) type is implicitly castable to Void, we can use this as the left argument in the ',' operator.
+ * The Ptr value exists only for referencing into m_fundamentalOperators the fundamental pointer operations.
+ * In these cases the operators in question use a null QualifiedType value to signify a placeholder for any type.
+ */
+enum
+{
+	Void = 0x0000, Ptr = Void,
+	Signed = 0x0000, Unsigned = 0x0001, Simple = 0x0000, Complex = 0x0001,
+	Natural = 0x0000, Short = 0x0002, Long = 0x0004, Longlong = 0x0006,
+	Bool = 0x0008, Int = 0x0010, Char = 0x0020, Float = 0x0040, Double = 0x0080,
+	Wchar = Char|Long
+};
+
+class SimpleType: public TypeEntity
+{
+	MARTTA_OBJECT(TypeEntity)
+
+public:
+	SimpleType(int _d = -1): m_id(_d) {}
+
+	int id() const { return m_id; }
+	void setId(int _d) { m_id = _d; changed(); }
+	void committed();
+
+	virtual QString code(QString const& _middle) const;
+
+	static inline QString name(int _d)
+	{
+		return (_d == -1) ? QString() : (_d == Wchar) ? QString("wchar_t") : (QString((_d & Unsigned) ? (_d & Float || _d & Double) ? "c" : "u" : "") +
+				(((_d & Longlong) == Longlong) ? "ll" : (_d & Short) ? "s" : (_d & Long) ? "l" : "") +
+				((_d & Float) ? "float" : (_d & Bool) ? "bool" : (_d & Double) ? "double" : (_d & Char) ? "char" : (_d & Int) ? "int" : "void"));
+	}
+
+	static int id(QString const& _n)
+	{
+		for (int i = 0; i < s_simpleIdsCount; i++)
+			if (name(s_simpleIds[i]) == _n)
+				return s_simpleIds[i];
+		return -1;
+	}
+
+	QList<int>							possibilities();
+	virtual QString						defineEditLayout(ViewKeys&, int) const;
+	int									get() const { return m_id; }
+	void								set(int _m) { setId(_m); }
+	
+	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
+
+protected:
+	virtual bool						hasDefaultConstructor() const { return true; }
+	virtual Types						assignableTypes() const;
+	virtual bool						contentsEquivalentTo(TypeEntity const* _t) const { return _t->asKind<SimpleType>()->m_id == m_id; }
+	virtual QString						idColour() const { return "#fb7"; }
+	virtual TypeEntity*					newClone() const { return new SimpleType(m_id); }
+	virtual QString						defineLayout(ViewKeys&) const;
+	virtual void						exportDom(QDomElement& _element) const;
+	virtual void						importDom(QDomElement const& _element);
+	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
+	virtual bool						isSuperfluous() const { return Super::isSuperfluous() && m_id == -1; }
+	virtual bool						keyPressed(EntityKeyEvent const* _e);
+	virtual bool						defineSimilarityFrom(TypeEntity const* _f, Castability _c) const;
+	virtual bool						defineSimilarityTo(TypeEntity const* _t, Castability _c) const;
+
+private:
+	int m_id;
+};
+
+}
