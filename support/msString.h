@@ -171,7 +171,7 @@ public:
 	int						toInt(bool* _ok = 0, int _base = 10) const;
 	t::uint					toUint(bool* _ok = 0, int _base = 10) const;
 	double					toDouble(bool* _ok = 0) const;
-	inline float			toFloat(bool* _ok = 0) const { return toDouble(_ok); }
+	inline float			toFloat(bool* _ok = 0) const { return (float)toDouble(_ok); }
 
 	static String			number(int _n);
 	static String			number(t::uint _n, int _base = 10);

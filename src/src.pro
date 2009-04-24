@@ -21,8 +21,8 @@ CONFIG -= stl
 QT += xml svg
 FORMS += Gui/MainWindow.ui
 win32 {
-     SUPPORT.files += ../support/support.lib
-	 LIBS += ../support/support.lib
+	SUPPORT.files += ../support/support.lib
+	LIBS += ../support/Debug/support.lib
 }
 unix {
      SUPPORT.files += ../support/libsupport.a

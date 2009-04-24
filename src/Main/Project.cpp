@@ -107,8 +107,10 @@ void Project::resetAsNew()
 	IncludeProject* sc = new IncludeProject("Standard C");
 #ifdef Q_WS_WIN
 	// TODO: Use .bat file to output & read proper paths for chosen compiler.
-	sc->addInclude("C:/Program Files/Microsoft Visual Studio .NET 2003/Vc7/include/stdlib.h");
-	sc->addInclude("C:/Program Files/Microsoft Visual Studio .NET 2003/Vc7/include/stdio.h");
+//	sc->addInclude("C:/Program Files/Microsoft Visual Studio .NET 2003/Vc7/include/stdlib.h");
+//	sc->addInclude("C:/Program Files/Microsoft Visual Studio .NET 2003/Vc7/include/stdio.h");
+	sc->addInclude("stdlib.h");
+	sc->addInclude("stdio.h");
 #else
 	sc->addInclude("/usr/include/stdlib.h");
 	sc->addInclude("/usr/include/stdio.h");
@@ -204,7 +206,7 @@ void Project::build()
 		f.open(QFile::WriteOnly | QFile::Text);
 		QString c = code();
 #ifdef _MSC_VER
-		c.replace("/usr/include/", "C:\\Program Files\\Microsoft Visual Studio .NET 2003\\VC\\include\\");
+		c.replace("/usr/include/", "");//"C:\\Program Files\\Microsoft Visual Studio .NET 2003\\VC\\include\\");
 #endif
 		f.write(c.toAscii());
 	}
