@@ -39,21 +39,20 @@
 #include "Pointer.h"
 using namespace Martta;
 
-#include "msSupport.h"
 #include "msList.h"
 #include "msString.h"
 #include "msHash.h"
+#include "msSupport.h"
 using namespace MarttaSupport;
 
-using MarttaSupport::uint;
 
-template<typename Key, typename T, MarttaSupport::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Box returnMeBox(GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey> const& _me)
 {
 	return _me;
 }
 
-template<typename Key, typename T, MarttaSupport::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey> const returnMe(GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey> const& _me)
 {
 	return _me;
@@ -359,11 +358,11 @@ int test()
 		{
 		// void (B:: b)()
 		Type b = Type(FunctionType()).append(SimpleType(Void)).topWith(Memberify(Type(B)));
-		// void (B:: bc)()
+		// void (B:: bc)() const
 		Type bc = Type(FunctionType()).append(SimpleType(Void)).topWith(Memberify(Type(B).topWith(Const())));
-		// void (B:: d)()
+		// void (D:: d)()
 		Type d = Type(FunctionType()).append(SimpleType(Void)).topWith(Memberify(Type(D)));
-		// void (B:: dc)()
+		// void (D:: dc)() const
 		Type dc = Type(FunctionType()).append(SimpleType(Void)).topWith(Memberify(Type(D).topWith(Const())));
 		CAST_TEST(b, b, Logical);
 		CAST_TEST(b, bc, Unrelated);
@@ -1027,7 +1026,8 @@ int test()
 		FAILED_IF(String("%2%3%1%4").arg("world").arg("Hello").arg(" ").arg("!") != "Hello world!");
 		FAILED_IF(String("%4 %3 %1%2").arg(69u, 0, 10).arg('!').arg(L'a', -6, L'.').arg("Make mine") != "Make mine a..... 69!");
 		FAILED_IF(String("%4 %3 %1%2").arg(69).arg(L'!').arg('a').arg("Make mine") != "Make mine a 69!");
-		FAILED_IF(String("%1 / %2 = %3").arg(69.f, 0, 'g', 4).arg(999999u, 0, 16).arg(69.f/999999, 0, 'e', 1) != "69 / f423f = 6.9e-05");
+		String s = String("%1 / %2 = %3").arg(69.f, 0, 'g', 4).arg(999999u, 0, 16).arg(69.f/999999, 0, 'e', 1);
+		FAILED_IF(s != "69 / f423f = 6.9e-05" && s != "69 / f423f = 6.9e-005");
 	}
 	TEST("String hashOf()")
 	{
