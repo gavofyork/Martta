@@ -44,8 +44,8 @@ void GccXml::extractHeaders(QString const& _c, QXmlContentHandler* _h)
 		QProcess::execute("/usr/bin/gccxml", QStringList() << f.fileName() << "--gccxml-cxxflags" << "-x c" << ("-fxml=" + xmlfn));
 	else if (QFile::exists("/usr/local/bin/gccxml"))
 		QProcess::execute("/usr/local/bin/gccxml", QStringList() << f.fileName() << "--gccxml-cxxflags" << "-x c" << ("-fxml=" + xmlfn));
-	else if (QFile::exists("C:\\cygwin\\usr\\local\\bin\\gccxml.exe"))
-		QProcess::execute("C:\\cygwin\\usr\\local\\bin\\gccxml.exe", QStringList() << f.fileName() << "--gccxml-cxxflags" << "-x c" << ("-fxml=" + xmlfn));
+	else if (QFile::exists("C:\\Program Files\\gccxml\\bin\\gccxml.exe"))
+		QProcess::execute("C:\\Program Files\\gccxml\\bin\\gccxml.exe", QStringList() << f.fileName() << "--gccxml-cxxflags" << "-xc" << ("-fxml=" + xmlfn));
 	f.close();
 
 	QXmlSimpleReader xmlReader;

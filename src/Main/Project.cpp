@@ -59,7 +59,10 @@ Project::Project(QString const& _load):
 	CFRelease(appUrlRef);
 	CFRelease(macPath);
 #endif
-#if defined(Q_WS_X11) || defined(Q_WS_WIN)
+#if Q_WS_WIN
+	m_supportPath = QCoreApplication::applicationDirPath() + "/../../Support/";
+#endif
+#if Q_WS_X11
 	m_supportPath = QCoreApplication::applicationDirPath() + "/../support/";
 #endif
 
@@ -102,8 +105,15 @@ void Project::resetAsNew()
 	m_namespace->back().place(new TextLabel("Project"));
 
 	IncludeProject* sc = new IncludeProject("Standard C");
+#ifdef Q_WS_WIN
+	// TODO: Use .bat file to output & read proper paths for chosen compiler.
+	sc->addInclude("C:/Program Files/Microsoft Visual Studio .NET 2003/Vc7/include/stdlib.h");
+	sc->addInclude("C:/Program Files/Microsoft Visual Studio .NET 2003/Vc7/include/stdio.h");
+#else
 	sc->addInclude("/usr/include/stdlib.h");
 	sc->addInclude("/usr/include/stdio.h");
+#endif
+
 	m_cDepends.append(sc);
 	reloadHeaders();
 
@@ -177,7 +187,7 @@ void Project::build()
 
 	QStringList ccArgs;
 	ccArgs << src;
-#if WIN32
+#if Q_WS_WIN
 	ccArgs << "/Fe" + bin;
 	ccArgs << "/nologo";
 	// TODO: Win32 linking to support library.
@@ -193,8 +203,8 @@ void Project::build()
 		QFile f(src);
 		f.open(QFile::WriteOnly | QFile::Text);
 		QString c = code();
-#if WIN32
-		c.replace("/usr/include/", "C:\\Program Files\\Microsoft Visual Studio 9.0\\VC\\include\\");
+#ifdef _MSC_VER
+		c.replace("/usr/include/", "C:\\Program Files\\Microsoft Visual Studio .NET 2003\\VC\\include\\");
 #endif
 		f.write(c.toAscii());
 	}
@@ -203,16 +213,25 @@ void Project::build()
 
 	qInformation() << "Compiling" << src;
 
-#if WIN32
+#if Q_WS_WIN
 	QStringList env = QProcess::systemEnvironment();
-	env.replaceInStrings(QRegExp("^PATH=(.*)", Qt::CaseInsensitive), "PATH=\\1;C:\\Program Files\\Microsoft Visual Studio 9.0\\VC\\BIN;C:\\Program Files\\Microsoft Visual Studio 9.0\\Common7\\IDE");
-	env << "LIB=C:\\Program Files\\Microsoft Visual Studio 9.0\\VC\\LIB;C:\\Program Files\\Microsoft Visual Studio 9.0\\Common7\\IDE;C:\\Program Files\\Microsoft SDKs\\Windows\\v6.0A\\Lib";
-	env << "INCLUDE=C:\\Program Files\\Microsoft Visual Studio 9.0\\VC\\INCLUDE";
-	env << "LIBPATH=C:\\Program Files\\Microsoft Visual Studio 9.0\\VC\\LIB;C:\\Program Files\\Microsoft Visual Studio 9.0\\Common7\\IDE;C:\\Program Files\\Microsoft SDKs\\Windows\\v6.0A\\Lib";
-	qInformation() << env;
-	m_compiler->setEnvironment(env);
-	qInformation() << ccArgs;
-	m_compiler->start("cl.exe", ccArgs, QIODevice::ReadOnly);
+	int index = env.lastIndexOf(QRegExp("VS..COMNTOOLS.*"));
+	QRegExp r("^([A-Z0-9]+)=(.*)$");
+	r.exactMatch(env[index]);
+	QTemporaryFile tempBat(QDir::tempPath() + "\\XXXXXX.bat");
+	tempBat.open();
+	tempBat.setAutoRemove(false);
+	QString tempBatName = tempBat.fileName();
+	QTextStream s(&tempBat);
+	s << "call \"%" << r.cap(1) << "%vsvars32.bat\"" << endl;
+	s << "cl \"" << ccArgs.join(QString("\" \"")) << "\"" << endl;
+	tempBat.close();
+
+	batArgs.clear();
+	batArgs << "/C";
+	batArgs << tempBatName;
+	m_compiler->start("cmd", batArgs, QIODevice::ReadOnly);
+	QFile::remove(tempBatName);
 #else
 	m_compiler->start("g++", ccArgs, QIODevice::ReadOnly);
 #endif
