@@ -71,18 +71,18 @@ inline T nextHigher(T _k)
 
 inline t::uint floorLog2(t::uint _a) 
 {
-	t::uint ret;
+	t::uint rett;
 #ifdef _MSCVER
 	_asm
 	{
 			mov	eax, _a
 			bsr	eax, eax
-			mov	ret, eax
+			mov	rett, eax
 	}	
 #else
-	asm ("bsr %1, %0;" :"=r"(ret) :"r"(_a));
+	asm ("bsr %1, %0;" :"=r"(rett) :"r"(_a));
 #endif
-	return ret;
+	return rett;
 }
 
 #define ASSERT(X)
