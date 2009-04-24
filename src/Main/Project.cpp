@@ -59,7 +59,7 @@ Project::Project(QString const& _load):
 	CFRelease(appUrlRef);
 	CFRelease(macPath);
 #endif
-#if Q_WS_WIN
+#ifdef Q_WS_WIN
 	m_supportPath = QCoreApplication::applicationDirPath() + "/../../Support/";
 #endif
 #if Q_WS_X11
@@ -187,7 +187,7 @@ void Project::build()
 
 	QStringList ccArgs;
 	ccArgs << src;
-#if Q_WS_WIN
+#ifdef Q_WS_WIN
 	ccArgs << "/Fe" + bin;
 	ccArgs << "/nologo";
 	// TODO: Win32 linking to support library.
@@ -213,7 +213,7 @@ void Project::build()
 
 	qInformation() << "Compiling" << src;
 
-#if Q_WS_WIN
+#ifdef Q_WS_WIN
 	QStringList env = QProcess::systemEnvironment();
 	int index = env.lastIndexOf(QRegExp("VS..COMNTOOLS.*"));
 	QRegExp r("^([A-Z0-9]+)=(.*)$");
@@ -227,6 +227,7 @@ void Project::build()
 	s << "cl \"" << ccArgs.join(QString("\" \"")) << "\"" << endl;
 	tempBat.close();
 
+	QStringList batArgs;
 	batArgs.clear();
 	batArgs << "/C";
 	batArgs << tempBatName;

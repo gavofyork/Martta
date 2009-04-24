@@ -20,13 +20,11 @@ mac:QMAKE_LFLAGS += -Wl,-Sp
 CONFIG -= stl
 QT += xml svg
 FORMS += Gui/MainWindow.ui
-win32
-{
+win32 {
      SUPPORT.files += ../support/support.lib
 	 LIBS += ../support/support.lib
 }
-unix
-{
+unix {
      SUPPORT.files += ../support/libsupport.a
 	 LIBS += ../support/libsupport.a
 }

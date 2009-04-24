@@ -29,13 +29,14 @@
 
 #define privateinline inline
 
-#ifndef _MSCVER
+#ifndef _MSC_VER
 #define inline MS_EXPORT inline
 #endif
 
 namespace MarttaSupport
 {
-	
+
+
 template<typename T>
 inline T max(T _a, T _b) { return (_a < _b) ? _b : _a; }
 
@@ -49,6 +50,7 @@ typedef unsigned long ulong;
 
 template<typename T>
 inline T min(T _a, T _b) { return (_a > _b) ? _b : _a; }
+
 
 //#define inline MS_EXPORT inline
 template<typename T>
@@ -72,7 +74,7 @@ inline T nextHigher(T _k)
 inline t::uint floorLog2(t::uint _a) 
 {
 	t::uint rett;
-#ifdef _MSCVER
+#ifdef _MSC_VER
 	_asm
 	{
 			mov	eax, _a

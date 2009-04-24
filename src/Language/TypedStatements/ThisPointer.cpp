@@ -39,7 +39,7 @@ bool ThisPointer::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKey
 Type ThisPointer::type() const
 {
 	if (!hasAncestor<MemberCallable>()) return Type();
-	Type t(ExplicitType(ancestor<Class>()));
+	Type t = Type(ExplicitType(ancestor<Class>()));
 	if (ancestor<MemberCallable>()->isConst())
 		t.topWith(Const());
 	return t.topWith(Pointer());

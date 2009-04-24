@@ -225,7 +225,7 @@ int test()
 		if (!failed)
 			TEST("Type creation syntax")
 			{
-				Type t(SimpleType(Void));
+				Type t = Type(SimpleType(Void));
 			}
 	}
 	
