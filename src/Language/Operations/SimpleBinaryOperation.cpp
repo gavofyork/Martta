@@ -63,14 +63,10 @@ QString SimpleBinaryOperation::operatorLayout() const
 		return QString::fromWCharArray(L"ycode;fs+1;'=';M-5;'/';M-6;'='");
 	else if (id().symbol() == Operator::EqualsEquals)
 		return QString::fromWCharArray(L"ycode;fs+1;'=';M-3;'='");
-	else if (id().symbol() == Operator::BarBar)
-		return QString::fromWCharArray(L"ycode;fs+1;'∨'");
-	else if (id().symbol() == Operator::AmpersAmpers)
-		return QString::fromWCharArray(L"ycode;fs+1;'∧'");
 	else if (id().symbol() == Operator::LessThanEquals)
-		return QString::fromWCharArray(L"ycode;'≤'");
+		return QString("ycode;'").append(QChar(0x2264)) + "'";
 	else if (id().symbol() == Operator::GreaterThanEquals)
-		return QString::fromWCharArray(L"ycode;'≥'");
+		return QString("ycode;'").append(QChar(0x2265)) + "'";
 	else if (id().symbol() == Operator::LeftShift)
 		return QString::fromWCharArray(L"ycode;'<';M-4;'<'");
 	else if (id().symbol() == Operator::RightShift)
@@ -80,17 +76,21 @@ QString SimpleBinaryOperation::operatorLayout() const
 	else if (id().symbol() == Operator::RightShiftEquals)
 		return QString::fromWCharArray(L"ycode;'>';M-4;'>';M-3;'='");
 	else if (id().symbol() == Operator::Star)
-		return QString::fromWCharArray(L"ycode;'×'");
+		return QString("ycode;'").append(QChar(0x00d7)) + "'";
 	else if (id().symbol() == Operator::Slash)
-		return QString::fromWCharArray(L"ycode;'÷'");
+		return QString("ycode;'").append(QChar(0x00f7)) + "'";
+	else if (id().symbol() == Operator::BarBar)
+		return QString("ycode;'").append(QChar(0x06f7)) + "'";
+	else if (id().symbol() == Operator::AmpersAmpers)
+		return QString("ycode;'").append(QChar(0x06f8)) + "'";
 	else if (id().symbol() == Operator::PlusEquals)
 		return QString::fromWCharArray(L"ycode;'+';M-3;'='");
 	else if (id().symbol() == Operator::MinusEquals)
 		return QString::fromWCharArray(L"ycode;'-';M-3;'='");
 	else if (id().symbol() == Operator::StarEquals)
-		return QString::fromWCharArray(L"ycode;'×';M-3;'='");
+		return QString("ycode;'").append(QChar(0x00d7)) + "';M-3;'='";
 	else if (id().symbol() == Operator::SlashEquals)
-		return QString::fromWCharArray(L"ycode;'÷';M-3;'='");
+		return QString("ycode;'").append(QChar(0x00f7)) + "';M-3;'='";
 	else
 		return QString("ycode;'%1'").arg(id().code());
 }
