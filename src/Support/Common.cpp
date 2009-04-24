@@ -42,7 +42,7 @@ int s_timeTotals[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 int s_timeCount[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 QTime s_timeTimers[16];
 
-const Precedence NoPrecedence = log(0);
+const Precedence NoPrecedence = log(0.0);
 
 QString code(Qualifiers _q, WhitespacePosition _p)
 {
