@@ -18,6 +18,9 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#if __linux__
+#include <cstddef>
+#endif
 #include <wchar.h>
 #include <wctype.h>
 #include <cstring>

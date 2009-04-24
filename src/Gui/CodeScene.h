@@ -97,7 +97,7 @@ public:
 	InsertionPoint				nearestBracket(InsertionPoint const& _p) const;
 	
 	// For EditDelegateFace
-	void						forgetMe(EditDelegateFace* _me) { if (m_editDelegate == _me); m_editDelegate = 0; }
+	void						forgetMe(EditDelegateFace* _me) { if (m_editDelegate == _me) m_editDelegate = 0; }
 	void						rememberMe(EditDelegateFace* _me) { M_ASSERT(!m_editDelegate); m_editDelegate = _me; }
 
 	// Hacks

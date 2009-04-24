@@ -35,7 +35,7 @@ public:
 	inline static bool					keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e) { return simpleInsertionPointKeyPressHandler<Reference>(_p, _e, "&", false); }
 	
 private:
-	virtual QList<ValueDefinition*>		applicableMembers(Entity* _s = 0, bool _isConst) const { return child() ? child()->applicableMembers(_s, _isConst) : Super::applicableMembers(_s); }
+	virtual QList<ValueDefinition*>		applicableMembers(Entity* _s = 0, bool _isConst = false) const { return child() ? child()->applicableMembers(_s, _isConst) : Super::applicableMembers(_s); }
 	virtual QString 					code(QString const& _middle) const { return child()->code("&" + _middle); }
 	virtual bool						isType(Kind _typeKind) { return isKind(_typeKind) || child()->isType(_typeKind); }
 	virtual TypeEntity*					asType(Kind _typeKind) { if (isKind(_typeKind)) return this; M_ASSERT(child()->isType(_typeKind)); return child()->asType(_typeKind); }

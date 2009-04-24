@@ -26,9 +26,9 @@
    <property name="geometry" >
     <rect>
      <x>262</x>
-     <y>232</y>
+     <y>247</y>
      <width>317</width>
-     <height>154</height>
+     <height>125</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout" >
@@ -66,9 +66,15 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>302</width>
-         <height>76</height>
+         <width>301</width>
+         <height>65</height>
         </rect>
+       </property>
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="MinimumExpanding" hsizetype="MinimumExpanding" >
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
        <layout class="QHBoxLayout" name="horizontalLayout" >
         <property name="spacing" >
@@ -198,7 +204,7 @@
      <x>0</x>
      <y>0</y>
      <width>579</width>
-     <height>22</height>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_Project" >
@@ -234,9 +240,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>594</y>
+     <y>592</y>
      <width>579</width>
-     <height>22</height>
+     <height>24</height>
     </rect>
    </property>
   </widget>
@@ -244,9 +250,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>232</y>
+     <y>247</y>
      <width>256</width>
-     <height>106</height>
+     <height>81</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -259,9 +265,9 @@
     <property name="geometry" >
      <rect>
       <x>0</x>
-      <y>26</y>
+      <y>22</y>
       <width>256</width>
-      <height>80</height>
+      <height>59</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" >
@@ -306,9 +312,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>344</y>
+     <y>334</y>
      <width>256</width>
-     <height>42</height>
+     <height>38</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -321,7 +327,7 @@
     <property name="geometry" >
      <rect>
       <x>0</x>
-      <y>26</y>
+      <y>22</y>
       <width>256</width>
       <height>16</height>
      </rect>
@@ -432,9 +438,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>392</y>
+     <y>378</y>
      <width>579</width>
-     <height>202</height>
+     <height>214</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -447,9 +453,9 @@
     <property name="geometry" >
      <rect>
       <x>0</x>
-      <y>26</y>
+      <y>22</y>
       <width>579</width>
-      <height>176</height>
+      <height>192</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" >
@@ -501,9 +507,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>48</y>
+     <y>51</y>
      <width>579</width>
-     <height>178</height>
+     <height>190</height>
     </rect>
    </property>
    <property name="floating" >
@@ -519,9 +525,9 @@
     <property name="geometry" >
      <rect>
       <x>0</x>
-      <y>26</y>
+      <y>22</y>
       <width>579</width>
-      <height>152</height>
+      <height>168</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" >
@@ -551,9 +557,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>22</y>
+     <y>24</y>
      <width>579</width>
-     <height>26</height>
+     <height>27</height>
     </rect>
    </property>
    <property name="windowTitle" >

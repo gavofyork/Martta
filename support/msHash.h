@@ -205,6 +205,19 @@ private:
 	T* m_value;
 };
 
+inline uint hashOf(char _key) { return (uint)_key; }
+template<typename T1, typename T2> inline uint hashOf(Pair<T1, T2> const& _key) { uint fh = hashOf(_key.first()); return (fh << 16 | fh >> 16) ^ hashOf(_key.second()); }
+inline uint hashOf(uchar _key) {  return (uint)_key; }
+inline uint hashOf(signed char _key) {  return (uint)_key; }
+inline uint hashOf(ushort _key) { return (uint)_key; }
+inline uint hashOf(short _key) { return (uint)_key; }
+inline uint hashOf(uint _key) { return (uint)_key; }
+inline uint hashOf(int const& _key) { return (uint)_key; }
+inline uint hashOf(ulong _key) { return (uint)_key; }
+inline uint hashOf(long _key) { return (uint)_key; }
+inline uint hashOf(wchar_t _key) { return (uint)_key; }
+template<typename T> inline uint hashOf(T const* _key) { return (uint)_key; }
+
 template<typename Key, typename T, uint Min = 32, bool AlwaysMulti = true, bool ImplicitKey = false>
 class MS_EXPORT GeneralHash
 {
@@ -406,7 +419,7 @@ private:
 	void copy(GeneralHash<Key, T, Min2, AlwaysMulti2, ImplicitKey2> const& _other);
 	
 	void moveAndDelete(Node* _n, uint _c);
-	void reinsertNode(Node* _n, bool _pleaseDelete);	
+	void reinsertNode(Node* _n, bool _pleaseDelete);
 	privateinline int indexOf(Key const& _key) const { return hashOf(_key) & (m_capacity - 1); }
 	void resizeToPowerOfTwo(uint _size);
 	// Find most recent node of key _key.
@@ -429,19 +442,6 @@ private:
 	bool m_autoGrow;
 	bool m_autoShrink;
 };
-
-inline uint hashOf(char _key) { return (uint)_key; }
-template<typename T1, typename T2> inline uint hashOf(Pair<T1, T2> const& _key) { uint fh = hashOf(_key.first()); return (fh << 16 | fh >> 16) ^ hashOf(_key.second()); }
-inline uint hashOf(uchar _key) {  return (uint)_key; }
-inline uint hashOf(signed char _key) {  return (uint)_key; }
-inline uint hashOf(ushort _key) { return (uint)_key; }
-inline uint hashOf(short _key) { return (uint)_key; }
-inline uint hashOf(uint _key) { return (uint)_key; }
-inline uint hashOf(int _key) { return (uint)_key; }
-inline uint hashOf(ulong _key) { return (uint)_key; }
-inline uint hashOf(long _key) { return (uint)_key; }
-inline uint hashOf(wchar_t _key) { return (uint)_key; }
-template<typename T> inline uint hashOf(T const* _key) { return (uint)_key; }
 
 template<typename Key, typename T, int Min = 32>
 class Hash: public GeneralHash<Key, T, Min, false, false>

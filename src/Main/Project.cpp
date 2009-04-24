@@ -48,16 +48,19 @@ namespace Martta
 Project::Project(QString const& _load):
 	m_filename			(_load),
 	m_alteringDepends	(false),
-	m_compiler			(0),
-	m_supportPath		(QCoreApplication::applicationDirPath() + "/../Resources/Support/")
+	m_compiler			(0)
 {
 #ifdef Q_WS_MAC
+	m_supportPath = QCoreApplication::applicationDirPath() + "/../Resources/Support/";
 	CFURLRef appUrlRef = CFBundleCopyBundleURL(CFBundleGetMainBundle());
 	CFStringRef macPath = CFURLCopyFileSystemPath(appUrlRef, kCFURLPOSIXPathStyle);
 	m_supportPath = QString(CFStringGetCStringPtr(macPath, CFStringGetSystemEncoding())) + "/Support/";
 	qInformation() << "Support path:" << m_supportPath;
 	CFRelease(appUrlRef);
 	CFRelease(macPath);
+#endif
+#if defined(Q_WS_X11) || defined(Q_WS_WIN)
+	m_supportPath = QCoreApplication::applicationDirPath() + "/../support/";
 #endif
 
 	AuxilliaryRegistrar::get()->initialiseAll();

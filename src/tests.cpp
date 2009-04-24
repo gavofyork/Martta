@@ -1053,6 +1053,14 @@ int test()
 		Hash<int, int> h;
 		FAILED_IF(!h.isEmpty());
 	}
+	TEST("HashOf int")
+	{
+		char const* x = "Hello world!";
+		uint i = (uint)x;
+		FAILED_IF(hashOf(i) != i);
+		int const j = (int)x;
+		FAILED_IF((int)hashOf(j) != j);
+	}
 	TEST("Hash insert()")
 	{
 		Hash<int, int> h;
