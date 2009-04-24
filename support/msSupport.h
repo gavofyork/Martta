@@ -23,37 +23,34 @@
  * quid pro code, Ltd. All Rights Reserved.
  *
  * ***** END LICENSE BLOCK ***** */
-
 #pragma once
 
 #define MS_EXPORT __attribute__((visibility("default")))
 
 #define privateinline inline
+
+#ifndef _MSCVER
 #define inline MS_EXPORT inline
+#endif
 
 namespace MarttaSupport
 {
 	
-typedef unsigned char uchar;
-typedef unsigned short ushort;
-typedef unsigned int uint;
-typedef unsigned long ulong;
-
-template<typename T>
-inline T nextHigher(T _k)
-{
-	_k--;
-	for (uint i = 1; i < sizeof(T) * 8; i = i * 2)
-		_k = _k | _k >> i;
-	return _k + 1;
-}
-
 template<typename T>
 inline T max(T _a, T _b) { return (_a < _b) ? _b : _a; }
+
+typedef unsigned char uchar;
+typedef unsigned short ushort;
+namespace t
+{
+typedef unsigned int uint;
+}
+typedef unsigned long ulong;
 
 template<typename T>
 inline T min(T _a, T _b) { return (_a > _b) ? _b : _a; }
 
+//#define inline MS_EXPORT inline
 template<typename T>
 inline void swap(T& _a, T& _b) { T t(_a); _a = _b; _b = t; }
 
@@ -63,7 +60,30 @@ inline T abs(T _a) { return _a < 0 ? -_a : _a; }
 template<typename T>
 inline bool isPOT(T _a) { return !(_a & (_a - 1)); }
 
-inline uint floorLog2(uint _a) { uint ret; asm ("bsr %1, %0;" :"=r"(ret) :"r"(_a)); return ret; }
+template<typename T>
+inline T nextHigher(T _k)
+{
+	_k--;
+	for (t::uint i = 1; i < sizeof(T) * 8; i = i * 2)
+		_k = _k | _k >> i;
+	return _k + 1;
+}
+
+inline t::uint floorLog2(t::uint _a) 
+{
+	t::uint ret;
+#ifdef _MSCVER
+	_asm
+	{
+			mov	eax, _a
+			bsr	eax, eax
+			mov	ret, eax
+	}	
+#else
+	asm ("bsr %1, %0;" :"=r"(ret) :"r"(_a));
+#endif
+	return ret;
+}
 
 #define ASSERT(X)
 

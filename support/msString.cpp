@@ -51,7 +51,7 @@ inline int strlen(char const* _s)
 String& String::operator=(char const* _latin1)
 {
 	changed();
-	uint l = _latin1 ? std::strlen(_latin1) : 0;
+	t::uint l = _latin1 ? std::strlen(_latin1) : 0;
 	reserve(l);
 	m_length = l;
 	if (m_data)
@@ -122,10 +122,10 @@ int String::toInt(bool* _ok, int _base) const
 	return ret;
 }
 
-uint String::toUint(bool* _ok, int _base) const
+t::uint String::toUint(bool* _ok, int _base) const
 {
 	errno = 0;
-	uint ret = m_data ? wcstoul(m_data, 0, _base) : 0u;
+	t::uint ret = m_data ? wcstoul(m_data, 0, _base) : 0u;
 	if (_ok)
 		*_ok = !errno && m_data;
 	return ret;
@@ -264,7 +264,7 @@ int String::indexOf(String const& _str, int _from) const
 
 int String::indexOf(wchar_t const* _str, int _from) const
 {
-	uint sl = wcslen(_str);
+	t::uint sl = wcslen(_str);
 	if (m_length < sl || !sl)
 		return -1;
 	wchar_t* i;
@@ -308,8 +308,8 @@ StringList String::split(String const& _sep) const
 	if (!m_length)
 		return ret;
 	int last = 0;
-	uint endIndex = m_length - _sep.m_length + 1;
-	for (uint i = 0; i < endIndex;)
+	t::uint endIndex = m_length - _sep.m_length + 1;
+	for (t::uint i = 0; i < endIndex;)
 		if (!memcmp(m_data + i, _sep.m_data, _sep.m_length * sizeof(wchar_t)))
 		{
 			ret << mid(last, i - last);
@@ -327,7 +327,7 @@ StringList String::split(wchar_t _sep) const
 	if (!m_length)
 		return ret;
 	int last = 0;
-	for (uint i = 0; i < m_length; i++)
+	for (t::uint i = 0; i < m_length; i++)
 		if (m_data[i] == _sep)
 		{
 			ret << mid(last, i - last);
@@ -337,12 +337,12 @@ StringList String::split(wchar_t _sep) const
 	return ret;
 }
 
-int String::indexOfNth(String const& _str, uint _th) const
+int String::indexOfNth(String const& _str, t::uint _th) const
 {
 	if (_th == 0)
 		return -1;
-	uint c = 0;
-	for (uint i = 0; i < m_length && c < _th;)
+	t::uint c = 0;
+	for (t::uint i = 0; i < m_length && c < _th;)
 		if (!memcmp(m_data + i, _str.m_data, _str.m_length * sizeof(wchar_t)))
 			if (++c == _th)
 				return i;
@@ -355,7 +355,7 @@ int String::indexOfNth(String const& _str, uint _th) const
 	return -1;
 }
 
-int String::indexOfNth(wchar_t _ch, uint _th) const
+int String::indexOfNth(wchar_t _ch, t::uint _th) const
 {
 	// for *this == _ch:
 	// _th == 0 -> -1
@@ -364,8 +364,8 @@ int String::indexOfNth(wchar_t _ch, uint _th) const
 	// _th >= 3 -> -1
 	if (_th == 0)
 		return -1;
-	uint c = 0;
-	for (uint from = 0; from < m_length && c < _th; from++)
+	t::uint c = 0;
+	for (t::uint from = 0; from < m_length && c < _th; from++)
 		if (m_data[from] == _ch)
 			if (++c == _th)
 				return from;
@@ -374,11 +374,11 @@ int String::indexOfNth(wchar_t _ch, uint _th) const
 	return -1;
 }
 
-int String::lastIndexOfNth(String const& _str, uint _th) const
+int String::lastIndexOfNth(String const& _str, t::uint _th) const
 {
 	if (_th == 0)
 		return m_length;
-	uint c = 0;
+	t::uint c = 0;
 	for (int i = m_length - _str.m_length; i >= 0 && c < _th;)
 		if (!memcmp(m_data + i, _str.m_data, _str.m_length * sizeof(wchar_t)))
 			if (++c == _th)
@@ -390,7 +390,7 @@ int String::lastIndexOfNth(String const& _str, uint _th) const
 	return -1;
 }
 
-int String::lastIndexOfNth(wchar_t _ch, uint _th) const
+int String::lastIndexOfNth(wchar_t _ch, t::uint _th) const
 {
 	// for *this == _ch:
 	// _th == 0 -> 1
@@ -398,7 +398,7 @@ int String::lastIndexOfNth(wchar_t _ch, uint _th) const
 	// _th >= 2 -> -1
 	if (_th == 0)
 		return m_length;
-	uint c = 0;
+	t::uint c = 0;
 	for (int from = m_length - 1; from >= 0 && c < _th; from--)
 		if (m_data[from] == _ch)
 			if (++c == _th)
@@ -428,7 +428,7 @@ String String::toUpper() const
 	return ret;
 }
 
-String& String::replace(uint _position, uint _n, String const& _after)
+String& String::replace(t::uint _position, t::uint _n, String const& _after)
 {
 	ASSERT(_position < m_length);
 	ASSERT(_position + _n <= m_length);
@@ -452,7 +452,7 @@ String& String::replace(uint _position, uint _n, String const& _after)
 	return *this;
 }
 
-String& String::replace(uint _position, uint _n, wchar_t _after)
+String& String::replace(t::uint _position, t::uint _n, wchar_t _after)
 {
 	ASSERT(_position < m_length);
 	ASSERT(_position + _n <= m_length);
@@ -549,7 +549,7 @@ String& String::append(String const& _str)
 
 String& String::append(char const* _latin1)
 {
-	uint l = std::strlen(_latin1);
+	t::uint l = std::strlen(_latin1);
 	if (!l)
 		return *this;
 	reserve(m_length + l);
@@ -581,9 +581,9 @@ String String::trimmed() const
 {
 	if (!m_length)
 		return String();
-	uint i;
+	t::uint i;
 	for (i = 0; i < m_length && iswspace(m_data[i]); i++);
-	uint j;
+	t::uint j;
 	for (j = m_length - 1; j > i && iswspace(m_data[j]); j--);
 	return mid(i, j - i + 1);
 }
@@ -613,7 +613,7 @@ String String::simplified() const
 	return ret;
 }
 
-String String::mid(uint _i, uint _length) const
+String String::mid(t::uint _i, t::uint _length) const
 {
 	ASSERT(_i >= 0);
 	ASSERT(_i < m_length);
@@ -635,7 +635,7 @@ String String::number(int _n)
 	return ret;
 }
 
-String String::number(uint _n, int _base)
+String String::number(t::uint _n, int _base)
 {
 	static wchar_t s_format[] = L"%d";
 	static wchar_t s_result[128];
@@ -697,14 +697,14 @@ String String::arg(char _a, int _fieldWidth, wchar_t _fillChar) const
 int String::findNextPlaceholder(wchar_t const** _token) const
 {
 	static wchar_t s[4] = L"%0";
-	for (uint i = 0; i < 99; i++)
+	for (t::uint i = 0; i < 99; i++)
 	{
 		if (i < 10)
-			s[1] = L'0' + i;
+			s[1] = L'0' + i, s[2] = 0;
 		else if (i == 10)
 			s[1] = L'1', s[1] = L'0', s[2] = 0;
 		else
-			s[1] = L'0' + i / 10, s[1] = L'0' + i % 10;
+			s[1] = L'0' + i / 10, s[2] = L'0' + i % 10, s[3] = 0;
 		int n;
 		if ((n = indexOf(s)) != -1)
 		{
@@ -716,7 +716,7 @@ int String::findNextPlaceholder(wchar_t const** _token) const
 	return -1;
 }
 
-void String::reserve(uint _len)
+void String::reserve(t::uint _len)
 {
 	if (m_allocated <= _len)
 	{

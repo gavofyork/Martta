@@ -32,10 +32,11 @@
 namespace MarttaSupport
 {
 
+
 class String;
 typedef List<String> StringList;
 
-class MS_EXPORT String
+class /*MS_EXPORT*/ String
 {
 public:
 	class Box;
@@ -54,8 +55,8 @@ public:
 		
 	private:
 		wchar_t*				m_data;
-		uint					m_length;
-		uint					m_allocated;
+		t::uint					m_length;
+		t::uint					m_allocated;
 		mutable char*			m_cache;
 	};
 	
@@ -99,29 +100,29 @@ public:
 	String&					append(wchar_t _ch);
 	String&					append(char _ch);
 	
-	inline wchar_t			at(uint _i) const { ASSERT(_i < m_length); return m_data[_i]; }
-	inline wchar_t			value(uint _i, wchar_t _default = 0) const { if (_i < m_length) return m_data[_i]; else return _default; }
+	inline wchar_t			at(t::uint _i) const { ASSERT(_i < m_length); return m_data[_i]; }
+	inline wchar_t			value(t::uint _i, wchar_t _default = 0) const { if (_i < m_length) return m_data[_i]; else return _default; }
 	inline char const*		toCString() const { checkCache(); return m_cache; }
 	inline wchar_t*			data() { changed(); return m_data; }
 	inline wchar_t const*	data() const { return m_data; }
 	inline wchar_t const*	constData() const { return m_data; }
 	
-	void					reserve(uint _len);
+	void					reserve(t::uint _len);
 	inline void				clear() { delete [] m_data; m_data = 0; m_length = m_allocated = 0; changed(); }
-	inline void				chop(uint _i) { m_length -= min(m_length, _i); m_data[m_length] = 0; changed(); }
-	inline void				truncate(uint _i) { m_length = min(m_length, _i); m_data[m_length] = 0; changed(); }
+	inline void				chop(t::uint _i) { m_length -= min(m_length, _i); m_data[m_length] = 0; changed(); }
+	inline void				truncate(t::uint _i) { m_length = min(m_length, _i); m_data[m_length] = 0; changed(); }
 	
 	inline bool				isEmpty() const { return !m_length; }
 	inline int				length() const { return m_length; }
 	inline int				size() const { return m_length; }
-	inline void				resize(uint _nl) { reserve(_nl); m_length = _nl; if (m_data) m_data[_nl] = 0; changed(); }
+	inline void				resize(t::uint _nl) { reserve(_nl); m_length = _nl; if (m_data) m_data[_nl] = 0; changed(); }
 	
 	String					trimmed() const;
 	String					simplified() const;
-	String					mid(uint _i, uint _length) const;
-	inline String			mid(uint _i) const { ASSERT(_i >= 0); ASSERT(_i < m_length); return mid(_i, m_length - _i); }
-	inline String			left(uint _len) const { ASSERT(_len <= m_length); return mid(0, _len); }
-	inline String			right(uint _len) const { ASSERT(_len <= m_length); return mid(m_length - _len, _len); }
+	String					mid(t::uint _i, t::uint _length) const;
+	inline String			mid(t::uint _i) const { ASSERT(_i >= 0); ASSERT(_i < m_length); return mid(_i, m_length - _i); }
+	inline String			left(t::uint _len) const { ASSERT(_len <= m_length); return mid(0, _len); }
+	inline String			right(t::uint _len) const { ASSERT(_len <= m_length); return mid(m_length - _len, _len); }
 
 	bool					contains(String const& _str) const;
 	bool					contains(wchar_t _ch) const;
@@ -133,10 +134,10 @@ public:
 	int						indexOf(wchar_t _ch, int _from = 0) const;
 	int						lastIndexOf(String const& _str, int _from = -1) const;
 	int						lastIndexOf(wchar_t _ch, int _from = -1) const;
-	int						indexOfNth(String const& _str, uint _th) const;
-	int						indexOfNth(wchar_t _ch, uint _th) const;
-	int						lastIndexOfNth(String const& _str, uint _th) const;
-	int						lastIndexOfNth(wchar_t _ch, uint _th) const;
+	int						indexOfNth(String const& _str, t::uint _th) const;
+	int						indexOfNth(wchar_t _ch, t::uint _th) const;
+	int						lastIndexOfNth(String const& _str, t::uint _th) const;
+	int						lastIndexOfNth(wchar_t _ch, t::uint _th) const;
 
 	bool					endsWith(String const& _str) const;
 	bool					endsWith(wchar_t _ch) const { return m_length && m_data[m_length - 1] == _ch; }
@@ -153,13 +154,13 @@ public:
 	String					toLower() const;
 	String					toUpper() const;
 
-	String&					replace(uint _position, uint _n, String const& _after);
-	String&					replace(uint _position, uint _n, wchar_t _after);
+	String&					replace(t::uint _position, t::uint _n, String const& _after);
+	String&					replace(t::uint _position, t::uint _n, wchar_t _after);
 	String&					replace(String const& _before, String const& _after);
 	String&					replace(wchar_t _ch, String const& _after);
 	String&					replace(wchar_t _before, wchar_t _after);
-	inline String&			insert(uint _position, String const& _str) { return replace(_position, 0, _str); }
-	inline String&			insert(uint _position, wchar_t _ch) { return replace(_position, 0, _ch); }
+	inline String&			insert(t::uint _position, String const& _str) { return replace(_position, 0, _str); }
+	inline String&			insert(t::uint _position, wchar_t _ch) { return replace(_position, 0, _ch); }
 	inline String&			prepend(String const& _str) { return replace(0, 0, _str); }
 	inline String&			prepend(const char* _str) { return replace(0, 0, String(_str)); }
 	inline String&			prepend(wchar_t _ch) { return replace(0, 0, _ch); }
@@ -168,17 +169,17 @@ public:
 	inline String&			remove(wchar_t _ch) { return replace(_ch, String()); }
 
 	int						toInt(bool* _ok = 0, int _base = 10) const;
-	uint					toUint(bool* _ok = 0, int _base = 10) const;
+	t::uint					toUint(bool* _ok = 0, int _base = 10) const;
 	double					toDouble(bool* _ok = 0) const;
 	inline float			toFloat(bool* _ok = 0) const { return toDouble(_ok); }
 
 	static String			number(int _n);
-	static String			number(uint _n, int _base = 10);
+	static String			number(t::uint _n, int _base = 10);
 	static String			number(double _n, char _format = 'g', int _precision = 6);
 
 	String					arg(String const& _a, int _fieldWidth = 0, wchar_t _fillChar = L' ') const;
 	String					arg(int _a, int _fieldWidth = 0, wchar_t _fillChar = L' ') const { return arg(String::number(_a), _fieldWidth, _fillChar); }
-	String					arg(uint _a, int _fieldWidth = 0, int _base = 10, wchar_t _fillChar = L' ') const { return arg(String::number(_a, _base), _fieldWidth, _fillChar); }
+	String					arg(t::uint _a, int _fieldWidth = 0, int _base = 10, wchar_t _fillChar = L' ') const { return arg(String::number(_a, _base), _fieldWidth, _fillChar); }
 	String					arg(wchar_t _a, int _fieldWidth = 0, wchar_t _fillChar = L' ') const;
 	String					arg(char _a, int _fieldWidth = 0, wchar_t _fillChar = L' ') const;
 	String					arg(double _a, int _fieldWidth = 0, char _format = 'g', int _precision = -1, wchar_t _fillChar = L' ') const { return arg(String::number(_a, _format, _precision), _fieldWidth, _fillChar); }
@@ -189,15 +190,15 @@ private:
 	int						findNextPlaceholder(wchar_t const** _token) const;
 		
 	wchar_t*				m_data;
-	uint					m_length;
-	uint					m_allocated;
+	t::uint					m_length;
+	t::uint					m_allocated;
 	
 	mutable char*			m_cache;
 };
 
-inline uint hashOf(String const& _s)
+inline t::uint hashOf(String const& _s)
 {
-	uint ret = 5381;
+	t::uint ret = 5381;
 	wchar_t const* i = _s.constData() + _s.length();
 	while (i-- != _s.constData())
 		ret = ((ret << 5) + ret) ^ *i;

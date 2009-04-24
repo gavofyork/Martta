@@ -35,7 +35,9 @@ template<typename T> class isSimple { public: enum { value = false }; typedef T*
 template<typename T> class isSimple<T*> { public: enum { value = true }; typedef T* StorageType; };
 #define DECLARE_SIMPLE_TYPE(T) template<> class isSimple<T> { public: enum { value = true }; typedef T StorageType; };
 template<> class isSimple<bool> { public: enum { value = true }; typedef bool StorageType; };
+#ifndef _MSC_VER
 template<> class isSimple<wchar_t> { public: enum { value = true }; typedef wchar_t StorageType; };
+#endif
 template<> class isSimple<signed char> { public: enum { value = true }; typedef signed char StorageType; };
 template<> class isSimple<unsigned char> { public: enum { value = true }; typedef unsigned char StorageType; };
 template<> class isSimple<signed short> { public: enum { value = true }; typedef signed short StorageType; };
@@ -51,7 +53,7 @@ template<> class isSimple<double> { public: enum { value = true }; typedef doubl
 template<> class isSimple<long double> { public: enum { value = true }; typedef long double StorageType; };
 
 template<typename T>
-class MS_EXPORT List
+class /*MS_EXPORT*/ List
 {
 #if defined(QT_DEBUG) || defined(QT_NO_DEBUG)
 	friend inline QDebug operator<<(QDebug _stream, ::MarttaSupport::List<T> const& _me)
@@ -91,7 +93,7 @@ public:
 		int m_reserved;
 	};
 	
-	class MS_EXPORT Iterator
+	class /*MS_EXPORT*/ Iterator
 	{
 		friend class List;
 		class ConstIterator;
@@ -127,7 +129,7 @@ public:
 		Iterator(ST* _p): m_ptr(_p) {}
 		ST* m_ptr;
 	};
-	class MS_EXPORT ConstIterator
+	class /*MS_EXPORT*/ ConstIterator
 	{
 		friend class List;
 		friend class Iterator;
