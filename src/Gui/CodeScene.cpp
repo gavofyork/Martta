@@ -369,7 +369,7 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 		}
 		e = EntityKeyEvent(*_e, m_strobeText, &*m_strobeFocus, true, m_strobeFocus->isPlaceholder(), -1, this);
 		e.setAccepted(false);
-		m_strobeFocus->keyPressEvent(&e);
+		Entity::keyPressEventStarter(&e);
 		if (e.isAccepted())
 		{
 			// TODO: Move this stuff to the EKE's notifyStrobeCreation... This will avoid having to test the child for originality.
@@ -401,7 +401,7 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 		// rejig for single key press.
 		e = EntityKeyEvent(*_e, n, true, n->isPlaceholder(), -1, this);
 		e.setAccepted(false);
-		n->keyPressEvent(&e);
+		Entity::keyPressEventStarter(&e);
 		if (e.isAccepted())
 			killStrobe();
 	}

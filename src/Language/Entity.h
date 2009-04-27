@@ -409,6 +409,7 @@ public:
 	/// Reset-layout cache.
 	void								resetLayoutCache();
 	
+	static void							keyPressEventStarter(EntityKeyEvent* _e);
 	void								keyPressEvent(EntityKeyEvent* _e);
 	void								activateEvent(CodeScene* _s);
 	

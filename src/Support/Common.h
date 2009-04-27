@@ -33,7 +33,7 @@ void assertFailed(char const* _c);
 #define M_ASSERT(T) if (!(T)) assertFailed(#T);
 #define qInformation qDebug
 
-#if WIN32
+#if _MSC_VER
 template<class T> inline T round(T x) { return ((x)>=0?(long)((x)+0.5):(long)((x)-0.5)); }
 #endif
 

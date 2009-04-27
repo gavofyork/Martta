@@ -840,26 +840,46 @@ void Entity::activateEvent(CodeScene* _s)
 		context()->activateEvent(_s);
 }
 
-void Entity::keyPressEvent(EntityKeyEvent* _e)
+void Entity::keyPressEventStarter(EntityKeyEvent* _e)
 {
-	if (isEditing(_e->codeScene()) && _e->codeScene()->editDelegate() && _e->codeScene()->editDelegate()->keyPressed(_e))
+	if (_e->focus()->isEditing(_e->codeScene()) && _e->codeScene()->editDelegate() && _e->codeScene()->editDelegate()->keyPressed(_e))
 	{
 		_e->accept();
 		if (_e->codeScene()->editDelegate())
 		{
 			_e->codeScene()->editDelegate()->lazyCommit();
-			_e->codeScene()->relayout(this);
+			_e->codeScene()->relayout(_e->focus());
 		}
 		return;
 	}
 	
-	Entity* cancelEdit = _e->codeScene()->editEntity();
-		
+	SafePointer<Entity> fe = _e->focus();
+	_e->codeScene()->setEditing(0);
+
+	while (fe)
+	{
+		if (fe && fe->keyPressed(_e) || fe && fe->attemptInsert(_e))
+		{
+			_e->accept();
+			return;
+		}
+	
+		if (fe && fe->context())
+		{
+			_e->setIsFocused(false);
+			_e->setFocalIndex(fe->contextIndex());
+			fe = fe->context();
+		}
+		else
+			fe = 0;
+	}
+}
+
+void Entity::keyPressEvent(EntityKeyEvent* _e)
+{
 	if (keyPressed(_e) || attemptInsert(_e))
 	{
 		_e->accept();
-		if (cancelEdit && _e->codeScene()->isEditing(cancelEdit))
-			_e->codeScene()->setEditing(0);
 		return;
 	}
 	
@@ -868,8 +888,6 @@ void Entity::keyPressEvent(EntityKeyEvent* _e)
 		_e->setIsFocused(false);
 		_e->setFocalIndex(contextIndex());
 		context()->keyPressEvent(_e);
-//		if (_e->isAccepted() && cancelEdit && _e->codeScene()->isEditing(cancelEdit))
-//			_e->codeScene()->setEditing(0);
 	}
 }
 

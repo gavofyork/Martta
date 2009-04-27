@@ -40,7 +40,8 @@ bool SimpleBinaryOperation::keyPressedOnInsertionPoint(InsertionPoint const& _p,
 	if (!_p.exists() || _p->isPlaceholder() || o.isNull())
 		return false;
 	InsertionPoint p = slideOnPrecedence(_p, o.precedence(), o.associativity(), _e->nearestBracket(_p));
-	if (p->isKind<Typed>() && findOperators(o, p->asKind<Typed>()->type()).size() && !isTemporary(p.entity()))
+	M_ASSERT(!p.entity()->isEditing());
+	if (p->isKind<Typed>() && findOperators(o, p->asKind<Typed>()->type()).size())
 	{
 		SimpleBinaryOperation* n = new SimpleBinaryOperation(o, p->asKind<Typed>()->type());
 		_e->noteStrobeCreation(n, &*p);
