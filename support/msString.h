@@ -220,7 +220,7 @@ inline const String operator+(char _ch, String const& _s) { return String(_s).pr
 
 }
 
-#if defined(QT_DEBUG) || defined(QT_NO_DEBUG)
+#if defined(QT_DEBUG)// || defined(QT_NO_DEBUG)
 inline QDataStream& operator<<(QDataStream& _stream, MarttaSupport::String const& _string)
 {
 	_stream << _string.length();

@@ -407,7 +407,7 @@ template<class T> inline bool List<T>::Iterator::operator>=(ConstIterator const&
 	return m_ptr >= _other.m_ptr;
 }
 
-#if defined(QT_DEBUG) || defined(QT_NO_DEBUG)
+#if defined(QT_DEBUG) //|| defined(QT_NO_DEBUG)
 template<class T> QDebug List<T>::streamToDebug(QDebug _stream) const
 {
 	_stream << "{";

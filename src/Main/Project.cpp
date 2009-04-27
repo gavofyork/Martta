@@ -60,7 +60,7 @@ Project::Project(QString const& _load):
 	CFRelease(macPath);
 #endif
 #ifdef Q_WS_WIN
-	m_supportPath = QCoreApplication::applicationDirPath() + "/../../Support/";
+	m_supportPath = QCoreApplication::applicationDirPath() + "/Support/";
 #endif
 #if Q_WS_X11
 	m_supportPath = QCoreApplication::applicationDirPath() + "/../support/";
@@ -233,6 +233,7 @@ void Project::build()
 	batArgs.clear();
 	batArgs << "/C";
 	batArgs << tempBatName;
+	QDir::setCurrent(QDir::tempPath());
 	m_compiler->start("cmd", batArgs, QIODevice::ReadOnly);
 	QFile::remove(tempBatName);
 #else
