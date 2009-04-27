@@ -26,15 +26,33 @@ namespace Martta
 {
 
 MARTTA_OBJECT_CPP(Enumeration);	
+	
+bool Enumeration::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
+{
+	return simpleInsertionPointKeyPressHandler<Enumeration>(_p, _e, "E");
+}
 
 Kinds Enumeration::allowedKinds(int _i) const
 {
-	if (_i)
-		return Kind::of<EnumValue>();
-	else
+	if (_i == 0)
 		return Kind::of<TextLabel>();
+	else
+		return Kind::of<EnumValue>();
 }
-	
+
+QString Enumeration::interfaceCode() const
+{
+	QString ret;
+	ret += "enum " + codeName() + "\n";
+	ret += "{\n";
+	foreach (EnumValue* f, entitiesOf<EnumValue>())
+		ret += f->code();
+	if (ret.endsWith("\n\n"))
+		ret.chop(1);
+	ret += "};\n";
+	return ret;
+}
+
 void Enumeration::updateStem()
 {
 	m_stem = QString();
@@ -46,5 +64,14 @@ void Enumeration::updateStem()
 				m_stem.chop(1);
 	changed();
 }
+
+QString Enumeration::defineLayout(ViewKeys&) const
+{
+	QString ret = "^;ycode;'enum ';fb;cblack;!0;s;ycode;n;'{'";
+	foreach (EnumValue* f, entitiesOf<EnumValue>())
+		ret += QString(";n;%1").arg(f->contextIndex());
+	return ret + ";n;'}'";
+}
+
 
 }

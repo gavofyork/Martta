@@ -32,15 +32,21 @@ class Enumeration: public TypeDefinition
 {
 	MARTTA_OBJECT(TypeDefinition)
 
-	friend class Entity;
-	friend class EnumerationResolver;
+//	friend class EnumerationResolver;
 
 public:
+	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
+
 	// Population methods.
 	void								updateStem();
 
-	virtual QString						code() const { return isHidden() ? "enum ["+m_stem+"*]" : (/*"enum " + */codeName()); }
+	virtual QString						code() const { return isHidden() ? "enum ["+m_stem+"*]" : codeName(); }
+	
+protected:
+	virtual QString						defineLayout(const ViewKeys&) const;
+	virtual int							minimumRequired() const { return 1; }
 	virtual Kinds						allowedKinds(int) const;
+	virtual QString						interfaceCode() const;
 
 private:
 	QString								m_stem;

@@ -37,8 +37,10 @@ class EnumValue: public ValueDefinition
 public:
 	// Accessor methods.
 	Type								type() const { return Type(Int); }
+	virtual QString						code() const { return codeName(); }
 
 protected:
+	virtual QString						defineLayout() const { return "0;"; }
 	virtual void						nameChanged();
 	// TODO: make work with new system.
 	virtual void						onContextChanged(Entity* _old, Entity* _new);
