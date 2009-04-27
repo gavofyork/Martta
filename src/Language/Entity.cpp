@@ -853,6 +853,9 @@ void Entity::keyPressEventStarter(EntityKeyEvent* _e)
 		return;
 	}
 	
+	if (_e->text().isEmpty())
+		return;
+	
 	SafePointer<Entity> fe = _e->focus();
 	_e->codeScene()->setEditing(0);
 

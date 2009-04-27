@@ -42,7 +42,7 @@ GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Box::~Box()
 {
 	if (m_nodes)
 	{
-		for (uint i = 0; i < m_capacity; i++)
+		for (t::uint i = 0; i < m_capacity; i++)
 			if (m_nodes[i])
 				for (Node* j = m_nodes[i].m_next, *nj = m_nodes[i].m_next ? m_nodes[i].m_next->m_next : 0; j != m_nodes + i; j = nj, nj = j->m_next)
 					delete j;
@@ -671,7 +671,7 @@ template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitK
 List<Key> GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::keys(T const& _value) const
 {
 	List<Key> ret;
-	for (uint i = 0; i < m_capacity; i++)
+	for (t::uint i = 0; i < m_capacity; i++)
 		if (m_nodes[i])
 		{
 			Node* m = m_nodes + i;
@@ -710,7 +710,7 @@ template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitK
 List<Key> GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::keys() const
 {
 	List<Key> ret;
-	for (uint i = 0; i < m_capacity; i++)
+	for (t::uint i = 0; i < m_capacity; i++)
 		if (m_nodes[i])
 		{
 			Node* m = m_nodes + i;
@@ -748,7 +748,7 @@ bool GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::operator==(GeneralHash<
 {
 	if (m_count != _other.m_count)
 		return false;
-	for (uint i = 0; i < m_capacity; i++)
+	for (t::uint i = 0; i < m_capacity; i++)
 		if (m_nodes[i])
 		{
 			Node* m = m_nodes + i;
@@ -765,7 +765,7 @@ template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitK
 List<Key> GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::uniqueKeys() const
 {
 	List<Key> ret;
-	for (uint i = 0; i < m_capacity; i++)
+	for (t::uint i = 0; i < m_capacity; i++)
 		if (m_nodes[i])
 		{
 			Node* m = m_nodes + i;
@@ -802,8 +802,8 @@ void GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::moveAndDelete(Node* _n,
 	if (m_capacity > _c)
 	{	
 		// capacity increasing; don't know the index off hand (one of (m_capacity / _c) though).
-		uint lowerBits = floorLog2(_c);
-		for (uint ii = 0; ii < _c; ii++)
+		t::uint lowerBits = floorLog2(_c);
+		for (t::uint ii = 0; ii < _c; ii++)
 		{
 			Node** ls = new Node*[m_capacity / _c];
 			memset(ls, 0, sizeof(Node*) * m_capacity / _c);
@@ -815,7 +815,7 @@ void GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::moveAndDelete(Node* _n,
 				do
 				{
 					x = j->m_next;
-					uint i = indexOf(j->key());
+					t::uint i = indexOf(j->key());
 					Node* l = ls[i >> lowerBits];
 					if (l)				// If there's already one in destination bucket and the source is not a master node
 					{
@@ -845,11 +845,11 @@ void GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::moveAndDelete(Node* _n,
 	{
 		// capacity decreasing; 
 		// go through new buckets, then iterate over possible old buckets.
-		for (uint i = 0; i < m_capacity; i++)
+		for (t::uint i = 0; i < m_capacity; i++)
 		{
 			ASSERT(!m_nodes[i]);
 			Node* l = 0;
-			for (uint ii = i; ii < _c; ii += m_capacity)
+			for (t::uint ii = i; ii < _c; ii += m_capacity)
 				if (_n[ii])
 				{
 					Node* m = _n + ii;
@@ -889,7 +889,7 @@ void GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::moveAndDelete(Node* _n,
 template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey> void GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::reinsertNode(Node* _n, bool _pleaseDelete)
 {
 	// appends the node to the list.
-	uint index = indexOf(_n->key());
+	t::uint index = indexOf(_n->key());
 	if (m_nodes[index] && _pleaseDelete)
 	{
 		// go to end...
@@ -915,7 +915,7 @@ QDebug GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::streamToDebug(QDebug 
 {
 	_stream << "#{";
 	bool first = true;
-	for (uint i = 0; i < m_capacity; i++)
+	for (t::uint i = 0; i < m_capacity; i++)
 		if (m_nodes[i])
 		{
 			Node* m = m_nodes + i;
