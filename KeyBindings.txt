@@ -11,17 +11,17 @@ a-z			local variable, in-scope function						create/edit simple type
 7			numeric literal
 8			numeric literal				
 9			numeric literal
-Escape		stop editing
-Tab		start editing
-Space		symbol break, next entity
-Return		append [shift: insert] entity, next line
-Backspace	undo
-Delete		delete entity, first child usurps if possible [shift: delete entirely]
-Insert		insert mode for next key press
-Home		left-most, biggest entity on line 
+Escape			stop editing
+Tab			start editing
+Space			symbol break, next entity
+Return			append [shift: insert] entity, next line
+Backspace		undo
+Delete			delete entity, first child usurps if possible [shift: delete entirely]
+Insert			insert mode for next key press
+Home			left-most, biggest entity on line 
 End
-PageUp		move to parent entity
-PageDown	move to child entity (order taken from previous PageUp)
+PageUp			move to parent entity
+PageDown		move to child entity (order taken from previous PageUp)
 F1
 F2
 F3
@@ -48,10 +48,10 @@ $
 )			move to entity encompassing next ')'
 -			(simple operation), strobe?
 =			assignment, strobe into simple operation
-_			
+_			insert referenced parameter
 +			(simple operation), strobe?
-{		open next body, focus on first statement, insert placeholder if none
-}		close current body
+{			open next body, focus on first statement, insert placeholder if none
+}			close current body
 [													insert array 
 ]													focus current array
 ;
@@ -71,8 +71,8 @@ _
 A			forall					variable
 B			break					base class
 C			construct				constructor
-D			declare variable
-E			else
+D			
+E			else					enumeration
 F			for					friend
 G			goto
 H			focus class				
@@ -89,7 +89,7 @@ R
 S			switch
 T			this					template
 U			do..until				public
-V								virtual method
+V			declare variable			virtual method
 X			cast					cast operator
 Y								
 Z			delete

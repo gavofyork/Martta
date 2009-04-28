@@ -67,7 +67,7 @@ void Enumeration::updateStem()
 
 QString Enumeration::defineLayout(ViewKeys&) const
 {
-	QString ret = "^;ycode;'enum ';fb;cblack;!0;s;ycode;n;'{'";
+	QString ret = "^;ycode;'enum ';fb;cblack;s" + Type(const_cast<Enumeration*>(this))->idColour() + ";!0;s;ycode;n;'{'";
 	foreach (EnumValue* f, entitiesOf<EnumValue>())
 		ret += QString(";n;%1").arg(f->contextIndex());
 	return ret + ";n;'}'";

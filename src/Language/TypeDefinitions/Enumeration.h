@@ -32,8 +32,6 @@ class Enumeration: public TypeDefinition
 {
 	MARTTA_OBJECT(TypeDefinition)
 
-//	friend class EnumerationResolver;
-
 public:
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
 

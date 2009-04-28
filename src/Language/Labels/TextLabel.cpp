@@ -72,7 +72,7 @@ void TextLabel::exportDom(QDomElement& _element) const
 
 QString TextLabel::name() const
 {
-	if (contextIs<Class>() || contextIs<NamespaceEntity>())
+	if (contextIs<TypeDefinition>() || contextIs<NamespaceEntity>())
 		return m_text.left(1).toUpper() + camelCase(m_text.mid(1));
 	else
 		return camelCase(m_text);
