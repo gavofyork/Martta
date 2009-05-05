@@ -41,8 +41,8 @@ void GccXml::extractHeaders(QString const& _c, QXmlContentHandler* _h)
 	}
 	TIME_STATEMENT("GccXML")
 #ifdef Q_WS_WIN
-	if (QFile::exists(QCoreApplication::applicationDirPath() + "/../../gccxml/bin/gccxml.exe"))
-		QProcess::execute(QCoreApplication::applicationDirPath() + "/../../gccxml/bin/gccxml.exe", QStringList() << f.fileName() << "--gccxml-cxxflags" << "-x c" << ("-fxml=" + xmlfn));
+	if (QFile::exists(QCoreApplication::applicationDirPath() + "/gccxml/bin/gccxml.exe"))
+		QProcess::execute(QCoreApplication::applicationDirPath() + "/gccxml/bin/gccxml.exe", QStringList() << f.fileName() << "--gccxml-cxxflags" << "-x c" << ("-fxml=" + xmlfn));
 #else
 	if (QFile::exists("/usr/bin/gccxml"))
 		QProcess::execute("/usr/bin/gccxml", QStringList() << f.fileName() << "--gccxml-cxxflags" << "-x c" << ("-fxml=" + xmlfn));

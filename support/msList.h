@@ -55,7 +55,7 @@ template<> class isSimple<long double> { public: enum { value = true }; typedef 
 template<typename T>
 class /*MS_EXPORT*/ List
 {
-#if defined(QT_DEBUG) || defined(QT_NO_DEBUG)
+#if defined(QT_DEBUG) //|| defined(QT_NO_DEBUG)
 	friend inline QDebug operator<<(QDebug _stream, ::MarttaSupport::List<T> const& _me)
 	{
 		return _me.streamToDebug(_stream);
@@ -230,7 +230,7 @@ private:
 	/// Makes the list a bit bigger.
 	void grow(int _minimum = 0);
 	
-#if defined(QT_DEBUG) || defined(QT_NO_DEBUG)
+#if defined(QT_DEBUG) //|| defined(QT_NO_DEBUG)
 	QDebug streamToDebug(QDebug _stream) const;
 #endif
 	
