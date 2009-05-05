@@ -1,3 +1,4 @@
+.DS_Store
 bin/
 src/build/
 src/Martta.xcodeproj/
