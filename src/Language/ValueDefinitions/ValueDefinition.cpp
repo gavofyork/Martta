@@ -48,7 +48,7 @@ QList<ValueDefinition*> filterTypedsInv(Type const& _t, QList<ValueDefinition*> 
 	QList<ValueDefinition*> ret;
 	
 	foreach (ValueDefinition* i, _l)
-		if (i->type().isSimilarTo(_t, TypeEntity::Physical) && i->type().isSimilarTo(_t, TypeEntity::Convertible))
+		if (!(i->type().isSimilarTo(_t, TypeEntity::Physical) && i->type().isSimilarTo(_t, TypeEntity::Convertible)))
 			ret << i;
 	return ret;
 }
