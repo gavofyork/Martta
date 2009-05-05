@@ -3,8 +3,9 @@ CRASH 'VEnum=_enum'
 BUG 'VEnum xyz' bad; because enum has no default constructor - should be ok like SimpleTypes.
 BUG passing enum instance as arg bad.
 BUG get program code updating nicely.
-BUG using .Mmembervariable marked as bad.
-BUG delete bottom line in block selects block. 
+BUG using .Mmembervariable marked as bad -- transient.
+BUG delete bottom line in block selects namespace. 
+BUG '(' selects Referenced, not Call.
 
 Multiple projects in a solution
 - Solution "explorer".

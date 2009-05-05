@@ -64,11 +64,19 @@ CodeScene::~CodeScene()
 
 void CodeScene::leaving(Entity* _e, InsertionPoint const& _pos)
 {
-	Entity* e;
+	Entity* e = 0;
 	{
 		Entity* n = next(_e);
+		while (n && n->hasAncestor(_e)) n = next(n);
 		Entity* p = previous(_e);
-		e = nearest(_e);
+		while (p && p->hasAncestor(_e)) p = previous(p);
+		if (m_current == _e)
+		{
+			qDebug() << "Leaving entity:";
+			_e->debugTree();
+			if (n) n->debugTree(); else qDebug() << "Nothing next";
+			if (p) p->debugTree(); else qDebug() << "Nothing next";
+		}
 		if (n)
 			e = n;
 		if (p)
@@ -102,7 +110,7 @@ void CodeScene::leaving(Entity* _e, InsertionPoint const& _pos)
 			else
 				setCurrent(m_subject);
 		}*/
-		setCurrent(e);
+		setCurrent(e ? e : nearest(_e));
 	}
 	if (m_hover == _e)
 		m_hover = 0;
