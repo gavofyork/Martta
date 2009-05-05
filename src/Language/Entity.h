@@ -421,7 +421,8 @@ public:
 	template<class T>
 	inline static bool					simpleInsertionPointKeyPressHandler(InsertionPoint const& _p, EntityKeyEvent const* _e, QString const& _t, bool _ontoNew = true);	
 
-	void								debugTree(QString const& _i = "") const;
+	void								debugTree() const;
+	void								debugTree(QString const& _i) const;
 	
 	/// Builds dependencies of this object. Assumes there are none there yet, since this should only ever be called
 	/// directly following a load.

@@ -567,6 +567,20 @@ bool Entity::attemptInsert(EntityKeyEvent const* _e)
 	return false;
 }
 
+void Entity::debugTree() const
+{
+	QList<Entity const*> ancestors;
+	for (Entity const* i = context(); i; i = i->context())
+		ancestors.push_front(i);
+	QString indent = "";
+	foreach (Entity const* i, ancestors)
+	{
+		qDebug(qPrintable(indent + i->kind().name() + " (%x)"), i);
+		indent += "    ";
+	}
+	debugTree(indent);
+}
+
 void Entity::debugTree(QString const& _i) const
 {
 	qDebug(qPrintable(_i + kind().name() + " (%x)"), this);
@@ -606,8 +620,8 @@ void Entity::deleteAndRefill(Entity* _e, bool _moveToGrave)
 		c->childRemoved(this, ci);
 		delete this;
 	}
-	if (_moveToGrave)
-		p.nearestEntity()->setCurrent();
+//	if (_moveToGrave)
+//		p.nearestEntity()->setCurrent();
 }
 
 void Entity::exportDom(QDomElement& _element) const

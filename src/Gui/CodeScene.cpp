@@ -64,6 +64,17 @@ CodeScene::~CodeScene()
 
 void CodeScene::leaving(Entity* _e, InsertionPoint const& _pos)
 {
+	Entity* e;
+	{
+		Entity* n = next(_e);
+		Entity* p = previous(_e);
+		e = nearest(_e);
+		if (n)
+			e = n;
+		if (p)
+			e = p;
+	}
+	
 	foreach (Entity* i, _e->entities())
 		leaving(i);
 	
@@ -79,8 +90,8 @@ void CodeScene::leaving(Entity* _e, InsertionPoint const& _pos)
 	
 	if (m_current == _e)
 	{
-		Entity* i;
-		for (i = _pos.entity(); !(i->contextIndex() == 0 || i != _e && (!isInScene(i) || isFocusable(i))); i = i->sibling(i->contextIndex() - 1));
+/*		Entity* i;
+		for (i = _pos.entity(); i->contextIndex() != 0 && (i == _e || isInScene(i) && !isFocusable(i)); i = i->sibling(i->contextIndex() - 1));
 		if (i != _e && (!isInScene(i) || isFocusable(i)))
 			 setCurrent(i);
 		else
@@ -90,7 +101,8 @@ void CodeScene::leaving(Entity* _e, InsertionPoint const& _pos)
 				setCurrent(i);
 			else
 				setCurrent(m_subject);
-		}
+		}*/
+		setCurrent(e);
 	}
 	if (m_hover == _e)
 		m_hover = 0;
@@ -200,11 +212,11 @@ void CodeScene::recacheLayoutList(Entity* _e, QString const& _s)
 	{
 		if (_e == m_subject && s.right(2) != ";n" && s.right(3) != ";n;")
 			s += ";n";
-		s.replace("\\;", "å");
-		s.replace(";", "¥");
-		s.replace("å", ";");
+		s.replace("\\;", QString(QChar(0xff69)));
+		s.replace(";", QString(QChar(0xff70)));
+		s.replace(QString(QChar(0xff69)), ";");
 	
-		list = s.split("¥");
+		list = s.split(QString(QChar(0xff70)));
 		if (!list.contains("^"))
 			list << "^!";
 	}
@@ -558,7 +570,9 @@ Entity* CodeScene::nearest(Entity* _e)
 		}
 		while (i && i->hasAncestor(_e));
 	
-		for (i = _e; i && !isFocusable(i); i = i->context());
+		i = _e;
+		while (i && !isFocusable(i))
+			i = i->context();
 		if (i)
 			return i;
 	}
@@ -596,7 +610,18 @@ void CodeScene::setCurrent(Entity* _e)
 	M_ASSERT(_e);
 	
 	if (isInScene(_e) && !isFocusable(_e))
-		_e = nearest(_e);
+	{
+		qDebug() << "In scene and not focusable - definitely wrong.";
+		_e->debugTree();
+		Entity* ne = nearest(_e);
+		if (!isFocusable(ne))
+		{
+			qDebug() << "!!! ERROR nearest returned a non-focusable entity.";
+			ne = nearest(_e);
+		}
+		_e = ne;
+	}
+		
 	qDebug() << "setCurrent: setting current to" << _e;
 	m_current = _e;
 	
