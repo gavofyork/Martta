@@ -45,6 +45,8 @@ protected:
 	virtual int							minimumRequired() const { return 1; }
 	virtual Kinds						allowedKinds(int) const;
 	virtual QString						interfaceCode() const;
+	virtual bool						hasDefaultConstructor() const { return true; }
+	virtual Types						assignableTypes() const;
 
 private:
 	QString								m_stem;

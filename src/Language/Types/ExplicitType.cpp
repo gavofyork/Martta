@@ -71,18 +71,24 @@ bool ExplicitType::haveSingleCastOperator(TypeEntity const* _t, bool _const) con
 	if (!m_subject)
 		return false;
 	
-	Class* c = m_subject->isKind<Class>() ? m_subject->asKind<Class>() : 0;
-
 	bool gotOne = false;
 	bool dupe = false;
-	bool whackedConstForBest = false;
-	foreach (MemberCallable* i, c->membersOf<ConversionOperator>(_const, Public))
-	{	
-		bool b = i->returns()->isSimilarTo(_t, FairlyConvertible);
-		if (b && (!gotOne || gotOne && (i->isConst() == _const) && whackedConstForBest))
-			gotOne = true, dupe = false, whackedConstForBest = (i->isConst() != _const);
-		else if (b && gotOne)
-			dupe = true;
+
+	if (Class* c = m_subject->isKind<Class>() ? m_subject->asKind<Class>() : 0)
+	{
+		bool whackedConstForBest = false;
+		foreach (MemberCallable* i, c->membersOf<ConversionOperator>(_const, Public))
+		{	
+			bool b = i->returns()->isSimilarTo(_t, FairlyConvertible);
+			if (b && (!gotOne || gotOne && (i->isConst() == _const) && whackedConstForBest))
+				gotOne = true, dupe = false, whackedConstForBest = (i->isConst() != _const);
+			else if (b && gotOne)
+				dupe = true;
+		}
+	}
+	else
+	{
+		gotOne = Type(*_t) == Type(*this);
 	}
 	if (gotOne && !dupe)
 		return true;

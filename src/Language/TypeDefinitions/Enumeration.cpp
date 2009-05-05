@@ -32,6 +32,11 @@ bool Enumeration::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKey
 	return simpleInsertionPointKeyPressHandler<Enumeration>(_p, _e, "E");
 }
 
+Types Enumeration::assignableTypes() const
+{
+	return Type(const_cast<Enumeration*>(this));
+}
+
 Kinds Enumeration::allowedKinds(int _i) const
 {
 	if (_i == 0)
