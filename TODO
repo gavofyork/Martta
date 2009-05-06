@@ -4,7 +4,6 @@ BUG 'VEnum xyz' bad; because enum has no default constructor - should be ok like
 BUG passing enum instance as arg bad.
 BUG get program code updating nicely.
 BUG using .Mmembervariable marked as bad -- transient.
-BUG '(' selects Referenced, not Call.
 
 Multiple projects in a solution
 - Solution "explorer".

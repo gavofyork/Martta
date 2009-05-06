@@ -141,7 +141,7 @@ bool Invocation::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyE
 		else
 		{
 			n->relayout();
-			n->entity(0)->setCurrent();
+			n->setCurrent();
 		}
 		return true;
 	}
