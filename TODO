@@ -1,6 +1,5 @@
 CRASH remove C dependency
 CRASH 'i++'
-CRASH 'Vi i<Enter>i<Esc><Del>'
 BUG get program code updating nicely.
 
 Multiple projects in a solution
