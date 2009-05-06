@@ -3,7 +3,6 @@
 #unix:UI_DIR = /tmp
 SUPPORT.version = Versions
 SUPPORT.files = ../support/msSupport.h ../support/msString.h ../support/msList.h ../support/msList.inl ../support/msHash.h ../support/msHash.inl
-SUPPORT.files += ../support/libsupport.a
 SUPPORT.path = Support
 
 ICON = Martta.icns

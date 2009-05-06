@@ -913,16 +913,28 @@ bool Entity::keyPressed(EntityKeyEvent const* _e)
 	InsertionPoint p = over();
 	if (_e->codeScene()->isCurrent(this) && (_e->key() == Qt::Key_Delete && _e->modifiers() == Qt::ShiftModifier || _e->key() == Qt::Key_Backspace && isEditing(_e->codeScene())))
 	{
+//		p.context()->debugTree();
+//		qDebug() << p.index();
+//		debugTree();
 		deleteAndRefill(0, true);
-		_e->codeScene()->setCurrent(p.entity());
+//		p.context()->debugTree();
+//		qDebug() << p.index();
+		if (p.entity())
+			_e->codeScene()->setCurrent(p.entity());
 	}
 	else if (_e->codeScene()->isCurrent(this) && _e->key() == Qt::Key_Delete)
 	{
+//		p.context()->debugTree();
+//		qDebug() << p.index();
+//		debugTree();
 		if (nonPlaceholderCount() == 1 && isAllowed(nonPlaceholder(0)->kind()))
 			deleteAndRefill(nonPlaceholder(0), true);
 		else
 			deleteAndRefill(0, true);
-		_e->codeScene()->setCurrent(p.entity());
+//		p.context()->debugTree();
+//		qDebug() << p.index();
+		if (p.entity())
+			_e->codeScene()->setCurrent(p.entity());
 	}
 	else if (_e->codeScene()->isCurrent(this) && (_e->key() == Qt::Key_Escape) && isEditing(_e->codeScene()))
 		_e->codeScene()->setEditing(0);

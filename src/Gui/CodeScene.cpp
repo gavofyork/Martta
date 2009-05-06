@@ -588,6 +588,8 @@ void CodeScene::silentlySetCurrent(Entity* _e)
 
 void CodeScene::setCurrent(Entity* _e)
 {
+	M_ASSERT(_e);
+
 	if (m_current == _e || !m_subject)
 		return;
 
