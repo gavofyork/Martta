@@ -109,7 +109,7 @@ void RootEntity::restorePtrs() const
 		foreach(ModelPtrFace* i, m_modelPtrs)
 			if (i->isArchived())
 			{
-				i->restore();
+				i->tryRestore();
 				if (!i->isArchived())
 					restored++;
 			}
@@ -119,7 +119,7 @@ void RootEntity::restorePtrs() const
 	foreach(ModelPtrFace* i, m_modelPtrs)
 		if (i->isArchived())
 		{
-			qCritical() << "ERROR: Coundn't restore model pointer with key: " << i->key();
+			qCritical() << "ERROR: Couldn't restore model pointer with key: " << i->key();
 			i->gone(0);
 		}
 	m_archivalState = Restored;

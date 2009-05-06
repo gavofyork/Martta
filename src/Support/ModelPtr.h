@@ -58,6 +58,7 @@ public:
 
 	void archive();
 	void restore();
+	void tryRestore();
 	void clearCache() { if (isArchived()) m_cache = 0; }
 	void gone(DeclarationEntity* _e);
 

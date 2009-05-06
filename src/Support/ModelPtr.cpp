@@ -48,10 +48,24 @@ void ModelPtrFace::restore()
 		// null pointer.
 		if (!m_cache)
 		{
-			qCritical() << "Couldn't find" << m_key;
-//			m_rootEntity->findEntity(m_key);
+			qCritical() << "Couldn't restore model pointer with key: " << m_key;
+			M_ASSERT(0);
 		}
-		else
+		m_rootEntity = 0;
+		m_key = QString();
+	}
+}
+
+void ModelPtrFace::tryRestore()
+{
+	if (isArchived())
+	{
+		M_ASSERT(!m_cache || !m_cache->context());
+		m_cache = m_rootEntity->findEntity(m_key);
+		// Note; m_cache is allowed to be zero, since it just means that the entity we're
+		// pointing at was deleted while we were archived. What we get back is naturally a
+		// null pointer.
+		if (m_cache)
 		{
 			m_rootEntity = 0;
 			m_key = QString();

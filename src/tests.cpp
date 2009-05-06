@@ -218,11 +218,11 @@ int test()
 		n->killAndDelete();
 		r->importDom(doc.documentElement());
 		r->restorePtrs();
-
-		r->debugTree();
-		
+	
 		FAILED_IF(!r->entity(0)->entitiesOf<Class>()[0]->entitiesOf<Method>()[0]->entitiesOf<Compound>()[0]->entityIs<Referenced>(1));
 		FAILED_IF(!r->entity(0)->entitiesOf<Class>()[0]->entitiesOf<Method>()[0]->entitiesOf<Compound>()[0]->entityAs<Referenced>(1)->subject());
+		
+		r->killAndDelete();
 	}
 	TEST("Type construction adoption")
 	{

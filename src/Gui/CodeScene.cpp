@@ -616,7 +616,7 @@ void CodeScene::setCurrent(Entity* _e)
 		_e = ne;
 	}
 		
-	qDebug() << "setCurrent: setting current to" << _e;
+//	qDebug() << "setCurrent: setting current to" << _e;
 	m_current = _e;
 	
 	// May need a rethink to make things less brittle (parentheses disappear when no longer in current;
