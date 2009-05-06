@@ -40,7 +40,8 @@ public:
 		m_focusIsPlaceholder	(_focusIsPlaceholder),
 		m_focalIndex			(_focalIndex),
 		m_codeScene				(_codeScene),
-		m_strobeCreation		(0)
+		m_strobeCreation		(0),
+		m_strobeChild			(0)
 	{
 	}
 	EntityKeyEvent(QKeyEvent const& _e, QString const& _strobe, Entity* _focus, bool _isFocused, bool _focusIsPlaceholder, int _focalIndex, CodeScene* _codeScene):
@@ -50,7 +51,8 @@ public:
 		m_focusIsPlaceholder	(_focusIsPlaceholder),
 		m_focalIndex			(_focalIndex),
 		m_codeScene				(_codeScene),
-		m_strobeCreation		(0)
+		m_strobeCreation		(0),
+		m_strobeChild			(0)
 	{
 	}
 

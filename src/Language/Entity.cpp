@@ -910,9 +910,11 @@ void Entity::keyPressEvent(EntityKeyEvent* _e)
 
 bool Entity::keyPressed(EntityKeyEvent const* _e)
 {
+	InsertionPoint p = over();
 	if (_e->codeScene()->isCurrent(this) && (_e->key() == Qt::Key_Delete && _e->modifiers() == Qt::ShiftModifier || _e->key() == Qt::Key_Backspace && isEditing(_e->codeScene())))
 	{
 		deleteAndRefill(0, true);
+		_e->codeScene()->setCurrent(p.entity());
 	}
 	else if (_e->codeScene()->isCurrent(this) && _e->key() == Qt::Key_Delete)
 	{
@@ -920,6 +922,7 @@ bool Entity::keyPressed(EntityKeyEvent const* _e)
 			deleteAndRefill(nonPlaceholder(0), true);
 		else
 			deleteAndRefill(0, true);
+		_e->codeScene()->setCurrent(p.entity());
 	}
 	else if (_e->codeScene()->isCurrent(this) && (_e->key() == Qt::Key_Escape) && isEditing(_e->codeScene()))
 		_e->codeScene()->setEditing(0);

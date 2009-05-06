@@ -392,7 +392,7 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 				m_strobeCreation->killAndDelete();
 			
 			m_strobeCreation = e.strobeCreation();
-			m_strobeChild = e.strobeChild();
+			m_strobeChild = e.strobeChild();	// CRASH Could have been deleted - the case when you do 'i++' in an empty main().
 		}
 		else if (sCrPoint && sChPoint)
 		{
