@@ -62,21 +62,21 @@ CodeScene::~CodeScene()
 	s_allScenes.removeAll(this);
 }
 
-void CodeScene::leaving(Entity* _e, InsertionPoint const& _pos)
+void CodeScene::leaving(Entity* _e, InsertionPoint const&)
 {
 	Entity* e = 0;
+	if (m_current == _e)
 	{
 		Entity* n = next(_e);
 		while (n && n->hasAncestor(_e)) n = next(n);
 		Entity* p = previous(_e);
 		while (p && p->hasAncestor(_e)) p = previous(p);
-		if (m_current == _e)
-		{
+		/*{
 			qDebug() << "Leaving entity:";
 			_e->debugTree();
 			if (n) n->debugTree(); else qDebug() << "Nothing next";
-			if (p) p->debugTree(); else qDebug() << "Nothing next";
-		}
+			if (p) p->debugTree(); else qDebug() << "Nothing previous";
+		}*/
 		if (n)
 			e = n;
 		if (p)
@@ -97,21 +97,7 @@ void CodeScene::leaving(Entity* _e, InsertionPoint const& _pos)
 	m_cacheKey.remove(_e);
 	
 	if (m_current == _e)
-	{
-/*		Entity* i;
-		for (i = _pos.entity(); i->contextIndex() != 0 && (i == _e || isInScene(i) && !isFocusable(i)); i = i->sibling(i->contextIndex() - 1));
-		if (i != _e && (!isInScene(i) || isFocusable(i)))
-			 setCurrent(i);
-		else
-		{
-			for (i = _pos->context(); i && !isFocusable(i); i = i->context());
-			if (i)
-				setCurrent(i);
-			else
-				setCurrent(m_subject);
-		}*/
 		setCurrent(e ? e : nearest(_e));
-	}
 	if (m_hover == _e)
 		m_hover = 0;
 	if (m_lastRealCurrent == _e)

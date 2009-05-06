@@ -91,9 +91,14 @@ DeclarationEntity* DeclarationEntity::lookupChild(QString const& _key) const
 	int k = _key.toInt(&ok);
 	if (ok && m_anonyma.size() > k)
 		return const_cast<DeclarationEntity*>(m_anonyma[k]);
-	foreach (DeclarationEntity* e, entitiesOf<DeclarationEntity>())
-		if (e->identity() == _key)
-			return e;
+	qDebug() << "Matching for " << _key;
+		foreach (DeclarationEntity* e, entitiesOf<DeclarationEntity>())
+		{	
+			if (entitiesOf<DeclarationEntity>().size() < 10)
+				qDebug() << "    " << e->identity();
+			if (e->identity() == _key)
+				return e;
+		}
 	return 0;
 }
 

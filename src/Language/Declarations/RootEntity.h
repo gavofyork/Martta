@@ -60,7 +60,7 @@ public:
 
 	virtual void						exportDom(QDomElement&) const { M_ASSERT(0); }
 
-	void								archivePtrs() const;
+	void								archivePtrs(bool _clear = false) const;
 	void								restorePtrs() const;
 	void								addModelPtr(ModelPtrFace* _p);
 	void								removeModelPtr(ModelPtrFace* _p);

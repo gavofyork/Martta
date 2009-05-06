@@ -37,6 +37,15 @@
 #include "StringType.h"
 #include "RootEntity.h"
 #include "Pointer.h"
+
+#include <QDomDocument>
+#include <QDomElement>
+
+#include "Method.h"
+#include "Variable.h"
+#include "Referenced.h"
+#include "NamespaceEntity.h"
+#include "Compound.h"
 using namespace Martta;
 
 #include "msList.h"
@@ -161,6 +170,59 @@ int test()
 			a.rewirePointer(&b);
 		}
 		FAILED_IF(p);
+	}
+	TEST("Pointer archival/restoration")
+	{
+		RootEntity* r = new RootEntity;
+		NamespaceEntity* n = new NamespaceEntity;
+		n->prepareChildren();
+		r->back().place(n);
+		n->entitiesOf<TextLabel>()[0]->setText("n");
+
+		Class* X = new Class;
+		X->prepareChildren();
+		n->back().place(X);
+		X->entitiesOf<TextLabel>()[0]->setText("X");
+
+		Class* Y = new Class;
+		Y->prepareChildren();
+		n->back().place(Y);
+		Y->entitiesOf<TextLabel>()[0]->setText("Y");
+
+		Method* M = new Method;
+		M->prepareChildren();
+		X->back().place(M);
+		M->entitiesOf<TextLabel>()[0]->setText("foo");
+		M->middle(2)->replace(new SimpleType(Void));
+		
+		Variable* v = new Variable;
+		v->back().place(new TextLabel("a"));
+		v->back().place(new ExplicitType(Y));
+		M->back().place(v);
+		
+		Referenced* f = new Referenced(v);
+		f->prepareChildren();
+		M->entitiesOf<Compound>()[0]->back().place(f);
+		
+		r->archivePtrs(true);
+		r->restorePtrs();
+		QDomDocument doc;
+		QDomElement prj = doc.createElement("project");
+		doc.appendChild(prj);
+		QDomElement ele = doc.createElement("entity");
+		ele.setAttribute("kind", n->kind().name());
+		prj.appendChild(ele);
+		
+		r->archivePtrs();
+		n->exportDom(ele);
+		n->killAndDelete();
+		r->importDom(doc.documentElement());
+		r->restorePtrs();
+
+		r->debugTree();
+		
+		FAILED_IF(!r->entity(0)->entitiesOf<Class>()[0]->entitiesOf<Method>()[0]->entitiesOf<Compound>()[0]->entityIs<Referenced>(1));
+		FAILED_IF(!r->entity(0)->entitiesOf<Class>()[0]->entitiesOf<Method>()[0]->entitiesOf<Compound>()[0]->entityAs<Referenced>(1)->subject());
 	}
 	TEST("Type construction adoption")
 	{

@@ -81,12 +81,15 @@ void RootEntity::removeModelPtr(ModelPtrFace* _p)
 	m_modelPtrs.removeAll(_p);
 }
 
-void RootEntity::archivePtrs() const
+void RootEntity::archivePtrs(bool _clear) const
 {
 	m_archivalState = Archiving;
 	qInformation() << "Archiving" << m_modelPtrs.size() << "pointers";
 	foreach(ModelPtrFace* i, m_modelPtrs)
 		i->archive();
+	if (_clear)
+		foreach(ModelPtrFace* i, m_modelPtrs)
+			i->clearCache();
 	m_archivalState = Archived;
 }
 
@@ -94,8 +97,31 @@ void RootEntity::restorePtrs() const
 {
 	m_archivalState = Restoring;
 	qInformation() << "Restoring" << m_modelPtrs.size() << "pointers";
+	// NOTE: Some model pointers naturally depend on others further down the model pointer list to be understood and restored.
+	// For this reason we loop doing multiple passes until no more model pointers can be restored. This results in a worst-case
+	// performance of O(n^2), which given the vast amount of model pointers most programs entail is unacceptable.
+	// This should be changed to a JIT system whereby model pointers are resolved when needed, and thus when the list is resolved
+	// any dependencies are worked through appropriately. Having thought about it, I'm reasonably confident that the spectre of
+	// circular dependencies will not arise, if only because this thing is possible and there's no reason why either of the methods
+	// given for restoration are flawed.
+	for (int restored = 0;; restored = 0)
+	{
+		foreach(ModelPtrFace* i, m_modelPtrs)
+			if (i->isArchived())
+			{
+				i->restore();
+				if (!i->isArchived())
+					restored++;
+			}
+		if (!restored) break;
+	}
+	
 	foreach(ModelPtrFace* i, m_modelPtrs)
-		i->restore();
+		if (i->isArchived())
+		{
+			qCritical() << "ERROR: Coundn't restore model pointer with key: " << i->key();
+			i->gone(0);
+		}
 	m_archivalState = Restored;
 }
 

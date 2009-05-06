@@ -1,5 +1,9 @@
 CRASH 'i++'
 BUG get program code updating nicely.
+CRASH open file.
+CRASH save fails in ModelPtrFace::archive
+
+Unit tests for save/load.
 
 Multiple projects in a solution
 - Solution "explorer".
