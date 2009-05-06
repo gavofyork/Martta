@@ -229,7 +229,10 @@ void ReferencedEdit::leavingEditIntact()
 				codeScene()->silentlySetCurrent(e->entity(0)->entity(1));	// set to the place where the user expects the cursor to be (silently, sicne we might (possibly) already be in a setCurrent!).
 			}
 			else
+			{
 				e->entity(0)->entityAs<TextLabel>(0)->setText(m_entityName);
+				codeScene()->silentlySetCurrent(e->entity(0));				// set to the place where the user expects the cursor to be (silently, sicne we might (possibly) already be in a setCurrent!).
+			}
 			
 			// set subject to zero so we don't go through this again when the kill()ed subject gets removed from the scene.
 			Entity* s = m_subject;
