@@ -82,7 +82,7 @@ private:
 	int				m_focalIndex;
 	CodeScene*		m_codeScene;
 	mutable Entity*	m_strobeCreation;
-	mutable Entity*	m_strobeChild;
+	mutable SafePointer<Entity>	m_strobeChild;
 };
 
 }

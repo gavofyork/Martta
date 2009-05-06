@@ -362,10 +362,13 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 	if (m_strobeFocus && !_e->text().isEmpty() && _e->text() != " ")
 	{
 		Entity* originalStrobeChild = m_strobeChild;
+		if (m_strobeChild)
+			m_strobeChild->debugTree();
 		InsertionPoint sCrPoint;
 		InsertionPoint sChPoint;
 		if (m_strobeCreation)
 		{
+			m_strobeCreation->debugTree();
 			M_ASSERT(m_strobeChild);
 			sCrPoint = m_strobeCreation->over();
 			sChPoint = m_strobeChild->over();
@@ -373,6 +376,7 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 			m_strobeChild->setContextTentatively(sCrPoint.context());
 			m_strobeChild->moveToPosition(sCrPoint.index());
 		}
+		qDebug() << "strobeText: " << m_strobeText;
 		e = EntityKeyEvent(*_e, m_strobeText, &*m_strobeFocus, true, m_strobeFocus->isPlaceholder(), -1, this);
 		e.setAccepted(false);
 		Entity::keyPressEventStarter(&e);
@@ -391,8 +395,17 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 			if (m_strobeCreation)
 				m_strobeCreation->killAndDelete();
 			
-			m_strobeCreation = e.strobeCreation();
-			m_strobeChild = e.strobeChild();	// CRASH Could have been deleted - the case when you do 'i++' in an empty main().
+			if (e.strobeChild())
+			{
+				m_strobeCreation = e.strobeCreation();
+				m_strobeChild = e.strobeChild();	// CRASH Could have been deleted - the case when you do 'i++' in an empty main().
+			}
+			else
+			{
+				// Strobe child died - cancel strobe and issue warning (can't strobe further now).
+				killStrobe();
+				qCritical() << "ERROR: Strober killed strobe child so cannot continue strobing.";
+			}
 		}
 		else if (sCrPoint && sChPoint)
 		{

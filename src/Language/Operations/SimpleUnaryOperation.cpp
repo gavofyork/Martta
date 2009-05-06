@@ -53,9 +53,12 @@ bool SimpleUnaryOperation::keyPressedOnInsertionPoint(InsertionPoint const& _p, 
 	if (findOperators(o, p->isKind<Typed>() ? p->asKind<Typed>()->type() : Type()).size() && !isTemporary(p.entity()))
 	{
 		SimpleUnaryOperation* n = new SimpleUnaryOperation(o, p->isKind<Typed>() ? p->asKind<Typed>()->type() : Type());
+//		p->debugTree();
 		_e->noteStrobeCreation(n, &*p);
 		p->insert(n);
+//		n->debugTree();
 		n->validifyChildren();
+//		n->debugTree();
 		n->dropCursor();
 		return true;
 	}
