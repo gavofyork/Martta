@@ -30,6 +30,15 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(GenericMemberOperation);	
 
+Type GenericMemberOperation::memberified(Type _t, Type const& _scope) const
+{
+	if (_t->isType<Reference>())
+		_t->asType<Reference>()->child()->knitIn(new Memberify(_scope));
+	else
+		_t.topWith(Memberify(_scope));
+	return _t;
+}
+
 Types GenericMemberOperation::allowedTypes(int _index) const
 {
 	if (_index == 0)
@@ -38,7 +47,7 @@ Types GenericMemberOperation::allowedTypes(int _index) const
 	{
 		Types ret;
 		foreach (Type t, BareTyped::allowedTypes())
-			ret << t.topWith(Memberify(scope()));
+			ret << memberified(t, scope()); 
 		return ret;
 	}
 	return Types();
@@ -50,7 +59,7 @@ Types GenericMemberOperation::deniedTypes(int _index) const
 	{
 		Types ret;
 		foreach (Type t, BareTyped::deniedTypes())
-			ret << t.topWith(Memberify(scope()));
+			ret << memberified(t, scope());
 		return ret;
 	}
 	return Types();

@@ -1,6 +1,5 @@
 CRASH 'i++'
 BUG get program code updating nicely.
-BUG using .Mmembervariable marked as bad -- transient.
 
 Multiple projects in a solution
 - Solution "explorer".

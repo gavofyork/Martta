@@ -37,6 +37,7 @@ protected:
 	virtual Type						type() const;
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity*) { changed(); }
+	Type								memberified(Type _t, Type const& _scope) const;
 };
 
 }
