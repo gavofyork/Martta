@@ -67,6 +67,8 @@ void CodeScene::leaving(Entity* _e, InsertionPoint const&)
 	Entity* e = 0;
 	if (m_current == _e)
 	{
+		qDebug() << "Trying to calculate next...";
+		_e->debugTree();
 		Entity* n = next(_e);
 		while (n && n->hasAncestor(_e)) n = next(n);
 		Entity* p = previous(_e);

@@ -172,12 +172,12 @@ void Project::clear()
 	m_alteringDepends = true;
 	m_program = 0;
 	m_namespace = 0;
-	while (m_classes.size()) m_classes.takeLast()->killAndDelete();
+	m_declarations.clearEntities();
+//	while (m_classes.size()) m_classes.takeLast()->killAndDelete();
 	m_classes.reset();
 	while (m_cDepends.size()) delete m_cDepends.takeLast();
 	m_cDepends.reset();
 	m_alteringDepends = false;
-	m_declarations.clearEntities();
 }
 
 void Project::build()

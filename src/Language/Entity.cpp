@@ -213,6 +213,9 @@ void Entity::setContext(Entity* _newContext)
 {
 	if (_newContext == m_context) return;
 
+//	qDebug() << "setContext:";
+//	debugTree();
+
 //	M_ASSERT(!_e || _e->rootEntity());
 
 	if (rootEntity() && (!_newContext || rootEntity() != _newContext->rootEntity()))

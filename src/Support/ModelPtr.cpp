@@ -110,8 +110,15 @@ void ModelPtrFace::set(DeclarationEntity* _e, QString const& _k, RootEntity* _r)
 		}
 	}
 
-	if (m_cache) m_cache->rootEntity()->addModelPtr(this);
-	else if (m_rootEntity) m_rootEntity->addModelPtr(this);
+	if (m_cache)
+	{
+		M_ASSERT(m_cache->isInModel());
+		m_cache->rootEntity()->addModelPtr(this);
+	}
+	else if (m_rootEntity)
+	{
+		m_rootEntity->addModelPtr(this);
+	}
 }
 
 }
