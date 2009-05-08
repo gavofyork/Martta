@@ -75,6 +75,7 @@ private slots:
 	void projectRenamed();
 	void updateCode(Function*);
 	void saveCode();
+	void resetSubject();
 
 	void programReadyOut();
 	void programReadyError();

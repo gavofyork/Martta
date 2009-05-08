@@ -440,7 +440,16 @@ void Project::reloadHeaders()
 	QTextStream t(&s);
 	doc.save(t, 4);
 	deserialise(doc);
-
+	
+	QList<Entity*> es = QList<Entity*>() << m_namespace;
+	while (es.size())
+	{
+		Entity* e = es.back();
+		es.pop_back();
+		M_ASSERT(e->rootEntity() == &m_declarations);
+		es << e->entities();
+	}
+	
 	emit changed();
 }
 

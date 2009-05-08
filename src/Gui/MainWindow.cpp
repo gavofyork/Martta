@@ -59,9 +59,11 @@ MainWindow::MainWindow(QWidget* _p, Qt::WindowFlags _f):
 	connect(m_project, SIGNAL(changed()), SLOT(updateProgramCode()));
 	updateProgramCode();
 
+	connect(m_project, SIGNAL(changed()), SLOT(resetSubject()));
+	resetSubject();
+
 	connect(m_codeScene, SIGNAL(currentChanged(Entity*)), SLOT(entityFocused(Entity*)));
 
-	m_codeScene->setSubject(m_project->ns());
 //	classesView->setSubject(m_project->ns());
 
 #ifdef Q_WS_MAC
@@ -76,6 +78,11 @@ MainWindow::~MainWindow()
 	s.setValue("mainwindow/state", saveState());
 	s.setValue("mainwindow/geometry", saveGeometry());
 	s.setValue("mainwindow/lastproject", m_project->filename());
+}
+
+void MainWindow::resetSubject()
+{
+	m_codeScene->setSubject(m_project->ns());
 }
 
 void MainWindow::on_actAboutMartta_triggered()

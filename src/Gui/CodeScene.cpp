@@ -64,6 +64,14 @@ CodeScene::~CodeScene()
 
 void CodeScene::leaving(Entity* _e, InsertionPoint const&)
 {
+	if (m_subject == _e)
+	{
+		qDebug() << "Gaa! Subject leaving! Don't know what to do!";
+		// TODO: Move to a safe (dormant) state, until we get told of a new subject.
+		int i = 9;
+		i++;
+	}
+
 	Entity* e = 0;
 	if (m_current == _e)
 	{
