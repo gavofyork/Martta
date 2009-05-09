@@ -582,9 +582,9 @@ String String::trimmed() const
 	if (!m_length)
 		return String();
 	t::uint i;
-	for (i = 0; i < m_length && iswspace(m_data[i]); i++);
+	for (i = 0; i < m_length && iswspace(m_data[i]); i++) ;
 	t::uint j;
-	for (j = m_length - 1; j > i && iswspace(m_data[j]); j--);
+	for (j = m_length - 1; j > i && iswspace(m_data[j]); j--) ;
 	return mid(i, j - i + 1);
 }
 
@@ -667,10 +667,12 @@ String String::arg(String const& _a, int _fieldWidth, wchar_t _fillChar) const
 	String const* a = &_a;
 	String jic;
 	if ((int)_a.m_length < abs(_fieldWidth))
+	{
 		if (_fieldWidth < 0)
 			a = &((*new String(_a)) += String(-_fieldWidth - _a.m_length, _fillChar));
 		else
 			a = &((*new String(_fieldWidth - _a.m_length, _fillChar)) += _a);
+	}
 	for (int p = findNextPlaceholder(&token); p != -1; p = indexOf(token, p + a->m_length))
 		ret.replace(p, token[2] ? 3 : 2, *a);
 	if (a != &_a)

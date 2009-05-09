@@ -102,7 +102,7 @@ GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator::operator--()
 	{
 		// There are items before us. Find the one whose next is us...
 		Node *o = m_node;
-		for (m_node = m_masterNode; m_node->m_next != o; m_node = m_node->m_next);
+		for (m_node = m_masterNode; m_node->m_next != o; m_node = m_node->m_next) ;
 	}
 	return *this;
 }

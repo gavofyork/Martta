@@ -283,7 +283,7 @@ void CodeScene::paintEvent(QPaintEvent*)
 	p.drawRect(br);
 	p.drawRect(QRectF(-m_borderOffset.x(), br.y(), width(), br.height()));
 	
-	if (m_hover && m_hover != m_current)
+/*	if (m_hover && m_hover != m_current)
 	{
 		QRectF br = bounds(m_hover);
 		{
@@ -314,7 +314,7 @@ void CodeScene::paintEvent(QPaintEvent*)
 				QRectF br = bounds(i);
 				p.drawRect(br);
 			}
-	}
+	}*/
 	
 	p.drawPicture(0, 0, m_pictures[m_subject]);
 	
@@ -359,6 +359,8 @@ void CodeScene::paintEvent(QPaintEvent*)
 
 void CodeScene::keyPressEvent(QKeyEvent* _e)
 {
+	char const* s = _e->text().toLatin1();
+	
 	if (!m_subject || !current()) return;
 
 	SafePointer<Entity> n = current();

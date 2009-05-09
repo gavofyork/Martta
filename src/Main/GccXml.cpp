@@ -39,20 +39,17 @@ void GccXml::extractHeaders(QString const& _c, QXmlContentHandler* _h)
 		xml.open();
 		xmlfn = xml.fileName();
 	}
-	TIME_STATEMENT("GccXML")
+	
+	QStringList searchPaths;
 #ifdef Q_WS_WIN
-	if (QFile::exists(QCoreApplication::applicationDirPath() + "/gccxml/bin/gccxml.exe"))
-		QProcess::execute(QCoreApplication::applicationDirPath() + "/gccxml/bin/gccxml.exe", QStringList() << f.fileName() << "--gccxml-cxxflags" << "-x c" << ("-fxml=" + xmlfn));
+	searchPaths << (QCoreApplication::applicationDirPath() + "/gccxml/bin/gccxml.exe") << "C:\\Program Files\\gccxml\\bin\\gccxml.exe";
 #else
-	if (QFile::exists("/usr/bin/gccxml"))
-		QProcess::execute("/usr/bin/gccxml", QStringList() << f.fileName() << "--gccxml-cxxflags" << "-x c" << ("-fxml=" + xmlfn));
-	else if (QFile::exists("/usr/local/bin/gccxml"))
-		QProcess::execute("/usr/local/bin/gccxml", QStringList() << f.fileName() << "--gccxml-cxxflags" << "-x c" << ("-fxml=" + xmlfn));
-	else if (QFile::exists("C:\\Program Files\\gccxml\\bin\\gccxml.exe"))
-		QProcess::execute("C:\\Program Files\\gccxml\\bin\\gccxml.exe", QStringList() << f.fileName() << "--gccxml-cxxflags" << "-xc" << ("-fxml=" + xmlfn));
-	else if (QFile::exists("C:\\Program Files\\gccxml\\bin\\gccxml.exe"))
-		QProcess::execute("C:\\Program Files\\gccxml\\bin\\gccxml.exe", QStringList() << f.fileName() << "--gccxml-cxxflags" << "-xc" << ("-fxml=" + xmlfn));
+	searchPaths << "/usr/local/bin/gccxml" << "/usr/bin/gccxml";
 #endif
+	foreach (QString s, searchPaths)
+		if (QFile::exists(s))
+			TIME_STATEMENT("GccXML")
+				QProcess::execute(s, QStringList() << f.fileName() << "--gccxml-cxxflags" << "-xc" << ("-fxml=" + xmlfn));
 	f.close();
 
 	QXmlSimpleReader xmlReader;
