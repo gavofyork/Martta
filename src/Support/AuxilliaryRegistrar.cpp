@@ -29,8 +29,17 @@ void AuxilliaryRegistrar::initialiseAll() const
 {
 	foreach (AuxilliaryFace const* i, m_auxilliaries.values())
 		i->initialise();
+	
+	recurseAux(m_derivedMap.values(0)[0], "");
 }
 	
+void AuxilliaryRegistrar::recurseAux(AuxilliaryFace const* _face, QString const& _indent) const
+{
+	qInformation() << _indent << _face->name();
+	foreach (AuxilliaryFace const* i, m_derivedMap.values(_face))
+		recurseAux(i, _indent + "|   ");
+}
+
 void AuxilliaryRegistrar::registerAuxilliary(AuxilliaryFace const* _a)
 {
 	qInformation() << "Registering" << _a->name();

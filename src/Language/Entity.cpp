@@ -623,8 +623,8 @@ void Entity::deleteAndRefill(Entity* _e, bool _moveToGrave)
 		c->childRemoved(this, ci);
 		delete this;
 	}
-//	if (_moveToGrave)
-//		p.nearestEntity()->setCurrent();
+	if (_moveToGrave)
+		p.nearestEntity()->setCurrent();
 }
 
 void Entity::exportDom(QDomElement& _element) const
@@ -919,10 +919,10 @@ bool Entity::keyPressed(EntityKeyEvent const* _e)
 //		p.context()->debugTree();
 //		qDebug() << p.index();
 //		debugTree();
-		deleteAndRefill(0, true);
+		deleteAndRefill(0, false);	// NOTE: Was true; changed to false to avoid erroneous currents being set. May need a rethink.
 //		p.context()->debugTree();
 //		qDebug() << p.index();
-		if (p.entity())
+		if (p.exists())
 			_e->codeScene()->setCurrent(p.entity());
 	}
 	else if (_e->codeScene()->isCurrent(this) && _e->key() == Qt::Key_Delete)
@@ -931,12 +931,12 @@ bool Entity::keyPressed(EntityKeyEvent const* _e)
 //		qDebug() << p.index();
 //		debugTree();
 		if (nonPlaceholderCount() == 1 && isAllowed(nonPlaceholder(0)->kind()))
-			deleteAndRefill(nonPlaceholder(0), true);
+			deleteAndRefill(nonPlaceholder(0), false);	// SEE ABOVE.
 		else
-			deleteAndRefill(0, true);
+			deleteAndRefill(0, false);	// SEE ABOVE.
 //		p.context()->debugTree();
 //		qDebug() << p.index();
-		if (p.entity())
+		if (p.exists())
 			_e->codeScene()->setCurrent(p.entity());
 	}
 	else if (_e->codeScene()->isCurrent(this) && (_e->key() == Qt::Key_Escape) && isEditing(_e->codeScene()))

@@ -38,6 +38,8 @@ public:
 	template<class T> inline Kinds		immediateDeriveds() const { return immediateDeriveds(T::staticAuxilliary()); } 
 	inline Kinds						immediateDeriveds(Kind _k) const { return m_derivedMap.values(_k.auxilliary()); } 
 	
+	void								recurseAux(AuxilliaryFace const* _face, QString const& _indent) const;
+	
 	void								initialiseAll() const;
 	
 private:

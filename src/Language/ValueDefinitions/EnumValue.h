@@ -18,49 +18,38 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include <QtXml>
+#pragma once
 
-#include "Type.h"
-#include "Typed.h"
-#include "TextLabel.h"
-#include "Enumeration.h"
-#include "EnumValue.h"
+#include "ValueDefinition.h"
 
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(EnumValue);	
-		
-bool EnumValue::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
-{
-	return simpleInsertionPointKeyPressHandler<EnumValue>(_p, _e, "V");
-}
+class Enumeration;
 
-Kinds EnumValue::allowedKinds(int _i) const
+class EnumValue: public ValueDefinition
 {
-	if (_i == 0)
-		return Kind::of<TextLabel>();
-	else
-		return Kind::of<Typed>();
-}
+	MARTTA_OBJECT(ValueDefinition)
 
-Types EnumValue::allowedTypes(int) const
-{
-	return Types() << Type(Int);
-}
+	friend class Entity;
+	friend class EnumValueResolver;
 
-void EnumValue::nameChanged()
-{
-	if (contextIs<Enumeration>())
-		contextAs<Enumeration>()->updateStem();
-}
+public:
+	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
 
-void EnumValue::onContextChanged(Entity* _old, Entity* _new)
-{
-	if (_old->isKind<Enumeration>())
-		_old->asKind<Enumeration>()->updateStem();
-	if (_new->isKind<Enumeration>())
-		_new->asKind<Enumeration>()->updateStem();
-}
+	// Accessor methods.
+	Type								type() const { return Type(Int); }	// TODO Not true - only when it's an anonymous enum.
+	virtual QString						code() const { return codeName(); }
+
+protected:
+	virtual QString						defineLayout(ViewKeys&) const;
+	virtual int							minimumRequired() const { return 1; }
+	virtual Kinds						allowedKinds(int) const;
+	virtual bool						keyPressed(EntityKeyEvent const* _e);
+
+	virtual void						nameChanged();
+	// TODO: make work with new system.
+	virtual void						onContextChanged(Entity* _old, Entity* _new);
+};
 
 }
