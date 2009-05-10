@@ -35,12 +35,18 @@ class EnumValue: public ValueDefinition
 	friend class EnumValueResolver;
 
 public:
+	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
+
 	// Accessor methods.
 	Type								type() const { return Type(Int); }
 	virtual QString						code() const { return codeName(); }
 
 protected:
 	virtual QString						defineLayout() const { return "0;"; }
+	virtual int							minimumRequired() const { return 1; }
+	virtual Kinds						allowedKinds(int) const;
+	virtual Types						allowedTypes(int) const;
+
 	virtual void						nameChanged();
 	// TODO: make work with new system.
 	virtual void						onContextChanged(Entity* _old, Entity* _new);

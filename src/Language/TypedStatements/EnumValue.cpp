@@ -20,6 +20,9 @@
 
 #include <QtXml>
 
+#include "Type.h"
+#include "Typed.h"
+#include "TextLabel.h"
 #include "Enumeration.h"
 #include "EnumValue.h"
 
@@ -27,7 +30,25 @@ namespace Martta
 {
 
 MARTTA_OBJECT_CPP(EnumValue);	
-	
+		
+bool EnumValue::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
+{
+	return simpleInsertionPointKeyPressHandler<EnumValue>(_p, _e, "V");
+}
+
+Kinds EnumValue::allowedKinds(int _i) const
+{
+	if (_i == 0)
+		return Kind::of<TextLabel>();
+	else
+		return Kind::of<Typed>();
+}
+
+Types EnumValue::allowedTypes(int) const
+{
+	return Types() << Type(Int);
+}
+
 void EnumValue::nameChanged()
 {
 	if (contextIs<Enumeration>())
