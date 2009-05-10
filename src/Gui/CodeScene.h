@@ -143,6 +143,7 @@ private:
 	bool				m_showChanges;
 	bool				m_showOneChange;
 	bool				m_leavingEdit;
+	bool				m_showHover;
 	
 	// State
 	Entity*				m_hover;

@@ -39,6 +39,7 @@ CodeScene::CodeScene(QWidget* _p):
 	m_showChanges		(false),
 	m_showOneChange		(true),
 	m_leavingEdit		(false),
+	m_showHover			(false),
 	m_hover				(0),
 	m_navigated			(false),
 	m_strobeCreation	(0),
@@ -54,7 +55,8 @@ CodeScene::CodeScene(QWidget* _p):
 	m_ensureCurrentVisible(false)
 {
 	s_allScenes.append(this);
-	setMouseTracking(true);
+	if (m_showHover)
+		setMouseTracking(true);
 }
 
 CodeScene::~CodeScene()
@@ -282,39 +284,42 @@ void CodeScene::paintEvent(QPaintEvent*)
 	}
 	p.drawRect(br);
 	p.drawRect(QRectF(-m_borderOffset.x(), br.y(), width(), br.height()));
-	
-/*	if (m_hover && m_hover != m_current)
+
+	if (m_showHover)
 	{
-		QRectF br = bounds(m_hover);
+		if (m_hover && m_hover != m_current)
 		{
-			QLinearGradient g(br.topLeft(), br.bottomLeft());
-			g.setColorAt(0.f, QColor(224, 224, 224, 32));
-			g.setColorAt(1.f, QColor(160, 160, 160, 32));
-			p.setBrush(g);
+			QRectF br = bounds(m_hover);
+			{
+				QLinearGradient g(br.topLeft(), br.bottomLeft());
+				g.setColorAt(0.f, QColor(224, 224, 224, 32));
+				g.setColorAt(1.f, QColor(160, 160, 160, 32));
+				p.setBrush(g);
+			}
+			p.setPen(QColor(160, 160, 160, 64));
+			p.drawRect(br);
 		}
-		p.setPen(QColor(160, 160, 160, 64));
-		p.drawRect(br);
+		if (m_hover && m_showDependencyInfo)
+		{
+			p.setBrush(Qt::NoBrush);
+			p.setPen(QColor(0, 255, 0, 128));
+			foreach (Entity* i, m_hover->dependents())
+			{
+				if (isInScene(i))
+				{
+					QRectF br = bounds(i);
+					p.drawRect(br);
+				}
+			}
+			p.setPen(QColor(255, 0, 0, 128));
+			foreach (Entity* i, m_hover->dependencies())
+				if (isInScene(i))
+				{
+					QRectF br = bounds(i);
+					p.drawRect(br);
+				}
+		}
 	}
-	if (m_hover && m_showDependencyInfo)
-	{
-		p.setBrush(Qt::NoBrush);
-		p.setPen(QColor(0, 255, 0, 128));
-		foreach (Entity* i, m_hover->dependents())
-		{
-			if (isInScene(i))
-			{
-				QRectF br = bounds(i);
-				p.drawRect(br);
-			}
-		}
-		p.setPen(QColor(255, 0, 0, 128));
-		foreach (Entity* i, m_hover->dependencies())
-			if (isInScene(i))
-			{
-				QRectF br = bounds(i);
-				p.drawRect(br);
-			}
-	}*/
 	
 	p.drawPicture(0, 0, m_pictures[m_subject]);
 	
@@ -359,8 +364,6 @@ void CodeScene::paintEvent(QPaintEvent*)
 
 void CodeScene::keyPressEvent(QKeyEvent* _e)
 {
-	char const* s = _e->text().toLatin1();
-	
 	if (!m_subject || !current()) return;
 
 	SafePointer<Entity> n = current();
@@ -615,6 +618,9 @@ void CodeScene::setCurrent(Entity* _e)
 {
 	M_ASSERT(_e);
 
+	qDebug() << "";
+	qDebug() << "setCurrent: want to set current to" << _e;
+	qDebug() << "";
 	if (m_current == _e || !m_subject)
 		return;
 
@@ -643,7 +649,11 @@ void CodeScene::setCurrent(Entity* _e)
 		_e = ne;
 	}
 		
-//	qDebug() << "setCurrent: setting current to" << _e;
+	qDebug() << "";
+	qDebug() << "setCurrent: setting current to" << _e;
+	qDebug() << "";
+	_e->debugTree();
+	qDebug() << "";
 	m_current = _e;
 	
 	// May need a rethink to make things less brittle (parentheses disappear when no longer in current;
@@ -733,11 +743,14 @@ void CodeScene::mouseDoubleClickEvent(QMouseEvent* _e)
 
 void CodeScene::mouseMoveEvent(QMouseEvent* _e)
 {
-	Entity* e = at(_e->pos());
-	if (m_hover != e)
+	if (m_showHover)
 	{
-		m_hover = e;
-		update();
+		Entity* e = at(_e->pos());
+		if (m_hover != e)
+		{
+			m_hover = e;
+			update();
+		}
 	}
 }
 
@@ -773,6 +786,9 @@ NEXT:
 
 void CodeScene::setSubject(Entity* _subject)
 {
+	if (m_subject == _subject)
+		return;
+		
 	m_pictures.clear();
 	m_viewKeys.clear();
 	m_bounds.clear();
