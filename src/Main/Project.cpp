@@ -62,7 +62,7 @@ Project::Project(QString const& _load):
 #ifdef Q_WS_WIN
 	m_supportPath = QCoreApplication::applicationDirPath() + "/Support/";
 #endif
-#if Q_WS_X11
+#ifdef Q_WS_X11
 	m_supportPath = QCoreApplication::applicationDirPath() + "/../support/";
 #endif
 

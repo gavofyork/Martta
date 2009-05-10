@@ -66,6 +66,28 @@ private:
 	S m_second;
 };
 
+inline t::uint hashOf(char _key) { return (t::uint)_key; }
+template<typename T1, typename T2> inline t::uint hashOf(Pair<T1, T2> const& _key) { t::uint fh = hashOf(_key.first()); return (fh << 16 | fh >> 16) ^ hashOf(_key.second()); }
+inline t::uint hashOf(uchar _key) {  return (t::uint)_key; }
+inline t::uint hashOf(signed char _key) {  return (t::uint)_key; }
+inline t::uint hashOf(ushort _key) { return (t::uint)_key; }
+inline t::uint hashOf(short _key) { return (t::uint)_key; }
+inline t::uint hashOf(unsigned int _key) { return (t::uint)_key; }
+inline t::uint hashOf(int _key) { return (t::uint)_key; }
+inline t::uint hashOf(ulong _key) { return (t::uint)_key; }
+inline t::uint hashOf(long _key) { return (t::uint)_key; }
+#ifndef _MSC_VER
+inline t::uint hashOf(wchar_t _key) { return (t::uint)_key; }
+#endif
+inline t::uint hashOf(char const* _key)
+{
+	int r = 0;
+	for (char const* i = _key; *i; i++)
+		r = (((r << 16) ^ *i) + ((r >> 16) ^ *i));
+	return r;
+}
+template<typename T> inline t::uint hashOf(T const* _key) { return (t::uint)_key; }
+
 template<typename T, typename S>
 inline Pair<T, S> makePair(T const& _first, S const& _second)
 {
@@ -429,28 +451,6 @@ private:
 	bool m_autoGrow;
 	bool m_autoShrink;
 };
-
-inline t::uint hashOf(char _key) { return (t::uint)_key; }
-template<typename T1, typename T2> inline t::uint hashOf(Pair<T1, T2> const& _key) { t::uint fh = hashOf(_key.first()); return (fh << 16 | fh >> 16) ^ hashOf(_key.second()); }
-inline t::uint hashOf(uchar _key) {  return (t::uint)_key; }
-inline t::uint hashOf(signed char _key) {  return (t::uint)_key; }
-inline t::uint hashOf(ushort _key) { return (t::uint)_key; }
-inline t::uint hashOf(short _key) { return (t::uint)_key; }
-inline t::uint hashOf(unsigned int _key) { return (t::uint)_key; }
-inline t::uint hashOf(int _key) { return (t::uint)_key; }
-inline t::uint hashOf(ulong _key) { return (t::uint)_key; }
-inline t::uint hashOf(long _key) { return (t::uint)_key; }
-#ifndef _MSC_VER
-inline t::uint hashOf(wchar_t _key) { return (t::uint)_key; }
-#endif
-inline t::uint hashOf(char const* _key)
-{
-	int r = 0;
-	for (char const* i = _key; *i; i++)
-		r = (((r << 16) ^ *i) + ((r >> 16) ^ *i));
-	return r;
-}
-template<typename T> inline t::uint hashOf(T const* _key) { return (t::uint)_key; }
 
 template<typename Key, typename T, int Min = 32>
 class Hash: public GeneralHash<Key, T, Min, false, false>

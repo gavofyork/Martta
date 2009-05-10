@@ -25,8 +25,6 @@
 #include "SafePointer.h"
 #include "Kind.h"
 
-class Martta::InsertionPoint;
-
 namespace Martta
 {
 
