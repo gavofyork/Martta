@@ -18,39 +18,37 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#pragma once
-
-#include "TypeDefinition.h"
+#include "Type.h"
+#include "Typed.h"
+#include "EnumValue.h"
+#include "EnumValuesValue.h"
 
 namespace Martta
 {
 
-class EnumValue;
-class EnumerationResolver;
-
-class Enumeration: public TypeDefinition
+MARTTA_OBJECT_CPP(EnumValuesValue);	
+				
+bool EnumValuesValue::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
 {
-	MARTTA_OBJECT(TypeDefinition)
+	return simpleInsertionPointKeyPressHandler<EnumValuesValue>(_p, _e, "=");
+}
 
-public:
-	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
+Kinds EnumValuesValue::allowedKinds(int _i) const
+{
+	if (_i == 0)
+		return Kind::of<Typed>();
+	else
+		return Kinds();
+}
 
-	// Population methods.
-	void								updateStem();
+Types EnumValuesValue::allowedTypes(int) const
+{
+	return Types() << Type(Int);
+}
 
-	virtual QString						code() const { return isHidden() ? "enum ["+m_stem+"*]" : codeName(); }
-	
-protected:
-	virtual QString						defineLayout(const ViewKeys&) const;
-	virtual int							minimumRequired() const { return 1; }
-	virtual Kinds						allowedKinds(int) const;
-	virtual QString						interfaceCode() const;
-	virtual bool						hasDefaultConstructor() const { return true; }
-	virtual Types						assignableTypes() const;
-	virtual bool						keyPressed(EntityKeyEvent const* _e);
-
-private:
-	QString								m_stem;
-};
+QString EnumValuesValue::code() const
+{
+	return entityAs<Typed>(0)->code();
+}
 
 }

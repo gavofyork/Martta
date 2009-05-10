@@ -20,36 +20,24 @@
 
 #pragma once
 
-#include "ValueDefinition.h"
+#include "TypedOwner.h"
 
 namespace Martta
 {
 
-class Enumeration;
-
-class EnumValue: public ValueDefinition
+class EnumValuesValue: public TypedOwner
 {
-	MARTTA_OBJECT(ValueDefinition)
-
-	friend class Entity;
-	friend class EnumValueResolver;
+	MARTTA_OBJECT(TypedOwner)
 
 public:
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
 
-	// Accessor methods.
-	Type								type() const { return Type(Int); }
-	virtual QString						code() const { return codeName(); }
-
 protected:
-	virtual QString						defineLayout() const { return "0;"; }
 	virtual int							minimumRequired() const { return 1; }
-	virtual Kinds						allowedKinds(int) const;
+	virtual Kinds						allowedKinds(int _index) const;
 	virtual Types						allowedTypes(int) const;
-
-	virtual void						nameChanged();
-	// TODO: make work with new system.
-	virtual void						onContextChanged(Entity* _old, Entity* _new);
+	virtual QString						code() const;
+	virtual QString						defineLayout(ViewKeys&) const { return "0"; }
 };
 
 }

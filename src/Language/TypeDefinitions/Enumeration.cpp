@@ -70,6 +70,19 @@ void Enumeration::updateStem()
 	changed();
 }
 
+bool Enumeration::keyPressed(EntityKeyEvent const* _e)
+{
+	if (_e->text() == "H")
+	{
+		setCurrent();
+	}
+	else if (attemptAppend(_e))
+	{}
+	else
+		return Super::keyPressed(_e);
+	return true;
+}
+
 QString Enumeration::defineLayout(ViewKeys&) const
 {
 	QString ret = "^;ycode;'enum ';fb;cblack;s" + Type(const_cast<Enumeration*>(this))->idColour() + ";!0;s;ycode;n;'{'";

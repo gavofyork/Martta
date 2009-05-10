@@ -1,3 +1,6 @@
+BUG enum values can take floats - seems to be autocasting it.
+TODO maybe use enumvaluesvalue for variable initialisers?
+
 BUG get program code updating nicely.
 
 Multiple projects in a solution
