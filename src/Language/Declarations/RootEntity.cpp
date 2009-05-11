@@ -18,6 +18,9 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "Variable.h"
+#include "Function.h"
+#include "BasicOperator.h"
 #include "RootEntity.h"
 
 namespace Martta
@@ -41,7 +44,7 @@ RootEntity::~RootEntity()
 
 Kinds RootEntity::allowedKinds(int) const
 {
-	return Kind::of<DeclarationEntity>();
+	return Kinds() << Kind::of<SubAddressable>() << Kind::of<Variable>() << Kind::of<Function>() << Kind::of<BasicOperator>();
 }
 
 void RootEntity::doCulling()

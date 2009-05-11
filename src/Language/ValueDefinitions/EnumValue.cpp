@@ -83,7 +83,7 @@ bool EnumValue::keyPressed(EntityKeyEvent const* _e)
 		entity(1)->setCurrent();
 	}
 	else
-		return false;
+		return Super::keyPressed(_e);
 	return true;
 }
 

@@ -620,26 +620,23 @@ bool Martta::Entity::simpleInsertionPointKeyPressHandler(InsertionPoint const& _
 	if (_e->text() == _t && _p.allowedToBeKind<T>())
 	{
 		T* n = new T;
-		if (_p.exists() && !_p->isPlaceholder())
+		if (_p.exists() && !_p->isPlaceholder() && n->back().allowedToBeKind(_p->kind()))
 		{
 			// insert
 			// when pressed on _p refers to a, changes from x->(a->(d, e), b, c) to x->(N->(a->(d, e)), b, c)
-			if (n->back().allowedToBeKind(_p->kind()))
-			{
-				Entity* e = _p.entity();
-				e->insert(n);
-				_e->noteStrobeCreation(e, n);
-				n->prepareChildren();
-				if (_ontoNew)
-					n->navigateToNew(_e->codeScene());
-				else
-					n->setCurrent();
-			}
+			Entity* e = _p.entity();
+			e->insert(n);
+			_e->noteStrobeCreation(e, n);
+			n->prepareChildren();
+			if (_ontoNew)
+				n->navigateToNew(_e->codeScene());
 			else
-				delete n;
+				n->setCurrent();
 		}
 		else
 		{
+			// when pressed on _p which already exists, changes from x->(a->(d, e), b, c) to x->(N, a->(d, e), b, c)
+			// when pressed on _p which doesn't exist yet or is a placeholder (a), changes from x->([a,] b, c) to x->(N, b, c)
 			n->prepareChildren();
 			_p.place(n);
 			n->navigateInto(_e->codeScene());
