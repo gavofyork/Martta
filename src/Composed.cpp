@@ -33,7 +33,6 @@
 #include "Language/Statements/ConstructedVariable.cpp"
 #include "Language/Statements/DefaultConstructedVariable.cpp"
 #include "Language/Statements/DeleteOperation.cpp"
-#include "Language/Statements/EnumValuesValue.cpp"
 #include "Language/Statements/ForLoop.cpp"
 #include "Language/Statements/IfStatement.cpp"
 #include "Language/Statements/Primary.cpp"

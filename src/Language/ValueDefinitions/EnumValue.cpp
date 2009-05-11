@@ -22,7 +22,6 @@
 #include "Typed.h"
 #include "TextLabel.h"
 #include "Enumeration.h"
-#include "EnumValuesValue.h"
 #include "EnumValue.h"
 
 namespace Martta
