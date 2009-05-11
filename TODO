@@ -1,6 +1,7 @@
 TODO variable initialisers should use same system as enum value?
 TODO enum value should check for CT-validity of expression?
 BUG string s = "Boo"; printf("%s\n", s);
+BUG enumvalues don't cull themselves.
 BUG get program code updating properly.
 
 Multiple projects in a solution

@@ -51,9 +51,9 @@ QString Enumeration::interfaceCode() const
 	ret += "enum " + codeName() + "\n";
 	ret += "{\n";
 	foreach (EnumValue* f, entitiesOf<EnumValue>())
-		ret += f->code();
-	if (ret.endsWith("\n\n"))
-		ret.chop(1);
+		ret += f->code() + ",\n";
+	if (ret.endsWith(",\n"))
+		ret.chop(2), ret += "\n";
 	ret += "};\n";
 	return ret;
 }

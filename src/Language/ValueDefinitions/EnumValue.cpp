@@ -67,6 +67,14 @@ QString EnumValue::defineLayout(ViewKeys&) const
 		return "0;' = ';1";
 }
 
+QString EnumValue::code() const
+{
+	if (entityCount() == 2 && entityIs<Typed>(1))
+		return codeName() + " = " + entityAs<Typed>(1)->code();
+	else
+		return codeName();
+}
+
 bool EnumValue::keyPressed(EntityKeyEvent const* _e)
 {
 	if (_e->text() == "=" && _e->focalIndex() == 0)
