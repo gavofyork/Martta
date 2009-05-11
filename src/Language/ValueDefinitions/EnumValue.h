@@ -48,10 +48,10 @@ protected:
 	virtual Kinds						allowedKinds(int) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
 	virtual bool						isChildInValidState(int _i) const;
+	virtual bool						isSuperfluous() const;
 
-	virtual void						nameChanged();
-	// TODO: make work with new system.
-	virtual void						onContextChanged(Entity* _old, Entity* _new);
+	virtual int							familyDependencies() const { return DependsOnChildren; }
+	virtual void						onDependencyChanged(Entity* _e) { if (_e == entity(0)) { /*checkForCullingLater(); */changed(); } }
 };
 
 }

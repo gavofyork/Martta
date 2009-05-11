@@ -48,6 +48,9 @@ protected:
 	virtual bool						hasDefaultConstructor() const { return true; }
 	virtual Types						assignableTypes() const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
+	
+	virtual int							familyDependencies() { return DependsOnChildren; }
+	virtual void						onDependencyChanged(Entity*) { updateStem(); }
 
 private:
 	QString								m_stem;

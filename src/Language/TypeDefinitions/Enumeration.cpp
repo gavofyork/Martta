@@ -60,6 +60,7 @@ QString Enumeration::interfaceCode() const
 
 void Enumeration::updateStem()
 {
+	QString oldStem = m_stem;
 	m_stem = QString();
 	foreach (EnumValue* i, entitiesOf<EnumValue>())
 		if (m_stem.isEmpty())
@@ -67,7 +68,8 @@ void Enumeration::updateStem()
 		else
 			while (m_stem != i->codeName().left(m_stem.length()))
 				m_stem.chop(1);
-	changed();
+	if (oldStem != m_stem)
+		changed();
 }
 
 bool Enumeration::keyPressed(EntityKeyEvent const* _e)

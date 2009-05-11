@@ -53,18 +53,17 @@ bool EnumValue::isChildInValidState(int _i) const
 	return false;
 }
 
-void EnumValue::nameChanged()
-{
-	if (contextIs<Enumeration>())
-		contextAs<Enumeration>()->updateStem();
-}
-
 QString EnumValue::defineLayout(ViewKeys&) const
 {
 	if (entityCount() == 1)
 		return "0;";
 	else
 		return "0;' = ';1";
+}
+
+bool EnumValue::isSuperfluous() const
+{
+	return entityAs<TextLabel>(0)->text().isEmpty();
 }
 
 QString EnumValue::code() const
@@ -86,14 +85,6 @@ bool EnumValue::keyPressed(EntityKeyEvent const* _e)
 	else
 		return false;
 	return true;
-}
-
-void EnumValue::onContextChanged(Entity* _old, Entity* _new)
-{
-	if (_old->isKind<Enumeration>())
-		_old->asKind<Enumeration>()->updateStem();
-	if (_new->isKind<Enumeration>())
-		_new->asKind<Enumeration>()->updateStem();
 }
 
 }
