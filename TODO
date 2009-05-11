@@ -1,4 +1,3 @@
-BUG enum values can take floats - seems to be autocasting it.
 TODO maybe use enumvaluesvalue for variable initialisers?
 BUG string s = "Boo"; printf("%s\n", s);
 
