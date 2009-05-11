@@ -1,5 +1,6 @@
 TODO variable initialisers should use same system as enum value?
 TODO enum value should check for CT-validity of expression?
+TODO enumvalues should be insertable/appendable with Enter ala compound.
 BUG string s = "Boo"; printf("%s\n", s);
 BUG get program code updating properly.
 
