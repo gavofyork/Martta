@@ -40,7 +40,18 @@ Kinds EnumValue::allowedKinds(int _i) const
 	if (_i == 0)
 		return Kind::of<TextLabel>();
 	else
-		return Kind::of<EnumValuesValue>();
+		return Kind::of<Typed>();
+}
+
+bool EnumValue::isChildInValidState(int _i) const
+{
+	// Nothing to say about it as it's not typed. If it's supposed to be typed, then the allowed kinds system should pick up the error.
+	if (!entityIs<Typed>(_i))
+		return true;
+	foreach (Type i, Types() << Type(Int))
+		if (entityAs<Typed>(_i)->type().isSimilarTo(i, TypeEntity::BasicallyConvertible))
+			return true;
+	return false;
 }
 
 void EnumValue::nameChanged()
@@ -59,13 +70,12 @@ QString EnumValue::defineLayout(ViewKeys&) const
 
 bool EnumValue::keyPressed(EntityKeyEvent const* _e)
 {
-	/*if (_e->text() == "=" && _e->focalIndex() == 0)
+	if (_e->text() == "=" && _e->focalIndex() == 0)
 	{
 		if (entityCount() == 1)
 			back().spawnPrepared();
 		entity(1)->setCurrent();
 	}
-	else */if (attemptAppend(_e)) {}
 	else
 		return false;
 	return true;

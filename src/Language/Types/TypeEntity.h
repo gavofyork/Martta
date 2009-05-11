@@ -51,10 +51,14 @@ public:
 	virtual bool						isUltimatelyNull() const { return isNull(); }
 	
 	typedef int Castability;
-	enum { Unrelated = 0, Physical = 1, Convertible = 2, FairlyConvertible = 6, VeryConvertible = 14, ConstPerfectConvertible = 30, MostConvertible = 30, Logical = Physical | Convertible };
+	enum { Unrelated = 0, Physical = 1, Convertible = 2, FairlyConvertible = 6, BasicallyConvertible = 14, VeryConvertible = 30, ConstPerfectConvertible = 62, MostConvertible = 62, Logical = Physical | Convertible };
 	// Note: Logical can *only* be used for *giving* the _requirement parameter.
 	//		Test the _requirement parameter for portions of Logicality with isLogicalAtMost.
 	// Note: Unrelated is a dummy requirement and will always return true;
+	// FairlyConvertible: float->int, int->float etc and
+	// BasicallyConvertible: long->int, signed char->unsigned short etc and
+	// VeryConvertible: ? and
+	// CopnstPerfectConvertible: ?
 	bool								isSimilarTo(TypeEntity const* _to, Castability _requirement) const;
 	inline bool							isEquivalentTo(TypeEntity const* _t) const { return defineEquivalenceTo(_t) || _t->defineEquivalenceFrom(this); }
 	virtual bool						contentsEquivalentTo(TypeEntity const*) const { return true; }
@@ -73,7 +77,7 @@ public:
 	virtual TypeEntity*					asType(Kind _typeKind) { M_ASSERT(isType(_typeKind)); return this; }
 	template<class T> inline T*			asType() { return static_cast<T*>(asType(Kind::of<T>())); }
 	
-	template<class T> inline TypeEntity*	ignore() { return isKind<T>() ? entityAs<TypeEntity>(0) : this; }
+	template<class T> inline TypeEntity*ignore() { return isKind<T>() ? entityAs<TypeEntity>(0) : this; }
 
 	/// 
 	template<class T> inline T*			knit() { T* ret = new T; knitIn(ret); return ret; }
@@ -100,8 +104,11 @@ protected:
 	// In particular, it will return false if the requirement includes Physical.
 	static inline bool					isAnyConvertible(Castability _required) { return !(_required & ~MostConvertible); }
 	// isAtMostFairlyConvertible will test true iff the required castability is exactly equal to any of the Convertibles at less restrictive or equals to FairlyConvertible.
-	// i.e. It will return false if the requirement includes Physical, VeryConvertible etc.
+	// i.e. It will return false if the requirement includes Physical, BasicallyConvertible, VeryConvertible etc.
 	static inline bool					isFairlyConvertibleAtMost(Castability _required) { return !(_required & ~FairlyConvertible); }
+	// isAtMostBasicallyConvertible will test true iff the required castability is exactly equal to any of the Convertibles at less restrictive or equals to FairlyConvertible.
+	// i.e. It will return false if the requirement includes Physical, VeryConvertible etc.
+	static inline bool					isBasicallyConvertibleAtMost(Castability _required) { return !(_required & ~BasicallyConvertible); }
 	
 	// Classes may opt to reimplement one or both of these.
 	// When determining the return type make sure you check the Castability _requirement first, before considering the

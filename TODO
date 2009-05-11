@@ -1,12 +1,15 @@
 BUG enum values can take floats - seems to be autocasting it.
 TODO maybe use enumvaluesvalue for variable initialisers?
+BUG string s = "Boo"; printf("%s\n", s);
 
-BUG get program code updating nicely.
+BUG get program code updating properly.
 
 Multiple projects in a solution
 - Solution "explorer".
 - Project types: "Static Library", "Dynamic Library", "Executable".
 - Way of specifying entry point.
+- Add other libraries (SDL, openGL)
+- Use other binary-only libraries.
 
 --------------------------------------------------------------------------------
 

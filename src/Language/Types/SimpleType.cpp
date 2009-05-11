@@ -85,10 +85,16 @@ bool SimpleType::defineSimilarityTo(TypeEntity const* _t, Castability _c) const
 		{
 			if (tId == m_id)
 				return true;
-			if (isFairlyConvertibleAtMost(_c) && m_id != Void && (m_id & (Int | Char) && tId & (Int | Bool)		// int/char -> int/bool
-				|| m_id & Int && tId & (Double | Float) && !(tId & Complex)								// int -> scalar double/float
-				|| m_id & (Double | Float) && !(m_id & Complex) && tId & Int							// scalar double/float -> int
-				|| m_id & (Double | Float) && tId & (Double | Float) && ((m_id & Complex) == (tId & Complex))	// double/float -> double/float (same scalar/complex)
+			if (m_id != Void && (
+				isFairlyConvertibleAtMost(_c) && (
+					m_id & Int && tId & (Double | Float) && !(tId & Complex)								// int -> scalar double/float
+					|| m_id & (Double | Float) && !(m_id & Complex) && tId & Int							// scalar double/float -> int
+					|| m_id & (Double | Float) && tId & (Double | Float) && ((m_id & Complex) == (tId & Complex))	// double/float -> double/float (same scalar/complex)
+				)
+				||
+				isBasicallyConvertibleAtMost(_c) && (
+					m_id & (Int | Char) && tId & (Int | Bool)												// int/char -> int/bool
+				)
 				))
 				return true;
 		}

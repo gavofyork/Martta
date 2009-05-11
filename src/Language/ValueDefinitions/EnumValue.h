@@ -38,7 +38,8 @@ public:
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
 
 	// Accessor methods.
-	Type								type() const { return Type(Int); }	// TODO Not true - only when it's an anonymous enum.
+	// From ValueDefinition from TypeNamer.
+	virtual Type						type() const { return Type(Int); }	// TODO Not true - only when it's an anonymous enum.
 	virtual QString						code() const { return codeName(); }
 
 protected:
@@ -46,6 +47,7 @@ protected:
 	virtual int							minimumRequired() const { return 1; }
 	virtual Kinds						allowedKinds(int) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
+	virtual bool						isChildInValidState(int _i) const;
 
 	virtual void						nameChanged();
 	// TODO: make work with new system.
