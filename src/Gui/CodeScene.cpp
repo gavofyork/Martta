@@ -666,7 +666,10 @@ void CodeScene::setCurrent(Entity* _e)
 //	qDebug() << "From" << old << "to" << current();
 	
 	if (old)
-		old->checkForCullingLater();
+	{
+		for (Entity* e = old; e && m_current && !m_current->hasAncestor(e); e = e->context())
+			e->checkForCullingLater();
+	}
 	currentChanged(current());
 	
 	if (QScrollArea* sa = qobject_cast<QScrollArea*>(parent()->parent()->parent()))
