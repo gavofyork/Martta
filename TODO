@@ -1,6 +1,7 @@
 TODO variable initialisers should use same system as enum value?
 TODO enum value should check for CT-validity of expression?
 TODO enumvalues should be insertable/appendable with Enter ala compound.
+TODO page up & down broken.
 BUG string s = "Boo"; printf("%s\n", s);
 BUG get program code updating properly.
 
@@ -20,6 +21,7 @@ RELEASE M1 (TBD)
 Dynamic code-loading (plugins).
 - Move everything over so that plugins use Martta-specific data types.
   - Will need QRgb-like type & QHashSet type.
+  - Get rid of XML dependencies.
   - Will need to move all decoration code into layout system and invent markup for it.
 - Include language-addition project type.
 
