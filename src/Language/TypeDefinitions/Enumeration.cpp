@@ -91,9 +91,17 @@ bool Enumeration::keyPressed(EntityKeyEvent const* _e)
 	{
 		entity(_e->focalIndex())->setCurrent();
 	}
-	else if (_e->text() == "{")
+	else if (_e->text() == "{" && !_e->codeScene()->viewKeys(this)["expanded"].toBool())
 	{
-		entity(0)->setCurrent();
+		_e->codeScene()->viewKeys(this)["expanded"] = true;
+		relayout(_e->codeScene());
+		entity(1)->setCurrent();
+	}
+	else if (_e->text() == "}" && _e->codeScene()->viewKeys(this)["expanded"].toBool())
+	{
+		_e->codeScene()->viewKeys(this)["expanded"] = false;
+		relayout(_e->codeScene());
+		setCurrent();
 	}
 	else if (_e->text() == "H")
 	{
