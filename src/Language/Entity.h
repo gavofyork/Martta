@@ -377,7 +377,7 @@ public:
 	virtual void						decorate(DecorationContext const&) const;
 	virtual EditDelegateFace*			newDelegate(CodeScene*) { return 0; }
 	// We've been double-clicked.
-	virtual bool						activated(CodeScene* _s) { setEditing(_s); return isEditing(_s); }
+	virtual bool						activated(CodeScene* _s);
 	virtual bool						keyPressed(EntityKeyEvent const*);
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const&, EntityKeyEvent const*) { return false; }
 	
@@ -520,6 +520,8 @@ protected:
 	/// Called when our rootEntity is changing. This currently just means either going into or out of the program model.
 	virtual void						onLeaveScene(RootEntity* _new, RootEntity* _old) { (void)_new; (void)_old; }
 	
+	virtual Entity*						isExpander() const { return 0; }
+	
 protected:
 	RootEntity*							m_rootEntity;
 
@@ -537,7 +539,7 @@ private:
 	QSet<Entity*>						m_dependencies;
 	QList<Entity*>						m_ancestralDependencies;
 	bool								m_notifiedOfChange;
-
+	
 	/// The cache
 	QList<Entity*>						m_dependents;
 };

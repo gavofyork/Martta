@@ -40,7 +40,22 @@ MARTTA_OBJECT_CPP(Callable);
 
 QString Callable::defineLayout(ViewKeys& _viewKeys) const
 {
-	return "^;2;Mi;>name;ynormal;s" + FunctionType().idColour() + ";!0;ycode;'(';" + times(firstArgumentIndex(), entityCount(), ";', ';") + ";')';#EOA" + QString(_viewKeys["expanded"].toBool() ? body()->entities().size() ? ";n;i;1" : ";1" : "");
+	QString ret = "^;2;Mi;>name;ynormal;s" + FunctionType().idColour() + ";!0;ycode;'(';" + times(firstArgumentIndex(), entityCount(), ";', ';") + ";')';#EOA";
+	if (_viewKeys["expanded"].toBool())
+		ret += body()->entities().size() ? ";n;i;1" : ";1";
+	else
+	{
+		ret += ";yminor;' (";
+		if (int n = body()->entitiesOf<Primary>().count() + body()->entitiesOf<Untyped>().count())
+			ret += QString::number(n) + " statement" + (n > 1 ? "s, " : ", ");
+		if (ret.endsWith(", "))
+			ret.chop(2);
+		ret += ")";
+		if (ret.endsWith(" ()"))
+			ret.replace(" ()", " (empty)");
+		ret += "'";
+	}
+	return ret;
 }
 
 QString Callable::implementationCode() const
@@ -112,18 +127,6 @@ Kinds Callable::deniedKinds(int) const
 	return Kind::of<ThisPointer>();
 }
 
-bool Callable::activated(CodeScene* _s)
-{
-	_s->viewKeys(this)["expanded"] = !(_s->viewKeys(this)["expanded"].toBool());
-	relayout(_s);
-	
-	if (_s->viewKeys(this)["expanded"].toBool())
-		body()->entity(0)->setCurrent();
-	else
-		setCurrent();
-	return true;
-}
-
 bool Callable::keyPressed(EntityKeyEvent const* _e)
 {
 	if (_e->text() == "(" && !argumentCount() && (_e->focalIndex() == 0 || _e->isFocused()) || _e->text() == "," && _e->focalIndex() >= firstArgumentIndex())
@@ -136,18 +139,6 @@ bool Callable::keyPressed(EntityKeyEvent const* _e)
 	else if (_e->text() == "(" && _e->focalIndex() == 0)
 	{
 		argument(0)->navigateInto(_e->codeScene());
-	}
-	else if (_e->text() == "{")
-	{
-		_e->codeScene()->viewKeys(this)["expanded"] = true;
-		_e->codeScene()->relayoutLater(this);
-		_e->codeScene()->setCurrent(body()->entity(0));
-	}
-	else if (_e->text() == "}")
-	{
-		_e->codeScene()->viewKeys(this)["expanded"] = false;
-		_e->codeScene()->relayoutLater(this);
-		setCurrent();
 	}
 	else if (_e->text() == " " && entityIs<TypeEntity>(_e->focalIndex()))
 	{

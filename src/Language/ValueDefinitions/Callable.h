@@ -68,7 +68,6 @@ protected:
 	virtual int							firstArgumentIndex() const { return 3; }
 	virtual int							minimumRequired() const { return firstArgumentIndex(); }
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
-	virtual bool						activated(CodeScene* _s);
 	virtual QString						identity() const;
 	virtual Type						type() const;
 	virtual QString						defineLayout(ViewKeys& _v) const;
@@ -77,6 +76,7 @@ protected:
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity*) { changed(); }
 	virtual void						onDependencyRemoved(Entity*) { changed(); }
+	virtual Entity*						isExpander() const { return body()->entity(0); }
 	
 	/// Gives a parameter list of the call. This depends on argumentType/CodeName, ellipsis, reference and codeName.
 	QString								callingCode(FunctionCodeScope _ref) const;

@@ -857,6 +857,26 @@ void Entity::activateEvent(CodeScene* _s)
 		context()->activateEvent(_s);
 }
 
+bool Entity::activated(CodeScene* _s)
+{
+	if (Entity* e = isExpander())
+	{
+		_s->viewKeys(this)["expanded"] = !(_s->viewKeys(this)["expanded"].toBool());
+		relayout(_s);
+		
+		if (_s->viewKeys(this)["expanded"].toBool())
+			e->setCurrent();
+		else
+			setCurrent();
+		return true;
+	}
+	else
+	{
+		setEditing(_s);
+		return isEditing(_s);
+	}
+}
+
 void Entity::keyPressEventStarter(EntityKeyEvent* _e)
 {
 	if (_e->focus()->isEditing(_e->codeScene()) && _e->codeScene()->editDelegate() && _e->codeScene()->editDelegate()->keyPressed(_e))
@@ -943,6 +963,18 @@ bool Entity::keyPressed(EntityKeyEvent const* _e)
 		_e->codeScene()->setEditing(0);
 	else if (_e->codeScene()->isCurrent(this) && _e->key() == Qt::Key_Tab && !isEditing(_e->codeScene()))
 		_e->codeScene()->setEditing(this);
+	else if (_e->text() == "{" && !_e->codeScene()->viewKeys(this)["expanded"].toBool() && isExpander())
+	{
+		_e->codeScene()->viewKeys(this)["expanded"] = true;
+		relayout(_e->codeScene());
+		isExpander()->setCurrent();
+	}
+	else if (_e->text() == "}" && _e->codeScene()->viewKeys(this)["expanded"].toBool() && isExpander())
+	{
+		_e->codeScene()->viewKeys(this)["expanded"] = false;
+		relayout(_e->codeScene());
+		setCurrent();
+	}
 	else
 		return false;
 	return true;

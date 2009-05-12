@@ -5,6 +5,8 @@ TODO anonymous enums?
 BUG get program code updating properly.
 TODO make members and argument referenceds look as they should.
 TODO enumerations as members of classes - needs (optional) access() from accesslabel. 
+BUG make entity private in class.
+
 
 Multiple projects in a solution
 - Solution "explorer".

@@ -56,6 +56,7 @@ protected:
 	virtual void						onChildrenPrepared() { checkImplicitConstructors(); }
 	virtual bool						hasDefaultConstructor() const;
 	virtual Types						assignableTypes() const;
+	virtual Entity*						isExpander() const;
 	
 private:
 	bool								checkImplicitConstructors();

@@ -74,6 +74,11 @@ bool Class::onChanged()
 	return checkImplicitConstructors() || Super::onChanged();
 }
 
+Entity* Class::isExpander() const
+{
+	return entityCount() > 4 ? entity(4) : const_cast<Class*>(this);
+}
+
 bool Class::checkImplicitConstructors()
 {
 	bool ret = false;
@@ -244,41 +249,72 @@ bool Class::keyPressed(EntityKeyEvent const* _e)
 	return true;
 }
 
-QString Class::defineLayout(ViewKeys&) const
+QString Class::defineLayout(ViewKeys& _keys) const
 {
 	QString ret = "^;ycode;'class ';fb;cblack;s" + Type(const_cast<Class*>(this))->idColour() + ";!0;s;ycode";
 	
-	foreach (Base* i, entitiesOf<Base>())
-		ret += QString(";n;i;%1").arg(i->contextIndex());
-	
-	ret += ";n;'{'";
+	if (_keys["expanded"].toBool())
+	{
+		foreach (Base* i, entitiesOf<Base>())
+			ret += QString(";n;i;%1").arg(i->contextIndex());
+		
+		ret += ";n;'{'";
 
-	for (int i = 0; i < AccessCount; i++)
-	{	
-		QString mem;
-		Kinds recognised;
-		recognised << Kind::of<Constructor>();
-		foreach (MemberCallable* f, entitiesOf<Constructor>())
-			if (f->access() == Access(i))
-				mem += QString(";n;%1").arg(f->contextIndex());
-		recognised << Kind::of<Destructor>();
-		foreach (MemberCallable* f, entitiesOf<Destructor>())
-			if (f->access() == Access(i))
-				mem += QString(";n;%1").arg(f->contextIndex());
-		recognised << Kind::of<Method>();
-		foreach (MemberCallable* f, entitiesOf<Method>())
-			if (f->access() == Access(i))
-				mem += QString(";n;%1").arg(f->contextIndex());
-		foreach (MemberCallable* f, entitiesOf<MemberCallable>())
-			if (f->access() == Access(i) && !f->isKind(recognised))
-				mem += QString(";n;%1").arg(f->contextIndex());
-		foreach (MemberVariable* f, entitiesOf<MemberVariable>())
-			if (f->access() == Access(i))
-				mem += QString(";n;%1").arg(f->contextIndex());
-		if (!mem.isEmpty())
-			ret += ";n;s" + AccessLabel(Access(i)).idColour().name() + "44;'" + Martta::code(Access(i)) + "';s" + mem;
+		for (int i = 0; i < AccessCount; i++)
+		{	
+			QString mem;
+			Kinds recognised;
+			recognised << Kind::of<Constructor>();
+			foreach (MemberCallable* f, entitiesOf<Constructor>())
+				if (f->access() == Access(i))
+					mem += QString(";n;%1").arg(f->contextIndex());
+			recognised << Kind::of<Destructor>();
+			foreach (MemberCallable* f, entitiesOf<Destructor>())
+				if (f->access() == Access(i))
+					mem += QString(";n;%1").arg(f->contextIndex());
+			recognised << Kind::of<Method>();
+			foreach (MemberCallable* f, entitiesOf<Method>())
+				if (f->access() == Access(i))
+					mem += QString(";n;%1").arg(f->contextIndex());
+			foreach (MemberCallable* f, entitiesOf<MemberCallable>())
+				if (f->access() == Access(i) && !f->isKind(recognised))
+					mem += QString(";n;%1").arg(f->contextIndex());
+			foreach (MemberVariable* f, entitiesOf<MemberVariable>())
+				if (f->access() == Access(i))
+					mem += QString(";n;%1").arg(f->contextIndex());
+			if (!mem.isEmpty())
+				ret += ";n;s" + AccessLabel(Access(i)).idColour().name() + "44;'" + Martta::code(Access(i)) + "';s" + mem;
+		}
+		ret += ";n;'}'";
 	}
-	return ret + ";n;'}'";
+	else
+	{
+		if (entitiesOf<Base>().count())
+		{
+			ret += ";ynormal;' ['";
+			foreach (Base* i, entitiesOf<Base>())
+				ret += QString(";%1").arg(i->contextIndex());
+			ret += ";']'";
+		}
+		ret += ";yminor;' (";
+		if (int n = entitiesOf<Method>().size())
+			ret += QString::number(n) + " method" + (n > 1 ? "s, " : ", ");
+		if (int n = entitiesOf<MemberVariable>().size())
+			ret += QString::number(n) + " variable" + (n > 1 ? "s, " : ", ");
+		if (int n = (entitiesOf<Constructor>().size() - entitiesOf<ImplicitCopyConstructor>().size() - entitiesOf<DefaultConstructor>().size()))
+			ret += QString::number(n) + " constructor" + (n > 1 ? "s, " : ", ");
+		if (int n = entitiesOf<Destructor>().size())
+			ret += QString::number(n) + " destructor" + (n > 1 ? "s, " : ", ");
+		if (int n = (entitiesOf<MethodOperator>().size() - entitiesOf<ImplicitAssignmentOperator>().size()))
+			ret += QString::number(n) + " operator" + (n > 1 ? "s, " : ", ");
+		if (ret.endsWith(", "))
+			ret.chop(2);
+		ret += ")";
+		if (ret.endsWith("()"))
+			ret.chop(2);
+		ret += "'";
+	}
+	return ret;
 }
 
 }
