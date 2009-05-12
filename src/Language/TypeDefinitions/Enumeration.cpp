@@ -18,6 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "CodeScene.h"
 #include "TextLabel.h"
 #include "EnumValue.h"
 #include "Enumeration.h"
@@ -103,12 +104,31 @@ bool Enumeration::keyPressed(EntityKeyEvent const* _e)
 	return true;
 }
 
-QString Enumeration::defineLayout(ViewKeys&) const
+bool Enumeration::activated(CodeScene* _s)
 {
-	QString ret = "^;ycode;'enum ';fb;cblack;s" + Type(const_cast<Enumeration*>(this))->idColour() + ";!0;s;ycode;n;'{'";
-	foreach (EnumValue* f, entitiesOf<EnumValue>())
-		ret += QString(";n;i;%1").arg(f->contextIndex());
-	return ret + ";n;'}'";
+	_s->viewKeys(this)["expanded"] = !(_s->viewKeys(this)["expanded"].toBool());
+	relayout(_s);
+	
+	if (_s->viewKeys(this)["expanded"].toBool())
+		entity(1)->setCurrent();
+	else
+		setCurrent();
+	return true;
+}
+
+QString Enumeration::defineLayout(ViewKeys& _viewKeys) const
+{
+	if (_viewKeys["expanded"].toBool())
+	{
+		QString ret = "^;ycode;'enum ';fb;cblack;s" + Type(const_cast<Enumeration*>(this))->idColour() + ";!0;s;ycode;n;'{'";
+		foreach (EnumValue* f, entitiesOf<EnumValue>())
+			ret += QString(";n;i;%1").arg(f->contextIndex());
+		return ret + ";n;'}'";
+	}
+	else
+	{
+		return "^;ycode;'enum ';fb;cblack;s" + Type(const_cast<Enumeration*>(this))->idColour() + ";!0;s;yminor;' (" + QString::number(entitiesOf<EnumValue>().count()) + " entries)'";
+	}
 }
 
 

@@ -48,6 +48,7 @@ protected:
 	virtual bool						hasDefaultConstructor() const { return true; }
 	virtual Types						assignableTypes() const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
+	virtual bool						activated(CodeScene* _s);
 	
 	virtual int							familyDependencies() { return DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity*) { updateStem(); }

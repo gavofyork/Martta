@@ -1,7 +1,10 @@
 TODO variable initialisers should use same system as enum value?
 TODO enum value should check for CT-validity of expression?
 TODO page up & down broken.
+TODO anonymous enums?
 BUG get program code updating properly.
+TODO make members and argument referenceds look as they should.
+TODO enumerations as members of classes - needs (optional) access() from accesslabel. 
 
 Multiple projects in a solution
 - Solution "explorer".

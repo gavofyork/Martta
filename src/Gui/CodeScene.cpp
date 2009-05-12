@@ -1195,6 +1195,24 @@ public:
 				curFont.setItalic(false);
 				curFont.setPixelSize(QFontInfo(QFont()).pixelSize());
 			}
+			else if (e == "yminor")
+			{
+				curCol = QColor(0, 0, 0, 96);
+				curShadow = QColor(0, 0, 0, 0);
+				curEmboss = QColor(0, 0, 0, 0);
+				curFont.setBold(false);
+				curFont.setItalic(false);
+				curFont.setPixelSize(QFontInfo(QFont()).pixelSize() * 3 / 4);
+			}
+			else if (e == "ymajor")
+			{
+				curCol = QColor(0, 0, 0);
+				curShadow = QColor(0, 0, 0, 0);
+				curEmboss = QColor(0, 0, 0, 0);
+				curFont.setBold(true);
+				curFont.setItalic(false);
+				curFont.setPixelSize(QFontInfo(QFont()).pixelSize());
+			}
 			else if (e == "ycode")
 			{
 				curCol = QColor(0, 0, 0, 160);

@@ -35,8 +35,6 @@ class EnumValue: public ValueDefinition
 	friend class EnumValueResolver;
 
 public:
-	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
-
 	// Accessor methods.
 	// From ValueDefinition from TypeNamer.
 	virtual Type						type() const { return Type(Int); }	// TODO Not true - only when it's an anonymous enum.
