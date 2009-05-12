@@ -74,12 +74,30 @@ void Enumeration::updateStem()
 
 bool Enumeration::keyPressed(EntityKeyEvent const* _e)
 {
-	if (_e->text() == "H")
+	if (_e->key() == Qt::Key_Return)
+	{
+		InsertionPoint p = (_e->isFocused() || _e->focalIndex() == 0) ?
+		(/*_e->inserting() || */_e->modifiers() & Qt::ShiftModifier) ?
+		middle(1) :
+		back() :
+		middle(_e->focalIndex() + ((/*_e->inserting() || */_e->modifiers() & Qt::ShiftModifier) ? 0 : 1));
+		EnumValue* s = new EnumValue;
+		s->prepareChildren();
+		p.place(s);
+		s->entity(0)->setCurrent();
+	}
+	else if (_e->key() == Qt::Key_Home && _e->focalIndex() > -1)
+	{
+		entity(_e->focalIndex())->setCurrent();
+	}
+	else if (_e->text() == "{")
+	{
+		entity(0)->setCurrent();
+	}
+	else if (_e->text() == "H")
 	{
 		setCurrent();
 	}
-	else if (attemptAppend(_e))
-	{}
 	else
 		return Super::keyPressed(_e);
 	return true;

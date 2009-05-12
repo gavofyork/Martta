@@ -1,8 +1,6 @@
 TODO variable initialisers should use same system as enum value?
 TODO enum value should check for CT-validity of expression?
-TODO enumvalues should be insertable/appendable with Enter ala compound.
 TODO page up & down broken.
-BUG string s = "Boo"; printf("%s\n", s);
 BUG get program code updating properly.
 
 Multiple projects in a solution
@@ -205,6 +203,12 @@ Remove (or make useful) m_location?
 ================================================================================
 
 === WISH LIST ===
+
+BUG string s = "Boo"; printf("%s\n", s);
+  - Fix: New type (Basic).
+  - Basic is able to cast from any simple type and from a pointer.
+  - String must be able to cast to a Basic by calling the toCString() method.
+    - Will need infrastructure to make this happen.
 
 Unit test embedding in class/methods.
 

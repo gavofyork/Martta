@@ -28,11 +28,6 @@ namespace Martta
 {
 
 MARTTA_OBJECT_CPP(EnumValue);	
-		
-bool EnumValue::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
-{
-	return simpleInsertionPointKeyPressHandler<EnumValue>(_p, _e, "V");
-}
 
 Kinds EnumValue::allowedKinds(int _i) const
 {
@@ -58,7 +53,7 @@ QString EnumValue::defineLayout(ViewKeys&) const
 	if (entityCount() == 1)
 		return "0;";
 	else
-		return "0;' = ';1";
+		return "0;' := ';1";
 }
 
 bool EnumValue::isSuperfluous() const

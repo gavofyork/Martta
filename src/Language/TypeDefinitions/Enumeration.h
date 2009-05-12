@@ -42,7 +42,7 @@ public:
 	
 protected:
 	virtual QString						defineLayout(const ViewKeys&) const;
-	virtual int							minimumRequired() const { return 1; }
+	virtual int							minimumRequired() const { return 2; }
 	virtual Kinds						allowedKinds(int) const;
 	virtual QString						interfaceCode() const;
 	virtual bool						hasDefaultConstructor() const { return true; }
