@@ -1,19 +1,24 @@
-TODO variable initialisers should use same system as enum value?
-TODO enum value should check for CT-validity of expression?
-TODO page up & down broken.
-TODO anonymous enums?
-BUG get program code updating properly.
 TODO make members and argument referenceds look as they should.
 TODO enumerations as members of classes - needs (optional) access() from accesslabel. 
-BUG make entity private in class.
+BUG make entity private in class with newly created method.
+BUG 'I' on method name.
 
+BUG get program code updating properly.
+TODO variable initialisers should use same system as enum value?
+
+TODO anonymous enums?
+TODO page up & down broken.
 
 Multiple projects in a solution
 - Solution "explorer".
 - Project types: "Static Library", "Dynamic Library", "Executable".
 - Way of specifying entry point.
+  - pickup if entry point is private
 - Add other libraries (SDL, openGL)
 - Use other binary-only libraries.
+Resolve name clashes.
+- Force unique names.
+- OR pickup on clashes and resolve at edit stage.
 
 --------------------------------------------------------------------------------
 
@@ -208,6 +213,8 @@ Remove (or make useful) m_location?
 ================================================================================
 
 === WISH LIST ===
+
+TODO enum value should check for CT-validity of expression?
 
 BUG string s = "Boo"; printf("%s\n", s);
   - Fix: New type (Basic).
