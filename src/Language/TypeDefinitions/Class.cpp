@@ -18,6 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "Enumeration.h"
 #include "Constructor.h"
 #include "DefaultConstructor.h"
 #include "ImplicitCopyConstructor.h"
@@ -161,7 +162,7 @@ Kinds Class::allowedKinds(int _i) const
 {
 	if (_i == 0)
 		return Kind::of<TextLabel>();
-	return (Kind::of<MemberCallable>(), Kind::of<MemberVariable>(), Kind::of<Base>());
+	return (Kind::of<MemberCallable>(), Kind::of<MemberVariable>(), Kind::of<Enumeration>(), Kind::of<Base>());
 }
 
 QString Class::implementationCode() const
@@ -175,6 +176,7 @@ QString Class::implementationCode() const
 
 QString Class::interfaceCode() const
 {
+	// TODO: ordering for enums?
 	QString ret;
 	ret += "class " + codeName() + "\n";
 	if (entitiesOf<Base>().size())
@@ -280,6 +282,9 @@ QString Class::defineLayout(ViewKeys& _keys) const
 				if (f->access() == Access(i) && !f->isKind(recognised))
 					mem += QString(";n;%1").arg(f->contextIndex());
 			foreach (MemberVariable* f, entitiesOf<MemberVariable>())
+				if (f->access() == Access(i))
+					mem += QString(";n;%1").arg(f->contextIndex());
+			foreach (Enumeration* f, entitiesOf<Enumeration>())
 				if (f->access() == Access(i))
 					mem += QString(";n;%1").arg(f->contextIndex());
 			if (!mem.isEmpty())

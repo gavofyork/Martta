@@ -38,17 +38,19 @@ public:
 	// Population methods.
 	void								updateStem();
 
+	virtual Access						access() const;
 	virtual QString						code() const { return isHidden() ? "enum ["+m_stem+"*]" : codeName(); }
 	
 protected:
 	virtual QString						defineLayout(const ViewKeys&) const;
-	virtual int							minimumRequired() const { return 2; }
+	virtual int							minimumRequired() const { return 3; }
 	virtual Kinds						allowedKinds(int) const;
 	virtual QString						interfaceCode() const;
 	virtual bool						hasDefaultConstructor() const { return true; }
 	virtual Types						assignableTypes() const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
 	virtual Entity*						isExpander() const { return entity(1); }
+	virtual void						decorate(DecorationContext const& _p) const;
 	
 	virtual int							familyDependencies() { return DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity*) { updateStem(); }

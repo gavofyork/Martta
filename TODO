@@ -1,6 +1,3 @@
-BUG 'I' on method name.
-TODO enumerations as members of classes - needs (optional) access() from accesslabel. 
-
 BUG get program code updating properly.
 TODO variable initialisers should use same system as enum value?
 

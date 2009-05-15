@@ -18,7 +18,10 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "CodeScene.h"
+#include "CommonGraphics.h"
+#include "DecorationContext.h"
+#include "Class.h"
+#include "AccessLabel.h"
 #include "TextLabel.h"
 #include "EnumValue.h"
 #include "Enumeration.h"
@@ -30,7 +33,12 @@ MARTTA_OBJECT_CPP(Enumeration);
 	
 bool Enumeration::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
 {
-	return simpleInsertionPointKeyPressHandler<Enumeration>(_p, _e, "E");
+	if (simpleInsertionPointKeyPressHandler<Enumeration>(_p, _e, "E"))
+	{	if (_p.exists() && _p->isKind<Enumeration>() && _p->entityIs<AccessLabel>(1) && _p->contextIs<Class>())
+			_p->entityAs<AccessLabel>(1)->setAccess(Private);
+		return true;
+	}
+	return false;
 }
 
 Types Enumeration::assignableTypes() const
@@ -42,8 +50,15 @@ Kinds Enumeration::allowedKinds(int _i) const
 {
 	if (_i == 0)
 		return Kind::of<TextLabel>();
+	else if (_i == 1)
+		return Kind::of<AccessLabel>();
 	else
 		return Kind::of<EnumValue>();
+}
+
+Access Enumeration::access() const
+{
+	return entityIs<AccessLabel>(1) ? entityAs<AccessLabel>(1)->access() : NoAccess;
 }
 
 QString Enumeration::interfaceCode() const
@@ -75,6 +90,7 @@ void Enumeration::updateStem()
 
 bool Enumeration::keyPressed(EntityKeyEvent const* _e)
 {
+	M_ASSERT(isComplete());
 	if (_e->key() == Qt::Key_Return)
 	{
 		InsertionPoint p = (_e->isFocused() || _e->focalIndex() == 0) ?
@@ -87,6 +103,8 @@ bool Enumeration::keyPressed(EntityKeyEvent const* _e)
 		p.place(s);
 		s->entity(0)->setCurrent();
 	}
+	else if (entitiesOf<AccessLabel>().size() && entitiesOf<AccessLabel>()[0]->asKind<Label>()->keyPressed(_e))
+		return true;
 	else if (_e->key() == Qt::Key_Home && _e->focalIndex() > -1)
 	{
 		entity(_e->focalIndex())->setCurrent();
@@ -102,18 +120,38 @@ bool Enumeration::keyPressed(EntityKeyEvent const* _e)
 
 QString Enumeration::defineLayout(ViewKeys& _viewKeys) const
 {
+	QString ret = (access() == NoAccess ? "" : "m24,0,0,0;");
 	if (_viewKeys["expanded"].toBool())
 	{
-		QString ret = "^;ycode;'enum ';fb;cblack;s" + Type(const_cast<Enumeration*>(this))->idColour() + ";!0;s;ycode;n;'{'";
+		ret += "^;ycode;'enum ';fb;cblack;s" + Type(const_cast<Enumeration*>(this))->idColour() + ";!0;s;ycode;n;'{'";
 		foreach (EnumValue* f, entitiesOf<EnumValue>())
 			ret += QString(";n;i;%1").arg(f->contextIndex());
-		return ret + ";n;'}'";
+		ret += ";n;'}'";
 	}
 	else
 	{
-		return "^;ycode;'enum ';fb;cblack;s" + Type(const_cast<Enumeration*>(this))->idColour() + ";!0;s;yminor;' (" + QString::number(entitiesOf<EnumValue>().count()) + " entries)'";
+		ret += "^;ycode;'enum ';fb;cblack;s" + Type(const_cast<Enumeration*>(this))->idColour() + ";!0;s;yminor;' (";
+		int n = entitiesOf<EnumValue>().count();
+		if (n > 1 || !entitiesOf<EnumValue>()[0]->codeName().isEmpty())
+			ret += QString::number(n) + " entr" + (n > 1 ? "ies" : "y");
+		if (ret.endsWith("("))
+			ret += "empty";
+		ret += ")'";
 	}
+	return ret;
 }
 
+void Enumeration::decorate(DecorationContext const& _p) const
+{
+	if (access() != NoAccess)
+	{
+		_p->setPen(Qt::NoPen);
+		QColor c = AccessLabel::idColour(access());
+		c.setAlpha(64);
+		_p->setBrush(c);
+		_p->drawRect(QRectF(16.f, 0.f, 4.f, _p.cap(0).height()));
+	}
+	Super::decorate(_p);
+}
 
 }
