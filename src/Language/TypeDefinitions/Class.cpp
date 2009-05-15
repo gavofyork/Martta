@@ -132,7 +132,7 @@ bool Class::checkImplicitConstructors()
 	}
 	return ret;
 }
-	
+
 void Class::onDependencyAdded(Entity* _e)
 {
 	if (entities().contains(_e))

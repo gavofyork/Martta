@@ -51,7 +51,8 @@ protected:
 	virtual void						apresLoad() { rejigDeps(); checkImplicitConstructors(); }
 	virtual void						onDependencyAdded(Entity* _e);
 	virtual void						onDependencyRemoved(Entity* _e);
-//	virtual void						onDependencySwitched(Entity* _e) { if (entities().contains(_e)) rejigDeps(); Super::onDependencySwitched(_e); }
+	// A child has been added to the class somewhere in the middle, probably. Either way we need to rejig deps to get the new access label tracked.
+	virtual void						onDependencySwitched(Entity* _e) { onDependencyAdded(_e); }
 	virtual bool						onChanged();
 	virtual void						onChildrenPrepared() { checkImplicitConstructors(); }
 	virtual bool						hasDefaultConstructor() const;

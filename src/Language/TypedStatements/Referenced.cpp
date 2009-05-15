@@ -190,7 +190,6 @@ void Referenced::decorate(DecorationContext const& _c) const
 	}
 }
 
-
 QString Referenced::defineLayout(ViewKeys&) const
 {
 	QString ret = QString(m_lastSet&GlobalSet ? "p:/global.svg;" : "");

@@ -1,7 +1,5 @@
-TODO make members and argument referenceds look as they should.
-TODO enumerations as members of classes - needs (optional) access() from accesslabel. 
-BUG make entity private in class with newly created method.
 BUG 'I' on method name.
+TODO enumerations as members of classes - needs (optional) access() from accesslabel. 
 
 BUG get program code updating properly.
 TODO variable initialisers should use same system as enum value?
