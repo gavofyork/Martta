@@ -82,7 +82,7 @@ QString MemberCallable::interfaceCode() const
 bool MemberCallable::keyPressed(EntityKeyEvent const* _e)
 {
 	M_ASSERT(isComplete());
-	if (_e->isFocused() && entitiesOf<AccessLabel>().size() && entitiesOf<AccessLabel>()[0]->asKind<Label>()->keyPressed(_e))
+	if ((_e->isFocused() || !entityIs<Compound>(_e->focalIndex())) && entitiesOf<AccessLabel>().size() && entitiesOf<AccessLabel>()[0]->asKind<Label>()->keyPressed(_e))
 		return true;
 	else if ((_e->isFocused() || !entityIs<Compound>(_e->focalIndex())) && entitiesOf<ConstLabel>().size() && entitiesOf<ConstLabel>()[0]->asKind<Label>()->keyPressed(_e))
 		return true;
