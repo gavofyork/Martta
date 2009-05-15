@@ -20,6 +20,9 @@
 
 #include <QtXml>
 
+#include "DecorationContext.h"
+#include "CommonGraphics.h"
+#include "NamespaceEntity.h"
 #include "Invocation.h"
 #include "MemberCallable.h"
 #include "MemberVariable.h"
@@ -161,9 +164,42 @@ void Referenced::exportDom(QDomElement& _element) const
 	_element.setAttribute("lastSet", m_lastSet);
 }
 
+void Referenced::decorate(DecorationContext const& _c) const
+{
+	bool dec= false;
+	if (m_subject->hasAncestor<NamespaceEntity>())
+	{
+		if (m_subject->isKind<Variable>() && m_subject->contextIs<Class>())
+			dec = true;
+		else if (m_subject->isKind<Variable>() && m_subject->contextIs<Callable>())
+			dec = true;
+	}
+	if (dec)
+	{
+		QRectF r(alignedForUnitPen(_c(1)));
+		r.setWidth(qMin(_c(0).width(), r.height() * 2));
+
+		QRgb c = qRgb(0, 0, 0);
+	
+		QRadialGradient go(_c(1).center(), r.height() * 2);
+		go.setColorAt(0.f, qRgba(c, 32));
+		go.setColorAt(1.f, qRgba(c, 0));
+		_c->setPen(Qt::NoPen);
+		_c->setBrush(go);
+		_c->drawRoundRect(r, 50, 100);
+	}
+}
+
+
 QString Referenced::defineLayout(ViewKeys&) const
 {
-	return QString(m_lastSet&GlobalSet ? "p:/global.svg;" : "") + "^;s" + (m_subject ? m_subject->type()->idColour() : TypeEntity::null->idColour()) + ";c;'" + (m_subject ? m_subject->name() : QString()) + "'";
+	QString ret = QString(m_lastSet&GlobalSet ? "p:/global.svg;" : "");
+	if (m_subject && m_subject->isKind<Variable>() && m_subject->contextIs<Class>())
+		ret += "(;M4;[[[;fs-2;fb;c#777;e#fff;'M';]]];);";
+	else if (m_subject && m_subject->isKind<Variable>() && m_subject->contextIs<Callable>())
+		ret += "(;M4;[[[;fs-2;fb;c#777;e#fff;'_';]]];);";
+	ret += "^;s" + (m_subject ? m_subject->type()->idColour() : TypeEntity::null->idColour()) + ";c;'" + (m_subject ? m_subject->name() : QString()) + "'";
+	return ret;
 }
 
 class ReferencedEdit: public EditDelegate<Referenced>

@@ -47,6 +47,7 @@ public:
 protected:
 	virtual bool						onChanged();
 	virtual QString						defineLayout(ViewKeys&) const;
+	virtual void						decorate(DecorationContext const& _c) const;
 	virtual bool						isSuperfluous() const;
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 	virtual void						exportDom(QDomElement& _element) const;
