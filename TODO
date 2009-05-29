@@ -1,4 +1,4 @@
-BUG 'Vi i;i+=7+=7;'
+BUG parentheses no longer work.
 BUG get program code updating properly.
 TODO variable initialisers should use same system as enum value?
 

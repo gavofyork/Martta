@@ -39,9 +39,17 @@ bool SimpleBinaryOperation::keyPressedOnInsertionPoint(InsertionPoint const& _p,
 	Operator o(_e->text(), Operator::Binary);
 	if (!_p.exists() || _p->isPlaceholder() || o.isNull())
 		return false;
+		
+	bool ok = false;
 	InsertionPoint p = slideOnPrecedence(_p, o.precedence(), o.associativity(), _e->nearestBracket(_p));
 	M_ASSERT(!p.entity()->isEditing());
 	if (p->isKind<Typed>() && findOperators(o, p->asKind<Typed>()->type()).size())
+		ok = true;
+	if (!ok)
+		p = _p;
+	if (p->isKind<Typed>() && findOperators(o, p->asKind<Typed>()->type()).size())
+		ok = true;
+	if (ok)
 	{
 		SimpleBinaryOperation* n = new SimpleBinaryOperation(o, p->asKind<Typed>()->type());
 		_e->noteStrobeCreation(n, &*p);
