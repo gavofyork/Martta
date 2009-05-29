@@ -255,6 +255,15 @@ void CodeScene::paintEvent(QPaintEvent*)
 		qDebug() << "paintEvent: setting current to" << m_subject << "(subject)";
 		m_current = m_subject;
 	}
+
+	// May need a rethink to make things less brittle (parentheses disappear when no longer in current;
+	// when switching things around e.g. placing new entities or strobing), current may be out of touch
+	// for a while and thus kill all brackets)
+	// Simple solution may be to move the next para into paintEvent.
+	foreach (InsertionPoint i, m_bracketed)
+		if (!i.exists() || (i.entity() != m_current && !m_current->hasAncestor(i.entity())))
+			m_bracketed.removeAll(i);
+//	qDebug() << "From" << old << "to" << current();
 	
 	QPainter p(this);
 	p.translate(m_borderOffset);
@@ -656,14 +665,6 @@ void CodeScene::setCurrent(Entity* _e)
 	qDebug() << "";
 	m_current = _e;
 	
-	// May need a rethink to make things less brittle (parentheses disappear when no longer in current;
-	// when switching things around e.g. placing new entities or strobing), current may be out of touch
-	// for a while and thus kill all brackets)
-	// Simple solution may be to move the next para into paintEvent.
-	foreach (InsertionPoint i, m_bracketed)
-		if (!i.exists() || (i.entity() != m_current && !m_current->hasAncestor(i.entity())))
-			m_bracketed.removeAll(i);
-//	qDebug() << "From" << old << "to" << current();
 	
 	if (old)
 	{

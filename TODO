@@ -1,4 +1,6 @@
-BUG parentheses no longer work.
+TODO better way for inputting ((i+=5)+=i)+=5
+     - probably do 'i+=5+=i'<-'(+=5'
+
 BUG get program code updating properly.
 TODO variable initialisers should use same system as enum value?
 
