@@ -59,8 +59,20 @@ bool Type::isSimilarTo(Type const& _to, TypeEntity::Castability _c) const
 	return m_top->isSimilarTo(_to.m_top, _c);
 }
 
+/**
+ * Usage: full.strippedTo(empty)
+ * empty must be ultimately null.
+ * 
+ * Will identify empty (ignoring Type()) with some portion in centre of full.
+ * Everything between root and this portion will replace the Type() at root of empty.
+ *
+ * e.g.
+ * <<int const*&>>.strippedTo(<<?*>>) == <<int const*>>
+ * <<int*&>>.strippedTo(<<? const*>>) == <<?>>
+ */
 Type Type::strippedTo(Type const& _t) const
 {
+	M_ASSERT(_t.isUltimatelyNull());
 	Type ret = *this;
 	while (ret.m_top)
 	{

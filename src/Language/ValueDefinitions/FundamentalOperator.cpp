@@ -79,8 +79,8 @@ void FundamentalOperator::initialiseClass()
 	{
 		// unit inc/decrement operators.
 		foreach (QString s, QString("++,--").split(","))
-		{	new FundamentalOperator(Operator(s, Operator::UnaryPrefix), Type(d).topWith(Reference()), Type(d).topWith(Reference()), root);
-			new FundamentalOperator(Operator(s, Operator::UnaryPostfix), Type(d).topWith(Reference()), Type(d).topWith(Reference()), root);
+		{	new FundamentalOperator(Operator(s, Operator::UnaryPrefix), Type(d)/*.topWith(Reference())*/, Type(d).topWith(Reference()), root);
+			new FundamentalOperator(Operator(s, Operator::UnaryPostfix), Type(d)/*.topWith(Reference())*/, Type(d).topWith(Reference()), root);
 		}
 		// modulo/logical operators
 		foreach (QString s, QString("%,&,|,^").split(","))
@@ -129,8 +129,8 @@ void FundamentalOperator::initialiseClass()
 	// pointer types (we use Ptr for them in the lookup)
 	foreach (QString s, QString("++,--").split(","))
 	{
-		new FundamentalOperator(Operator(s, Operator::UnaryPrefix), Type(), Type(Void).topWith(Const()).topWith(Pointer()).topWith(Reference()), root);
-		new FundamentalOperator(Operator(s, Operator::UnaryPostfix), Type(), Type(Void).topWith(Const()).topWith(Pointer()).topWith(Reference()), root);
+		new FundamentalOperator(Operator(s, Operator::UnaryPrefix), Type().topWith(Pointer()), Type(Void).topWith(Const()).topWith(Pointer()).topWith(Reference()), root);
+		new FundamentalOperator(Operator(s, Operator::UnaryPostfix), Type().topWith(Pointer()), Type(Void).topWith(Const()).topWith(Pointer()).topWith(Reference()), root);
 	}
 	foreach (QString s, QString("<,>,<=,>=,==,!=").split(","))
 		new FundamentalOperator(Operator(s), Type(Bool), (Type(Void).topWith(Const()).topWith(Pointer()), Type().topWith(Pointer())), root);

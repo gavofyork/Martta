@@ -83,7 +83,15 @@ Type SimpleUnaryOperation::type() const
 	if (!m_symbolCache.isUsable())
 		return Type();
 	if (protoReturn().isUltimatelyNull() && !typeOf(0).isNull())
+	{
+/*		qDebug() << typeOf(0)->code();
+		typeOf(0)->debugTree();
+		qDebug() << protoReturn()->code();
+		protoReturn()->debugTree();
+		qDebug() << typeOf(0).strippedTo(protoReturn())->code();
+		typeOf(0).strippedTo(protoReturn())->debugTree();*/
 		return typeOf(0).strippedTo(protoReturn());
+	}
 	return protoReturn();
 }
 

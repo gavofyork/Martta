@@ -166,6 +166,9 @@ void Referenced::exportDom(QDomElement& _element) const
 
 void Referenced::decorate(DecorationContext const& _c) const
 {
+	//TODO: Check!
+	if (!m_subject)
+		return;
 	bool dec= false;
 	if (m_subject->hasAncestor<NamespaceEntity>())
 	{
