@@ -1,6 +1,3 @@
-TODO variable initialisers should use same system as enum value?
-
-BUG get program code updating properly.
 TODO anonymous enums?
 TODO page up & down broken.
 
@@ -243,3 +240,6 @@ Debugger
   - Should be some way to hook into parent's code building. Probably virtuals are best; consider.
 
 - Data files
+
+Variable initialisers should use same system as enum value?
+- Not right now, anyway, since an initialised (default or not) variable declaration is not equivalent to a simple variable declaration (inside a class).

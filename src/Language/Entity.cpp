@@ -235,6 +235,8 @@ void Entity::setContext(Entity* _newContext)
 			sibling(i)->m_contextIndex = i;
 	}
 	
+	RootEntity* ore = m_rootEntity;
+	
 	m_context = _newContext;
 	
 	if (m_context)
@@ -248,9 +250,14 @@ void Entity::setContext(Entity* _newContext)
 		m_contextIndex = -1;
 		m_rootEntity = 0;
 	}
-
+		
 	foreach (Entity* e, m_children)
 		e->checkRoot();
+
+	if (isInModel())
+		m_rootEntity->setChanged();
+	if (ore)
+		ore->setChanged();
 }
 
 void Entity::setContextTentatively(Entity* _newContext)

@@ -88,7 +88,7 @@ QString TextLabel::defineLayout(ViewKeys&) const
 		else if (contextIs<Variable>() && context()->contextIs<Callable>())
 			key = "(;M4;[[[;fs-2;fb;c#777;e#fff;'_';]]];)";
 	}
-	return "^;" + (text().isEmpty() ? QString("ygrayed;'<unnamed>'") : (key + ";'" + name() + "'"));
+	return "^;" + (text().isEmpty() ? QString("yminor;'ANONYMOUS'") : (key + ";'" + name() + "'"));
 }
 
 void TextLabel::decorate(DecorationContext const& _c) const
