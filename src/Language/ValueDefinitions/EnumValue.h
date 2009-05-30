@@ -37,7 +37,7 @@ class EnumValue: public ValueDefinition
 public:
 	// Accessor methods.
 	// From ValueDefinition from TypeNamer.
-	virtual Type						type() const { return Type(Int); }	// TODO Not true - only when it's an anonymous enum.
+	virtual Type						type() const;
 	virtual QString						code() const;
 
 protected:

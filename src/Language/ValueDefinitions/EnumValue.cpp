@@ -19,6 +19,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "Type.h"
+#include "ExplicitType.h"
 #include "Typed.h"
 #include "TextLabel.h"
 #include "Enumeration.h"
@@ -35,6 +36,19 @@ Kinds EnumValue::allowedKinds(int _i) const
 		return Kind::of<TextLabel>();
 	else
 		return Kind::of<Typed>();
+}
+
+Type EnumValue::type() const
+{
+	if (contextIs<Enumeration>())
+	{
+		if (contextAs<Enumeration>()->isHidden())
+			return Type(Int);
+		else
+			return Type(ExplicitType(contextAs<Enumeration>()));
+	}
+	else
+		return Type();
 }
 
 bool EnumValue::isChildInValidState(int _i) const
