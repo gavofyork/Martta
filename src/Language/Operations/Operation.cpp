@@ -140,6 +140,14 @@ bool Operation::keyPressed(EntityKeyEvent const* _e)
 		repaint(_e->codeScene());
 		return true;
 	}
+	else if(_e->text() == "(")
+	{
+		_e->codeScene()->setBracketed(over());
+		over()->setCurrent();
+		repaint(_e->codeScene());
+		return true;
+	}
+	
 	return Super::keyPressed(_e);
 }
 
@@ -149,7 +157,7 @@ InsertionPoint Operation::slideOnPrecedence(InsertionPoint _p, Precedence _d, As
 	while (_block != p && p->contextIs<Operation>() && p.index() == p->siblingCount() - 1 &&
 		   (_d > p->contextAs<Operation>()->precedence() || _d == p->contextAs<Operation>()->precedence() && _a == LeftAssociativity))
 		p = p.context()->over();
-	while (p->isKind<Operation>() && !p->entity(p->entityCount() - 1)->isPlaceholder() && p->asKind<Operation>()->precedence() == _d && _a == RightAssociativity)
+	while (_block != p && p->isKind<Operation>() && !p->entity(p->entityCount() - 1)->isPlaceholder() && p->asKind<Operation>()->precedence() == _d && _a == RightAssociativity)
 		p = p->entity(p->entityCount() - 1)->over();
 	if (p->contextIs<Operation>() && p->contextAs<Operation>()->isSlidable(p.index()))
 		return _p;

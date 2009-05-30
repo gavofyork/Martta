@@ -1,12 +1,12 @@
-TODO better way for inputting ((i+=5)+=i)+=5
-     - probably do 'i+=5+=i'<-'(+=5'
-
-BUG get program code updating properly.
 TODO variable initialisers should use same system as enum value?
 
+BUG get program code updating properly.
 TODO anonymous enums?
 TODO page up & down broken.
 
+Resolve name clashes.
+- Force unique names.
+- OR pickup on clashes and resolve at edit stage.
 Multiple projects in a solution
 - Solution "explorer".
 - Project types: "Static Library", "Dynamic Library", "Executable".
@@ -14,9 +14,6 @@ Multiple projects in a solution
   - pickup if entry point is private
 - Add other libraries (SDL, openGL)
 - Use other binary-only libraries.
-Resolve name clashes.
-- Force unique names.
-- OR pickup on clashes and resolve at edit stage.
 
 --------------------------------------------------------------------------------
 
