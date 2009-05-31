@@ -39,6 +39,15 @@ DeclarationEntity::~DeclarationEntity()
 		qInformation() << "Deleting" << this << "with no rootEntity!";
 }
 
+QList<ValueDefinition*> DeclarationEntity::valuesKnown() const
+{
+	QList<ValueDefinition*> ret = contextIs<DeclarationEntity>() ? contextAs<DeclarationEntity>()->valuesKnown() : QList<ValueDefinition>();
+	foreach (DeclarationEntity* d, parentsChildrenOf<DeclarationEntity>())
+		if (d != this)
+			ret += d.valuesAdded();
+	return ret;
+}
+
 QString DeclarationEntity::name() const
 {
 	if (!entitiesOf<TextLabel>().size())
@@ -108,7 +117,7 @@ QList<DeclarationEntity*> DeclarationEntity::utilisedSiblings() const
 	foreach (DeclarationEntity* i, utilised())
 		if (i->hasAncestor(context()))
 		{
-			DeclarationEntity* e = sibling(i->ancestorIndex(context()))->asKind<DeclarationEntity>();
+			DeclarationEntity* e = parentsChild(i->ancestorIndex(context()))->asKind<DeclarationEntity>();
 			if (e && !ret.contains(e))
 				ret << e;
 		}

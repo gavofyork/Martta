@@ -63,8 +63,8 @@ QList<ValueDefinition*> Statement::valuesInLocalScope() const
 		return QList<ValueDefinition*>();
 	QList<ValueDefinition*> ret = contextAs<Statement>()->valuesInLocalScope();
 	for(int i = 0; i < contextIndex(); ++i)
-		if (siblingIs<Statement>(i))
-			ret += siblingAs<Statement>(i)->entitiesOf<ValueDefinition>();
+		if (parentsChildIs<Statement>(i))
+			ret += parentsChildAs<Statement>(i)->entitiesOf<ValueDefinition>();
 	return ret;
 }
 

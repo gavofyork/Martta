@@ -27,6 +27,7 @@ namespace Martta
 
 class Type;
 class SubAddressable;
+class ValueDefinition;
 
 /**
  * Class for anything individually referencable in the language.
@@ -65,6 +66,9 @@ public:
 
 	QList<DeclarationEntity*>			utilisedSiblings() const;
 	virtual QList<DeclarationEntity*>	utilised() const;
+
+	QList<ValueDefinition*>				valuesKnown() const;
+	virtual QList<ValueDefinition*>		valuesAdded() const { return QList<ValueDefinition*>(); }
 	
 	virtual void						exportDom(QDomElement& _element) const;
 	virtual void						importDom(QDomElement const& _element);

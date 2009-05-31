@@ -164,8 +164,8 @@ public:
 	inline Entity*						context() const { return m_context; }
 	template<class T> inline bool		contextIs() const { return m_context ? m_context->isKind<T>() : false; }
 	template<class T> inline T*			contextAs() const { M_ASSERT(m_context); return m_context->asKind<T>(); }
-	inline int							contextIndex() const { /*M_ASSERT(m_contextIndex == siblings().indexOf(const_cast<Entity*>(this)));*/ return m_contextIndex; }
-	template<class T> inline int		contextIndexExclusive() const { return siblingsOf<T>().indexOf(static_cast<T*>(const_cast<Entity*>(this))); }
+	inline int							contextIndex() const { /*M_ASSERT(m_contextIndex == parentsChildren().indexOf(const_cast<Entity*>(this)));*/ return m_contextIndex; }
+	template<class T> inline int		contextIndexExclusive() const { M_ASSERT(isKind<T>()); return parentsChildrenOf<T>().indexOf(static_cast<T*>(const_cast<Entity*>(this))); }
 	virtual QList<DeclarationEntity*>	spacesInScope() const;
 	template<class T> QList<T*>			entitiesHereAndBeforeOf() const { QList<T*> ret = entitiesOf<T>(); return context() ? ret + context()->entitiesHereAndBeforeOf<T>() : ret; }
 	virtual DeclarationEntity*			findEntity(QString const& _key) const;
@@ -177,12 +177,15 @@ public:
 	template<class T> inline QList<T*>	entitiesOf() const { return filterEntities<T>(m_children); }
 	template<class T> inline bool		entityIs(int _i) const { return (_i >= 0 && _i < m_children.size() && m_children[_i]) ? m_children[_i]->isKind<T>() : false; }
 	template<class T> inline T*			entityAs(int _i) const { M_ASSERT(_i >= 0 && _i < m_children.size() && m_children[_i]); return m_children[_i]->asKind<T>(); }
-	inline QList<Entity*>				siblings() const { if (!m_context) return QList<Entity*>(); return m_context->m_children; }
-	inline int							siblingCount() const { M_ASSERT(context()); return context()->m_children.size(); }
-	inline Entity*						sibling(int _i) const { M_ASSERT(context()); return context()->entity(_i); }
-	template<class T> inline QList<T*>	siblingsOf() const { if (!m_context) return QList<T*>(); return m_context->entitiesOf<T>(); }
-	template<class T> inline bool		siblingIs(int _i) const { return sibling(_i) ? sibling(_i)->isKind<T>() : false; }
-	template<class T> inline T*			siblingAs(int _i) const { M_ASSERT(sibling(_i)); return sibling(_i)->asKind<T>(); }
+	inline QList<Entity*>				parentsChildren() const { if (!m_context) return QList<Entity*>(); return m_context->m_children; }
+	inline int							parentsChildrenCount() const { M_ASSERT(context()); return context()->m_children.size(); }
+	inline Entity*						parentsChild(int _i) const { M_ASSERT(context()); return context()->entity(_i); }
+	template<class T> inline QList<T*>	parentsChildrenOf() const { if (!m_context) return QList<T*>(); return m_context->entitiesOf<T>(); }
+	template<class T> inline bool		parentsChildIs(int _i) const { return parentsChild(_i) ? parentsChild(_i)->isKind<T>() : false; }
+	template<class T> inline T*			parentsChildAs(int _i) const { M_ASSERT(parentsChild(_i)); return parentsChild(_i)->asKind<T>(); }
+	inline QList<Entity*>				siblings() const { if (!m_context) return QList<Entity*>(); QList<Entity*> ret; foreach (Entity* e, m_context->m_children) if (e != this) ret += e; return ret; }
+	inline int							siblingCount() const { M_ASSERT(context()); return context()->m_children.size() - 1; }
+	template<class T> inline QList<T*>	siblingsOf() const { return filterEntities<T>(siblings());  }
 	template<class T> T*				ancestor() const;
 	Entity*								ancestor(Kind _k) const;
 	template<class T> bool				hasAncestor() const;

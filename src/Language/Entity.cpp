@@ -231,8 +231,8 @@ void Entity::setContext(Entity* _newContext)
 	{
 		int oi = contextIndex();
 		m_context->m_children.removeAll(this);
-		for (int i = oi; i < siblingCount(); i++)
-			sibling(i)->m_contextIndex = i;
+		for (int i = oi; i < parentsChildrenCount(); i++)
+			parentsChild(i)->m_contextIndex = i;
 	}
 	
 	RootEntity* ore = m_rootEntity;
@@ -242,7 +242,7 @@ void Entity::setContext(Entity* _newContext)
 	if (m_context)
 	{
 		m_context->m_children.append(this);
-		m_contextIndex = siblingCount() - 1;
+		m_contextIndex = parentsChildrenCount() - 1;
 		m_rootEntity = m_context->rootEntity();
 	}
 	else
@@ -268,8 +268,8 @@ void Entity::setContextTentatively(Entity* _newContext)
 	{
 		int oi = contextIndex();
 		m_context->m_children.removeAll(this);
-		for (int i = oi; i < siblingCount(); i++)
-			sibling(i)->m_contextIndex = i;
+		for (int i = oi; i < parentsChildrenCount(); i++)
+			parentsChild(i)->m_contextIndex = i;
 	}
 	
 	m_context = _newContext;
@@ -277,7 +277,7 @@ void Entity::setContextTentatively(Entity* _newContext)
 	if (m_context)
 	{
 		m_context->m_children.append(this);
-		m_contextIndex = siblingCount() - 1;
+		m_contextIndex = parentsChildrenCount() - 1;
 	}
 	else
 	{
@@ -312,8 +312,8 @@ void Entity::undoTentativeSetContext(InsertionPoint const& _oldPosition)
 	{
 		int oi = contextIndex();
 		m_context->m_children.removeAll(this);
-		for (int i = oi; i < siblingCount(); i++)
-			sibling(i)->m_contextIndex = i;
+		for (int i = oi; i < parentsChildrenCount(); i++)
+			parentsChild(i)->m_contextIndex = i;
 	}
 
 	m_context = _oldPosition.context();
@@ -322,8 +322,8 @@ void Entity::undoTentativeSetContext(InsertionPoint const& _oldPosition)
 	{
 		int oi = _oldPosition.index();
 		m_context->m_children.insert(oi, this);
-		for (int i = oi; i < siblingCount(); i++)
-			sibling(i)->m_contextIndex = i;
+		for (int i = oi; i < parentsChildrenCount(); i++)
+			parentsChild(i)->m_contextIndex = i;
 	}
 	else
 	{
@@ -396,14 +396,14 @@ void Entity::moveToPosition(int _index)
 	
 	int oi = contextIndex();
 	
-	if (_index < 0 || _index > siblingCount())
-		_index = siblingCount() - 1;
+	if (_index < 0 || _index > parentsChildrenCount())
+		_index = parentsChildrenCount() - 1;
 	
 	m_context->m_children.removeAll(this);
 	m_context->m_children.insert(_index, this);
 	
 	for (int i = qMin(_index, oi); i <= qMax(_index, oi); i++)
-		sibling(i)->m_contextIndex = i;
+		parentsChild(i)->m_contextIndex = i;
 }
 
 bool Entity::isSuperfluous() const

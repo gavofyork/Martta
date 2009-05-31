@@ -154,7 +154,7 @@ bool Operation::keyPressed(EntityKeyEvent const* _e)
 InsertionPoint Operation::slideOnPrecedence(InsertionPoint _p, Precedence _d, Associativity _a, InsertionPoint const& _block)
 {
 	InsertionPoint p = _p;
-	while (_block != p && p->contextIs<Operation>() && p.index() == p->siblingCount() - 1 &&
+	while (_block != p && p->contextIs<Operation>() && p.index() == p->parentsChildrenCount() - 1 &&
 		   (_d > p->contextAs<Operation>()->precedence() || _d == p->contextAs<Operation>()->precedence() && _a == LeftAssociativity))
 		p = p.context()->over();
 	while (_block != p && p->isKind<Operation>() && !p->entity(p->entityCount() - 1)->isPlaceholder() && p->asKind<Operation>()->precedence() == _d && _a == RightAssociativity)

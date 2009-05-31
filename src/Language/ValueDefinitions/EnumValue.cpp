@@ -45,7 +45,7 @@ Type EnumValue::type() const
 		if (contextAs<Enumeration>()->isHidden())
 			return Type(Int);
 		else
-			return Type(ExplicitType(contextAs<Enumeration>()));
+			return Type(contextAs<Enumeration>());
 	}
 	else
 		return Type();
