@@ -1,4 +1,6 @@
 TODO wire enum values in.
+BUG 7 on load
+TODO move crap from ExplicitType to TypeDefinition.
 TODO page up & down broken.
 TODO join statements or tree insert.
 

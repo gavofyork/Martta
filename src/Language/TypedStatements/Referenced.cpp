@@ -168,30 +168,32 @@ void Referenced::exportDom(QDomElement& _element) const
 void Referenced::decorate(DecorationContext const& _c) const
 {
 	//TODO: Check!
-	if (!m_subject)
-		return;
-	bool dec= false;
-	if (m_subject->hasAncestor<NamespaceEntity>())
+	if (m_subject)
 	{
-		if (m_subject->isKind<Variable>() && m_subject->contextIs<Class>())
-			dec = true;
-		else if (m_subject->isKind<Variable>() && m_subject->contextIs<Callable>())
-			dec = true;
-	}
-	if (dec)
-	{
-		QRectF r(alignedForUnitPen(_c(1)));
-		r.setWidth(qMin(_c(0).width(), r.height() * 2));
+		bool dec = false;
+		if (m_subject->hasAncestor<NamespaceEntity>())
+		{
+			if (m_subject->isKind<Variable>() && m_subject->contextIs<Class>())
+				dec = true;
+			else if (m_subject->isKind<Variable>() && m_subject->contextIs<Callable>())
+				dec = true;
+		}
+		if (dec)
+		{
+			QRectF r(alignedForUnitPen(_c(1)));
+			r.setWidth(qMin(_c(0).width(), r.height() * 2));
 
-		QRgb c = qRgb(0, 0, 0);
-	
-		QRadialGradient go(_c(1).center(), r.height() * 2);
-		go.setColorAt(0.f, qRgba(c, 32));
-		go.setColorAt(1.f, qRgba(c, 0));
-		_c->setPen(Qt::NoPen);
-		_c->setBrush(go);
-		_c->drawRoundRect(r, 50, 100);
+			QRgb c = qRgb(0, 0, 0);
+		
+			QRadialGradient go(_c(1).center(), r.height() * 2);
+			go.setColorAt(0.f, qRgba(c, 32));
+			go.setColorAt(1.f, qRgba(c, 0));
+			_c->setPen(Qt::NoPen);
+			_c->setBrush(go);
+			_c->drawRoundRect(r, 50, 100);
+		}
 	}
+	Super::decorate(_c);
 }
 
 QString Referenced::defineLayout(ViewKeys&) const

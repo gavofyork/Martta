@@ -37,6 +37,8 @@
 #include "StringType.h"
 #include "RootEntity.h"
 #include "Pointer.h"
+#include "Enumeration.h"
+#include "EnumValue.h"
 
 #include <QDomDocument>
 #include <QDomElement>
@@ -342,6 +344,36 @@ int test()
 		CAST_TEST(ir, bc, Convertible);
 		CAST_TEST(ir, i, Convertible);
 		CAST_TEST(ir, ir, Logical);
+#undef CAST_TEST
+	}
+	{
+#define CAST_TEST(F, T, R) TEST("EnumValue Conversion casting... " #F "->" #T) TEST_THIS_CAST(F, T, R)
+		RootEntity* r = new RootEntity;
+		Enumeration* X = new Enumeration;
+		X->prepareChildren();
+		r->back().place(X);
+		EnumValue* Xv = new EnumValue;
+		Xv->prepareChildren();
+		X->back().place(Xv);
+		Enumeration* Y = new Enumeration;
+		Y->prepareChildren();
+		Y->entitiesOf<TextLabel>()[0]->setText("Y");
+		r->back().place(Y);
+		EnumValue* Yv = new EnumValue;
+		Yv->prepareChildren();
+		Y->back().place(Yv);
+		Type x = Xv->type();
+		Type y = Yv->type();
+		Type i = Type(Int);
+//		CAST_TEST(x, x, Logical);
+		CAST_TEST(x, y, Unrelated);
+		CAST_TEST(x, i, Logical);
+//		CAST_TEST(y, x, Unrelated);
+		CAST_TEST(y, y, Logical);
+		CAST_TEST(y, i, Unrelated);
+//		CAST_TEST(i, x, Logical);
+		CAST_TEST(i, y, Unrelated);
+		CAST_TEST(i, i, Logical);
 #undef CAST_TEST
 	}
 	{

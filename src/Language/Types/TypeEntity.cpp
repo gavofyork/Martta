@@ -35,7 +35,7 @@ MARTTA_OBJECT_CPP(TypeEntity);
 
 TypeEntity* TypeEntity::null = (new TypeEntity)->setOwned();
 
-bool g_debugCastability = false;
+bool g_debugCastability = true;
 
 Types TypeEntity::assignableTypes() const
 {

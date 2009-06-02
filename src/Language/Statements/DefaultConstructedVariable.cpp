@@ -18,6 +18,11 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+// GAA Don't really want to have to care about this, but necessary at the moment since MemberVariable inherits from Variable and we need to 
+// be able to accept it generally. In reality, MemberVariable shouldn't inherit from Variable - just contain it or something, or perhaps
+// have BaseVariable -> { Variable, MemberVariable } 
+#include "MemberVariable.h"
+
 #include "Variable.h"
 #include "AssignedVariable.h"
 #include "DefaultConstructedVariable.h"
@@ -32,6 +37,15 @@ Kinds DefaultConstructedVariable::allowedKinds(int _index) const
 	switch (_index)
 	{
 		case 0: return Kind::of<Variable>();
+		default: return Kinds();
+	}
+}
+
+Kinds DefaultConstructedVariable::deniedKinds(int _index) const
+{
+	switch (_index)
+	{
+		case 0: return Kind::of<MemberVariable>();
 		default: return Kinds();
 	}
 }

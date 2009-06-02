@@ -22,6 +22,7 @@
 
 #include "CodeScene.h"
 #include "Class.h"
+#include "Enumeration.h"
 #include "Const.h"
 #include "Constructor.h"
 #include "Base.h"
@@ -134,21 +135,32 @@ bool ExplicitType::defineSimilarityTo(TypeEntity const* _t, Castability _c) cons
 		if (_c == Convertible && haveSingleCastOperator(_t))
 			return true;
 	
-		Class* c = m_subject->isKind<Class>() ? m_subject->asKind<Class>() : 0;
-		if (_c == Physical && _t->isKind<ExplicitType>() && c)
+		if (Class* c = m_subject->tryKind<Class>())
 		{
-			TypeDefinition* ts = _t->asKind<ExplicitType>()->m_subject;
-			if (c == ts)
-				return true;
-			// Note Physical attribute should be tested last.
-			QList<Base*> bases = c->entitiesOf<Base>();
-			while (bases.size())
+			if (_c == Physical && _t->isKind<ExplicitType>())
 			{
-				Base* b = bases.takeLast();
-				if (ts && b->classType() == ts)
+				TypeDefinition* ts = _t->asKind<ExplicitType>()->m_subject;
+				if (c == ts)
 					return true;
-				else if (b->classType())
-					bases += b->classType()->entitiesOf<Base>();
+				// Note Physical attribute should be tested last.
+				QList<Base*> bases = c->entitiesOf<Base>();
+				while (bases.size())
+				{
+					Base* b = bases.takeLast();
+					if (ts && b->classType() == ts)
+						return true;
+					else if (b->classType())
+						bases += b->classType()->entitiesOf<Base>();
+				}
+			}
+		}
+		else if (Enumeration* e = m_subject->tryKind<Enumeration>())
+		{
+			if (_t->isKind<ExplicitType>())
+			{
+				TypeDefinition* ts = _t->asKind<ExplicitType>()->m_subject;
+				if (e == ts)
+					return true;
 			}
 		}
 	}
