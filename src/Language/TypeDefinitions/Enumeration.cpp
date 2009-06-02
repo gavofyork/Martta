@@ -34,8 +34,10 @@ MARTTA_OBJECT_CPP(Enumeration);
 bool Enumeration::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
 {
 	if (simpleInsertionPointKeyPressHandler<Enumeration>(_p, _e, "E"))
-	{	if (_p.exists() && _p->isKind<Enumeration>() && _p->entityIs<AccessLabel>(1) && _p->contextIs<Class>())
-			_p->entityAs<AccessLabel>(1)->setAccess(Private);
+	{	Entity* e = _p.context()->entity(_p.index() == -1 ? _p.context()->entityCount() - 1 : _p.index());
+		// We got true so there must be an entity at _p, right?
+		M_ASSERT(e && e->isKind<Enumeration>() && e->entityIs<AccessLabel>(1));
+		e->entityAs<AccessLabel>(1)->setAccess(e->contextIs<Class>() ? Private : NoAccess);
 		return true;
 	}
 	return false;
@@ -124,6 +126,14 @@ bool Enumeration::keyPressed(EntityKeyEvent const* _e)
 	else
 		return Super::keyPressed(_e);
 	return true;
+}
+
+void Enumeration::onDependencyChanged(Entity* _e)
+{
+	if (_e->isKind<Label>())
+		changed();
+	else
+		updateStem();
 }
 
 QString Enumeration::defineLayout(ViewKeys& _viewKeys) const

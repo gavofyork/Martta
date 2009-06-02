@@ -54,7 +54,7 @@ protected:
 	virtual QList<ValueDefinition*>		valuesAdded() const;
 
 	virtual int							familyDependencies() { return DependsOnChildren; }
-	virtual void						onDependencyChanged(Entity*) { updateStem(); }
+	virtual void						onDependencyChanged(Entity* _e);
 
 private:
 	QString								m_stem;

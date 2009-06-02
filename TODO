@@ -1,5 +1,6 @@
 TODO wire enum values in.
 BUG 7 on load
+CHECK enums do behave well regarding order of declaration.
 TODO move crap from ExplicitType to TypeDefinition.
 TODO page up & down broken.
 TODO join statements or tree insert.

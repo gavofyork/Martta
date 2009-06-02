@@ -130,11 +130,11 @@ void MainWindow::entityFocused(Entity* _e)
 		{
 			QTreeWidgetItem* l = new QTreeWidgetItem(typesVisible, QStringList() << QString("Local"));
 			foreach (ValueDefinition* v, _e->asKind<Statement>()->valuesInLocalScope())
-				new QTreeWidgetItem(l, QStringList() << QString(v->reference()) << QString(v->type()->code()));
+				new QTreeWidgetItem(l, QStringList() << QString(v->name()) << QString(v->type()->code()));
 		}
 		QTreeWidgetItem* g = new QTreeWidgetItem(typesVisible, QStringList() << QString("General"));
 		foreach (ValueDefinition* v, _e->ancestor<DeclarationEntity>()->valuesKnown())
-			new QTreeWidgetItem(g, QStringList() << QString(v->reference()) << QString(v->type()->code()));
+			new QTreeWidgetItem(g, QStringList() << QString(v->name()) << QString(v->type()->code()));
 		typesVisible->expandAll();
 		typesVisible->verticalScrollBar()->setValue(vvalue);
 	}
