@@ -49,10 +49,11 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(Referenced);	
 
-enum { LocalVariables = 1, LocalCallables = 2, LocalSet = 3,
-		ArgumentVariables = 4, ArgumentCallables = 8, ArgumentSet = 12,
-  		MemberVariables = 16, MemberCallables = 32, MemberSet = 48,
-		GlobalVariables = 64, GlobalCallables = 128, GlobalSet = 192 };
+enum { LocalVariables = 1<<0, LocalCallables = 1<<1, LocalSet = 1<<0 + 1<<1,
+		ArgumentVariables = 1<<2, ArgumentCallables = 1<<3, ArgumentSet = 1<<2 + 1<<3,
+  		MemberVariables = 1<<4, MemberCallables = 1<<5, MemberSet = 1<<4 + 1<<5,
+		ScopedVariables = 1<<6, ScopedCallables = 1<<7, ScopedSet = 1<<6 + 1<<7,
+		GlobalVariables = 1<<30, GlobalCallables = 1<<31, GlobalSet = 1<<30 + 1<<31 };
 
 bool Referenced::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
 {
@@ -79,7 +80,7 @@ bool Referenced::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyE
 Referenced::Referenced(ValueDefinition* _v, bool _specific):
 	m_subject	(0),
 	m_specific	(_specific),
-	m_lastSet	(LocalSet|MemberCallables)
+	m_lastSet	(LocalSet|MemberCallables|ScopedSet)
 {
 	setSubject(_v);
 }
@@ -291,6 +292,8 @@ void ReferencedEdit::updateSubset()
 	m_valuesInScope.clear();
 	if (subject()->m_lastSet & LocalSet)
 		m_valuesInScope << subject()->valuesInLocalScope();
+	if (subject()->m_lastSet & ScopedSet)
+		m_valuesInScope << subject()->ancestor<DeclarationEntity>()->valuesKnown();
 	if (subject()->m_lastSet & GlobalSet)
 		m_valuesInScope << subject()->rootEntity()->entitiesHereAndBeforeOf<ValueDefinition>();
 	if (subject()->m_lastSet & ArgumentSet && subject()->hasAncestor<Callable>())
