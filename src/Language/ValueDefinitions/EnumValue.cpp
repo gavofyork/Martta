@@ -42,7 +42,7 @@ Type EnumValue::type() const
 {
 	if (contextIs<Enumeration>())
 	{
-		if (contextAs<Enumeration>()->isHidden())
+		if (contextAs<Enumeration>()->isHidden() || contextAs<Enumeration>()->name().isEmpty())
 			return Type(Int);
 		else
 			return Type(contextAs<Enumeration>());

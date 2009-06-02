@@ -83,6 +83,7 @@ MainWindow::~MainWindow()
 void MainWindow::resetSubject()
 {
 	m_codeScene->setSubject(m_project->ns());
+	entityFocused(m_codeScene->current());
 }
 
 void MainWindow::on_actAboutMartta_triggered()
@@ -122,6 +123,20 @@ void MainWindow::entityFocused(Entity* _e)
 			t += "</td>";
 		}
 		t += "</tr></table>";
+		
+		int vvalue = typesVisible->verticalScrollBar()->value();
+		typesVisible->clear();
+		if (_e->isKind<Statement>())
+		{
+			QTreeWidgetItem* l = new QTreeWidgetItem(typesVisible, QStringList() << QString("Local"));
+			foreach (ValueDefinition* v, _e->asKind<Statement>()->valuesInLocalScope())
+				new QTreeWidgetItem(l, QStringList() << QString(v->reference()) << QString(v->type()->code()));
+		}
+		QTreeWidgetItem* g = new QTreeWidgetItem(typesVisible, QStringList() << QString("General"));
+		foreach (ValueDefinition* v, _e->ancestor<DeclarationEntity>()->valuesKnown())
+			new QTreeWidgetItem(g, QStringList() << QString(v->reference()) << QString(v->type()->code()));
+		typesVisible->expandAll();
+		typesVisible->verticalScrollBar()->setValue(vvalue);
 	}
 	else
 		t += "Nothing selected.";

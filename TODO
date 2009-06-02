@@ -1,5 +1,6 @@
 TODO wire enum values in.
 TODO page up & down broken.
+TODO join statements or tree insert.
 
 Resolve name clashes.
 - Force unique names.

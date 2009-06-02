@@ -41,10 +41,9 @@ DeclarationEntity::~DeclarationEntity()
 
 QList<ValueDefinition*> DeclarationEntity::valuesKnown() const
 {
-	QList<ValueDefinition*> ret = contextIs<DeclarationEntity>() ? contextAs<DeclarationEntity>()->valuesKnown() : QList<ValueDefinition>();
-	foreach (DeclarationEntity* d, parentsChildrenOf<DeclarationEntity>())
-		if (d != this)
-			ret += d.valuesAdded();
+	QList<ValueDefinition*> ret = contextIs<DeclarationEntity>() ? contextAs<DeclarationEntity>()->valuesKnown() : QList<ValueDefinition*>();
+	foreach (DeclarationEntity* d, siblingsOf<DeclarationEntity>())
+		ret += d->valuesAdded();
 	return ret;
 }
 

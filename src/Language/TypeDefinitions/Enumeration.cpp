@@ -46,6 +46,14 @@ Types Enumeration::assignableTypes() const
 	return Type(const_cast<Enumeration*>(this));
 }
 
+QList<ValueDefinition*> Enumeration::valuesAdded() const
+{
+	QList<ValueDefinition*> ret = QList<ValueDefinition*>();
+	foreach (EnumValue* v, entitiesOf<EnumValue>())
+		ret << v;
+	return ret;
+}
+
 Kinds Enumeration::allowedKinds(int _i) const
 {
 	if (_i == 0)

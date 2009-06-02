@@ -51,7 +51,7 @@ protected:
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
 	virtual Entity*						isExpander() const { return entity(1); }
 	virtual void						decorate(DecorationContext const& _p) const;
-	virtual QList<ValueDefinition*>		valuesAdded() const { return QList<ValueDefinition*>(); }
+	virtual QList<ValueDefinition*>		valuesAdded() const;
 
 	virtual int							familyDependencies() { return DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity*) { updateStem(); }
