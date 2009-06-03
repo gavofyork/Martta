@@ -33,9 +33,12 @@ public:
 	virtual ~AuxilliaryFace() {}
 	virtual AuxilliaryFace const*		superAuxilliary() const = 0;
 	virtual char const*					name() const = 0;
+	
+	// They will return 0 is called on an Interface.
 	virtual Entity*						create() const = 0;
-	virtual bool						dispatchKeyPress(InsertionPoint const& _p, EntityKeyEvent const* _e) const = 0;
 	virtual void						initialise() const = 0;
+	virtual void						finalise() const = 0;	// TODO: wire in.
+	virtual bool						dispatchKeyPress(InsertionPoint const& _p, EntityKeyEvent const* _e) const = 0;
 };
 
 }

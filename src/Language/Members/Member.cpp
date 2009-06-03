@@ -25,7 +25,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(Member);	
+MARTTA_OBJECT_CPP(Member);
 
 Access Member::access() const
 {

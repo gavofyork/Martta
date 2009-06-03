@@ -69,6 +69,8 @@ MainWindow::MainWindow(QWidget* _p, Qt::WindowFlags _f):
 #ifdef Q_WS_MAC
 	setUnifiedTitleAndToolBarOnMac(true);
 #endif
+
+	updateLanguage();
 }
 
 MainWindow::~MainWindow()
@@ -78,6 +80,20 @@ MainWindow::~MainWindow()
 	s.setValue("mainwindow/state", saveState());
 	s.setValue("mainwindow/geometry", saveGeometry());
 	s.setValue("mainwindow/lastproject", m_project->filename());
+}
+
+template<class T> void addToLanguage(Kind const& _k, T* _p)
+{
+	QTreeWidgetItem* i = new QTreeWidgetItem(_p, QStringList() << _k.name().remove("Martta::") << "");
+	foreach (Kind k, _k.immediateDeriveds())
+		addToLanguage(k, i);
+}
+
+void MainWindow::updateLanguage()
+{
+	language->clear();
+	addToLanguage(Kind::of<Entity>(), language);
+	language->expandAll();
 }
 
 void MainWindow::resetSubject()

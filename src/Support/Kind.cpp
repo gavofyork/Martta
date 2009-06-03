@@ -18,6 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "AuxilliaryRegistrar.h"
 #include "Entity.h"
 #include "Kind.h"
 
@@ -27,6 +28,19 @@ namespace Martta
 Entity* Kind::spawnPrepared() const
 {
 	return Entity::spawn(name())->prepareChildren();
+}
+
+Kinds Kind::immediateDeriveds() const
+{
+	return AuxilliaryRegistrar::get()->immediateDeriveds(*this);
+}
+
+Kinds Kind::deriveds() const
+{
+	Kinds ret;
+	foreach (Kind k, immediateDeriveds())
+		ret << k << k.deriveds();
+	return ret;
 }
 
 }

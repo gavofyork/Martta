@@ -29,7 +29,6 @@
 namespace Martta
 {
 
-class AuxilliaryFace;
 class Entity;
 class Kind;
 
@@ -43,7 +42,8 @@ public:
 	
 	inline Kinds operator,(Kind const& _c) const { return Kinds(*this) << _c; }
 	
-	inline Kinds& operator<<(Kind const& k) { append(k); return *this; }
+	inline Kinds& operator<<(Kind const& _k) { append(_k); return *this; }
+	inline Kinds& operator<<(Kinds const& _k) { this->QList<Kind>::operator<<(_k); return *this; }
 	
 	inline bool containsBaseOf(Kind const& _derived) const;
 	inline bool containsKindOf(Kind const& _base) const;
@@ -63,7 +63,10 @@ public:
 	inline QString name() const { return m_mo ? m_mo->name() : 0; }
 	inline AuxilliaryFace const* auxilliary() const { return m_mo; }
 	Entity* spawnPrepared() const;
-
+	
+	Kinds deriveds() const;
+	Kinds immediateDeriveds() const;
+	
 	inline bool isKind(Kind _base) const { return m_mo && (_base.m_mo == m_mo || super().isKind(_base)); }
 	inline bool isKind(Kinds const& _bases) const;
 	template<class T>

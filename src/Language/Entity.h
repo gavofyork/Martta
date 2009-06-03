@@ -56,26 +56,51 @@ class ValueDefinition;
 class TypeDefinition;
 class EntityKeyEvent;
 
-#define MARTTA_COMMON(S) \
+template<class Kind> struct NatureOfKind { static const bool IsInterface = false; static const bool IsObject = false; static const bool IsPlaceholder = false; };
+
+#define MARTTA_BASIC \
 	public: \
 	static AuxilliaryFace const*		staticAuxilliary(); \
 	static Kind							staticKind; \
+	template<class T, int d = 0>		struct IsAltSuper { static const bool value = false; };
+
+#define MARTTA_INHERITS(S)				template<int d> struct IsAltSuper<S, d> { static const bool value = true; };
+#define MARTTA_INTERFACE \
+	static const bool IsInterface = true; \
+	static const bool IsObject = false; \
+	static const bool IsPlaceholder = false; \
+	MARTTA_BASIC
+
+#define MARTTA_COMMON(S) \
+	public: \
 	inline virtual Kind					kind() const { return staticKind; } \
-	typedef S Super;
+	typedef S Super; \
+	MARTTA_BASIC
 
 #define MARTTA_OBJECT(S) \
 	MARTTA_COMMON(S) \
 	public: \
+	static const bool IsInterface = false; \
+	static const bool IsObject = true; \
+	static const bool IsPlaceholder = false; \
 	inline virtual bool					isPlaceholder() const { return false; }
 
 #define MARTTA_OBJECT_INTERFACE(S) \
 	MARTTA_COMMON(S) \
 	public: \
+	static const bool IsInterface = false; \
+	static const bool IsObject = false; \
+	static const bool IsPlaceholder = true; \
 	inline virtual bool					isPlaceholder() const { return true; }
 
 #define MARTTA_OBJECT_CPP(E) \
 	static AuxilliaryFace const* s_auxilliary_##E = 0; \
 	AuxilliaryFace const* E::staticAuxilliary() { if (!s_auxilliary_##E) s_auxilliary_##E = new Auxilliary<E>("Martta::" #E); return s_auxilliary_##E; } \
+	Kind E::staticKind = Kind(E::staticAuxilliary())
+
+#define MARTTA_INTERFACE_CPP(E) \
+	static AuxilliaryFace const* s_auxilliary_##E = 0; \
+	AuxilliaryFace const* E::staticAuxilliary() { if (!s_auxilliary_##E) s_auxilliary_##E = new InterfaceAuxilliary<E>("Martta::" #E); return s_auxilliary_##E; } \
 	Kind E::staticKind = Kind(E::staticAuxilliary())
 
 #define SET_DEPENDENCY(M_S, _S) if (true) { if ((Entity*)M_S == (Entity*)_S) return; removeDependency(M_S); M_S = _S; addDependency(M_S); dependencySwitched(M_S); changed(); } else void(0)
@@ -545,6 +570,18 @@ private:
 	
 	/// The cache
 	QList<Entity*>						m_dependents;
+};
+
+class Tag
+{
+	MARTTA_INTERFACE
+};
+
+class TestEntity: public Entity, public Tag
+{
+	MARTTA_OBJECT(Entity)
+	MARTTA_INHERITS(Tag)
+public:
 };
 
 class EntityStylist

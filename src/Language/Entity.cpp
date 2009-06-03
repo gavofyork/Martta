@@ -40,6 +40,9 @@ int s_news = 0;
 int s_deletes = 0;
 	
 MARTTA_OBJECT_CPP(Entity);
+
+MARTTA_OBJECT_CPP(TestEntity);
+MARTTA_INTERFACE_CPP(Tag);
 			
 QList<ChangeEntry> s_changes;
 void change(Entity* _s, ChangeOperation _op, Entity* _o)
