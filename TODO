@@ -1,4 +1,3 @@
-CHECK enums do behave well regarding order of declaration.
 TODO classes store member access information themselves.
 TODO variable -> basevariable, new variable & membervariable - no need if class stores access.
 OR member enumeration with decoration code moved to class, but not ideal since no clear way of getting enumeration into member enumeration without a basically useless 3rd class to act as sharing base.
@@ -17,6 +16,7 @@ Multiple projects in a solution
   - pickup if entry point is private
 - Add other libraries (SDL, openGL)
 - Use other binary-only libraries.
+CHECK enums do behave well regarding order of declaration.
 
 --------------------------------------------------------------------------------
 

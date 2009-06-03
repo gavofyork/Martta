@@ -13,6 +13,7 @@
 #include "Language/Labels/Label.cpp"
 #include "Language/Labels/OperatorLabel.cpp"
 #include "Language/Labels/TextLabel.cpp"
+#include "Language/Members/Member.cpp"
 #include "Language/Operations/AssignmentOperation.cpp"
 #include "Language/Operations/BinaryOperation.cpp"
 #include "Language/Operations/DereferenceOperation.cpp"
