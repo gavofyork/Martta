@@ -58,7 +58,7 @@ public:
 	// FairlyConvertible: float->int, int->float etc and
 	// BasicallyConvertible: long->int, signed char->unsigned short etc and
 	// VeryConvertible: ? and
-	// CopnstPerfectConvertible: ?
+	// ConstPerfectConvertible: ?
 	bool								isSimilarTo(TypeEntity const* _to, Castability _requirement) const;
 	inline bool							isEquivalentTo(TypeEntity const* _t) const { return defineEquivalenceTo(_t) || _t->defineEquivalenceFrom(this); }
 	virtual bool						contentsEquivalentTo(TypeEntity const*) const { return true; }

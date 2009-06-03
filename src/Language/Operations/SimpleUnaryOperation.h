@@ -51,6 +51,7 @@ protected:
 	virtual Precedence					precedence() const { return id().precedence(); }
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity*) { refreshOperation(); }
+	virtual void						apresLoad() { refreshOperation(); }
 	
 private:
 	Type								prototypeOf(int _index) const { if (!m_symbolCache.isUsable()) return Type(); return Operation::prototypeOf(m_symbolCache->type(), _index); }
