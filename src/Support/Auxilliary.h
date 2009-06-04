@@ -27,16 +27,25 @@
 namespace Martta
 {
 
+template<class T> struct GetCount
+{
+	typedef typename T::template AltSuperCount<> X;
+	enum { Value = X::count };
+};
+
 template<class T>
 class Auxilliary: public AuxilliaryFace
 {
 public:
 	Auxilliary(char const* _name): m_name(_name) { AuxilliaryRegistrar::get()->registerAuxilliary(this); }
+	virtual bool						isInterface() const { return false; }
 	virtual char const*					name() const { return m_name; }
 	virtual bool						dispatchKeyPress(InsertionPoint const& _p, EntityKeyEvent const* _e) const;
 	virtual void						initialise() const { T::initialiseClass(); }
 	virtual void						finalise() const { T::finaliseClass(); }
 	virtual AuxilliaryFace const*		superAuxilliary() const { return T::Super::staticAuxilliary(); }
+	virtual AuxilliaryFace const*		interfaceAuxilliary(int _i) const { return T::template ASHelper<GetCount<T>::Value>::altSupers()[_i]; }
+	virtual int							interfaceAuxilliaryCount() const { return GetCount<T>::Value; }
 	virtual Entity*						create() const { return new T; }
 private:
 	char const*							m_name;
@@ -47,11 +56,14 @@ class InterfaceAuxilliary: public AuxilliaryFace
 {
 public:
 	InterfaceAuxilliary(char const* _name): m_name(_name) { AuxilliaryRegistrar::get()->registerAuxilliary(this); }
+	virtual bool						isInterface() const { return true; }
 	virtual char const*					name() const { return m_name; }
 	virtual bool						dispatchKeyPress(InsertionPoint const&, EntityKeyEvent const*) const { return false; }
 	virtual void						initialise() const {}
 	virtual void						finalise() const {}
 	virtual AuxilliaryFace const*		superAuxilliary() const { return 0; }
+	virtual AuxilliaryFace const*		interfaceAuxilliary(int _i) const { return T::template ASHelper<GetCount<T>::Value>::altSupers()[_i]; }
+	virtual int							interfaceAuxilliaryCount() const { return GetCount<T>::Value; }
 	virtual Entity*						create() const { return 0; }
 private:
 	char const*							m_name;

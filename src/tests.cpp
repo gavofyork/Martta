@@ -122,6 +122,53 @@ private:
 
 class SPT: public SafePointerTarget { public: SafePointerTarget::rewirePointer; };
 
+class Tag
+{
+	MARTTA_INTERFACE
+	public: void killAndDelete() { delete this; }
+};
+
+class TagB
+{
+	MARTTA_INTERFACE
+	public: void killAndDelete() { delete this; }
+};
+
+class TagC
+{
+	MARTTA_INTERFACE
+	public: void killAndDelete() { delete this; }
+};
+
+class TagD: public TagB
+{
+	MARTTA_INTERFACE
+	MARTTA_INHERITS(TagB, 0)
+	public: void killAndDelete() { delete this; }
+};
+
+class TestEntity: public Entity, public Tag
+{
+	MARTTA_OBJECT(Entity)
+	MARTTA_INHERITS(Tag, 0)
+	void killAndDelete() { Entity::killAndDelete(); }
+};
+
+class TestEntityB: public TestEntity, public TagC, public TagD
+{
+	MARTTA_OBJECT(TestEntity)
+	MARTTA_INHERITS(TagC, 0)
+	MARTTA_INHERITS(TagD, 1)
+	void killAndDelete() { Entity::killAndDelete(); }
+};
+
+MARTTA_INTERFACE_CPP(Tag);
+MARTTA_OBJECT_CPP(TestEntity);
+MARTTA_INTERFACE_CPP(TagB);
+MARTTA_INTERFACE_CPP(TagC);
+MARTTA_INTERFACE_CPP(TagD);
+MARTTA_OBJECT_CPP(TestEntityB);
+
 int test()
 {
 	s_testing = true;
@@ -132,6 +179,82 @@ int test()
 		M_ASSERT(!testHasActuallySucceeded);
 		FAILED_IF(!s_asserted);
 		s_asserted = 0;
+	}
+
+#define DERIVES_TOP(BASE, DERIVED) \
+	{ \
+		BASE& b = *new BASE; \
+		DERIVED& d = *new DERIVED;
+#define DERIVES_BOTTOM(BASE, DERIVED) \
+		b.BASE::killAndDelete(); \
+		d.DERIVED::killAndDelete(); \
+	}
+#define DERIVES_MAIN(BASE, DERIVED) \
+	FAILED_IF(Kind::of<BASE>().isKind<DERIVED>()); \
+	FAILED_IF(!Kind::of<DERIVED>().isKind<BASE>()); \
+	FAILED_IF(Kind::of<BASE>().isKind(d.staticKind)); \
+	FAILED_IF(!Kind::of<DERIVED>().isKind(b.staticKind)); \
+	FAILED_IF(Kind::of<BASE>().isKind(Kind::of<DERIVED>())); \
+	FAILED_IF(!Kind::of<DERIVED>().isKind(Kind::of<BASE>()));
+#define DERIVES_ONE(BASE, DERIVED) \
+	FAILED_IF(!d.isKind(b.staticKind)); \
+	FAILED_IF(!d.isKind<BASE>()); \
+	FAILED_IF(!d.isKind(Kind::of<BASE>()));
+#define DERIVES_OTHER(BASE, DERIVED) \
+	FAILED_IF(b.isKind<DERIVED>()); \
+	FAILED_IF(b.isKind(d.staticKind)); \
+	FAILED_IF(b.isKind(Kind::of<DERIVED>()));
+#define DERIVES_TT(BASE, DERIVED) DERIVES_TOP(BASE, DERIVED) DERIVES_MAIN(BASE, DERIVED) DERIVES_BOTTOM(BASE, DERIVED)
+#define DERIVES_TO(BASE, DERIVED) DERIVES_TOP(BASE, DERIVED) DERIVES_MAIN(BASE, DERIVED) DERIVES_ONE(BASE, DERIVED) DERIVES_BOTTOM(BASE, DERIVED)
+#define DERIVES_OO(BASE, DERIVED) DERIVES_TOP(BASE, DERIVED) DERIVES_MAIN(BASE, DERIVED) DERIVES_ONE(BASE, DERIVED) DERIVES_OTHER(BASE, DERIVED) DERIVES_BOTTOM(BASE, DERIVED)
+#define UNRELATED(BASE, DERIVED) \
+	DERIVES_TOP(BASE, DERIVED) \
+	FAILED_IF(Kind::of<BASE>().isKind<DERIVED>()); \
+	FAILED_IF(Kind::of<DERIVED>().isKind<BASE>()); \
+	FAILED_IF(Kind::of<BASE>().isKind(d.staticKind)); \
+	FAILED_IF(Kind::of<DERIVED>().isKind(b.staticKind)); \
+	FAILED_IF(Kind::of<BASE>().isKind(Kind::of<DERIVED>())); \
+	FAILED_IF(Kind::of<DERIVED>().isKind(Kind::of<BASE>())); \
+	DERIVES_BOTTOM(BASE, DERIVED)
+
+	TEST("Entity derivation")
+	{
+		DERIVES_OO(Entity, TestEntity);
+		DERIVES_OO(Entity, TestEntityB);
+		UNRELATED(Entity, Tag);
+		UNRELATED(Entity, TagB);
+		UNRELATED(Entity, TagC);
+		UNRELATED(Entity, TagD);
+	}
+	TEST("Tag derivation")
+	{
+		DERIVES_TO(Tag, TestEntity);
+		DERIVES_TO(Tag, TestEntityB);
+		UNRELATED(Tag, TagB);
+		UNRELATED(Tag, TagC);
+		UNRELATED(Tag, TagD);
+	}
+	TEST("TestEntity derivation")
+	{
+		DERIVES_OO(TestEntity, TestEntityB);
+		UNRELATED(TestEntity, TagB);
+		UNRELATED(TestEntity, TagC);
+		UNRELATED(TestEntity, TagD);
+	}
+	TEST("TagB derivation")
+	{
+		DERIVES_TO(TagB, TestEntityB);
+		UNRELATED(TagB, TagC);
+		DERIVES_TT(TagB, TagD);
+	}
+	TEST("TagC derivation")
+	{
+		DERIVES_TO(TagC, TestEntityB);
+		UNRELATED(TagC, TagD);
+	}
+	TEST("TagD derivation")
+	{
+		DERIVES_TO(TagD, TestEntityB);
 	}
 	TEST("Safe pointer assignment")
 	{

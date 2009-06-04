@@ -8,7 +8,6 @@ SUPPORT.path = Support
 ICON = Martta.icns
 
 QMAKE_BUNDLE_DATA += SUPPORT
-PRECOMPILED_HEADER = Precompiled.h
 TEMPLATE = app
 CONFIG += warn_on \
 	  debug \
@@ -29,6 +28,7 @@ unix {
 }
 INCLUDEPATH += ../support
 mac:QMAKE_CXXFLAGS_DEBUG += -O0 -g3
+PRECOMPILED_HEADER = Precompiled.h
 DISTFILES += ../TODO
 RESOURCES += Operators.qrc
 #INCLUDEPATH += /usr/local/include/boost-1_35

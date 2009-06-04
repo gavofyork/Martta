@@ -84,7 +84,12 @@ MainWindow::~MainWindow()
 
 template<class T> void addToLanguage(Kind const& _k, T* _p)
 {
-	QTreeWidgetItem* i = new QTreeWidgetItem(_p, QStringList() << _k.name().remove("Martta::") << "");
+	QString ifsS;
+	foreach (Kind k, _k.immediateInterfaces())
+		ifsS += k.name().remove("Martta::") + ", ";
+	if (ifsS.endsWith(", "))
+		ifsS.chop(2);
+	QTreeWidgetItem* i = new QTreeWidgetItem(_p, QStringList() << _k.name().remove("Martta::") << ifsS);
 	foreach (Kind k, _k.immediateDeriveds())
 		addToLanguage(k, i);
 }

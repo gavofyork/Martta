@@ -30,6 +30,24 @@ Entity* Kind::spawnPrepared() const
 	return Entity::spawn(name())->prepareChildren();
 }
 
+Kinds Kind::immediateInterfaces() const
+{
+	if (!m_mo)
+		return Kinds();
+	Kinds ret;
+	for (int i = 0; i < m_mo->interfaceAuxilliaryCount(); i++)
+		ret << m_mo->interfaceAuxilliary(i);
+	return ret;
+}
+
+Kinds Kind::interfaces() const
+{
+	Kinds ret;
+	foreach (Kind k, immediateInterfaces())
+		ret << k << k.interfaces();
+	return ret;
+}
+
 Kinds Kind::immediateDeriveds() const
 {
 	return AuxilliaryRegistrar::get()->immediateDeriveds(*this);

@@ -45,7 +45,9 @@ public:
 private:
 	static AuxilliaryRegistrar*			s_this;
 	QHash<QString, AuxilliaryFace const*> m_auxilliaries;
+	QList<AuxilliaryFace const*>		m_interfaces;
 	QMultiMap<AuxilliaryFace const*, AuxilliaryFace const*> m_derivedMap;
+	QMultiMap<AuxilliaryFace const*, AuxilliaryFace const*> m_altDerivedMap;
 };
 
 }

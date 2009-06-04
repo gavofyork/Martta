@@ -30,7 +30,7 @@ void AuxilliaryRegistrar::initialiseAll() const
 	foreach (AuxilliaryFace const* i, m_auxilliaries.values())
 		i->initialise();
 	
-	recurseAux(m_derivedMap.values(0)[0], "");
+//	recurseAux(m_derivedMap.values(0)[0], "");
 }
 	
 void AuxilliaryRegistrar::recurseAux(AuxilliaryFace const* _face, QString const& _indent) const
@@ -42,9 +42,12 @@ void AuxilliaryRegistrar::recurseAux(AuxilliaryFace const* _face, QString const&
 
 void AuxilliaryRegistrar::registerAuxilliary(AuxilliaryFace const* _a)
 {
-	qInformation() << "Registering" << _a->name();
+//	qInformation() << "Registering" << _a->name();
 	m_auxilliaries[_a->name()] = _a;
-	m_derivedMap.insert(_a->superAuxilliary(), _a);
+	if (_a->isInterface())
+		m_interfaces.append(_a);
+	else
+		m_derivedMap.insert(_a->superAuxilliary(), _a);
 }
 	
 }

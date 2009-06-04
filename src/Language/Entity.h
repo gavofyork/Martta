@@ -56,15 +56,17 @@ class ValueDefinition;
 class TypeDefinition;
 class EntityKeyEvent;
 
-template<class Kind> struct NatureOfKind { static const bool IsInterface = false; static const bool IsObject = false; static const bool IsPlaceholder = false; };
-
 #define MARTTA_BASIC \
 	public: \
 	static AuxilliaryFace const*		staticAuxilliary(); \
 	static Kind							staticKind; \
-	template<class T, int d = 0>		struct IsAltSuper { static const bool value = false; };
+	template<int i, int d = 0>			struct AltSuper { typedef Nothing TheType; }; \
+	template<int m = -1, typename T = void>	struct AltSuperCount { static const int count = AltSuperCount<m + 1, typename AltSuper<m + 1>::TheType>::count; }; \
+	template<int m>						struct AltSuperCount<m, Nothing> { static const int count = m; }; \
+	template<int m, int d = 0>			struct ASHelper { public: static AuxilliaryFace const** altSupers() { static AuxilliaryFace const* r[m]; r[m - 1] = AltSuper<m - 1>::TheType::staticAuxilliary(); memcpy(r, ASHelper<m - 1>::altSupers(), (m - 1) * sizeof(AuxilliaryFace const*)); return r; } }; \
+	template<int d>						struct ASHelper<0, d> { public: static AuxilliaryFace const** altSupers() { static AuxilliaryFace const* r[0]; return r; } };
 
-#define MARTTA_INHERITS(S)				template<int d> struct IsAltSuper<S, d> { static const bool value = true; };
+#define MARTTA_INHERITS(S, i)			template<int d> struct AltSuper<i, d> { typedef S TheType; };
 #define MARTTA_INTERFACE \
 	static const bool IsInterface = true; \
 	static const bool IsObject = false; \
@@ -93,15 +95,17 @@ template<class Kind> struct NatureOfKind { static const bool IsInterface = false
 	static const bool IsPlaceholder = true; \
 	inline virtual bool					isPlaceholder() const { return true; }
 
-#define MARTTA_OBJECT_CPP(E) \
+#define MARTTA_CPP_BASIC(E) \
 	static AuxilliaryFace const* s_auxilliary_##E = 0; \
-	AuxilliaryFace const* E::staticAuxilliary() { if (!s_auxilliary_##E) s_auxilliary_##E = new Auxilliary<E>("Martta::" #E); return s_auxilliary_##E; } \
-	Kind E::staticKind = Kind(E::staticAuxilliary())
+	Kind E::staticKind = Kind(E::staticAuxilliary());
+
+#define MARTTA_OBJECT_CPP(E) \
+	MARTTA_CPP_BASIC(E) \
+	AuxilliaryFace const* E::staticAuxilliary() { if (!s_auxilliary_##E) s_auxilliary_##E = new Auxilliary<E>("Martta::" #E); return s_auxilliary_##E; }
 
 #define MARTTA_INTERFACE_CPP(E) \
-	static AuxilliaryFace const* s_auxilliary_##E = 0; \
-	AuxilliaryFace const* E::staticAuxilliary() { if (!s_auxilliary_##E) s_auxilliary_##E = new InterfaceAuxilliary<E>("Martta::" #E); return s_auxilliary_##E; } \
-	Kind E::staticKind = Kind(E::staticAuxilliary())
+	MARTTA_CPP_BASIC(E) \
+	AuxilliaryFace const* E::staticAuxilliary() { if (!s_auxilliary_##E) s_auxilliary_##E = new InterfaceAuxilliary<E>("Martta::" #E); return s_auxilliary_##E; }
 
 #define SET_DEPENDENCY(M_S, _S) if (true) { if ((Entity*)M_S == (Entity*)_S) return; removeDependency(M_S); M_S = _S; addDependency(M_S); dependencySwitched(M_S); changed(); } else void(0)
 
@@ -138,7 +142,7 @@ class Entity: public SafePointerTarget
 
 public:
 	typedef Nothing Super;
-		
+	
 #if POOL_ALLOCATOR
 	static QMap<size_t, boost::pool<>* >* s_pools;
 	inline void* operator new(size_t _size)
@@ -311,9 +315,41 @@ public:
 
 	inline RootEntity*					rootEntity() const { return m_rootEntity; }
 	
-	/// Stuff to do with RTTI.
+	/// Stuff to do with RTTI. [ Same as MARTTA_BASIC macro ]
 	static AuxilliaryFace const*		staticAuxilliary();
 	static Kind							staticKind;
+	template<int i, int d>						
+	struct AltSuper {
+		typedef Nothing TheType;
+	};
+	
+	template<int m = -1, typename T = void>
+	struct AltSuperCount {
+		static const int count = AltSuperCount<m + 1, typename AltSuper<m + 1, 0>::TheType>::count;
+	};
+	
+	template<int m>						
+	struct AltSuperCount<m, Nothing> {
+		static const int count = m;
+	};
+	
+	template<int m, int d = 0>			
+	struct ASHelper {
+		public: static AuxilliaryFace const** altSupers() {
+			static AuxilliaryFace const* r[m];
+			r[m - 1] = AltSuper<m - 1, 0>::TheType::staticAuxilliary();
+			memcpy(r, ASHelper<m - 1>::altSupers(), (m - 1) * sizeof(AuxilliaryFace const*));
+			return r;
+		}
+	};
+	
+	template<int d>						
+	struct ASHelper<0, d> {
+		public: static AuxilliaryFace const** altSupers() {
+			static AuxilliaryFace const* r[0]; return r;
+		}
+	};
+	
 	inline virtual Kind					kind() const { return this ? staticKind : Kind(Nothing::staticAuxilliary()); }
 	
 	template<class T> inline bool		isKind() const { return this && kind().isKind(T::staticKind); }
@@ -570,18 +606,6 @@ private:
 	
 	/// The cache
 	QList<Entity*>						m_dependents;
-};
-
-class Tag
-{
-	MARTTA_INTERFACE
-};
-
-class TestEntity: public Entity, public Tag
-{
-	MARTTA_OBJECT(Entity)
-	MARTTA_INHERITS(Tag)
-public:
 };
 
 class EntityStylist

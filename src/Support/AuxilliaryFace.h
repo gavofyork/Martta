@@ -31,7 +31,10 @@ class AuxilliaryFace
 {
 public:
 	virtual ~AuxilliaryFace() {}
+	virtual AuxilliaryFace const*		interfaceAuxilliary(int _i) const = 0;
+	virtual int							interfaceAuxilliaryCount() const = 0;
 	virtual AuxilliaryFace const*		superAuxilliary() const = 0;
+	virtual bool						isInterface() const = 0;
 	virtual char const*					name() const = 0;
 	
 	// They will return 0 is called on an Interface.
