@@ -109,7 +109,8 @@ void CodeScene::leaving(Entity* _e, InsertionPoint const&)
 	m_cacheKey.remove(_e);
 	
 	if (m_current == _e)
-		setCurrent(e ? e : nearest(_e));
+		if (Entity* ne = e ? e : nearest(_e))
+			setCurrent(ne);
 	if (m_hover == _e)
 		m_hover = 0;
 	if (m_lastRealCurrent == _e)
@@ -785,8 +786,9 @@ NEXT:
 
 void CodeScene::setSubject(Entity* _subject)
 {
-	if (m_subject == _subject)
-		return;
+//	if (m_subject == _subject)
+//		return;
+	// Memory reuse means two completely different models could have the same address with one following the death of the other.
 		
 	m_pictures.clear();
 	m_viewKeys.clear();
@@ -798,7 +800,8 @@ void CodeScene::setSubject(Entity* _subject)
 	m_editDelegate = 0;
 	
 	// If the model's going down then make sure we reset all our pointers.
-	if (!m_subject)
+	// m_current, at least, needs to be reset with a different subject.
+//	if (!m_subject)
 	{
 		delete m_editDelegate;
 		m_editDelegate = 0;
@@ -812,7 +815,8 @@ void CodeScene::setSubject(Entity* _subject)
 	// Set subject
 	m_subject = _subject;
 	doRefreshLayout();
-	navigateOnto(m_subject);
+	if (m_subject)
+		navigateOnto(m_subject);
 	update();
 }
 

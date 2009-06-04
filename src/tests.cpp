@@ -325,7 +325,7 @@ int test()
 		v->back().place(new ExplicitType(Y));
 		M->back().place(v);
 		
-		Referenced* f = new Referenced(v);
+		Referenced* f = new Referenced(v); 
 		f->prepareChildren();
 		M->entitiesOf<Compound>()[0]->back().place(f);
 		

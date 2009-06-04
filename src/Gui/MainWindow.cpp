@@ -104,6 +104,7 @@ void MainWindow::updateLanguage()
 void MainWindow::resetSubject()
 {
 	m_codeScene->setSubject(m_project->ns());
+	M_ASSERT(m_codeScene->current()->rootEntity() == m_project->root());
 	entityFocused(m_codeScene->current());
 }
 
