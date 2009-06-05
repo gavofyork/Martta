@@ -61,14 +61,18 @@ template<class T, class F> T tryCast(F _f) { return tryCastPrivate::XL<T, F, try
 	static const bool IsPlaceholder = false; \
 	virtual Entity const* self() const = 0; \
 	virtual Entity* self() = 0; \
-	Entity const& operator+() const { return *self(); } \
-	Entity& operator+() { return *self(); } \
+	template<class T> inline T*			asKind() { return this && self() ? self()->asKind<T>() : 0; } \
+	template<class T> inline T const*	asKind() const { return this && self() ? self()->asKind<T>() : 0; } \
+	template<class T> inline bool		isKind() const { return this && self() ? self()->isKind<T>() : false; } \
 	MARTTA_BASIC
 
 #define MARTTA_COMMON(S) \
 	public: \
 	virtual Entity const*				self() const { return this; } \
 	virtual Entity*						self() { return this; } \
+	template<class T> inline T*			asKind() { return Entity::asKind<T>(); } \
+	template<class T> inline T const*	asKind() const { return Entity::asKind<T>(); } \
+	template<class T> inline bool		isKind() const { return Entity::isKind<T>(); } \
 	typedef S Super; \
 	MARTTA_BASIC
 
@@ -101,3 +105,5 @@ template<class T, class F> T tryCast(F _f) { return tryCastPrivate::XL<T, F, try
 	MARTTA_CPP_BASIC(E) \
 	AuxilliaryFace const* E::staticAuxilliary() { if (!s_auxilliary_##E) s_auxilliary_##E = new InterfaceAuxilliary<E>("Martta::" #E); return s_auxilliary_##E; } \
 	void const* E::tryInterface(Kind _k) const { /*qDebug() << "tryInterface: " << E::staticKind.name() << ", searching " << _k.name();*/ M_ASSERT(this); if (_k == staticKind) { /*qDebug() << "Matched: Want " << _k.name() << ", got " << E::staticKind.name() << "!"; */return (void const*)this; } /*qDebug() << "Trying ASTHelper " << GetCount<E>::Value << " interfaces";*/ if (void const* r = ASTHelper<GetCount<E>::Value, E>::altSupers(this, _k)) return r; /*qDebug() << "Failed";*/ return 0; }
+
+#define public_interface virtual public

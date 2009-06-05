@@ -24,13 +24,15 @@
 #include "Common.h"
 #include "RootEntity.h"
 #include "TextLabel.h"
+#include "ValueDefinition.h"
 #include "DeclarationEntity.h"
 
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(DeclarationEntity);	
-	
+MARTTA_OBJECT_CPP(DeclarationEntity);
+MARTTA_INTERFACE_CPP(Referencable);	
+
 DeclarationEntity::~DeclarationEntity()
 {
 	if (rootEntity() && rootEntity() != this)
@@ -41,10 +43,10 @@ DeclarationEntity::~DeclarationEntity()
 
 QList<ValueDefinition*> DeclarationEntity::valuesKnown() const
 {
-	QList<ValueDefinition*> ret = contextIs<DeclarationEntity>() ? contextAs<DeclarationEntity>()->valuesKnown() : QList<ValueDefinition*>();
+	QList<DeclarationEntity*> ret = contextIs<DeclarationEntity>() ? castEntities<DeclarationEntity>(contextAs<DeclarationEntity>()->valuesKnown()) : QList<DeclarationEntity*>();
 	foreach (DeclarationEntity* d, siblingsOf<DeclarationEntity>())
-		ret += d->valuesAdded();
-	return ret;
+		ret += castEntities<DeclarationEntity>(d->valuesAdded());
+	return castEntities<ValueDefinition>(ret);
 }
 
 QString DeclarationEntity::name() const

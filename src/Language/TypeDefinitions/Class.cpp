@@ -279,7 +279,7 @@ QString Class::defineLayout(ViewKeys& _keys) const
 				if (f->access() == Access(i))
 					mem += QString(";n;%1").arg(f->contextIndex());
 			foreach (MemberCallable* f, entitiesOf<MemberCallable>())
-				if (f->access() == Access(i) && !f->isKind(recognised))
+				if (f->access() == Access(i) && !f->Entity::isKind(recognised))
 					mem += QString(";n;%1").arg(f->contextIndex());
 			foreach (MemberVariable* f, entitiesOf<MemberVariable>())
 				if (f->access() == Access(i))

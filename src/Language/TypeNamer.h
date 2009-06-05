@@ -45,3 +45,31 @@ QList<TypeNamer*> filterTypeds(Type const& _t, QList<TypeNamer*> const& _l);
 QList<TypeNamer*> filterTypedsInv(Type const& _t, QList<TypeNamer*> const& _l);
 
 }
+
+template<class T>
+QList<T*> Martta::filterTypeds(Type const& _t, QList<T*> const& _l)
+{
+	QList<T*> ret;
+	
+	foreach (T* i, _l)
+	{
+//		qDebug() << "fT:" << i->type()->code() << "(" << _t->code() << ")";
+		if (i->type().isSimilarTo(_t, TypeEntity::Physical) && i->type().isSimilarTo(_t, TypeEntity::Convertible))
+		{
+//			qDebug() << "OK";
+			ret << i;
+		}
+	}
+	return ret;
+}
+
+template<class T>
+QList<T*> Martta::filterTypedsInv(Type const& _t, QList<T*> const& _l)
+{
+	QList<T*> ret;
+	
+	foreach (T* i, _l)
+		if (!(i->type().isSimilarTo(_t, TypeEntity::Physical) && i->type().isSimilarTo(_t, TypeEntity::Convertible)))
+			ret << i;
+	return ret;
+}

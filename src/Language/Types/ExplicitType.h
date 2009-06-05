@@ -21,6 +21,7 @@
 #pragma once
 
 #include "TypeDefinition.h"
+#include "ModelPtr.h"
 #include "TypeEntity.h"
 
 namespace Martta

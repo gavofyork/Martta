@@ -77,7 +77,7 @@ bool Referenced::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyE
 	return true;
 }
 
-Referenced::Referenced(ValueDefinition* _v, bool _specific):
+Referenced::Referenced(ValueDefiner* _v, bool _specific):
 	m_subject	(0),
 	m_specific	(_specific),
 	m_lastSet	(LocalSet|MemberCallables|ScopedSet)
@@ -124,7 +124,7 @@ Type Referenced::type() const
 		M_ASSERT(hasAncestor<Class>());
 		// There is; check to see if we can remove it (by being in a scoped context and assuming the "this->" precedent).
 		Memberify* m = t->asType<Memberify>();
-		M_ASSERT(m->isKind(Kind::of<Memberify>()));
+		M_ASSERT(m->isKind<Memberify>());
 		if (m->scopeClass() == ancestor<Class>())
 		{
 			bool memberIsCallable = m->child()->isType<FunctionType>();
@@ -151,7 +151,7 @@ Type Referenced::type() const
 void Referenced::importDom(QDomElement const& _element)
 {
 	Entity::importDom(_element);
-	m_subject = locateEntity<ValueDefinition>(_element.attribute("subject"));
+	m_subject = locateEntity<ValueDefiner>(_element.attribute("subject"));
 	m_specific = _element.attribute("specific").toInt();
 	m_lastSet = _element.attribute("lastSet").toInt();
 	// TODO: check if depend system needs reseting here.
@@ -168,14 +168,14 @@ void Referenced::exportDom(QDomElement& _element) const
 void Referenced::decorate(DecorationContext const& _c) const
 {
 	//TODO: Check!
-	if (m_subject)
+	if (Entity* e = m_subject ? m_subject->self() : 0)
 	{
 		bool dec = false;
-		if (m_subject->hasAncestor<NamespaceEntity>())
+		if (e->hasAncestor<NamespaceEntity>())
 		{
-			if (m_subject->isKind<Variable>() && m_subject->contextIs<Class>())
+			if (e->isKind<Variable>() && e->contextIs<Class>())
 				dec = true;
-			else if (m_subject->isKind<Variable>() && m_subject->contextIs<Callable>())
+			else if (e->isKind<Variable>() && e->contextIs<Callable>())
 				dec = true;
 		}
 		if (dec)
@@ -199,9 +199,9 @@ void Referenced::decorate(DecorationContext const& _c) const
 QString Referenced::defineLayout(ViewKeys&) const
 {
 	QString ret = QString(m_lastSet&GlobalSet ? "p:/global.svg;" : "");
-	if (m_subject && m_subject->isKind<Variable>() && m_subject->contextIs<Class>())
+	if (m_subject && m_subject->isKind<Variable>() && m_subject->self()->contextIs<Class>())
 		ret += "(;M4;[[[;fs-2;fb;c#777;e#fff;'M';]]];);";
-	else if (m_subject && m_subject->isKind<Variable>() && m_subject->contextIs<Callable>())
+	else if (m_subject && m_subject->isKind<Variable>() && m_subject->self()->contextIs<Callable>())
 		ret += "(;M4;[[[;fs-2;fb;c#777;e#fff;'_';]]];);";
 	ret += "^;s" + (m_subject ? m_subject->type()->idColour() : TypeEntity::null->idColour()) + ";c;'" + (m_subject ? m_subject->name() : QString()) + "'";
 	return ret;
@@ -225,10 +225,10 @@ private:
 
 	QString						m_completion;
 	QString						m_entityName;
-	ValueDefinition*			m_entity;
+	ValueDefiner*				m_entity;
 
 	// Actual scope the symbol will be in
-	QList<ValueDefinition*>		m_valuesInScope;
+	QList<ValueDefiner*>		m_valuesInScope;
 	bool						m_immediateCommits;
 };
 
@@ -293,26 +293,27 @@ void ReferencedEdit::updateSubset()
 {
 	m_valuesInScope.clear();
 	if (subject()->m_lastSet & LocalSet)
-		m_valuesInScope << subject()->valuesInLocalScope();
+		m_valuesInScope << castEntities<ValueDefiner>(subject()->valuesInLocalScope());	// TODO: Change over
 	if (subject()->m_lastSet & ScopedSet)
-		m_valuesInScope << subject()->ancestor<DeclarationEntity>()->valuesKnown();
+		m_valuesInScope << castEntities<ValueDefiner>(subject()->ancestor<DeclarationEntity>()->valuesKnown());
 	if (subject()->m_lastSet & GlobalSet)
-		m_valuesInScope << subject()->rootEntity()->entitiesHereAndBeforeOf<ValueDefinition>();
+		m_valuesInScope << subject()->rootEntity()->entitiesHereAndBeforeOf<ValueDefiner>();
 	if (subject()->m_lastSet & ArgumentSet && subject()->hasAncestor<Callable>())
 		for (int i = 0; i < subject()->ancestor<Callable>()->argumentCount(); i++)
 			m_valuesInScope << subject()->ancestor<Callable>()->argument(i);
 	if (subject()->m_lastSet & MemberVariables)
 		foreach (Type t, subject()->allowedTypes())
 			if (t->isType<Memberify>() && t->asType<Memberify>()->scope())
-				m_valuesInScope << castEntities<ValueDefinition>(filterTypedsInv(Type(FunctionType(false, true)).topWith(Memberify()).topWith(Reference()), castEntities<TypeNamer>(t->asType<Memberify>()->scope()->applicableMembers(subject(), t->asType<Memberify>()->isConst()))));
+				 m_valuesInScope << castEntities<ValueDefiner>(filterTypedsInv(Type(FunctionType(false, true)).topWith(Memberify()).topWith(Reference()),
+									t->asType<Memberify>()->scope()->applicableMembers(subject(), t->asType<Memberify>()->isConst())));
 			else if (subject()->hasAncestor<Class>())
-				m_valuesInScope << castEntities<ValueDefinition>(subject()->ancestor<Class>()->membersOf<MemberVariable>(subject()->hasAncestor<MemberCallable>() ? subject()->ancestor<MemberCallable>()->isConst() : false));
+				m_valuesInScope << castEntities<ValueDefiner>(subject()->ancestor<Class>()->membersOf<MemberVariable>(subject()->hasAncestor<MemberCallable>() ? subject()->ancestor<MemberCallable>()->isConst() : false));
 	if (subject()->m_lastSet & MemberCallables)
 		foreach (Type t, subject()->allowedTypes())
 			if (t->isType<Memberify>() && t->asType<Memberify>()->scope())
-				m_valuesInScope << castEntities<ValueDefinition>(filterTypeds(Type(FunctionType(false, true)).topWith(Memberify()).topWith(Reference()), castEntities<TypeNamer>(t->asType<Memberify>()->scope()->applicableMembers(subject(), t->asType<Memberify>()->isConst()))));
+				m_valuesInScope << castEntities<ValueDefiner>(filterTypeds(Type(FunctionType(false, true)).topWith(Memberify()).topWith(Reference()), t->asType<Memberify>()->scope()->applicableMembers(subject(), t->asType<Memberify>()->isConst())));
 			else if (subject()->hasAncestor<Class>())
-				m_valuesInScope << castEntities<ValueDefinition>(subject()->ancestor<Class>()->membersOf<MemberCallable>(subject()->hasAncestor<MemberCallable>() ? subject()->ancestor<MemberCallable>()->isConst() : false));
+				m_valuesInScope << castEntities<ValueDefiner>(subject()->ancestor<Class>()->membersOf<MemberCallable>(subject()->hasAncestor<MemberCallable>() ? subject()->ancestor<MemberCallable>()->isConst() : false));
 }
 
 void ReferencedEdit::commit()
@@ -359,7 +360,7 @@ bool ReferencedEdit::keyPressed(EntityKeyEvent const* _e)
 	updateCompletion();
 	m_entity = 0;
 	if (!(m_entityName + m_completion).isEmpty())
-		foreach (ValueDefinition* t, m_valuesInScope)
+		foreach (ValueDefiner* t, m_valuesInScope)
 			if (t->name() == m_entityName + m_completion)
 				m_entity = t;
 	return true;
@@ -373,7 +374,7 @@ bool ReferencedEdit::isValid() const
 void ReferencedEdit::updateCompletion()
 {
 	m_completion = "";
-	QList<ValueDefinition*> potentials = nameStarts(m_valuesInScope, m_entityName);
+	QList<ValueDefiner*> potentials = nameStarts(m_valuesInScope, m_entityName);
 	if (potentials.size() == 1)
 	{
 		m_completion = potentials[0]->name().mid(m_entityName.size());

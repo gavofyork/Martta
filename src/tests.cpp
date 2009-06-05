@@ -217,17 +217,17 @@ int test()
 	FAILED_IF(!Kind::of<DERIVED>().isKind(Kind::of<BASE>()));
 #define DERIVES_ONE(BASE, DERIVED) { \
 	DERIVED& d = *new DERIVED; \
-	FAILED_IF(!d.isKind(BASE::staticKind)); \
+	FAILED_IF(!d.Entity::isKind(BASE::staticKind)); \
 	FAILED_IF(!d.isKind<BASE>()); \
-	FAILED_IF(!d.isKind(Kind::of<BASE>())); \
+	FAILED_IF(!d.Entity::isKind(Kind::of<BASE>())); \
 	d.DERIVED::killAndDelete(); \
 	}
 #define DERIVES_OTHER(BASE, DERIVED) { \
 	BASE& b = *new BASE; \
 	DERIVED& d = *new DERIVED; \
 	FAILED_IF(b.isKind<DERIVED>()); \
-	FAILED_IF(b.isKind(d.staticKind)); \
-	FAILED_IF(b.isKind(Kind::of<DERIVED>())); \
+	FAILED_IF(b.Entity::isKind(d.staticKind)); \
+	FAILED_IF(b.Entity::isKind(Kind::of<DERIVED>())); \
 	d.DERIVED::killAndDelete(); \
 	b.BASE::killAndDelete(); \
 	}
@@ -408,8 +408,10 @@ int test()
 		n->killAndDelete();
 		r->importDom(doc.documentElement());
 		r->restorePtrs();
+		r->debugTree();
 	
 		FAILED_IF(!r->entity(0)->entitiesOf<Class>()[0]->entitiesOf<Method>()[0]->entitiesOf<Compound>()[0]->entityIs<Referenced>(1));
+		qDebug() << &*r->entity(0)->entitiesOf<Class>()[0]->entitiesOf<Method>()[0]->entitiesOf<Compound>()[0]->entityAs<Referenced>(1)->subject();
 		FAILED_IF(!r->entity(0)->entitiesOf<Class>()[0]->entitiesOf<Method>()[0]->entitiesOf<Compound>()[0]->entityAs<Referenced>(1)->subject());
 		
 		r->killAndDelete();

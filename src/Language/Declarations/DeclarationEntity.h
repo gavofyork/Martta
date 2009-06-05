@@ -29,13 +29,29 @@ class Type;
 class SubAddressable;
 class ValueDefinition;
 
+class Referencable
+{
+	MARTTA_INTERFACE
+	
+public:	
+	virtual SubAddressable*				addressableContext() const = 0;
+	virtual QString						name() const = 0;
+	virtual QString						codeName() const = 0;
+	virtual QString						reference() const = 0;
+	virtual QString						identity() const = 0;
+	virtual QString						key() const = 0;
+	
+	virtual ~Referencable() {}
+};
+
 /**
  * Class for anything individually referencable in the language.
  * Currently this includes only functions, variables, types and enumeration values.
  */
-class DeclarationEntity: public Entity
+class DeclarationEntity: public Entity, public_interface Referencable
 {
 	MARTTA_PLACEHOLDER(Entity)
+	MARTTA_INHERITS(Referencable, 0)
 
 public:
 	virtual ~DeclarationEntity();

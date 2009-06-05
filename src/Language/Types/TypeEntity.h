@@ -72,7 +72,7 @@ public:
 	/// isType/asType: They ignore qualifiers and test for/identify the physical type stored.
 	/// In terms of C++, Reference and Const are considered physically transparent (though
 	/// can still be searched for explicitly). FunctionType, Memberify and AddressType are not.
-	virtual bool						isType(Kind _typeKind) { return isKind(_typeKind); }
+	virtual bool						isType(Kind _typeKind) { return Entity::isKind(_typeKind); }
 	template<class T> inline bool		isType() { return isType(Kind::of<T>()); }
 	virtual TypeEntity*					asType(Kind _typeKind) { M_ASSERT(isType(_typeKind)); return this; }
 	template<class T> inline T*			asType() { return static_cast<T*>(asType(Kind::of<T>())); }

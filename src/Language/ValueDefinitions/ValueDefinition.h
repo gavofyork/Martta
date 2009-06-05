@@ -26,14 +26,21 @@
 namespace Martta
 {
 
+class ValueDefiner: public_interface Referencable, public_interface TypeNamer
+{
+	MARTTA_INTERFACE
+	MARTTA_INHERITS(Referencable, 0)
+	MARTTA_INHERITS(TypeNamer, 1)
+};
+
 /**
  * Class for any DeclarationEntity that holds a specific, in-language value.
  * This includes only variables and enumeration values.
  */
-class ValueDefinition: public DeclarationEntity, public TypeNamer
+class ValueDefinition: public DeclarationEntity, public_interface ValueDefiner
 {
 	MARTTA_PLACEHOLDER(DeclarationEntity)
-	MARTTA_INHERITS(TypeNamer, 0)
+	MARTTA_INHERITS(ValueDefiner, 0)
 };
 
 }

@@ -25,30 +25,4 @@ namespace Martta
 
 MARTTA_INTERFACE_CPP(TypeNamer)
 
-QList<TypeNamer*> filterTypeds(Type const& _t, QList<TypeNamer*> const& _l)
-{
-	QList<TypeNamer*> ret;
-	
-	foreach (TypeNamer* i, _l)
-	{
-//		qDebug() << "fT:" << i->type()->code() << "(" << _t->code() << ")";
-		if (i->type().isSimilarTo(_t, TypeEntity::Physical) && i->type().isSimilarTo(_t, TypeEntity::Convertible))
-		{
-//			qDebug() << "OK";
-			ret << i;
-		}
-	}
-	return ret;
-}
-
-QList<TypeNamer*> filterTypedsInv(Type const& _t, QList<TypeNamer*> const& _l)
-{
-	QList<TypeNamer*> ret;
-	
-	foreach (TypeNamer* i, _l)
-		if (!(i->type().isSimilarTo(_t, TypeEntity::Physical) && i->type().isSimilarTo(_t, TypeEntity::Convertible)))
-			ret << i;
-	return ret;
-}
-
 }

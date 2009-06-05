@@ -26,5 +26,6 @@ namespace Martta
 {
 
 MARTTA_OBJECT_CPP(ValueDefinition);	
+MARTTA_INTERFACE_CPP(ValueDefiner);
 
 }

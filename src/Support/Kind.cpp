@@ -45,9 +45,22 @@ Kinds Kind::interfaces() const
 	if (!m_mo)
 		return Kinds();
 	Kinds ret;
-	ret << super().interfaces();
-	foreach (Kind k, immediateInterfaces())
-		ret << k << k.interfaces();
+	Kinds yet;
+	for (Kind k = *this;; k = yet.takeLast())
+	{
+		foreach (Kind k, k.immediateInterfaces())
+			if (!ret.contains(k))
+			{
+				ret << k;
+				yet << k;
+			}
+		if (yet.isEmpty())
+			break;
+	}
+	
+	foreach (Kind k, super().interfaces())
+		if (!ret.contains(k))
+			ret << k;
 	return ret;
 }
 

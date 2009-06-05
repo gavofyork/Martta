@@ -62,8 +62,8 @@ public:
 	inline Kind super() const { return m_mo ? Kind(m_mo->superAuxilliary()) : Kind(); }
 	Kinds deriveds() const;
 	Kinds immediateDeriveds() const;
-	Kinds immediateInterfaces() const;
 	Kinds interfaces() const;
+	Kinds immediateInterfaces() const;
 	inline QString name() const { return m_mo ? m_mo->name() : 0; }
 	inline AuxilliaryFace const* auxilliary() const { return m_mo; }
 	Entity* spawnPrepared() const;

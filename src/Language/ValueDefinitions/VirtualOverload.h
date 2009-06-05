@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "ModelPtr.h"
 #include "VirtualMethod.h"
 
 namespace Martta

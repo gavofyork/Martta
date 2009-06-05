@@ -22,6 +22,7 @@
 
 #include "Callable.h"
 #include "Operator.h"
+#include "ModelPtr.h"
 #include "UnaryOperation.h"
 
 namespace Martta

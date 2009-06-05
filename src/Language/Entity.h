@@ -35,7 +35,7 @@
 #include "Kind.h"
 #include "Auxilliary.h"
 #include "Location.h"
-#include "ModelPtr.h"
+#include "ModelPtrFace.h"
 #include "InsertionPoint.h"
 #include "EntityKeyEvent.h"
 #include "SafePointer.h"
@@ -57,7 +57,15 @@ class ValueDefinition;
 class TypeDefinition;
 class EntityKeyEvent;
 
-#define SET_DEPENDENCY(M_S, _S) if (true) { if ((Entity*)M_S == (Entity*)_S) return; removeDependency(M_S); M_S = _S; addDependency(M_S); dependencySwitched(M_S); changed(); } else void(0)
+#define SET_DEPENDENCY(M_S, _S) if (true) { \
+	if (((M_S) ? (M_S)->asKind<Entity>() : 0) == (Entity*)_S) \
+		return; \
+	removeDependency(((M_S) ? (M_S)->asKind<Entity>() : 0)); \
+	M_S = _S; \
+	addDependency(((M_S) ? (M_S)->asKind<Entity>() : 0)); \
+	dependencySwitched(((M_S) ? (M_S)->asKind<Entity>() : 0)); \
+	changed(); \
+	} else void(0)
 
 extern int s_news;
 extern int s_deletes;
@@ -75,6 +83,8 @@ extern QList<ChangeEntry> s_changes;
 void change(Entity* _s, ChangeOperation _op, Entity* _o = 0);
 inline QList<ChangeEntry> const& changes() { return s_changes; }
 inline void clearChanges() { s_changes.clear(); }
+
+template<class T> class ModelPtr;
 
 class Nothing { public: static AuxilliaryFace const* staticAuxilliary() { return 0; } };
 /**

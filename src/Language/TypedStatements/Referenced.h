@@ -21,6 +21,7 @@
 #pragma once
 
 #include "Typed.h"
+#include "ModelPtr.h"
 #include "ValueDefinition.h"
 
 namespace Martta
@@ -35,12 +36,20 @@ class Referenced: public Typed
 	friend class ReferencedEdit;
 
 public:
-	Referenced(ValueDefinition* _v = 0, bool _specific = false);
+	Referenced(ValueDefiner* _v = 0, bool _specific = false);
 
 	virtual QString						code() const;
 	virtual Type						type() const;
-	ModelPtr<ValueDefinition>			subject() const { return m_subject; }
-	void								setSubject(ValueDefinition* _e) { SET_DEPENDENCY(m_subject, _e); }
+	ModelPtr<ValueDefiner>				subject() const { return m_subject; }
+	void								setSubject(ValueDefiner* _e) { 
+		if ((m_subject)->asKind<Entity>() == (Entity*)_e)
+			return;
+		removeDependency((m_subject)->asKind<Entity>());
+		m_subject = _e;
+		addDependency((m_subject)->asKind<Entity>());
+		dependencySwitched((m_subject)->asKind<Entity>());
+		changed();
+	}
 	
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
 
@@ -52,11 +61,11 @@ protected:
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 	virtual void						exportDom(QDomElement& _element) const;
 	virtual void						importDom(QDomElement const& _element);
-	virtual void						apresLoad() { addDependency(m_subject); Super::apresLoad(); }
+	virtual void						apresLoad() { addDependency(m_subject->self()); Super::apresLoad(); }
 	virtual Kinds						ancestralDependencies() const;
 	virtual void						onDependencyChanged(Entity*) { changed(); }
 	
-	ModelPtr<ValueDefinition>			m_subject;
+	ModelPtr<ValueDefiner>				m_subject;
 	bool								m_specific;
 	uint								m_lastSet;
 };

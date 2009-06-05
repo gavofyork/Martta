@@ -22,6 +22,7 @@
 
 #include "ValueDefinition.h"
 #include "Operator.h"
+#include "ModelPtr.h"
 #include "BinaryOperation.h"
 
 namespace Martta
