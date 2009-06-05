@@ -31,7 +31,7 @@ class Typed;
 
 class Statement: public TypedOwner
 {
-	MARTTA_OBJECT_INTERFACE(TypedOwner)
+	MARTTA_PLACEHOLDER(TypedOwner)
 
 public:
 	virtual QString						code() const { return "(void)0;"; }

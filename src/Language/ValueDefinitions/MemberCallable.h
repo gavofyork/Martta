@@ -32,7 +32,7 @@ namespace Martta
 /// knowledge of the AccessLabel.
 class MemberCallable: public Callable
 {
-	MARTTA_OBJECT_INTERFACE(Callable)
+	MARTTA_PLACEHOLDER(Callable)
 
 public:
 	virtual Access						access() const;

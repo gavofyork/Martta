@@ -27,7 +27,7 @@ namespace Martta
 
 class GenericMemberOperation: public BinaryOperation
 {
-	MARTTA_OBJECT_INTERFACE(BinaryOperation)
+	MARTTA_PLACEHOLDER(BinaryOperation)
 
 protected:
 	virtual Type						scope() const { return Type(); }

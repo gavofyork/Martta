@@ -27,7 +27,7 @@ namespace Martta
 
 class Untyped: public Statement
 {
-	MARTTA_OBJECT_INTERFACE(Statement)
+	MARTTA_PLACEHOLDER(Statement)
 
 protected:
 //	virtual int							familyDependencies() const { return DependsOnNothing; }

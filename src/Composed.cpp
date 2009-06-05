@@ -114,6 +114,7 @@
 #include "Support/InsertionPoint.cpp"
 #include "Support/Kind.cpp"
 #include "Support/Location.cpp"
+#include "Support/Meta.cpp"
 #include "Support/ModelPtr.cpp"
 #include "Support/Operator.cpp"
 #include "Support/Type.cpp"

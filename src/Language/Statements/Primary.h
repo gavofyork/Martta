@@ -27,7 +27,7 @@ namespace Martta
 
 class Primary: public Statement
 {
-	MARTTA_OBJECT_INTERFACE(Statement)
+	MARTTA_PLACEHOLDER(Statement)
 
 public:
 	virtual QString						codeAsStatement() const { return code() + ";"; }

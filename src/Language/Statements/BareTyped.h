@@ -28,7 +28,7 @@ namespace Martta
 
 class BareTyped: public Primary, public TypeNamer
 {
-	MARTTA_OBJECT_INTERFACE(Primary)
+	MARTTA_PLACEHOLDER(Primary)
 
 public:
 	inline Types allowedTypes() const

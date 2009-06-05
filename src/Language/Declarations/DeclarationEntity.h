@@ -35,7 +35,7 @@ class ValueDefinition;
  */
 class DeclarationEntity: public Entity
 {
-	MARTTA_OBJECT_INTERFACE(Entity)
+	MARTTA_PLACEHOLDER(Entity)
 
 public:
 	virtual ~DeclarationEntity();

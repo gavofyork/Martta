@@ -31,7 +31,7 @@ namespace Martta
 	
 class ModifyingType: public TypeEntity
 {
-	MARTTA_OBJECT_INTERFACE(TypeEntity)
+	MARTTA_PLACEHOLDER(TypeEntity)
 
 public:
 	inline TypeEntity*					child() const { return entityIs<TypeEntity>(0) ? entityAs<TypeEntity>(0) : TypeEntity::null; }

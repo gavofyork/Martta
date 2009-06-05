@@ -27,7 +27,7 @@ namespace Martta
 
 class Evaluation: public Typed
 {
-	MARTTA_OBJECT_INTERFACE(Typed)
+	MARTTA_PLACEHOLDER(Typed)
 
 public:
 	virtual bool						doINeedParenthesising(Entity const*) const { return true; }

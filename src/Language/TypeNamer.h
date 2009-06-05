@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "Meta.h"
 #include "Type.h"
 
 namespace Martta
@@ -27,6 +28,7 @@ namespace Martta
 
 class TypeNamer
 {
+	MARTTA_INTERFACE
 public:
 	virtual ~TypeNamer() {}
 
@@ -38,5 +40,8 @@ public:
 	/// the type has not been implicitly casted according to the "hole" it is trying to fit.
 	virtual Type						type() const { return Type(); }
 };
+
+QList<TypeNamer*> filterTypeds(Type const& _t, QList<TypeNamer*> const& _l);
+QList<TypeNamer*> filterTypedsInv(Type const& _t, QList<TypeNamer*> const& _l);
 
 }

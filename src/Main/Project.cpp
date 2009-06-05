@@ -138,8 +138,8 @@ void Project::resetAsNew()
 	m_program->back().place(new AccessLabel);
 	m_program->back().place(new ConstLabel(false));
 	
-	nameChanged();
-	changed();
+	emit subjectInvalid();
+	emit nameChanged();
 }
 
 QString Project::code() const
@@ -372,7 +372,8 @@ void Project::deserialise(QDomDocument& _d)
 		}
 	}
 	
-	changed();
+	// Overuse?
+	emit subjectInvalid();
 }
 
 void Project::revert()
@@ -450,7 +451,8 @@ void Project::reloadHeaders()
 		es << e->entities();
 	}
 	
-	emit changed();
+	// Overuse?
+	emit subjectInvalid();
 }
 
 ////////////////////

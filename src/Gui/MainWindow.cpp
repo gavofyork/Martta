@@ -23,6 +23,7 @@
 
 #include "Project.h"
 #include "Function.h"
+#include "MemberVariable.h"
 #include "BareTyped.h"
 #include "IncludeProject.h"
 #include "CodeScene.h"
@@ -59,7 +60,7 @@ MainWindow::MainWindow(QWidget* _p, Qt::WindowFlags _f):
 	connect(m_project, SIGNAL(changed()), SLOT(updateProgramCode()));
 	updateProgramCode();
 
-	connect(m_project, SIGNAL(changed()), SLOT(resetSubject()));
+	connect(m_project, SIGNAL(subjectInvalid()), SLOT(resetSubject()));
 	resetSubject();
 
 	connect(m_codeScene, SIGNAL(currentChanged(Entity*)), SLOT(entityFocused(Entity*)));
@@ -85,8 +86,11 @@ MainWindow::~MainWindow()
 template<class T> void addToLanguage(Kind const& _k, T* _p)
 {
 	QString ifsS;
-	foreach (Kind k, _k.immediateInterfaces())
-		ifsS += k.name().remove("Martta::") + ", ";
+	foreach (Kind k, _k.interfaces())
+		if (_k.immediateInterfaces().contains(k))
+			ifsS += "*" + k.name().remove("Martta::") + "* ";
+		else
+			ifsS += k.name().remove("Martta::") + " ";
 	if (ifsS.endsWith(", "))
 		ifsS.chop(2);
 	QTreeWidgetItem* i = new QTreeWidgetItem(_p, QStringList() << _k.name().remove("Martta::") << ifsS);
@@ -154,9 +158,18 @@ void MainWindow::entityFocused(Entity* _e)
 			foreach (ValueDefinition* v, _e->asKind<Statement>()->valuesInLocalScope())
 				new QTreeWidgetItem(l, QStringList() << QString(v->name()) << QString(v->type()->code()));
 		}
+		if (_e->hasAncestor<Class>())
+		{
+			QTreeWidgetItem* m = new QTreeWidgetItem(typesVisible, QStringList() << QString("Members"));
+			foreach (ValueDefinition* v, castEntities<ValueDefinition>(_e->ancestor<Class>()->membersOf<MemberVariable>(_e->hasAncestor<MemberCallable>() ? _e->ancestor<MemberCallable>()->isConst() : false)) + castEntities<ValueDefinition>(_e->ancestor<Class>()->membersOf<MemberCallable>(_e->hasAncestor<MemberCallable>() ? _e->ancestor<MemberCallable>()->isConst() : false)))
+				new QTreeWidgetItem(m, QStringList() << QString(v->name()) << QString(v->type()->code()));
+		}
 		QTreeWidgetItem* g = new QTreeWidgetItem(typesVisible, QStringList() << QString("General"));
 		foreach (ValueDefinition* v, _e->ancestor<DeclarationEntity>()->valuesKnown())
 			new QTreeWidgetItem(g, QStringList() << QString(v->name()) << QString(v->type()->code()));
+		QTreeWidgetItem* gl = new QTreeWidgetItem(typesVisible, QStringList() << QString("Global"));
+		foreach (ValueDefinition* v, _e->rootEntity()->entitiesHereAndBeforeOf<ValueDefinition>())
+			new QTreeWidgetItem(gl, QStringList() << QString(v->name()) << QString(v->type()->code()));
 		typesVisible->expandAll();
 		typesVisible->verticalScrollBar()->setValue(vvalue);
 	}

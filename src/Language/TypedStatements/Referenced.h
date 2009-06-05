@@ -58,7 +58,7 @@ protected:
 	
 	ModelPtr<ValueDefinition>			m_subject;
 	bool								m_specific;
-	int									m_lastSet;
+	uint								m_lastSet;
 };
 
 }

@@ -27,30 +27,4 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(ValueDefinition);	
 
-QList<ValueDefinition*> filterTypeds(Type const& _t, QList<ValueDefinition*> const& _l)
-{
-	QList<ValueDefinition*> ret;
-	
-	foreach (ValueDefinition* i, _l)
-	{
-//		qDebug() << "fT:" << i->type()->code() << "(" << _t->code() << ")";
-		if (i->type().isSimilarTo(_t, TypeEntity::Physical) && i->type().isSimilarTo(_t, TypeEntity::Convertible))
-		{
-//			qDebug() << "OK";
-			ret << i;
-		}
-	}
-	return ret;
-}
-
-QList<ValueDefinition*> filterTypedsInv(Type const& _t, QList<ValueDefinition*> const& _l)
-{
-	QList<ValueDefinition*> ret;
-	
-	foreach (ValueDefinition* i, _l)
-		if (!(i->type().isSimilarTo(_t, TypeEntity::Physical) && i->type().isSimilarTo(_t, TypeEntity::Convertible)))
-			ret << i;
-	return ret;
-}
-
 }

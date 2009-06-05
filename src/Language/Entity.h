@@ -31,11 +31,12 @@
 #include <QHash>
 #include <QPointF>
 
+#include "Meta.h"
+#include "Kind.h"
 #include "Auxilliary.h"
 #include "Location.h"
 #include "ModelPtr.h"
 #include "InsertionPoint.h"
-#include "Kind.h"
 #include "EntityKeyEvent.h"
 #include "SafePointer.h"
 
@@ -55,57 +56,6 @@ class DeclarationEntity;
 class ValueDefinition;
 class TypeDefinition;
 class EntityKeyEvent;
-
-#define MARTTA_BASIC \
-	public: \
-	static AuxilliaryFace const*		staticAuxilliary(); \
-	static Kind							staticKind; \
-	template<int i, int d = 0>			struct AltSuper { typedef Nothing TheType; }; \
-	template<int m = -1, typename T = void>	struct AltSuperCount { static const int count = AltSuperCount<m + 1, typename AltSuper<m + 1>::TheType>::count; }; \
-	template<int m>						struct AltSuperCount<m, Nothing> { static const int count = m; }; \
-	template<int m, int d = 0>			struct ASHelper { public: static AuxilliaryFace const** altSupers() { static AuxilliaryFace const* r[m]; r[m - 1] = AltSuper<m - 1>::TheType::staticAuxilliary(); memcpy(r, ASHelper<m - 1>::altSupers(), (m - 1) * sizeof(AuxilliaryFace const*)); return r; } }; \
-	template<int d>						struct ASHelper<0, d> { public: static AuxilliaryFace const** altSupers() { static AuxilliaryFace const* r[0]; return r; } };
-
-#define MARTTA_INHERITS(S, i)			template<int d> struct AltSuper<i, d> { typedef S TheType; };
-#define MARTTA_INTERFACE \
-	static const bool IsInterface = true; \
-	static const bool IsObject = false; \
-	static const bool IsPlaceholder = false; \
-	MARTTA_BASIC
-
-#define MARTTA_COMMON(S) \
-	public: \
-	inline virtual Kind					kind() const { return staticKind; } \
-	typedef S Super; \
-	MARTTA_BASIC
-
-#define MARTTA_OBJECT(S) \
-	MARTTA_COMMON(S) \
-	public: \
-	static const bool IsInterface = false; \
-	static const bool IsObject = true; \
-	static const bool IsPlaceholder = false; \
-	inline virtual bool					isPlaceholder() const { return false; }
-
-#define MARTTA_OBJECT_INTERFACE(S) \
-	MARTTA_COMMON(S) \
-	public: \
-	static const bool IsInterface = false; \
-	static const bool IsObject = false; \
-	static const bool IsPlaceholder = true; \
-	inline virtual bool					isPlaceholder() const { return true; }
-
-#define MARTTA_CPP_BASIC(E) \
-	static AuxilliaryFace const* s_auxilliary_##E = 0; \
-	Kind E::staticKind = Kind(E::staticAuxilliary());
-
-#define MARTTA_OBJECT_CPP(E) \
-	MARTTA_CPP_BASIC(E) \
-	AuxilliaryFace const* E::staticAuxilliary() { if (!s_auxilliary_##E) s_auxilliary_##E = new Auxilliary<E>("Martta::" #E); return s_auxilliary_##E; }
-
-#define MARTTA_INTERFACE_CPP(E) \
-	MARTTA_CPP_BASIC(E) \
-	AuxilliaryFace const* E::staticAuxilliary() { if (!s_auxilliary_##E) s_auxilliary_##E = new InterfaceAuxilliary<E>("Martta::" #E); return s_auxilliary_##E; }
 
 #define SET_DEPENDENCY(M_S, _S) if (true) { if ((Entity*)M_S == (Entity*)_S) return; removeDependency(M_S); M_S = _S; addDependency(M_S); dependencySwitched(M_S); changed(); } else void(0)
 
@@ -142,6 +92,9 @@ class Entity: public SafePointerTarget
 
 public:
 	typedef Nothing Super;
+	static const bool IsInterface = false;
+	static const bool IsPlaceholder = true;
+	static const bool IsObject = false;
 	
 #if POOL_ALLOCATOR
 	static QMap<size_t, boost::pool<>* >* s_pools;
@@ -184,7 +137,7 @@ public:
 	
 	static void							initialiseClass() {}
 	static void							finaliseClass() {}
-
+	
 	void								setContext(Entity* _e);
 	void								setContextTentatively(Entity* _e);
 	void								commitTentativeSetContext(InsertionPoint const& _oldPosition);
@@ -355,10 +308,13 @@ public:
 	template<class T> inline bool		isKind() const { return this && kind().isKind(T::staticKind); }
 	inline bool							isKind(Kind _k) const { return this && kind().isKind(_k); }
 	inline bool							isKind(Kinds _k) const { return this && kind().isKind(_k); }
-	template<class T> inline T*			asKind() { M_ASSERT(this); M_ASSERT(isKind<T>()); return static_cast<T*>(this); }
-	template<class T> inline T const*	asKind() const { M_ASSERT(this); M_ASSERT(isKind<T>()); return static_cast<T const*>(this); }
-	template<class T> inline T*			tryKind() { if (this && isKind<T>()) return static_cast<T*>(this); return 0; }
-	template<class T> inline T const*	tryKind() const { if (this && isKind<T>()) return static_cast<T const*>(this); return 0; }
+	
+	template<class T> inline T*			asInterface() { return const_cast<T*>(const_cast<Entity const*>(this)->asInterface<T>()); }
+	template<class T> inline T const*	asInterface() const { M_ASSERT(isKind<T>()); return reinterpret_cast<T const*>(toInterface(T::staticKind)); }
+	template<class T> inline T*			asKind() { M_ASSERT(this); M_ASSERT(isKind<T>()); return T::IsInterface ? asInterface<T>() : tryCast<T*>(this); }
+	template<class T> inline T const*	asKind() const { M_ASSERT(this); M_ASSERT(isKind<T>()); return T::IsInterface ? asInterface<T>() : tryCast<T const*>(this); }
+	template<class T> inline T*			tryKind() { if (this && isKind<T>()) return asKind<T>(); return 0; }
+	template<class T> inline T const*	tryKind() const { if (this && isKind<T>()) return asKind<T>(); return 0; }
 
 	// The following are information for checking and selection mechanisms.
 	// These values could change depending upon elements already in place (e.g. dereference operators), so should be rechecked whenever anything changes.
@@ -532,6 +488,9 @@ public:
 	
 protected:
 	virtual ~Entity();
+
+	virtual void const*					toInterface(Kind) const { return 0; }
+	void const*							tryInterface(Kind) const { return 0; }
 
 	virtual QString						defineLayout(ViewKeys&) const { return "^;'[]'"; }
 	

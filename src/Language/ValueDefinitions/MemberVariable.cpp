@@ -68,6 +68,8 @@ QString MemberVariable::defineLayout(ViewKeys& _v) const
 
 void MemberVariable::decorate(DecorationContext const& _p) const
 {
+	if (!isComplete())
+		return;
 	_p->setPen(Qt::NoPen);
 	QColor c = entityAs<AccessLabel>(2)->idColour();
 	c.setAlpha(64);

@@ -39,7 +39,8 @@ QMap<size_t, boost::pool<>* >* Entity::s_pools = 0;
 int s_news = 0;
 int s_deletes = 0;
 	
-MARTTA_OBJECT_CPP(Entity);
+MARTTA_CPP_BASIC(Entity);
+AuxilliaryFace const* Entity::staticAuxilliary() { if (!s_auxilliary_Entity) s_auxilliary_Entity = new Auxilliary<Entity>("Martta::Entity"); return s_auxilliary_Entity; }
 
 QList<ChangeEntry> s_changes;
 void change(Entity* _s, ChangeOperation _op, Entity* _o)

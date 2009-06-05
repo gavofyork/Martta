@@ -38,7 +38,7 @@ typedef QList<Type> Types;
  */
 class TypeDefinition: public SubAddressable
 {
-	MARTTA_OBJECT_INTERFACE(SubAddressable)
+	MARTTA_PLACEHOLDER(SubAddressable)
 
 	friend class TypeResolver;
 

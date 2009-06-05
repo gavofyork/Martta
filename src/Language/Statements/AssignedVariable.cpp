@@ -47,7 +47,7 @@ Types AssignedVariable::allowedTypes(int _index) const
 
 Type AssignedVariable::type() const
 {
-	return entityIs<Variable>(0) ? entityAs<ValueDefinition>(0)->type() : Type();
+	return entityIs<Variable>(0) ? entityAs<Variable>(0)->asKind<TypeNamer>()->type() : Type();
 }
 
 QString AssignedVariable::code() const

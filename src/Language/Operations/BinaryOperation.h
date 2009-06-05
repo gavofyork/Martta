@@ -27,7 +27,7 @@ namespace Martta
 
 class BinaryOperation: public Operation
 {
-	MARTTA_OBJECT_INTERFACE(Operation)
+	MARTTA_PLACEHOLDER(Operation)
 
 public:
 	virtual int							minimumRequired() const { return 2; }

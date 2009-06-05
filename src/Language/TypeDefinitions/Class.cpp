@@ -168,7 +168,7 @@ Kinds Class::allowedKinds(int _i) const
 QString Class::implementationCode() const
 {
 	QString ret;
-	foreach (DeclarationEntity* f, entitiesOf<ValueDefinition>())
+	foreach (DeclarationEntity* f, entitiesOf<DeclarationEntity>())
 		ret += f->implementationCode() + "\n";
 	if (ret.endsWith("\n\n")) ret.chop(1);
 	return ret;
@@ -185,7 +185,7 @@ QString Class::interfaceCode() const
 		ret += f->code() + ", ";
 	if (ret.endsWith(", ")) ret.chop(2);
 	ret += "{\n";
-	foreach (DeclarationEntity* f, entitiesOf<ValueDefinition>())
+	foreach (DeclarationEntity* f, entitiesOf<DeclarationEntity>())
 		ret += f->interfaceCode();
 	if (ret.endsWith("\n\n")) ret.chop(1);
 	ret += "};\n";

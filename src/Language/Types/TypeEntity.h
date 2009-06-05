@@ -33,7 +33,7 @@ class ValueDefinition;
 
 class TypeEntity: public TypedOwner
 {
-	MARTTA_OBJECT_INTERFACE(TypedOwner)
+	MARTTA_PLACEHOLDER(TypedOwner)
 
 	friend class Type;
 	friend class ModifyingType;

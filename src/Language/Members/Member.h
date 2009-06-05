@@ -30,7 +30,7 @@ namespace Martta
  */
 class Member: public DeclarationEntity
 {
-	MARTTA_OBJECT_INTERFACE(DeclarationEntity)
+	MARTTA_PLACEHOLDER(DeclarationEntity)
 	
 public:
 	virtual Access						access() const;

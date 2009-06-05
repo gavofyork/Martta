@@ -25,13 +25,6 @@
 
 namespace Martta
 {
-/*
-class DefaultConstructedVariable;
-class ConstructedVariable;
-class AssignedVariable;
-*/
-QList<ValueDefinition*> filterTypeds(Type const& _t, QList<ValueDefinition*> const& _l);
-QList<ValueDefinition*> filterTypedsInv(Type const& _t, QList<ValueDefinition*> const& _l);
 
 /**
  * Class for any DeclarationEntity that holds a specific, in-language value.
@@ -39,7 +32,8 @@ QList<ValueDefinition*> filterTypedsInv(Type const& _t, QList<ValueDefinition*> 
  */
 class ValueDefinition: public DeclarationEntity, public TypeNamer
 {
-	MARTTA_OBJECT_INTERFACE(DeclarationEntity)
+	MARTTA_PLACEHOLDER(DeclarationEntity)
+	MARTTA_INHERITS(TypeNamer, 0)
 };
 
 }

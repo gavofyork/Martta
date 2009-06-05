@@ -27,7 +27,7 @@ namespace Martta
 
 class Literal: public Typed
 {
-	MARTTA_OBJECT_INTERFACE(Typed)
+	MARTTA_PLACEHOLDER(Typed)
 };
 
 }

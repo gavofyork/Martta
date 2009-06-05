@@ -27,7 +27,7 @@ namespace Martta
 
 class UnaryOperation: public Operation
 {
-	MARTTA_OBJECT_INTERFACE(Operation)
+	MARTTA_PLACEHOLDER(Operation)
 
 public:
 	virtual int							minimumRequired() const { return 1; }

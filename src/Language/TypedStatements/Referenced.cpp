@@ -53,7 +53,7 @@ enum { LocalVariables = 1<<0, LocalCallables = 1<<1, LocalSet = 1<<0 + 1<<1,
 		ArgumentVariables = 1<<2, ArgumentCallables = 1<<3, ArgumentSet = 1<<2 + 1<<3,
   		MemberVariables = 1<<4, MemberCallables = 1<<5, MemberSet = 1<<4 + 1<<5,
 		ScopedVariables = 1<<6, ScopedCallables = 1<<7, ScopedSet = 1<<6 + 1<<7,
-		GlobalVariables = 1<<30, GlobalCallables = 1<<31, GlobalSet = 1<<30 + 1<<31 };
+		GlobalVariables = 1U<<14, GlobalCallables = 1U<<15, GlobalSet = 1U<<14 + 1U<<15 };
 
 bool Referenced::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
 {
@@ -219,7 +219,7 @@ public:
 	virtual QString				defineLayout(ViewKeys&) const;
 	
 private:
-	void						setSubset(int _s) { subject()->m_lastSet = _s; updateSubset(); } 
+	void						setSubset(uint _s) { subject()->m_lastSet = _s; updateSubset(); } 
 	void						updateSubset();
 	void						updateCompletion();
 
@@ -304,13 +304,13 @@ void ReferencedEdit::updateSubset()
 	if (subject()->m_lastSet & MemberVariables)
 		foreach (Type t, subject()->allowedTypes())
 			if (t->isType<Memberify>() && t->asType<Memberify>()->scope())
-				m_valuesInScope << filterTypedsInv(Type(FunctionType(false, true)).topWith(Memberify()).topWith(Reference()), t->asType<Memberify>()->scope()->applicableMembers(subject(), t->asType<Memberify>()->isConst()));
+				m_valuesInScope << castEntities<ValueDefinition>(filterTypedsInv(Type(FunctionType(false, true)).topWith(Memberify()).topWith(Reference()), castEntities<TypeNamer>(t->asType<Memberify>()->scope()->applicableMembers(subject(), t->asType<Memberify>()->isConst()))));
 			else if (subject()->hasAncestor<Class>())
 				m_valuesInScope << castEntities<ValueDefinition>(subject()->ancestor<Class>()->membersOf<MemberVariable>(subject()->hasAncestor<MemberCallable>() ? subject()->ancestor<MemberCallable>()->isConst() : false));
 	if (subject()->m_lastSet & MemberCallables)
 		foreach (Type t, subject()->allowedTypes())
 			if (t->isType<Memberify>() && t->asType<Memberify>()->scope())
-				m_valuesInScope << filterTypeds(Type(FunctionType(false, true)).topWith(Memberify()).topWith(Reference()), t->asType<Memberify>()->scope()->applicableMembers(subject(), t->asType<Memberify>()->isConst()));
+				m_valuesInScope << castEntities<ValueDefinition>(filterTypeds(Type(FunctionType(false, true)).topWith(Memberify()).topWith(Reference()), castEntities<TypeNamer>(t->asType<Memberify>()->scope()->applicableMembers(subject(), t->asType<Memberify>()->isConst()))));
 			else if (subject()->hasAncestor<Class>())
 				m_valuesInScope << castEntities<ValueDefinition>(subject()->ancestor<Class>()->membersOf<MemberCallable>(subject()->hasAncestor<MemberCallable>() ? subject()->ancestor<MemberCallable>()->isConst() : false));
 }
@@ -322,6 +322,7 @@ void ReferencedEdit::commit()
 
 bool ReferencedEdit::keyPressed(EntityKeyEvent const* _e)
 {
+	qDebug() << "Got: " << _e->text();
 	if (_e->key() == Qt::Key_Tab)
 		m_entityName += m_completion;
 	else if (_e->key() == Qt::Key_Backspace && m_entityName.length())

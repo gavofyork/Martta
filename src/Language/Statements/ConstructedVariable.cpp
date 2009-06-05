@@ -41,7 +41,7 @@ Kinds ConstructedVariable::allowedKinds(int _index) const
 Types ConstructedVariable::allowedTypes(int _index) const
 {
 	if (_index == 1 && entityAs<Variable>(0))
-		return entityAs<ValueDefinition>(0)->type();
+		return entityAs<TypeNamer>(0)->type();
 	return Types();
 }
 

@@ -27,7 +27,7 @@ namespace Martta
 
 class SubAddressable: public DeclarationEntity
 {
-	MARTTA_OBJECT_INTERFACE(DeclarationEntity)
+	MARTTA_PLACEHOLDER(DeclarationEntity)
 };
 
 }

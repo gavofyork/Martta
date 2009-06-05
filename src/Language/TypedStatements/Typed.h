@@ -27,7 +27,7 @@ namespace Martta
 
 class Typed: public BareTyped
 {
-	MARTTA_OBJECT_INTERFACE(BareTyped)
+	MARTTA_PLACEHOLDER(BareTyped)
 	
 public:
 	virtual int							familyDependencies() const { return DependsOnContext | DependsOnContextIndex; }

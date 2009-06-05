@@ -29,7 +29,7 @@ namespace Martta
 
 class Callable: public ValueDefinition
 {
-	MARTTA_OBJECT_INTERFACE(ValueDefinition)
+	MARTTA_PLACEHOLDER(ValueDefinition)
 
 public:
 	Callable(): m_qualifiers(Qualifiers(0)) {}

@@ -30,7 +30,7 @@ class Callable;
 
 class Operation: public Evaluation
 {
-	MARTTA_OBJECT_INTERFACE(Evaluation)
+	MARTTA_PLACEHOLDER(Evaluation)
 
 public:
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const&, EntityKeyEvent const*);

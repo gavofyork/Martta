@@ -27,7 +27,7 @@ namespace Martta
 
 class AddressType: public ModifyingType
 {
-	MARTTA_OBJECT_INTERFACE(ModifyingType)
+	MARTTA_PLACEHOLDER(ModifyingType)
 
 private:
 	virtual TypeEntity*					newClone() const { return new AddressType; }
