@@ -42,6 +42,7 @@
 #include "DefaultConstructedVariable.h"
 #include "AssignedVariable.h"
 #include "TextLabel.h"
+#include "Member.h"
 #include "Referenced.h"
 
 namespace Martta
@@ -173,7 +174,7 @@ void Referenced::decorate(DecorationContext const& _c) const
 		bool dec = false;
 		if (e->hasAncestor<NamespaceEntity>())
 		{
-			if (e->isKind<Variable>() && e->contextIs<Class>())
+			if (e->isKind<MemberVariable>())
 				dec = true;
 			else if (e->isKind<Variable>() && e->contextIs<Callable>())
 				dec = true;
@@ -199,7 +200,7 @@ void Referenced::decorate(DecorationContext const& _c) const
 QString Referenced::defineLayout(ViewKeys&) const
 {
 	QString ret = QString(m_lastSet&GlobalSet ? "p:/global.svg;" : "");
-	if (m_subject && m_subject->isKind<Variable>() && m_subject->self()->contextIs<Class>())
+	if (m_subject && m_subject->isKind<MemberVariable>())
 		ret += "(;M4;[[[;fs-2;fb;c#777;e#fff;'M';]]];);";
 	else if (m_subject && m_subject->isKind<Variable>() && m_subject->self()->contextIs<Callable>())
 		ret += "(;M4;[[[;fs-2;fb;c#777;e#fff;'_';]]];);";

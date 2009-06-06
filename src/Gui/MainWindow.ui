@@ -509,6 +509,67 @@
     </layout>
    </widget>
   </widget>
+  <widget class="QDockWidget" name="entityInfoDock" >
+   <property name="windowTitle" >
+    <string>Entity Information</string>
+   </property>
+   <attribute name="dockWidgetArea" >
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_9f" >
+    <layout class="QVBoxLayout" >
+     <property name="spacing" >
+      <number>0</number>
+     </property>
+     <property name="margin" >
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QFrame" name="frame_3f" >
+       <property name="frameShape" >
+        <enum>QFrame::Panel</enum>
+       </property>
+       <property name="frameShadow" >
+        <enum>QFrame::Sunken</enum>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_2f" >
+        <property name="margin" >
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QTreeWidget" name="entityInfo" >
+          <property name="font" >
+           <font>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="frameShape" >
+           <enum>QFrame::NoFrame</enum>
+          </property>
+          <property name="headerHidden" >
+           <bool>false</bool>
+          </property>
+          <property name="columnCount" >
+           <number>2</number>
+          </property>
+          <column>
+           <property name="text" >
+            <string>Name</string>
+           </property>
+          </column>
+          <column>
+           <property name="text" >
+            <string>Type</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
   <widget class="QDockWidget" name="dockLanguage" >
    <property name="windowTitle" >
     <string>Language Available</string>

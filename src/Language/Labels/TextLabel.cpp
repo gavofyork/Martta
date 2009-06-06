@@ -23,7 +23,8 @@
 #include "CommonGraphics.h"
 #include "Variable.h"
 #include "NamespaceEntity.h"
-#include "Class.h"
+#include "TypeDefinition.h"
+#include "Member.h"
 #include "Callable.h"
 #include "EditDelegate.h"
 #include "DecorationContext.h"
@@ -41,7 +42,7 @@ QString TextLabel::code() const
 	{
 		if (contextIs<Variable>())
 		{
-			if (context()->contextIs<Class>())
+			if (context()->contextIs<Member>())
 				prefix = "m_";
 			else if (context()->contextIs<Callable>())
 				prefix = "a_";
@@ -83,7 +84,7 @@ QString TextLabel::defineLayout(ViewKeys&) const
 	QString key = "";
 	if (context()->hasAncestor<NamespaceEntity>())
 	{
-		if (contextIs<Variable>() && context()->contextIs<Class>())
+		if (contextIs<Variable>() && context()->contextIs<Member>())
 			key = "(;M4;[[[;fs-2;fb;c#777;e#fff;'M';]]];)";
 		else if (contextIs<Variable>() && context()->contextIs<Callable>())
 			key = "(;M4;[[[;fs-2;fb;c#777;e#fff;'_';]]];)";
@@ -96,7 +97,7 @@ void TextLabel::decorate(DecorationContext const& _c) const
 	bool dec= false;
 	if (context()->hasAncestor<NamespaceEntity>())
 	{
-		if (contextIs<Variable>() && context()->contextIs<Class>())
+		if (contextIs<Variable>() && context()->contextIs<Member>())
 			dec = true;
 		else if (contextIs<Variable>() && context()->contextIs<Callable>())
 			dec = true;

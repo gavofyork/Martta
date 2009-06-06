@@ -18,8 +18,10 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "Common.h"
-#include "Class.h"
+//#include "Class.h"
+#include "DecorationContext.h"
+#include "CommonGraphics.h"
+#include "AccessLabel.h"
 #include "Member.h"
 
 namespace Martta
@@ -29,7 +31,46 @@ MARTTA_OBJECT_CPP(Member);
 
 Access Member::access() const
 {
-	return NoAccess;
+	return isComplete() ? entityAs<AccessLabel>(0)->access() : NoAccess;
+}
+
+Kinds Member::allowedKinds(int _i) const
+{
+	if (_i == 0)
+		return Kind::of<AccessLabel>();
+	else
+		return localAllowedKinds(_i - OffsetForDerivatives);
+}
+
+QString Member::code() const
+{
+	if (!isComplete())
+		return QString();
+	return entityAs<Label>(0)->code() + ": " + localCode();
+}
+
+QString Member::defineLayout(ViewKeys&/* _k*/) const
+{
+	return "m24,0,0,0;1";
+}
+
+void Member::decorate(DecorationContext const& _p) const
+{
+	if (!isComplete())
+		return;
+	_p->setPen(Qt::NoPen);
+	QColor c = entityAs<AccessLabel>(0)->idColour();
+	c.setAlpha(64);
+	_p->setBrush(c);
+	_p->drawRect(QRectF(16.f, 0.f, 4.f, _p.cap(0).height()));
+	localDecorate(_p);
+}
+
+bool Member::keyPressed(EntityKeyEvent const* _e)
+{
+	if (entity(0)->keyPressed(_e))
+		return true;
+	return Super::keyPressed(_e);
 }
 
 }

@@ -31,57 +31,15 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(MemberVariable);
 
-Kinds MemberVariable::allowedKinds(int _i) const
-{
-	if (_i == 2)
-		return Kind::of<AccessLabel>();
-	return Super::allowedKinds(_i);
-}
-
-Access MemberVariable::access() const
-{
-	if (!isComplete())
-		return NoAccess;
-	return entityAs<AccessLabel>(2)->access();
-}
-
-QString MemberVariable::code() const
-{
-	if (!isComplete())
-		return QString();
-	return entityAs<Label>(2)->code() + ": " + Super::code();
-}
-
 Type MemberVariable::type() const
 {
-	Type ret = Super::type();
+	if (!isComplete())
+		return Type();
+	Type ret = localEntityAs<TypeNamer>(0)->type();
 	if (!ancestor<Class>() || !ret->isType<Reference>() || !ret->asType<Reference>()->child())
 		return Type();
 	ret->asType<Reference>()->child()->knitIn(new Memberify(ancestor<Class>()));
 	return ret;
-}
-
-QString MemberVariable::defineLayout(ViewKeys& _v) const
-{
-	return "m24,0,0,0;" + Super::defineLayout(_v);
-}
-
-void MemberVariable::decorate(DecorationContext const& _p) const
-{
-	if (!isComplete())
-		return;
-	_p->setPen(Qt::NoPen);
-	QColor c = entityAs<AccessLabel>(2)->idColour();
-	c.setAlpha(64);
-	_p->setBrush(c);
-	_p->drawRect(QRectF(16.f, 0.f, 4.f, _p.cap(0).height()));
-}
-
-bool MemberVariable::keyPressed(EntityKeyEvent const* _e)
-{
-	if (entity(2)->keyPressed(_e))
-		return true;
-	return Super::keyPressed(_e);
 }
 
 bool MemberVariable::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)

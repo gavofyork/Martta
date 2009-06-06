@@ -495,14 +495,14 @@ public:
 	/// Calls onDependencyRemoved() on each of the registered dependents.
 	void								clearDependents();
 	
+	virtual QString						defineLayout(ViewKeys&) const { return "^;'[]'"; }
+	
 protected:
 	virtual ~Entity();
 
 	virtual void const*					toInterface(Kind) const { return 0; }
 	void const*							tryInterface(Kind) const { return 0; }
 
-	virtual QString						defineLayout(ViewKeys&) const { return "^;'[]'"; }
-	
 	enum { DependsOnNothing = 0, DependsOnContext = 1, DependsOnChildren = 2, DependsOnBoth = 3, DependsOnContextIndex = 4 };
 	virtual int							familyDependencies() const { return DependsOnNothing; }
 	virtual Kinds						ancestralDependencies() const { return Kinds(); }

@@ -34,7 +34,29 @@ class Member: public DeclarationEntity
 	
 public:
 	virtual Access						access() const;
+	
+protected:
+	static const int OffsetForDerivatives = 1;
 
+	// New helpers.
+	template<class T> bool				localEntityIs(int _i) const { return entityIs<T>(OffsetForDerivatives + _i); }
+	template<class T> T*				localEntityAs(int _i) const { return entityAs<T>(OffsetForDerivatives + _i); }
+
+	// New virtuals.
+	virtual QString 					localCode() const { return QString(); }
+	virtual void						localDecorate(DecorationContext const&) const {}
+	virtual int							localMinimumRequired() const { return 0; }
+	virtual Kinds						localAllowedKinds(int) const { return Kinds(); }
+	
+	// Old virtuals.
+	virtual QString 					code() const;
+	virtual QString						defineLayout(ViewKeys&) const;
+	virtual int							minimumRequired() const { return OffsetForDerivatives + localMinimumRequired(); }
+	virtual Kinds						allowedKinds(int _i) const;
+	virtual void						decorate(DecorationContext const& _p) const;
+	virtual bool						keyPressed(EntityKeyEvent const* _e);
+	virtual int							familyDependencies() const { return DependsOnChildren; }
+	virtual void						onDependencyChanged(Entity*) { changed(); }
 };
 
 }

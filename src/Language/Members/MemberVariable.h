@@ -21,28 +21,27 @@
 #pragma once
 
 #include "Variable.h"
-#include "Callable.h"
+#include "ValueDefiner.h"
+#include "Member.h"
 
 namespace Martta
 {
 
-class MemberVariable: public Variable
+class MemberVariable: public Member, public_interface ValueDefiner
 {
-	MARTTA_OBJECT(Variable)
+	MARTTA_OBJECT(Member)
+	MARTTA_INHERITS(ValueDefiner, 0)
 	
 public:
-	Access								access() const;
-	
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
 	
 protected:
+	virtual int							localMinimumRequired() const { return 1; }
+	virtual Kinds						localAllowedKinds(int _i) const { if (_i == 0) return Kind::of<Variable>(); else return Kinds(); }
+	virtual QString 					localCode() const { if(isComplete()) return localEntityAs<Variable>(0)->code(); return QString(); }
+	
 	virtual Type						type() const;
-	virtual QString 					code() const;
-	virtual int							minimumRequired() const { return 3; }
-	virtual Kinds						allowedKinds(int _i) const;
-	virtual void						decorate(DecorationContext const& _p) const;
-	virtual QString						defineLayout(ViewKeys&) const;
-	virtual bool						keyPressed(EntityKeyEvent const* _e);
+	virtual QString						name() const { return localEntityAs<Variable>(0)->name(); }
 };
 
 }
