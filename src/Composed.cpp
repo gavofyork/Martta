@@ -95,7 +95,6 @@
 #include "Language/ValueDefinitions/MethodOperator.cpp"
 #include "Language/ValueDefinitions/SimpleMethod.cpp"
 #include "Language/ValueDefinitions/SimpleOperator.cpp"
-#include "Language/ValueDefinitions/ValueDefinition.cpp"
 #include "Language/ValueDefinitions/Variable.cpp"
 #include "Language/ValueDefinitions/VirtualMethod.cpp"
 #include "Language/ValueDefinitions/VirtualOverload.cpp"
