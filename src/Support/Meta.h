@@ -70,10 +70,9 @@ template<class T, class F> T tryCast(F _f) { return tryCastPrivate::XL<T, F, try
 	public: \
 	virtual Entity const*				self() const { return this; } \
 	virtual Entity*						self() { return this; } \
-	template<class T> inline T*			asKind() { return Entity::asKind<T>(); } \
-	template<class T> inline T const*	asKind() const { return Entity::asKind<T>(); } \
-	template<class T> inline bool		isKind() const { return Entity::isKind<T>(); } \
 	typedef S Super; \
+	Entity::asKind; \
+	Entity::isKind; \
 	MARTTA_BASIC
 
 #define MARTTA_OBJECT(S) \

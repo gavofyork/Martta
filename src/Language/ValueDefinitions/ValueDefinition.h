@@ -20,18 +20,11 @@
 
 #pragma once
 
-#include "TypeNamer.h"
+#include "ValueDefiner.h"
 #include "DeclarationEntity.h"
 
 namespace Martta
 {
-
-class ValueDefiner: public_interface Referencable, public_interface TypeNamer
-{
-	MARTTA_INTERFACE
-	MARTTA_INHERITS(Referencable, 0)
-	MARTTA_INHERITS(TypeNamer, 1)
-};
 
 /**
  * Class for any DeclarationEntity that holds a specific, in-language value.

@@ -61,11 +61,11 @@ private:
 	void								setOperation(Operator _o, Type const& _left = Type(), Type const& _right = Type());
 	void								refreshOperation() { setOperation(m_operator, leftType(), rightType()); }
 	
-	static QList<ValueDefinition*>		findOperators(Operator _o, Type const& _left = Type(), Type const& _right = Type());
+	static QList<ValueDefiner*>			findOperators(Operator _o, Type const& _left = Type(), Type const& _right = Type());
 	
 	// Change to OperatorLabel?
 	Operator							m_operator;
-	ModelPtr<ValueDefinition>			m_symbolCache;
+	ModelPtr<ValueDefiner>				m_symbolCache;
 };
 
 }

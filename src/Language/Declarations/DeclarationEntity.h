@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "Identifiable.h"
 #include "Entity.h"
 
 namespace Martta
@@ -27,22 +28,7 @@ namespace Martta
 
 class Type;
 class SubAddressable;
-class ValueDefinition;
-
-class Referencable
-{
-	MARTTA_INTERFACE
-	
-public:	
-	virtual SubAddressable*				addressableContext() const = 0;
-	virtual QString						name() const = 0;
-	virtual QString						codeName() const = 0;
-	virtual QString						reference() const = 0;
-	virtual QString						identity() const = 0;
-	virtual QString						key() const = 0;
-	
-	virtual ~Referencable() {}
-};
+class ValueDefiner;
 
 /**
  * Class for anything individually referencable in the language.
@@ -83,8 +69,8 @@ public:
 	QList<DeclarationEntity*>			utilisedSiblings() const;
 	virtual QList<DeclarationEntity*>	utilised() const;
 
-	QList<ValueDefinition*>				valuesKnown() const;
-	virtual QList<ValueDefinition*>		valuesAdded() const { return QList<ValueDefinition*>(); }
+	QList<ValueDefiner*>				valuesKnown() const;
+	virtual QList<ValueDefiner*>		valuesAdded() const { return QList<ValueDefiner*>(); }
 	
 	virtual void						exportDom(QDomElement& _element) const;
 	virtual void						importDom(QDomElement const& _element);

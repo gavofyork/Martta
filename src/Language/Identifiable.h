@@ -20,35 +20,28 @@
 
 #pragma once
 
-#include "TypedOwner.h"
-#include "Type.h"
+#include <QString>
+
+#include "Meta.h"
 
 namespace Martta
 {
 
-class ValueDefinition;
-class Typed;
+class SubAddressable;
 
-class Statement: public TypedOwner
+class Referencable
 {
-	MARTTA_PLACEHOLDER(TypedOwner)
-
-public:
-	virtual QString						code() const { return "(void)0;"; }
-	virtual QString						codeAsStatement() const { return code(); }
-
-	virtual QList<ValueDefiner*>		valuesInLocalScope() const;
-
-	QList<Statement*>					statements() const { return entitiesOf<Statement>(); }
-	bool			 					isStatement(int _i) const { return entityIs<Statement>(_i); }
-	Statement*		 					asStatement(int _i) const { return entityAs<Statement>(_i); }
-
-	QList<Typed*>						typeds() const;
-	bool								isTyped(int _i) const;
-	Typed*								asTyped(int _i) const;
-	Type								typeOf(int _i) const;
+	MARTTA_INTERFACE
 	
-	virtual bool						onChanged() { foreach (Entity* i, entities()) i->relayoutLater(); return Super::onChanged(); }
+public:	
+	virtual SubAddressable*				addressableContext() const = 0;
+	virtual QString						name() const = 0;
+	virtual QString						codeName() const = 0;
+	virtual QString						reference() const = 0;
+	virtual QString						identity() const = 0;
+	virtual QString						key() const = 0;
+	
+	virtual ~Referencable() {}
 };
 
 }

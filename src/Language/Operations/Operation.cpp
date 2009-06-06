@@ -31,7 +31,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(Operation);
 
-QMultiHash<Operator, ValueDefinition*> Operation::s_operatorCatalogue;
+QMultiHash<Operator, ValueDefiner*> Operation::s_operatorCatalogue;
 
 Type Operation::prototypeOf(Type const& _t, int _index)
 {
@@ -67,13 +67,13 @@ bool Operation::prototypeHasArgumentAt(Type const& _t, int _i)
 	return false;
 }
 
-QList<ValueDefinition*> Operation::findBestOverload(Types const& _actual, QList<ValueDefinition*> const _candidates)
+QList<ValueDefiner*> Operation::findBestOverload(Types const& _actual, QList<ValueDefiner*> const _candidates)
 {
 //	qDebug() << "Finding best overload for" << _actual;
-	QList<ValueDefinition*> ret;
+	QList<ValueDefiner*> ret;
 	// Go through each one and give a score, then return the best one(s)...
 	int bestScore = 0;
-	foreach (ValueDefinition* i, _candidates)
+	foreach (ValueDefiner* i, _candidates)
 	{
 		Type c = i->type();
 		
@@ -164,10 +164,10 @@ InsertionPoint Operation::slideOnPrecedence(InsertionPoint _p, Precedence _d, As
 	return p;
 }
 
-QList<ValueDefinition*> Operation::allOperators(Operator _o)
+QList<ValueDefiner*> Operation::allOperators(Operator _o)
 {
 	// TODO: Should use rootEntity() here to index, but doesn't yet; no a big issue until there are multiple RootEntities at once.
-	QList<ValueDefinition*> ret = castEntities<ValueDefinition>(FundamentalOperator::find(_o.symbol()));
+	QList<ValueDefiner*> ret = castEntities<ValueDefiner>(FundamentalOperator::find(_o.symbol()));
 	ret += s_operatorCatalogue.values(_o);
 	// TODO: Search classes etc.
 	return ret;

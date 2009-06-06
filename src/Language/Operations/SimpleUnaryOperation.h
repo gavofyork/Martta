@@ -60,10 +60,10 @@ private:
 	// Note these don't call changed().
 	void								refreshOperation() { setOperation(m_operator, operandType()); }
 	void								setOperation(Operator _o, Type const& _type = Type());
-	static QList<ValueDefinition*>		findOperators(Operator _o, Type const& _type = Type());
+	static QList<ValueDefiner*>			findOperators(Operator _o, Type const& _type = Type());
 	
 	Operator							m_operator;
-	ModelPtr<ValueDefinition>			m_symbolCache;
+	ModelPtr<ValueDefiner>				m_symbolCache;
 };
 
 }

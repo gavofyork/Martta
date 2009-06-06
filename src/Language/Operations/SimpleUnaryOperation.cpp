@@ -65,7 +65,7 @@ bool SimpleUnaryOperation::keyPressedOnInsertionPoint(InsertionPoint const& _p, 
 	return false;
 }
 
-QList<ValueDefinition*> SimpleUnaryOperation::findOperators(Operator _o, Type const& _type)
+QList<ValueDefiner*> SimpleUnaryOperation::findOperators(Operator _o, Type const& _type)
 {
 	return findBestOverload((_type), allOperators(_o.symbol()));
 }
@@ -73,7 +73,7 @@ QList<ValueDefinition*> SimpleUnaryOperation::findOperators(Operator _o, Type co
 void SimpleUnaryOperation::setOperation(Operator _o, Type const& _type)
 {
 	m_operator = _o;
-	QList<ValueDefinition*> l = findOperators(_o, _type);
+	QList<ValueDefiner*> l = findOperators(_o, _type);
 	if (l.size())
 		SET_DEPENDENCY(m_symbolCache, l[0]);
 }

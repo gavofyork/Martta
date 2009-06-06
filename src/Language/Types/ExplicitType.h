@@ -52,7 +52,7 @@ public:
 protected:
 	virtual bool						hasDefaultConstructor() const;
 	virtual Types						assignableTypes() const;
-	virtual QList<ValueDefinition*>		applicableMembers(Entity* _s = 0, bool _isConst = false) const;
+	virtual QList<ValueDefiner*>		applicableMembers(Entity* _s = 0, bool _isConst = false) const;
 	virtual QString						code(QString const& _middle) const { return (m_subject ? m_subject->reference() : "") + _middle; }
 	virtual bool						contentsEquivalentTo(TypeEntity const* _t) const { return _t->asKind<ExplicitType>()->m_subject == m_subject; }
 	virtual QString						idColour() const;

@@ -155,20 +155,20 @@ void MainWindow::entityFocused(Entity* _e)
 		if (_e->isKind<Statement>())
 		{
 			QTreeWidgetItem* l = new QTreeWidgetItem(typesVisible, QStringList() << QString("Local"));
-			foreach (ValueDefinition* v, _e->asKind<Statement>()->valuesInLocalScope())
+			foreach (ValueDefiner* v, _e->asKind<Statement>()->valuesInLocalScope())
 				new QTreeWidgetItem(l, QStringList() << QString(v->name()) << QString(v->type()->code()));
 		}
 		if (_e->hasAncestor<Class>())
 		{
 			QTreeWidgetItem* m = new QTreeWidgetItem(typesVisible, QStringList() << QString("Members"));
-			foreach (ValueDefinition* v, castEntities<ValueDefinition>(_e->ancestor<Class>()->membersOf<MemberVariable>(_e->hasAncestor<MemberCallable>() ? _e->ancestor<MemberCallable>()->isConst() : false)) + castEntities<ValueDefinition>(_e->ancestor<Class>()->membersOf<MemberCallable>(_e->hasAncestor<MemberCallable>() ? _e->ancestor<MemberCallable>()->isConst() : false)))
+			foreach (ValueDefiner* v, castEntities<ValueDefiner>(_e->ancestor<Class>()->membersOf<MemberVariable>(_e->hasAncestor<MemberCallable>() ? _e->ancestor<MemberCallable>()->isConst() : false)) + castEntities<ValueDefiner>(_e->ancestor<Class>()->membersOf<MemberCallable>(_e->hasAncestor<MemberCallable>() ? _e->ancestor<MemberCallable>()->isConst() : false)))
 				new QTreeWidgetItem(m, QStringList() << QString(v->name()) << QString(v->type()->code()));
 		}
 		QTreeWidgetItem* g = new QTreeWidgetItem(typesVisible, QStringList() << QString("General"));
-		foreach (ValueDefinition* v, _e->ancestor<DeclarationEntity>()->valuesKnown())
+		foreach (ValueDefiner* v, _e->ancestor<DeclarationEntity>()->valuesKnown())
 			new QTreeWidgetItem(g, QStringList() << QString(v->name()) << QString(v->type()->code()));
 		QTreeWidgetItem* gl = new QTreeWidgetItem(typesVisible, QStringList() << QString("Global"));
-		foreach (ValueDefinition* v, _e->rootEntity()->entitiesHereAndBeforeOf<ValueDefinition>())
+		foreach (ValueDefiner* v, _e->rootEntity()->entitiesHereAndBeforeOf<ValueDefiner>())
 			new QTreeWidgetItem(gl, QStringList() << QString(v->name()) << QString(v->type()->code()));
 		typesVisible->expandAll();
 		typesVisible->verticalScrollBar()->setValue(vvalue);

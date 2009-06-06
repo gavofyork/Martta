@@ -55,7 +55,7 @@ Types ExplicitType::assignableTypes() const
 	return m_subject ? m_subject->assignableTypes() : Types();
 }
 
-QList<ValueDefinition*> ExplicitType::applicableMembers(Entity* _s, bool _isConst) const
+QList<ValueDefiner*> ExplicitType::applicableMembers(Entity* _s, bool _isConst) const
 {
 	Access a = Public;
 	if (_s->ancestor<Class>() && _s->ancestor<Class>() == m_subject)
@@ -63,8 +63,8 @@ QList<ValueDefinition*> ExplicitType::applicableMembers(Entity* _s, bool _isCons
 	else if (m_subject && m_subject->isKind<Class>() && m_subject->asKind<Class>()->baseAccess(_s->ancestor<Class>()) <= Protected)
 		a = Protected;
 	if (Class* c = m_subject ? m_subject->asKind<Class>() : 0)
-		return c->membersOf<ValueDefinition>(_isConst, a);
-	return QList<ValueDefinition*>();
+		return c->membersOf<ValueDefiner>(_isConst, a);
+	return QList<ValueDefiner*>();
 }
 
 bool ExplicitType::haveSingleCastOperator(TypeEntity const* _t, bool _const) const

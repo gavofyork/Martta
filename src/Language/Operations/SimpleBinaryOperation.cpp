@@ -61,7 +61,7 @@ bool SimpleBinaryOperation::keyPressedOnInsertionPoint(InsertionPoint const& _p,
 	return false;
 }
 
-QList<ValueDefinition*> SimpleBinaryOperation::findOperators(Operator _o, Type const& _left, Type const& _right)
+QList<ValueDefiner*> SimpleBinaryOperation::findOperators(Operator _o, Type const& _left, Type const& _right)
 {
 	return findBestOverload((_left, _right), allOperators(_o.symbol()));
 }
@@ -107,7 +107,7 @@ QString SimpleBinaryOperation::operatorLayout() const
 void SimpleBinaryOperation::setOperation(Operator _o, Type const& _left, Type const& _right)
 {
 	m_operator = _o;
-	QList<ValueDefinition*> l = findOperators(m_operator, _left, _right);
+	QList<ValueDefiner*> l = findOperators(m_operator, _left, _right);
 	if (l.size())
 		SET_DEPENDENCY(m_symbolCache, l[0]);
 }

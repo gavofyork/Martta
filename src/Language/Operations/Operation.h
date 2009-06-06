@@ -39,24 +39,24 @@ public:
 	virtual Precedence					precedence() const { return id().precedence(); }
 	virtual Operator					id() const { return Operator(); }
 
-	static void							registerOperator(Operator _o, ValueDefinition* _v, RootEntity*) { s_operatorCatalogue.insert(_o, _v); }
-	static void							unregisterOperator(Operator _o, ValueDefinition* _v, RootEntity*) { s_operatorCatalogue.remove(_o, _v); }
+	static void							registerOperator(Operator _o, ValueDefiner* _v, RootEntity*) { s_operatorCatalogue.insert(_o, _v); }
+	static void							unregisterOperator(Operator _o, ValueDefiner* _v, RootEntity*) { s_operatorCatalogue.remove(_o, _v); }
 
 protected:
 	virtual bool						isSlidable(int _i) const { return _i != entities().size() - 1; }
 	static InsertionPoint				slideOnPrecedence(InsertionPoint _p, Precedence _d, Associativity _a, InsertionPoint const& _block);
 	
 	// Must return all entities that are Callable-derived and whose id() is operator _o.
-	static QList<ValueDefinition*>		allOperators(Operator _o);
+	static QList<ValueDefiner*>			allOperators(Operator _o);
 	
 	/// The argument type of the method or function type _t. argument -1 is the return type.
 	static Type							prototypeOf(Type const& _t, int _index = -1);
 	static bool							prototypeHasArgumentAt(Type const& _t, int _index);
-	static QList<ValueDefinition*>		findBestOverload(Types const& _actual, QList<ValueDefinition*> const _candidates);
+	static QList<ValueDefiner*>			findBestOverload(Types const& _actual, QList<ValueDefiner*> const _candidates);
 	
 	// TODO: Should really be indexed on RootEntity too, but this won't matter until there are multiple RootEntities at once, 
 	// and I doubt that's going to happen any time soon.
-	static QMultiHash<Operator, ValueDefinition*>	s_operatorCatalogue;
+	static QMultiHash<Operator, ValueDefiner*>	s_operatorCatalogue;
 };
 
 }

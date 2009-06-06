@@ -18,14 +18,11 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "Common.h"
-#include "Class.h"
 #include "ValueDefinition.h"
 
 namespace Martta
 {
 
 MARTTA_OBJECT_CPP(ValueDefinition);	
-MARTTA_INTERFACE_CPP(ValueDefiner);
 
 }

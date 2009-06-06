@@ -29,6 +29,7 @@ namespace Martta
 class TypeNamer
 {
 	MARTTA_INTERFACE
+	
 public:
 	virtual ~TypeNamer() {}
 

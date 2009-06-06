@@ -120,9 +120,9 @@ Types HashType::assignableTypes() const
 	return Type(*this);
 }
 
-QList<ValueDefinition*> HashType::applicableMembers(Entity*, bool _isConst) const
+QList<ValueDefiner*> HashType::applicableMembers(Entity*, bool _isConst) const
 {
-	QList<ValueDefinition*> ret;
+	QList<ValueDefiner*> ret;
 	foreach (SimpleMethod* i, s_members)
 		if (i->type()->asType<Memberify>()->isConst() || !_isConst)
 			ret += i;

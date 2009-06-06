@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "Common.h"
 #include "SimpleType.h"
 #include "TypeEntity.h"
 

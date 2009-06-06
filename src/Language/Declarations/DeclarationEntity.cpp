@@ -31,7 +31,6 @@ namespace Martta
 {
 
 MARTTA_OBJECT_CPP(DeclarationEntity);
-MARTTA_INTERFACE_CPP(Referencable);	
 
 DeclarationEntity::~DeclarationEntity()
 {
@@ -41,12 +40,12 @@ DeclarationEntity::~DeclarationEntity()
 		qInformation() << "Deleting" << this << "with no rootEntity!";
 }
 
-QList<ValueDefinition*> DeclarationEntity::valuesKnown() const
+QList<ValueDefiner*> DeclarationEntity::valuesKnown() const
 {
-	QList<DeclarationEntity*> ret = contextIs<DeclarationEntity>() ? castEntities<DeclarationEntity>(contextAs<DeclarationEntity>()->valuesKnown()) : QList<DeclarationEntity*>();
+	QList<ValueDefiner*> ret = contextIs<DeclarationEntity>() ? contextAs<DeclarationEntity>()->valuesKnown() : QList<ValueDefiner*>();
 	foreach (DeclarationEntity* d, siblingsOf<DeclarationEntity>())
-		ret += castEntities<DeclarationEntity>(d->valuesAdded());
-	return castEntities<ValueDefinition>(ret);
+		ret += d->valuesAdded();
+	return ret;
 }
 
 QString DeclarationEntity::name() const

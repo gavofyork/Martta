@@ -107,9 +107,9 @@ Types ListType::assignableTypes() const
 	return Type(*this);
 }
 
-QList<ValueDefinition*> ListType::applicableMembers(Entity*, bool _isConst) const
+QList<ValueDefiner*> ListType::applicableMembers(Entity*, bool _isConst) const
 {
-	QList<ValueDefinition*> ret;
+	QList<ValueDefiner*> ret;
 	foreach (SimpleMethod* i, s_members)
 		if (i->type()->asType<Memberify>()->isConst() || !_isConst)
 			ret += i;
