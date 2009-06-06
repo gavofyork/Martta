@@ -29,7 +29,7 @@ namespace Martta
 
 class SubAddressable;
 
-class Referencable
+class Identifiable
 {
 	MARTTA_INTERFACE
 	
@@ -41,7 +41,7 @@ public:
 	virtual QString						identity() const = 0;
 	virtual QString						key() const = 0;
 	
-	virtual ~Referencable() {}
+	virtual ~Identifiable() {}
 };
 
 }

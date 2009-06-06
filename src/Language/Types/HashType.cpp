@@ -19,7 +19,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "Typed.h"
-#include "ValueDefinition.h"
+#include "ValueDefiner.h"
 #include "FunctionType.h"
 #include "Reference.h"
 #include "Const.h"

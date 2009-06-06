@@ -24,7 +24,7 @@
 #include "Common.h"
 #include "RootEntity.h"
 #include "TextLabel.h"
-#include "ValueDefinition.h"
+#include "ValueDefiner.h"
 #include "DeclarationEntity.h"
 
 namespace Martta

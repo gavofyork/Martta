@@ -73,13 +73,13 @@ void ModelPtrFace::tryRestore()
 	}
 }
 
-void ModelPtrFace::gone(Referencable* _e)
+void ModelPtrFace::gone(Identifiable* _e)
 {
 	if (m_cache == _e)
 		set(0);
 }
 
-Referencable* ModelPtrFace::get()
+Identifiable* ModelPtrFace::get()
 {
 	return m_cache;
 }
@@ -91,7 +91,7 @@ QString ModelPtrFace::key() const
 	return QString();
 }
 
-void ModelPtrFace::set(Referencable* _e, QString const& _k, RootEntity* _r)
+void ModelPtrFace::set(Identifiable* _e, QString const& _k, RootEntity* _r)
 {
 	if (m_cache) m_cache->self()->rootEntity()->removeModelPtr(this);
 	else if (m_rootEntity) m_rootEntity->removeModelPtr(this);

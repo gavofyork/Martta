@@ -23,6 +23,6 @@
 namespace Martta
 {
 
-MARTTA_INTERFACE_CPP(Referencable);	
+MARTTA_INTERFACE_CPP(Identifiable);	
 
 }

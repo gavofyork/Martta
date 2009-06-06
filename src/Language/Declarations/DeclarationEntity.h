@@ -34,10 +34,10 @@ class ValueDefiner;
  * Class for anything individually referencable in the language.
  * Currently this includes only functions, variables, types and enumeration values.
  */
-class DeclarationEntity: public Entity, public_interface Referencable
+class DeclarationEntity: public Entity, public_interface Identifiable
 {
 	MARTTA_PLACEHOLDER(Entity)
-	MARTTA_INHERITS(Referencable, 0)
+	MARTTA_INHERITS(Identifiable, 0)
 
 public:
 	virtual ~DeclarationEntity();

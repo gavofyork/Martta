@@ -27,10 +27,10 @@
 namespace Martta
 {
 
-class ValueDefiner: public_interface Referencable, public_interface TypeNamer
+class ValueDefiner: public_interface Identifiable, public_interface TypeNamer
 {
 	MARTTA_INTERFACE
-	MARTTA_INHERITS(Referencable, 0)
+	MARTTA_INHERITS(Identifiable, 0)
 	MARTTA_INHERITS(TypeNamer, 1)
 };
 

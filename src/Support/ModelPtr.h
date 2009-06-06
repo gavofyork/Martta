@@ -39,7 +39,7 @@ public:
 
 	inline operator T*() const
 	{
-		Referencable* r = const_cast<ModelPtr*>(this)->get();
+		Identifiable* r = const_cast<ModelPtr*>(this)->get();
 		M_ASSERT(!const_cast<ModelPtr*>(this)->get() || r->isKind<T>());
 		return r ? r->asKind<T>() : 0;
 	}

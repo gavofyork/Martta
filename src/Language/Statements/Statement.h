@@ -26,7 +26,7 @@
 namespace Martta
 {
 
-class ValueDefinition;
+class ValueDefiner;
 class Typed;
 
 class Statement: public TypedOwner

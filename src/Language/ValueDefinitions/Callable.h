@@ -22,14 +22,16 @@
 
 #include "Variable.h"
 #include "Compound.h"
-#include "ValueDefinition.h"
+#include "ValueDefiner.h"
+#include "DeclarationEntity.h"
 
 namespace Martta
 {
 
-class Callable: public ValueDefinition
+class Callable: public DeclarationEntity, public_interface ValueDefiner
 {
-	MARTTA_PLACEHOLDER(ValueDefinition)
+	MARTTA_PLACEHOLDER(DeclarationEntity)
+	MARTTA_INHERITS(ValueDefiner, 0)
 
 public:
 	Callable(): m_qualifiers(Qualifiers(0)) {}

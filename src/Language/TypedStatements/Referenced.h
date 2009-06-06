@@ -20,9 +20,9 @@
 
 #pragma once
 
-#include "Typed.h"
 #include "ModelPtr.h"
-#include "ValueDefinition.h"
+#include "ValueDefiner.h"
+#include "Typed.h"
 
 namespace Martta
 {

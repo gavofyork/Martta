@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include "ValueDefinition.h"
+#include "ValueDefiner.h"
 #include "Operator.h"
 #include "ModelPtr.h"
 #include "BinaryOperation.h"

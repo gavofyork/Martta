@@ -30,7 +30,7 @@ class NamespaceEntity: public SubAddressable
 	MARTTA_OBJECT(SubAddressable)
 
 public:
-	virtual bool						isGloballyReferencable() const { return true; }
+	virtual bool						isGloballyIdentifiable() const { return true; }
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual QString						defineLayout(ViewKeys&) const;
 	

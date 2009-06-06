@@ -21,15 +21,17 @@
 #pragma once
 
 #include "TypeEntity.h"
-#include "ValueDefinition.h"
+#include "ValueDefiner.h"
+#include "DeclarationEntity.h"
 
 namespace Martta
 {
 
-class SimpleMethod: public ValueDefinition
+class SimpleMethod: public DeclarationEntity, public_interface ValueDefiner
 {
-	MARTTA_OBJECT(ValueDefinition)
-	
+	MARTTA_OBJECT(DeclarationEntity)
+	MARTTA_INHERITS(ValueDefiner, 0)
+
 public:
 	SimpleMethod() {}
 	template<class T> inline static SimpleMethod* create(QString const& _name, bool _isConst, Type const& _returns, Types const& _args, RootEntity* _root)

@@ -28,12 +28,12 @@ namespace Martta
 {
 
 class RootEntity;
-class Referencable;
+class Identifiable;
 
 class ModelPtrFace
 {
 public:
-	inline ModelPtrFace(Referencable* _e): m_cache(0), m_rootEntity(0) { set(_e); }
+	inline ModelPtrFace(Identifiable* _e): m_cache(0), m_rootEntity(0) { set(_e); }
 	inline ModelPtrFace(QString const& _k, RootEntity* _r): m_cache(0), m_rootEntity(0) { set(0, _k, _r); }
 	inline ModelPtrFace(ModelPtrFace const& _c): m_cache(0), m_rootEntity(0) { set(_c.m_cache, _c.m_key, _c.m_rootEntity); }
 	inline ~ModelPtrFace() { set(0); }
@@ -60,14 +60,14 @@ public:
 	void restore();
 	void tryRestore();
 	void clearCache() { if (isArchived()) m_cache = 0; }
-	void gone(Referencable* _e);
+	void gone(Identifiable* _e);
 
 protected:
-	void set(Referencable* _e, QString const& _k = QString(), RootEntity* _r = 0);
-	Referencable* get();
+	void set(Identifiable* _e, QString const& _k = QString(), RootEntity* _r = 0);
+	Identifiable* get();
 
 private:
-	Referencable*		m_cache;
+	Identifiable*		m_cache;
 	QString				m_key;
 	RootEntity*			m_rootEntity;
 };

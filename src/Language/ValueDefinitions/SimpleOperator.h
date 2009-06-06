@@ -21,14 +21,16 @@
 #pragma once
 
 #include "TypeEntity.h"
-#include "ValueDefinition.h"
+#include "ValueDefiner.h"
+#include "DeclarationEntity.h"
 
 namespace Martta
 {
 
-class SimpleOperator: public ValueDefinition
+class SimpleOperator: public DeclarationEntity, public_interface ValueDefiner
 {
-	MARTTA_OBJECT(ValueDefinition)
+	MARTTA_OBJECT(DeclarationEntity)
+	MARTTA_INHERITS(ValueDefiner, 0)
 	
 public:
 	SimpleOperator() {}

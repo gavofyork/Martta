@@ -19,7 +19,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "Typed.h"
-#include "ValueDefinition.h"
+#include "ValueDefiner.h"
 #include "Statement.h"
 
 namespace Martta

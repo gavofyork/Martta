@@ -20,23 +20,25 @@
 
 #pragma once
 
-#include "ValueDefinition.h"
+#include "ValueDefiner.h"
+#include "DeclarationEntity.h"
 
 namespace Martta
 {
 
 class Enumeration;
 
-class EnumValue: public ValueDefinition
+class EnumValue: public DeclarationEntity, public_interface ValueDefiner
 {
-	MARTTA_OBJECT(ValueDefinition)
+	MARTTA_OBJECT(DeclarationEntity)
+	MARTTA_INHERITS(ValueDefiner, 0)
 
 	friend class Entity;
 	friend class EnumValueResolver;
 
 public:
 	// Accessor methods.
-	// From ValueDefinition from TypeNamer.
+	// From ValueDefiner from TypeNamer.
 	virtual Type						type() const;
 	virtual QString						code() const;
 

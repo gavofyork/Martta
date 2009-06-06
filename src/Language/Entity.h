@@ -53,7 +53,6 @@ class EditDelegateFace;
 class EntityKeyPress;
 class FundamentalOperator;
 class DeclarationEntity;
-class ValueDefinition;
 class TypeDefinition;
 class EntityKeyEvent;
 
