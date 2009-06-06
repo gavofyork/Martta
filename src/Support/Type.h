@@ -27,8 +27,8 @@
 namespace Martta
 {
 
-class TypeDefinition;
 class ModifyingType;
+class TypeDefinition;
 
 class Type
 {
