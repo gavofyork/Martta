@@ -43,15 +43,17 @@ protected:
 	template<class T> T*				localEntityAs(int _i) const { return entityAs<T>(OffsetForDerivatives + _i); }
 
 	// New virtuals.
-	virtual QString 					localCode() const { return QString(); }
-	virtual void						localDecorate(DecorationContext const&) const {}
-	virtual int							localMinimumRequired() const { return 0; }
-	virtual Kinds						localAllowedKinds(int) const { return Kinds(); }
+	virtual QString 					memberInterfaceCode() const { return QString(); }
+	virtual QString 					memberImplementationCode() const { return QString(); }
+	virtual void						memberDecorate(DecorationContext const&) const {}
+	virtual int							memberMinimumRequired() const { return 0; }
+	virtual Kinds						memberAllowedKinds(int) const { return Kinds(); }
 	
 	// Old virtuals.
-	virtual QString 					code() const;
+	virtual QString 					interfaceCode() const;
+	virtual QString 					implementationCode() const { return memberImplementationCode(); }
 	virtual QString						defineLayout(ViewKeys&) const;
-	virtual int							minimumRequired() const { return OffsetForDerivatives + localMinimumRequired(); }
+	virtual int							minimumRequired() const { return OffsetForDerivatives + memberMinimumRequired(); }
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual void						decorate(DecorationContext const& _p) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);

@@ -39,14 +39,14 @@ Kinds Member::allowedKinds(int _i) const
 	if (_i == 0)
 		return Kind::of<AccessLabel>();
 	else
-		return localAllowedKinds(_i - OffsetForDerivatives);
+		return memberAllowedKinds(_i - OffsetForDerivatives);
 }
 
-QString Member::code() const
+QString Member::interfaceCode() const
 {
 	if (!isComplete())
 		return QString();
-	return entityAs<Label>(0)->code() + ": " + localCode();
+	return entityAs<Label>(0)->code() + ": " + memberInterfaceCode();
 }
 
 QString Member::defineLayout(ViewKeys&/* _k*/) const
@@ -63,7 +63,7 @@ void Member::decorate(DecorationContext const& _p) const
 	c.setAlpha(64);
 	_p->setBrush(c);
 	_p->drawRect(QRectF(16.f, 0.f, 4.f, _p.cap(0).height()));
-	localDecorate(_p);
+	memberDecorate(_p);
 }
 
 bool Member::keyPressed(EntityKeyEvent const* _e)

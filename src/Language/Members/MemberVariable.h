@@ -36,12 +36,14 @@ public:
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
 	
 protected:
-	virtual int							localMinimumRequired() const { return 1; }
-	virtual Kinds						localAllowedKinds(int _i) const { if (_i == 0) return Kind::of<Variable>(); else return Kinds(); }
-	virtual QString 					localCode() const { if(isComplete()) return localEntityAs<Variable>(0)->code(); return QString(); }
+	virtual int							memberMinimumRequired() const { return 1; }
+	virtual Kinds						memberAllowedKinds(int _i) const { if (_i == 0) return Kind::of<Variable>(); else return Kinds(); }
+	virtual QString						memberInterfaceCode() const { return localEntityAs<DeclarationEntity>(0)->interfaceCode(); }
+	virtual QString						memberImplementationCode() const { return localEntityAs<DeclarationEntity>(0)->implementationCode(); }
 	
 	virtual Type						type() const;
-	virtual QString						name() const { return localEntityAs<Variable>(0)->name(); }
+	virtual QString						name() const { return localEntityAs<DeclarationEntity>(0)->name(); }
+	virtual QString						codeName() const { return localEntityAs<DeclarationEntity>(0)->codeName(); }
 };
 
 }
