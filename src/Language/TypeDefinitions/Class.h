@@ -62,8 +62,6 @@ protected:
 private:
 	bool								checkImplicitConstructors();
 	void								rejigDeps();
-	
-	Location							m_location;
 };
 
 }
