@@ -20,16 +20,16 @@
 
 #pragma once
 
-#include "TypeDefinition.h"
+#include "TopLevel.h"
 
 namespace Martta
 {
 
 class MemberCallable;
 	
-class Class: public TypeDefinition
+class Class: public TopLevel
 {
-	MARTTA_OBJECT(TypeDefinition)
+	MARTTA_OBJECT(TopLevel)
 
 public:
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);

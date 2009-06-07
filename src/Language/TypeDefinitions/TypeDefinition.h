@@ -20,14 +20,12 @@
 
 #pragma once
 
-#include "SubAddressable.h"
+#include "Identifiable.h"
 
 namespace Martta
 {
 
-class TypeResolver;
-template<class T> class WithFieldsSimpleResolver;
-
+class DeclarationEntity;
 class Type;
 typedef QList<Type> Types;
 
@@ -36,22 +34,18 @@ typedef QList<Type> Types;
  * Types may be named or anonymous.
  * This includes typedefs, unions, structs and enums.
  */
-class TypeDefinition: public SubAddressable
+class TypeDefinition: public_interface Identifiable
 {
-	MARTTA_PLACEHOLDER(SubAddressable)
-
-	friend class TypeResolver;
+	MARTTA_INTERFACE
+	MARTTA_INHERITS(Identifiable, 0)
 
 public:
-	bool								isHidden() const { return codeName().startsWith("."); }				///< true for anonymous enums.
-	virtual QString						code() const { return codeName(); }
-	virtual bool						hasDefaultConstructor() const { return false; }
-	virtual Types						assignableTypes() const;
+	virtual QString						code() const = 0;
+	virtual bool						hasDefaultConstructor() const = 0;
+	virtual Types						assignableTypes() const = 0;
+	virtual QList<DeclarationEntity*>	utilised() const = 0;
 	
-protected:
-	virtual int							familyDependencies() const { return DependsOnChildren; }
-	
-	Location							m_location;
+	virtual ~TypeDefinition() {}
 	// TODO: implicit-cast/conversion information
 };
 

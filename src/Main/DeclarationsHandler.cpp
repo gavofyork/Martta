@@ -182,21 +182,21 @@ public:
 	QString id() const { return m_id; }
 
 protected:
-	virtual TypeDefinition*	subject() const = 0;
+	virtual TopLevel*	subject() const = 0;
 
 	QString					m_id;
 	QString					m_contextId;
 	QString					m_fileId;
 };
 
-template<class T> // T must be TypeDefinition-derived.
+template<class T> // T must be TopLevel-derived.
 class SimpleResolver: public TypeResolver
 {
 public:
 	SimpleResolver(T* _s): m_subject(_s) {}
 
 protected:
-	virtual TypeDefinition*	subject() const { return m_subject; }
+	virtual TopLevel*	subject() const { return m_subject; }
 	T*		m_subject;
 };
 
@@ -233,7 +233,7 @@ public:
 	virtual void resolve(DeclarationsHandler* _h);
 
 protected:
-	virtual TypeDefinition*	subject() const { return m_subject; }
+	virtual TopLevel*	subject() const { return m_subject; }
 
 private:
 	T*			m_subject;
@@ -350,7 +350,7 @@ void TypedefResolver::resolve(DeclarationsHandler* _h)
 	if (m_subject->entityIs<ExplicitType>(1) && m_subject->entityAs<ExplicitType>(1)->subject()->isKind<Struct>() && m_subject->entityAs<ExplicitType>(1)->subject()->asKind<Struct>()->codeName() == m_subject->codeName())
 	{
 		// Cloned struct name; make the structure anonymous.
-		TypeDefinition* e = m_subject->entityAs<ExplicitType>(1)->subject()->asKind<Struct>();
+		TopLevel* e = m_subject->entityAs<ExplicitType>(1)->subject()->asKind<Struct>();
 		e->setContext(m_subject);
 		_h->removeFromFile(e);
 	}
@@ -427,14 +427,14 @@ QString DeclarationsHandler::commitToFile(QString const& _fileId, Variable* _f)
 	return m_files[_fileId]->m_filename;
 }
 
-QString DeclarationsHandler::commitToFile(QString const& _fileId, TypeDefinition* _f)
+QString DeclarationsHandler::commitToFile(QString const& _fileId, TopLevel* _f)
 {
 	M_ASSERT(m_files.contains(_fileId));
 	m_files[_fileId]->m_types << _f;
 	return m_files[_fileId]->m_filename;
 }
 
-void DeclarationsHandler::removeFromFile(TypeDefinition* _e)
+void DeclarationsHandler::removeFromFile(TopLevel* _e)
 {
 	foreach (DeclarationFile* f, m_files.values())
 		f->m_types.removeAll(_e);

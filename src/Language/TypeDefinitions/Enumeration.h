@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include "TypeDefinition.h"
+#include "TopLevel.h"
 
 namespace Martta
 {
@@ -28,9 +28,9 @@ namespace Martta
 class EnumValue;
 class EnumerationResolver;
 
-class Enumeration: public TypeDefinition
+class Enumeration: public TopLevel
 {
-	MARTTA_OBJECT(TypeDefinition)
+	MARTTA_OBJECT(TopLevel)
 
 public:
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);

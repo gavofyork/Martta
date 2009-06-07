@@ -181,7 +181,7 @@ QString ExplicitType::idColour() const
 
 bool ExplicitType::canStandAlone() const
 {
-	return m_subject.isUsable() && m_subject->isKind<Class>() ? !m_subject->entitiesOf<VirtualPure>().size() : true;
+	return m_subject.isUsable() && m_subject->isKind<Class>() ? !m_subject->self()->entitiesOf<VirtualPure>().size() : true;
 }
 
 bool ExplicitType::keyPressed(EntityKeyEvent const* _e)

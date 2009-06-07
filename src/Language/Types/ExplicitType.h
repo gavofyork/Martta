@@ -36,13 +36,14 @@ class ExplicitType: public TypeEntity
 public:
 	ExplicitType(TypeDefinition* _subject = 0): m_subject(0) { setSubject(_subject); }
 
+	// QUICK workout which is better and eliminate other.
 	TypeDefinition*						subject() const { return m_subject; }
 	void								setSubject(TypeDefinition* _subject = 0) { setDependency(m_subject, _subject); }
+	TypeDefinition*						get() const { return m_subject; }
+	void								set(TypeDefinition* _m) { setSubject(_m); }
 	
 	QList<TypeDefinition*>				possibilities();
 	virtual QString						defineEditLayout(ViewKeys&, TypeDefinition*) const;
-	TypeDefinition*						get() const { return m_subject; }
-	void								set(TypeDefinition* _m) { setSubject(_m); }
 	
 	bool								haveSingleCastOperator(TypeEntity const* _t, bool _const = false) const;
 	bool								haveSingleConversionConstructor(TypeEntity const* _f) const;
@@ -53,7 +54,7 @@ protected:
 	virtual bool						hasDefaultConstructor() const;
 	virtual Types						assignableTypes() const;
 	virtual QList<ValueDefiner*>		applicableMembers(Entity* _s = 0, bool _isConst = false) const;
-	virtual QString						code(QString const& _middle) const { return (m_subject ? m_subject->reference() : "") + _middle; }
+	virtual QString						code(QString const& _middle) const { return (m_subject ? m_subject->asKind<Identifiable>()->reference() : "") + _middle; }
 	virtual bool						contentsEquivalentTo(TypeEntity const* _t) const { return _t->asKind<ExplicitType>()->m_subject == m_subject; }
 	virtual QString						idColour() const;
 	virtual void						exportDom(QDomElement& _element) const;
@@ -66,7 +67,7 @@ protected:
 	virtual bool						canStandAlone() const;
 	virtual bool						defineSimilarityTo(TypeEntity const* _t, Castability _c) const;
 	virtual bool						defineSimilarityFrom(TypeEntity const* _from, Castability _c) const;
-	virtual void						apresLoad() { addDependency(m_subject); Super::apresLoad(); }
+	virtual void						apresLoad() { addDependency(m_subject->self()); Super::apresLoad(); }
 	
 	ModelPtr<TypeDefinition>			m_subject;
 };

@@ -18,11 +18,37 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#pragma once
+
 #include "TypeDefinition.h"
+#include "SubAddressable.h"
 
 namespace Martta
 {
 
-MARTTA_INTERFACE_CPP(TypeDefinition);	
+class TypeResolver;
+
+class TopLevel: public SubAddressable, public_interface TypeDefinition
+{
+	MARTTA_PLACEHOLDER(SubAddressable)
+	MARTTA_INHERITS(TypeDefinition, 0)
+
+	friend class TypeResolver;
+	
+public:
+	bool								isHidden() const { return codeName().startsWith("."); }				///< true for anonymous enums.
+	
+protected:
+	// From SubAddressable
+	virtual int							familyDependencies() const { return DependsOnChildren; }
+	
+	// From TypeDefinition
+	virtual QString						code() const { return codeName(); }
+	virtual bool						hasDefaultConstructor() const { return false; }
+	virtual Types						assignableTypes() const;
+	virtual QList<DeclarationEntity*>	utilised() const { return QList<DeclarationEntity*>() << const_cast<TopLevel*>(this); }
+	
+	Location							m_location;
+};
 
 }

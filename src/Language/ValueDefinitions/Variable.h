@@ -36,7 +36,6 @@ class Variable: public DeclarationEntity, public_interface ValueDefiner
 	friend class VariableResolver;
 
 public:
-	bool 								isHidden() const { return codeName().startsWith("."); }
 	TypeEntity*							actualType() const;
 	Qualifiers							qualifiers() const { return m_qualifiers; }
 	virtual QString						code() const;

@@ -18,11 +18,17 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "TypeDefinition.h"
+#include "Type.h"
+#include "TopLevel.h"
 
 namespace Martta
 {
 
-MARTTA_INTERFACE_CPP(TypeDefinition);	
+MARTTA_OBJECT_CPP(TopLevel);	
+
+Types TopLevel::assignableTypes() const
+{
+	return Types();
+}
 
 }

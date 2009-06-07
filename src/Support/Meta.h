@@ -63,6 +63,8 @@ template<class T, class F> T tryCast(F _f) { return tryCastPrivate::XL<T, F, try
 	virtual Entity* self() = 0; \
 	template<class T> inline T*			asKind() { return this && self() ? self()->asKind<T>() : 0; } \
 	template<class T> inline T const*	asKind() const { return this && self() ? self()->asKind<T>() : 0; } \
+	template<class T> inline T*			tryKind() { return this && self() && self()->isKind<T>() ? self()->asKind<T>() : 0; } \
+	template<class T> inline T const*	tryKind() const { return this && self() && self()->isKind<T>() ? self()->asKind<T>() : 0; } \
 	template<class T> inline bool		isKind() const { return this && self() ? self()->isKind<T>() : false; } \
 	MARTTA_BASIC
 
@@ -72,6 +74,7 @@ template<class T, class F> T tryCast(F _f) { return tryCastPrivate::XL<T, F, try
 	virtual Entity*						self() { return this; } \
 	typedef S Super; \
 	Entity::asKind; \
+	Entity::tryKind; \
 	Entity::isKind; \
 	inline QList<Entity*>				locals() const { return localsFor<S>(); } \
 	inline int							localCount() const { return localCountFor<S>(); } \
