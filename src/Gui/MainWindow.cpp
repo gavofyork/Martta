@@ -162,9 +162,9 @@ void MainWindow::entityFocused(Entity* _e)
 		if (_e->hasAncestor<Class>())
 		{
 			QTreeWidgetItem* m = new QTreeWidgetItem(typesVisible, QStringList() << QString("Members"));
+			QTreeWidgetItem* h = new QTreeWidgetItem(m, QStringList() << QString("Hidden"));
 			foreach (ValueDefiner* v, castEntities<ValueDefiner>(_e->ancestor<Class>()->membersOf<MemberVariable>(_e->hasAncestor<MemberCallable>() ? _e->ancestor<MemberCallable>()->isConst() : false)) + castEntities<ValueDefiner>(_e->ancestor<Class>()->membersOf<MemberCallable>(_e->hasAncestor<MemberCallable>() ? _e->ancestor<MemberCallable>()->isConst() : false)))
-				if (!v->isKind<Artificial>())
-					new QTreeWidgetItem(m, QStringList() << QString(v->name()) << QString(v->type()->code()));
+				new QTreeWidgetItem(v->isKind<Artificial>() ? h : m, QStringList() << QString(v->name()) << QString(v->type()->code()));
 		}
 		QTreeWidgetItem* g = new QTreeWidgetItem(typesVisible, QStringList() << QString("General"));
 		foreach (ValueDefiner* v, _e->ancestor<DeclarationEntity>()->valuesKnown())
@@ -174,6 +174,22 @@ void MainWindow::entityFocused(Entity* _e)
 			new QTreeWidgetItem(gl, QStringList() << QString(v->name()) << QString(v->type()->code()));
 		typesVisible->expandAll();
 		typesVisible->verticalScrollBar()->setValue(vvalue);
+		
+		vvalue = entityInfo->verticalScrollBar()->value();
+		entityInfo->clear();
+		if (DeclarationEntity* d = _e->selfAncestor<DeclarationEntity>())
+		{
+			QTreeWidgetItem* decl = new QTreeWidgetItem(entityInfo, QStringList() << QString("Declaration Context"));
+			new QTreeWidgetItem(decl, QStringList() << QString(d->name()) << QString(d->kind().name()));
+			QTreeWidgetItem* ul = new QTreeWidgetItem(decl, QStringList() << QString("Utilised"));
+			foreach (DeclarationEntity* u, d->utilised())
+				new QTreeWidgetItem(ul, QStringList() << QString(u->name()) << QString(u->kind().name()));
+			QTreeWidgetItem* us = new QTreeWidgetItem(decl, QStringList() << QString("Utilised Siblings"));
+			foreach (DeclarationEntity* u, d->utilisedSiblings())
+				new QTreeWidgetItem(us, QStringList() << QString(u->name()) << QString(u->kind().name()));
+		}
+		entityInfo->expandAll();
+		entityInfo->verticalScrollBar()->setValue(vvalue);
 	}
 	else
 		t += "Nothing selected.";

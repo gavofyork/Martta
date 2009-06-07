@@ -50,6 +50,13 @@ Types Array::allowedTypes(int _i) const
 		return Types();
 }
 
+QList<DeclarationEntity*> Array::utilised() const
+{
+	if (entityIs<Typed>(1))
+		return Super::utilised() + entityAs<Typed>(1)->type()->utilised();
+	return Super::utilised();
+}
+
 QString Array::code(QString const& _middle) const
 {
 	return entityAs<TypeEntity>(0)->code(_middle + "[" + entityAs<Typed>(1)->code() + "]");

@@ -107,11 +107,7 @@ QString Variable::defineLayout(ViewKeys&) const
 
 QList<DeclarationEntity*> Variable::utilised() const
 {
-	QList<DeclarationEntity*> ret;
-	// TODO: recursive search!
-	if (actualType()->isType<ExplicitType>() && !actualType()->isType<Reference>())
-		ret << actualType()->asType<ExplicitType>()->subject()->utilised();	// TODO: move into explicittype, interface in typeentity and define for other types.
-	return ret;
+	return actualType()->utilised();
 }
 
 bool Variable::keyPressed(EntityKeyEvent const* _e)

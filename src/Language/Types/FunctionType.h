@@ -56,6 +56,7 @@ private:
 	virtual TypeEntity*					newClone() const { return new FunctionType(m_ellipsis, m_wild); }
 	virtual bool						canStandAlone() const { return false; }
 	virtual bool						defineSimilarityTo(TypeEntity const* _t, Castability _c) const;
+	virtual QList<DeclarationEntity*>	utilisedX() const;
 
 	bool m_ellipsis;
 	bool m_wild;

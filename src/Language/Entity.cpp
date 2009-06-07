@@ -84,6 +84,40 @@ Entity* Entity::ancestor(Kind _k) const
 	return 0;
 }
 
+int Entity::ancestorIndex(Kind _k) const
+{
+	int ret = contextIndex();
+	for (Entity* e = context(); e; ret = e->contextIndex(), e = e->context())
+		if (e->isKind(_k))
+			return ret;
+	return -1;
+}
+
+bool Entity::hasSelfAncestor(Kind _k) const
+{
+	for (Entity* e = context(); e; e = e->context())
+		if (e->isKind(_k))
+			return true;
+	return false;
+}
+
+Entity* Entity::selfAncestor(Kind _k) const
+{
+	for (Entity* e = context(); e; e = e->context())
+		if (e->isKind(_k))
+			return e;
+	return 0;
+}
+
+int Entity::selfAncestorIndex(Kind _k) const
+{
+	int ret = contextIndex();
+	for (Entity* e = const_cast<Entity*>(this); e; ret = e->contextIndex(), e = e->context())
+		if (e->isKind(_k))
+			return ret;
+	return -1;
+}
+
 int Entity::ancestorIndex(Entity* _a) const
 {
 	for (Entity const* i = this; i; i = i->context())

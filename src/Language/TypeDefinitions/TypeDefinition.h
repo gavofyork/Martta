@@ -43,7 +43,7 @@ public:
 	virtual QString						code() const = 0;
 	virtual bool						hasDefaultConstructor() const = 0;
 	virtual Types						assignableTypes() const = 0;
-	virtual QList<DeclarationEntity*>	utilised() const = 0;
+	virtual QList<DeclarationEntity*>	utilisedInUse() const = 0;
 	
 	virtual ~TypeDefinition() {}
 	// TODO: implicit-cast/conversion information

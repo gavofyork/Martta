@@ -196,11 +196,18 @@ public:
 	inline QList<Entity*>				siblings() const { if (!m_context) return QList<Entity*>(); QList<Entity*> ret; foreach (Entity* e, m_context->m_children) if (e != this) ret += e; return ret; }
 	inline int							siblingCount() const { M_ASSERT(context()); return context()->m_children.size() - 1; }
 	template<class T> inline QList<T*>	siblingsOf() const { return filterEntities<T>(siblings());  }
-	template<class T> T*				ancestor() const;
+	template<class T> T*				ancestor() const { return static_cast<T*>(ancestor(T::staticKind)); }
 	Entity*								ancestor(Kind _k) const;
-	template<class T> bool				hasAncestor() const;
+	template<class T> bool				hasAncestor() const { return hasAncestor(T::staticKind); }
 	bool								hasAncestor(Kind _k) const;
-	template<class T> int				ancestorIndex() const;
+	template<class T> int				ancestorIndex() const { return ancestorIndex(T::staticKind); }
+	int									ancestorIndex(Kind _k) const;
+	template<class T> T*				selfAncestor() const { return static_cast<T*>(selfAncestor(T::staticKind)); }
+	Entity*								selfAncestor(Kind _k) const;
+	template<class T> bool				hasSelfAncestor() const { return hasSelfAncestor(T::staticKind); }
+	bool								hasSelfAncestor(Kind _k) const;
+	template<class T> int				selfAncestorIndex() const { return selfAncestorIndex(T::staticKind); }
+	int									selfAncestorIndex(Kind _k) const;
 	bool								hasAncestor(Entity* _a) const { return ancestorIndex(_a) != -1; }
 	int									ancestorIndex(Entity* _a) const;
 	
@@ -624,34 +631,6 @@ inline QDebug operator<<(QDebug _out, const Martta::Entity* _item)
 		return _out << _item->kind() << "*(" << ((void*)_item) << ")";
 	else
 		return _out << "Entity *( 0 )";
-}
-
-template<class T>
-bool Martta::Entity::hasAncestor() const
-{
-	for (Entity* e = context(); e; e = e->context())
-		if (e->isKind<T>())
-			return true;
-	return 0;
-}
-
-template<class T>
-T* Martta::Entity::ancestor() const
-{
-	for (Entity* e = context(); e; e = e->context())
-		if (e->isKind<T>())
-			return e->asKind<T>();
-	return 0;
-}
-
-template<class T>
-int Martta::Entity::ancestorIndex() const
-{
-	int ret = contextIndex();
-	for (Entity* e = context(); e; ret = e->contextIndex(), e = e->context())
-		if (e->isKind<T>())
-			return ret;
-	return -1;
 }
 
 template<class T>

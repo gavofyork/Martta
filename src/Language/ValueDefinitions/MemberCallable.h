@@ -50,6 +50,7 @@ protected:
 	virtual void						decorate(DecorationContext const& _p) const;
 	virtual QString						defineLayout(ViewKeys&) const;
 	virtual QString						defineMemberLayout(ViewKeys&) const;
+	virtual QList<DeclarationEntity*>	utilised() const;
 };
 
 }

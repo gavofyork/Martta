@@ -43,6 +43,14 @@ bool FunctionType::defineSimilarityTo(TypeEntity const* _t, Castability _c) cons
 	return Super::defineSimilarityTo(_t, _c);
 }
 
+QList<DeclarationEntity*> FunctionType::utilisedX() const
+{
+	QList<DeclarationEntity*> ret;
+	foreach (TypeEntity* i, entitiesOf<TypeEntity>())
+		ret << i->utilised();
+	return ret;
+}
+
 Types FunctionType::assignableTypes() const
 {
 	return Type(*this);

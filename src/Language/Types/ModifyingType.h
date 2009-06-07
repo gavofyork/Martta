@@ -49,6 +49,7 @@ protected:
 	virtual TypeEntity*					newClone() const { return new ModifyingType; }
 	virtual TypeEntity*					bottom() { return entityIs<TypeEntity>(0) ? entityAs<TypeEntity>(0) : this; }
 	virtual bool						canStandAlone() const { return child() ? child()->canStandAlone() : false; }
+	virtual QList<DeclarationEntity*>	utilisedX() const { return child() ? child()->utilised() : Super::utilised(); }
 };
 
 }

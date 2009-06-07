@@ -89,6 +89,13 @@ bool MemberCallable::keyPressed(EntityKeyEvent const* _e)
 	return Super::keyPressed(_e);
 }
 
+QList<DeclarationEntity*> MemberCallable::utilised() const
+{
+	QList<DeclarationEntity*> l = Super::utilised();
+	l.removeAll(ancestor<Class>());
+	return l;
+}
+
 QString MemberCallable::defineLayout(ViewKeys& _v) const
 {
 	return (isConst() ? "m24,0,0,0;M-17;fs11;fb;ewhite;c#5f6f7f;'C';M9;fb0;e#0000;c#0000;fs;" : "m24,0,0,0;") + defineMemberLayout(_v);

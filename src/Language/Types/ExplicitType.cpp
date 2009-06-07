@@ -196,6 +196,11 @@ bool ExplicitType::keyPressed(EntityKeyEvent const* _e)
 	return true;
 }
 
+QList<DeclarationEntity*> ExplicitType::utilised() const
+{
+	return m_subject.isUsable() ? subject()->utilisedInUse() : Super::utilised();	// TODO: define for other types.
+}
+
 QString ExplicitType::defineLayout(ViewKeys&) const
 {
 	return "^;fb;s" + idColour() + ";'" + (m_subject.isUsable() ? m_subject->name() : "[]") + "'";

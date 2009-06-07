@@ -129,6 +129,9 @@ QList<DeclarationEntity*> DeclarationEntity::utilised() const
 	QList<DeclarationEntity*> ret;
 	foreach (DeclarationEntity* i, entitiesOf<DeclarationEntity>())
 		ret << i->utilised();
+	qDebug() << name() << "(" << kind().name() << ") utilises:";
+	foreach (DeclarationEntity* i, ret)
+		qDebug() << "    " << i->name() << "(" << i->kind().name() << ")";
 	return ret;
 }
 

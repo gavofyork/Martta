@@ -45,6 +45,7 @@ private:
 	virtual bool						defineSimilarityTo(TypeEntity const* _t, Castability _c) const;
 	virtual QString						defineLayout(ViewKeys&) const;
 	virtual void						decorate(DecorationContext const& _c) const;
+	virtual QList<DeclarationEntity*>	utilised() const { return QList<DeclarationEntity*>(); }
 };
 
 }

@@ -68,6 +68,7 @@ protected:
 	virtual bool						defineSimilarityTo(TypeEntity const* _t, Castability _c) const;
 	virtual bool						defineSimilarityFrom(TypeEntity const* _from, Castability _c) const;
 	virtual void						apresLoad() { addDependency(m_subject->self()); Super::apresLoad(); }
+	virtual QList<DeclarationEntity*>	utilised() const;
 	
 	ModelPtr<TypeDefinition>			m_subject;
 };
