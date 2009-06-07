@@ -56,16 +56,6 @@ class DeclarationEntity;
 class TypeDefinition;
 class EntityKeyEvent;
 
-#define SET_DEPENDENCY(M_S, _S) if (true) { \
-	if (((M_S) ? (M_S)->asKind<Entity>() : 0) == (Entity*)_S) \
-		return; \
-	removeDependency(((M_S) ? (M_S)->asKind<Entity>() : 0)); \
-	M_S = _S; \
-	addDependency(((M_S) ? (M_S)->asKind<Entity>() : 0)); \
-	dependencySwitched(((M_S) ? (M_S)->asKind<Entity>() : 0)); \
-	changed(); \
-	} else void(0)
-
 extern int s_news;
 extern int s_deletes;
 
@@ -100,6 +90,22 @@ class Entity: public SafePointerTarget
 	friend class EditDelegateFace;
 
 public:
+	template<class T> void setDependency(ModelPtr<T>& M_S, T* _S)
+	{
+		if (M_S != _S)
+		{
+			if (M_S)
+				removeDependency(M_S->asKind<Entity>());
+			M_S = _S;
+			if (M_S)
+			{
+				addDependency(M_S->asKind<Entity>());
+				dependencySwitched(M_S->asKind<Entity>());
+			}
+			changed();
+		}
+	}
+	
 	typedef Nothing Super;
 	static const bool IsInterface = false;
 	static const bool IsPlaceholder = true;

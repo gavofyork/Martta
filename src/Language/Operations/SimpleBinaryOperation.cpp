@@ -106,10 +106,12 @@ QString SimpleBinaryOperation::operatorLayout() const
 
 void SimpleBinaryOperation::setOperation(Operator _o, Type const& _left, Type const& _right)
 {
-	m_operator = _o;
-	QList<ValueDefiner*> l = findOperators(m_operator, _left, _right);
-	if (l.size())
-		SET_DEPENDENCY(m_symbolCache, l[0]);
+	QList<ValueDefiner*> l = findOperators(_o, _left, _right);
+	if (l.size() && (m_symbolCache != l[0] || m_operator != _o))
+	{
+		m_operator = _o;
+		setDependency(m_symbolCache, l[0]);
+	}
 }
 
 void SimpleBinaryOperation::onDependencyChanged(Entity*)

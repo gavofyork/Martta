@@ -37,7 +37,7 @@ public:
 	ExplicitType(TypeDefinition* _subject = 0): m_subject(0) { setSubject(_subject); }
 
 	TypeDefinition*						subject() const { return m_subject; }
-	void								setSubject(TypeDefinition* _subject = 0) { SET_DEPENDENCY(m_subject, _subject); }
+	void								setSubject(TypeDefinition* _subject = 0) { setDependency(m_subject, _subject); }
 	
 	QList<TypeDefinition*>				possibilities();
 	virtual QString						defineEditLayout(ViewKeys&, TypeDefinition*) const;

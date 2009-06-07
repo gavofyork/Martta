@@ -72,10 +72,12 @@ QList<ValueDefiner*> SimpleUnaryOperation::findOperators(Operator _o, Type const
 
 void SimpleUnaryOperation::setOperation(Operator _o, Type const& _type)
 {
-	m_operator = _o;
 	QList<ValueDefiner*> l = findOperators(_o, _type);
-	if (l.size())
-		SET_DEPENDENCY(m_symbolCache, l[0]);
+	if (l.size() && (m_symbolCache != l[0] || m_operator != _o))
+	{
+		m_operator = _o;
+		setDependency(m_symbolCache, l[0]);
+	}
 }
 
 Type SimpleUnaryOperation::type() const

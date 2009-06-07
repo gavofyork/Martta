@@ -45,7 +45,7 @@ TypeEntity* Variable::actualType() const
 
 Type Variable::type() const
 {
-	if (!entityAs<TypeEntity>(1))
+	if (!entityIs<TypeEntity>(1))
 		return Type();
 
 	Type ret(*entityAs<TypeEntity>(1));
@@ -102,7 +102,7 @@ void Variable::exportDom(QDomElement& _element) const
 
 QString Variable::defineLayout(ViewKeys&) const
 {
-	return QString(contextIs<Statement>() ? "" : "^;") + "1;s" + entityAs<TypeEntity>(1)->idColour() + ";Mi;>name;fb0;!0";
+	return QString(contextIs<Callable>() ? "^;" : "") + "1;s" + entityAs<TypeEntity>(1)->idColour() + ";Mi;>name;fb0;!0";
 }
 
 QList<DeclarationEntity*> Variable::utilised() const

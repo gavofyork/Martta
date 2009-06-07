@@ -58,8 +58,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>137</width>
-         <height>492</height>
+         <width>61</width>
+         <height>395</height>
         </rect>
        </property>
        <property name="sizePolicy" >
@@ -450,7 +450,7 @@
   </widget>
   <widget class="QDockWidget" name="dockTypesVisible" >
    <property name="windowTitle" >
-    <string>Types Visible</string>
+    <string>Values Visible</string>
    </property>
    <attribute name="dockWidgetArea" >
     <number>1</number>
@@ -514,7 +514,7 @@
     <string>Entity Information</string>
    </property>
    <attribute name="dockWidgetArea" >
-    <number>1</number>
+    <number>2</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_9f" >
     <layout class="QVBoxLayout" >
@@ -554,12 +554,12 @@
           </property>
           <column>
            <property name="text" >
-            <string>Name</string>
+            <string>Property</string>
            </property>
           </column>
           <column>
            <property name="text" >
-            <string>Type</string>
+            <string>Value</string>
            </property>
           </column>
          </widget>

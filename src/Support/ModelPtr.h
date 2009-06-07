@@ -36,6 +36,10 @@ public:
 
 	inline ModelPtr& operator=(ModelPtr const& _c) { ModelPtrFace::operator=(_c); return *this; }
 	inline ModelPtr& operator=(T* _t) { set(_t); return *this; }
+	inline bool operator==(T const* _t) const { return this->operator T*() == _t; }
+	inline bool operator!=(T const* _t) const { return !operator==(_t); }
+	inline bool operator==(T* _t) const { return this->operator T*() == _t; }
+	inline bool operator!=(T* _t) const { return !operator==(_t); }
 
 	inline operator T*() const
 	{
@@ -46,5 +50,10 @@ public:
 	inline T& operator*() const { return *this->operator T*(); }
 	inline T* operator->() const { return this->operator T*(); }
 };
+
+template<class T> inline bool operator==(T const* _t, ModelPtr<T> const& _f) { return _t == _f; }
+template<class T> inline bool operator!=(T const* _t, ModelPtr<T> const& _f) { return _t != _f; }
+template<class T> inline bool operator==(T* _t, ModelPtr<T> const& _f) { return _t == _f; }
+template<class T> inline bool operator!=(T* _t, ModelPtr<T> const& _f) { return _t != _f; }
 
 }

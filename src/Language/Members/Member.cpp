@@ -51,7 +51,7 @@ QString Member::code() const
 
 QString Member::defineLayout(ViewKeys&/* _k*/) const
 {
-	return "m24,0,0,0;1";
+	return "^;m24,0,0,0;1";
 }
 
 void Member::decorate(DecorationContext const& _p) const

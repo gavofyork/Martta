@@ -34,7 +34,7 @@ class Construction: public Invocation
 	friend class Entity;
 
 public:
-	Construction(Constructor* _c = 0) : m_subject(0) { SET_DEPENDENCY(m_subject, _c); }
+	Construction(Constructor* _c = 0) : m_subject(0) { setDependency(m_subject, _c); }
 
 	virtual int							minimumRequired() const;
 	virtual Kinds						allowedKinds(int _index) const;

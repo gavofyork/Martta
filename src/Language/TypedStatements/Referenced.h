@@ -41,15 +41,7 @@ public:
 	virtual QString						code() const;
 	virtual Type						type() const;
 	ModelPtr<ValueDefiner>				subject() const { return m_subject; }
-	void								setSubject(ValueDefiner* _e) { 
-		if ((m_subject)->asKind<Entity>() == (Entity*)_e)
-			return;
-		removeDependency((m_subject)->asKind<Entity>());
-		m_subject = _e;
-		addDependency((m_subject)->asKind<Entity>());
-		dependencySwitched((m_subject)->asKind<Entity>());
-		changed();
-	}
+	void								setSubject(ValueDefiner* _e) { setDependency(m_subject, _e); }
 	
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
 
