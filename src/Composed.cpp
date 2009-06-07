@@ -2,6 +2,7 @@
 #include "tests.cpp"
 #include "Gui/CodeScene.cpp"
 #include "Gui/MainWindow.cpp"
+#include "Language/Artificial.cpp"
 #include "Language/Base.cpp"
 #include "Language/Declarations/DeclarationEntity.cpp"
 #include "Language/Declarations/NamespaceEntity.cpp"

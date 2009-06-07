@@ -33,15 +33,11 @@ class Member: public DeclarationEntity
 	MARTTA_PLACEHOLDER(DeclarationEntity)
 	
 public:
+	static const int OffsetForDerivatives = 1;
+
 	virtual Access						access() const;
 	
 protected:
-	static const int OffsetForDerivatives = 1;
-
-	// New helpers.
-	template<class T> bool				localEntityIs(int _i) const { return entityIs<T>(OffsetForDerivatives + _i); }
-	template<class T> T*				localEntityAs(int _i) const { return entityAs<T>(OffsetForDerivatives + _i); }
-
 	// New virtuals.
 	virtual QString 					memberInterfaceCode() const { return QString(); }
 	virtual QString 					memberImplementationCode() const { return QString(); }

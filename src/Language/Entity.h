@@ -75,7 +75,12 @@ inline void clearChanges() { s_changes.clear(); }
 
 template<class T> class ModelPtr;
 
+class Entity;
 class Nothing { public: static AuxilliaryFace const* staticAuxilliary() { return 0; } };
+
+template<class T> struct TotalOffset { static const int value = TotalOffset<typename T::Super>::value + T::OffsetForDerivatives; };
+template<> struct TotalOffset<Entity> { static const int value = 0; };
+
 /**
  * Note regarding rootEntity/null-Context: You can never depend on something which does not share the
  * same RootEntity object as you. Objects yet to be inserted into the program have a nullContext and thus
@@ -90,6 +95,8 @@ class Entity: public SafePointerTarget
 	friend class EditDelegateFace;
 
 public:
+	static const int OffsetForDerivatives = 0;
+	
 	template<class T> void setDependency(ModelPtr<T>& M_S, T* _S)
 	{
 		if (M_S != _S)
@@ -174,6 +181,12 @@ public:
 	template<class T> inline QList<T*>	entitiesOf() const { return filterEntities<T>(m_children); }
 	template<class T> inline bool		entityIs(int _i) const { return (_i >= 0 && _i < m_children.size() && m_children[_i]) ? m_children[_i]->isKind<T>() : false; }
 	template<class T> inline T*			entityAs(int _i) const { M_ASSERT(_i >= 0 && _i < m_children.size() && m_children[_i]); return m_children[_i]->asKind<T>(); }
+	template<class L> inline QList<Entity*>			localsFor() const { return m_children.mid(TotalOffset<L>::value); }
+	template<class L> inline int					localCountFor() const { return m_children.size() - TotalOffset<L>::value; }
+	template<class L> inline Entity*				localFor(int _i) const { if (_i >= 0 && _i < m_children.size() - TotalOffset<L>::value) { M_ASSERT(m_children[_i + TotalOffset<L>::value]->m_context == this); return m_children[TotalOffset<L>::value + _i]; } else return 0; }
+	template<class L, class T> inline QList<T*>		localsOfFor() const { return filterEntities<T>(m_children.mid(TotalOffset<L>::value)); }
+	template<class L, class T> inline bool			localIsFor(int _i) const { return (_i >= 0 && _i < m_children.size() - TotalOffset<L>::value && m_children[_i + TotalOffset<L>::value]) ? m_children[_i + TotalOffset<L>::value]->isKind<T>() : false; }
+	template<class L, class T> inline T*			localAsFor(int _i) const { M_ASSERT(_i >= 0 && _i < m_children.size() - TotalOffset<L>::value && m_children[_i + TotalOffset<L>::value]); return m_children[_i + TotalOffset<L>::value]->asKind<T>(); }
 	inline QList<Entity*>				parentsChildren() const { if (!m_context) return QList<Entity*>(); return m_context->m_children; }
 	inline int							parentsChildrenCount() const { M_ASSERT(context()); return context()->m_children.size(); }
 	inline Entity*						parentsChild(int _i) const { M_ASSERT(context()); return context()->entity(_i); }

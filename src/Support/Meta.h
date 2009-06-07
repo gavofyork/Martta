@@ -73,6 +73,12 @@ template<class T, class F> T tryCast(F _f) { return tryCastPrivate::XL<T, F, try
 	typedef S Super; \
 	Entity::asKind; \
 	Entity::isKind; \
+	inline QList<Entity*>				locals() const { return localsFor<S>(); } \
+	inline int							localCount() const { return localCountFor<S>(); } \
+	inline Entity*						local(int _i) const { return localFor<S>(_i); } \
+	template<class T> inline QList<T*>	localsOf() const { return localsOfFor<S, T>(); } \
+	template<class T> inline bool		localIs(int _i) const { return localIsFor<S, T>(_i); } \
+	template<class T> inline T*			localAs(int _i) const { return localAsFor<S, T>(_i); } \
 	MARTTA_BASIC
 
 #define MARTTA_OBJECT(S) \

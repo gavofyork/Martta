@@ -22,6 +22,7 @@
 #include <QtXml>
 
 #include "Project.h"
+#include "Artificial.h"
 #include "Function.h"
 #include "MemberVariable.h"
 #include "BareTyped.h"
@@ -162,7 +163,8 @@ void MainWindow::entityFocused(Entity* _e)
 		{
 			QTreeWidgetItem* m = new QTreeWidgetItem(typesVisible, QStringList() << QString("Members"));
 			foreach (ValueDefiner* v, castEntities<ValueDefiner>(_e->ancestor<Class>()->membersOf<MemberVariable>(_e->hasAncestor<MemberCallable>() ? _e->ancestor<MemberCallable>()->isConst() : false)) + castEntities<ValueDefiner>(_e->ancestor<Class>()->membersOf<MemberCallable>(_e->hasAncestor<MemberCallable>() ? _e->ancestor<MemberCallable>()->isConst() : false)))
-				new QTreeWidgetItem(m, QStringList() << QString(v->name()) << QString(v->type()->code()));
+				if (!v->isKind<Artificial>())
+					new QTreeWidgetItem(m, QStringList() << QString(v->name()) << QString(v->type()->code()));
 		}
 		QTreeWidgetItem* g = new QTreeWidgetItem(typesVisible, QStringList() << QString("General"));
 		foreach (ValueDefiner* v, _e->ancestor<DeclarationEntity>()->valuesKnown())

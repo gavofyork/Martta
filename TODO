@@ -1,3 +1,4 @@
+TODO insertion of entities in, e.g. argument lists for function calls.
 TODO local entity utilities. static const int LocalEntityOffset - with templates?
 TODO classes store member access information themselves.
 TODO variable -> basevariable, new variable & membervariable - no need if class stores access.

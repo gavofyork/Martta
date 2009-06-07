@@ -20,14 +20,16 @@
 
 #pragma once
 
+#include "Artificial.h"
 #include "Constructor.h"
 
 namespace Martta
 {
 
-class ImplicitCopyConstructor: public Constructor
+class ImplicitCopyConstructor: public Constructor, public_interface Artificial
 {
 	MARTTA_OBJECT(Constructor)
+	MARTTA_INHERITS(Artificial, 0)
 	
 protected:
 	virtual bool						activated(CodeScene* _s);

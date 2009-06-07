@@ -18,33 +18,11 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "DecorationContext.h"
-#include "CommonGraphics.h"
-#include "Reference.h"
-#include "Memberify.h"
-#include "AccessLabel.h"
-#include "Const.h"
-#include "MemberVariable.h"
+#include "Artificial.h"
 
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(MemberVariable);
-
-Type MemberVariable::type() const
-{
-	if (!isComplete())
-		return Type();
-	Type ret = localAs<TypeNamer>(0)->type();
-	if (!ancestor<Class>() || !ret->isType<Reference>() || !ret->asType<Reference>()->child())
-		return Type();
-	ret->asType<Reference>()->child()->knitIn(new Memberify(ancestor<Class>()));
-	return ret;
-}
-
-bool MemberVariable::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
-{
-	return simpleInsertionPointKeyPressHandler<MemberVariable>(_p, _e, "A");
-}
+MARTTA_INTERFACE_CPP(Artificial);	
 
 }

@@ -38,12 +38,12 @@ public:
 protected:
 	virtual int							memberMinimumRequired() const { return 1; }
 	virtual Kinds						memberAllowedKinds(int _i) const { if (_i == 0) return Kind::of<Variable>(); else return Kinds(); }
-	virtual QString						memberInterfaceCode() const { return localEntityAs<DeclarationEntity>(0)->interfaceCode(); }
-	virtual QString						memberImplementationCode() const { return localEntityAs<DeclarationEntity>(0)->implementationCode(); }
+	virtual QString						memberInterfaceCode() const { return localAs<DeclarationEntity>(0)->interfaceCode(); }
+	virtual QString						memberImplementationCode() const { return localAs<DeclarationEntity>(0)->implementationCode(); }
 	
 	virtual Type						type() const;
-	virtual QString						name() const { return localEntityAs<DeclarationEntity>(0)->name(); }
-	virtual QString						codeName() const { return localEntityAs<DeclarationEntity>(0)->codeName(); }
+	virtual QString						name() const { return localAs<DeclarationEntity>(0)->name(); }
+	virtual QString						codeName() const { return localAs<DeclarationEntity>(0)->codeName(); }
 };
 
 }

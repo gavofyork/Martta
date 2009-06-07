@@ -20,14 +20,16 @@
 
 #pragma once
 
+#include "Artificial.h"
 #include "MethodOperator.h"
 
 namespace Martta
 {
 
-class ImplicitAssignmentOperator: public MethodOperator
+class ImplicitAssignmentOperator: public MethodOperator, public_interface Artificial
 {
 	MARTTA_OBJECT(MethodOperator)
+	MARTTA_INHERITS(Artificial, 0)
 	
 protected:
 	virtual Operator					id() const { return Operator::Equals; }
