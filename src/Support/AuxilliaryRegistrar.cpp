@@ -25,18 +25,67 @@ namespace Martta
 
 AuxilliaryRegistrar* AuxilliaryRegistrar::s_this = 0;
 
-void AuxilliaryRegistrar::initialiseAll() const
+void AuxilliaryRegistrar::jigCache()
 {
+	m_allInterfaces.clear();
+	m_interfacesMap.clear();
+	m_supersMap.clear();
+	m_immediateDerivedsMap.clear();
+	
+	foreach (AuxilliaryFace const* i, m_auxilliaries.values())
+	{
+		if (i->isInterface())
+			m_allInterfaces.append(i);
+		else
+			m_immediateDerivedsMap.insert(i->superAuxilliary(), i);
+		foreach (AuxilliaryFace const* j, calculateInterfaces(i))
+		{
+			m_interfacesMap.insert(i, j);
+			m_supersMap.insert(i, j);
+		}
+		for (AuxilliaryFace const* j = i->superAuxilliary(); j; j = j->superAuxilliary())
+			m_supersMap.insert(i, j);
+	}
+//	recurseAux(m_immediateDerivedsMap.values(0)[0], "");
+}
+
+void AuxilliaryRegistrar::initialiseClasses()
+{
+	if (m_isInitialised)
+		return;	// TODO: reinitialise?
+		
 	foreach (AuxilliaryFace const* i, m_auxilliaries.values())
 		i->initialise();
-	
-//	recurseAux(m_derivedMap.values(0)[0], "");
 }
+
+QList<AuxilliaryFace const*> AuxilliaryRegistrar::calculateInterfaces(AuxilliaryFace const* _a) const
+{
+	M_ASSERT(_a);
+	QList<AuxilliaryFace const*> ret;
+	QList<AuxilliaryFace const*> yet;
+	for (AuxilliaryFace const* k = _a;; k = yet.takeLast())
+	{
+		for (int i = 0; i < k->interfaceAuxilliaryCount(); i++)
+			if (!ret.contains(k->interfaceAuxilliary(i)))
+			{
+				ret << k->interfaceAuxilliary(i);
+				yet << k->interfaceAuxilliary(i);
+			}
+		if (yet.isEmpty())
+			break;
+	}
 	
+	if (_a->superAuxilliary())
+		foreach (AuxilliaryFace const* a, calculateInterfaces(_a->superAuxilliary()))
+			if (!ret.contains(a))
+				ret << a;
+	return ret;
+}
+
 void AuxilliaryRegistrar::recurseAux(AuxilliaryFace const* _face, QString const& _indent) const
 {
 	qInformation() << _indent << _face->name();
-	foreach (AuxilliaryFace const* i, m_derivedMap.values(_face))
+	foreach (AuxilliaryFace const* i, m_immediateDerivedsMap.values(_face))
 		recurseAux(i, _indent + "|   ");
 }
 
@@ -44,10 +93,6 @@ void AuxilliaryRegistrar::registerAuxilliary(AuxilliaryFace const* _a)
 {
 //	qInformation() << "Registering" << _a->name();
 	m_auxilliaries[_a->name()] = _a;
-	if (_a->isInterface())
-		m_interfaces.append(_a);
-	else
-		m_derivedMap.insert(_a->superAuxilliary(), _a);
 }
 	
 }

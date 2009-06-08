@@ -30,45 +30,6 @@ Entity* Kind::spawnPrepared() const
 	return Entity::spawn(name())->prepareChildren();
 }
 
-Kinds Kind::immediateInterfaces() const
-{
-	if (!m_mo)
-		return Kinds();
-	Kinds ret;
-	for (int i = 0; i < m_mo->interfaceAuxilliaryCount(); i++)
-		ret << m_mo->interfaceAuxilliary(i);
-	return ret;
-}
-
-Kinds Kind::interfaces() const
-{
-	if (!m_mo)
-		return Kinds();
-	Kinds ret;
-	Kinds yet;
-	for (Kind k = *this;; k = yet.takeLast())
-	{
-		foreach (Kind k, k.immediateInterfaces())
-			if (!ret.contains(k))
-			{
-				ret << k;
-				yet << k;
-			}
-		if (yet.isEmpty())
-			break;
-	}
-	
-	foreach (Kind k, super().interfaces())
-		if (!ret.contains(k))
-			ret << k;
-	return ret;
-}
-
-Kinds Kind::immediateDeriveds() const
-{
-	return AuxilliaryRegistrar::get()->immediateDeriveds(*this);
-}
-
 Kinds Kind::deriveds() const
 {
 	Kinds ret;

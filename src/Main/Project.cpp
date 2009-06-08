@@ -66,7 +66,7 @@ Project::Project(QString const& _load):
 	m_supportPath = QCoreApplication::applicationDirPath() + "/../support/";
 #endif
 
-	AuxilliaryRegistrar::get()->initialiseAll();
+	AuxilliaryRegistrar::get()->initialiseClasses();
 		
 	if (QFile::exists(m_filename))
 		revert();

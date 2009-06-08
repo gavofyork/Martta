@@ -242,6 +242,10 @@ int test()
 	FAILED_IF(Kind::of<BASE>().isKind(Kind::of<DERIVED>())); \
 	FAILED_IF(Kind::of<DERIVED>().isKind(Kind::of<BASE>())); \
 
+	TEST("Auxilliaries Initialisation")
+	{
+		AuxilliaryRegistrar::get()->jigCache();
+	}
 	TEST("Entity derivation")
 	{
 		DERIVES_OO(Entity, TestEntity);
