@@ -18,29 +18,16 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#pragma once
-
-#include "Variable.h"
-#include "ValueDefiner.h"
-#include "Member.h"
+#include "MemberEnumeration.h"
 
 namespace Martta
 {
 
-class MemberVariable: public Member, public_interface ValueDefiner
+MARTTA_OBJECT_CPP(MemberEnumeration);
+
+bool MemberEnumeration::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
 {
-	MARTTA_OBJECT(Member)
-	MARTTA_INHERITS(ValueDefiner, 0)
-	
-public:
-	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
-	
-protected:
-	virtual Kinds						memberAllowedKinds(int _i) const { if (_i == 0) return Kind::of<Variable>(); else return Kinds(); }
-	
-	virtual Type						type() const;
-	virtual QString						name() const { return localAs<DeclarationEntity>(0)->name(); }
-	virtual QString						codeName() const { return localAs<DeclarationEntity>(0)->codeName(); }
-};
+	return simpleInsertionPointKeyPressHandler<MemberEnumeration>(_p, _e, "E");
+}
 
 }

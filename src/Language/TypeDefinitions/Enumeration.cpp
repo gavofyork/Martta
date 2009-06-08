@@ -21,7 +21,6 @@
 #include "CommonGraphics.h"
 #include "DecorationContext.h"
 #include "Class.h"
-#include "AccessLabel.h"
 #include "TextLabel.h"
 #include "EnumValue.h"
 #include "Enumeration.h"
@@ -33,14 +32,15 @@ MARTTA_OBJECT_CPP(Enumeration);
 	
 bool Enumeration::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
 {
-	if (simpleInsertionPointKeyPressHandler<Enumeration>(_p, _e, "E"))
+	return simpleInsertionPointKeyPressHandler<Enumeration>(_p, _e, "E");
+/*	if ()
 	{	Entity* e = _p.context()->entity(_p.index() == -1 ? _p.context()->entityCount() - 1 : _p.index());
 		// We got true so there must be an entity at _p, right?
 		M_ASSERT(e && e->isKind<Enumeration>() && e->entityIs<AccessLabel>(1));
 		e->entityAs<AccessLabel>(1)->setAccess(e->contextIs<Class>() ? Private : NoAccess);
 		return true;
 	}
-	return false;
+	return false;*/
 }
 
 Types Enumeration::assignableTypes() const
@@ -60,15 +60,8 @@ Kinds Enumeration::allowedKinds(int _i) const
 {
 	if (_i == 0)
 		return Kind::of<TextLabel>();
-	else if (_i == 1)
-		return Kind::of<AccessLabel>();
 	else
 		return Kind::of<EnumValue>();
-}
-
-Access Enumeration::access() const
-{
-	return entityIs<AccessLabel>(1) ? entityAs<AccessLabel>(1)->access() : NoAccess;
 }
 
 QString Enumeration::interfaceCode() const
@@ -113,8 +106,6 @@ bool Enumeration::keyPressed(EntityKeyEvent const* _e)
 		p.place(s);
 		s->entity(0)->setCurrent();
 	}
-	else if (entitiesOf<AccessLabel>().size() && entitiesOf<AccessLabel>()[0]->asKind<Label>()->keyPressed(_e))
-		return true;
 	else if (_e->key() == Qt::Key_Home && _e->focalIndex() > -1)
 	{
 		entity(_e->focalIndex())->setCurrent();
@@ -138,7 +129,7 @@ void Enumeration::onDependencyChanged(Entity* _e)
 
 QString Enumeration::defineLayout(ViewKeys& _viewKeys) const
 {
-	QString ret = (access() == NoAccess ? "" : "m24,0,0,0;");
+	QString ret;
 	if (_viewKeys["expanded"].toBool())
 	{
 		ret += "^;ycode;'enum ';fb;cblack;s" + Type(const_cast<Enumeration*>(this))->idColour() + ";!0;s;ycode;n;'{'";
@@ -157,19 +148,6 @@ QString Enumeration::defineLayout(ViewKeys& _viewKeys) const
 		ret += ")'";
 	}
 	return ret;
-}
-
-void Enumeration::decorate(DecorationContext const& _p) const
-{
-	if (access() != NoAccess)
-	{
-		_p->setPen(Qt::NoPen);
-		QColor c = AccessLabel::idColour(access());
-		c.setAlpha(64);
-		_p->setBrush(c);
-		_p->drawRect(QRectF(16.f, 0.f, 4.f, _p.cap(0).height()));
-	}
-	Super::decorate(_p);
 }
 
 }

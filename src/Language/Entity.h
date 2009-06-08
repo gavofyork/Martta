@@ -186,7 +186,7 @@ public:
 	template<class L> inline Entity*				localFor(int _i) const { if (_i >= 0 && _i < m_children.size() - TotalOffset<L>::value) { M_ASSERT(m_children[_i + TotalOffset<L>::value]->m_context == this); return m_children[TotalOffset<L>::value + _i]; } else return 0; }
 	template<class L, class T> inline QList<T*>		localsOfFor() const { return filterEntities<T>(m_children.mid(TotalOffset<L>::value)); }
 	template<class L, class T> inline bool			localIsFor(int _i) const { return (_i >= 0 && _i < m_children.size() - TotalOffset<L>::value && m_children[_i + TotalOffset<L>::value]) ? m_children[_i + TotalOffset<L>::value]->isKind<T>() : false; }
-	template<class L, class T> inline T*			localAsFor(int _i) const { M_ASSERT(_i >= 0 && _i < m_children.size() - TotalOffset<L>::value && m_children[_i + TotalOffset<L>::value]); return m_children[_i + TotalOffset<L>::value]->asKind<T>(); }
+	template<class L, class T> inline T*			localAsFor(int _i) const { M_ASSERT(_i >= 0); M_ASSERT(_i < m_children.size() - TotalOffset<L>::value); M_ASSERT(m_children[_i + TotalOffset<L>::value]); return m_children[_i + TotalOffset<L>::value]->asKind<T>(); }
 	inline QList<Entity*>				parentsChildren() const { if (!m_context) return QList<Entity*>(); return m_context->m_children; }
 	inline int							parentsChildrenCount() const { M_ASSERT(context()); return context()->m_children.size(); }
 	inline Entity*						parentsChild(int _i) const { M_ASSERT(context()); return context()->entity(_i); }

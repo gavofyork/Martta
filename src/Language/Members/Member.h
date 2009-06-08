@@ -39,22 +39,22 @@ public:
 	
 protected:
 	// New virtuals.
-	virtual QString 					memberInterfaceCode() const { return QString(); }
-	virtual QString 					memberImplementationCode() const { return QString(); }
-	virtual void						memberDecorate(DecorationContext const&) const {}
-	virtual int							memberMinimumRequired() const { return 0; }
-	virtual Kinds						memberAllowedKinds(int) const { return Kinds(); }
+	virtual int							memberMinimumRequired() const { return 1; }
+	virtual Kinds						memberAllowedKinds(int _i) const { if (_i == 0) return Kind::of<DeclarationEntity>(); else return Kinds(); }
+	virtual QString						memberInterfaceCode() const { return entityAs<DeclarationEntity>(1)->interfaceCode(); }
+	virtual QString						memberImplementationCode() const { return entityAs<DeclarationEntity>(1)->implementationCode(); }
+	virtual void						memberDecorate(DecorationContext const& _p) const { entity(0)->decorate(_p); }
 	
 	// Old virtuals.
-	virtual QString 					interfaceCode() const;
-	virtual QString 					implementationCode() const { return memberImplementationCode(); }
-	virtual QString						defineLayout(ViewKeys&) const;
 	virtual int							minimumRequired() const { return OffsetForDerivatives + memberMinimumRequired(); }
 	virtual Kinds						allowedKinds(int _i) const;
+	virtual QString 					interfaceCode() const;
+	virtual QString 					implementationCode() const { return memberImplementationCode(); }
 	virtual void						decorate(DecorationContext const& _p) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity*) { changed(); }
+	virtual QString						defineLayout(ViewKeys&) const;
 };
 
 }

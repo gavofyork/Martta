@@ -18,7 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "Enumeration.h"
+#include "MemberEnumeration.h"
 #include "Constructor.h"
 #include "DefaultConstructor.h"
 #include "ImplicitCopyConstructor.h"
@@ -162,7 +162,7 @@ Kinds Class::allowedKinds(int _i) const
 {
 	if (_i == 0)
 		return Kind::of<TextLabel>();
-	return (Kind::of<MemberCallable>(), Kind::of<MemberVariable>(), Kind::of<Enumeration>(), Kind::of<Base>());
+	return (Kind::of<MemberCallable>(), Kind::of<Member>(), Kind::of<Base>());
 }
 
 QString Class::implementationCode() const
@@ -284,7 +284,7 @@ QString Class::defineLayout(ViewKeys& _keys) const
 			foreach (MemberVariable* f, entitiesOf<MemberVariable>())
 				if (f->access() == Access(i))
 					mem += QString(";n;%1").arg(f->contextIndex());
-			foreach (Enumeration* f, entitiesOf<Enumeration>())
+			foreach (MemberEnumeration* f, entitiesOf<MemberEnumeration>())
 				if (f->access() == Access(i))
 					mem += QString(";n;%1").arg(f->contextIndex());
 			if (!mem.isEmpty())

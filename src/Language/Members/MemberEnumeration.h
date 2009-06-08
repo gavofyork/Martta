@@ -20,43 +20,29 @@
 
 #pragma once
 
-#include "TopLevel.h"
+#include "Type.h"
+#include "Enumeration.h"
+#include "TypeDefinition.h"
+#include "Member.h"
 
 namespace Martta
 {
 
-class EnumValue;
-class EnumerationResolver;
-
-class Enumeration: public TopLevel
+class MemberEnumeration: public Member, public_interface TypeDefinition
 {
-	MARTTA_OBJECT(TopLevel)
-
+	MARTTA_OBJECT(Member)
+	MARTTA_INHERITS(TypeDefinition, 0)
+	
 public:
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
 
-	// Population methods.
-	void								updateStem();
-
-	virtual QString						code() const { return isHidden() ? "enum ["+m_stem+"*]" : codeName(); }
-	
 protected:
-	virtual QString						defineLayout(const ViewKeys&) const;
-	virtual int							minimumRequired() const { return 2; }
-	virtual Kinds						allowedKinds(int) const;
-	virtual QString						interfaceCode() const;
-	virtual bool						hasDefaultConstructor() const { return true; }
-	virtual Types						assignableTypes() const;
-	virtual bool						keyPressed(EntityKeyEvent const* _e);
-	virtual Entity*						isExpander() const { return entity(1); }
-	virtual void						decorate(DecorationContext const&) const {}
-	virtual QList<ValueDefiner*>		valuesAdded() const;
-
-	virtual int							familyDependencies() { return DependsOnChildren; }
-	virtual void						onDependencyChanged(Entity* _e);
-
-private:
-	QString								m_stem;
+	virtual Kinds						memberAllowedKinds(int _i) const { if (_i == 0) return Kind::of<Enumeration>(); else return Kinds(); }
+	
+	virtual QString						code() const { return localAs<TypeDefinition>(0)->code(); }
+	virtual bool						hasDefaultConstructor() const { return localAs<TypeDefinition>(0)->hasDefaultConstructor(); }
+	virtual Types						assignableTypes() const { return localAs<TypeDefinition>(0)->assignableTypes(); }
+	virtual QList<DeclarationEntity*>	utilisedInUse() const { return localAs<TypeDefinition>(0)->utilisedInUse(); }
 };
 
 }
