@@ -211,6 +211,9 @@ public:
 	bool								hasAncestor(Entity* _a) const { return ancestorIndex(_a) != -1; }
 	int									ancestorIndex(Entity* _a) const;
 	
+	virtual bool						usurpsChild(Entity const*) const { return false; }
+	bool								isUsurped() const { return m_context->usurpsChild(this); }
+	
 	inline int							nonPlaceholderCount() const { int ret = 0; foreach (Entity* i, m_children) if (!i->isPlaceholder()) ret++; return ret; }
 	inline QList<Entity*>				nonPlaceholders() const { QList<Entity*> ret; foreach (Entity* i, m_children) if (!i->isPlaceholder()) ret += i; return ret; }
 	inline Entity*						nonPlaceholder(int _i) const { int c = 0; foreach (Entity* i, m_children) if (c++ == _i) return i; M_ASSERT(false); return 0; }

@@ -224,6 +224,8 @@ void CodeScene::recacheLayoutList(Entity* _e, QString const& _s)
 		s.replace(QString(QChar(0xff69)), ";");
 	
 		list = s.split(QString(QChar(0xff70)));
+		if (_e->isUsurped())
+			list.removeAll("^");
 		if (!list.contains("^"))
 			list << "^!";
 	}
@@ -828,7 +830,15 @@ void CodeScene::navigateInto(Entity* _centre)
 	if (!isInScene(_centre))
 		doRefreshLayout();
 	
-	setCurrent(m_leftmostChild.value(_centre, _centre));
+	qDebug() << "Navigating into " << _centre;
+	_centre->debugTree();
+	Entity* n = m_leftmostChild.value(_centre, _centre);
+	if (!n)
+	{
+		qDebug() << "Can't find anything here.";
+		n = m_leftmostChild.value(_centre, _centre);
+	}
+	setCurrent(n ? n : nearest(_centre));
 }
 
 void CodeScene::navigateOnto(Entity* _shell)

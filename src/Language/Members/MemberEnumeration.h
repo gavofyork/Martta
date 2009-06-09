@@ -37,6 +37,8 @@ public:
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
 
 protected:
+	virtual bool						usurpsChild(Entity const* _e) const { return _e == local(0); }
+
 	virtual Kinds						memberAllowedKinds(int _i) const { if (_i == 0) return Kind::of<Enumeration>(); else return Kinds(); }
 	
 	virtual QString						code() const { return localAs<TypeDefinition>(0)->code(); }
