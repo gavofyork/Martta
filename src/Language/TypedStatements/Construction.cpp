@@ -20,6 +20,7 @@
 
 #include <QtXml>
 
+#include "Variable.h"
 #include "Class.h"
 #include "Constructor.h"
 #include "ExplicitType.h"

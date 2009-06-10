@@ -270,7 +270,7 @@ QString Class::defineLayout(ViewKeys& _keys) const
 			QString mem;
 			Kinds recognised;
 			recognised << Kind::of<Constructor>();
-			foreach (MemberCallable* f, entitiesOf<Constructor>())
+			foreach (MemberLambda* f, entitiesOf<Constructor>())
 				if (f->access() == Access(i))
 					mem += QString(";n;%1").arg(f->contextIndex());
 			recognised << Kind::of<Destructor>();

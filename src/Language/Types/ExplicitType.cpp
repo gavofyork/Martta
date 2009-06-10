@@ -113,7 +113,7 @@ bool ExplicitType::haveSingleConversionConstructor(TypeEntity const* _f) const
 	if (c)
 	{
 		bool gotOne = false;
-		foreach (MemberCallable* i, c->membersOf<Constructor>(false, Public))
+		foreach (MemberLambda* i, c->membersOf<Constructor>(false, Public))
 			if (i->argumentCount() == 1 && i->isValid())
 				if (_f->isSimilarTo(&*i->argumentType(0), FairlyConvertible))
 				{

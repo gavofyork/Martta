@@ -20,16 +20,16 @@
 
 #pragma once
 
-#include "MemberCallable.h"
+#include "MemberLambda.h"
 
 namespace Martta
 {
 
 class Class;
 
-class Constructor: public MemberCallable
+class Constructor: public MemberLambda
 {
-	MARTTA_OBJECT(MemberCallable)
+	MARTTA_OBJECT(MemberLambda)
 
 public:
 	Class*								classType() const;
@@ -37,16 +37,18 @@ public:
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
 
 protected:
-	virtual QString						defineMemberLayout(ViewKeys& _viewKeys) const;
+	// From MemberLambda
+	virtual int							memberMinimumRequired() const { return 1; }
+	virtual Kinds						memberAllowedKinds(int _i) const;
+	virtual QString						memberDefineLayout(ViewKeys& _viewKeys) const;
+	virtual bool						isConst() const { return false; }
+
 	virtual QString						name() const;
 	virtual QString						codeName() const;
-	virtual bool						isConst() const { return false; }
-	virtual int							firstArgumentIndex() const { return 2; }
-	virtual Kinds						allowedKinds(int _i) const;
+	
 	virtual bool						isInValidState() const;
 	virtual Type						returns() const;
-	virtual QString						code(FunctionCodeScope _ref) const;
-	virtual Compound*					body() const { return entityAs<Compound>(0); }
+	virtual QString						basicCode(FunctionCodeScope _ref) const;
 };
 
 }

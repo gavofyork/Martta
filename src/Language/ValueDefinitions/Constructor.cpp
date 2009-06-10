@@ -32,7 +32,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(Constructor);	
 
-QString Constructor::code(FunctionCodeScope _ref) const
+QString Constructor::basicCode(FunctionCodeScope _ref) const
 {
 	return Martta::code(qualifiers() & MethodMask) + callingCode(_ref);
 }
@@ -42,9 +42,15 @@ bool Constructor::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKey
 	return simpleInsertionPointKeyPressHandler<Constructor>(_p, _e, "C");
 }
 
-QString Constructor::defineMemberLayout(ViewKeys& _viewKeys) const
+QString Constructor::memberDefineLayout(ViewKeys& _viewKeys) const
 {
-	return "^;>name;ycode;'" + name() + "';'(';" + times(2, entityCount(), ";', ';") + ";')'" + QString(_viewKeys["expanded"].toBool() ? body()->entities().size() ? ";n;i;0" : ";0" : "");
+	//fromLocal broken.
+	int sFirstArg = self()->entityIndexOf<Variable>();
+	int sArgCount = self()->entityCountOf<Variable>();
+	int sBody = self()->entityIndexOf<Compound>();
+	int j = entityCount();
+	int k = fromLocal(0);
+	return ">name;ycode;'" + name() + "';'(';" + times(sFirstArg, sFirstArg + sArgCount, ";', ';") + ";')'" + (_viewKeys["expanded"].toBool() ? (body()->entities().size() ? ";n;i;" : ";") + QString::number(sBody) : QString(""));
 }
 
 QString Constructor::name() const
@@ -57,12 +63,10 @@ QString Constructor::codeName() const
 	return classType()->codeName();
 }
 
-Kinds Constructor::allowedKinds(int _i) const
+Kinds Constructor::memberAllowedKinds(int _i) const
 {
 	if (_i == 0)
 		return Kind::of<Compound>();
-	else if (_i == 1)
-		return Kind::of<AccessLabel>();
 	else
 		return Kind::of<Variable>();
 }
