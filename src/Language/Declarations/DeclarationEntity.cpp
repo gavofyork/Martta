@@ -58,10 +58,8 @@ QString DeclarationEntity::name() const
 
 QString DeclarationEntity::codeName() const
 {
-	if (entitiesOf<TextLabel>().size())
-		return entitiesOf<TextLabel>()[0]->asKind<Label>()->code();
-	else if (entitiesOf<OperatorLabel>().size())
-		return entitiesOf<OperatorLabel>()[0]->asKind<Label>()->code();
+	if (entitiesOf<IdLabel>().size())
+		return entitiesOf<IdLabel>()[0]->asKind<Label>()->code();
 	else
 		return QString();
 }

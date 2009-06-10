@@ -29,7 +29,7 @@
 #include "MemberVariable.h"
 #include "Base.h"
 #include "MethodOperator.h"
-#include "ImplicitAssignmentOperator.h"
+#include "ArtificialAssignmentOperator.h"
 #include "TextLabel.h"
 #include "AccessLabel.h"
 #include "Const.h"
@@ -122,13 +122,13 @@ bool Class::checkImplicitConstructors()
 			assignmentOperators++;
 	if (!assignmentOperators)
 	{
-		// Don't have one anymore; create an ImplicitAssignmentOperator, then return true to allow any dependents to rejig themselves.
-		back().insertSilent(new ImplicitAssignmentOperator);
+		// Don't have one anymore; create an ArtificialAssignmentOperator, then return true to allow any dependents to rejig themselves.
+		back().insertSilent(new ArtificialAssignmentOperator);
 		ret = true;
 	}
-	else if (assignmentOperators > 1 && membersOf<ImplicitAssignmentOperator>().size())
+	else if (assignmentOperators > 1 && membersOf<ArtificialAssignmentOperator>().size())
 	{
-		membersOf<ImplicitAssignmentOperator>()[0]->killAndDelete();
+		membersOf<ArtificialAssignmentOperator>()[0]->killAndDelete();
 		ret = true;
 	}
 	return ret;
@@ -138,7 +138,7 @@ void Class::onDependencyAdded(Entity* _e)
 {
 	if (entities().contains(_e))
 		rejigDeps(); 
-	if (_e->isKind<ConversionOperator>() || (_e->isKind<MethodOperator>() && !_e->isKind<ImplicitAssignmentOperator>()) || (_e->isKind<Constructor>() && !_e->isKind<DefaultConstructor>() && !_e->isKind<ImplicitCopyConstructor>()))
+	if (_e->isKind<ConversionOperator>() || (_e->isKind<MethodOperator>() && !_e->isKind<ArtificialAssignmentOperator>()) || (_e->isKind<Constructor>() && !_e->isKind<DefaultConstructor>() && !_e->isKind<ImplicitCopyConstructor>()))
 		changed();
 }
 
@@ -146,13 +146,13 @@ void Class::onDependencyRemoved(Entity* _e)
 {
 	if (entities().contains(_e))
 		rejigDeps(); 
-	if (_e->isKind<ConversionOperator>() || (_e->isKind<MethodOperator>() && !_e->isKind<ImplicitAssignmentOperator>()) || (_e->isKind<Constructor>() && !_e->isKind<DefaultConstructor>() && !_e->isKind<ImplicitCopyConstructor>()))
+	if (_e->isKind<ConversionOperator>() || (_e->isKind<MethodOperator>() && !_e->isKind<ArtificialAssignmentOperator>()) || (_e->isKind<Constructor>() && !_e->isKind<DefaultConstructor>() && !_e->isKind<ImplicitCopyConstructor>()))
 		changed();
 }
 
 void Class::onDependencyChanged(Entity* _e)
 {
-	if (_e->isKind<ConversionOperator>() || (_e->isKind<MethodOperator>() && !_e->isKind<ImplicitAssignmentOperator>()) || (_e->isKind<Constructor>() && !_e->isKind<DefaultConstructor>() && !_e->isKind<ImplicitCopyConstructor>()))
+	if (_e->isKind<ConversionOperator>() || (_e->isKind<MethodOperator>() && !_e->isKind<ArtificialAssignmentOperator>()) || (_e->isKind<Constructor>() && !_e->isKind<DefaultConstructor>() && !_e->isKind<ImplicitCopyConstructor>()))
 		changed();
 	if (_e->isKind<AccessLabel>())
 		relayoutLater();
@@ -313,7 +313,7 @@ QString Class::defineLayout(ViewKeys& _keys) const
 			ret += QString::number(n) + " constructor" + (n > 1 ? "s, " : ", ");
 		if (int n = entitiesOf<Destructor>().size())
 			ret += QString::number(n) + " destructor" + (n > 1 ? "s, " : ", ");
-		if (int n = (entitiesOf<MethodOperator>().size() - entitiesOf<ImplicitAssignmentOperator>().size()))
+		if (int n = (entitiesOf<MethodOperator>().size() - entitiesOf<ArtificialAssignmentOperator>().size()))
 			ret += QString::number(n) + " operator" + (n > 1 ? "s, " : ", ");
 		if (ret.endsWith(", "))
 			ret.chop(2);

@@ -27,24 +27,24 @@
 #include "ConstLabel.h"
 #include "AccessLabel.h"
 #include "Class.h"
-#include "ImplicitAssignmentOperator.h"
+#include "ArtificialAssignmentOperator.h"
 
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(ImplicitAssignmentOperator);	
+MARTTA_OBJECT_CPP(ArtificialAssignmentOperator);	
 
-Type ImplicitAssignmentOperator::argumentType(int) const
+Type ArtificialAssignmentOperator::argumentType(int) const
 {
 	return Type(ancestor<Class>()).topWith(Const()).topWith(Reference());
 }
 
-Type ImplicitAssignmentOperator::returns() const
+Type ArtificialAssignmentOperator::returns() const
 {
 	return Type(ancestor<Class>()).topWith(Reference());
 }
 
-/*bool ImplicitAssignmentOperator::activated(CodeScene* _s)
+/*bool ArtificialAssignmentOperator::activated(CodeScene* _s)
 {
 	Callable* c = new MethodOperator;
 	c->prepareChildren();

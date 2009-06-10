@@ -21,24 +21,24 @@
 #pragma once
 
 #include "Operator.h"
-#include "MemberCallable.h"
+#include "MemberLambda.h"
 
 namespace Martta
 {
 
-class MethodOperator: public MemberCallable
+class MethodOperator: public MemberLambda
 {
-	MARTTA_OBJECT(MemberCallable)
+	MARTTA_OBJECT(MemberLambda)
 
 public:
 	virtual Operator					id() const;
 
 protected:	
-	virtual Kinds						allowedKinds(int _i) const;
-	virtual int							minimumRequired() const;
+	virtual int							memberMinimumRequired() const { return isBinary() ? 5 : 4; }
+	virtual Kinds						memberAllowedKinds(int _i) const;
+	
 	virtual int							argumentCount() const;
 	virtual Type						argumentType(int _i) const;
-	virtual QString						codeName() const;
 
 private:
 	bool								isBinary() const { return id().isBinary(); }

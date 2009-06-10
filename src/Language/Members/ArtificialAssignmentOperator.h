@@ -26,13 +26,14 @@
 namespace Martta
 {
 
-class ImplicitAssignmentOperator: public MethodOperator, public_interface Artificial
+class ArtificialAssignmentOperator: public MethodOperator, public_interface Artificial
 {
 	MARTTA_OBJECT(MethodOperator)
 	MARTTA_INHERITS(Artificial, 0)
 	
 protected:
 	virtual Operator					id() const { return Operator::Equals; }
+	virtual QString						codeName() const { return "operator="; }
 //	virtual bool						activated(CodeScene* _s);
 	virtual QString						defineLayout(ViewKeys&) const { return QString(); }
 	virtual	bool						isConst() const { return true; }

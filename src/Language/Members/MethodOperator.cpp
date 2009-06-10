@@ -19,6 +19,10 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "OperatorLabel.h"
+#include "ConstLabel.h"
+#include "Compound.h"
+#include "TypeEntity.h"
+#include "Variable.h"
 #include "MethodOperator.h"
 
 namespace Martta
@@ -32,7 +36,7 @@ Operator MethodOperator::id() const
 		return Operator();
 	return entityAs<OperatorLabel>(0)->id();
 }
-	
+
 int MethodOperator::argumentCount() const
 {
 	return Super::argumentCount() + ((isComplete() && id().isConfusablePostfix()) ? 1 : 0);
@@ -43,29 +47,19 @@ Type MethodOperator::argumentType(int _i) const
 	return (isComplete() && id().isConfusablePostfix() && _i == argumentCount() - 1) ? Type(Int) : Super::argumentType(_i);
 }
 
-Kinds MethodOperator::allowedKinds(int _i) const
+Kinds MethodOperator::memberAllowedKinds(int _i) const
 {
 	if (_i == 0)
 		return Kind::of<OperatorLabel>();
-	if (_i < firstArgumentIndex())
-		return Super::allowedKinds(_i);
-	if (isBinary() && _i == firstArgumentIndex())
+	if (_i == 1)
+		return Kind::of<Compound>();
+	if (_i == 2)
+		return Kind::of<TypeEntity>();
+	if (_i == 3)
+		return Kind::of<ConstLabel>();
+	if (_i == 4 && isBinary())
 		return Kind::of<Variable>();
 	return Kinds();
-}
-
-int MethodOperator::minimumRequired() const
-{
-	if (isBinary())
-		return firstArgumentIndex() + 1;
-	return firstArgumentIndex();
-}
-
-QString MethodOperator::codeName() const
-{
-	if (!entitiesOf<OperatorLabel>().size())
-		return QString();
-	return entitiesOf<OperatorLabel>()[0]->asKind<Label>()->code();
 }
 
 }
