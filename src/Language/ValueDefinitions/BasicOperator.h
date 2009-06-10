@@ -21,14 +21,16 @@
 #pragma once
 
 #include "Operator.h"
-#include "Callable.h"
+#include "LambdaNamer.h"
+#include "DeclarationEntity.h"
 
 namespace Martta
 {
 
-class BasicOperator: public Callable
+class BasicOperator: public DeclarationEntity, public_interface LambdaNamer
 {
-	MARTTA_OBJECT(Callable)
+	MARTTA_OBJECT(DeclarationEntity)
+	MARTTA_INHERITS(LambdaNamer, 0)
 
 public:
 	virtual Operator							id() const;
@@ -39,6 +41,16 @@ protected:
 	virtual int									argumentCount() const;
 	virtual Type								argumentType(int _i) const;
 	
+	virtual QString								interfaceCode() const { return LambdaNamer::interfaceCode(); }
+	virtual QString								implementationCode() const { return LambdaNamer::implementationCode(); }
+
+	virtual QString								defineLayout(ViewKeys& _v) const { return "^;" + LambdaNamer::defineLayout(_v); }
+	virtual bool								keyPressed(EntityKeyEvent const* _e) { return LambdaNamer::keyPressed(_e) ? true : Super::keyPressed(_e); }
+	virtual int									familyDependencies() const { return DependsOnChildren; }
+	virtual void								onDependencyChanged(Entity*) { changed(); }
+	virtual void								onDependencyRemoved(Entity*) { changed(); }
+	virtual Entity*								isExpander() const;
+		
 private:
 	/// Safe to call within allowedKinds/minimumRequired (i.e. to determine isComplete()).
 	virtual bool								isBinary() const;

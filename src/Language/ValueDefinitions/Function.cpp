@@ -44,11 +44,6 @@ Kinds Function::allowedKinds(int _i) const
 	return Kinds();
 }
 
-Kinds Function::deniedKinds(int) const
-{
-	return Kind::of<ThisPointer>();
-}
-
 void Function::importDom(QDomElement const& _element)
 {
 	Super::importDom(_element);

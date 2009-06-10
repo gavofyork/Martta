@@ -46,7 +46,6 @@ public:
 protected:
 	virtual int							minimumRequired() const { return 3; }
 	virtual Kinds						allowedKinds(int _i) const;
-	virtual Kinds						deniedKinds(int _i) const;
 	
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity*) { changed(); }

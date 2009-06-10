@@ -19,11 +19,13 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "OperatorLabel.h"
-#include "RootEntity.h"
+#include "Compound.h"
+#include "Variable.h"
 #include "TextLabel.h"
 #include "Pointer.h"
 #include "Reference.h"
 #include "Const.h"
+#include "RootEntity.h"
 #include "FundamentalOperator.h"
 
 namespace Martta
