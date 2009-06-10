@@ -32,7 +32,7 @@ class DefaultConstructor: public Constructor, public_interface Artificial
 	MARTTA_INHERITS(Artificial, 0)
 	
 protected:
-	virtual bool						activated(CodeScene* _s);
+//	virtual bool						activated(CodeScene* _s);
 	virtual QString						defineLayout(ViewKeys&) const { return QString(); }
 	virtual Access						access() const { return Public; }
 	virtual int							firstArgumentIndex() const { return 0; }

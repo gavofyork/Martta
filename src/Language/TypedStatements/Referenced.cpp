@@ -176,7 +176,7 @@ void Referenced::decorate(DecorationContext const& _c) const
 		{
 			if (e->isKind<MemberVariable>())
 				dec = true;
-			else if (e->isKind<Variable>() && e->contextIs<Callable>())
+			else if (e->isKind<Variable>() && e->contextIs<LambdaNamer>())
 				dec = true;
 		}
 		if (dec)
@@ -202,7 +202,7 @@ QString Referenced::defineLayout(ViewKeys&) const
 	QString ret = QString(m_lastSet&GlobalSet ? "p:/global.svg;" : "");
 	if (m_subject && m_subject->isKind<MemberVariable>())
 		ret += "(;M4;[[[;fs-2;fb;c#777;e#fff;'M';]]];);";
-	else if (m_subject && m_subject->isKind<Variable>() && m_subject->self()->contextIs<Callable>())
+	else if (m_subject && m_subject->isKind<Variable>() && m_subject->self()->contextIs<LambdaNamer>())
 		ret += "(;M4;[[[;fs-2;fb;c#777;e#fff;'_';]]];);";
 	ret += "^;s" + (m_subject ? m_subject->type()->idColour() : TypeEntity::null->idColour()) + ";c;'" + (m_subject ? m_subject->name() : QString()) + "'";
 	return ret;
@@ -299,9 +299,9 @@ void ReferencedEdit::updateSubset()
 		m_valuesInScope << castEntities<ValueDefiner>(subject()->ancestor<DeclarationEntity>()->valuesKnown());
 	if (subject()->m_lastSet & GlobalSet)
 		m_valuesInScope << subject()->rootEntity()->entitiesHereAndBeforeOf<ValueDefiner>();
-	if (subject()->m_lastSet & ArgumentSet && subject()->hasAncestor<Callable>())
-		for (int i = 0; i < subject()->ancestor<Callable>()->argumentCount(); i++)
-			m_valuesInScope << subject()->ancestor<Callable>()->argument(i);
+	if (subject()->m_lastSet & ArgumentSet && subject()->hasAncestor<LambdaNamer>())
+		for (int i = 0; i < subject()->ancestor<LambdaNamer>()->argumentCount(); i++)
+			m_valuesInScope << subject()->ancestor<LambdaNamer>()->argument(i);
 	if (subject()->m_lastSet & MemberVariables)
 		foreach (Type t, subject()->allowedTypes())
 			if (t->isType<Memberify>() && t->asType<Memberify>()->scope())

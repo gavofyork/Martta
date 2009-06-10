@@ -1,17 +1,18 @@
 TODO variable -> basevariable, new variable & membervariable - no need if class stores access.
 OR member enumeration with decoration code moved to class, but not ideal since no clear way of getting enumeration into member enumeration without a basically useless 3rd class to act as sharing base.
 
+TODO Variable::defineLayout - get rid of check for ^; by using usurp API.
+TODO TypeNamer::type = 0;
+TODO abstract OperatorLabel & TextLabel into IdentifierLabel.
 TODO move crap from ExplicitType to TypeDefinition.
 TODO page up & down broken.
 TODO join statements or tree insert.
 TODO insertion of entities in, e.g. argument lists for function calls.
 
 Allow "usurption" for stuff like DefaultConstructedVariable to usurp Variable.
-- enum { NotUsurping = -1 };
-- int usurpsChild() const { return NotUsurping; }
+- All good.
 - key presses automatically rerouted to child (only at source to prevent recursion).
-- should handle situation of usurper usurped.
-- child loses ability to focus.
+- CHECK should handle situation of usurper usurped.
 Utilised
 - utilised/utilisable interface.
 - BUG enums don't behave well regarding order of declaration & use.

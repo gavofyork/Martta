@@ -39,7 +39,7 @@ QString Compound::code() const
 
 QString Compound::defineLayout(ViewKeys&) const
 {
-	if (statements().size() > 1 || contextIs<Callable>())
+	if (statements().size() > 1 || contextIs<LambdaNamer>())
 		return "ycode;-i;'{';n;" + times(0, entityCount(), ";n;") + ";n;-i;'}'";
 	else if (statements().size())
 		return "ycode;0";

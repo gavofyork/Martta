@@ -30,7 +30,7 @@ MARTTA_OBJECT_CPP(VirtualPure);
 
 QString VirtualPure::interfaceCode() const
 {
-	return entitiesOf<AccessLabel>()[0]->asKind<Label>()->code() + ": virtual " + code(Callable::InsideScope) + " = 0;\n";
+	return entitiesOf<AccessLabel>()[0]->asKind<Label>()->code() + ": virtual " + basicCode(LambdaNamer::InsideScope) + " = 0;\n";
 }
 
 bool VirtualPure::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)

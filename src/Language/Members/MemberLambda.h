@@ -20,36 +20,40 @@
 
 #pragma once
 
-#include "Variable.h"
-#include "Callable.h"
+#include "ValueDefiner.h"
+#include "LambdaNamer.h"
+#include "Member.h"
 
 namespace Martta
 {
 
-/// Base class for all callables that can contain ThisPointers.
-/// @note on deriving it. It assumes that there is precisely one child of type AccessLabel, and this is the object's access
-/// characteristics. If you're not going to provide that child, then make sure you redefine all of the functions that require
-/// knowledge of the AccessLabel.
-class MemberCallable: public Callable
-{
-	MARTTA_PLACEHOLDER(Callable)
+// Just for non-static callables
 
+class MemberLambda: public Member, public_interface LambdaNamer
+{
+	MARTTA_PLACEHOLDER(Member)
+	MARTTA_INHERITS(LambdaNamer, 0)
+	
 public:
-	virtual Access						access() const;
 	virtual bool						isConst() const;
 	
 protected:
 	virtual Type						type() const;
-	virtual QString 					code(FunctionCodeScope _ref) const;
-	virtual QString						interfaceCode() const;
-	virtual bool						keyPressed(EntityKeyEvent const* _e);
-	virtual int							firstArgumentIndex() const { return 5; }
-	virtual Kinds						allowedKinds(int _i) const;
-	virtual Kinds						deniedKinds(int) const { return Kinds(); }
-	virtual void						decorate(DecorationContext const& _p) const;
-	virtual QString						defineLayout(ViewKeys&) const;
-	virtual QString						defineMemberLayout(ViewKeys&) const;
+	
+	virtual QString						memberImplementationCode() const { return LambdaNamer::implementationCode(); }
+	virtual QString						memberInterfaceCode() const { return LambdaNamer::interfaceCode(); }
+
+	virtual int							familyDependencies() const { return DependsOnChildren; }
+	virtual void						onDependencyChanged(Entity*) { changed(); }
+	virtual void						onDependencyRemoved(Entity*) { changed(); }
 	virtual QList<DeclarationEntity*>	utilised() const;
+	
+	virtual QString						basicCode(FunctionCodeScope _ref) const;
+
+	virtual Entity*						isExpander() const;
+	virtual QString						memberDefineLayout(ViewKeys& _v) const;
+	virtual bool						keyPressed(EntityKeyEvent const* _e);
+	virtual void						memberDecorate(DecorationContext const& _p) const;
 };
 
 }

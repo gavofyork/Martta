@@ -102,7 +102,7 @@ void Variable::exportDom(QDomElement& _element) const
 
 QString Variable::defineLayout(ViewKeys&) const
 {
-	return QString(contextIs<Callable>() ? "^;" : "") + "1;s" + entityAs<TypeEntity>(1)->idColour() + ";Mi;>name;fb0;!0";
+	return QString(contextIs<LambdaNamer>() ? "^;" : "") + "1;s" + entityAs<TypeEntity>(1)->idColour() + ";Mi;>name;fb0;!0";
 }
 
 QList<DeclarationEntity*> Variable::utilised() const

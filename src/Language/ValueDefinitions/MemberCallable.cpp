@@ -69,7 +69,7 @@ QString MemberCallable::code(FunctionCodeScope _ref) const
 {
 	if (!isComplete())
 		return QString();
-	return memberCode(_ref) + (isConst() ? " const" : "");
+	return LambdaNamer::basicCode(_ref) + (isConst() ? " const" : "");
 }
 
 QString MemberCallable::interfaceCode() const

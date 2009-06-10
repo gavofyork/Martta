@@ -35,10 +35,18 @@ class Identifiable
 	
 public:	
 	virtual SubAddressable*				addressableContext() const = 0;
+	/// @returns the user-visible name used for this entity. (e.g. "foo", "bar", "my class")
 	virtual QString						name() const = 0;
+	/// @returns the name used for this declaration in the CPP code. (e.g. "foo", "m_bar", "MyClass")
 	virtual QString						codeName() const = 0;
+	/// @returns the program-wide reference used for this declaration in the CPP code (calls codeName()).
+	/// (e.g. "::MyClass::m_foo", "::MyClass::bar", "::MyClass")
 	virtual QString						reference() const = 0;
-	virtual QString						identity() const = 0;
+	/// @returns the Martta-identity for this entity.
+	/// (e.g. "m_foo", "void bar(int), "MyClass")
+	virtual QString						identity() const { return codeName(); }
+	/// @returns the program-wide Martta-reference for this entity.
+	/// (e.g. ";;MyClass;;m_foo", ";;MyClass;;void bar(int)", ";;MyClass")
 	virtual QString						key() const = 0;
 	
 	virtual ~Identifiable() {}

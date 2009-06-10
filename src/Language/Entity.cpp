@@ -95,7 +95,7 @@ int Entity::ancestorIndex(Kind _k) const
 
 bool Entity::hasSelfAncestor(Kind _k) const
 {
-	for (Entity* e = context(); e; e = e->context())
+	for (Entity* e = const_cast<Entity*>(this); e; e = e->context())
 		if (e->isKind(_k))
 			return true;
 	return false;
@@ -103,7 +103,7 @@ bool Entity::hasSelfAncestor(Kind _k) const
 
 Entity* Entity::selfAncestor(Kind _k) const
 {
-	for (Entity* e = context(); e; e = e->context())
+	for (Entity* e = const_cast<Entity*>(this); e; e = e->context())
 		if (e->isKind(_k))
 			return e;
 	return 0;

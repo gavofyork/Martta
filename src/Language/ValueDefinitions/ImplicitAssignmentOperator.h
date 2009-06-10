@@ -33,7 +33,7 @@ class ImplicitAssignmentOperator: public MethodOperator, public_interface Artifi
 	
 protected:
 	virtual Operator					id() const { return Operator::Equals; }
-	virtual bool						activated(CodeScene* _s);
+//	virtual bool						activated(CodeScene* _s);
 	virtual QString						defineLayout(ViewKeys&) const { return QString(); }
 	virtual	bool						isConst() const { return true; }
 	virtual Access						access() const { return Public; }

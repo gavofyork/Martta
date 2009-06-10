@@ -22,40 +22,40 @@
 
 #include "Variable.h"
 #include "Compound.h"
-#include "ValueDefiner.h"
+#include "LambdaNamer.h"
 #include "DeclarationEntity.h"
 
 namespace Martta
 {
 
-class Callable: public DeclarationEntity, public_interface ValueDefiner
+class Callable: public DeclarationEntity, public_interface LambdaNamer
 {
 	MARTTA_PLACEHOLDER(DeclarationEntity)
-	MARTTA_INHERITS(ValueDefiner, 0)
+	MARTTA_INHERITS(LambdaNamer, 0)
 
 public:
-	Callable(): m_qualifiers(Qualifiers(0)) {}
+//	Callable(): m_qualifiers(Qualifiers(0)) {}
 	
 	/// Used for default implementation of implementationCode. Can be safely ignored if implementationCode is reimplemented.
-	virtual Compound*					body() const { return entityAs<Compound>(1); }
-	virtual bool						ellipsis() const { return false; }
-	virtual Qualifiers					qualifiers() const { return m_qualifiers; }
+//	virtual Compound*					body() const { return entityAs<Compound>(1); }
+//	virtual bool						ellipsis() const { return false; }
+//	virtual Qualifiers					qualifiers() const { return m_qualifiers; }
 	
-	enum FunctionCodeScope { InsideScope = 0, OutsideScope = 1 };
+//	enum FunctionCodeScope { InsideScope = 0, OutsideScope = 1 };
 	
 	/// Basic code for this function call. Is essentially the interfaceCode without the final ';'.
-	virtual QString						code(FunctionCodeScope _ref) const;
-	virtual QString						interfaceCode() const { return code(Callable::InsideScope) + ";\n"; }
-	virtual QString						implementationCode() const;
+//	virtual QString						code(FunctionCodeScope _ref) const;
+	virtual QString						interfaceCode() const { return LambdaNamer::interfaceCode(); }
+	virtual QString						implementationCode() const { return LambdaNamer::implementationCode(); }
 
 	/// @note this only returns the number of nameable arguments. If ellipsis() is true, this could be different to the number of parameters that are passed to it in an invocation.
 	/// @note argument() may not work for all arguments within argumentCount(); argumentType() is the only one guaranteed to work. This is the case in, e.g., postfix versions of ++ and -- unary operators.
-	virtual int							argumentCount() const { return entities().size() - firstArgumentIndex(); }
-	virtual Variable*					argument(int _index) const;
-	virtual inline Type					returns() const { return entityIs<TypeEntity>(2) ? *entityAs<TypeEntity>(2) : Type(); }
-	virtual inline Type					argumentType(int _index) const { return argument(_index)->actualType() ? *argument(_index)->actualType() : Type(); }
-	virtual inline QString				argumentName(int _index) const { return argument(_index)->name(); }
-	virtual inline QString				argumentCodeName(int _index) const { return argument(_index)->codeName(); }
+//	virtual int							argumentCount() const { return entities().size() - firstArgumentIndex(); }
+//	virtual Variable*					argument(int _index) const;
+//	virtual inline Type					returns() const { return entityIs<TypeEntity>(2) ? *entityAs<TypeEntity>(2) : Type(); }
+//	virtual inline Type					argumentType(int _index) const { return argument(_index)->actualType() ? *argument(_index)->actualType() : Type(); }
+//	virtual inline QString				argumentName(int _index) const { return argument(_index)->name(); }
+//	virtual inline QString				argumentCodeName(int _index) const { return argument(_index)->codeName(); }
 
 protected:
 	/// This is a basic implementation that works as Compound, ReturnType, ArgumentVariables, ...
@@ -70,20 +70,20 @@ protected:
 	virtual int							firstArgumentIndex() const { return 3; }
 	virtual int							minimumRequired() const { return firstArgumentIndex(); }
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
-	virtual QString						identity() const;
-	virtual Type						type() const;
+//	virtual QString						identity() const;
+//	virtual Type						type() const;
 	virtual QString						defineLayout(ViewKeys& _v) const;
-	virtual void						exportDom(QDomElement& _element) const;
-	virtual void						importDom(QDomElement const& _element);
+//	virtual void						exportDom(QDomElement& _element) const;
+//	virtual void						importDom(QDomElement const& _element);
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity*) { changed(); }
 	virtual void						onDependencyRemoved(Entity*) { changed(); }
 	virtual Entity*						isExpander() const { return body()->entity(0); }
 	
 	/// Gives a parameter list of the call. This depends on argumentType/CodeName, ellipsis, reference and codeName.
-	QString								callingCode(FunctionCodeScope _ref) const;
+//	QString								callingCode(FunctionCodeScope _ref) const;
 	
-	Qualifiers							m_qualifiers;
+//	Qualifiers							m_qualifiers;
 };
 
 }

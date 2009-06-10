@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include "Method.h"
+#include "MemberCallable.h"
 
 namespace Martta
 {

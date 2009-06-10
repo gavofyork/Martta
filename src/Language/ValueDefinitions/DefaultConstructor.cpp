@@ -26,7 +26,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(DefaultConstructor);	
 
-bool DefaultConstructor::activated(CodeScene* _s)
+/*bool DefaultConstructor::activated(CodeScene* _s)
 {
 	Callable* c = new Constructor;
 	c->prepareChildren();
@@ -34,7 +34,7 @@ bool DefaultConstructor::activated(CodeScene* _s)
 	_s->setViewKey(c, "expanded", true);
 	_s->setCurrent(c->body()->entity(0));
 	return true;
-}
+}*/
 
 }
 

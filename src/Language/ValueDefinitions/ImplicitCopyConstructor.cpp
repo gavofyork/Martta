@@ -36,7 +36,7 @@ Type ImplicitCopyConstructor::argumentType(int) const
 	return Type(classType()).topWith(Const()).topWith(Reference());
 }
 
-bool ImplicitCopyConstructor::activated(CodeScene* _s)
+/*bool ImplicitCopyConstructor::activated(CodeScene* _s)
 {
 	Callable* c = new Constructor;
 	c->prepareChildren();
@@ -48,7 +48,7 @@ bool ImplicitCopyConstructor::activated(CodeScene* _s)
 	_s->setViewKey(c, "expanded", true);
 	_s->setCurrent(c->body()->entity(0));
 	return true;
-}
+}*/
 
 }
 

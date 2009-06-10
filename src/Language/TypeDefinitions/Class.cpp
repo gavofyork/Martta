@@ -118,7 +118,7 @@ bool Class::checkImplicitConstructors()
 	// Check assignment operators.
 	int assignmentOperators = 0;
 	foreach (MethodOperator* i, membersOf<MethodOperator>())
-		if (i->id() == Operator::Equals && Type(*i->asKind<Callable>()->argumentType(0)->ignore<Reference>()->ignore<Const>()) == Type(this))
+		if (i->id() == Operator::Equals && Type(*i->asKind<LambdaNamer>()->argumentType(0)->ignore<Reference>()->ignore<Const>()) == Type(this))
 			assignmentOperators++;
 	if (!assignmentOperators)
 	{
@@ -210,6 +210,9 @@ QList<DeclarationEntity*> Class::members(bool _isConst, Access _access) const
 	foreach (MemberCallable* i, entitiesOf<MemberCallable>())
 		if ((i->isConst() || !_isConst) && i->access() <= _access)
 			ret += i;
+	foreach (MemberLambda* i, entitiesOf<MemberLambda>())
+		if ((i->isConst() || !_isConst) && i->access() <= _access)
+			ret += i;
 	foreach (Base* i, entitiesOf<Base>())
 		if (!i->classType())
 			continue;
@@ -223,7 +226,7 @@ QList<DeclarationEntity*> Class::members(bool _isConst, Access _access) const
 bool Class::hasDefaultConstructor() const
 {
 	int count = 0;
-	foreach (Callable* i, membersOf<Constructor>())
+	foreach (LambdaNamer* i, membersOf<Constructor>())
 		if (i->argumentCount() == 0)
 			count++;
 	return count == 1;
@@ -234,7 +237,7 @@ Types Class::assignableTypes() const
 	Types ret;
 	foreach (MethodOperator* i, membersOf<MethodOperator>(false, Public))
 		if (i->id() == Operator::Equals)
-			ret << i->asKind<Callable>()->argumentType(0);
+			ret << i->asKind<LambdaNamer>()->argumentType(0);
 	return ret;
 }
 
@@ -275,7 +278,7 @@ QString Class::defineLayout(ViewKeys& _keys) const
 				if (f->access() == Access(i))
 					mem += QString(";n;%1").arg(f->contextIndex());
 			recognised << Kind::of<Method>();
-			foreach (MemberCallable* f, entitiesOf<Method>())
+			foreach (MemberLambda* f, entitiesOf<Method>())
 				if (f->access() == Access(i))
 					mem += QString(";n;%1").arg(f->contextIndex());
 			foreach (MemberCallable* f, entitiesOf<MemberCallable>())

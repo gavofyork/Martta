@@ -96,6 +96,7 @@ class Entity: public SafePointerTarget
 
 public:
 	static const int OffsetForDerivatives = 0;
+	static const int MyOffset = 0;
 	
 	template<class T> void setDependency(ModelPtr<T>& M_S, T* _S)
 	{
@@ -179,6 +180,8 @@ public:
 	inline int							entityCount() const { return m_children.size(); }
 	inline Entity*						entity(int _i) const { if (_i >= 0 && _i < m_children.size()) { M_ASSERT(m_children[_i]->m_context == this); return m_children[_i]; } else return 0; }
 	template<class T> inline QList<T*>	entitiesOf() const { return filterEntities<T>(m_children); }
+	template<class T> inline int		entityIndexOf() const { for (int r = 0; r < m_children.size(); ++r) if (entityIs<T>(r)) return r; return -1; }
+	template<class T> inline int		entityCountOf() const { int r = 0; foreach (Entity* i, m_children) if (i->isKind<T>()) r++; return r; }
 	template<class T> inline bool		entityIs(int _i) const { return (_i >= 0 && _i < m_children.size() && m_children[_i]) ? m_children[_i]->isKind<T>() : false; }
 	template<class T> inline T*			entityAs(int _i) const { M_ASSERT(_i >= 0 && _i < m_children.size() && m_children[_i]); return m_children[_i]->asKind<T>(); }
 	template<class L> inline QList<Entity*>			localsFor() const { return m_children.mid(TotalOffset<L>::value); }
@@ -196,13 +199,13 @@ public:
 	inline QList<Entity*>				siblings() const { if (!m_context) return QList<Entity*>(); QList<Entity*> ret; foreach (Entity* e, m_context->m_children) if (e != this) ret += e; return ret; }
 	inline int							siblingCount() const { M_ASSERT(context()); return context()->m_children.size() - 1; }
 	template<class T> inline QList<T*>	siblingsOf() const { return filterEntities<T>(siblings());  }
-	template<class T> T*				ancestor() const { return static_cast<T*>(ancestor(T::staticKind)); }
+	template<class T> T*				ancestor() const { Entity* r = ancestor(T::staticKind); return r ? r->asKind<T>() : 0; }
 	Entity*								ancestor(Kind _k) const;
 	template<class T> bool				hasAncestor() const { return hasAncestor(T::staticKind); }
 	bool								hasAncestor(Kind _k) const;
 	template<class T> int				ancestorIndex() const { return ancestorIndex(T::staticKind); }
 	int									ancestorIndex(Kind _k) const;
-	template<class T> T*				selfAncestor() const { return static_cast<T*>(selfAncestor(T::staticKind)); }
+	template<class T> T*				selfAncestor() const { Entity* r = selfAncestor(T::staticKind); return r ? r->asKind<T>() : 0; }
 	Entity*								selfAncestor(Kind _k) const;
 	template<class T> bool				hasSelfAncestor() const { return hasSelfAncestor(T::staticKind); }
 	bool								hasSelfAncestor(Kind _k) const;

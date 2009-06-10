@@ -44,6 +44,7 @@ protected:
 	virtual QString						memberInterfaceCode() const { return entityAs<DeclarationEntity>(1)->interfaceCode(); }
 	virtual QString						memberImplementationCode() const { return entityAs<DeclarationEntity>(1)->implementationCode(); }
 	virtual void						memberDecorate(DecorationContext const& _p) const { entity(0)->decorate(_p); }
+	virtual QString						memberDefineLayout(ViewKeys&) const { return "1"; }	// don't forget that the numbers are offset! use fromLocal here. 
 	
 	// Old virtuals.
 	virtual int							minimumRequired() const { return OffsetForDerivatives + memberMinimumRequired(); }

@@ -24,8 +24,8 @@
 #include "Variable.h"
 #include "NamespaceEntity.h"
 #include "TypeDefinition.h"
-#include "Member.h"
-#include "Callable.h"
+#include "MemberVariable.h"
+#include "LambdaNamer.h"
 #include "EditDelegate.h"
 #include "DecorationContext.h"
 #include "TextLabel.h"
@@ -42,9 +42,9 @@ QString TextLabel::code() const
 	{
 		if (contextIs<Variable>())
 		{
-			if (context()->contextIs<Member>())
+			if (context()->contextIs<MemberVariable>())
 				prefix = "m_";
-			else if (context()->contextIs<Callable>())
+			else if (context()->contextIs<LambdaNamer>())
 				prefix = "a_";
 			else
 				prefix = "l_";
@@ -86,7 +86,7 @@ QString TextLabel::defineLayout(ViewKeys&) const
 	{
 		if (contextIs<Variable>() && context()->contextIs<Member>())
 			key = "(;M4;[[[;fs-2;fb;c#777;e#fff;'M';]]];)";
-		else if (contextIs<Variable>() && context()->contextIs<Callable>())
+		else if (contextIs<Variable>() && context()->contextIs<LambdaNamer>())
 			key = "(;M4;[[[;fs-2;fb;c#777;e#fff;'_';]]];)";
 	}
 	return "^;" + (text().isEmpty() ? QString("yminor;'ANONYMOUS'") : (key + ";'" + name() + "'"));
@@ -99,7 +99,7 @@ void TextLabel::decorate(DecorationContext const& _c) const
 	{
 		if (contextIs<Variable>() && context()->contextIs<Member>())
 			dec = true;
-		else if (contextIs<Variable>() && context()->contextIs<Callable>())
+		else if (contextIs<Variable>() && context()->contextIs<LambdaNamer>())
 			dec = true;
 	}
 	if (dec)

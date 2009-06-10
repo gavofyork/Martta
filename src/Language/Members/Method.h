@@ -20,19 +20,22 @@
 
 #pragma once
 
-#include "Compound.h"
-#include "MemberCallable.h"
+#include "MemberLambda.h"
 #include "Callable.h"
 
 namespace Martta
 {
 
-class Method: public MemberCallable
+class Method: public MemberLambda
 {
-	MARTTA_OBJECT(MemberCallable)
+	MARTTA_OBJECT(MemberLambda)
 
 public:
 	static bool keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e) { return simpleInsertionPointKeyPressHandler<Method>(_p, _e, "M"); }
+	
+protected:
+	virtual int							memberMinimumRequired() const { return 4; }
+	virtual Kinds						memberAllowedKinds(int _i) const;
 };
 
 }

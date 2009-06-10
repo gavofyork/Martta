@@ -82,6 +82,9 @@ template<class T, class F> T tryCast(F _f) { return tryCastPrivate::XL<T, F, try
 	template<class T> inline QList<T*>	localsOf() const { return localsOfFor<S, T>(); } \
 	template<class T> inline bool		localIs(int _i) const { return localIsFor<S, T>(_i); } \
 	template<class T> inline T*			localAs(int _i) const { return localAsFor<S, T>(_i); } \
+	static const int MyOffset = TotalOffset<S>::value; \
+	static inline int					fromLocal(int _i) { return MyOffset + _i; } \
+	static inline int					toLocal(int _i) { return MyOffset - _i; } \
 	MARTTA_BASIC
 
 #define MARTTA_OBJECT(S) \
@@ -108,6 +111,8 @@ template<class T, class F> T tryCast(F _f) { return tryCastPrivate::XL<T, F, try
 	MARTTA_CPP_BASIC(E) \
 	AuxilliaryFace const* E::staticAuxilliary() { if (!s_auxilliary_##E) s_auxilliary_##E = new Auxilliary<E>("Martta::" #E); return s_auxilliary_##E; } \
 	void const* E::tryInterface(Kind _k) const { /*qDebug() << "tryInterface(Object): " << E::staticKind.name() << ", searching " << _k.name();*/ M_ASSERT(this); if (_k == staticKind) { /*qDebug() << "Shouldn't happen - object matched but wanted interface: Want " << _k.name() << ", got " << E::staticKind.name() << "!";*/ return (void const*)this; } /*qDebug() << "Trying ASTHelper " << GetCount<E>::Value << " interfaces";*/ if (void const* r = ASTHelper<GetCount<E>::Value, E>::altSupers(this, _k)) return r; /*qDebug() << "Moving to Super (" << Super::staticKind.name() << ")...";*/ return Super::tryInterface(_k); }
+
+#define MARTTA_PLACEHOLDER_CPP(E) MARTTA_OBJECT_CPP(E)
 
 #define MARTTA_INTERFACE_CPP(E) \
 	MARTTA_CPP_BASIC(E) \

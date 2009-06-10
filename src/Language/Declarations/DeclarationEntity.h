@@ -45,20 +45,13 @@ public:
 	/// Returns the context if it is addressable. If not (e.g. Statement-derived context) it returns zero.
 	virtual SubAddressable*				addressableContext() const;
 
-	/// @returns the user-visible name used for this entity. (e.g. "foo", "bar", "my class")
+	/// From Identifiable (default implementations).
 	virtual QString						name() const;
-	/// @returns the name used for this declaration in the CPP code. (e.g. "foo", "m_bar", "MyClass")
 	virtual QString						codeName() const;
-	/// @returns the program-wide reference used for this declaration in the CPP code (calls codeName()).
-	/// (e.g. "::MyClass::m_foo", "::MyClass::bar", "::MyClass")
 	virtual QString						reference() const;
-	/// @returns the Martta-identity for this entity.
-	/// (e.g. "m_foo", "void bar(int), "MyClass")
-	virtual QString						identity() const { return codeName(); }
-	/// @returns the program-wide Martta-reference for this entity.
-	/// (e.g. ";;MyClass;;m_foo", ";;MyClass;;void bar(int)", ";;MyClass")
 	virtual QString						key() const;
-
+//	virtual QString						code() const { return QString(); }
+	
 	virtual QString						interfaceCode() const { return QString(); }
 	virtual QString						implementationCode() const { return QString(); }
 

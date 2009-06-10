@@ -46,7 +46,7 @@ protected:
 	virtual bool						isSlidable(int _i) const { return _i != entities().size() - 1; }
 	static InsertionPoint				slideOnPrecedence(InsertionPoint _p, Precedence _d, Associativity _a, InsertionPoint const& _block);
 	
-	// Must return all entities that are Callable-derived and whose id() is operator _o.
+	// Must return all entities that are LambdaNamer-derived and whose id() is operator _o.
 	static QList<ValueDefiner*>			allOperators(Operator _o);
 	
 	/// The argument type of the method or function type _t. argument -1 is the return type.

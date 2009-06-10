@@ -35,8 +35,6 @@ Type MemberVariable::type() const
 {
 	if (!isComplete())
 		return Type();
-	ancestor<Class>()->debugTree();
-	qDebug() << TotalOffset<MemberVariable>::value << " " << OffsetForDerivatives << " " << Super::OffsetForDerivatives;
 	Type ret = localAs<TypeNamer>(0)->type();
 	if (!ancestor<Class>() || !ret->isType<Reference>() || !ret->asType<Reference>()->child())
 		return Type();

@@ -44,7 +44,7 @@ Type ImplicitAssignmentOperator::returns() const
 	return Type(ancestor<Class>()).topWith(Reference());
 }
 
-bool ImplicitAssignmentOperator::activated(CodeScene* _s)
+/*bool ImplicitAssignmentOperator::activated(CodeScene* _s)
 {
 	Callable* c = new MethodOperator;
 	c->prepareChildren();
@@ -60,7 +60,7 @@ bool ImplicitAssignmentOperator::activated(CodeScene* _s)
 	_s->setViewKey(c, "expanded", true);
 	_s->setCurrent(c->body()->entity(0));
 	return true;
-}
+}*/
 
 }
 

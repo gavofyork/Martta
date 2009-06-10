@@ -58,6 +58,13 @@ QString Callable::defineLayout(ViewKeys& _viewKeys) const
 	return ret;
 }
 
+
+/*
+QString Callable::identity() const
+{
+	return type()->code(name()).replace(" ", "").replace("::", ";;");
+}
+
 QString Callable::implementationCode() const
 {
 	return code(Callable::OutsideScope) + "\n" + (body() ? body()->code() : QString());
@@ -72,11 +79,6 @@ Variable* Callable::argument(int _index) const
 		M_ASSERT(false);
 	}
 	return entityAs<Variable>(_index + firstArgumentIndex());
-}
-
-QString Callable::identity() const
-{
-	return type()->code(name()).replace(" ", "").replace("::", ";;");
 }
 
 Type Callable::type() const
@@ -108,7 +110,7 @@ QString Callable::code(FunctionCodeScope _ref) const
 {
 	return Martta::code(qualifiers() & MethodMask) + returns()->code(" " + callingCode(_ref));
 }
-
+*/
 Kinds Callable::allowedKinds(int _i) const
 {
 	if (_i == 0)
@@ -148,7 +150,7 @@ bool Callable::keyPressed(EntityKeyEvent const* _e)
 		return Super::keyPressed(_e);
 	return true;
 }
-
+/*
 void Callable::importDom(QDomElement const& _element)
 {
 	Super::importDom(_element);
@@ -160,5 +162,5 @@ void Callable::exportDom(QDomElement& _element) const
 	Super::exportDom(_element);
 	_element.setAttribute("qualifiers", m_qualifiers);
 }
-
+*/
 }

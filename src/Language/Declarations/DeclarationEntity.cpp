@@ -24,6 +24,7 @@
 #include "Common.h"
 #include "RootEntity.h"
 #include "TextLabel.h"
+#include "OperatorLabel.h"
 #include "ValueDefiner.h"
 #include "DeclarationEntity.h"
 
@@ -50,16 +51,19 @@ QList<ValueDefiner*> DeclarationEntity::valuesKnown() const
 
 QString DeclarationEntity::name() const
 {
-	if (!entitiesOf<TextLabel>().size())
-		return QString();
-	return entitiesOf<TextLabel>()[0]->name();
+	if (entitiesOf<TextLabel>().size())
+		return entitiesOf<TextLabel>()[0]->name();
+	return QString();
 }
 
 QString DeclarationEntity::codeName() const
 {
-	if (!entitiesOf<TextLabel>().size())
+	if (entitiesOf<TextLabel>().size())
+		return entitiesOf<TextLabel>()[0]->asKind<Label>()->code();
+	else if (entitiesOf<OperatorLabel>().size())
+		return entitiesOf<OperatorLabel>()[0]->asKind<Label>()->code();
+	else
 		return QString();
-	return entitiesOf<TextLabel>()[0]->asKind<Label>()->code();
 }
 
 Kinds DeclarationEntity::allowedKinds(int _i) const

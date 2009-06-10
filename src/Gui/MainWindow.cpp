@@ -163,7 +163,7 @@ void MainWindow::entityFocused(Entity* _e)
 		{
 			QTreeWidgetItem* m = new QTreeWidgetItem(typesVisible, QStringList() << QString("Members"));
 			QTreeWidgetItem* h = new QTreeWidgetItem(m, QStringList() << QString("Hidden"));
-			foreach (ValueDefiner* v, castEntities<ValueDefiner>(_e->ancestor<Class>()->membersOf<MemberVariable>(_e->hasAncestor<MemberCallable>() ? _e->ancestor<MemberCallable>()->isConst() : false)) + castEntities<ValueDefiner>(_e->ancestor<Class>()->membersOf<MemberCallable>(_e->hasAncestor<MemberCallable>() ? _e->ancestor<MemberCallable>()->isConst() : false)))
+			foreach (ValueDefiner* v, castEntities<ValueDefiner>(_e->ancestor<Class>()->membersOf<MemberVariable>(_e->hasAncestor<MemberLambda>() ? _e->ancestor<MemberLambda>()->isConst() : false)) + castEntities<ValueDefiner>(_e->ancestor<Class>()->membersOf<MemberLambda>(_e->hasAncestor<MemberLambda>() ? _e->ancestor<MemberLambda>()->isConst() : false)))
 				new QTreeWidgetItem(v->isKind<Artificial>() ? h : m, QStringList() << QString(v->name()) << QString(v->type()->code()));
 		}
 		QTreeWidgetItem* g = new QTreeWidgetItem(typesVisible, QStringList() << QString("General"));
@@ -188,6 +188,7 @@ void MainWindow::entityFocused(Entity* _e)
 			foreach (DeclarationEntity* u, d->utilisedSiblings())
 				new QTreeWidgetItem(us, QStringList() << QString(u->name()) << QString(u->kind().name()));
 		}
+		new QTreeWidgetItem(entityInfo, QStringList() << QString("Layout") << QString(_e->defineLayout(m_codeScene->viewKeys(_e))));
 		entityInfo->expandAll();
 		entityInfo->verticalScrollBar()->setValue(vvalue);
 	}

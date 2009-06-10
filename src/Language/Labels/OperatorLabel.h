@@ -28,9 +28,9 @@ class QDomElement;
 namespace Martta
 {
 
-class OperatorLabel: public Label
+class OperatorLabel: public IdLabel
 {
-	MARTTA_OBJECT(Label)
+	MARTTA_OBJECT(IdLabel)
 	
 public:
 	OperatorLabel() {}

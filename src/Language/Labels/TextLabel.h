@@ -25,15 +25,16 @@
 namespace Martta
 {
 	
-class TextLabel: public Label
+class TextLabel: public IdLabel
 {
-	MARTTA_OBJECT(Label)
+	MARTTA_OBJECT(IdLabel)
 	
 public:
 	TextLabel(QString const& _t = QString()): m_text(_t) {}
 	
 	QString								name() const;
 	QString								text() const { return m_text; }
+	virtual QString						code() const;
 	void								setText(QString const& _t) { m_text = _t; changed(); }
 	
 protected:
@@ -42,7 +43,6 @@ protected:
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 	virtual QString						defineLayout(ViewKeys&) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
-	virtual QString						code() const;
 	virtual void						decorate(DecorationContext const& _c) const;
 	
 private:

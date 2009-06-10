@@ -49,9 +49,9 @@ QString Member::interfaceCode() const
 	return entityAs<Label>(0)->code() + ": " + memberInterfaceCode();
 }
 
-QString Member::defineLayout(ViewKeys&/* _k*/) const
+QString Member::defineLayout(ViewKeys& _k) const
 {
-	return "^;m24,0,0,0;1";
+	return "^;m24,0,0,0;" + memberDefineLayout(_k);
 }
 
 void Member::decorate(DecorationContext const& _p) const

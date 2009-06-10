@@ -387,7 +387,7 @@ int test()
 		M->prepareChildren();
 		X->back().place(M);
 		M->entitiesOf<TextLabel>()[0]->setText("foo");
-		M->middle(2)->replace(new SimpleType(Void));
+		M->entitiesOf<TypeEntity>()[0]->over()->replace(new SimpleType(Void));
 		
 		Variable* v = new Variable;
 		v->back().place(new TextLabel("a"));

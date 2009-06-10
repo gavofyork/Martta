@@ -86,6 +86,7 @@ enum Associativity
 	
 enum Qualifier
 {
+	NoQualifiers = 0,
  	Static = 0x0002,	// Variable/Function
 	Extern = 0x0004,	// Variable/Function
   	Mutable = 0x0010,	// Variable

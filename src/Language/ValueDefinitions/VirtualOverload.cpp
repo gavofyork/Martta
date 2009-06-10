@@ -21,6 +21,7 @@
 #include <QtXml>
 
 #include "Class.h"
+#include "LambdaNamer.h"
 #include "AccessLabel.h"
 #include "CodeScene.h"
 #include "VirtualOverload.h"
@@ -33,7 +34,7 @@ MARTTA_OBJECT_CPP(VirtualOverload);
 	
 QString VirtualOverload::defineMemberLayout(ViewKeys& _viewKeys) const
 {
-	return "^;ycode;'virtual';Mo;>name;'" + (m_base ? m_base->asKind<Callable>()->code(Callable::InsideScope) : QString()) + "';Mo" + QString(_viewKeys["expanded"].toBool() ? body()->entities().size() ? ";n;i;0" : ";0" : "");
+	return "^;ycode;'virtual';Mo;>name;'" + (m_base ? m_base->asKind<LambdaNamer>()->basicCode(LambdaNamer::InsideScope) : QString()) + "';Mo" + QString(_viewKeys["expanded"].toBool() ? body()->entities().size() ? ";n;i;0" : ";0" : "");
 }
 
 Kinds VirtualOverload::allowedKinds(int _i) const

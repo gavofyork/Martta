@@ -23,6 +23,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(Label);	
+MARTTA_PLACEHOLDER_CPP(Label);	
+MARTTA_PLACEHOLDER_CPP(IdLabel);
 
 }
