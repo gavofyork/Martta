@@ -50,6 +50,8 @@ public:
 
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
 	
+	virtual bool						isWellDefined() const { return m_subject.isUsable(); }
+	
 protected:
 	virtual bool						hasDefaultConstructor() const;
 	virtual Types						assignableTypes() const;

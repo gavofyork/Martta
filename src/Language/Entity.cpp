@@ -957,6 +957,11 @@ void Entity::keyPressEventStarter(EntityKeyEvent* _e)
 	}
 }
 
+QString Entity::defineLayout(ViewKeys&) const
+{
+	return "^;ycode;'[]'";
+}
+
 void Entity::keyPressEvent(EntityKeyEvent* _e)
 {
 	if (keyPressed(_e) || attemptInsert(_e))

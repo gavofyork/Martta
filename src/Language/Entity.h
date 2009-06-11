@@ -527,7 +527,7 @@ public:
 	/// Calls onDependencyRemoved() on each of the registered dependents.
 	void								clearDependents();
 	
-	virtual QString						defineLayout(ViewKeys&) const { return "^;'[]'"; }
+	virtual QString						defineLayout(ViewKeys&) const;
 	
 protected:
 	virtual ~Entity();

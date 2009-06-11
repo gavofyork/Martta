@@ -26,9 +26,14 @@ namespace Martta
 	
 MARTTA_OBJECT_CPP(VirtualMethod);
 
-QString VirtualMethod::interfaceCode() const
+QString VirtualMethod::memberInterfaceCode() const
 {
-	return entitiesOf<AccessLabel>()[0]->asKind<Label>()->code() + ": " + "virtual " + basicCode(LambdaNamer::InsideScope) + ";\n";
+	return "virtual " + basicCode(LambdaNamer::InsideScope) + ";\n";
+}
+
+QString VirtualMethod::memberLambdaDefineLayout(ViewKeys& _viewKeys) const
+{
+	return "yminor;'VIRTUAL';Mo;" + Super::memberLambdaDefineLayout(_viewKeys);
 }
 	
 // TODO: if deleted, it should notify the VirtualOverload objects dependent on it and fix if necessary.

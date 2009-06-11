@@ -18,9 +18,10 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "AccessLabel.h"
 #include "TextLabel.h"
+#include "TypeEntity.h"
 #include "ConstLabel.h"
+#include "Variable.h"
 #include "VirtualPure.h"
 
 namespace Martta
@@ -28,28 +29,31 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(VirtualPure);
 
-QString VirtualPure::interfaceCode() const
-{
-	return entitiesOf<AccessLabel>()[0]->asKind<Label>()->code() + ": virtual " + basicCode(LambdaNamer::InsideScope) + " = 0;\n";
-}
-
 bool VirtualPure::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
 {
 	return simpleInsertionPointKeyPressHandler<VirtualPure>(_p, _e, "0");
 }
 	
-Kinds VirtualPure::allowedKinds(int _i) const
+Kinds VirtualPure::memberAllowedKinds(int _i) const
 {
 	if (_i == 0)
 		return Kind::of<TextLabel>();
 	else if (_i == 1)
 		return Kind::of<TypeEntity>();
 	else if (_i == 2)
-		return Kind::of<AccessLabel>();
-	else if (_i == 3)
 		return Kind::of<ConstLabel>();
 	else
 		return Kind::of<Variable>();
 }
-	
+
+QString VirtualPure::memberInterfaceCode() const
+{
+	return "virtual " + basicCode(LambdaNamer::InsideScope) + " = 0;\n";
+}
+
+QString VirtualPure::memberLambdaDefineLayout(ViewKeys&) const
+{
+	return ("yminor;'VIRTUAL';Mo;%1;Mo;>name;%2;ycode;'(';" + times(fromLocal(3), entityCount(), ";',';") + ";')';Mo;'= 0'").arg(fromLocal(1)).arg(fromLocal(0));
+}
+
 }

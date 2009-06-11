@@ -183,10 +183,10 @@ void MainWindow::entityFocused(Entity* _e)
 			new QTreeWidgetItem(decl, QStringList() << QString(d->name()) << QString(d->kind().name()));
 			QTreeWidgetItem* ul = new QTreeWidgetItem(decl, QStringList() << QString("Utilised"));
 			foreach (DeclarationEntity* u, d->utilised())
-				new QTreeWidgetItem(ul, QStringList() << QString(u->name()) << QString(u->kind().name()));
+				new QTreeWidgetItem(ul, QStringList() << QString(u ? u->name() : "NULL?") << QString(u ? u->kind().name() : "NULL?"));
 			QTreeWidgetItem* us = new QTreeWidgetItem(decl, QStringList() << QString("Utilised Siblings"));
 			foreach (DeclarationEntity* u, d->utilisedSiblings())
-				new QTreeWidgetItem(us, QStringList() << QString(u->name()) << QString(u->kind().name()));
+				new QTreeWidgetItem(us, QStringList() << QString(u ? u->name() : "NULL?") << QString(u ? u->kind().name() : "NULL?"));
 		}
 		new QTreeWidgetItem(entityInfo, QStringList() << QString("Layout") << QString(_e->defineLayout(m_codeScene->viewKeys(_e))));
 		entityInfo->expandAll();

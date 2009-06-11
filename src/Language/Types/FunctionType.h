@@ -43,6 +43,7 @@ public:
 	Type								argumentType(int _i) const { return !m_wild && entityIs<TypeEntity>(_i + 1) ? *entityAs<TypeEntity>(_i + 1) : Type(); }
 	int									minimumArgCount() const { return m_wild ? 0 : (entities().size() - 1); }
 	bool								hasArgumentAt(int _i) const { return m_wild || m_ellipsis || _i < entities().size() - 1; }
+	virtual bool						isWellDefined() const { for (int i = 0; i < minimumArgCount(); ++i) if (!argumentType(i)->isWellDefined()) return false; return returnType()->isWellDefined(); }
 
 	void								setEllipsis(bool _on = true) { m_ellipsis = _on; }
 

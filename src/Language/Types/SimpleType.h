@@ -76,6 +76,7 @@ public:
 	virtual QString						defineEditLayout(ViewKeys&, int) const;
 	int									get() const { return m_id; }
 	void								set(int _m) { setId(_m); }
+	virtual bool						isWellDefined() const { return true; }
 	
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
 

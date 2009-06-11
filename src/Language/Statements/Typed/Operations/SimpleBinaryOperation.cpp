@@ -130,6 +130,7 @@ Types SimpleBinaryOperation::allowedTypes(int _index) const
 {
 	if (m_symbolCache.isUsable() && (_index == 0 || _index == 1))
 	{
+		qDebug() << prototypeOf(0)->code() << prototypeOf(1)->code() << " " << _index << " " << typeOf(0)->code();
 		if (_index == 1 && prototypeOf(1).isUltimatelyNull() && !typeOf(0).isNull())
 			return typeOf(0).strippedTo(prototypeOf(0));
 		if (_index == 1 && prototypeOf(1).isUltimatelyNull())

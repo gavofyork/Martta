@@ -38,6 +38,8 @@ public:
 	virtual bool						isConst() const;
 	
 protected:
+	virtual QString						memberLambdaDefineLayout(ViewKeys& _v) const { return LambdaNamer::defineLayout(_v); }
+
 	virtual Type						type() const;
 	
 	virtual QString						memberImplementationCode() const { return LambdaNamer::implementationCode(); }
@@ -50,6 +52,7 @@ protected:
 	
 	virtual QString						basicCode(FunctionCodeScope _ref) const;
 
+	virtual bool						isInValidState() const { return type().isWellDefined(); }
 	virtual Entity*						isExpander() const;
 	virtual QString						memberDefineLayout(ViewKeys& _v) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);

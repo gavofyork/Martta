@@ -36,6 +36,7 @@ public:
 
 	/// After calling substitute, this object may no longer exist.
 	void								substitute();
+	virtual bool						isWellDefined() const { return true; }
 	
 protected:
 	virtual TypeEntity*					newClone() const { return new MemberTemplateType(m_index); }

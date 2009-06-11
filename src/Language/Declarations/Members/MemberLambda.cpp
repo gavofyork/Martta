@@ -86,7 +86,7 @@ QList<DeclarationEntity*> MemberLambda::utilised() const
 
 QString MemberLambda::memberDefineLayout(ViewKeys& _v) const
 {
-	return (isConst() ? "M-17;fs11;fb;ewhite;c#5f6f7f;'C';M9;fb0;e#0000;c#0000;fs;" : "") + LambdaNamer::defineLayout(_v);
+	return (isConst() ? "M-17;fs11;fb;ewhite;c#5f6f7f;'C';M9;fb0;e#0000;c#0000;fs;" : "") + memberLambdaDefineLayout(_v);
 }
 
 bool MemberLambda::keyPressed(EntityKeyEvent const* _e)

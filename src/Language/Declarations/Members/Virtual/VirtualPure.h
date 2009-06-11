@@ -34,13 +34,12 @@ public:
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
 	
 protected:
-	virtual QString						interfaceCode() const;
-	virtual QString						implementationCode() const { return ""; }
-	virtual int							firstArgumentIndex() const { return 4; }
-	virtual Kinds						allowedKinds(int _i) const;
-	virtual inline Type					returns() const { return *entityAs<TypeEntity>(1); }
-	virtual Compound*					body() const { return 0; }
-	virtual QString						defineMemberLayout(ViewKeys&) const { return "^;ycode;'virtual';Mi;1;Mo;>name;0;'(';" + times(4, entityCount(), ";',';") + ";')';Mo;3;Mo;'= 0;'"; }
+	virtual int							memberMinimumRequired() const { return 3; }
+	virtual Kinds						memberAllowedKinds(int _i) const;
+	virtual QString						memberInterfaceCode() const;
+	virtual QString						memberImplementationCode() const { return QString::null; }
+	virtual QString						memberLambdaDefineLayout(ViewKeys& _v) const;
+	virtual Entity*						isExpander() const { return 0; }
 };
 
 }

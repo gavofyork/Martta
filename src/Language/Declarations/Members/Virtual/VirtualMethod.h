@@ -20,21 +20,21 @@
 
 #pragma once
 
-#include "MemberCallable.h"
+#include "Method.h"
 
 namespace Martta
 {
 	
-class VirtualMethod: public MemberCallable
+class VirtualMethod: public Method
 {
-	MARTTA_OBJECT(MemberCallable)
+	MARTTA_OBJECT(Method)
 	
 public:
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e) { return simpleInsertionPointKeyPressHandler<VirtualMethod>(_p, _e, "V"); }
 	
 protected:
-	virtual QString						interfaceCode() const;
-	virtual QString						defineMemberLayout(ViewKeys& _viewKeys) const { return "ycode;'virtual';Mo;" + Super::defineMemberLayout(_viewKeys); }
+	virtual QString						memberInterfaceCode() const;
+	virtual QString						memberLambdaDefineLayout(ViewKeys& _viewKeys) const;
 };
 
 }

@@ -62,14 +62,16 @@ QString Member::defineLayout(ViewKeys& _k) const
 
 void Member::decorate(DecorationContext const& _p) const
 {
-	if (!isComplete())
-		return;
-	_p->setPen(Qt::NoPen);
-	QColor c = entityAs<AccessLabel>(0)->idColour();
-	c.setAlpha(64);
-	_p->setBrush(c);
-	_p->drawRect(QRectF(16.f, 0.f, 4.f, _p.cap(0).height()));
-	memberDecorate(_p);
+	if (isComplete())
+	{
+		_p->setPen(Qt::NoPen);
+		QColor c = entityAs<AccessLabel>(0)->idColour();
+		c.setAlpha(64);
+		_p->setBrush(c);
+		_p->drawRect(QRectF(16.f, 0.f, 4.f, _p.cap(0).height()));
+		memberDecorate(_p);
+	}
+	Super::decorate(_p);
 }
 
 bool Member::keyPressed(EntityKeyEvent const* _e)

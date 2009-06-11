@@ -39,6 +39,7 @@ public:
 	/// Deletes this object and puts its child in its place.
 	void								unknit();
 	virtual bool						isUltimatelyNull() const { return !child() || child()->isUltimatelyNull(); }
+	virtual bool						isWellDefined() const { return child() && child()->isWellDefined(); }
 	
 protected:
 	virtual int							minimumRequired() const { return 1; }

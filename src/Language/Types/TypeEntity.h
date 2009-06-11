@@ -50,6 +50,7 @@ public:
 	
 	bool								isNull() const { return isPlaceholder(); }
 	virtual bool						isUltimatelyNull() const { return isNull(); }
+	virtual bool						isWellDefined() const { return false; }
 	
 	typedef int Castability;
 	enum { Unrelated = 0, Physical = 1, Convertible = 2, FairlyConvertible = 6, BasicallyConvertible = 14, VeryConvertible = 30, ConstPerfectConvertible = 62, MostConvertible = 62, Logical = Physical | Convertible };

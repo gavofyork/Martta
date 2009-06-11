@@ -39,22 +39,23 @@ public:
 	QList<VirtualMethod*>				possibilities() const;
 	
 protected:
-	virtual Compound*					body() const { return entityAs<Compound>(0); }
+	virtual int							memberMinimumRequired() const { return 1; }
+	virtual Kinds						memberAllowedKinds(int _i) const;
+	virtual QString						memberLambdaDefineLayout(ViewKeys&) const;
 	virtual QString						name() const { return m_base ? m_base->name() : QString(); }
 	virtual QString						codeName() const { return m_base ? m_base->codeName() : QString(); }
+	virtual bool						isInValidState() const { return m_base.isUsable(); }
+	virtual bool						keyPressed(EntityKeyEvent const* _e);
+	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
+	
+	virtual void						apresLoad() { addDependency(m_base); Super::apresLoad(); }
+	virtual void						exportDom(QDomElement& _element) const;
+	virtual void						importDom(QDomElement const& _element);
+
 	virtual inline int					argumentCount() const { return m_base ? m_base->argumentCount() : 0; }
 	virtual inline Variable*			argument(int _index) const { M_ASSERT(_index < argumentCount()); return m_base ? m_base->argument(_index) : 0; }
 	virtual inline Type					returns() const { return m_base ? m_base->returns() : Type(); }
 	virtual inline bool					isConst() const { return m_base ? m_base->isConst() : false; }
-	virtual int							firstArgumentIndex() const { return 2; }
-	virtual Kinds						allowedKinds(int _i) const;
-	virtual void						exportDom(QDomElement& _element) const;
-	virtual void						importDom(QDomElement const& _element);
-	virtual QString						defineMemberLayout(ViewKeys&) const;
-	virtual bool						keyPressed(EntityKeyEvent const* _e);
-	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
-	virtual QString						implementationCode() const;
-	virtual void						apresLoad() { addDependency(m_base); Super::apresLoad(); }
 	
 private:
 	ModelPtr<VirtualMethod>				m_base;

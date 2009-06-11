@@ -42,21 +42,24 @@ QString LambdaNamer::defineLayout(ViewKeys& _viewKeys, QString _middle) const
 	int sArgCount = self()->entityCountOf<Variable>();
 
 	// TODO handle ellipsis here so we can put one in/take one out
-	QString ret = QString::number(sReturn) + ";Mi;>name;ynormal;s" + FunctionType().idColour() + ";!" + QString::number(sName) + ";ycode;'(';" + times(sFirstArg, sFirstArg + sArgCount, ";', ';") + ";')';" + _middle;
-	if (_viewKeys["expanded"].toBool())
-		ret += (body()->entities().size() ? ";n;i;" : ";") + QString::number(sBody);
+	QString ret = QString::number(sReturn) + ";Mo;>name;ynormal;s" + FunctionType().idColour() + ";!" + QString::number(sName) + ";ycode;'(';" + times(sFirstArg, sFirstArg + sArgCount, ";', ';") + ";')';" + _middle;
+	if (body() && sBody > -1)
+		if (_viewKeys["expanded"].toBool())
+			ret += (body()->entities().size() ? ";n;i;" : ";") + QString::number(sBody);
+		else
+		{
+			ret += ";yminor;' (";
+			if (int n = body()->entitiesOf<Primary>().count() + body()->entitiesOf<Untyped>().count())
+				ret += QString::number(n) + " statement" + (n > 1 ? "s, " : ", ");
+			if (ret.endsWith(", "))
+				ret.chop(2);
+			ret += ")";
+			if (ret.endsWith(" ()"))
+				ret.replace(" ()", " (empty)");
+			ret += "'";
+		}
 	else
-	{
-		ret += ";yminor;' (";
-		if (int n = body()->entitiesOf<Primary>().count() + body()->entitiesOf<Untyped>().count())
-			ret += QString::number(n) + " statement" + (n > 1 ? "s, " : ", ");
-		if (ret.endsWith(", "))
-			ret.chop(2);
-		ret += ")";
-		if (ret.endsWith(" ()"))
-			ret.replace(" ()", " (empty)");
-		ret += "'";
-	}
+		ret += ";' = 0'";
 	return ret;
 }
 
