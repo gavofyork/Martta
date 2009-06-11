@@ -18,21 +18,20 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#pragma once
-
-#include "Entity.h"
+#include "Const.h"
+#include "Reference.h"
+#include "Class.h"
+#include "ArtificialCopyConstructor.h"
 
 namespace Martta
 {
 
-class Label: public Entity
+MARTTA_OBJECT_CPP(ArtificialCopyConstructor);	
+
+Type ArtificialCopyConstructor::argumentType(int) const
 {
-	MARTTA_PLACEHOLDER(Entity)
-	
-public:
-	inline virtual QString				code() const { return QString(); }
-	virtual int							familyDependencies() const { return DependsOnNothing; }
-};
+	return Type(classType()).topWith(Const()).topWith(Reference());
+}
 
 }
 

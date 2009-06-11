@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include "Label.h"
+#include "IdLabel.h"
 
 namespace Martta
 {

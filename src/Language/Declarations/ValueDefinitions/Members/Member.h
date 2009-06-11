@@ -30,11 +30,9 @@ namespace Martta
  */
 class Member: public DeclarationEntity
 {
-	MARTTA_PLACEHOLDER(DeclarationEntity)
+	MARTTA_PLACEHOLDER_WITH_OFFSET(DeclarationEntity, 1)
 	
 public:
-	static const int OffsetForDerivatives = 1;
-
 	virtual Access						access() const;
 	
 protected:

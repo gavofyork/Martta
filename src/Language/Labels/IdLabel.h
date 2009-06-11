@@ -20,30 +20,15 @@
 
 #pragma once
 
-#include "Artificial.h"
-#include "Constructor.h"
+#include "Label.h"
 
 namespace Martta
 {
 
-class ImplicitCopyConstructor: public Constructor, public_interface Artificial
+class IdLabel: public Label
 {
-	MARTTA_OBJECT(Constructor)
-	MARTTA_INHERITS(Artificial, 0)
-	
-protected:
-//	virtual bool						activated(CodeScene* _s);
-	virtual QString						defineLayout(ViewKeys&) const { return QString(); }
-	virtual Access						access() const { return Public; }
-	virtual int							firstArgumentIndex() const { return 0; }
-	virtual Kinds						allowedKinds(int) const { return Kinds(); }
-	virtual QString						interfaceCode() const { return ""; }
-	virtual QString						implementationCode() const { return ""; }
-	virtual Compound*					body() const { return 0; }
-	virtual int							argumentCount() const { return 1; }
-	virtual Type						argumentType(int) const;
-	virtual QString						argumentCodeName(int) const { return "source"; }
-	virtual QString						argumentName(int) const { return "source"; }
+	MARTTA_PLACEHOLDER(Label)
 };
 
 }
+

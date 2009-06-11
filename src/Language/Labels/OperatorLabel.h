@@ -21,7 +21,7 @@
 #pragma once
 
 #include "Operator.h"
-#include "Label.h"
+#include "IdLabel.h"
 
 class QDomElement;
 

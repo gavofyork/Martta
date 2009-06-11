@@ -68,8 +68,9 @@ template<class T, class F> T tryCast(F _f) { return tryCastPrivate::XL<T, F, try
 	template<class T> inline bool		isKind() const { return this && self() ? self()->isKind<T>() : false; } \
 	MARTTA_BASIC
 
-#define MARTTA_COMMON(S) \
+#define MARTTA_COMMON(S, o) \
 	public: \
+	static const int					OffsetForDerivatives = o; \
 	virtual Entity const*				self() const { return this; } \
 	virtual Entity*						self() { return this; } \
 	typedef S Super; \
@@ -87,21 +88,24 @@ template<class T, class F> T tryCast(F _f) { return tryCastPrivate::XL<T, F, try
 	static inline int					toLocal(int _i) { return MyOffset - _i; } \
 	MARTTA_BASIC
 
-#define MARTTA_OBJECT(S) \
-	MARTTA_COMMON(S) \
+#define MARTTA_OBJECT_WITH_OFFSET(S, o) \
+	MARTTA_COMMON(S, o) \
 	public: \
 	static const bool IsInterface = false; \
 	static const bool IsObject = true; \
 	static const bool IsPlaceholder = false; \
 	inline virtual bool					isPlaceholder() const { return false; }
 
-#define MARTTA_PLACEHOLDER(S) \
-	MARTTA_COMMON(S) \
+#define MARTTA_PLACEHOLDER_WITH_OFFSET(S, o) \
+	MARTTA_COMMON(S, o) \
 	public: \
 	static const bool IsInterface = false; \
 	static const bool IsObject = false; \
 	static const bool IsPlaceholder = true; \
 	inline virtual bool					isPlaceholder() const { return true; }
+
+#define MARTTA_OBJECT(S) MARTTA_OBJECT_WITH_OFFSET(S, 0)
+#define MARTTA_PLACEHOLDER(S) MARTTA_PLACEHOLDER_WITH_OFFSET(S, 0)
 
 #define MARTTA_CPP_BASIC(E) \
 	static AuxilliaryFace const* s_auxilliary_##E = 0; \

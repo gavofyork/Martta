@@ -20,19 +20,31 @@
 
 #pragma once
 
-#include "Entity.h"
+#include "Artificial.h"
+#include "Constructor.h"
 
 namespace Martta
 {
 
-class Label: public Entity
+class ArtificialCopyConstructor: public Constructor, public_interface Artificial
 {
-	MARTTA_PLACEHOLDER(Entity)
+	MARTTA_OBJECT(Constructor)
+	MARTTA_INHERITS(Artificial, 0)
 	
-public:
-	inline virtual QString				code() const { return QString(); }
-	virtual int							familyDependencies() const { return DependsOnNothing; }
+protected:
+	virtual int							minimumRequired() const { return 0; }
+	virtual Kinds						allowedKinds(int) const { return Kinds(); }
+	virtual QString						defineLayout(ViewKeys&) const { return QString(); }
+	virtual QString						interfaceCode() const { return ""; }
+	virtual QString						implementationCode() const { return ""; }
+	
+	virtual Access						access() const { return Public; }
+
+	virtual Compound*					body() const { return 0; }
+	virtual int							argumentCount() const { return 1; }
+	virtual Type						argumentType(int) const;
+	virtual QString						argumentCodeName(int) const { return "source"; }
+	virtual QString						argumentName(int) const { return "source"; }
 };
 
 }
-

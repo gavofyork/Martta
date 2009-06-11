@@ -18,23 +18,12 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "CodeScene.h"
-#include "DefaultConstructor.h"
+#include "ArtificialDefaultConstructor.h"
 
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(DefaultConstructor);	
-
-/*bool DefaultConstructor::activated(CodeScene* _s)
-{
-	Callable* c = new Constructor;
-	c->prepareChildren();
-	replace(c);
-	_s->setViewKey(c, "expanded", true);
-	_s->setCurrent(c->body()->entity(0));
-	return true;
-}*/
+MARTTA_OBJECT_CPP(ArtificialDefaultConstructor);
 
 }
 

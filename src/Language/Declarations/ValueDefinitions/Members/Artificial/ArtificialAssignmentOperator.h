@@ -33,6 +33,7 @@ class ArtificialAssignmentOperator: public MethodOperator, public_interface Arti
 	
 protected:
 	virtual Operator					id() const { return Operator::Equals; }
+	virtual QString						name() const { return "operator="; }
 	virtual QString						codeName() const { return "operator="; }
 //	virtual bool						activated(CodeScene* _s);
 	virtual QString						defineLayout(ViewKeys&) const { return QString(); }

@@ -44,13 +44,7 @@ bool Constructor::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKey
 
 QString Constructor::memberDefineLayout(ViewKeys& _viewKeys) const
 {
-	//fromLocal broken.
-	int sFirstArg = self()->entityIndexOf<Variable>();
-	int sArgCount = self()->entityCountOf<Variable>();
-	int sBody = self()->entityIndexOf<Compound>();
-	int j = entityCount();
-	int k = fromLocal(0);
-	return ">name;ycode;'" + name() + "';'(';" + times(sFirstArg, sFirstArg + sArgCount, ";', ';") + ";')'" + (_viewKeys["expanded"].toBool() ? (body()->entities().size() ? ";n;i;" : ";") + QString::number(sBody) : QString(""));
+	return ">name;ycode;'" + name() + "';'(';" + times(fromLocal(1), entityCount(), ";', ';") + ";')'" + (_viewKeys["expanded"].toBool() ? (body()->entities().size() ? ";n;i;" : ";") + QString::number(fromLocal(0)) : QString(""));
 }
 
 QString Constructor::name() const

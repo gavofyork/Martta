@@ -19,7 +19,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "EntityKeyEvent.h"
-#include "Label.h"
+#include "IdLabel.h"
 #include "Primary.h"
 #include "FunctionType.h"
 #include "Reference.h"

@@ -18,29 +18,11 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#pragma once
-
-#include "Artificial.h"
-#include "Constructor.h"
+#include "IdLabel.h"
 
 namespace Martta
 {
 
-class DefaultConstructor: public Constructor, public_interface Artificial
-{
-	MARTTA_OBJECT(Constructor)
-	MARTTA_INHERITS(Artificial, 0)
-	
-protected:
-//	virtual bool						activated(CodeScene* _s);
-	virtual QString						defineLayout(ViewKeys&) const { return QString(); }
-	virtual Access						access() const { return Public; }
-	virtual int							firstArgumentIndex() const { return 0; }
-	virtual Kinds						allowedKinds(int) const { return Kinds(); }
-	virtual QString						interfaceCode() const { return ""; }
-	virtual QString						implementationCode() const { return ""; }
-	virtual Compound*					body() const { return 0; }
-	virtual int							argumentCount() const { return 0; }
-};
+MARTTA_PLACEHOLDER_CPP(IdLabel);
 
 }

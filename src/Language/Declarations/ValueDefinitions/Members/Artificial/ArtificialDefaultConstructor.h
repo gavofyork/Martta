@@ -18,37 +18,29 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "CodeScene.h"
-#include "Const.h"
-#include "Reference.h"
-#include "TextLabel.h"
-#include "Variable.h"
-#include "Class.h"
-#include "ImplicitCopyConstructor.h"
+#pragma once
+
+#include "Artificial.h"
+#include "Constructor.h"
 
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(ImplicitCopyConstructor);	
-
-Type ImplicitCopyConstructor::argumentType(int) const
+class ArtificialDefaultConstructor: public Constructor, public_interface Artificial
 {
-	return Type(classType()).topWith(Const()).topWith(Reference());
-}
-
-/*bool ImplicitCopyConstructor::activated(CodeScene* _s)
-{
-	Callable* c = new Constructor;
-	c->prepareChildren();
-	Variable* v = new Variable;
-	v->back().insertSilent(new TextLabel("source"));
-	argumentType(0).insertSilentCopy(v->back());
-	c->back().insertSilent(v);
-	replace(c);
-	_s->setViewKey(c, "expanded", true);
-	_s->setCurrent(c->body()->entity(0));
-	return true;
-}*/
+	MARTTA_OBJECT(Constructor)
+	MARTTA_INHERITS(Artificial, 0)
+	
+protected:
+	virtual int							minimumRequired() const { return 0; }
+	virtual Kinds						allowedKinds(int) const { return Kinds(); }
+	virtual QString						interfaceCode() const { return ""; }
+	virtual QString						implementationCode() const { return ""; }
+	virtual QString						defineLayout(ViewKeys&) const { return QString(); }
+	
+	virtual Access						access() const { return Public; }
+	virtual Compound*					body() const { return 0; }
+	virtual int							argumentCount() const { return 0; }
+};
 
 }
-

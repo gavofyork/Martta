@@ -20,8 +20,8 @@
 
 #include "MemberEnumeration.h"
 #include "Constructor.h"
-#include "DefaultConstructor.h"
-#include "ImplicitCopyConstructor.h"
+#include "ArtificialDefaultConstructor.h"
+#include "ArtificialCopyConstructor.h"
 #include "Destructor.h"
 #include "Method.h"
 #include "ExplicitType.h"
@@ -85,16 +85,16 @@ bool Class::checkImplicitConstructors()
 	bool ret = false;
 	
 	// Check default constructors.
-	int nonImplicits = membersOf<Constructor>().size() - membersOf<ImplicitCopyConstructor>().size() - membersOf<DefaultConstructor>().size();
-	if (!nonImplicits && !membersOf<DefaultConstructor>().size())
+	int nonImplicits = membersOf<Constructor>().size() - membersOf<ArtificialCopyConstructor>().size() - membersOf<ArtificialDefaultConstructor>().size();
+	if (!nonImplicits && !membersOf<ArtificialDefaultConstructor>().size())
 	{
-		// Don't have one anymore; create a DefaultConstructor, then return true to allow any dependents to rejig themselves.
-		back().insertSilent(new DefaultConstructor);
+		// Don't have one anymore; create a ArtificialDefaultConstructor, then return true to allow any dependents to rejig themselves.
+		back().insertSilent(new ArtificialDefaultConstructor);
 		ret = true;
 	}
-	else if (nonImplicits && membersOf<DefaultConstructor>().size())
+	else if (nonImplicits && membersOf<ArtificialDefaultConstructor>().size())
 	{
-		membersOf<DefaultConstructor>()[0]->killAndDelete();
+		membersOf<ArtificialDefaultConstructor>()[0]->killAndDelete();
 		ret = true;
 	}
 
@@ -105,13 +105,13 @@ bool Class::checkImplicitConstructors()
 			copyConstructors++;
 	if (!copyConstructors)
 	{
-		// Don't have one anymore; create a ImplicitCopyConstructor, then return true to allow any dependents to rejig themselves.
-		back().insertSilent(new ImplicitCopyConstructor);
+		// Don't have one anymore; create a ArtificialCopyConstructor, then return true to allow any dependents to rejig themselves.
+		back().insertSilent(new ArtificialCopyConstructor);
 		ret = true;
 	}
-	else if (copyConstructors > 1 && membersOf<ImplicitCopyConstructor>().size())
+	else if (copyConstructors > 1 && membersOf<ArtificialCopyConstructor>().size())
 	{
-		membersOf<ImplicitCopyConstructor>()[0]->killAndDelete();
+		membersOf<ArtificialCopyConstructor>()[0]->killAndDelete();
 		ret = true;
 	}
 	
@@ -138,7 +138,7 @@ void Class::onDependencyAdded(Entity* _e)
 {
 	if (entities().contains(_e))
 		rejigDeps(); 
-	if (_e->isKind<ConversionOperator>() || (_e->isKind<MethodOperator>() && !_e->isKind<ArtificialAssignmentOperator>()) || (_e->isKind<Constructor>() && !_e->isKind<DefaultConstructor>() && !_e->isKind<ImplicitCopyConstructor>()))
+	if (_e->isKind<ConversionOperator>() || (_e->isKind<MethodOperator>() && !_e->isKind<ArtificialAssignmentOperator>()) || (_e->isKind<Constructor>() && !_e->isKind<ArtificialDefaultConstructor>() && !_e->isKind<ArtificialCopyConstructor>()))
 		changed();
 }
 
@@ -146,13 +146,13 @@ void Class::onDependencyRemoved(Entity* _e)
 {
 	if (entities().contains(_e))
 		rejigDeps(); 
-	if (_e->isKind<ConversionOperator>() || (_e->isKind<MethodOperator>() && !_e->isKind<ArtificialAssignmentOperator>()) || (_e->isKind<Constructor>() && !_e->isKind<DefaultConstructor>() && !_e->isKind<ImplicitCopyConstructor>()))
+	if (_e->isKind<ConversionOperator>() || (_e->isKind<MethodOperator>() && !_e->isKind<ArtificialAssignmentOperator>()) || (_e->isKind<Constructor>() && !_e->isKind<ArtificialDefaultConstructor>() && !_e->isKind<ArtificialCopyConstructor>()))
 		changed();
 }
 
 void Class::onDependencyChanged(Entity* _e)
 {
-	if (_e->isKind<ConversionOperator>() || (_e->isKind<MethodOperator>() && !_e->isKind<ArtificialAssignmentOperator>()) || (_e->isKind<Constructor>() && !_e->isKind<DefaultConstructor>() && !_e->isKind<ImplicitCopyConstructor>()))
+	if (_e->isKind<ConversionOperator>() || (_e->isKind<MethodOperator>() && !_e->isKind<ArtificialAssignmentOperator>()) || (_e->isKind<Constructor>() && !_e->isKind<ArtificialDefaultConstructor>() && !_e->isKind<ArtificialCopyConstructor>()))
 		changed();
 	if (_e->isKind<AccessLabel>())
 		relayoutLater();
@@ -309,7 +309,7 @@ QString Class::defineLayout(ViewKeys& _keys) const
 			ret += QString::number(n) + " method" + (n > 1 ? "s, " : ", ");
 		if (int n = entitiesOf<MemberVariable>().size())
 			ret += QString::number(n) + " variable" + (n > 1 ? "s, " : ", ");
-		if (int n = (entitiesOf<Constructor>().size() - entitiesOf<ImplicitCopyConstructor>().size() - entitiesOf<DefaultConstructor>().size()))
+		if (int n = (entitiesOf<Constructor>().size() - entitiesOf<ArtificialCopyConstructor>().size() - entitiesOf<ArtificialDefaultConstructor>().size()))
 			ret += QString::number(n) + " constructor" + (n > 1 ? "s, " : ", ");
 		if (int n = entitiesOf<Destructor>().size())
 			ret += QString::number(n) + " destructor" + (n > 1 ? "s, " : ", ");
