@@ -25,6 +25,8 @@
 namespace Martta
 {
 
+class Class;
+
 /**
  * Class for any entity that can be found inside a class (i.e. with an access attribute).
  */
@@ -34,6 +36,7 @@ class Member: public DeclarationEntity
 	
 public:
 	virtual Access						access() const;
+	Class*								classType() const;
 	
 protected:
 	// New virtuals.

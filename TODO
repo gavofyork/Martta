@@ -1,5 +1,4 @@
-TODO move constructor
-BUG fromLocal
+BUG String s="Boo"; s.replace(
 TODO variable -> basevariable, new variable & membervariable - no need if class stores access.
 OR member enumeration with decoration code moved to class, but not ideal since no clear way of getting enumeration into member enumeration without a basically useless 3rd class to act as sharing base.
 

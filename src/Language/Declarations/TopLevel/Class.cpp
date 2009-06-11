@@ -274,14 +274,14 @@ QString Class::defineLayout(ViewKeys& _keys) const
 				if (f->access() == Access(i))
 					mem += QString(";n;%1").arg(f->contextIndex());
 			recognised << Kind::of<Destructor>();
-			foreach (MemberCallable* f, entitiesOf<Destructor>())
+			foreach (MemberLambda* f, entitiesOf<Destructor>())
 				if (f->access() == Access(i))
 					mem += QString(";n;%1").arg(f->contextIndex());
 			recognised << Kind::of<Method>();
 			foreach (MemberLambda* f, entitiesOf<Method>())
 				if (f->access() == Access(i))
 					mem += QString(";n;%1").arg(f->contextIndex());
-			foreach (MemberCallable* f, entitiesOf<MemberCallable>())
+			foreach (MemberLambda* f, entitiesOf<MemberLambda>())
 				if (f->access() == Access(i) && !f->Entity::isKind(recognised))
 					mem += QString(";n;%1").arg(f->contextIndex());
 			foreach (MemberVariable* f, entitiesOf<MemberVariable>())

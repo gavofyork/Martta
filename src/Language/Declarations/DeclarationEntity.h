@@ -50,7 +50,6 @@ public:
 	virtual QString						codeName() const;
 	virtual QString						reference() const;
 	virtual QString						key() const;
-//	virtual QString						code() const { return QString(); }
 	
 	virtual QString						interfaceCode() const { return QString(); }
 	virtual QString						implementationCode() const { return QString(); }

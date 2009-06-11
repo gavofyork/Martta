@@ -74,11 +74,6 @@ bool Constructor::isInValidState() const
 	return true;
 }
 
-Class* Constructor::classType() const
-{
-	return contextAs<Class>();
-}
-
 Type Constructor::returns() const
 {
 	return Type(classType()).topWith(Reference());

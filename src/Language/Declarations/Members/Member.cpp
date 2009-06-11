@@ -21,6 +21,7 @@
 //#include "Class.h"
 #include "DecorationContext.h"
 #include "CommonGraphics.h"
+#include "Class.h"
 #include "AccessLabel.h"
 #include "Member.h"
 
@@ -32,6 +33,11 @@ MARTTA_OBJECT_CPP(Member);
 Access Member::access() const
 {
 	return isComplete() ? entityAs<AccessLabel>(0)->access() : NoAccess;
+}
+
+Class* Member::classType() const
+{
+	return contextAs<Class>();
 }
 
 Kinds Member::allowedKinds(int _i) const

@@ -32,8 +32,6 @@ class Constructor: public MemberLambda
 	MARTTA_OBJECT(MemberLambda)
 
 public:
-	Class*								classType() const;
-	
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
 
 protected:
