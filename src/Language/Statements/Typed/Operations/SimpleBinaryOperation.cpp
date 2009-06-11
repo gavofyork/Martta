@@ -132,7 +132,7 @@ Types SimpleBinaryOperation::allowedTypes(int _index) const
 	{
 		qDebug() << prototypeOf(0)->code() << prototypeOf(1)->code() << " " << _index << " " << typeOf(0)->code();
 		if (_index == 1 && prototypeOf(1).isUltimatelyNull() && !typeOf(0).isNull())
-			return typeOf(0).strippedTo(prototypeOf(0));
+			return typeOf(0).strippedTo(prototypeOf(1));
 		if (_index == 1 && prototypeOf(1).isUltimatelyNull())
 			return Types();
 		M_ASSERT(!prototypeOf(_index).isNull());

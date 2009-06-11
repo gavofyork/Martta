@@ -29,8 +29,6 @@ class ThisPointer: public Typed
 {
 	MARTTA_OBJECT(Typed)
 
-	friend class Entity;
-
 public:
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
 	

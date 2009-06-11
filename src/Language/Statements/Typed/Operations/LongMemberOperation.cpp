@@ -61,6 +61,18 @@ QString LongMemberOperation::code() const
 
 bool LongMemberOperation::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
 {
+/*	qDebug() << _p.exists();
+	if (_p.exists())
+	{
+		qDebug() << (!_p->isPlaceholder()) << " " << _p->isKind<Typed>();
+		if (_p->isKind<Typed>())
+		{	qDebug() << _p->asKind<Typed>()->type()->code();
+			_p->debugTree();
+			qDebug() << _p->asKind<Typed>()->type()->isType<AddressType>();
+			if (_p->asKind<Typed>()->type()->isType<AddressType>())
+				qDebug() << _p->asKind<Typed>()->type()->asType<AddressType>()->child()->isType<ExplicitType>();
+		}
+	}*/
 	if (_p.exists() && !_p->isPlaceholder() && _p->isKind<Typed>() &&
 		_p->asKind<Typed>()->type()->isType<AddressType>() &&
 		_p->asKind<Typed>()->type()->asType<AddressType>()->child()->isType<ExplicitType>())

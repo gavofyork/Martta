@@ -20,6 +20,8 @@
 
 #include "CommonGraphics.h"
 #include "DecorationContext.h"
+#include "Const.h"
+#include "Pointer.h"
 #include "ConstLabel.h"
 #include "Compound.h"
 #include "Reference.h"
@@ -82,6 +84,14 @@ QList<DeclarationEntity*> MemberLambda::utilised() const
 	QList<DeclarationEntity*> l = Super::utilised();
 	l.removeAll(ancestor<Class>());
 	return l;
+}
+
+Type MemberLambda::thisType() const
+{
+	Type t(classType());
+	if (isConst())
+		t.topWith(Const());
+	return t.topWith(Pointer());
 }
 
 QString MemberLambda::memberDefineLayout(ViewKeys& _v) const

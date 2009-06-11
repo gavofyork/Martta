@@ -36,6 +36,7 @@ class MemberLambda: public Member, public_interface LambdaNamer
 	
 public:
 	virtual bool						isConst() const;
+	Type								thisType() const;
 	
 protected:
 	virtual QString						memberLambdaDefineLayout(ViewKeys& _v) const { return LambdaNamer::defineLayout(_v); }

@@ -18,12 +18,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "Class.h"
-#include "MemberCallable.h"
 #include "Type.h"
-#include "ExplicitType.h"
-#include "Pointer.h"
-#include "Const.h"
+#include "MemberLambda.h"
 #include "ThisPointer.h"
 
 namespace Martta
@@ -33,16 +29,15 @@ MARTTA_OBJECT_CPP(ThisPointer);
 
 bool ThisPointer::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
 {
+	// TODO: only when has ancestor of Member
 	return simplePlaceholderKeyPressHandler<ThisPointer>(_p, _e, "T");
 }
 
 Type ThisPointer::type() const
 {
-	if (!hasAncestor<MemberCallable>()) return Type();
-	Type t = Type(ExplicitType(ancestor<Class>()));
-	if (ancestor<MemberCallable>()->isConst())
-		t.topWith(Const());
-	return t.topWith(Pointer());
+	if (!hasAncestor<MemberLambda>())
+		return Type();
+	return ancestor<MemberLambda>()->thisType();
 }
 
 QString ThisPointer::defineLayout(ViewKeys&) const
