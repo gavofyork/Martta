@@ -42,11 +42,6 @@ bool Constructor::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKey
 	return simpleInsertionPointKeyPressHandler<Constructor>(_p, _e, "C");
 }
 
-QString Constructor::memberDefineLayout(ViewKeys& _viewKeys) const
-{
-	return ">name;ycode;'" + name() + "';'(';" + times(fromLocal(1), entityCount(), ";', ';") + ";')'" + (_viewKeys["expanded"].toBool() ? (body()->entities().size() ? ";n;i;" : ";") + QString::number(fromLocal(0)) : QString(""));
-}
-
 QString Constructor::name() const
 {
 	return classType()->name();

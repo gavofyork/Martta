@@ -39,6 +39,8 @@ public:
 	Type								thisType() const;
 	
 protected:
+	/// Override if you want a completely different layout (rather than the LambdaNamer template).
+	/// Overriding this will still do the const decoration etc. If you don't want that, override Member::memberDefineLayout or Entity::defineLayout.
 	virtual QString						memberLambdaDefineLayout(ViewKeys& _v) const { return LambdaNamer::defineLayout(_v); }
 
 	virtual Type						type() const;

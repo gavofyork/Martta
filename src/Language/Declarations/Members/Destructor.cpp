@@ -59,9 +59,4 @@ QString Destructor::basicCode(FunctionCodeScope _ref) const
 	return Martta::code(qualifiers() & MethodMask) + callingCode(_ref);
 }
 
-QString Destructor::memberDefineLayout(ViewKeys& _viewKeys) const
-{
-	return ">name;ycode;'" + name() + "';'()'" + (_viewKeys["expanded"].toBool() ? (body()->entities().size() ? ";n;i;" : ";") + QString::number(fromLocal(0)) : QString(""));
-}
-
 }

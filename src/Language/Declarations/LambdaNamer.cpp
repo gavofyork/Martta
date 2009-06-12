@@ -41,7 +41,10 @@ QString LambdaNamer::defineReturnLayout(ViewKeys&) const
 QString LambdaNamer::defineNameLayout(ViewKeys&) const
 {
 	int sName = self()->entityIndexOf<IdLabel>();
-	return "ynormal;s" + FunctionType().idColour() + ";!" + QString::number(sName);
+	if (sName > -1)
+		return "ynormal;s" + FunctionType().idColour() + ";!" + QString::number(sName);
+	else
+		return "ycode;'" + name().replace(";", "\\;").replace("'", "\\'") + "'";
 }
 
 QString LambdaNamer::defineArgListLayout(ViewKeys&) const

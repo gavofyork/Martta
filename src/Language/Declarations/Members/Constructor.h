@@ -38,7 +38,7 @@ protected:
 	// From MemberLambda
 	virtual int							memberMinimumRequired() const { return 1; }
 	virtual Kinds						memberAllowedKinds(int _i) const;
-	virtual QString						memberDefineLayout(ViewKeys& _viewKeys) const;
+	virtual QString						defineReturnLayout(ViewKeys&) const { return QString::null; }
 	virtual bool						isConst() const { return false; }
 
 	virtual QString						name() const;

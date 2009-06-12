@@ -34,7 +34,7 @@ public:
 	
 protected:
 	virtual QString						memberInterfaceCode() const;
-	virtual QString						memberLambdaDefineLayout(ViewKeys& _viewKeys) const;
+	virtual QString						definePreLayout(ViewKeys& _k) const { return Super::definePreLayout(_k) + ";yminor;'VIRTUAL';Mo"; }
 };
 
 }

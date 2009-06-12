@@ -51,9 +51,4 @@ QString VirtualPure::memberInterfaceCode() const
 	return "virtual " + basicCode(LambdaNamer::InsideScope) + " = 0;\n";
 }
 
-QString VirtualPure::memberLambdaDefineLayout(ViewKeys&) const
-{
-	return ("yminor;'VIRTUAL';Mo;%1;Mo;>name;%2;ycode;'(';" + times(fromLocal(3), entityCount(), ";',';") + ";')';Mo;'= 0'").arg(fromLocal(1)).arg(fromLocal(0));
-}
-
 }

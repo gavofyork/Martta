@@ -31,11 +31,6 @@ QString VirtualMethod::memberInterfaceCode() const
 	return "virtual " + basicCode(LambdaNamer::InsideScope) + ";\n";
 }
 
-QString VirtualMethod::memberLambdaDefineLayout(ViewKeys& _viewKeys) const
-{
-	return "yminor;'VIRTUAL';Mo;" + Super::memberLambdaDefineLayout(_viewKeys);
-}
-	
 // TODO: if deleted, it should notify the VirtualOverload objects dependent on it and fix if necessary.
 
 }
