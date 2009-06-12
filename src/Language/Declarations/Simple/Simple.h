@@ -20,36 +20,24 @@
 
 #pragma once
 
-#include "TypeEntity.h"
 #include "ValueDefiner.h"
 #include "DeclarationEntity.h"
 
 namespace Martta
 {
 
-class SimpleOperator: public DeclarationEntity, public_interface ValueDefiner
+class Simple: public DeclarationEntity, public_interface ValueDefiner
 {
 	MARTTA_OBJECT(DeclarationEntity)
 	MARTTA_INHERITS(ValueDefiner, 0)
 	
 public:
-	SimpleOperator() {}
-	template<class T> static SimpleOperator* create(Operator _o, Type const& _returns, Types const& _args, RootEntity* _root)
-	{
-		SimpleOperator* s = new SimpleOperator;
-		s->construct(T::s_nonMembers.count(), _o, _returns, _args, _root, T::staticAuxilliary()->name());
-		T::s_nonMembers.append(s);
-		return s;
-	}
-	virtual ~SimpleOperator();
-	virtual Operator					id() const { return m_operator; }
+	virtual ~Simple();
 	virtual Type						type() const { return *entityAs<TypeEntity>(0); }
-	virtual QString						key() const { return "@" + m_key + "@N" + QString::number(m_myId); }
 
-private:
-	void								construct(int _id, Operator _o, Type const& _returns, Types const& _args, RootEntity* _root, char const* _key);
+protected:
+	void								construct(TypeEntity const* _scope, int _id, bool _isConst, Type const& _returns, Types const& _args, RootEntity* _root, char const* _key);
 	
-	Operator							m_operator;
 	QString								m_key;
 	int									m_myId;
 };

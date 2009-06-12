@@ -18,40 +18,16 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "FunctionType.h"
-#include "Memberify.h"
-#include "Type.h"
-#include "Reference.h"
 #include "RootEntity.h"
-#include "Operation.h"
-#include "SimpleOperator.h"
+#include "SimpleMethod.h"
 
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(SimpleOperator);
+MARTTA_OBJECT_CPP(SimpleMethod);
 
-void SimpleOperator::construct(int _id, Operator _o, Type const& _returns, Types const& _args, RootEntity* _root, char const* _key)
+SimpleMethod::~SimpleMethod()
 {
-	m_operator = _o;
-	m_key = _key;
-	m_myId = _id;
-	
-	Type t = FunctionType();
-	t.append(_returns);
-	foreach (Type i, _args)
-		t.append(i);
-	t.topWith(Reference());
-	t.placeCopy(back());
-	
-	Operation::registerOperator(_o, this, _root);
-	m_rootEntity = _root;
-	rootEntity()->registerDeclaration(this);
-}
-
-SimpleOperator::~SimpleOperator()
-{
-	Operation::unregisterOperator(m_operator, this, rootEntity());
 	rootEntity()->unregisterDeclaration(this);
 }
 

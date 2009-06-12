@@ -24,33 +24,21 @@
 #include "Reference.h"
 #include "RootEntity.h"
 #include "Operation.h"
-#include "SimpleMethod.h"
+#include "SimpleOperator.h"
 
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(SimpleMethod);
+MARTTA_OBJECT_CPP(SimpleOperator);
 
-void SimpleMethod::construct(TypeEntity const& _scope, int _id, QString const& _name, bool _isConst, Type const& _returns, Types const& _args, RootEntity* _root, char const* _key)
+void SimpleOperator::construct(int _id, Operator _o, Type const& _returns, Types const& _args, RootEntity* _root, char const* _key)
 {
-	m_name = _name;
-	m_key = _key;
-	m_myId = _id;
-	Type t = FunctionType();
-	t.append(_returns);
-	foreach (Type i, _args)
-		t.append(i);
-	Memberify m = Memberify(Type().topWith(_scope));
-	m.setConst(_isConst);
-	t.topWith(m);
-	t.topWith(Reference());
-	t.placeCopy(back());
-	// Rather superfluous, but needed for DeclarationEntity's I/O and so we can register a key.
-	m_rootEntity = _root;
-	rootEntity()->registerDeclaration(this);
+	m_operator = _o;
+	Simple::construct(0, _id, false, _returns, _args, _root, _key);
+	Operation::registerOperator(_o, this, _root);
 }
 
-SimpleMethod::~SimpleMethod()
+SimpleOperator::~SimpleOperator()
 {
 	rootEntity()->unregisterDeclaration(this);
 }

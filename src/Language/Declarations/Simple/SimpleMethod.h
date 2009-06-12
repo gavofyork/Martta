@@ -20,24 +20,22 @@
 
 #pragma once
 
-#include "TypeEntity.h"
-#include "ValueDefiner.h"
-#include "DeclarationEntity.h"
+#include "Simple.h"
 
 namespace Martta
 {
 
-class SimpleMethod: public DeclarationEntity, public_interface ValueDefiner
+class SimpleMethod: public Simple
 {
-	MARTTA_OBJECT(DeclarationEntity)
-	MARTTA_INHERITS(ValueDefiner, 0)
+	MARTTA_OBJECT(Simple)
 
 public:
-	SimpleMethod() {}
 	template<class T> inline static SimpleMethod* create(QString const& _name, bool _isConst, Type const& _returns, Types const& _args, RootEntity* _root)
 	{
 		SimpleMethod* s = new SimpleMethod;
-		s->construct(T(), T::s_members.count(), _name, _isConst, _returns, _args, _root, T::staticAuxilliary()->name());
+		s->m_name = _name;
+		T t;
+		s->construct(&t, T::s_members.count(), _isConst, _returns, _args, _root, T::staticAuxilliary()->name());
 		T::s_members.append(s);
 		return s;
 	}
@@ -45,15 +43,10 @@ public:
 	virtual QString						name() const { return m_name; }
 	virtual QString						codeName() const { return m_name; }
 	virtual QString						reference() const { return m_name; }
-	virtual Type						type() const { return *entityAs<TypeEntity>(0); }
 	virtual QString						key() const { return "@" + m_key + "@" + QString::number(m_myId); }
 	
 private:
-	void								construct(TypeEntity const& _scope, int _id, QString const& _name, bool _isConst, Type const& _returns, Types const& _args, RootEntity* _root, char const* _key);
-	
 	QString								m_name;
-	QString								m_key;
-	int									m_myId;
 };
 
 }
