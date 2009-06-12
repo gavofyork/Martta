@@ -48,9 +48,9 @@ public:
 	virtual QString						code(QString const& _middle = "") const { return _middle; }
 	virtual TypeEntity*					bottom() { return this; }
 	
-	bool								isNull() const { return isPlaceholder(); }
+	virtual bool						isNull() const { return isPlaceholder(); }
 	virtual bool						isUltimatelyNull() const { return isNull(); }
-	virtual bool						isWellDefined() const { return false; }
+	virtual bool						isWellDefined() const { return !isNull(); }
 	
 	typedef int Castability;
 	enum { Unrelated = 0, Physical = 1, Convertible = 2, FairlyConvertible = 6, BasicallyConvertible = 14, VeryConvertible = 30, ConstPerfectConvertible = 62, MostConvertible = 62, Logical = Physical | Convertible };
@@ -113,6 +113,9 @@ protected:
 	// isAtMostBasicallyConvertible will test true iff the required castability is exactly equal to any of the Convertibles at less restrictive or equals to FairlyConvertible.
 	// i.e. It will return false if the requirement includes Physical, VeryConvertible etc.
 	static inline bool					isBasicallyConvertibleAtMost(Castability _required) { return !(_required & ~BasicallyConvertible); }
+	
+	virtual bool						isSuperfluous() const { return context()->allowedKinds(contextIndex()).commonBase() != kind() && isNull(); }
+
 	
 	// Classes may opt to reimplement one or both of these.
 	// When determining the return type make sure you check the Castability _requirement first, before considering the

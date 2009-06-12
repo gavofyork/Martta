@@ -18,6 +18,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "TextLabel.h"
+#include "EnumValue.h"
 #include "MemberEnumeration.h"
 
 namespace Martta
@@ -28,6 +30,22 @@ MARTTA_OBJECT_CPP(MemberEnumeration);
 bool MemberEnumeration::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
 {
 	return simpleInsertionPointKeyPressHandler<MemberEnumeration>(_p, _e, "E");
+}
+
+Kinds MemberEnumeration::memberAllowedKinds(int _i) const
+{
+	if (_i == 0)
+		return Kind::of<TextLabel>();
+	else
+		return Kind::of<EnumValue>();
+}
+
+void MemberEnumeration::onDependencyChanged(Entity* _e)
+{
+	if (_e->isKind<Label>())
+		changed();
+	else
+		updateStem();
 }
 
 }

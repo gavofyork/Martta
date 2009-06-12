@@ -42,14 +42,12 @@ class DeclarationEntity: public Entity, public_interface Identifiable
 public:
 	virtual ~DeclarationEntity();
 
-	/// Returns the context if it is addressable. If not (e.g. Statement-derived context) it returns zero.
-	virtual SubAddressable*				addressableContext() const;
-
 	/// From Identifiable (default implementations).
 	virtual QString						name() const;
 	virtual QString						codeName() const;
 	virtual QString						reference() const;
 	virtual QString						key() const;
+	virtual SubAddressable*				addressableContext() const;
 	
 	virtual QString						interfaceCode() const { return QString(); }
 	virtual QString						implementationCode() const { return QString(); }

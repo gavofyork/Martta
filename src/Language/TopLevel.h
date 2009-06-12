@@ -36,7 +36,6 @@ class TopLevel: public SubAddressable, public_interface TypeDefinition
 	friend class TypeResolver;
 	
 public:
-	bool								isHidden() const { return codeName().startsWith("."); }				///< true for anonymous enums.
 	
 protected:
 	// From SubAddressable

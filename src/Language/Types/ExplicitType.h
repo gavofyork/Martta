@@ -50,7 +50,7 @@ public:
 
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
 	
-	virtual bool						isWellDefined() const { return m_subject.isUsable(); }
+	virtual bool						isNull() const { return !m_subject.isUsable(); }
 	
 protected:
 	virtual bool						hasDefaultConstructor() const;
@@ -65,7 +65,7 @@ protected:
 	virtual TypeEntity*					newClone() const { return new ExplicitType(m_subject); }
 	virtual QString						defineLayout(ViewKeys&) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
-	virtual bool						isSuperfluous() const;
+//	virtual bool						isSuperfluous() const;
 	virtual bool						canStandAlone() const;
 	virtual bool						defineSimilarityTo(TypeEntity const* _t, Castability _c) const;
 	virtual bool						defineSimilarityFrom(TypeEntity const* _from, Castability _c) const;

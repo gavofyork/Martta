@@ -20,31 +20,42 @@
 
 #pragma once
 
-#include "Type.h"
-#include "Enumeration.h"
-#include "TypeDefinition.h"
+#include "EnumerationNamer.h"
 #include "Member.h"
 
 namespace Martta
 {
 
-class MemberEnumeration: public Member, public_interface TypeDefinition
+class MemberEnumeration: public Member, public_interface EnumerationNamer
 {
 	MARTTA_OBJECT(Member)
-	MARTTA_INHERITS(TypeDefinition, 0)
+	MARTTA_INHERITS(EnumerationNamer, 0)
 	
 public:
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
 
 protected:
-	virtual bool						usurpsChild(Entity const* _e) const { return _e == local(0); }
-
-	virtual Kinds						memberAllowedKinds(int _i) const { if (_i == 0) return Kind::of<Enumeration>(); else return Kinds(); }
+	// From Member
+	virtual Kinds						memberAllowedKinds(int _i) const;
+	virtual int							memberMinimumRequired() const { return 2; }
+	virtual QString						memberDefineLayout(const ViewKeys& _k) const { return EnumerationNamer::defineLayout(_k); }
+	virtual QString						memberInterfaceCode() const { return EnumerationNamer::interfaceCode(); }
+	virtual QString						memberImplementationCode() const { return QString::null; }
 	
-	virtual QString						code() const { return localAs<TypeDefinition>(0)->code(); }
-	virtual bool						hasDefaultConstructor() const { return localAs<TypeDefinition>(0)->hasDefaultConstructor(); }
-	virtual Types						assignableTypes() const { return localAs<TypeDefinition>(0)->assignableTypes(); }
-	virtual QList<DeclarationEntity*>	utilisedInUse() const { return localAs<TypeDefinition>(0)->utilisedInUse(); }
+	// From TypeDefinition/EnumerationNamer
+	virtual bool						hasDefaultConstructor() const { return EnumerationNamer::hasDefaultConstructor(); }
+	virtual Types						assignableTypes() const { return Type(const_cast<MemberEnumeration*>(this)); }
+	virtual QString						code() const { return codeName(); }
+	virtual QList<DeclarationEntity*>	utilisedInUse() const { return QList<DeclarationEntity*>() << const_cast<MemberEnumeration*>(this); }
+	
+	// From DeclarationEntity
+	virtual QList<ValueDefiner*>		valuesAdded() const { return EnumerationNamer::valuesAdded(); }
+
+	// From Entity
+	virtual int							familyDependencies() { return DependsOnChildren; }
+	virtual void						onDependencyChanged(Entity* _e);
+	virtual bool						keyPressed(EntityKeyEvent const* _e) { M_ASSERT(isComplete()); return EnumerationNamer::keyPressed(_e) ? true : Super::keyPressed(_e); }
+	virtual Entity*						isExpander() const { return entity(1); }
 };
 
 }

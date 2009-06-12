@@ -75,7 +75,7 @@ void DeclarationEntity::onLeaveScene(RootEntity* _new, RootEntity* _old)
 	if (_old && _old != _new)
 		_old->noteDeletion(this);
 }
-
+	
 SubAddressable* DeclarationEntity::addressableContext() const
 {
 	return contextIs<SubAddressable>() ? contextAs<SubAddressable>() : 0;

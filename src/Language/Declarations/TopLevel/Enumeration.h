@@ -20,6 +20,8 @@
 
 #pragma once
 
+#include "Type.h"
+#include "EnumerationNamer.h"
 #include "TopLevel.h"
 
 namespace Martta
@@ -28,35 +30,29 @@ namespace Martta
 class EnumValue;
 class EnumerationResolver;
 
-class Enumeration: public TopLevel
+class Enumeration: public TopLevel, public_interface EnumerationNamer
 {
 	MARTTA_OBJECT(TopLevel)
+	MARTTA_INHERITS(EnumerationNamer, 0)
 
 public:
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
-
-	// Population methods.
-	void								updateStem();
-
 	virtual QString						code() const { return isHidden() ? "enum ["+m_stem+"*]" : codeName(); }
 	
 protected:
-	virtual QString						defineLayout(const ViewKeys&) const;
 	virtual int							minimumRequired() const { return 2; }
 	virtual Kinds						allowedKinds(int) const;
-	virtual QString						interfaceCode() const;
-	virtual bool						hasDefaultConstructor() const { return true; }
-	virtual Types						assignableTypes() const;
-	virtual bool						keyPressed(EntityKeyEvent const* _e);
+	virtual QString						defineLayout(const ViewKeys& _k) const { return "^;" + EnumerationNamer::defineLayout(_k); }
+	virtual QString						interfaceCode() const { return EnumerationNamer::interfaceCode(); }
+	virtual bool						hasDefaultConstructor() const { return EnumerationNamer::hasDefaultConstructor(); }
+	virtual QList<ValueDefiner*>		valuesAdded() const { return EnumerationNamer::valuesAdded(); }
+	virtual Types						assignableTypes() const { return Type(const_cast<Enumeration*>(this)); }
+
+	virtual bool						keyPressed(EntityKeyEvent const* _e) { M_ASSERT(isComplete()); return EnumerationNamer::keyPressed(_e) ? true : Super::keyPressed(_e); }
 	virtual Entity*						isExpander() const { return entity(1); }
-	virtual void						decorate(DecorationContext const&) const {}
-	virtual QList<ValueDefiner*>		valuesAdded() const;
 
 	virtual int							familyDependencies() { return DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity* _e);
-
-private:
-	QString								m_stem;
 };
 
 }

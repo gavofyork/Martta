@@ -40,12 +40,12 @@ Kinds EnumValue::allowedKinds(int _i) const
 
 Type EnumValue::type() const
 {
-	if (contextIs<Enumeration>())
+	if (contextIs<EnumerationNamer>())
 	{
-		if (contextAs<Enumeration>()->isHidden() || contextAs<Enumeration>()->name().isEmpty())
+		if (contextAs<EnumerationNamer>()->isHidden() || contextAs<EnumerationNamer>()->name().isEmpty())
 			return Type(Int);
 		else
-			return Type(contextAs<Enumeration>());
+			return Type(contextAs<EnumerationNamer>());
 	}
 	else
 		return Type();

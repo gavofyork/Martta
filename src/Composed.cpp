@@ -5,6 +5,7 @@
 #include "Language/Base.cpp"
 #include "Language/Declarations/BasicOperator.cpp"
 #include "Language/Declarations/DeclarationEntity.cpp"
+#include "Language/Declarations/EnumerationNamer.cpp"
 #include "Language/Declarations/EnumValue.cpp"
 #include "Language/Declarations/Function.cpp"
 #include "Language/Declarations/FundamentalOperator.cpp"

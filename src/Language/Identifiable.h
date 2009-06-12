@@ -34,7 +34,9 @@ class Identifiable
 	MARTTA_INTERFACE
 	
 public:	
+	/// Default value to returns the context is addressable or zero if not (e.g. Statement-derived context).
 	virtual SubAddressable*				addressableContext() const = 0;
+
 	/// @returns the user-visible name used for this entity. (e.g. "foo", "bar", "my class")
 	virtual QString						name() const = 0;
 	/// @returns the name used for this declaration in the CPP code. (e.g. "foo", "m_bar", "MyClass")
@@ -49,6 +51,8 @@ public:
 	/// (e.g. ";;MyClass;;m_foo", ";;MyClass;;void bar(int)", ";;MyClass")
 	virtual QString						key() const = 0;
 	
+	virtual bool						isHidden() const { return codeName().startsWith(".") || name().isEmpty(); }				///< true for anonymous enums.
+
 	virtual ~Identifiable() {}
 };
 

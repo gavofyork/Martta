@@ -18,11 +18,31 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "SubAddressable.h"
+#pragma once
+
+#include "TypeDefinition.h"
+#include "ValueDefiner.h"
 
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(SubAddressable);
+class EnumerationNamer: public_interface TypeDefinition
+{
+	MARTTA_INTERFACE
+	MARTTA_INHERITS(TypeDefinition, 0)
+	
+public:
+	void								updateStem();
+
+protected:
+	virtual bool						hasDefaultConstructor() const { return true; }
+	
+	QString								defineLayout(const ViewKeys& _k) const;
+	QString								interfaceCode() const;
+	bool								keyPressed(EntityKeyEvent const* _e);
+	QList<ValueDefiner*>				valuesAdded() const { return castEntities<ValueDefiner>(self()->entitiesOf<ValueDefiner>()); }
+	
+	QString								m_stem;
+};
 
 }

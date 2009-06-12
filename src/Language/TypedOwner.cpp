@@ -74,6 +74,10 @@ bool TypedOwner::isChildInValidState(int _i) const
 		else
 			if (entityAs<Typed>(_i)->type().isSimilarTo(i, TypeEntity::Convertible))
 				return true;
+			else
+			{
+				qDebug() << entityAs<Typed>(_i)->type()->code() << " != " << i->code();
+			}
 	return false;
 }
 

@@ -62,7 +62,7 @@ QList<ValueDefiner*> ExplicitType::applicableMembers(Entity* _s, bool _isConst) 
 		a = Private;
 	else if (m_subject && m_subject->isKind<Class>() && m_subject->asKind<Class>()->baseAccess(_s->ancestor<Class>()) <= Protected)
 		a = Protected;
-	if (Class* c = m_subject ? m_subject->asKind<Class>() : 0)
+	if (Class* c = m_subject ? m_subject->tryKind<Class>() : 0)
 		return c->membersOf<ValueDefiner>(_isConst, a);
 	return QList<ValueDefiner*>();
 }
@@ -206,17 +206,13 @@ QString ExplicitType::defineLayout(ViewKeys&) const
 	return "^;fb;s" + idColour() + ";'" + (m_subject.isUsable() ? m_subject->name() : "[]") + "'";
 }
 
-bool ExplicitType::isSuperfluous() const
-{
-	return context()->allowedKinds(contextIndex()).commonBase() != kind() && m_subject.isNull();
-}
-
 QList<TypeDefinition*> ExplicitType::possibilities()
 {
 	QList<TypeDefinition*> ret;
 	TypeDefinition* old = m_subject;
 	foreach (TypeDefinition* i, context()->entitiesHereAndBeforeOf<TypeDefinition>())
 	{
+		qDebug() << i->name();
 		m_subject = i;
 		if (context()->isChildInValidState(contextIndex()))
 			ret << i;
