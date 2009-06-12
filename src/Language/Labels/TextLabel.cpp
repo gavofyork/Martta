@@ -84,10 +84,10 @@ QString TextLabel::defineLayout(ViewKeys&) const
 	QString key = "";
 	if (context()->hasAncestor<NamespaceEntity>())
 	{
-		if (contextIs<Variable>() && context()->contextIs<Member>())
-			key = "(;M4;[[[;fs-2;fb;c#777;e#fff;'M';]]];)";
-		else if (contextIs<Variable>() && context()->contextIs<LambdaNamer>())
+		if (contextIs<Variable>() && context()->contextIs<LambdaNamer>())
 			key = "(;M4;[[[;fs-2;fb;c#777;e#fff;'_';]]];)";
+		else if (contextIs<Variable>() && context()->contextIs<MemberVariable>())
+			key = "(;M4;[[[;fs-2;fb;c#777;e#fff;'M';]]];)";
 	}
 	return "^;" + (text().isEmpty() ? QString("yminor;'ANONYMOUS'") : (key + ";'" + name() + "'"));
 }

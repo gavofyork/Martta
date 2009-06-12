@@ -87,7 +87,8 @@ QString LambdaNamer::defineLayout(ViewKeys& _k, QString _middle) const
 bool LambdaNamer::keyPressed(EntityKeyEvent const* _e)
 {
 	int sFirstArg = self()->entityIndexOf<Variable>();
-	if ((_e->text() == "(" && !argumentCount() && (_e->focalIndex() == 0 || _e->isFocused()) || _e->text() == "," && _e->focalIndex() >= sFirstArg) && self()->back().allowedToBeKind<Variable>())
+	int sName = self()->entityIndexOf<IdLabel>();
+	if ((_e->text() == "(" && !argumentCount() && (_e->focalIndex() == sName || _e->isFocused()) || _e->text() == "," && _e->focalIndex() >= sFirstArg) && self()->back().allowedToBeKind<Variable>())
 	{
 		Variable* v = new Variable;
 		self()->back().place(v);

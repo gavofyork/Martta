@@ -40,7 +40,7 @@ protected:
 	virtual QString						defineLayout(ViewKeys&) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
 	virtual bool						isInValidState() const;
-	virtual bool						usurpsChild(Entity* _e) const { return _e == entity(0); }
+	virtual bool						usurpsChild(Entity const* _e) const { return _e == entity(0); }
 };
 
 }

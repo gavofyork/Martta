@@ -1,6 +1,5 @@
 TODO optimise Class.
-BUG Variable isn't usurped.
-BUG M in arg list not _.
+TODO special EntryMethod
 BUG String s="Boo"; s.replace(
 BUG everything unavailable to call
 TODO virtual interface

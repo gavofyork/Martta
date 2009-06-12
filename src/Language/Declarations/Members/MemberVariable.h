@@ -41,6 +41,7 @@ protected:
 	virtual Type						type() const;
 	virtual QString						name() const { return localAs<DeclarationEntity>(0)->name(); }
 	virtual QString						codeName() const { return localAs<DeclarationEntity>(0)->codeName(); }
+	virtual bool						usurpsChild(Entity const* _e) const { return _e == local(0); }
 };
 
 }
