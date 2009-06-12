@@ -25,7 +25,6 @@
 #include "Destructor.h"
 #include "Method.h"
 #include "ExplicitType.h"
-#include "MemberCallable.h"
 #include "MemberVariable.h"
 #include "Base.h"
 #include "MethodOperator.h"
@@ -162,7 +161,7 @@ Kinds Class::allowedKinds(int _i) const
 {
 	if (_i == 0)
 		return Kind::of<TextLabel>();
-	return (Kind::of<MemberCallable>(), Kind::of<Member>(), Kind::of<Base>());
+	return (Kind::of<MemberLambda>(), Kind::of<Member>(), Kind::of<Base>());
 }
 
 QString Class::implementationCode() const
@@ -207,9 +206,6 @@ QList<DeclarationEntity*> Class::members(bool _isConst, Access _access) const
 	foreach (MemberVariable* i, entitiesOf<MemberVariable>())
 		if (i->access() <= _access)
 			 ret += i;
-	foreach (MemberCallable* i, entitiesOf<MemberCallable>())
-		if ((i->isConst() || !_isConst) && i->access() <= _access)
-			ret += i;
 	foreach (MemberLambda* i, entitiesOf<MemberLambda>())
 		if ((i->isConst() || !_isConst) && i->access() <= _access)
 			ret += i;

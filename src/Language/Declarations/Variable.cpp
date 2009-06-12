@@ -25,11 +25,7 @@
 #include "Reference.h"
 #include "Memberify.h"
 #include "TextLabel.h"
-#include "Callable.h"
 #include "Variable.h"
-
-// !TAKE ME OUT
-#include "ExplicitType.h"
 
 namespace Martta
 {
@@ -102,7 +98,7 @@ void Variable::exportDom(QDomElement& _element) const
 
 QString Variable::defineLayout(ViewKeys&) const
 {
-	return QString(contextIs<LambdaNamer>() ? "^;" : "") + "1;s" + entityAs<TypeEntity>(1)->idColour() + ";Mi;>name;fb0;!0";
+	return "^;1;s" + entityAs<TypeEntity>(1)->idColour() + ";Mi;>name;fb0;!0";
 }
 
 QList<DeclarationEntity*> Variable::utilised() const

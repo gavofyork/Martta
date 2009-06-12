@@ -42,6 +42,7 @@ protected:
 	virtual QString						defineLayout(ViewKeys&) const;
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity*) { changed(); }
+	virtual bool						usurpsChild(Entity* _e) const { return _e == entity(0); }
 };
 
 }

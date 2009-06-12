@@ -26,8 +26,6 @@
 namespace Martta
 {
 
-class Callable;
-
 class Operation: public Evaluation
 {
 	MARTTA_PLACEHOLDER(Evaluation)

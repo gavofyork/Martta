@@ -35,7 +35,6 @@ protected:
 	virtual Operator					id() const { return Operator::Equals; }
 	virtual QString						name() const { return "operator="; }
 	virtual QString						codeName() const { return "operator="; }
-//	virtual bool						activated(CodeScene* _s);
 	virtual QString						defineLayout(ViewKeys&) const { return QString(); }
 	virtual	bool						isConst() const { return true; }
 	virtual Access						access() const { return Public; }

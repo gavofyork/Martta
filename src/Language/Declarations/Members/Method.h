@@ -21,7 +21,6 @@
 #pragma once
 
 #include "MemberLambda.h"
-#include "Callable.h"
 
 namespace Martta
 {

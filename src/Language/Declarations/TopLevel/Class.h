@@ -25,8 +25,6 @@
 namespace Martta
 {
 
-class MemberCallable;
-	
 class Class: public TopLevel
 {
 	MARTTA_OBJECT(TopLevel)

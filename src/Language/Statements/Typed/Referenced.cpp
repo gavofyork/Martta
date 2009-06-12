@@ -22,9 +22,9 @@
 
 #include "DecorationContext.h"
 #include "CommonGraphics.h"
+#include "MemberLambda.h"
 #include "NamespaceEntity.h"
 #include "Invocation.h"
-#include "MemberCallable.h"
 #include "MemberVariable.h"
 #include "MemberOperation.h"
 #include "LongMemberOperation.h"
@@ -100,7 +100,7 @@ bool Referenced::onChanged()
 
 QString Referenced::code() const
 {
-	if (!m_subject.isNull() && !m_specific && (m_subject->isKind<MemberCallable>() || m_subject->isKind<MemberVariable>()))
+	if (!m_subject.isNull() && !m_specific && m_subject->isKind<Member>())
 		return m_subject->codeName();
 	if (!m_subject.isNull())
 		return m_subject->reference();
@@ -109,7 +109,7 @@ QString Referenced::code() const
 
 Kinds Referenced::ancestralDependencies() const
 {
-	return Kind::of<MemberCallable>();
+	return Kind::of<MemberLambda>();
 }
 
 Type Referenced::type() const
@@ -120,7 +120,7 @@ Type Referenced::type() const
 	
 	Type t = m_subject->type();
 	// If we're not in a member operation, check if there's some memberification that we can silently discard; 
-	if (!contextIs<LongMemberOperation>() && !contextIs<MemberOperation>() && t->isType<Memberify>() && hasAncestor<MemberCallable>())
+	if (!contextIs<GenericMemberOperation>() && t->isType<Memberify>() && hasAncestor<MemberLambda>())
 	{
 		M_ASSERT(hasAncestor<Class>());
 		// There is; check to see if we can remove it (by being in a scoped context and assuming the "this->" precedent).
@@ -129,7 +129,7 @@ Type Referenced::type() const
 		if (m->scopeClass() == ancestor<Class>())
 		{
 			bool memberIsCallable = m->child()->isType<FunctionType>();
-			bool constScope = ancestor<MemberCallable>()->isConst();
+			bool constScope = ancestor<MemberLambda>()->isConst();
 			bool constMember = memberIsCallable ? m->isConst() : m->child()->isType<Const>();
 			if (constMember || !constMember && !constScope)
 			{
@@ -308,13 +308,13 @@ void ReferencedEdit::updateSubset()
 				 m_valuesInScope << castEntities<ValueDefiner>(filterTypedsInv(Type(FunctionType(false, true)).topWith(Memberify()).topWith(Reference()),
 									t->asType<Memberify>()->scope()->applicableMembers(subject(), t->asType<Memberify>()->isConst())));
 			else if (subject()->hasAncestor<Class>())
-				m_valuesInScope << castEntities<ValueDefiner>(subject()->ancestor<Class>()->membersOf<MemberVariable>(subject()->hasAncestor<MemberCallable>() ? subject()->ancestor<MemberCallable>()->isConst() : false));
+				m_valuesInScope << castEntities<ValueDefiner>(subject()->ancestor<Class>()->membersOf<MemberVariable>(subject()->hasAncestor<MemberLambda>() ? subject()->ancestor<MemberLambda>()->isConst() : false));
 	if (subject()->m_lastSet & MemberCallables)
 		foreach (Type t, subject()->allowedTypes())
 			if (t->isType<Memberify>() && t->asType<Memberify>()->scope())
 				m_valuesInScope << castEntities<ValueDefiner>(filterTypeds(Type(FunctionType(false, true)).topWith(Memberify()).topWith(Reference()), t->asType<Memberify>()->scope()->applicableMembers(subject(), t->asType<Memberify>()->isConst())));
 			else if (subject()->hasAncestor<Class>())
-				m_valuesInScope << castEntities<ValueDefiner>(subject()->ancestor<Class>()->membersOf<MemberCallable>(subject()->hasAncestor<MemberCallable>() ? subject()->ancestor<MemberCallable>()->isConst() : false));
+				m_valuesInScope << castEntities<ValueDefiner>(subject()->ancestor<Class>()->membersOf<MemberLambda>(subject()->hasAncestor<MemberLambda>() ? subject()->ancestor<MemberLambda>()->isConst() : false));
 }
 
 void ReferencedEdit::commit()

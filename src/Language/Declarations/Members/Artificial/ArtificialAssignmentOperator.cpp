@@ -44,23 +44,5 @@ Type ArtificialAssignmentOperator::returns() const
 	return Type(ancestor<Class>()).topWith(Reference());
 }
 
-/*bool ArtificialAssignmentOperator::activated(CodeScene* _s)
-{
-	Callable* c = new MethodOperator;
-	c->prepareChildren();
-	c->middle(0)->replace(new OperatorLabel(Operator::Equals));
-	returns().placeCopy(c->middle(2));
-	c->middle(3)->replace(new AccessLabel(Public));
-	c->middle(4)->replace(new ConstLabel(false));
-	Variable* v = new Variable;
-	v->back().insertSilent(new TextLabel("source"));
-	argumentType(0).insertSilentCopy(v->back());
-	c->back().insertSilent(v);
-	replace(c);
-	_s->setViewKey(c, "expanded", true);
-	_s->setCurrent(c->body()->entity(0));
-	return true;
-}*/
-
 }
 

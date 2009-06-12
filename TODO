@@ -1,3 +1,4 @@
+TODO optimise Class.
 BUG String s="Boo"; s.replace(
 BUG everything unavailable to call
 TODO virtual interface
