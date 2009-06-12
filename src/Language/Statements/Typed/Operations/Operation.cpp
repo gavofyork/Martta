@@ -140,7 +140,7 @@ bool Operation::keyPressed(EntityKeyEvent const* _e)
 		repaint(_e->codeScene());
 		return true;
 	}
-	else if(_e->text() == "(")
+	else if(_e->text() == ")")
 	{
 		_e->codeScene()->setBracketed(over());
 		over()->setCurrent();
