@@ -1,9 +1,11 @@
-BUG String s="Boo"; s.replace(
+TODO anonymous -> metasyntactic variable
 TODO optimise Class.
 TODO special EntryMethod
 TODO virtual interface
 TODO variable -> basevariable, new variable & membervariable - no need if class stores access.
 OR member enumeration with decoration code moved to class, but not ideal since no clear way of getting enumeration into member enumeration without a basically useless 3rd class to act as sharing base.
+
+TODO references leave hopeful names behind when invalid
 
 TODO Variable::defineLayout - get rid of check for ^; by using usurp API.
 TODO TypeNamer::type = 0;

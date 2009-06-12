@@ -51,7 +51,7 @@ void StringType::initialiseClass()
 	Type ws = Type(Wchar).topWith(Pointer());
 	Type wcs = Type(Wchar).topWith(Const()).topWith(Pointer());
 	Type c = Type(Char);
-	Type u = Type(Unsigned);
+	Type u = Type(Unsigned|Int);
 	Type b = Type(Bool);
 	Type i = Type(Int);
 	Type v = Type(Void);

@@ -70,7 +70,7 @@ bool Entity::isComplete() const
 
 bool Entity::hasAncestor(Kind _k) const
 {
-	for (Entity* e = context(); e; e = e->context())
+	for (Entity* e = this ? context() : 0; e; e = e->context())
 		if (e->isKind(_k))
 			return true;
 	return false;
@@ -78,7 +78,7 @@ bool Entity::hasAncestor(Kind _k) const
 
 Entity* Entity::ancestor(Kind _k) const
 {
-	for (Entity* e = context(); e; e = e->context())
+	for (Entity* e = this ? context() : 0; e; e = e->context())
 		if (e->isKind(_k))
 			return e;
 	return 0;
@@ -87,7 +87,7 @@ Entity* Entity::ancestor(Kind _k) const
 int Entity::ancestorIndex(Kind _k) const
 {
 	int ret = contextIndex();
-	for (Entity* e = context(); e; ret = e->contextIndex(), e = e->context())
+	for (Entity* e = this ? context() : 0; e; ret = e->contextIndex(), e = e->context())
 		if (e->isKind(_k))
 			return ret;
 	return -1;

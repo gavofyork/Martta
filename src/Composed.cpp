@@ -19,6 +19,7 @@
 #include "Language/Declarations/Members/Member.cpp"
 #include "Language/Declarations/Members/MemberEnumeration.cpp"
 #include "Language/Declarations/Members/MemberLambda.cpp"
+#include "Language/Declarations/Members/MemberValue.cpp"
 #include "Language/Declarations/Members/MemberVariable.cpp"
 #include "Language/Declarations/Members/Method.cpp"
 #include "Language/Declarations/Members/MethodOperator.cpp"

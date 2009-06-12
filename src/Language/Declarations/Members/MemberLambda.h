@@ -20,18 +20,17 @@
 
 #pragma once
 
-#include "ValueDefiner.h"
 #include "LambdaNamer.h"
-#include "Member.h"
+#include "MemberValue.h"
 
 namespace Martta
 {
 
 // Just for non-static callables
 
-class MemberLambda: public Member, public_interface LambdaNamer
+class MemberLambda: public MemberValue, public_interface LambdaNamer
 {
-	MARTTA_PLACEHOLDER(Member)
+	MARTTA_PLACEHOLDER(MemberValue)
 	MARTTA_INHERITS(LambdaNamer, 0)
 	
 public:

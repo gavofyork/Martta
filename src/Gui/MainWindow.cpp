@@ -189,6 +189,14 @@ void MainWindow::entityFocused(Entity* _e)
 				new QTreeWidgetItem(us, QStringList() << QString(u ? u->name() : "NULL?") << QString(u ? u->kind().name() : "NULL?"));
 		}
 		new QTreeWidgetItem(entityInfo, QStringList() << QString("Layout") << QString(_e->defineLayout(m_codeScene->viewKeys(_e))));
+		
+		if (BareTyped* td = _e->tryKind<BareTyped>())
+		{
+			QTreeWidgetItem* te = new QTreeWidgetItem(entityInfo, QStringList() << QString("Type Information") << td->type()->code());
+			foreach (ValueDefiner* v, td->type()->applicableMembers())
+				new QTreeWidgetItem(te, QStringList() << QString(v->name()) << QString(v->type()->code()));
+		}
+		
 		entityInfo->expandAll();
 		entityInfo->verticalScrollBar()->setValue(vvalue);
 	}

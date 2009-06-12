@@ -21,16 +21,14 @@
 #pragma once
 
 #include "Variable.h"
-#include "ValueDefiner.h"
-#include "Member.h"
+#include "MemberValue.h"
 
 namespace Martta
 {
 
-class MemberVariable: public Member, public_interface ValueDefiner
+class MemberVariable: public MemberValue
 {
-	MARTTA_OBJECT(Member)
-	MARTTA_INHERITS(ValueDefiner, 0)
+	MARTTA_OBJECT(MemberValue)
 	
 public:
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);

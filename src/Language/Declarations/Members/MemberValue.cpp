@@ -18,44 +18,11 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "FunctionType.h"
-#include "Memberify.h"
-#include "Type.h"
-#include "Reference.h"
-#include "RootEntity.h"
-#include "Simple.h"
+#include "MemberValue.h"
 
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(Simple);
-
-void Simple::construct(TypeEntity const* _scope, int _id, bool _isConst, Type const& _returns, Types const& _args, RootEntity* _root, char const* _key)
-{
-	m_key = _key;
-	m_myId = _id;
-	
-	Type t = FunctionType();
-	t.append(_returns);
-	foreach (Type i, _args)
-		t.append(i);
-	if (_scope)
-	{
-		Memberify m = Memberify(Type().topWith(*_scope));
-		m.setConst(_isConst);
-		t.topWith(m);
-	}
-	t.topWith(Reference());
-	t.placeCopy(back());
-
-	// Rather superfluous, but needed for DeclarationEntity's I/O and so we can register a key.
-	m_rootEntity = _root;
-	rootEntity()->registerDeclaration(this);
-}
-
-Simple::~Simple()
-{
-	rootEntity()->unregisterDeclaration(this);
-}
+MARTTA_PLACEHOLDER_CPP(MemberValue);
 
 }
