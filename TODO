@@ -1,5 +1,3 @@
-BUG ConversionOperator, Destructor always in error.
-BUG Return value for ConvOp.
 TODO use new modular defineLayout.
 BUG String s="Boo"; s.replace(
 BUG everything unavailable to call

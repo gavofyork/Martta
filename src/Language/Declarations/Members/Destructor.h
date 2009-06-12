@@ -39,6 +39,7 @@ protected:
 	virtual Kinds						memberAllowedKinds(int _i) const;
 	virtual QString						memberDefineLayout(ViewKeys& _viewKeys) const;
 	virtual bool						isConst() const { return false; }
+	virtual bool						isInValidState() const { return Super::Super::isInValidState(); }
 
 	virtual QString						name() const;
 	virtual QString						codeName() const;
