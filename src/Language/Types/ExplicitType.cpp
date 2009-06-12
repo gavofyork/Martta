@@ -78,7 +78,7 @@ bool ExplicitType::haveSingleCastOperator(TypeEntity const* _t, bool _const) con
 	if (Class* c = m_subject->isKind<Class>() ? m_subject->asKind<Class>() : 0)
 	{
 		bool whackedConstForBest = false;
-		foreach (MemberCallable* i, c->membersOf<ConversionOperator>(_const, Public))
+		foreach (MemberLambda* i, c->membersOf<ConversionOperator>(_const, Public))
 		{	
 			bool b = i->returns()->isSimilarTo(_t, FairlyConvertible);
 			if (b && (!gotOne || gotOne && (i->isConst() == _const) && whackedConstForBest))

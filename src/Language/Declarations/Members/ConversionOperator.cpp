@@ -18,6 +18,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "Kind.h"
+#include "Compound.h"
 #include "AccessLabel.h"
 #include "ConstLabel.h"
 #include "ConversionOperator.h"
@@ -27,7 +29,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(ConversionOperator);
 
-QString ConversionOperator::code(FunctionCodeScope _ref) const
+QString ConversionOperator::basicCode(FunctionCodeScope _ref) const
 {
 	return Martta::code(qualifiers() & MethodMask) + callingCode(_ref) + (isConst() ? " const" : "");
 }
@@ -37,9 +39,9 @@ bool ConversionOperator::keyPressedOnInsertionPoint(InsertionPoint const& _p, En
 	return simpleInsertionPointKeyPressHandler<ConversionOperator>(_p, _e, "X");
 }
 
-QString ConversionOperator::defineMemberLayout(ViewKeys& _viewKeys) const
+QString ConversionOperator::defineNameLayout(ViewKeys&) const
 {
-	return "^;>name;ycode;'operator';1;'()';Mo;3;Mo" + QString(_viewKeys["expanded"].toBool() ? body()->entities().size() ? ";n;i;0" : ";0" : "");
+	return QString("ycode;'operator';Mi;%1").arg(fromLocal(1));
 }
 
 QString ConversionOperator::name() const
@@ -52,15 +54,13 @@ QString ConversionOperator::codeName() const
 	return "operator " + returns()->code();
 }
 
-Kinds ConversionOperator::allowedKinds(int _i) const
+Kinds ConversionOperator::memberAllowedKinds(int _i) const
 {
 	if (_i == 0)
 		return Kind::of<Compound>();
 	if (_i == 1)
 		return Kind::of<TypeEntity>();
 	if (_i == 2)
-		return Kind::of<AccessLabel>();
-	if (_i == 3)
 		return Kind::of<ConstLabel>();
 	return Kinds();
 }

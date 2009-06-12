@@ -32,23 +32,35 @@ namespace Martta
 
 MARTTA_INTERFACE_CPP(LambdaNamer);
 
+QString LambdaNamer::defineReturnLayout(ViewKeys&) const
+{
+	int sReturn = self()->entityIndexOf<TypeEntity>();
+	return QString::number(sReturn) + ";Mo";
+}
 
-QString LambdaNamer::defineLayout(ViewKeys& _viewKeys, QString _middle) const
+QString LambdaNamer::defineNameLayout(ViewKeys&) const
 {
 	int sName = self()->entityIndexOf<IdLabel>();
-	int sBody = self()->entityIndexOf<Compound>();
-	int sReturn = self()->entityIndexOf<TypeEntity>();
+	return "ynormal;s" + FunctionType().idColour() + ";!" + QString::number(sName);
+}
+
+QString LambdaNamer::defineArgListLayout(ViewKeys&) const
+{
 	int sFirstArg = self()->entityIndexOf<Variable>();
 	int sArgCount = self()->entityCountOf<Variable>();
+	return "ycode;'(';" + times(sFirstArg, sFirstArg + sArgCount, ";', ';") + ";')'";
+}
 
-	// TODO handle ellipsis here so we can put one in/take one out
-	QString ret = QString::number(sReturn) + ";Mo;>name;ynormal;s" + FunctionType().idColour() + ";!" + QString::number(sName) + ";ycode;'(';" + times(sFirstArg, sFirstArg + sArgCount, ";', ';") + ";')';" + _middle;
+QString LambdaNamer::defineBodyLayout(ViewKeys& _viewKeys) const
+{
+	int sBody = self()->entityIndexOf<Compound>();
+	QString ret;
 	if (body() && sBody > -1)
 		if (_viewKeys["expanded"].toBool())
-			ret += (body()->entities().size() ? ";n;i;" : ";") + QString::number(sBody);
+			ret += (body()->entities().size() ? "n;i;" : "") + QString::number(sBody);
 		else
 		{
-			ret += ";yminor;' (";
+			ret += "yminor;' (";
 			if (int n = body()->entitiesOf<Primary>().count() + body()->entitiesOf<Untyped>().count())
 				ret += QString::number(n) + " statement" + (n > 1 ? "s, " : ", ");
 			if (ret.endsWith(", "))
@@ -59,8 +71,14 @@ QString LambdaNamer::defineLayout(ViewKeys& _viewKeys, QString _middle) const
 			ret += "'";
 		}
 	else
-		ret += ";' = 0'";
+		ret += "' = 0'";
 	return ret;
+}
+
+QString LambdaNamer::defineLayout(ViewKeys& _k, QString _middle) const
+{
+	// TODO handle ellipsis here so we can put one in/take one out
+	return definePreLayout(_k) + ";" + defineReturnLayout(_k) + ";>name;" + defineNameLayout(_k) + ";" + defineArgListLayout(_k) + ";" + defineMidLayout(_k, _middle) + ";" + defineBodyLayout(_k) + ";" + definePostLayout(_k);
 }
 
 bool LambdaNamer::keyPressed(EntityKeyEvent const* _e)
@@ -118,7 +136,7 @@ QString LambdaNamer::callingCode(FunctionCodeScope _ref) const
 
 QString LambdaNamer::basicCode(FunctionCodeScope _ref) const
 {
-	return Martta::code(qualifiers() & MethodMask) + returns()->code(" " + callingCode(_ref));
+	return Martta::code(qualifiers() & FunctionMask) + returns()->code(" " + callingCode(_ref));
 }
 
 Compound* LambdaNamer::body() const

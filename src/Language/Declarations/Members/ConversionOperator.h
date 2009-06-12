@@ -20,27 +20,26 @@
 
 #pragma once
 
-#include "MemberCallable.h"
+#include "MemberLambda.h"
 
 namespace Martta
 {
 
-class ConversionOperator: public MemberCallable
+class ConversionOperator: public MemberLambda
 {
-	MARTTA_OBJECT(MemberCallable)
+	MARTTA_OBJECT(MemberLambda)
 
 public:
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
 
 protected:
-	virtual QString						defineMemberLayout(ViewKeys& _viewKeys) const;
+	virtual QString						defineNameLayout(ViewKeys& _viewKeys) const;
+	virtual QString						defineReturnLayout(ViewKeys&) const { return QString::null; }
 	virtual QString						name() const;
 	virtual QString						codeName() const;
-	virtual int							firstArgumentIndex() const { return 4; }
-	virtual Kinds						allowedKinds(int _i) const;
-	virtual Type						returns() const { return entityIs<TypeEntity>(1) ? *entityAs<TypeEntity>(1) : Type(); }
-	virtual QString						code(FunctionCodeScope _ref) const;
-	virtual Compound*					body() const { return entityAs<Compound>(0); }
+	virtual int							memberMinimumRequired() const { return 3; }
+	virtual Kinds						memberAllowedKinds(int _i) const;
+	virtual QString						basicCode(FunctionCodeScope _ref) const;
 };
 
 }

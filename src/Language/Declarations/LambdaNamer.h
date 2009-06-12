@@ -62,6 +62,13 @@ public:
 	/// Basic code for this function call. Is essentially the interfaceCode without the final ';'.
 	/// A default implementation exists.
 	virtual QString						basicCode(FunctionCodeScope _ref) const;
+	virtual QString						definePreLayout(ViewKeys&) const { return QString::null; }
+	virtual QString						defineMidLayout(ViewKeys&, QString _middle) const { return _middle; }
+	virtual QString						definePostLayout(ViewKeys&) const { return QString::null; }
+	virtual QString						defineNameLayout(ViewKeys& _viewKeys) const;
+	virtual QString						defineReturnLayout(ViewKeys& _viewKeys) const;
+	virtual QString						defineArgListLayout(ViewKeys& _viewKeys) const;
+	virtual QString						defineBodyLayout(ViewKeys& _viewKeys) const;
 	
 	/// Used for default implementation of implementationCode. Can be safely ignored if implementationCode is reimplemented.
 	virtual Compound*					body() const;

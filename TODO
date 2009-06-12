@@ -1,5 +1,9 @@
+BUG ConversionOperator, Destructor always in error.
+BUG Return value for ConvOp.
+TODO use new modular defineLayout.
 BUG String s="Boo"; s.replace(
 BUG everything unavailable to call
+TODO virtual interface
 TODO variable -> basevariable, new variable & membervariable - no need if class stores access.
 OR member enumeration with decoration code moved to class, but not ideal since no clear way of getting enumeration into member enumeration without a basically useless 3rd class to act as sharing base.
 

@@ -76,7 +76,7 @@ QString MemberLambda::basicCode(FunctionCodeScope _ref) const
 {
 	if (!isComplete())
 		return QString();
-	return LambdaNamer::basicCode(_ref) + (isConst() ? " const" : "");
+	return Martta::code(qualifiers() & MethodMask) + returns()->code(" " + callingCode(_ref)) + (isConst() ? " const" : "");
 }
 
 QList<DeclarationEntity*> MemberLambda::utilised() const
