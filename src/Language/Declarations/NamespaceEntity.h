@@ -20,14 +20,14 @@
 
 #pragma once
 
-#include "SubAddressable.h"
+#include "TopLevel.h"
 
 namespace Martta
 {
 
-class NamespaceEntity: public SubAddressable
+class NamespaceEntity: public TopLevel
 {
-	MARTTA_OBJECT(SubAddressable)
+	MARTTA_OBJECT(TopLevel)
 
 public:
 	virtual bool						isGloballyIdentifiable() const { return true; }

@@ -26,8 +26,6 @@
 namespace Martta
 {
 
-class Type;
-class SubAddressable;
 class ValueDefiner;
 
 /**
@@ -47,7 +45,7 @@ public:
 	virtual QString						codeName() const;
 	virtual QString						reference() const;
 	virtual QString						key() const;
-	virtual SubAddressable*				addressableContext() const;
+	virtual Identifiable*				addressableContext() const;
 	
 	virtual QString						interfaceCode() const { return QString(); }
 	virtual QString						implementationCode() const { return QString(); }

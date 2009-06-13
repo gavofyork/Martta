@@ -18,11 +18,19 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "SubAddressable.h"
+#pragma once
+
+#include "Meta.h"
 
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(SubAddressable);
+class Virtual
+{
+	MARTTA_INTERFACE
+
+public:
+	virtual ~Virtual() {}
+};
 
 }

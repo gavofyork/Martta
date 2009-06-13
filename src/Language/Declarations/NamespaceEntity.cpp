@@ -19,7 +19,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "TextLabel.h"
-#include "TopLevel.h"
+#include "TopLevelType.h"
 #include "NamespaceEntity.h"
 
 namespace Martta
@@ -47,7 +47,7 @@ Kinds NamespaceEntity::allowedKinds(int _i) const
 {
 	if (!_i)
 		return Kind::of<TextLabel>();
-	return Kind::of<TopLevel>();
+	return Kind::of<TopLevelType>();
 }
 
 QString NamespaceEntity::interfaceCode() const

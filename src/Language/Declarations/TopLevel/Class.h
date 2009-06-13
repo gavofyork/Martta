@@ -20,14 +20,14 @@
 
 #pragma once
 
-#include "TopLevel.h"
+#include "TopLevelType.h"
 
 namespace Martta
 {
 
-class Class: public TopLevel
+class Class: public TopLevelType
 {
-	MARTTA_OBJECT(TopLevel)
+	MARTTA_OBJECT(TopLevelType)
 
 public:
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);

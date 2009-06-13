@@ -27,15 +27,13 @@
 namespace Martta
 {
 
-class SubAddressable;
-
 class Identifiable
 {
 	MARTTA_INTERFACE
 	
 public:	
 	/// Default value to returns the context is addressable or zero if not (e.g. Statement-derived context).
-	virtual SubAddressable*				addressableContext() const = 0;
+	virtual Identifiable*				addressableContext() const = 0;
 
 	/// @returns the user-visible name used for this entity. (e.g. "foo", "bar", "my class")
 	virtual QString						name() const = 0;

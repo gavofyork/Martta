@@ -76,9 +76,9 @@ void DeclarationEntity::onLeaveScene(RootEntity* _new, RootEntity* _old)
 		_old->noteDeletion(this);
 }
 	
-SubAddressable* DeclarationEntity::addressableContext() const
+Identifiable* DeclarationEntity::addressableContext() const
 {
-	return contextIs<SubAddressable>() ? contextAs<SubAddressable>() : 0;
+	return contextIs<Identifiable>() ? contextAs<Identifiable>() : 0;
 }
 
 QString DeclarationEntity::reference() const

@@ -20,16 +20,16 @@
 
 #pragma once
 
-#include "TopLevel.h"
+#include "TopLevelType.h"
 
 namespace Martta
 {
 
 class TypedefResolver;
 
-class Typedef: public TopLevel
+class Typedef: public TopLevelType
 {
-	MARTTA_OBJECT(TopLevel)
+	MARTTA_OBJECT(TopLevelType)
 
 	friend class TypedefResolver;
 

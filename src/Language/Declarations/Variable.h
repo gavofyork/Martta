@@ -21,16 +21,16 @@
 #pragma once
 
 #include "ValueDefiner.h"
-#include "DeclarationEntity.h"
+#include "TopLevel.h"
 
 namespace Martta
 {
 
 class VariableResolver;
 
-class Variable: public DeclarationEntity, public_interface ValueDefiner
+class Variable: public TopLevel, public_interface ValueDefiner
 {
-	MARTTA_OBJECT(DeclarationEntity)
+	MARTTA_OBJECT(TopLevel)
 	MARTTA_INHERITS(ValueDefiner, 0)
 
 	friend class VariableResolver;

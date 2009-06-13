@@ -18,16 +18,17 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#pragma once
-
-#include "DeclarationEntity.h"
+#include "Type.h"
+#include "TopLevelType.h"
 
 namespace Martta
 {
 
-class SubAddressable: public DeclarationEntity
+MARTTA_OBJECT_CPP(TopLevelType);	
+
+Types TopLevelType::assignableTypes() const
 {
-	MARTTA_PLACEHOLDER(DeclarationEntity)
-};
+	return Types();
+}
 
 }

@@ -18,17 +18,36 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "Type.h"
+#pragma once
+
+#include "TypeDefinition.h"
 #include "TopLevel.h"
 
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(TopLevel);	
+class TypeResolver;
 
-Types TopLevel::assignableTypes() const
+class TopLevelType: public TopLevel, public_interface TypeDefinition
 {
-	return Types();
-}
+	MARTTA_PLACEHOLDER(TopLevel)
+	MARTTA_INHERITS(TypeDefinition, 0)
+
+	friend class TypeResolver;
+	
+public:
+	
+protected:
+	// From SubAddressable
+	virtual int							familyDependencies() const { return DependsOnChildren; }
+	
+	// From TypeDefinition
+	virtual QString						code() const { return codeName(); }
+	virtual bool						hasDefaultConstructor() const { return false; }
+	virtual Types						assignableTypes() const;
+	virtual QList<DeclarationEntity*>	utilisedInUse() const { return QList<DeclarationEntity*>() << const_cast<TopLevelType*>(this); }
+	
+	Location							m_location;
+};
 
 }

@@ -22,7 +22,7 @@
 
 #include "Type.h"
 #include "EnumerationNamer.h"
-#include "TopLevel.h"
+#include "TopLevelType.h"
 
 namespace Martta
 {
@@ -30,9 +30,9 @@ namespace Martta
 class EnumValue;
 class EnumerationResolver;
 
-class Enumeration: public TopLevel, public_interface EnumerationNamer
+class Enumeration: public TopLevelType, public_interface EnumerationNamer
 {
-	MARTTA_OBJECT(TopLevel)
+	MARTTA_OBJECT(TopLevelType)
 	MARTTA_INHERITS(EnumerationNamer, 0)
 
 public:

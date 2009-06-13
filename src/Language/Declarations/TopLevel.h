@@ -20,23 +20,14 @@
 
 #pragma once
 
-#include "Virtual.h"
-#include "Method.h"
+#include "DeclarationEntity.h"
 
 namespace Martta
 {
-	
-class VirtualMethod: public Method, public_interface Virtual
+
+class TopLevel: public DeclarationEntity
 {
-	MARTTA_OBJECT(Method)
-	MARTTA_INHERITS(Virtual, 0)
-	
-public:
-	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e) { return simpleInsertionPointKeyPressHandler<VirtualMethod>(_p, _e, "V"); }
-	
-protected:
-	virtual QString						memberInterfaceCode() const;
-	virtual QString						definePreLayout(ViewKeys& _k) const { return Super::definePreLayout(_k) + ";yminor;'VIRTUAL';Mo"; }
+	MARTTA_PLACEHOLDER(DeclarationEntity)
 };
 
 }

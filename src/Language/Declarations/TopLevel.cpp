@@ -18,25 +18,11 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#pragma once
-
-#include "Virtual.h"
-#include "Method.h"
+#include "TopLevel.h"
 
 namespace Martta
 {
-	
-class VirtualMethod: public Method, public_interface Virtual
-{
-	MARTTA_OBJECT(Method)
-	MARTTA_INHERITS(Virtual, 0)
-	
-public:
-	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e) { return simpleInsertionPointKeyPressHandler<VirtualMethod>(_p, _e, "V"); }
-	
-protected:
-	virtual QString						memberInterfaceCode() const;
-	virtual QString						definePreLayout(ViewKeys& _k) const { return Super::definePreLayout(_k) + ";yminor;'VIRTUAL';Mo"; }
-};
+
+MARTTA_OBJECT_CPP(TopLevel);
 
 }

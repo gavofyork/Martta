@@ -20,16 +20,16 @@
 
 #pragma once
 
-#include "TopLevel.h"
+#include "TopLevelType.h"
 
 namespace Martta
 {
 
 class UnionResolver;
 
-class Union: public TopLevel
+class Union: public TopLevelType
 {
-	MARTTA_OBJECT(TopLevel)
+	MARTTA_OBJECT(TopLevelType)
 
 	friend class Entity;
 	friend class UnionResolver;

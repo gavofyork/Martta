@@ -22,14 +22,14 @@
 
 #include "Operator.h"
 #include "LambdaNamer.h"
-#include "DeclarationEntity.h"
+#include "TopLevel.h"
 
 namespace Martta
 {
 
-class BasicOperator: public DeclarationEntity, public_interface LambdaNamer
+class BasicOperator: public TopLevel, public_interface LambdaNamer
 {
-	MARTTA_OBJECT(DeclarationEntity)
+	MARTTA_OBJECT(TopLevel)
 	MARTTA_INHERITS(LambdaNamer, 0)
 
 public:

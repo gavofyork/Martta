@@ -30,9 +30,9 @@ namespace Martta
 
 class FunctionResolver;
 
-class Function: public DeclarationEntity, public_interface LambdaNamer
+class Function: public TopLevel, public_interface LambdaNamer
 {
-	MARTTA_OBJECT(DeclarationEntity)
+	MARTTA_OBJECT(TopLevel)
 	MARTTA_INHERITS(LambdaNamer, 0)
 	
 	friend class FunctionResolver;
