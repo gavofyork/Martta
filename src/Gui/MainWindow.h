@@ -82,6 +82,8 @@ private slots:
 	void programFinished(int _exitCode);
 
 	void updateProgramCode();
+	
+	void updateLanguage();
 
 private:
 //	Workspace				m_workspace;

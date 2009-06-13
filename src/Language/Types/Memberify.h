@@ -45,6 +45,7 @@ public:
 	void								setScope(Type const& _newScope);
 	void								setScopeClass(Class* _scope, bool _isConst = false);
 	virtual QString						code(QString const& _middle) const;
+	virtual bool						isWellDefined() const { return Super::isWellDefined() && scope(); }
 	
 protected:
 	virtual Types						assignableTypes() const;

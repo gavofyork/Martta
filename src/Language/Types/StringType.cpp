@@ -19,7 +19,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "Typed.h"
-#include "ValueDefinition.h"
+#include "ValueDefiner.h"
 #include "FunctionType.h"
 #include "Reference.h"
 #include "Const.h"
@@ -37,7 +37,7 @@ namespace Martta
 MARTTA_OBJECT_CPP(StringType);
 
 QList<SimpleMethod*> StringType::s_members;
-QList<ValueDefinition*> StringType::s_nonMembers;
+QList<ValueDefiner*> StringType::s_nonMembers;
 
 void StringType::initialiseClass()
 {
@@ -51,7 +51,7 @@ void StringType::initialiseClass()
 	Type ws = Type(Wchar).topWith(Pointer());
 	Type wcs = Type(Wchar).topWith(Const()).topWith(Pointer());
 	Type c = Type(Char);
-	Type u = Type(Unsigned);
+	Type u = Type(Unsigned|Int);
 	Type b = Type(Bool);
 	Type i = Type(Int);
 	Type v = Type(Void);
@@ -196,9 +196,9 @@ Types StringType::assignableTypes() const
 	return Type(*this).topWith(Const()).topWith(Reference()), Type(Char).topWith(Const()).topWith(Pointer()), Type(Char), Type(Wchar);
 }
 
-QList<ValueDefinition*> StringType::applicableMembers(Entity*, bool _isConst) const
+QList<ValueDefiner*> StringType::applicableMembers(Entity*, bool _isConst) const
 {
-	QList<ValueDefinition*> ret;
+	QList<ValueDefiner*> ret;
 	foreach (SimpleMethod* i, s_members)
 		if (i->type()->asType<Memberify>()->isConst() || !_isConst)
 			ret += i;

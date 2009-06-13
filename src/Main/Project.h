@@ -94,6 +94,7 @@ private slots:
 	void compileFinished();
 
 signals:
+	void subjectInvalid();
 	void changed();
 	void nameChanged();
 

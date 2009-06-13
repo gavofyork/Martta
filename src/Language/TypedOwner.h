@@ -32,7 +32,7 @@ typedef QList<Type> Types;
 
 class TypedOwner: public Entity
 {
-	MARTTA_OBJECT_INTERFACE(Entity)
+	MARTTA_PLACEHOLDER(Entity)
 
 public:
 	virtual Types						allowedTypes(int) const;

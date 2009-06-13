@@ -31,7 +31,7 @@ namespace Martta
 	
 class ModifyingType: public TypeEntity
 {
-	MARTTA_OBJECT_INTERFACE(TypeEntity)
+	MARTTA_PLACEHOLDER(TypeEntity)
 
 public:
 	inline TypeEntity*					child() const { return entityIs<TypeEntity>(0) ? entityAs<TypeEntity>(0) : TypeEntity::null; }
@@ -39,6 +39,7 @@ public:
 	/// Deletes this object and puts its child in its place.
 	void								unknit();
 	virtual bool						isUltimatelyNull() const { return !child() || child()->isUltimatelyNull(); }
+	virtual bool						isWellDefined() const { return child() && child()->isWellDefined(); }
 	
 protected:
 	virtual int							minimumRequired() const { return 1; }
@@ -49,6 +50,7 @@ protected:
 	virtual TypeEntity*					newClone() const { return new ModifyingType; }
 	virtual TypeEntity*					bottom() { return entityIs<TypeEntity>(0) ? entityAs<TypeEntity>(0) : this; }
 	virtual bool						canStandAlone() const { return child() ? child()->canStandAlone() : false; }
+	virtual QList<DeclarationEntity*>	utilisedX() const { return child() ? child()->utilised() : Super::utilised(); }
 };
 
 }

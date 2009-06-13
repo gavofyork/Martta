@@ -36,9 +36,9 @@ public:
 	
 protected:
 	virtual bool						hasDefaultConstructor() const { return child() && child()->hasDefaultConstructor(); }
-	virtual QList<ValueDefinition*>		applicableMembers(Entity* _s = 0, bool = false) const { return child() ? child()->applicableMembers(_s, true) : Super::applicableMembers(_s); }
-	virtual bool						isType(Kind _typeKind) { return isKind(_typeKind) || child()->isType(_typeKind); }
-	virtual TypeEntity*					asType(Kind _typeKind) { if (isKind(_typeKind)) return this; M_ASSERT(child()->isType(_typeKind)); return child()->asType(_typeKind); }
+	virtual QList<ValueDefiner*>		applicableMembers(Entity* _s = 0, bool = false) const { return child() ? child()->applicableMembers(_s, true) : Super::applicableMembers(_s); }
+	virtual bool						isType(Kind _typeKind) { return Entity::isKind(_typeKind) || child()->isType(_typeKind); }
+	virtual TypeEntity*					asType(Kind _typeKind) { if (Entity::isKind(_typeKind)) return this; M_ASSERT(child()->isType(_typeKind)); return child()->asType(_typeKind); }
 	virtual QString						code(QString const& _middle) const;
 	virtual QString						defineLayout(ViewKeys&) const;
 	virtual TypeEntity*					newClone() const { return new Const; }

@@ -27,7 +27,7 @@ namespace Martta
 
 class Label: public Entity
 {
-	MARTTA_OBJECT(Entity)
+	MARTTA_PLACEHOLDER(Entity)
 	
 public:
 	inline virtual QString				code() const { return QString(); }

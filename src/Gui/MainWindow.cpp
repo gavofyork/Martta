@@ -22,7 +22,9 @@
 #include <QtXml>
 
 #include "Project.h"
+#include "Artificial.h"
 #include "Function.h"
+#include "MemberVariable.h"
 #include "BareTyped.h"
 #include "IncludeProject.h"
 #include "CodeScene.h"
@@ -59,7 +61,7 @@ MainWindow::MainWindow(QWidget* _p, Qt::WindowFlags _f):
 	connect(m_project, SIGNAL(changed()), SLOT(updateProgramCode()));
 	updateProgramCode();
 
-	connect(m_project, SIGNAL(changed()), SLOT(resetSubject()));
+	connect(m_project, SIGNAL(subjectInvalid()), SLOT(resetSubject()));
 	resetSubject();
 
 	connect(m_codeScene, SIGNAL(currentChanged(Entity*)), SLOT(entityFocused(Entity*)));
@@ -69,6 +71,8 @@ MainWindow::MainWindow(QWidget* _p, Qt::WindowFlags _f):
 #ifdef Q_WS_MAC
 	setUnifiedTitleAndToolBarOnMac(true);
 #endif
+
+	updateLanguage();
 }
 
 MainWindow::~MainWindow()
@@ -80,9 +84,32 @@ MainWindow::~MainWindow()
 	s.setValue("mainwindow/lastproject", m_project->filename());
 }
 
+template<class T> void addToLanguage(Kind const& _k, T* _p)
+{
+	QString ifsS;
+	foreach (Kind k, _k.interfaces())
+		if (_k.immediateInterfaces().contains(k))
+			ifsS += "*" + k.name().remove("Martta::") + "* ";
+		else
+			ifsS += k.name().remove("Martta::") + " ";
+	if (ifsS.endsWith(", "))
+		ifsS.chop(2);
+	QTreeWidgetItem* i = new QTreeWidgetItem(_p, QStringList() << _k.name().remove("Martta::") << ifsS);
+	foreach (Kind k, _k.immediateDeriveds())
+		addToLanguage(k, i);
+}
+
+void MainWindow::updateLanguage()
+{
+	language->clear();
+	addToLanguage(Kind::of<Entity>(), language);
+	language->expandAll();
+}
+
 void MainWindow::resetSubject()
 {
 	m_codeScene->setSubject(m_project->ns());
+	M_ASSERT(m_codeScene->current()->rootEntity() == m_project->root());
 	entityFocused(m_codeScene->current());
 }
 
@@ -129,14 +156,49 @@ void MainWindow::entityFocused(Entity* _e)
 		if (_e->isKind<Statement>())
 		{
 			QTreeWidgetItem* l = new QTreeWidgetItem(typesVisible, QStringList() << QString("Local"));
-			foreach (ValueDefinition* v, _e->asKind<Statement>()->valuesInLocalScope())
+			foreach (ValueDefiner* v, _e->asKind<Statement>()->valuesInLocalScope())
 				new QTreeWidgetItem(l, QStringList() << QString(v->name()) << QString(v->type()->code()));
 		}
+		if (_e->hasAncestor<Class>())
+		{
+			QTreeWidgetItem* m = new QTreeWidgetItem(typesVisible, QStringList() << QString("Members"));
+			QTreeWidgetItem* h = new QTreeWidgetItem(m, QStringList() << QString("Hidden"));
+			foreach (ValueDefiner* v, castEntities<ValueDefiner>(_e->ancestor<Class>()->membersOf<MemberVariable>(_e->hasAncestor<MemberLambda>() ? _e->ancestor<MemberLambda>()->isConst() : false)) + castEntities<ValueDefiner>(_e->ancestor<Class>()->membersOf<MemberLambda>(_e->hasAncestor<MemberLambda>() ? _e->ancestor<MemberLambda>()->isConst() : false)))
+				new QTreeWidgetItem(v->isKind<Artificial>() ? h : m, QStringList() << QString(v->name()) << QString(v->type()->code()));
+		}
 		QTreeWidgetItem* g = new QTreeWidgetItem(typesVisible, QStringList() << QString("General"));
-		foreach (ValueDefinition* v, _e->ancestor<DeclarationEntity>()->valuesKnown())
+		foreach (ValueDefiner* v, _e->ancestor<DeclarationEntity>()->valuesKnown())
 			new QTreeWidgetItem(g, QStringList() << QString(v->name()) << QString(v->type()->code()));
+		QTreeWidgetItem* gl = new QTreeWidgetItem(typesVisible, QStringList() << QString("Global"));
+		foreach (ValueDefiner* v, _e->rootEntity()->entitiesHereAndBeforeOf<ValueDefiner>())
+			new QTreeWidgetItem(gl, QStringList() << QString(v->name()) << QString(v->type()->code()));
 		typesVisible->expandAll();
 		typesVisible->verticalScrollBar()->setValue(vvalue);
+		
+		vvalue = entityInfo->verticalScrollBar()->value();
+		entityInfo->clear();
+		if (DeclarationEntity* d = _e->selfAncestor<DeclarationEntity>())
+		{
+			QTreeWidgetItem* decl = new QTreeWidgetItem(entityInfo, QStringList() << QString("Declaration Context"));
+			new QTreeWidgetItem(decl, QStringList() << QString(d->name()) << QString(d->kind().name()));
+			QTreeWidgetItem* ul = new QTreeWidgetItem(decl, QStringList() << QString("Utilised"));
+			foreach (DeclarationEntity* u, d->utilised())
+				new QTreeWidgetItem(ul, QStringList() << QString(u ? u->name() : "NULL?") << QString(u ? u->kind().name() : "NULL?"));
+			QTreeWidgetItem* us = new QTreeWidgetItem(decl, QStringList() << QString("Utilised Siblings"));
+			foreach (DeclarationEntity* u, d->utilisedSiblings())
+				new QTreeWidgetItem(us, QStringList() << QString(u ? u->name() : "NULL?") << QString(u ? u->kind().name() : "NULL?"));
+		}
+		new QTreeWidgetItem(entityInfo, QStringList() << QString("Layout") << QString(_e->defineLayout(m_codeScene->viewKeys(_e))));
+		
+		if (BareTyped* td = _e->tryKind<BareTyped>())
+		{
+			QTreeWidgetItem* te = new QTreeWidgetItem(entityInfo, QStringList() << QString("Type Information") << td->type()->code());
+			foreach (ValueDefiner* v, td->type()->applicableMembers())
+				new QTreeWidgetItem(te, QStringList() << QString(v->name()) << QString(v->type()->code()));
+		}
+		
+		entityInfo->expandAll();
+		entityInfo->verticalScrollBar()->setValue(vvalue);
 	}
 	else
 		t += "Nothing selected.";

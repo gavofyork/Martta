@@ -39,11 +39,12 @@ public:
 	static void							initialiseClass();
 	static void							finaliseClass();
 	inline static bool					keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e) { return simpleInsertionPointKeyPressHandler<StringType>(_p, _e, "$"); }
+	virtual bool						isWellDefined() const { return true; }
 	
 protected:
 	virtual bool						hasDefaultConstructor() const { return true; }
 	virtual Types						assignableTypes() const;
-	virtual QList<ValueDefinition*>		applicableMembers(Entity* _s = 0, bool _isConst = false) const;
+	virtual QList<ValueDefiner*>		applicableMembers(Entity* _s = 0, bool _isConst = false) const;
 	
 	virtual QString						code(QString const& _middle) const;
 	virtual QString						defineLayout(ViewKeys&) const;
@@ -54,7 +55,7 @@ protected:
 	virtual TypeEntity*					newClone() const { return new StringType; }
 	
 	static QList<SimpleMethod*>			s_members;	
-	static QList<ValueDefinition*>		s_nonMembers;	
+	static QList<ValueDefiner*>			s_nonMembers;	
 };
 
 }

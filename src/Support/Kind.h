@@ -23,13 +23,13 @@
 #include <QString>
 #include <QList>
 
+#include "AuxilliaryRegistrar.h"
 #include "AuxilliaryFace.h"
 #include "Common.h"
 
 namespace Martta
 {
 
-class AuxilliaryFace;
 class Entity;
 class Kind;
 
@@ -43,7 +43,8 @@ public:
 	
 	inline Kinds operator,(Kind const& _c) const { return Kinds(*this) << _c; }
 	
-	inline Kinds& operator<<(Kind const& k) { append(k); return *this; }
+	inline Kinds& operator<<(Kind const& _k) { append(_k); return *this; }
+	inline Kinds& operator<<(Kinds const& _k) { this->QList<Kind>::operator<<(_k); return *this; }
 	
 	inline bool containsBaseOf(Kind const& _derived) const;
 	inline bool containsKindOf(Kind const& _base) const;
@@ -60,11 +61,16 @@ public:
 	template<class T> inline static Kind of() { return Kind(T::staticAuxilliary()); }
 
 	inline Kind super() const { return m_mo ? Kind(m_mo->superAuxilliary()) : Kind(); }
+	Kinds deriveds() const;
+	Kinds immediateDeriveds() const { return m_mo ? AuxilliaryRegistrar::get()->immediateDeriveds(m_mo) : Kinds(); }
+	Kinds interfaces() const { return m_mo ? AuxilliaryRegistrar::get()->interfaces(m_mo) : Kinds(); }
+	Kinds immediateInterfaces() const { return m_mo ? AuxilliaryRegistrar::get()->immediateInterfaces(m_mo) : Kinds(); }
+	Kinds supers() const { return m_mo ? AuxilliaryRegistrar::get()->supers(m_mo) : Kinds(); }
 	inline QString name() const { return m_mo ? m_mo->name() : 0; }
 	inline AuxilliaryFace const* auxilliary() const { return m_mo; }
 	Entity* spawnPrepared() const;
 
-	inline bool isKind(Kind _base) const { return m_mo && (_base.m_mo == m_mo || super().isKind(_base)); }
+	inline bool isKind(Kind _base) const { return _base.m_mo == m_mo || AuxilliaryRegistrar::get()->supers().contains(m_mo, _base.m_mo); }
 	inline bool isKind(Kinds const& _bases) const;
 	template<class T>
 	inline bool isKind() const { return isKind(T::staticKind); }

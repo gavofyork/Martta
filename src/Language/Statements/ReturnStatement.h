@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "LambdaNamer.h"
 #include "Untyped.h"
 
 namespace Martta
@@ -36,7 +37,7 @@ public:
 	virtual QString						code() const;
 	inline static bool					keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e) { return simplePlaceholderKeyPressHandler<ReturnStatement>(_p, _e, "R"); }
 
-	virtual Kinds						ancestralDependencies() const { return Kind::of<Callable>(); }
+	virtual Kinds						ancestralDependencies() const { return Kind::of<LambdaNamer>(); }
 	virtual void						onDependencyChanged(Entity* _e);
 	virtual QString						defineLayout(ViewKeys&) const { return QString("^;ycode;'return ';") + (entity(0) ? ";0" : ""); }
 };

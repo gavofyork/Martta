@@ -1,11 +1,29 @@
-TODO classes store member access information themselves.
+TODO study SubAddressable & addressableContext
+TODO anonymous -> metasyntactic variable
+TODO optimise Class.
+TODO special EntryMethod
+TODO virtual interface
+TODO virtual overload
 TODO variable -> basevariable, new variable & membervariable - no need if class stores access.
 OR member enumeration with decoration code moved to class, but not ideal since no clear way of getting enumeration into member enumeration without a basically useless 3rd class to act as sharing base.
 
+TODO references leave hopeful names behind when invalid
+
+TODO TypeNamer::type = 0;
 TODO move crap from ExplicitType to TypeDefinition.
 TODO page up & down broken.
 TODO join statements or tree insert.
+TODO insertion of entities in, e.g. argument lists for function calls.
 
+Allow "usurption" for stuff like DefaultConstructedVariable to usurp Variable.
+- All good.
+- key presses automatically rerouted to child (only at source to prevent recursion).
+- CHECK should handle situation of usurper usurped.
+Utilised
+- utilised/utilisable interface.
+- BUG enums don't behave well regarding order of declaration & use.
+- utilised for Memberify, EnumValue/Enumeration & Method.
+- unit tests.
 Resolve name clashes.
 - Force unique names.
 - OR pickup on clashes and resolve at edit stage.
@@ -16,7 +34,6 @@ Multiple projects in a solution
   - pickup if entry point is private
 - Add other libraries (SDL, openGL)
 - Use other binary-only libraries.
-CHECK enums do behave well regarding order of declaration.
 
 --------------------------------------------------------------------------------
 
@@ -145,13 +162,6 @@ RELEASE M8 (TBD)
 Recursive search for utilised.
 
 Split CodeScene from CodeView via. mixins?.
-
-Allow "usurption" for stuff like DefaultConstructedVariable to usurp Variable.
-- enum { NotUsurping = -1 };
-- int usurpsChild() const { return NotUsurping; }
-- key presses automatically rerouted to child (only at source to prevent recursion).
-- should handle situation of usurper usurped.
-- child loses ability to focus.
 
 Virtual base for Entity.
 - Allow Members to inherit principally from "Member", but also from Callable/Variable.

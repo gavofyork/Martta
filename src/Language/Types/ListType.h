@@ -44,7 +44,7 @@ protected:
 	// Assumes we are (eventually) a non-const ref.
 	virtual Types						assignableTypes() const;
 	virtual bool						hasDefaultConstructor() const { return true; }
-	virtual QList<ValueDefinition*>		applicableMembers(Entity* _s = 0, bool _isConst = false) const;
+	virtual QList<ValueDefiner*>		applicableMembers(Entity* _s = 0, bool _isConst = false) const;
 	
 	virtual QString						code(QString const& _middle) const;
 	virtual int							minimumRequired() const { return 1; }

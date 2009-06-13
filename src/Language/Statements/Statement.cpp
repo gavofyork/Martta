@@ -19,7 +19,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "Typed.h"
-#include "ValueDefinition.h"
+#include "ValueDefiner.h"
 #include "Statement.h"
 
 namespace Martta
@@ -47,7 +47,7 @@ QList<Typed*> Statement::typeds() const
 	return entitiesOf<Typed>();
 }
 
-QList<ValueDefinition*> Statement::valuesInLocalScope() const
+QList<ValueDefiner*> Statement::valuesInLocalScope() const
 {
 	
 	// This is presumably something to do with Variables, since they are not Statements but appear in statement hierarchies.
@@ -60,11 +60,11 @@ QList<ValueDefinition*> Statement::valuesInLocalScope() const
 		return ret;
 	}*/
 	if (!contextIs<Statement>())
-		return QList<ValueDefinition*>();
-	QList<ValueDefinition*> ret = contextAs<Statement>()->valuesInLocalScope();
+		return QList<ValueDefiner*>();
+	QList<ValueDefiner*> ret = contextAs<Statement>()->valuesInLocalScope();
 	for(int i = 0; i < contextIndex(); ++i)
 		if (parentsChildIs<Statement>(i))
-			ret += parentsChildAs<Statement>(i)->entitiesOf<ValueDefinition>();
+			ret += parentsChildAs<Statement>(i)->entitiesOf<ValueDefiner>();
 	return ret;
 }
 

@@ -37,7 +37,7 @@ class IncomingFunctionType;
 class DeclarationEntity;
 class Function;
 class Variable;
-class TypeDefinition;
+class TopLevelType;
 
 class ArrayType;
 class CvQualifiedType;
@@ -53,8 +53,8 @@ public:
 	TypeEntity* resolveType(QString const& _typeId);
 	QString commitToFile(QString const& _fileId, Function* _f);
 	QString commitToFile(QString const& _fileId, Variable* _f);
-	QString commitToFile(QString const& _fileId, TypeDefinition* _f);
-	void removeFromFile(TypeDefinition* _f);
+	QString commitToFile(QString const& _fileId, TopLevelType* _f);
+	void removeFromFile(TopLevelType* _f);
 
 private:
 	virtual bool startDocument();
@@ -81,7 +81,7 @@ private:
 	QMap<QString, DeclarationEntity*>	m_contexts;
 	QMap<QString, Function*>		m_functions;
 	QMap<QString, Variable*>		m_variables;
-	QMap<QString, TypeDefinition*>		m_types;
+	QMap<QString, TopLevelType*>		m_types;
 
 	QMap<QString, int>			m_simples;
 	QMap<QString, ArrayType*> 		m_arrays;

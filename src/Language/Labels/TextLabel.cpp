@@ -23,8 +23,9 @@
 #include "CommonGraphics.h"
 #include "Variable.h"
 #include "NamespaceEntity.h"
-#include "Class.h"
-#include "Callable.h"
+#include "TypeDefinition.h"
+#include "MemberVariable.h"
+#include "LambdaNamer.h"
 #include "EditDelegate.h"
 #include "DecorationContext.h"
 #include "TextLabel.h"
@@ -41,9 +42,9 @@ QString TextLabel::code() const
 	{
 		if (contextIs<Variable>())
 		{
-			if (context()->contextIs<Class>())
+			if (context()->contextIs<MemberVariable>())
 				prefix = "m_";
-			else if (context()->contextIs<Callable>())
+			else if (context()->contextIs<LambdaNamer>())
 				prefix = "a_";
 			else
 				prefix = "l_";
@@ -83,10 +84,10 @@ QString TextLabel::defineLayout(ViewKeys&) const
 	QString key = "";
 	if (context()->hasAncestor<NamespaceEntity>())
 	{
-		if (contextIs<Variable>() && context()->contextIs<Class>())
-			key = "(;M4;[[[;fs-2;fb;c#777;e#fff;'M';]]];)";
-		else if (contextIs<Variable>() && context()->contextIs<Callable>())
+		if (contextIs<Variable>() && context()->contextIs<LambdaNamer>())
 			key = "(;M4;[[[;fs-2;fb;c#777;e#fff;'_';]]];)";
+		else if (contextIs<Variable>() && context()->contextIs<MemberVariable>())
+			key = "(;M4;[[[;fs-2;fb;c#777;e#fff;'M';]]];)";
 	}
 	return "^;" + (text().isEmpty() ? QString("yminor;'ANONYMOUS'") : (key + ";'" + name() + "'"));
 }
@@ -96,9 +97,9 @@ void TextLabel::decorate(DecorationContext const& _c) const
 	bool dec= false;
 	if (context()->hasAncestor<NamespaceEntity>())
 	{
-		if (contextIs<Variable>() && context()->contextIs<Class>())
+		if (contextIs<Variable>() && context()->contextIs<Member>())
 			dec = true;
-		else if (contextIs<Variable>() && context()->contextIs<Callable>())
+		else if (contextIs<Variable>() && context()->contextIs<LambdaNamer>())
 			dec = true;
 	}
 	if (dec)

@@ -39,8 +39,9 @@ QMap<size_t, boost::pool<>* >* Entity::s_pools = 0;
 int s_news = 0;
 int s_deletes = 0;
 	
-MARTTA_OBJECT_CPP(Entity);
-			
+MARTTA_CPP_BASIC(Entity);
+AuxilliaryFace const* Entity::staticAuxilliary() { if (!s_auxilliary_Entity) s_auxilliary_Entity = new Auxilliary<Entity>("Martta::Entity"); return s_auxilliary_Entity; }
+
 QList<ChangeEntry> s_changes;
 void change(Entity* _s, ChangeOperation _op, Entity* _o)
 {
@@ -69,7 +70,7 @@ bool Entity::isComplete() const
 
 bool Entity::hasAncestor(Kind _k) const
 {
-	for (Entity* e = context(); e; e = e->context())
+	for (Entity* e = this ? context() : 0; e; e = e->context())
 		if (e->isKind(_k))
 			return true;
 	return false;
@@ -77,10 +78,44 @@ bool Entity::hasAncestor(Kind _k) const
 
 Entity* Entity::ancestor(Kind _k) const
 {
-	for (Entity* e = context(); e; e = e->context())
+	for (Entity* e = this ? context() : 0; e; e = e->context())
 		if (e->isKind(_k))
 			return e;
 	return 0;
+}
+
+int Entity::ancestorIndex(Kind _k) const
+{
+	int ret = contextIndex();
+	for (Entity* e = this ? context() : 0; e; ret = e->contextIndex(), e = e->context())
+		if (e->isKind(_k))
+			return ret;
+	return -1;
+}
+
+bool Entity::hasSelfAncestor(Kind _k) const
+{
+	for (Entity* e = const_cast<Entity*>(this); e; e = e->context())
+		if (e->isKind(_k))
+			return true;
+	return false;
+}
+
+Entity* Entity::selfAncestor(Kind _k) const
+{
+	for (Entity* e = const_cast<Entity*>(this); e; e = e->context())
+		if (e->isKind(_k))
+			return e;
+	return 0;
+}
+
+int Entity::selfAncestorIndex(Kind _k) const
+{
+	int ret = contextIndex();
+	for (Entity* e = const_cast<Entity*>(this); e; ret = e->contextIndex(), e = e->context())
+		if (e->isKind(_k))
+			return ret;
+	return -1;
 }
 
 int Entity::ancestorIndex(Entity* _a) const
@@ -920,6 +955,11 @@ void Entity::keyPressEventStarter(EntityKeyEvent* _e)
 		else
 			fe = 0;
 	}
+}
+
+QString Entity::defineLayout(ViewKeys&) const
+{
+	return "^;ycode;'[]'";
 }
 
 void Entity::keyPressEvent(EntityKeyEvent* _e)

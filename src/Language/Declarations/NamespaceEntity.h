@@ -20,17 +20,17 @@
 
 #pragma once
 
-#include "SubAddressable.h"
+#include "TopLevel.h"
 
 namespace Martta
 {
 
-class NamespaceEntity: public SubAddressable
+class NamespaceEntity: public TopLevel
 {
-	MARTTA_OBJECT(SubAddressable)
+	MARTTA_OBJECT(TopLevel)
 
 public:
-	virtual bool						isGloballyReferencable() const { return true; }
+	virtual bool						isGloballyIdentifiable() const { return true; }
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual QString						defineLayout(ViewKeys&) const;
 	

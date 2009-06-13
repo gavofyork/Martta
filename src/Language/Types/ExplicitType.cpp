@@ -55,16 +55,16 @@ Types ExplicitType::assignableTypes() const
 	return m_subject ? m_subject->assignableTypes() : Types();
 }
 
-QList<ValueDefinition*> ExplicitType::applicableMembers(Entity* _s, bool _isConst) const
+QList<ValueDefiner*> ExplicitType::applicableMembers(Entity* _s, bool _isConst) const
 {
 	Access a = Public;
 	if (_s->ancestor<Class>() && _s->ancestor<Class>() == m_subject)
 		a = Private;
 	else if (m_subject && m_subject->isKind<Class>() && m_subject->asKind<Class>()->baseAccess(_s->ancestor<Class>()) <= Protected)
 		a = Protected;
-	if (Class* c = m_subject ? m_subject->asKind<Class>() : 0)
-		return c->membersOf<ValueDefinition>(_isConst, a);
-	return QList<ValueDefinition*>();
+	if (Class* c = m_subject ? m_subject->tryKind<Class>() : 0)
+		return c->membersOf<ValueDefiner>(_isConst, a);
+	return QList<ValueDefiner*>();
 }
 
 bool ExplicitType::haveSingleCastOperator(TypeEntity const* _t, bool _const) const
@@ -78,7 +78,7 @@ bool ExplicitType::haveSingleCastOperator(TypeEntity const* _t, bool _const) con
 	if (Class* c = m_subject->isKind<Class>() ? m_subject->asKind<Class>() : 0)
 	{
 		bool whackedConstForBest = false;
-		foreach (MemberCallable* i, c->membersOf<ConversionOperator>(_const, Public))
+		foreach (MemberLambda* i, c->membersOf<ConversionOperator>(_const, Public))
 		{	
 			bool b = i->returns()->isSimilarTo(_t, FairlyConvertible);
 			if (b && (!gotOne || gotOne && (i->isConst() == _const) && whackedConstForBest))
@@ -113,7 +113,7 @@ bool ExplicitType::haveSingleConversionConstructor(TypeEntity const* _f) const
 	if (c)
 	{
 		bool gotOne = false;
-		foreach (MemberCallable* i, c->membersOf<Constructor>(false, Public))
+		foreach (MemberLambda* i, c->membersOf<Constructor>(false, Public))
 			if (i->argumentCount() == 1 && i->isValid())
 				if (_f->isSimilarTo(&*i->argumentType(0), FairlyConvertible))
 				{
@@ -181,7 +181,7 @@ QString ExplicitType::idColour() const
 
 bool ExplicitType::canStandAlone() const
 {
-	return m_subject.isUsable() && m_subject->isKind<Class>() ? !m_subject->entitiesOf<VirtualPure>().size() : true;
+	return m_subject.isUsable() && m_subject->isKind<Class>() ? !m_subject->self()->entitiesOf<VirtualPure>().size() : true;
 }
 
 bool ExplicitType::keyPressed(EntityKeyEvent const* _e)
@@ -196,14 +196,14 @@ bool ExplicitType::keyPressed(EntityKeyEvent const* _e)
 	return true;
 }
 
+QList<DeclarationEntity*> ExplicitType::utilised() const
+{
+	return m_subject.isUsable() ? subject()->utilisedInUse() : Super::utilised();	// TODO: define for other types.
+}
+
 QString ExplicitType::defineLayout(ViewKeys&) const
 {
 	return "^;fb;s" + idColour() + ";'" + (m_subject.isUsable() ? m_subject->name() : "[]") + "'";
-}
-
-bool ExplicitType::isSuperfluous() const
-{
-	return context()->allowedKinds(contextIndex()).commonBase() != kind() && m_subject.isNull();
 }
 
 QList<TypeDefinition*> ExplicitType::possibilities()
@@ -212,6 +212,7 @@ QList<TypeDefinition*> ExplicitType::possibilities()
 	TypeDefinition* old = m_subject;
 	foreach (TypeDefinition* i, context()->entitiesHereAndBeforeOf<TypeDefinition>())
 	{
+		qDebug() << i->name();
 		m_subject = i;
 		if (context()->isChildInValidState(contextIndex()))
 			ret << i;

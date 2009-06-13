@@ -39,7 +39,7 @@ CodeScene::CodeScene(QWidget* _p):
 	m_showChanges		(false),
 	m_showOneChange		(true),
 	m_leavingEdit		(false),
-	m_showHover			(false),
+	m_showHover			(true),
 	m_hover				(0),
 	m_navigated			(false),
 	m_strobeCreation	(0),
@@ -109,7 +109,8 @@ void CodeScene::leaving(Entity* _e, InsertionPoint const&)
 	m_cacheKey.remove(_e);
 	
 	if (m_current == _e)
-		setCurrent(e ? e : nearest(_e));
+		if (Entity* ne = e ? e : nearest(_e))
+			setCurrent(ne);
 	if (m_hover == _e)
 		m_hover = 0;
 	if (m_lastRealCurrent == _e)
@@ -223,6 +224,8 @@ void CodeScene::recacheLayoutList(Entity* _e, QString const& _s)
 		s.replace(QString(QChar(0xff69)), ";");
 	
 		list = s.split(QString(QChar(0xff70)));
+		if (_e->isUsurped())
+			list.removeAll("^");
 		if (!list.contains("^"))
 			list << "^!";
 	}
@@ -785,8 +788,9 @@ NEXT:
 
 void CodeScene::setSubject(Entity* _subject)
 {
-	if (m_subject == _subject)
-		return;
+//	if (m_subject == _subject)
+//		return;
+	// Memory reuse means two completely different models could have the same address with one following the death of the other.
 		
 	m_pictures.clear();
 	m_viewKeys.clear();
@@ -798,7 +802,8 @@ void CodeScene::setSubject(Entity* _subject)
 	m_editDelegate = 0;
 	
 	// If the model's going down then make sure we reset all our pointers.
-	if (!m_subject)
+	// m_current, at least, needs to be reset with a different subject.
+//	if (!m_subject)
 	{
 		delete m_editDelegate;
 		m_editDelegate = 0;
@@ -812,7 +817,8 @@ void CodeScene::setSubject(Entity* _subject)
 	// Set subject
 	m_subject = _subject;
 	doRefreshLayout();
-	navigateOnto(m_subject);
+	if (m_subject)
+		navigateOnto(m_subject);
 	update();
 }
 
@@ -824,7 +830,15 @@ void CodeScene::navigateInto(Entity* _centre)
 	if (!isInScene(_centre))
 		doRefreshLayout();
 	
-	setCurrent(m_leftmostChild.value(_centre, _centre));
+	qDebug() << "Navigating into " << _centre;
+	_centre->debugTree();
+	Entity* n = m_leftmostChild.value(_centre, _centre);
+	if (!n)
+	{
+		qDebug() << "Can't find anything here.";
+		n = m_leftmostChild.value(_centre, _centre);
+	}
+	setCurrent(n ? n : nearest(_centre));
 }
 
 void CodeScene::navigateOnto(Entity* _shell)

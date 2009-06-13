@@ -30,13 +30,13 @@ MARTTA_OBJECT_CPP(ReturnStatement);
 	
 int ReturnStatement::minimumRequired() const
 {
-	if (!hasAncestor<Callable>())
+	if (!hasAncestor<LambdaNamer>())
 	{
 		qCritical("*** ERROR: Return statement without callable ancestor!");
 		return 0;
 	}
 
-	if (ancestor<Callable>()->returns().isNull() || ancestor<Callable>()->returns() == Type(Void))
+	if (ancestor<LambdaNamer>()->returns().isNull() || ancestor<LambdaNamer>()->returns() == Type(Void))
 		return 0;
 	else
 		return 1;
@@ -50,26 +50,26 @@ void ReturnStatement::onDependencyChanged(Entity*)
 
 Kinds ReturnStatement::allowedKinds(int _i) const
 {
-	if (!hasAncestor<Callable>())
+	if (!hasAncestor<LambdaNamer>())
 	{
-		qCritical("Return statement without callable ancestor!");
+		qCritical("Return statement without lambda ancestor!");
 		return Kinds();
 	}
 
-	if (_i == 0 && !ancestor<Callable>()->returns().isNull() && ancestor<Callable>()->returns() != Type(Void))
+	if (_i == 0 && !ancestor<LambdaNamer>()->returns().isNull() && ancestor<LambdaNamer>()->returns() != Type(Void))
 		return Kind::of<Typed>();
 	return Kinds();
 }
 
 Types ReturnStatement::allowedTypes(int _i) const
 {
-	if (!hasAncestor<Callable>())
+	if (!hasAncestor<LambdaNamer>())
 	{
-		qCritical("Return statement without callable ancestor!");
+		qCritical("Return statement without lambda ancestor!");
 		return Types();
 	}
-	if (_i == 0 && !ancestor<Callable>()->returns().isNull() && ancestor<Callable>()->returns() != Type(Void))
-		return ancestor<Callable>()->returns();
+	if (_i == 0 && !ancestor<LambdaNamer>()->returns().isNull() && ancestor<LambdaNamer>()->returns() != Type(Void))
+		return ancestor<LambdaNamer>()->returns();
 	return Types();
 }
 

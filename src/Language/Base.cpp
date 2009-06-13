@@ -43,7 +43,7 @@ bool Base::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent c
 bool Base::isChildInValidState(int _i) const
 {
 	if (entityIs<ExplicitType>(_i))
-		return Super::isChildInValidState(_i) && entityAs<ExplicitType>(_i)->subject()->isKind<Class>() && entityAs<ExplicitType>(_i)->subject() != context();
+		return Super::isChildInValidState(_i) && entityAs<ExplicitType>(_i)->subject()->isKind<Class>() && entityAs<ExplicitType>(_i)->subject()->self() != context();
 	return Super::isChildInValidState(_i);
 }
 

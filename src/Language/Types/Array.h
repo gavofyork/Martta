@@ -40,6 +40,7 @@ protected:
 	virtual Types						allowedTypes(int _i) const;
 	virtual TypeEntity*					newClone() const;
 	virtual QString						defineLayout(ViewKeys&) const { return "ycode;0;^;'[';1;']'"; }
+	virtual QList<DeclarationEntity*>	utilised() const;
 };
 
 }

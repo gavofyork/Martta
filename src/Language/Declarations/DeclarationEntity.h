@@ -20,43 +20,33 @@
 
 #pragma once
 
+#include "Identifiable.h"
 #include "Entity.h"
 
 namespace Martta
 {
 
-class Type;
-class SubAddressable;
-class ValueDefinition;
+class ValueDefiner;
 
 /**
  * Class for anything individually referencable in the language.
  * Currently this includes only functions, variables, types and enumeration values.
  */
-class DeclarationEntity: public Entity
+class DeclarationEntity: public Entity, public_interface Identifiable
 {
-	MARTTA_OBJECT_INTERFACE(Entity)
+	MARTTA_PLACEHOLDER(Entity)
+	MARTTA_INHERITS(Identifiable, 0)
 
 public:
 	virtual ~DeclarationEntity();
 
-	/// Returns the context if it is addressable. If not (e.g. Statement-derived context) it returns zero.
-	virtual SubAddressable*				addressableContext() const;
-
-	/// @returns the user-visible name used for this entity. (e.g. "foo", "bar", "my class")
+	/// From Identifiable (default implementations).
 	virtual QString						name() const;
-	/// @returns the name used for this declaration in the CPP code. (e.g. "foo", "m_bar", "MyClass")
 	virtual QString						codeName() const;
-	/// @returns the program-wide reference used for this declaration in the CPP code (calls codeName()).
-	/// (e.g. "::MyClass::m_foo", "::MyClass::bar", "::MyClass")
 	virtual QString						reference() const;
-	/// @returns the Martta-identity for this entity.
-	/// (e.g. "m_foo", "void bar(int), "MyClass")
-	virtual QString						identity() const { return codeName(); }
-	/// @returns the program-wide Martta-reference for this entity.
-	/// (e.g. ";;MyClass;;m_foo", ";;MyClass;;void bar(int)", ";;MyClass")
 	virtual QString						key() const;
-
+	virtual Identifiable*				addressableContext() const;
+	
 	virtual QString						interfaceCode() const { return QString(); }
 	virtual QString						implementationCode() const { return QString(); }
 
@@ -67,8 +57,8 @@ public:
 	QList<DeclarationEntity*>			utilisedSiblings() const;
 	virtual QList<DeclarationEntity*>	utilised() const;
 
-	QList<ValueDefinition*>				valuesKnown() const;
-	virtual QList<ValueDefinition*>		valuesAdded() const { return QList<ValueDefinition*>(); }
+	QList<ValueDefiner*>				valuesKnown() const;
+	virtual QList<ValueDefiner*>		valuesAdded() const { return QList<ValueDefiner*>(); }
 	
 	virtual void						exportDom(QDomElement& _element) const;
 	virtual void						importDom(QDomElement const& _element);

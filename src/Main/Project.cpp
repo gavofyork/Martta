@@ -66,7 +66,7 @@ Project::Project(QString const& _load):
 	m_supportPath = QCoreApplication::applicationDirPath() + "/../support/";
 #endif
 
-	AuxilliaryRegistrar::get()->initialiseAll();
+	AuxilliaryRegistrar::get()->initialiseClasses();
 		
 	if (QFile::exists(m_filename))
 		revert();
@@ -130,16 +130,12 @@ void Project::resetAsNew()
 	m_classes << c;
 
 	c->back().place(m_program = new Method);
-	m_program->back().place(new TextLabel("main"));
-	Compound* o = new Compound;
-	o->prepareChildren();
-	m_program->back().place(o);
-	m_program->back().place(new SimpleType(Void));
-	m_program->back().place(new AccessLabel);
-	m_program->back().place(new ConstLabel(false));
+	m_program->prepareChildren();
+	m_program->entitiesOf<TextLabel>()[0]->setText("main");
+	m_program->entitiesOf<TypeEntity>()[0]->over().place(new SimpleType(Void));
 	
-	nameChanged();
-	changed();
+	emit subjectInvalid();
+	emit nameChanged();
 }
 
 QString Project::code() const
@@ -161,7 +157,7 @@ QString Project::code() const
 			return QString();
 		ret += ic + "\n" + m_namespace->implementationCode() + "\n";
 		if (m_program && m_program->contextIs<DeclarationEntity>())
-			ret += "int main(int, char**)\n{\n" + m_program->contextAs<DeclarationEntity>()->reference() + " p;\np." + m_program->entityAs<Label>(0)->code() + "();\n}\n";
+			ret += "int main(int, char**)\n{\n" + m_program->contextAs<DeclarationEntity>()->reference() + " p;\np." + m_program->entitiesOf<TextLabel>()[0]->code() + "();\n}\n";
 	}
 
 	return ret;
@@ -372,7 +368,8 @@ void Project::deserialise(QDomDocument& _d)
 		}
 	}
 	
-	changed();
+	// Overuse?
+	emit subjectInvalid();
 }
 
 void Project::revert()
@@ -450,7 +447,8 @@ void Project::reloadHeaders()
 		es << e->entities();
 	}
 	
-	emit changed();
+	// Overuse?
+	emit subjectInvalid();
 }
 
 ////////////////////
@@ -537,7 +535,7 @@ QVariant Project::CDepends::data(QModelIndex const& _i, int _r) const
 			if (checkHeading(_i, Variables)) return "Variables";
 			if (checkHeading(_i, Includes)) return "Includes";
 			if (checkItem(_i, Types)) return checkItem(_i, All)->types()[_i.row()]->code();
-			if (checkItem(_i, Functions)) return checkItem(_i, All)->functions()[_i.row()]->code(Callable::InsideScope);
+			if (checkItem(_i, Functions)) return checkItem(_i, All)->functions()[_i.row()]->basicCode(LambdaNamer::InsideScope);
 			if (checkItem(_i, Variables)) return checkItem(_i, All)->variables()[_i.row()]->code();
 			if (checkItem(_i, Includes)) return checkItem(_i, All)->includes()[_i.row()];
 			M_ASSERT(false);

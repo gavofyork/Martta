@@ -27,13 +27,14 @@ namespace Martta
 
 extern int g_typeCount;
 extern bool g_debugCastability;
-	
+
+class DeclarationEntity;
 class ModifyingType;
-class ValueDefinition;
+class ValueDefiner;
 
 class TypeEntity: public TypedOwner
 {
-	MARTTA_OBJECT_INTERFACE(TypedOwner)
+	MARTTA_PLACEHOLDER(TypedOwner)
 
 	friend class Type;
 	friend class ModifyingType;
@@ -47,8 +48,9 @@ public:
 	virtual QString						code(QString const& _middle = "") const { return _middle; }
 	virtual TypeEntity*					bottom() { return this; }
 	
-	bool								isNull() const { return isPlaceholder(); }
+	virtual bool						isNull() const { return isPlaceholder(); }
 	virtual bool						isUltimatelyNull() const { return isNull(); }
+	virtual bool						isWellDefined() const { return !isNull(); }
 	
 	typedef int Castability;
 	enum { Unrelated = 0, Physical = 1, Convertible = 2, FairlyConvertible = 6, BasicallyConvertible = 14, VeryConvertible = 30, ConstPerfectConvertible = 62, MostConvertible = 62, Logical = Physical | Convertible };
@@ -67,12 +69,12 @@ public:
 	virtual bool						hasDefaultConstructor() const { return false; }
 	/// Types that assignment operator may take on right hand side, assuming left hand side is a reference to this type.
 	virtual Types						assignableTypes() const;
-	virtual QList<ValueDefinition*>		applicableMembers(Entity* /*_s*/ = 0, bool /*_isConst*/ = false) const { return QList<ValueDefinition*>(); }
+	virtual QList<ValueDefiner*>		applicableMembers(Entity* /*_s*/ = 0, bool /*_isConst*/ = false) const { return QList<ValueDefiner*>(); }
 	
 	/// isType/asType: They ignore qualifiers and test for/identify the physical type stored.
 	/// In terms of C++, Reference and Const are considered physically transparent (though
 	/// can still be searched for explicitly). FunctionType, Memberify and AddressType are not.
-	virtual bool						isType(Kind _typeKind) { return isKind(_typeKind); }
+	virtual bool						isType(Kind _typeKind) { return Entity::isKind(_typeKind); }
 	template<class T> inline bool		isType() { return isType(Kind::of<T>()); }
 	virtual TypeEntity*					asType(Kind _typeKind) { M_ASSERT(isType(_typeKind)); return this; }
 	template<class T> inline T*			asType() { return static_cast<T*>(asType(Kind::of<T>())); }
@@ -89,6 +91,8 @@ public:
 	
 	/// Just a tunnel into other TypeEntity's newClone methods.
 	static TypeEntity*					cloneOf(TypeEntity const* _t, Type* _owner) { return _t->newClone(_owner); }
+	
+	virtual QList<DeclarationEntity*>	utilised() const { return QList<DeclarationEntity*>(); }
 	
 protected:
 	/// This newClone is the simple one; it doesn't have to change the ownership or duplicate the children.
@@ -109,6 +113,9 @@ protected:
 	// isAtMostBasicallyConvertible will test true iff the required castability is exactly equal to any of the Convertibles at less restrictive or equals to FairlyConvertible.
 	// i.e. It will return false if the requirement includes Physical, VeryConvertible etc.
 	static inline bool					isBasicallyConvertibleAtMost(Castability _required) { return !(_required & ~BasicallyConvertible); }
+	
+	virtual bool						isSuperfluous() const { return context()->allowedKinds(contextIndex()).commonBase() != kind() && isNull(); }
+
 	
 	// Classes may opt to reimplement one or both of these.
 	// When determining the return type make sure you check the Castability _requirement first, before considering the

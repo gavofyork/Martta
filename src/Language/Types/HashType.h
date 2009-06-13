@@ -41,11 +41,12 @@ public:
 	TypeEntity const*					key() const { return entityIs<TypeEntity>(1) ? entityAs<TypeEntity>(1) : TypeEntity::null; }
 	TypeEntity const*					value() const { return entityIs<TypeEntity>(0) ? entityAs<TypeEntity>(0) : TypeEntity::null; }
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
+	virtual bool						isWellDefined() const { return key() && value() && key()->isWellDefined() && value()->isWellDefined(); }
 	
 protected:
 	virtual bool						hasDefaultConstructor() const { return true; }
 	virtual Types						assignableTypes() const;
-	virtual QList<ValueDefinition*>		applicableMembers(Entity* _s = 0, bool _isConst = false) const;
+	virtual QList<ValueDefiner*>		applicableMembers(Entity* _s = 0, bool _isConst = false) const;
 	
 	virtual int							minimumRequired() const { return 2; }
 	virtual Kinds						allowedKinds(int _i) const;

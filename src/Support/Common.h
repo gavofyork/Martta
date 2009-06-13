@@ -86,6 +86,7 @@ enum Associativity
 	
 enum Qualifier
 {
+	NoQualifiers = 0,
  	Static = 0x0002,	// Variable/Function
 	Extern = 0x0004,	// Variable/Function
   	Mutable = 0x0010,	// Variable
@@ -222,8 +223,8 @@ template<class T, class F> inline QList<T*> filterEntities(QList<F*> _f)
 {
 	QList<T*> ret;
 	foreach (F* i, _f)
-		if (i->isKind(T::staticKind))
-			ret << static_cast<T*>(i);
+		if (i->template isKind<T>())
+			ret << i->template asKind<T>();
 	return ret;
 }
 

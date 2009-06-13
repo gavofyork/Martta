@@ -23,7 +23,7 @@
 #include <QTimer>
 
 #include "Operator.h"
-#include "SubAddressable.h"
+#include "DeclarationEntity.h"
 
 namespace Martta
 {
@@ -39,10 +39,10 @@ class FundamentalOperator;
  *
  * Aside from that it should also encompass all the implementation of the project in question.
  */
-class RootEntity: public QObject, public SubAddressable
+class RootEntity: public QObject, public DeclarationEntity
 {
 	Q_OBJECT
-	MARTTA_OBJECT(SubAddressable)
+	MARTTA_OBJECT(DeclarationEntity)
 
 public:
 	RootEntity();

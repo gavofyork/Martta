@@ -24,13 +24,15 @@
 #include "Common.h"
 #include "RootEntity.h"
 #include "TextLabel.h"
+#include "OperatorLabel.h"
+#include "ValueDefiner.h"
 #include "DeclarationEntity.h"
 
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(DeclarationEntity);	
-	
+MARTTA_OBJECT_CPP(DeclarationEntity);
+
 DeclarationEntity::~DeclarationEntity()
 {
 	if (rootEntity() && rootEntity() != this)
@@ -39,9 +41,9 @@ DeclarationEntity::~DeclarationEntity()
 		qInformation() << "Deleting" << this << "with no rootEntity!";
 }
 
-QList<ValueDefinition*> DeclarationEntity::valuesKnown() const
+QList<ValueDefiner*> DeclarationEntity::valuesKnown() const
 {
-	QList<ValueDefinition*> ret = contextIs<DeclarationEntity>() ? contextAs<DeclarationEntity>()->valuesKnown() : QList<ValueDefinition*>();
+	QList<ValueDefiner*> ret = contextIs<DeclarationEntity>() ? contextAs<DeclarationEntity>()->valuesKnown() : QList<ValueDefiner*>();
 	foreach (DeclarationEntity* d, siblingsOf<DeclarationEntity>())
 		ret += d->valuesAdded();
 	return ret;
@@ -49,16 +51,17 @@ QList<ValueDefinition*> DeclarationEntity::valuesKnown() const
 
 QString DeclarationEntity::name() const
 {
-	if (!entitiesOf<TextLabel>().size())
-		return QString();
-	return entitiesOf<TextLabel>()[0]->name();
+	if (entitiesOf<TextLabel>().size())
+		return entitiesOf<TextLabel>()[0]->name();
+	return QString();
 }
 
 QString DeclarationEntity::codeName() const
 {
-	if (!entitiesOf<TextLabel>().size())
+	if (entitiesOf<IdLabel>().size())
+		return entitiesOf<IdLabel>()[0]->asKind<Label>()->code();
+	else
 		return QString();
-	return entitiesOf<TextLabel>()[0]->asKind<Label>()->code();
 }
 
 Kinds DeclarationEntity::allowedKinds(int _i) const
@@ -72,10 +75,10 @@ void DeclarationEntity::onLeaveScene(RootEntity* _new, RootEntity* _old)
 	if (_old && _old != _new)
 		_old->noteDeletion(this);
 }
-
-SubAddressable* DeclarationEntity::addressableContext() const
+	
+Identifiable* DeclarationEntity::addressableContext() const
 {
-	return contextIs<SubAddressable>() ? contextAs<SubAddressable>() : 0;
+	return contextIs<Identifiable>() ? contextAs<Identifiable>() : 0;
 }
 
 QString DeclarationEntity::reference() const
@@ -128,6 +131,9 @@ QList<DeclarationEntity*> DeclarationEntity::utilised() const
 	QList<DeclarationEntity*> ret;
 	foreach (DeclarationEntity* i, entitiesOf<DeclarationEntity>())
 		ret << i->utilised();
+	qDebug() << name() << "(" << kind().name() << ") utilises:";
+	foreach (DeclarationEntity* i, ret)
+		qDebug() << "    " << i->name() << "(" << i->kind().name() << ")";
 	return ret;
 }
 

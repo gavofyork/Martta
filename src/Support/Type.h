@@ -20,14 +20,15 @@
 
 #pragma once
 
+#include "Common.h"
 #include "SimpleType.h"
 #include "TypeEntity.h"
 
 namespace Martta
 {
 
-class TypeDefinition;
 class ModifyingType;
+class TypeDefinition;
 
 class Type
 {
@@ -43,6 +44,7 @@ public:
 	inline ~Type() { m_top->killAndDelete(); }
 
 	bool isNull() const { return m_top->isPlaceholder(); }
+	bool isWellDefined() const { return m_top->isWellDefined(); }
 	bool isUltimatelyNull() const;
 
 	// Note this will change the class template types in order to remember what template substitution have happened.

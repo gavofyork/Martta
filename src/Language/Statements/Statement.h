@@ -26,18 +26,18 @@
 namespace Martta
 {
 
-class ValueDefinition;
+class ValueDefiner;
 class Typed;
 
 class Statement: public TypedOwner
 {
-	MARTTA_OBJECT_INTERFACE(TypedOwner)
+	MARTTA_PLACEHOLDER(TypedOwner)
 
 public:
 	virtual QString						code() const { return "(void)0;"; }
 	virtual QString						codeAsStatement() const { return code(); }
 
-	virtual QList<ValueDefinition*>		valuesInLocalScope() const;
+	virtual QList<ValueDefiner*>		valuesInLocalScope() const;
 
 	QList<Statement*>					statements() const { return entitiesOf<Statement>(); }
 	bool			 					isStatement(int _i) const { return entityIs<Statement>(_i); }
