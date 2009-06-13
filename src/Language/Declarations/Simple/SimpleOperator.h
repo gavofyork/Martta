@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "Operator.h"
 #include "Simple.h"
 
 namespace Martta

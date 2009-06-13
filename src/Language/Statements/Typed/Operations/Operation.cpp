@@ -19,11 +19,11 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "msSupport.h"
-#include "FundamentalOperator.h"
 #include "CodeScene.h"
 #include "FunctionType.h"
 #include "Reference.h"
 #include "Memberify.h"
+#include "ValueDefiner.h"
 #include "Operation.h"
 
 namespace Martta
@@ -167,8 +167,7 @@ InsertionPoint Operation::slideOnPrecedence(InsertionPoint _p, Precedence _d, As
 QList<ValueDefiner*> Operation::allOperators(Operator _o)
 {
 	// TODO: Should use rootEntity() here to index, but doesn't yet; no a big issue until there are multiple RootEntities at once.
-	QList<ValueDefiner*> ret = castEntities<ValueDefiner>(FundamentalOperator::find(_o.symbol()));
-	ret += s_operatorCatalogue.values(_o);
+	QList<ValueDefiner*> ret = s_operatorCatalogue.values(_o);
 	// TODO: Search classes etc.
 	return ret;
 }

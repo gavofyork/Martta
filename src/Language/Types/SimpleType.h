@@ -28,6 +28,8 @@ namespace Martta
 extern const int s_simpleIds[];
 extern const int s_simpleIdsCount;
 
+class SimpleOperator;
+
 /**
  * Enumeration of fundamental types.
  *
@@ -48,7 +50,12 @@ class SimpleType: public TypeEntity
 {
 	MARTTA_OBJECT(TypeEntity)
 
+	friend class SimpleOperator;	// For use of s_nonMembers. QUICK Should probably use an interface for this.
+	
 public:
+	static void initialiseClass();
+	static void finaliseClass();
+
 	SimpleType(int _d = -1): m_id(_d) {}
 
 	int id() const { return m_id; }
@@ -97,6 +104,7 @@ protected:
 
 private:
 	int m_id;
+	static QList<SimpleOperator*> s_nonMembers;
 };
 
 }

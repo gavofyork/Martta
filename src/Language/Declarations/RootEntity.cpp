@@ -18,11 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "Variable.h"
-#include "Function.h"
-#include "BasicOperator.h"
 #include "TopLevelType.h"
-#include "NamespaceEntity.h"
 #include "RootEntity.h"
 
 namespace Martta

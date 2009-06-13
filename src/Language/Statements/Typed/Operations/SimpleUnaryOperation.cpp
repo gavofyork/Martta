@@ -23,9 +23,7 @@
 #include "Const.h"
 #include "Reference.h"
 #include "TypeDefinition.h"
-#include "BasicOperator.h"
 #include "MethodOperator.h"
-#include "FundamentalOperator.h"
 #include "SimpleUnaryOperation.h"
 
 #include "Referenced.h"

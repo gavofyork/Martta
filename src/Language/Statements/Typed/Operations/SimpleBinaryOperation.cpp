@@ -23,8 +23,6 @@
 #include "TypeDefinition.h"
 #include "Const.h"
 #include "Reference.h"
-#include "FundamentalOperator.h"
-#include "BasicOperator.h"
 #include "FunctionType.h"
 #include "MethodOperator.h"
 #include "SimpleBinaryOperation.h"

@@ -181,8 +181,6 @@ Move the commitContextChange stuff from CodeScene's key event handler into the E
 
 "J" -> Joins next line to last [] in current.
 
-Move FundamentalOperator stuff into SimpleType and move over to standard SimpleOperator stuff.
-
 Currently MemberOperations' leftType needs only to be of type  "Class", rather than "Class&"?
 
 Allow code for "implicit" casting.

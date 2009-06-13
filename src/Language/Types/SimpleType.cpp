@@ -20,8 +20,11 @@
 
 #include <QtXml>
 
+#include "RootEntity.h"
 #include "Type.h"
+#include "SimpleOperator.h"
 #include "Const.h"
+#include "Pointer.h"
 #include "Reference.h"
 #include "CodeScene.h"
 #include "CompletionDelegate.h"
@@ -35,6 +38,8 @@ const int s_simpleIds[] = { Char, Int, Short|Int, Long|Int, Longlong|Int, Unsign
 const int s_simpleIdsCount = sizeof(s_simpleIds) / sizeof(s_simpleIds[0]);
 
 MARTTA_OBJECT_CPP(SimpleType);
+
+QList<SimpleOperator*> SimpleType::s_nonMembers;
 
 bool SimpleType::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
 {
@@ -159,6 +164,89 @@ void SimpleType::committed()
 	{
 		replace(new StringType);
 	}
+}
+
+void SimpleType::initialiseClass()
+{
+	QList<int> integral;
+	integral << Char << (Short|Int) << Int << (Long|Int) << (Longlong|Int) << (Unsigned|Char) << (Unsigned|Short|Int) << (Unsigned|Int) << (Unsigned|Long|Int) << (Unsigned|Longlong|Int);
+	QList<int> scalar;
+	scalar << integral << Float << Double << (Long|Double);
+	QList<int> numeric;
+	numeric << scalar << (Complex|Float) << (Complex|Double) << (Complex|Long|Double);
+	
+	RootEntity* root = RootEntity::get();
+	
+	// integral types
+	foreach (int d, integral)
+	{
+		// unit inc/decrement operators.
+		foreach (QString s, QString("++,--").split(","))
+		{	SimpleOperator::create<SimpleType>(Operator(s, Operator::UnaryPrefix), Type(d)/*.topWith(Reference())*/, Type(d).topWith(Reference()), root);
+			SimpleOperator::create<SimpleType>(Operator(s, Operator::UnaryPostfix), Type(d)/*.topWith(Reference())*/, Type(d).topWith(Reference()), root);
+		}
+		// modulo/logical operators
+		foreach (QString s, QString("%,&,|,^").split(","))
+			SimpleOperator::create<SimpleType>(Operator(s), Type(d), (Type(d), Type(d)), root);
+		foreach (QString s, QString(">>,<<").split(","))
+			SimpleOperator::create<SimpleType>(Operator(s), Type(d), (Type(d), Type(Int)), root);
+		foreach (QString s, QString("%=,&=,|=,^=").split(","))
+			SimpleOperator::create<SimpleType>(Operator(s), Type(d).topWith(Reference()), (Type(d).topWith(Reference()), Type(d)), root);
+		foreach (QString s, QString(">>=,<<=").split(","))
+			SimpleOperator::create<SimpleType>(Operator(s), Type(d).topWith(Reference()), (Type(d).topWith(Reference()), Type(Int)), root);
+		foreach (QString s, QString("~").split(","))
+			SimpleOperator::create<SimpleType>(Operator(s), Type(d), Type(d), root);
+	}
+
+	// all scalar types
+	foreach (int d, scalar)
+	{
+		// comparison
+		foreach (QString s, QString("<,>,<=,>=").split(","))
+			SimpleOperator::create<SimpleType>(Operator(s), Type(Bool), (Type(d), Type(d)), root);
+		// simple arithmetic
+		foreach (QString s, QString("+,-,*,/").split(","))
+			SimpleOperator::create<SimpleType>(Operator(s, Operator::Binary), Type(d), (Type(d), Type(d)), root);
+		// increment
+		foreach (QString s, QString("+=,-=,*=,/=").split(","))
+			SimpleOperator::create<SimpleType>(Operator(s), Type(d).topWith(Reference()), (Type(d).topWith(Reference()), Type(d)), root);
+		// signing
+		foreach (QString s, QString("+,-").split(","))
+			SimpleOperator::create<SimpleType>(Operator(s, Operator::UnaryPrefix), Type(d), Type(d), root);
+	}
+
+	// boolean
+	foreach (QString s, QString("||,&&").split(","))
+		SimpleOperator::create<SimpleType>(Operator(s), Type(Bool), (Type(Bool), Type(Bool)), root);
+	foreach (QString s, QString("!").split(","))
+		SimpleOperator::create<SimpleType>(Operator(s), Type(Bool), Type(Bool), root);
+
+	// all types
+	foreach (int d, QList<int>(numeric) << Bool << Wchar)
+	{
+		// (in)equality
+		foreach (QString s, QString("==,!=").split(","))
+			SimpleOperator::create<SimpleType>(Operator(s), Type(Bool), (Type(d), Type(d)), root);
+	}
+
+	// pointer types (we use Ptr for them in the lookup)
+	foreach (QString s, QString("++,--").split(","))
+	{
+		SimpleOperator::create<SimpleType>(Operator(s, Operator::UnaryPrefix), Type().topWith(Pointer()), Type(Void).topWith(Const()).topWith(Pointer()).topWith(Reference()), root);
+		SimpleOperator::create<SimpleType>(Operator(s, Operator::UnaryPostfix), Type().topWith(Pointer()), Type(Void).topWith(Const()).topWith(Pointer()).topWith(Reference()), root);
+	}
+	foreach (QString s, QString("<,>,<=,>=,==,!=").split(","))
+		SimpleOperator::create<SimpleType>(Operator(s), Type(Bool), (Type(Void).topWith(Const()).topWith(Pointer()), Type().topWith(Pointer())), root);
+	foreach (QString s, QString("+,-").split(","))
+		SimpleOperator::create<SimpleType>(Operator(s, Operator::Binary), Type().topWith(Pointer()), (Type(Void).topWith(Const()).topWith(Pointer()), Type(Int)), root);
+	foreach (QString s, QString("+=,-=").split(","))
+		SimpleOperator::create<SimpleType>(Operator(s), Type().topWith(Pointer()).topWith(Reference()), (Type(Void).topWith(Const()).topWith(Pointer()).topWith(Reference()), Type(Int)), root);
+}
+
+void SimpleType::finaliseClass()
+{
+	while (s_nonMembers.size())
+		delete s_nonMembers.takeLast();
 }
 
 }

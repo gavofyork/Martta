@@ -25,7 +25,6 @@
 #include "CodeScene.h"
 #include "TypeDefinition.h"
 #include "RootEntity.h"
-#include "FundamentalOperator.h"
 #include "EditDelegate.h"
 #include "Entity.h"
 

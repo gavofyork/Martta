@@ -24,7 +24,6 @@
 #include <QObject>
 #include <QAbstractItemModel>
 
-#include "FundamentalOperator.h"
 #include "NamespaceEntity.h"
 #include "RootEntity.h"
 #include "Method.h"

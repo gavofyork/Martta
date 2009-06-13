@@ -51,7 +51,6 @@ class CodeScene;
 class DecorationContext;
 class EditDelegateFace;
 class EntityKeyPress;
-class FundamentalOperator;
 class DeclarationEntity;
 class TypeDefinition;
 class EntityKeyEvent;

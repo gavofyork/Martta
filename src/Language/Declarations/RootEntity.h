@@ -29,7 +29,6 @@ namespace Martta
 {
 
 class ModelPtrFace;
-class FundamentalOperator;
 
 /**
  * The language root for an entire program.

@@ -30,7 +30,6 @@ namespace Martta
 
 class MethodOperator;
 class BasicOperator;
-class FundamentalOperator;
 	
 class SimpleBinaryOperation: public BinaryOperation
 {
