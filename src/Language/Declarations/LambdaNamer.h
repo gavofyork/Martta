@@ -27,7 +27,7 @@
 namespace Martta
 {
 
-class Variable;
+class Argument;
 class Compound;
 
 class LambdaNamer: public_interface ValueDefiner
@@ -78,7 +78,7 @@ public:
 	/// @note this only returns the number of nameable arguments. If ellipsis() is true, this could be different to the number of parameters that are passed to it in an invocation.
 	/// @note argument() may not work for all arguments within argumentCount(); argumentType() is the only one guaranteed to work. This is the case in, e.g., postfix versions of ++ and -- unary operators.
 	virtual int							argumentCount() const;
-	virtual Variable*					argument(int _index) const;
+	virtual Argument*					argument(int _index) const;
 	virtual Type						returns() const;
 	virtual Type						argumentType(int _index) const;
 	virtual QString						argumentName(int _index) const;

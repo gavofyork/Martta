@@ -25,5 +25,10 @@ namespace Martta
 {
 
 MARTTA_INTERFACE_CPP(Identifiable);	
+	
+Identifiable* Identifiable::addressableContext() const
+{
+	return self()->contextIs<Identifiable>() ? self()->contextAs<Identifiable>() : 0;
+}
 
 }

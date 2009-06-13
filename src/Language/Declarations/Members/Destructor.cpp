@@ -18,12 +18,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "ExplicitType.h"
 #include "Class.h"
 #include "Compound.h"
-#include "Variable.h"
-#include "Reference.h"
-#include "AccessLabel.h"
 #include "Destructor.h"
 
 namespace Martta

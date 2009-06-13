@@ -29,6 +29,7 @@
 #include "Struct.h"
 #include "Class.h"
 #include "Variable.h"
+#include "Argument.h"
 #include "Function.h"
 #include "NamespaceEntity.h"
 #include "Type.h"
@@ -284,7 +285,7 @@ void FunctionResolver::addArgument(QXmlAttributes const& _a)
 {
 	// TODO: Will have to handle defaults for C++ stuff (i.e. know if it has a default).
 	m_argIds << _a.value("type");
-	Variable* v = new Variable;
+	Argument* v = new Argument;
 	m_subject->back().place(v);
 	v->back().place(new TextLabel(_a.value("name")));
 	v->back().place(new TypeEntity);

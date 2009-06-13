@@ -77,8 +77,8 @@ void CodeScene::leaving(Entity* _e, InsertionPoint const&)
 	Entity* e = 0;
 	if (m_current == _e)
 	{
-		qDebug() << "Trying to calculate next...";
-		_e->debugTree();
+//		qDebug() << "Trying to calculate next...";
+//		_e->debugTree();
 		Entity* n = next(_e);
 		while (n && n->hasAncestor(_e)) n = next(n);
 		Entity* p = previous(_e);
@@ -390,7 +390,7 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 		InsertionPoint sChPoint;
 		if (m_strobeCreation)
 		{
-			m_strobeCreation->debugTree();
+//			m_strobeCreation->debugTree();
 			M_ASSERT(m_strobeChild);
 			sCrPoint = m_strobeCreation->over();
 			sChPoint = m_strobeChild->over();
@@ -656,11 +656,11 @@ void CodeScene::setCurrent(Entity* _e)
 		_e = ne;
 	}
 		
-	qDebug() << "";
+/*	qDebug() << "";
 	qDebug() << "setCurrent: setting current to" << _e;
 	qDebug() << "";
 	_e->debugTree();
-	qDebug() << "";
+	qDebug() << "";*/
 	m_current = _e;
 	
 	
@@ -830,8 +830,8 @@ void CodeScene::navigateInto(Entity* _centre)
 	if (!isInScene(_centre))
 		doRefreshLayout();
 	
-	qDebug() << "Navigating into " << _centre;
-	_centre->debugTree();
+	qInformation() << "Navigating into " << _centre;
+//	_centre->debugTree();
 	Entity* n = m_leftmostChild.value(_centre, _centre);
 	if (!n)
 	{

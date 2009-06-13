@@ -115,6 +115,7 @@ protected:
 	static inline bool					isBasicallyConvertibleAtMost(Castability _required) { return !(_required & ~BasicallyConvertible); }
 	
 	virtual bool						isSuperfluous() const { return context()->allowedKinds(contextIndex()).commonBase() != kind() && isNull(); }
+	virtual bool						isInValidState() const { return isWellDefined(); }
 
 	
 	// Classes may opt to reimplement one or both of these.

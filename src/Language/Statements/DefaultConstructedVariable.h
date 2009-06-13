@@ -35,7 +35,6 @@ public:
 protected:
 	virtual int							minimumRequired() const { return 1; }
 	virtual Kinds						allowedKinds(int _index) const;
-	virtual Kinds						deniedKinds(int _index) const;
 	virtual QString						code() const;
 	virtual QString						defineLayout(ViewKeys&) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);

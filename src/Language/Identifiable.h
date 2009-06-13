@@ -32,23 +32,28 @@ class Identifiable
 	MARTTA_INTERFACE
 	
 public:	
-	/// Default value to returns the context is addressable or zero if not (e.g. Statement-derived context).
-	virtual Identifiable*				addressableContext() const = 0;
-
 	/// @returns the user-visible name used for this entity. (e.g. "foo", "bar", "my class")
 	virtual QString						name() const = 0;
 	/// @returns the name used for this declaration in the CPP code. (e.g. "foo", "m_bar", "MyClass")
 	virtual QString						codeName() const = 0;
 	/// @returns the program-wide reference used for this declaration in the CPP code (calls codeName()).
 	/// (e.g. "::MyClass::m_foo", "::MyClass::bar", "::MyClass")
-	virtual QString						reference() const = 0;
-	/// @returns the Martta-identity for this entity.
+	virtual QString						reference() const { return addressableContext() ? addressableContext()->reference() + "::" + codeName() : codeName(); }
+	/// @returns the Martta-identity for this entity. Defaults to the codeName().
 	/// (e.g. "m_foo", "void bar(int), "MyClass")
 	virtual QString						identity() const { return codeName(); }
-	/// @returns the program-wide Martta-reference for this entity.
+	/// @returns the program-wide Martta-reference for this entity. This must deliver a unique and locatable
+	/// string even when the entity is within a statement hierarchy or is anonymous (empty name).
 	/// (e.g. ";;MyClass;;m_foo", ";;MyClass;;void bar(int)", ";;MyClass")
 	virtual QString						key() const = 0;
 	
+	/// @returns the entity from which this may be addressed. Typically it is the parent, though some entities
+	/// (e.g. EnumValue) skip this immediate parent and use their parent's addressableContext. 
+	/// Default value to returns the context is addressable or zero if not (e.g. Statement-derived context).
+	virtual Identifiable*				addressableContext() const;
+
+	/// @returns true if the entity cannot be explicitly referenced in the CPP code. This is the case in code
+	/// like class {} x; or typedef struct {} y; or enum { z };
 	virtual bool						isHidden() const { return codeName().startsWith(".") || name().isEmpty(); }				///< true for anonymous enums.
 
 	virtual ~Identifiable() {}

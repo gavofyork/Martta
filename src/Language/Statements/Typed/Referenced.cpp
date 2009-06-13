@@ -40,6 +40,7 @@
 #include "CodeScene.h"
 #include "TextLabel.h"
 #include "DefaultConstructedVariable.h"
+#include "Argument.h"
 #include "AssignedVariable.h"
 #include "TextLabel.h"
 #include "Member.h"
@@ -181,7 +182,7 @@ void Referenced::decorate(DecorationContext const& _c) const
 		{
 			if (e->isKind<MemberVariable>())
 				dec = true;
-			else if (e->isKind<Variable>() && e->contextIs<LambdaNamer>())
+			else if (e->isKind<Argument>())
 				dec = true;
 		}
 		if (dec)
@@ -207,7 +208,7 @@ QString Referenced::defineLayout(ViewKeys&) const
 	QString ret = QString(m_lastSet&GlobalSet ? "p:/global.svg;" : "");
 	if (m_subject && m_subject->isKind<MemberVariable>())
 		ret += "(;M4;[[[;fs-2;fb;c#777;e#fff;'M';]]];);";
-	else if (m_subject && m_subject->isKind<Variable>() && m_subject->self()->contextIs<LambdaNamer>())
+	else if (m_subject && m_subject->isKind<Argument>())
 		ret += "(;M4;[[[;fs-2;fb;c#777;e#fff;'_';]]];);";
 	ret += "^;s" + (m_subject ? m_subject->type()->idColour() : TypeEntity::null->idColour()) + ";c;'" + (m_subject ? m_subject->name() : QString()) + "'";
 	return ret;

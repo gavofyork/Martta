@@ -44,6 +44,7 @@ protected:
 	virtual QString						defineLayout(ViewKeys&) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
 	virtual void						decorate(DecorationContext const& _c) const;
+	virtual bool						isInValidState() const { return m_text != ""; }
 	
 private:
 	QString								m_text;

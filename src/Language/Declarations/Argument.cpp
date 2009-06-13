@@ -18,44 +18,27 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include <QtXml>
-
-#include "FunctionType.h"
-#include "Primary.h"
+#include "TypeEntity.h"
 #include "TextLabel.h"
-#include "ThisPointer.h"
-#include "Function.h"
+#include "Argument.h"
 
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(Function);	
+MARTTA_OBJECT_CPP(Argument);
 
-Kinds Function::allowedKinds(int _i) const
+bool Argument::isSuperfluous() const
+{
+	return actualType()->isNull();
+}
+
+Kinds Argument::allowedKinds(int _i) const
 {
 	if (_i == 0)
 		return Kind::of<TextLabel>();
 	if (_i == 1)
-		return Kind::of<Compound>();
-	if (_i == 2)
 		return Kind::of<TypeEntity>();
-	if (_i >= 3)
-		return Kind::of<Variable>();
 	return Kinds();
-}
-
-void Function::importDom(QDomElement const& _element)
-{
-	Super::importDom(_element);
-	m_qualifiers = (Qualifiers)_element.attribute("qualifiers").toInt();
-	m_ellipsis = (bool)_element.attribute("ellipsis").toInt();
-}
-
-void Function::exportDom(QDomElement& _element) const
-{
-	Super::exportDom(_element);
-	_element.setAttribute("qualifiers", m_qualifiers);
-	_element.setAttribute("ellipsis", m_ellipsis);
 }
 
 }

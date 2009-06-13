@@ -22,7 +22,7 @@
 #include "ExplicitType.h"
 #include "Class.h"
 #include "Compound.h"
-#include "Variable.h"
+#include "Argument.h"
 #include "Reference.h"
 #include "Const.h"
 #include "Constructor.h"
@@ -57,7 +57,7 @@ Kinds Constructor::memberAllowedKinds(int _i) const
 	if (_i == 0)
 		return Kind::of<Compound>();
 	else
-		return Kind::of<Variable>();
+		return Kind::of<Argument>();
 }
 
 bool Constructor::isInValidState() const

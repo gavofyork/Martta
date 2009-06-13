@@ -42,20 +42,20 @@ protected:
 	virtual int							memberMinimumRequired() const { return 1; }
 	virtual Kinds						memberAllowedKinds(int _i) const;
 	virtual QString						memberLambdaDefineLayout(ViewKeys&) const;
-	virtual QString						name() const { return m_base ? m_base->name() : QString(); }
+	virtual QString						name() const { return m_base.isUsable() ? m_base->name() : QString(); }
 	virtual QString						codeName() const { return m_base ? m_base->codeName() : QString(); }
 	virtual bool						isInValidState() const { return m_base.isUsable(); }
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 	
-	virtual void						apresLoad() { addDependency(m_base); Super::apresLoad(); }
+	virtual void						apresLoad() { M_ASSERT(m_base.isUsable()); addDependency(m_base); Super::apresLoad(); }
 	virtual void						exportDom(QDomElement& _element) const;
 	virtual void						importDom(QDomElement const& _element);
 
-	virtual inline int					argumentCount() const { return m_base ? m_base->argumentCount() : 0; }
-	virtual inline Variable*			argument(int _index) const { M_ASSERT(_index < argumentCount()); return m_base ? m_base->argument(_index) : 0; }
-	virtual inline Type					returns() const { return m_base ? m_base->returns() : Type(); }
-	virtual inline bool					isConst() const { return m_base ? m_base->isConst() : false; }
+	virtual inline int					argumentCount() const { return m_base.isUsable() ? m_base->argumentCount() : 0; }
+	virtual inline Argument*			argument(int _index) const { M_ASSERT(_index < argumentCount()); return m_base.isUsable() ? m_base->argument(_index) : 0; }
+	virtual Type						returns() const;
+	virtual inline bool					isConst() const { return m_base.isUsable() ? m_base->isConst() : false; }
 	
 private:
 	ModelPtr<VirtualMethod>				m_base;

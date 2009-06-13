@@ -536,7 +536,7 @@ QVariant Project::CDepends::data(QModelIndex const& _i, int _r) const
 			if (checkHeading(_i, Includes)) return "Includes";
 			if (checkItem(_i, Types)) return checkItem(_i, All)->types()[_i.row()]->code();
 			if (checkItem(_i, Functions)) return checkItem(_i, All)->functions()[_i.row()]->basicCode(LambdaNamer::InsideScope);
-			if (checkItem(_i, Variables)) return checkItem(_i, All)->variables()[_i.row()]->code();
+			if (checkItem(_i, Variables)) return checkItem(_i, All)->variables()[_i.row()]->basicCode();
 			if (checkItem(_i, Includes)) return checkItem(_i, All)->includes()[_i.row()];
 			M_ASSERT(false);
 		case HeadingRole:

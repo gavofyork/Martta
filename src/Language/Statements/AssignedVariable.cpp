@@ -54,7 +54,7 @@ QString AssignedVariable::code() const
 {
 	if (!entityAs<Variable>(0)) return "";
 	if (!isTyped(1)) return "";
-	return entityAs<Variable>(0)->code() + " = " + asTyped(1)->code();
+	return entityAs<Variable>(0)->basicCode() + " = " + asTyped(1)->code();
 }
 
 bool AssignedVariable::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)

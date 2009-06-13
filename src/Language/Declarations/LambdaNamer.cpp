@@ -23,7 +23,7 @@
 #include "Primary.h"
 #include "FunctionType.h"
 #include "Reference.h"
-#include "Variable.h"
+#include "Argument.h"
 #include "Compound.h"
 #include "LambdaNamer.h"
 
@@ -49,8 +49,8 @@ QString LambdaNamer::defineNameLayout(ViewKeys&) const
 
 QString LambdaNamer::defineArgListLayout(ViewKeys&) const
 {
-	int sFirstArg = self()->entityIndexOf<Variable>();
-	int sArgCount = self()->entityCountOf<Variable>();
+	int sFirstArg = self()->entityIndexOf<Argument>();
+	int sArgCount = self()->entityCountOf<Argument>();
 	return "ycode;'(';" + times(sFirstArg, sFirstArg + sArgCount, ";', ';") + ";')'";
 }
 
@@ -86,11 +86,11 @@ QString LambdaNamer::defineLayout(ViewKeys& _k, QString _middle) const
 
 bool LambdaNamer::keyPressed(EntityKeyEvent const* _e)
 {
-	int sFirstArg = self()->entityIndexOf<Variable>();
+	int sFirstArg = self()->entityIndexOf<Argument>();
 	int sName = self()->entityIndexOf<IdLabel>();
-	if ((_e->text() == "(" && !argumentCount() && (_e->focalIndex() == sName || _e->isFocused()) || _e->text() == "," && _e->focalIndex() >= sFirstArg) && self()->back().allowedToBeKind<Variable>())
+	if ((_e->text() == "(" && !argumentCount() && (_e->focalIndex() == sName || _e->isFocused()) || _e->text() == "," && _e->focalIndex() >= sFirstArg) && self()->back().allowedToBeKind<Argument>())
 	{
-		Variable* v = new Variable;
+		Argument* v = new Argument;
 		self()->back().place(v);
 		v->prepareChildren();
 		v->navigateInto(_e->codeScene());
@@ -152,13 +152,13 @@ Compound* LambdaNamer::body() const
 
 int LambdaNamer::argumentCount() const
 {
-	return self()->entitiesOf<Variable>().size();
+	return self()->entitiesOf<Argument>().size();
 }
 
-Variable* LambdaNamer::argument(int _index) const
+Argument* LambdaNamer::argument(int _index) const
 {
-	if (_index < self()->entitiesOf<Variable>().size())
-		return self()->entitiesOf<Variable>()[_index];
+	if (_index < self()->entitiesOf<Argument>().size())
+		return self()->entitiesOf<Argument>()[_index];
 	return 0;
 }
 
@@ -171,21 +171,21 @@ Type LambdaNamer::returns() const
 
 Type LambdaNamer::argumentType(int _index) const
 {
-	if (Variable* v = argument(_index))
+	if (Argument* v = argument(_index))
 		return *v->actualType();
 	return 0;
 }
 
 QString LambdaNamer::argumentName(int _index) const
 {
-	if (Variable* v = argument(_index))
+	if (Argument* v = argument(_index))
 		return v->name();
 	return 0;
 }
 
 QString LambdaNamer::argumentCodeName(int _index) const
 {
-	if (Variable* v = argument(_index))
+	if (Argument* v = argument(_index))
 		return v->codeName();
 	return 0;
 }

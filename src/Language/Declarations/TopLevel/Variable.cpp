@@ -20,10 +20,7 @@
 
 #include <QtXml>
 
-#include "Common.h"
-#include "Referenced.h"
-#include "Reference.h"
-#include "Memberify.h"
+#include "TypeEntity.h"
 #include "TextLabel.h"
 #include "Variable.h"
 
@@ -32,30 +29,6 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(Variable);
 
-TypeEntity* Variable::actualType() const
-{
-	if (!entityIs<TypeEntity>(1))
-		return TypeEntity::null;
-	return entityAs<TypeEntity>(1);
-}
-
-Type Variable::type() const
-{
-	if (!entityIs<TypeEntity>(1))
-		return Type();
-
-	Type ret(*entityAs<TypeEntity>(1));
-
-	if (!ret->isType<Reference>())
-		ret.topWith(Reference());
-	return ret;
-}
-
-bool Variable::isChildInValidState(int _i) const
-{
-	return _i != 1 || !entityIs<TypeEntity>(1) || Type(*entityAs<TypeEntity>(1)) != Type(Void);
-}
-
 Kinds Variable::allowedKinds(int _i) const
 {
 	if (_i == 0)
@@ -63,23 +36,6 @@ Kinds Variable::allowedKinds(int _i) const
 	if (_i == 1)
 		return Kind::of<TypeEntity>();
 	return Kinds();
-}
-
-QString Variable::code() const
-{
-	if (!isComplete())
-		return QString();
-	return Martta::code(m_qualifiers & VariableMask) + actualType()->code(" " + entityAs<Label>(0)->code());
-}
-
-QString Variable::interfaceCode() const
-{
-	return code() + ";\n";
-}
-
-QString Variable::implementationCode() const
-{
-	return QString();
 }
 
 void Variable::importDom(QDomElement const& _element)
@@ -94,32 +50,6 @@ void Variable::exportDom(QDomElement& _element) const
 	Super::exportDom(_element);
 
 	_element.setAttribute("qualifiers", m_qualifiers);
-}
-
-QString Variable::defineLayout(ViewKeys&) const
-{
-	return "^;1;s" + entityAs<TypeEntity>(1)->idColour() + ";Mi;>name;fb0;!0";
-}
-
-QList<DeclarationEntity*> Variable::utilised() const
-{
-	return actualType()->utilised();
-}
-
-bool Variable::keyPressed(EntityKeyEvent const* _e)
-{
-	if (_e->text() == " " && _e->focalIndex() == 1)
-	{
-		entity(0)->navigateOnto(_e->codeScene());
-	}
-	else if (_e->key() == Qt::Key_Delete && contextIs<Statement>())
-	{
-		_e->reinterpretLater();
-		contextAs<Statement>()->setCurrent();
-	}
-	else
-		return Super::keyPressed(_e);
-	return true;
 }
 
 }

@@ -32,6 +32,11 @@ namespace Martta
 {
 
 MARTTA_OBJECT_CPP(VirtualOverload);
+
+Type VirtualOverload::returns() const
+{
+	return m_base.isUsable() ? m_base->returns() : Type();
+}
 	
 QString VirtualOverload::memberLambdaDefineLayout(ViewKeys& _viewKeys) const
 {

@@ -58,7 +58,7 @@ Type TypedOwner::effectiveType(int _i) const
 
 bool TypedOwner::isChildInValidState(int _i) const
 {
-	entity(_i)->debugTree();
+//	entity(_i)->debugTree();
 	// Nothing to say about it as it's not typed. If it's supposed to be typed, then the allowed kinds system should pick up the error.
 	if (!entityIs<Typed>(_i))
 		return true;

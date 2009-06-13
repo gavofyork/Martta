@@ -198,20 +198,21 @@ public:
 	inline QList<Entity*>				siblings() const { if (!m_context) return QList<Entity*>(); QList<Entity*> ret; foreach (Entity* e, m_context->m_children) if (e != this) ret += e; return ret; }
 	inline int							siblingCount() const { M_ASSERT(context()); return context()->m_children.size() - 1; }
 	template<class T> inline QList<T*>	siblingsOf() const { return filterEntities<T>(siblings());  }
-	template<class T> T*				ancestor() const { Entity* r = ancestor(T::staticKind); return r ? r->asKind<T>() : 0; }
-	Entity*								ancestor(Kind _k) const;
+	
 	template<class T> bool				hasAncestor() const { return hasAncestor(T::staticKind); }
 	bool								hasAncestor(Kind _k) const;
+	bool								hasAncestor(Entity const* _a) const { return ancestorIndex(_a) != -1; }
+	template<class T> T*				ancestor() const { Entity* r = ancestor(T::staticKind); return r ? r->asKind<T>() : 0; }
+	Entity*								ancestor(Kind _k) const;
 	template<class T> int				ancestorIndex() const { return ancestorIndex(T::staticKind); }
 	int									ancestorIndex(Kind _k) const;
-	template<class T> T*				selfAncestor() const { Entity* r = selfAncestor(T::staticKind); return r ? r->asKind<T>() : 0; }
-	Entity*								selfAncestor(Kind _k) const;
+	int									ancestorIndex(Entity const* _a) const;
+	
 	template<class T> bool				hasSelfAncestor() const { return hasSelfAncestor(T::staticKind); }
 	bool								hasSelfAncestor(Kind _k) const;
-	template<class T> int				selfAncestorIndex() const { return selfAncestorIndex(T::staticKind); }
-	int									selfAncestorIndex(Kind _k) const;
-	bool								hasAncestor(Entity* _a) const { return ancestorIndex(_a) != -1; }
-	int									ancestorIndex(Entity* _a) const;
+	bool								hasSelfAncestor(Entity const* _a) const;
+	template<class T> T*				selfAncestor() const { Entity* r = selfAncestor(T::staticKind); return r ? r->asKind<T>() : 0; }
+	Entity*								selfAncestor(Kind _k) const;
 	
 	virtual bool						usurpsChild(Entity const*) const { return false; }
 	bool								isUsurped() const { return m_context->usurpsChild(this); }
@@ -446,6 +447,8 @@ public:
 	void								setEditing(CodeScene* _s);
 	bool								isCurrent() const;
 	bool								isCurrent(CodeScene* _s) const;
+	bool								isCurrentOrAncestor() const;
+	bool								isCurrentOrAncestor(CodeScene* _s) const;
 	bool								isEditing() const;
 	bool								isEditing(CodeScene* _s) const;
 	EditDelegateFace*					editDelegate(CodeScene* _s);

@@ -64,6 +64,16 @@ QString DeclarationEntity::codeName() const
 		return QString();
 }
 
+QString DeclarationEntity::key() const
+{
+	if (addressableContext())
+		return addressableContext()->key() + "::" + identity();
+	else
+	{
+		return ancestor<DeclarationEntity>()->key() + "::" + QString::number(ancestor<DeclarationEntity>()->registerAnonymous(this));
+	}
+}
+
 Kinds DeclarationEntity::allowedKinds(int _i) const
 {
 	return _i ? Kinds() : Kind::of<TextLabel>();
@@ -74,26 +84,6 @@ void DeclarationEntity::onLeaveScene(RootEntity* _new, RootEntity* _old)
 	Super::onLeaveScene(_new, _old);
 	if (_old && _old != _new)
 		_old->noteDeletion(this);
-}
-	
-Identifiable* DeclarationEntity::addressableContext() const
-{
-	return contextIs<Identifiable>() ? contextAs<Identifiable>() : 0;
-}
-
-QString DeclarationEntity::reference() const
-{
-	return addressableContext() ? addressableContext()->reference() + "::" + codeName() : codeName();
-}
-
-QString DeclarationEntity::key() const
-{
-	if (addressableContext())
-		return addressableContext()->key() + "::" + identity();
-	else
-	{
-		return ancestor<DeclarationEntity>()->key() + "::" + QString::number(ancestor<DeclarationEntity>()->registerAnonymous(this));
-	}
 }
 
 DeclarationEntity* DeclarationEntity::lookupChild(QString const& _key) const

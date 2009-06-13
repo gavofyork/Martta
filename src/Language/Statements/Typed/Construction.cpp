@@ -20,7 +20,7 @@
 
 #include <QtXml>
 
-#include "Variable.h"
+#include "Argument.h"
 #include "Class.h"
 #include "Constructor.h"
 #include "ExplicitType.h"
@@ -50,7 +50,7 @@ Types Construction::allowedTypes(int _index) const
 {
 	if (!m_subject.isUsable()) return Types();
 	
-	Type t = *m_subject->entityAs<Variable>(_index + 1)->actualType();
+	Type t = *m_subject->entityAs<Argument>(_index + 1)->actualType();
 	if (t.isNull())
 		return Type(Void).topWith(Const());
 	return t;

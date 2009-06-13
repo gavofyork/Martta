@@ -18,25 +18,43 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "Const.h"
-#include "Reference.h"
-#include "Class.h"
-#include "ArtificialAssignmentOperator.h"
+#include <QtXml>
+
+#include "TextLabel.h"
+#include "Compound.h"
+#include "Argument.h"
+#include "Function.h"
 
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(ArtificialAssignmentOperator);	
+MARTTA_OBJECT_CPP(Function);	
 
-Type ArtificialAssignmentOperator::argumentType(int) const
+Kinds Function::allowedKinds(int _i) const
 {
-	return Type(ancestor<Class>()).topWith(Const()).topWith(Reference());
+	if (_i == 0)
+		return Kind::of<TextLabel>();
+	if (_i == 1)
+		return Kind::of<Compound>();
+	if (_i == 2)
+		return Kind::of<TypeEntity>();
+	if (_i >= 3)
+		return Kind::of<Argument>();
+	return Kinds();
 }
 
-Type ArtificialAssignmentOperator::returns() const
+void Function::importDom(QDomElement const& _element)
 {
-	return Type(ancestor<Class>()).topWith(Reference());
+	Super::importDom(_element);
+	m_qualifiers = (Qualifiers)_element.attribute("qualifiers").toInt();
+	m_ellipsis = (bool)_element.attribute("ellipsis").toInt();
+}
+
+void Function::exportDom(QDomElement& _element) const
+{
+	Super::exportDom(_element);
+	_element.setAttribute("qualifiers", m_qualifiers);
+	_element.setAttribute("ellipsis", m_ellipsis);
 }
 
 }
-

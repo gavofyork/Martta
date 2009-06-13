@@ -48,7 +48,7 @@ Types ConstructedVariable::allowedTypes(int _index) const
 QString ConstructedVariable::code() const
 {
 	M_ASSERT(entityAs<Construction>(1));
-	return entityAs<Variable>(0)->code() + entityAs<Construction>(1)->callList();
+	return entityAs<Variable>(0)->basicCode() + entityAs<Construction>(1)->callList();
 }
 
 QString ConstructedVariable::defineLayout(ViewKeys&) const

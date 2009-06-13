@@ -21,7 +21,7 @@
 #include "TextLabel.h"
 #include "TypeEntity.h"
 #include "ConstLabel.h"
-#include "Variable.h"
+#include "Argument.h"
 #include "VirtualPure.h"
 
 namespace Martta
@@ -43,7 +43,7 @@ Kinds VirtualPure::memberAllowedKinds(int _i) const
 	else if (_i == 2)
 		return Kind::of<ConstLabel>();
 	else
-		return Kind::of<Variable>();
+		return Kind::of<Argument>();
 }
 
 QString VirtualPure::memberInterfaceCode() const

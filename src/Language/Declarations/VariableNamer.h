@@ -21,43 +21,26 @@
 #pragma once
 
 #include "ValueDefiner.h"
-#include "TopLevel.h"
 
 namespace Martta
 {
 
-class VariableResolver;
-
-class Variable: public TopLevel, public_interface ValueDefiner
+class VariableNamer: public_interface ValueDefiner
 {
-	MARTTA_OBJECT(TopLevel)
+	MARTTA_INTERFACE
 	MARTTA_INHERITS(ValueDefiner, 0)
-
-	friend class VariableResolver;
-
-public:
+	
+public:	
 	TypeEntity*							actualType() const;
-	Qualifiers							qualifiers() const { return m_qualifiers; }
-	virtual QString						code() const;
+	QString								basicCode() const;
 	
 protected:
 	virtual Type						type() const;
-	virtual bool						isChildInValidState(int _i) const;
-	virtual int							minimumRequired() const { return 2; }
-	virtual Kinds						allowedKinds(int _i) const;
-	virtual QString						interfaceCode() const;
-	virtual QString						implementationCode() const;
-	virtual QString						defineLayout(ViewKeys&) const;
-	virtual void						exportDom(QDomElement& _element) const;
-	virtual void						importDom(QDomElement const& _element);
-	virtual bool						keyPressed(EntityKeyEvent const* _e);
-	virtual QList<DeclarationEntity*>	utilised() const;
-	virtual int							familyDependencies() const { return DependsOnChildren; }
-	virtual void						onDependencyChanged(Entity*) { changed(); } 
 	
-private:
-	Qualifiers							m_qualifiers;
-	Location							m_location;
+	inline QString						interfaceCode() const { return basicCode() + ";\n"; }
+	inline QString						implementationCode() const { return QString::null; }
+	QString								defineLayout(ViewKeys&) const;
+	bool								keyPressed(EntityKeyEvent const* _e);
 };
 
 }

@@ -39,6 +39,7 @@
 #include "Pointer.h"
 #include "Enumeration.h"
 #include "EnumValue.h"
+#include "Argument.h"
 
 #include <QDomDocument>
 #include <QDomElement>
@@ -389,7 +390,7 @@ int test()
 		M->entitiesOf<TextLabel>()[0]->setText("foo");
 		M->entitiesOf<TypeEntity>()[0]->over()->replace(new SimpleType(Void));
 		
-		Variable* v = new Variable;
+		Argument* v = new Argument;
 		v->back().place(new TextLabel("a"));
 		v->back().place(new ExplicitType(Y));
 		M->back().place(v);

@@ -102,22 +102,21 @@ bool Entity::hasSelfAncestor(Kind _k) const
 
 Entity* Entity::selfAncestor(Kind _k) const
 {
-	for (Entity* e = const_cast<Entity*>(this); e; e = e->context())
+	for (Entity const* e = this; e; e = e->context())
 		if (e->isKind(_k))
-			return e;
+			return const_cast<Entity*>(e);
 	return 0;
 }
 
-int Entity::selfAncestorIndex(Kind _k) const
+bool Entity::hasSelfAncestor(Entity const* _a) const
 {
-	int ret = contextIndex();
-	for (Entity* e = const_cast<Entity*>(this); e; ret = e->contextIndex(), e = e->context())
-		if (e->isKind(_k))
-			return ret;
-	return -1;
+	for (Entity const* i = this; i; i = i->context())
+		if (i == _a)
+			return true;
+	return false;
 }
 
-int Entity::ancestorIndex(Entity* _a) const
+int Entity::ancestorIndex(Entity const* _a) const
 {
 	for (Entity const* i = this; i; i = i->context())
 		if (i->context() == _a)
@@ -454,7 +453,7 @@ void Entity::checkForCullingLater()
 bool Entity::cull()
 {
 	Entity* c = context();
-	if (c && !isCurrent() && isSuperfluous())
+	if (c && !isCurrentOrAncestor() && isSuperfluous())
 	{
 		deleteAndRefill();
 		c->relayoutLater();
@@ -722,6 +721,14 @@ bool Entity::isCurrent() const
 	return false;
 }
 
+bool Entity::isCurrentOrAncestor() const
+{
+	foreach (CodeScene* i, CodeScene::all())
+		if (isCurrentOrAncestor(i))
+			return true;
+	return false;
+}
+
 bool Entity::isEditing(CodeScene* _s) const
 {
 	return _s->editEntity() == this;
@@ -730,6 +737,11 @@ bool Entity::isEditing(CodeScene* _s) const
 bool Entity::isCurrent(CodeScene* _s) const
 {
 	return _s->current() == this;
+}
+
+bool Entity::isCurrentOrAncestor(CodeScene* _s) const
+{
+	return _s->current()->hasSelfAncestor(this);
 }
 
 void Entity::setEditing(CodeScene* _s)

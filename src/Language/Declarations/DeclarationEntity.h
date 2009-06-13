@@ -43,9 +43,7 @@ public:
 	/// From Identifiable (default implementations).
 	virtual QString						name() const;
 	virtual QString						codeName() const;
-	virtual QString						reference() const;
 	virtual QString						key() const;
-	virtual Identifiable*				addressableContext() const;
 	
 	virtual QString						interfaceCode() const { return QString(); }
 	virtual QString						implementationCode() const { return QString(); }

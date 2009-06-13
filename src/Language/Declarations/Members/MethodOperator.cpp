@@ -22,7 +22,7 @@
 #include "ConstLabel.h"
 #include "Compound.h"
 #include "TypeEntity.h"
-#include "Variable.h"
+#include "Argument.h"
 #include "MethodOperator.h"
 
 namespace Martta
@@ -58,7 +58,7 @@ Kinds MethodOperator::memberAllowedKinds(int _i) const
 	if (_i == 3)
 		return Kind::of<ConstLabel>();
 	if (_i == 4 && isBinary())
-		return Kind::of<Variable>();
+		return Kind::of<Argument>();
 	return Kinds();
 }
 
