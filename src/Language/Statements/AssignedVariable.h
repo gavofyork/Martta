@@ -39,9 +39,10 @@ protected:
 	virtual int							minimumRequired() const { return 3; }
 	virtual Kinds						allowedKinds(int _index) const;
 	virtual int							familyDependencies() const { return DependsOnChildren; }
-	virtual void						onDependencyChanged(Entity*) { changed(); }
 	virtual QString						defineLayout(ViewKeys& _k) const { return VariableNamer::defineLayout(_k) + ";Mi;^;ycode;':=';Mi;2"; }
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
+	virtual void						onDependencyChanged(Entity*);
+	virtual void						onDependencySwitched(Entity*);
 
 	// From Statement via BareTyped
 	virtual QString						code() const;

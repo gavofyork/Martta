@@ -18,42 +18,41 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "Variable.h"
+#include "TextLabel.h"
+#include "TypeEntity.h"
 #include "Construction.h"
-#include "Constructor.h"
 #include "ConstructedVariable.h"
 
 namespace Martta
 {
 
 MARTTA_OBJECT_CPP(ConstructedVariable);	
-	
+
 Kinds ConstructedVariable::allowedKinds(int _index) const
 {
 	switch (_index)
 	{
-		case 0: return Kind::of<Variable>();
-		case 1: return Kind::of<Construction>();
+		case 0: return Kind::of<TextLabel>();
+		case 1: return Kind::of<TypeEntity>();
+		case 2: return Kind::of<Construction>();
 		default: return Kinds();
 	}
 }
 
-Types ConstructedVariable::allowedTypes(int _index) const
-{
-	if (_index == 1 && entityIs<Variable>(0))
-		return entityAs<TypeNamer>(0)->type();
-	return Types();
-}
-
 QString ConstructedVariable::code() const
 {
-	M_ASSERT(entityAs<Construction>(1));
-	return entityAs<Variable>(0)->basicCode() + entityAs<Construction>(1)->callList();
+	return basicCode() + entityAs<Construction>(2)->callList();
 }
 
-QString ConstructedVariable::defineLayout(ViewKeys&) const
+bool ConstructedVariable::keyPressed(EntityKeyEvent const* _e)
 {
-	return "ycode;0;^;'(';1;')'";
+	if (VariableNamer::keyPressed(_e))
+		return true;
+	else if (_e->text() == "(")
+		entity(2)->setCurrent();
+	else
+		return Super::keyPressed(_e);
+	return true;
 }
 
 }

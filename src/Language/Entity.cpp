@@ -522,8 +522,9 @@ Entity* Entity::prepareChildren()
 Entity* Entity::usurp(Entity* _u)
 {
 	InsertionPoint you = _u->over();
-	
+
 	over().insertSilent(_u);
+	
 	QList<Entity*> es = entities();
 	foreach (Entity* e, es)
 		e->setContext(_u);
@@ -795,12 +796,13 @@ void Entity::childAdded(int _index)
 {
 	if (_index >= 0 && _index < m_children.size() && familyDependencies() & DependsOnChildren)
 	{
-		dependencySwitched(entity(_index));
-		for (int i = _index + 1; i < entityCount(); i++)
+		dependencyAdded(m_children[_index]);
+//		dependencySwitched(entity(_index));
+/*		for (int i = _index + 1; i < entityCount(); i++)
 			if (entity(i)->familyDependencies() & DependsOnContextIndex)
-				entity(i)->contextIndexChanged(i - 1);
+				entity(i)->contextIndexChanged(i - 1);*/
 	}
-	else if (_index < 0 && m_children.size() && familyDependencies() & DependsOnChildren)
+	else if (m_children.size() && familyDependencies() & DependsOnChildren)
 	{
 		dependencyAdded(m_children.last());
 	}

@@ -73,6 +73,8 @@ void CodeScene::leaving(Entity* _e, InsertionPoint const&)
 		int i = 9;
 		i++;
 	}
+	
+	qDebug() << "Removing from scene " << _e;
 
 	Entity* e = 0;
 	if (m_current == _e)
@@ -80,8 +82,10 @@ void CodeScene::leaving(Entity* _e, InsertionPoint const&)
 //		qDebug() << "Trying to calculate next...";
 //		_e->debugTree();
 		Entity* n = next(_e);
+		M_ASSERT(!n || n->context());
 		while (n && n->hasAncestor(_e)) n = next(n);
 		Entity* p = previous(_e);
+		M_ASSERT(!p || p->context());
 		while (p && p->hasAncestor(_e)) p = previous(p);
 		/*{
 			qDebug() << "Leaving entity:";
@@ -102,9 +106,15 @@ void CodeScene::leaving(Entity* _e, InsertionPoint const&)
 	m_viewKeys.remove(_e);
 	m_bounds.remove(_e);
 	m_orders.remove(_e);
+	foreach (Entity* i, m_orders.keys())
+		m_orders[i].removeAll(_e);
 	m_visible.remove(_e);
 	m_leftmostChild.remove(_e);
+	while (Entity* k = m_leftmostChild.key(_e, 0))
+		m_leftmostChild.remove(k);
 	m_rightmostChild.remove(_e);
+	while (Entity* k = m_rightmostChild.key(_e, 0))
+		m_rightmostChild.remove(k);
 	m_listCache.remove(_e);
 	m_cacheKey.remove(_e);
 	
@@ -616,7 +626,7 @@ void CodeScene::silentlySetCurrent(Entity* _e)
 {
 	if (m_leavingEdit)
 	{
-		qDebug() << "silentlySetCurrent: setting current to" << _e;
+//		qDebug() << "silentlySetCurrent: setting current to" << _e;
 		m_current = _e;
 	}
 }
@@ -625,9 +635,9 @@ void CodeScene::setCurrent(Entity* _e)
 {
 	M_ASSERT(_e);
 
-	qDebug() << "";
-	qDebug() << "setCurrent: want to set current to" << _e;
-	qDebug() << "";
+//	qDebug() << "";
+//	qDebug() << "setCurrent: want to set current to" << _e;
+//	qDebug() << "";
 	if (m_current == _e || !m_subject)
 		return;
 

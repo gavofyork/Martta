@@ -60,6 +60,25 @@ bool AssignedVariable::keyPressedOnInsertionPoint(InsertionPoint const& _p, Enti
 		return false;
 }
 
+void AssignedVariable::onDependencyChanged(Entity* _e)
+{
+	qDebug() << this << ": Dependency Changed: " << _e;
+	debugTree();
+	changed();
+}
+
+void AssignedVariable::onDependencySwitched(Entity* _e)
+{
+	qDebug() << this << ": Dependency Switched: " << _e;
+	debugTree();
+	if (_e == entity(2) && _e->kind() == Kind::of<Typed>())
+	{
+		Entity* o = usurp(new DefaultConstructedVariable);
+		_e->kill();
+		o->setCurrent();
+	}
+}
+
 bool AssignedVariable::keyPressed(EntityKeyEvent const* _e)
 {
 	if (VariableNamer::keyPressed(_e))

@@ -49,16 +49,6 @@ QList<Typed*> Statement::typeds() const
 
 QList<ValueDefiner*> Statement::valuesInLocalScope() const
 {
-	
-	// This is presumably something to do with Variables, since they are not Statements but appear in statement hierarchies.
-	// I don't know how/if it works now though, so I'll wait for a bug and then bring it in/fix it appropriately.
-/*	if (!contextIs<Statement>() && contextIs<TypedOwner>())
-	{
-		Entity* e = context()->context();
-		if (e->isKind<Statement>())
-			return e->asKind<Statement>()->valuesInLocalScope();
-		return ret;
-	}*/
 	if (!contextIs<Statement>())
 		return QList<ValueDefiner*>();
 	QList<ValueDefiner*> ret = contextAs<Statement>()->valuesInLocalScope();

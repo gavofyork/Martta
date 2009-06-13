@@ -20,23 +20,32 @@
 
 #pragma once
 
+#include "VariableNamer.h"
 #include "Primary.h"
 
 namespace Martta
 {
 
 /// Has two children; one of type Variable, and a second of Construction.
-class ConstructedVariable: public Primary
+class ConstructedVariable: public Primary, public_interface VariableNamer
 {
 	MARTTA_OBJECT(Primary)
-
+	MARTTA_INHERITS(VariableNamer, 0)
+	
 private:
-	virtual int							minimumRequired() const { return 2; }
+	// From Entity via BareTyped
+	virtual int							minimumRequired() const { return 3; }
 	virtual Kinds						allowedKinds(int _index) const;
-	virtual Types						allowedTypes(int _index) const;
+	virtual int							familyDependencies() const { return DependsOnChildren; }
+	virtual void						onDependencyChanged(Entity*) { changed(); }
+	virtual QString						defineLayout(ViewKeys& _k) const { return VariableNamer::defineLayout(_k) + ";Mi;^;ycode;'(';Mi;2;Mi;')'"; }
+	virtual bool						keyPressed(EntityKeyEvent const* _e);
+
+	// From Statement via BareTyped
 	virtual QString						code() const;
-	virtual QString						defineLayout(ViewKeys&) const;
-	virtual bool						usurpsChild(Entity const* _e) const { return _e == entity(0); }
+	
+	// From Identifiable via VariableNamer
+	virtual Identifiable*				addressableContext() const { return 0; }
 };
 
 }

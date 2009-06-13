@@ -1,4 +1,13 @@
-TODO empty name fscks Identifiable/DeclarationEntity ::key?
+TODO sort out differential changes stuff.
+- DependsOnValidity: nothing called unless isInValidState(). Default.
+- DependsOnChildren: Initialised, Added (child inserted/appended), Removed (child removed), Switched (Added + Removed in same place), Changed (child changed)
+  - DependsOnOrder: Moved (called on insertion - all children at or after insertion point are Moved to new position, happens after Added is called for new child).
+- DependsOnContext: Added (new non-null context, old was null), Removed (new context null, old was non-null), Switched (Added + Removed), Changed (context changed).
+  - DependsOnContextIndex: Changed (contextIndex now different).
+
+TODO codescene needs to track changes and keep an uptodate (or at least knowingly out-of-date) next/previous functions for leaving to work properly. otherwise leaving could be called e.g. half way through usurption where something in the scene has a context which is not.
+
+CHECK empty name fscks Identifiable/DeclarationEntity ::key?
 TODO AssignedVariable - change back to DefaultConstructedVariable
 TODO anonymous -> metasyntactic variable
 TODO optimise Class.

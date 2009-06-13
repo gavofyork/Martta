@@ -20,26 +20,35 @@
 
 #pragma once
 
+#include "VariableNamer.h"
 #include "Primary.h"
 
 namespace Martta
 {
 
-class DefaultConstructedVariable: public Primary
+class DefaultConstructedVariable: public Primary, public_interface VariableNamer
 {
 	MARTTA_OBJECT(Primary)
+	MARTTA_INHERITS(VariableNamer, 0)
 
 public:
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
 
 protected:
-	virtual int							minimumRequired() const { return 1; }
+	// From Entity via BareTyped
+	virtual int							minimumRequired() const { return 2; }
 	virtual Kinds						allowedKinds(int _index) const;
-	virtual QString						code() const;
-	virtual QString						defineLayout(ViewKeys&) const;
+	virtual int							familyDependencies() const { return DependsOnChildren; }
+	virtual void						onDependencyChanged(Entity*) { changed(); }
+	virtual QString						defineLayout(ViewKeys& _k) const { return "^;" + VariableNamer::defineLayout(_k); }
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
 	virtual bool						isInValidState() const;
-	virtual bool						usurpsChild(Entity const* _e) const { return _e == entity(0); }
+
+	// From Statement via BareTyped
+	virtual QString						code() const { return basicCode(); }
+	
+	// From Identifiable via VariableNamer
+	virtual Identifiable*				addressableContext() const { return 0; }
 };
 
 }
