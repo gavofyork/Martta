@@ -18,8 +18,9 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "TextLabel.h"
+#include "TypeEntity.h"
 #include "Typed.h"
-#include "Variable.h"
 #include "DefaultConstructedVariable.h"
 #include "AssignedVariable.h"
 
@@ -32,29 +33,23 @@ Kinds AssignedVariable::allowedKinds(int _index) const
 {
 	switch (_index)
 	{
-		case 0: return Kind::of<Variable>();
-		case 1: return Kind::of<Typed>();
+		case 0: return Kind::of<TextLabel>();
+		case 1: return Kind::of<TypeEntity>();
+		case 2: return Kind::of<Typed>();
 		default: return Kinds();
 	}
 }
 
 Types AssignedVariable::allowedTypes(int _index) const
 {
-	if (_index == 1 && entityAs<Variable>(0))
-		return Type(*entityAs<Variable>(0)->actualType());
+	if (_index == 2)
+		return Type(*actualType());
 	return Types();
-}
-
-Type AssignedVariable::type() const
-{
-	return entityIs<Variable>(0) ? entityAs<Variable>(0)->asKind<TypeNamer>()->type() : Type();
 }
 
 QString AssignedVariable::code() const
 {
-	if (!entityAs<Variable>(0)) return "";
-	if (!isTyped(1)) return "";
-	return entityAs<Variable>(0)->basicCode() + " = " + asTyped(1)->code();
+	return basicCode() + " = " + asTyped(2)->code();
 }
 
 bool AssignedVariable::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
@@ -67,16 +62,13 @@ bool AssignedVariable::keyPressedOnInsertionPoint(InsertionPoint const& _p, Enti
 
 bool AssignedVariable::keyPressed(EntityKeyEvent const* _e)
 {
-	if (_e->text() == "=")
-		entity(1)->setCurrent();
+	if (VariableNamer::keyPressed(_e))
+		return true;
+	else if (_e->text() == "=")
+		entity(2)->setCurrent();
 	else
 		return Super::keyPressed(_e);
 	return true;
-}
-
-QString AssignedVariable::defineLayout(ViewKeys&) const
-{
-	return "0;ycode;Mi;^;':=';Mi;1";
 }
 
 }

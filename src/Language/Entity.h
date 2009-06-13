@@ -172,7 +172,7 @@ public:
 	template<class T> inline int		contextIndexExclusive() const { M_ASSERT(isKind<T>()); return parentsChildrenOf<T>().indexOf(static_cast<T*>(const_cast<Entity*>(this))); }
 	virtual QList<DeclarationEntity*>	spacesInScope() const;
 	template<class T> QList<T*>			entitiesHereAndBeforeOf() const { QList<T*> ret = entitiesOf<T>(); return context() ? ret + context()->entitiesHereAndBeforeOf<T>() : ret; }
-	virtual DeclarationEntity*			findEntity(QString const& _key) const;
+	virtual Identifiable*				findEntity(QString const& _key) const;
 	template<class T> inline ModelPtr<T>locateEntity(QString const& _key) const { return ModelPtr<T>(_key, rootEntity()); }
 	template<class T> QList<T*>			findAll() const { QList<T*> ret = entitiesOf<T>(); foreach (Entity* i, m_children) ret << i->findAll<T>(); return ret; }
 	inline QList<Entity*> const&		entities() const { return m_children; }

@@ -20,29 +20,37 @@
 
 #pragma once
 
+#include "VariableNamer.h"
 #include "BareTyped.h"
 
 namespace Martta
 {
 
-class AssignedVariable: public BareTyped
+class AssignedVariable: public BareTyped, public_interface VariableNamer
 {
 	MARTTA_OBJECT(BareTyped)
+	MARTTA_INHERITS(VariableNamer, 0)
 
 public:
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
 	
 protected:
-	virtual int							minimumRequired() const { return 2; }
+	// From Entity via BareTyped
+	virtual int							minimumRequired() const { return 3; }
 	virtual Kinds						allowedKinds(int _index) const;
-	virtual Types						allowedTypes(int _index) const;
-	virtual Type						type() const;
-	virtual QString						code() const;
-	virtual bool						keyPressed(EntityKeyEvent const* _e);
-	virtual QString						defineLayout(ViewKeys&) const;
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity*) { changed(); }
-	virtual bool						usurpsChild(Entity const* _e) const { return _e == entity(0); }
+	virtual QString						defineLayout(ViewKeys& _k) const { return VariableNamer::defineLayout(_k) + ";Mi;^;ycode;':=';Mi;2"; }
+	virtual bool						keyPressed(EntityKeyEvent const* _e);
+
+	// From Statement via BareTyped
+	virtual QString						code() const;
+	
+	// From BareTyped
+	virtual Types						allowedTypes(int _index) const;
+
+	// From Identifiable via VariableNamer
+	virtual Identifiable*				addressableContext() const { return 0; }
 };
 
 }

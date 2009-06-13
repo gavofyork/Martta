@@ -18,14 +18,38 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "IdLabel.h"
+#include "TextLabel.h"
 #include "Entity.h"
+#include "DeclarationEntity.h"
 #include "Identifiable.h"
 
 namespace Martta
 {
 
 MARTTA_INTERFACE_CPP(Identifiable);	
-	
+
+
+QString Identifiable::name() const
+{
+	if (self()->entityCountOf<TextLabel>() == 1)
+		return self()->entitiesOf<TextLabel>()[0]->name();
+	return QString::null;
+}
+
+QString Identifiable::codeName() const
+{
+	if (self()->entityCountOf<IdLabel>() == 1)
+		return self()->entitiesOf<IdLabel>()[0]->code();
+	return QString::null;
+}
+
+QString Identifiable::key() const
+{
+	M_ASSERT(self()->hasAncestor<DeclarationEntity>());
+	return self()->ancestor<DeclarationEntity>()->key() + "::" + QString::number(self()->ancestor<DeclarationEntity>()->registerAnonymous(this));
+}
+
 Identifiable* Identifiable::addressableContext() const
 {
 	return self()->contextIs<Identifiable>() ? self()->contextAs<Identifiable>() : 0;

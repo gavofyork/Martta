@@ -41,16 +41,11 @@ public:
 	virtual ~DeclarationEntity();
 
 	/// From Identifiable (default implementations).
-	virtual QString						name() const;
-	virtual QString						codeName() const;
 	virtual QString						key() const;
 	
-	virtual QString						interfaceCode() const { return QString(); }
-	virtual QString						implementationCode() const { return QString(); }
-
-	DeclarationEntity*					lookupChild(QString const& _key) const;
-	int									registerAnonymous(DeclarationEntity const* _e) const { if (m_anonyma.contains(_e)) return m_anonyma.indexOf(_e); m_anonyma << _e; return m_anonyma.size() - 1; }
-	void								registerAnonymous(DeclarationEntity const* _e, int _k) { while (m_anonyma.size() <= _k) m_anonyma << 0; m_anonyma[_k] = _e; }
+	Identifiable*						lookupChild(QString const& _key) const;
+	int									registerAnonymous(Identifiable const* _e) const { if (m_anonyma.contains(_e)) return m_anonyma.indexOf(_e); m_anonyma << _e; return m_anonyma.size() - 1; }
+	void								registerAnonymous(Identifiable const* _e, int _k) { while (m_anonyma.size() <= _k) m_anonyma << 0; m_anonyma[_k] = _e; }
 
 	QList<DeclarationEntity*>			utilisedSiblings() const;
 	virtual QList<DeclarationEntity*>	utilised() const;
@@ -58,6 +53,9 @@ public:
 	QList<ValueDefiner*>				valuesKnown() const;
 	virtual QList<ValueDefiner*>		valuesAdded() const { return QList<ValueDefiner*>(); }
 	
+	virtual QString						interfaceCode() const { return QString(); }
+	virtual QString						implementationCode() const { return QString(); }
+
 	virtual void						exportDom(QDomElement& _element) const;
 	virtual void						importDom(QDomElement const& _element);
 	
@@ -67,8 +65,7 @@ protected:
 	virtual Kinds						allowedKinds(int _i) const;
 
 private:
-	mutable QList<DeclarationEntity const*>
-										m_anonyma;
+	mutable QList<Identifiable const*>	m_anonyma;
 };
 
 }

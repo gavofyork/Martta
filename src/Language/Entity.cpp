@@ -124,7 +124,7 @@ int Entity::ancestorIndex(Entity const* _a) const
 	return -1;
 }
 
-DeclarationEntity* Entity::findEntity(QString const& _key) const
+Identifiable* Entity::findEntity(QString const& _key) const
 {
 	if (_key.isEmpty())
 		return const_cast<RootEntity*>(rootEntity());
@@ -132,10 +132,9 @@ DeclarationEntity* Entity::findEntity(QString const& _key) const
 		return r;
 	if (_key.startsWith("::"))
 		return rootEntity()->findEntity(_key.mid(2));
-	if (!isKind<DeclarationEntity>())
-		return 0;
-	if (DeclarationEntity* e = asKind<DeclarationEntity>()->lookupChild(_key.section("::", 0, 0)))
-		return _key.contains("::") ? e->findEntity(_key.section("::", 1)) : e;
+	if (isKind<DeclarationEntity>())
+		if (Identifiable* e = asKind<DeclarationEntity>()->lookupChild(_key.section("::", 0, 0)))
+			return _key.contains("::") ? e->self()->findEntity(_key.section("::", 1)) : e;
 	return 0;
 }
 

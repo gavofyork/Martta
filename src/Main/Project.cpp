@@ -351,7 +351,7 @@ void Project::deserialise(QDomDocument& _d)
 	m_classes << m_namespace->entitiesOf<Class>();
 
 	// Load "program"
-	Entity* e = m_namespace->findEntity(_d.documentElement().namedItem("program").toElement().attribute("key"));
+	Entity* e = m_namespace->findEntity(_d.documentElement().namedItem("program").toElement().attribute("key"))->self();
 	m_program = e->isKind<Method>() ? e->asKind<Method>() : 0;
 
 	QList<SafePointer<Entity> > uplist;

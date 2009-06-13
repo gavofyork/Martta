@@ -49,29 +49,12 @@ QList<ValueDefiner*> DeclarationEntity::valuesKnown() const
 	return ret;
 }
 
-QString DeclarationEntity::name() const
-{
-	if (entitiesOf<TextLabel>().size())
-		return entitiesOf<TextLabel>()[0]->name();
-	return QString();
-}
-
-QString DeclarationEntity::codeName() const
-{
-	if (entitiesOf<IdLabel>().size())
-		return entitiesOf<IdLabel>()[0]->asKind<Label>()->code();
-	else
-		return QString();
-}
-
 QString DeclarationEntity::key() const
 {
 	if (addressableContext())
 		return addressableContext()->key() + "::" + identity();
 	else
-	{
-		return ancestor<DeclarationEntity>()->key() + "::" + QString::number(ancestor<DeclarationEntity>()->registerAnonymous(this));
-	}
+		return Identifiable::key();
 }
 
 Kinds DeclarationEntity::allowedKinds(int _i) const
@@ -86,12 +69,12 @@ void DeclarationEntity::onLeaveScene(RootEntity* _new, RootEntity* _old)
 		_old->noteDeletion(this);
 }
 
-DeclarationEntity* DeclarationEntity::lookupChild(QString const& _key) const
+Identifiable* DeclarationEntity::lookupChild(QString const& _key) const
 {
 	bool ok;
 	int k = _key.toInt(&ok);
 	if (ok && m_anonyma.size() > k)
-		return const_cast<DeclarationEntity*>(m_anonyma[k]);
+		return const_cast<Identifiable*>(m_anonyma[k]);
 //	qDebug() << "Matching for " << _key;
 	foreach (DeclarationEntity* e, entitiesOf<DeclarationEntity>())
 	{	
@@ -121,9 +104,9 @@ QList<DeclarationEntity*> DeclarationEntity::utilised() const
 	QList<DeclarationEntity*> ret;
 	foreach (DeclarationEntity* i, entitiesOf<DeclarationEntity>())
 		ret << i->utilised();
-	qDebug() << name() << "(" << kind().name() << ") utilises:";
-	foreach (DeclarationEntity* i, ret)
-		qDebug() << "    " << i->name() << "(" << i->kind().name() << ")";
+//	qDebug() << name() << "(" << kind().name() << ") utilises:";
+//	foreach (DeclarationEntity* i, ret)
+//		qDebug() << "    " << i->name() << "(" << i->kind().name() << ")";
 	return ret;
 }
 

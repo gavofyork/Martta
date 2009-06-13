@@ -1,4 +1,5 @@
 TODO empty name fscks Identifiable/DeclarationEntity ::key?
+TODO AssignedVariable - change back to DefaultConstructedVariable
 TODO anonymous -> metasyntactic variable
 TODO optimise Class.
 TODO special EntryMethod

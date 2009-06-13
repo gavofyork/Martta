@@ -33,9 +33,9 @@ class Identifiable
 	
 public:	
 	/// @returns the user-visible name used for this entity. (e.g. "foo", "bar", "my class")
-	virtual QString						name() const = 0;
+	virtual QString						name() const;
 	/// @returns the name used for this declaration in the CPP code. (e.g. "foo", "m_bar", "MyClass")
-	virtual QString						codeName() const = 0;
+	virtual QString						codeName() const;
 	/// @returns the program-wide reference used for this declaration in the CPP code (calls codeName()).
 	/// (e.g. "::MyClass::m_foo", "::MyClass::bar", "::MyClass")
 	virtual QString						reference() const { return addressableContext() ? addressableContext()->reference() + "::" + codeName() : codeName(); }
@@ -45,7 +45,7 @@ public:
 	/// @returns the program-wide Martta-reference for this entity. This must deliver a unique and locatable
 	/// string even when the entity is within a statement hierarchy or is anonymous (empty name).
 	/// (e.g. ";;MyClass;;m_foo", ";;MyClass;;void bar(int)", ";;MyClass")
-	virtual QString						key() const = 0;
+	virtual QString						key() const;
 	
 	/// @returns the entity from which this may be addressed. Typically it is the parent, though some entities
 	/// (e.g. EnumValue) skip this immediate parent and use their parent's addressableContext. 
