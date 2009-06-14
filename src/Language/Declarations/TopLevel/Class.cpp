@@ -151,7 +151,7 @@ void Class::onDependencyRemoved(Entity* _e)
 
 void Class::onDependencyChanged(Entity* _e)
 {
-	if (_e->isKind<ConversionOperator>() || (_e->isKind<MethodOperator>() && !_e->isKind<ArtificialAssignmentOperator>()) || (_e->isKind<Constructor>() && !_e->isKind<ArtificialDefaultConstructor>() && !_e->isKind<ArtificialCopyConstructor>()))
+	if (_e->isKind<TextLabel>() || _e->isKind<ConversionOperator>() || (_e->isKind<MethodOperator>() && !_e->isKind<ArtificialAssignmentOperator>()) || (_e->isKind<Constructor>() && !_e->isKind<ArtificialDefaultConstructor>() && !_e->isKind<ArtificialCopyConstructor>()))
 		changed();
 	if (_e->isKind<AccessLabel>())
 		relayoutLater();
