@@ -359,9 +359,11 @@ void CodeScene::paintEvent(QPaintEvent*)
 				{
 					case EntityChanged: c = QColor(0, 0, 255); break;
 					case DependencyAdded: c = QColor(0, 255, 0); break;
+					case EntityChildrenAdded: c = QColor(0, 127, 0); break;
 					case DependencyRemoved: c = QColor(255, 0, 0); break;
 					case DependencyChanged: c = QColor(0, 255, 255); break;
 					case DependencySwitched: c = QColor(255, 255, 0); break;
+					case ChildMoved: c = QColor(255, 255, 127); break;
 					case ContextIndexChanged: c = QColor(255, 0, 255); break;
 				}
 				p.setPen(QPen(c, 2.f));
@@ -422,7 +424,7 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 			{
 				m_strobeChild->commitTentativeSetContext(sChPoint);
 				m_strobeChild->contextSwitched(m_strobeCreation);
-				m_strobeChild->context()->childSwitched(m_strobeChild);
+				m_strobeChild->context()->childSwitched(m_strobeChild, m_strobeCreation);
 			}
 			if (m_strobeCreation)
 				m_strobeCreation->killAndDelete();

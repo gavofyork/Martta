@@ -93,8 +93,13 @@ QString ModelPtrFace::key() const
 
 void ModelPtrFace::set(Identifiable* _e, QString const& _k, RootEntity* _r)
 {
-	if (m_cache) m_cache->self()->rootEntity()->removeModelPtr(this);
-	else if (m_rootEntity) m_rootEntity->removeModelPtr(this);
+	if (m_cache)
+	{
+		M_ASSERT(m_cache->self()->isInModel());
+		m_cache->self()->rootEntity()->removeModelPtr(this);
+	}
+	else if (m_rootEntity)
+		m_rootEntity->removeModelPtr(this);
 
 	m_cache = _e;
 	m_rootEntity = _r;
