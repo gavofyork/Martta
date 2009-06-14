@@ -40,12 +40,17 @@ void ModifyingType::unknit()
 	}
 	InsertionPoint p = over();
 	TypeEntity* ch = child();
+	
+	//	P -p-> this -0-> ch    BECOMES    P -p-> ch
+	
 	p.insertSilent(ch);
-	killAndDelete();
+	kill();
 	
 	if (p.context())
-		p.context()->childSwitched(ch);
-	ch->contextSwitched(p.context());
+		p.context()->childSwitched(ch, this);
+	ch->contextSwitched(this);
+	
+	delete this;
 }
 
 Kinds ModifyingType::allowedKinds(int _index) const

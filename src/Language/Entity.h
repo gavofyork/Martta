@@ -33,7 +33,8 @@
 
 #include "Meta.h"
 #include "Kind.h"
-#include "Auxilliary.h"
+#include "AuxilliaryFace.h"
+#include "AuxilliaryFace.h"
 #include "Location.h"
 #include "ModelPtrFace.h"
 #include "InsertionPoint.h"
@@ -58,7 +59,17 @@ class EntityKeyEvent;
 extern int s_news;
 extern int s_deletes;
 
-enum ChangeOperation { EntityChanged = 0, DependencyAdded, DependencyRemoved, DependencyChanged, DependencySwitched, ContextIndexChanged };
+enum ChangeOperation
+{
+	EntityChanged = 0,
+	EntityChildrenAdded,
+	DependencyAdded,
+	DependencyRemoved,
+	DependencyChanged,
+	DependencySwitched,
+	ChildMoved,
+	ContextIndexChanged
+};
 class ChangeEntry
 {
 public:
@@ -97,17 +108,18 @@ public:
 	static const int OffsetForDerivatives = 0;
 	static const int MyOffset = 0;
 	
-	template<class T> void setDependency(ModelPtr<T>& M_S, T* _S)
+	template<class T> void setDependency(ModelPtr<T>& _dependencyVariable, T* _dependency)
 	{
-		if (M_S != _S)
+		if (_dependencyVariable != _dependency)
 		{
-			if (M_S)
-				removeDependency(M_S->asKind<Entity>());
-			M_S = _S;
-			if (M_S)
+			Entity* old = _dependencyVariable->asKind<Entity>();
+			if (old)
+				removeDependency(old);
+			_dependencyVariable = _dependency;
+			if (_dependency)
 			{
-				addDependency(M_S->asKind<Entity>());
-				dependencySwitched(M_S->asKind<Entity>());
+				addDependency(_dependency->asKind<Entity>());
+				dependencySwitched(_dependency->asKind<Entity>(), old);
 			}
 			changed();
 		}
@@ -233,9 +245,6 @@ public:
 	/// Appends any children if they are necessary. They themselves will be in a valid state.
 	/// @note changed() called as appropriate.
 	Entity*								prepareChildren();
-	/// Is called directly following preparation of children.
-	/// Can be used to do initialisation that must be called when the class is (children-wise) complete.
-	virtual void						onChildrenPrepared() {}
 	
 	/**
 	 * Cull-check an object. If it is determined the object is superfluous (with the accoridng method), it will
@@ -251,7 +260,7 @@ public:
 	/**
 	 * Create a new entity.
 	 */
-	static Entity*						spawn(QString const& _kind);
+	inline static Entity*				spawn(QString const& _kind) { AuxilliaryFace const* f = AuxilliaryRegistrar::get()->auxilliary(_kind); M_ASSERT(f); return f->create(); }
 
 	/**
 	 * Destructs the object. Use this before delete. It sets the context to zero while the object is still
@@ -494,10 +503,11 @@ public:
 	QList<Entity*>						dependents() const;
 	QList<Entity*>						dependencies() const;
 	
+	void								childrenAdded();
 	void								childAdded(Entity* _ch) { if (_ch->context() == this) childAdded(_ch->contextIndex()); }
 	void								childAdded(int _index);
-	void								childSwitched(int _index) { if (_index >= 0 && _index < m_children.size()) childSwitched(entity(_index)); }
-	void								childSwitched(Entity* _ch);
+	void								childSwitched(int _index, Entity* _o) { if (_index >= 0 && _index < m_children.size()) childSwitched(entity(_index), _o); }
+	void								childSwitched(Entity* _ch, Entity* _o);
 	void								childRemoved(Entity* _ch, int _index);
 	void								contextAdded() { contextAdded(context()); }
 	void								contextAdded(Entity* _con);
@@ -511,11 +521,12 @@ public:
 	void								contextSwitchedWithChildRemoved(Entity* _old, int _ourOldContextIndex) { contextSwitched(_old); if (_old) _old->childRemoved(this, _ourOldContextIndex); }
 	void								contextSwitchedWithChildRemoved(InsertionPoint const& _old) { contextSwitchedWithChildRemoved(_old.context(), _old.index()); }
 	
-	void								dependencyAdded(Entity* _e) { if (isInModel()) { change(this, DependencyAdded, _e); onDependencyAdded(_e); } }
-	void								dependencyRemoved(Entity* _e, int _index = -1) { if (isInModel()) { change(this, DependencyRemoved, _e); onDependencyRemoved(_e, _index); } }
-	void								dependencyChanged(Entity* _e) { if (isInModel()) { change(this, DependencyChanged, _e); onDependencyChanged(_e); } }
-	void								dependencySwitched(Entity* _e) { if (isInModel()) { change(this, DependencySwitched, _e); onDependencySwitched(_e); } }
-	void								contextIndexChanged(int _oI) { if (isInModel()) { change(this, ContextIndexChanged, 0); onContextIndexChanged(_oI); } }
+	void								dependencyAdded(Entity* _e) { change(this, DependencyAdded, _e); onDependencyAdded(_e); }
+	void								dependencyRemoved(Entity* _e, int _index = -1) { change(this, DependencyRemoved, _e); onDependencyRemoved(_e, _index); }
+	void								dependencyChanged(Entity* _e) { change(this, DependencyChanged, _e); onDependencyChanged(_e); }
+	void								dependencySwitched(Entity* _e, Entity* _o) { change(this, DependencySwitched, _e); onDependencySwitched(_e, _o); }
+	void								childMoved(Entity* _e, int _oI) { change(this, ChildMoved, _e); onChildMoved(_e, _oI); }
+	void								contextIndexChanged(int _oI) { change(this, ContextIndexChanged, 0); onContextIndexChanged(_oI); }
 	
 	/// To be called when something in the object has changed. Calls onChanged() and notifies dependents.
 	void								changed();
@@ -537,9 +548,13 @@ protected:
 	virtual void const*					toInterface(Kind) const { return 0; }
 	void const*							tryInterface(Kind) const { return 0; }
 
-	enum { DependsOnNothing = 0, DependsOnContext = 1, DependsOnChildren = 2, DependsOnBoth = 3, DependsOnContextIndex = 4 };
+	enum { DependsOnNothing = 0, DependsOnContext = 1, DependsOnChildren = 2, DependsOnBoth = 3, DependsOnContextIndex = 4, TestOnOrder = 8, DependsOnChildOrder = DependsOnChildren | TestOnOrder };
 	virtual int							familyDependencies() const { return DependsOnNothing; }
 	virtual Kinds						ancestralDependencies() const { return Kinds(); }
+	enum { NoRequirements = 0, BeComplete = 1, BeInModel = 2 };
+	virtual int							notificationRequirements() const { return BeComplete | BeInModel; }
+	
+	inline bool							botherNotifying() const { return (~notificationRequirements() & BeInModel || isInModel()) && (~notificationRequirements() & BeComplete || isComplete()); }
 	
 	/// Adds a dependency. Should only be called from inside registerDependencies().
 	/// Note this will *not* call onDependencyAdded(_e) for you. You must call it yourself if you want it to run.
@@ -567,7 +582,12 @@ protected:
 	/// - The object fulfilling an ancestral dependency has changed, though both are non-null (_e is the old ancestor).
 	/// - A family member is replaced, and there is a family dependency (_e is the new family member).
 	/// @note By default, it just called the onDependencyChanged() method. 
-	virtual void						onDependencySwitched(Entity* _e) { onDependencyChanged(_e); }
+	virtual void						onDependencySwitched(Entity* _e, Entity* /*_old*/) { onDependencyChanged(_e); }
+	/// Called when child order is a family dependency and:
+	/// - A child entity has had its contextIndex changed (usually through the insertion of another child at an earlier
+	/// position.
+	/// @note By default, it just called the onDependencyChanged() method. 
+	virtual void						onChildMoved(Entity* _e, int /*_oldIndex*/) { onDependencyChanged(_e); }
 	/// Called when:
 	/// - A new context is set where before it was null and context is a family dependency (_e is the new context).
 	/// - A new dependent ancestor is set where before it was null (_e is the new ancestor).
@@ -582,6 +602,12 @@ protected:
 	/// @note By default, it does nothing. 
 	virtual void						onDependencyRemoved(Entity* _e) { onDependencyChanged(_e); }
 	virtual void						onDependencyRemoved(Entity* _e, int /*_index*/) { onDependencyRemoved(_e); }
+	/// Called at a point where several entities are added in a batch operation, usually when the object has been fully
+	/// populated with children, if we depend on children.
+	/// This would be called instead of a number of onDependencyAdded()s.
+	/// @note By default, it calls onDependencyAdded() for each child entity. 
+	/// @note If you intend to use this, you may find it useful to change notificationRequirements() from BeInModel.
+	virtual void						onChildrenAdded() { foreach (Entity* e, entities()) onDependencyAdded(e); }
 	
 	/// Called when our rootEntity is changing. This currently just means either going into or out of the program model.
 	virtual void						onLeaveScene(RootEntity* _new, RootEntity* _old) { (void)_new; (void)_old; }

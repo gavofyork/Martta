@@ -71,7 +71,7 @@ void Class::rejigDeps()
 
 bool Class::onChanged()
 {
-	return checkImplicitConstructors() || Super::onChanged();
+	return isInModel() && checkImplicitConstructors() || Super::onChanged();
 }
 
 Entity* Class::isExpander() const
@@ -131,6 +131,14 @@ bool Class::checkImplicitConstructors()
 		ret = true;
 	}
 	return ret;
+}
+
+void Class::onChildrenAdded()
+{
+	rejigDeps();
+	checkImplicitConstructors();
+	changed();
+	relayoutLater();
 }
 
 void Class::onDependencyAdded(Entity* _e)

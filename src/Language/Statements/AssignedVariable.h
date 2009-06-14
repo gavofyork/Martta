@@ -42,7 +42,7 @@ protected:
 	virtual QString						defineLayout(ViewKeys& _k) const { return VariableNamer::defineLayout(_k) + ";Mi;^;ycode;':=';Mi;2"; }
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
 	virtual void						onDependencyChanged(Entity*);
-	virtual void						onDependencySwitched(Entity*);
+	virtual void						onDependencySwitched(Entity*, Entity*);
 
 	// From Statement via BareTyped
 	virtual QString						code() const;

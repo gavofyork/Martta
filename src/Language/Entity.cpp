@@ -44,7 +44,7 @@ AuxilliaryFace const* Entity::staticAuxilliary() { if (!s_auxilliary_Entity) s_a
 QList<ChangeEntry> s_changes;
 void change(Entity* _s, ChangeOperation _op, Entity* _o)
 {
-	static const QStringList ops = QStringList() << "EntityChanged" << "DependencyAdded" << "DependencyRemoved" << "DependencyChanged" << "DependencySwitched" << "ContextIndexChanged";
+	static const QStringList ops = QStringList() << "EntityChanged" << "ChildrenAdded" << "DependencyAdded" << "DependencyRemoved" << "DependencyChanged" << "DependencySwitched" << "ChildMoved" << "ContextIndexChanged";
 	s_changes << ChangeEntry(_s, _op, _o);
 }
 
@@ -56,17 +56,7 @@ Entity::~Entity()
 	M_ASSERT(!m_children.size());
 }
 
-bool Entity::isComplete() const
-{
-	QList<Entity*> e = entities();
-	if (e.size() < minimumRequired())
-		return false;
-	foreach (Entity* i, e)
-		if (!i->isAllowed())
-			return false;
-	return true;
-}
-
+// Model structure management.
 bool Entity::hasAncestor(Kind _k) const
 {
 	for (Entity* e = this ? context() : 0; e; e = e->context())
@@ -74,7 +64,6 @@ bool Entity::hasAncestor(Kind _k) const
 			return true;
 	return false;
 }
-
 Entity* Entity::ancestor(Kind _k) const
 {
 	for (Entity* e = this ? context() : 0; e; e = e->context())
@@ -82,7 +71,6 @@ Entity* Entity::ancestor(Kind _k) const
 			return e;
 	return 0;
 }
-
 int Entity::ancestorIndex(Kind _k) const
 {
 	int ret = contextIndex();
@@ -91,7 +79,6 @@ int Entity::ancestorIndex(Kind _k) const
 			return ret;
 	return -1;
 }
-
 bool Entity::hasSelfAncestor(Kind _k) const
 {
 	for (Entity* e = const_cast<Entity*>(this); e; e = e->context())
@@ -99,7 +86,6 @@ bool Entity::hasSelfAncestor(Kind _k) const
 			return true;
 	return false;
 }
-
 Entity* Entity::selfAncestor(Kind _k) const
 {
 	for (Entity const* e = this; e; e = e->context())
@@ -107,7 +93,6 @@ Entity* Entity::selfAncestor(Kind _k) const
 			return const_cast<Entity*>(e);
 	return 0;
 }
-
 bool Entity::hasSelfAncestor(Entity const* _a) const
 {
 	for (Entity const* i = this; i; i = i->context())
@@ -115,7 +100,6 @@ bool Entity::hasSelfAncestor(Entity const* _a) const
 			return true;
 	return false;
 }
-
 int Entity::ancestorIndex(Entity const* _a) const
 {
 	for (Entity const* i = this; i; i = i->context())
@@ -124,6 +108,7 @@ int Entity::ancestorIndex(Entity const* _a) const
 	return -1;
 }
 
+// Identification, search & location.
 Identifiable* Entity::findEntity(QString const& _key) const
 {
 	if (_key.isEmpty())
@@ -137,7 +122,16 @@ Identifiable* Entity::findEntity(QString const& _key) const
 			return _key.contains("::") ? e->self()->findEntity(_key.section("::", 1)) : e;
 	return 0;
 }
+QList<DeclarationEntity*> Entity::spacesInScope() const
+{
+	return entitiesOf<DeclarationEntity>();
+}
 
+// Validity/status checking
+bool Entity::isValidName(QString const& _n)
+{
+	return QRegExp("[a-zA-Z][a-zA-Z0-9_]*").exactMatch(_n);
+}
 bool Entity::isNecessary() const
 {
 	if (!context())
@@ -149,74 +143,16 @@ bool Entity::isNecessary() const
 			return true;
 	return false;
 }
-
-bool Entity::isValidName(QString const& _n)
+bool Entity::isComplete() const
 {
-	return QRegExp("[a-zA-Z][a-zA-Z0-9_]*").exactMatch(_n);
+	QList<Entity*> e = entities();
+	if (e.size() < minimumRequired())
+		return false;
+	foreach (Entity* i, e)
+		if (!i->isAllowed())
+			return false;
+	return true;
 }
-
-QList<Entity*> Entity::dependencies() const
-{
-	if (!isInModel())
-		return QList<Entity*>();
-	QSet<Entity*> ret = m_dependencies;
-	foreach (Entity* e, m_children)
-		if (familyDependencies() & DependsOnChildren)
-			ret << e;
-	if (familyDependencies() & DependsOnContext)
-		ret << context();
-	return ret.values();
-}
-
-QList<Entity*> Entity::dependents() const
-{
-	if (!isInModel())
-		return QList<Entity*>();
-	QList<Entity*> ret = m_dependents;
-	foreach (Entity* e, m_children)
-		if (e->familyDependencies() & DependsOnContext)
-			ret << e;
-	if (context() && (context()->familyDependencies() & DependsOnChildren))
-		ret << context();
-	return ret;
-}
-
-void Entity::clearDependents()
-{
-	foreach (Entity* i, m_dependents)
-	{
-		i->removeDependency(this);
-		i->dependencyRemoved(this);
-	}
-}
-
-void Entity::addDependency(Entity* _e)
-{
-	if (_e && !m_dependencies.contains(_e))
-	{
-		m_dependencies << _e;
-		_e->m_dependents << this;
-	}
-}
-
-void Entity::removeDependency(Entity* _e)
-{
-	if (_e && m_dependencies.contains(_e))
-	{
-		m_dependencies.remove(_e);
-		_e->m_dependents.removeAt(_e->m_dependents.indexOf(this));
-	}
-}
-
-void Entity::removeAllDependencies()
-{
-	foreach (Entity* i, m_dependencies)
-	{
-		m_dependencies.remove(i);
-		i->m_dependents.removeAt(i->m_dependents.indexOf(this));
-	}
-}
-
 bool Entity::isValid() const
 {
 	if (!isInModel())
@@ -240,7 +176,375 @@ bool Entity::isValid() const
 		}
 	return true;
 }
+bool Entity::isSuperfluous() const
+{
+	return isPlaceholder() && !isNecessary() || !isAllowed();
+}
+bool Entity::isAllowed(int _i, Kind _o) const
+{
+	if (_o.isKind(deniedKinds(_i)))
+		return false;
+	if (!_o.isKind(allowedKinds(_i)))
+		return false;
+	return true;
+}
 
+// Culling
+void Entity::checkForCullingLater()
+{
+	if (rootEntity())
+		rootEntity()->checkCull(this);
+}
+bool Entity::cull()
+{
+	Entity* c = context();
+	if (c && !isCurrentOrAncestor() && isSuperfluous())
+	{
+		deleteAndRefill();
+		c->relayoutLater();
+		return true;
+	}
+	return false;
+}
+
+// These do *not* send notifications. Be careful when using.
+void Entity::kill(Entity* _substitute)
+{
+//	if (isInModel())
+//		qDebug() << "Killing" << this;
+	if (_substitute)
+		rewirePointer(_substitute);
+	setContext(0);
+	foreach (Entity* i, m_dependencies)
+		removeDependency(i);
+	clearDependents();
+}
+void Entity::clearEntities()
+{
+	while (entities().size())
+		entities().last()->kill();
+}
+
+// Debug
+void Entity::debugTree() const
+{
+	QList<Entity const*> ancestors;
+	for (Entity const* i = context(); i; i = i->context())
+		ancestors.push_front(i);
+	QString indent = "";
+	foreach (Entity const* i, ancestors)
+	{
+		qDebug(qPrintable(indent + i->kind().name() + " (%x)"), i);
+		indent += "    ";
+	}
+	debugTree(indent);
+}
+void Entity::debugTree(QString const& _i) const
+{
+	qDebug(qPrintable(_i + kind().name() + " (%x)"), this);
+	foreach (Entity* i, m_children)
+		i->debugTree(_i + "|   ");
+}
+
+// I/O
+void Entity::exportDom(QDomElement& _element) const
+{
+	foreach (Entity* e, entities())
+	{
+		QDomElement n = _element.ownerDocument().createElement("entity");
+		n.setAttribute("kind", e->kind().name());
+		e->exportDom(n);
+		_element.appendChild(n);
+	}
+}
+void Entity::importDom(QDomElement const& _element)
+{
+	for (QDomNode i = _element.firstChild(); !i.isNull(); i = i.nextSibling())
+		if (i.isElement() && i.toElement().tagName() == "entity")
+		{
+			Entity* e = spawn(i.toElement().attribute("kind"));
+			e->setContext(this);
+			if (e)
+				e->importDom(i.toElement());
+			else
+				qCritical() << "Unknown element of kind" << i.toElement().attribute("kind");
+		}
+}
+
+// Navigation in CodeScene(s)
+bool Entity::isCurrent() const
+{
+	foreach (CodeScene* i, CodeScene::all())
+		if (isCurrent(i))
+			return true;
+	return false;
+}
+bool Entity::isCurrent(CodeScene* _s) const
+{
+	return _s->current() == this;
+}
+bool Entity::isCurrentOrAncestor() const
+{
+	foreach (CodeScene* i, CodeScene::all())
+		if (isCurrentOrAncestor(i))
+			return true;
+	return false;
+}
+bool Entity::isCurrentOrAncestor(CodeScene* _s) const
+{
+	return _s->current()->hasSelfAncestor(this);
+}
+void Entity::setCurrent()
+{
+	foreach (CodeScene* i, CodeScene::all())
+		i->setCurrent(this);
+}
+void Entity::navigateInto(CodeScene* _s)
+{
+	_s->navigateInto(this);
+}
+void Entity::navigateToNew(CodeScene* _s)
+{
+	_s->navigateToNew(this);
+}
+void Entity::navigateOnto(CodeScene* _s)
+{
+	_s->navigateOnto(this);
+}
+void Entity::dropCursor()
+{
+	QList<Entity*> s = entities();
+	while (s.size())
+	{
+		Entity* e = s.takeFirst();
+		if (e->isPlaceholder())
+		{
+			e->setCurrent();
+			return;
+		}
+		else
+			s = e->entities() + s;
+	}
+	setCurrent();
+}
+
+// Editting in CodeScene(s)
+bool Entity::isEditing() const
+{
+	foreach (CodeScene* i, CodeScene::all())
+		if (isEditing(i))
+			return true;
+	return false;
+}
+bool Entity::isEditing(CodeScene* _s) const
+{
+	return _s->editEntity() == this;
+}
+void Entity::setEditing(CodeScene* _s)
+{
+	_s->setEditing(this);
+}
+void Entity::clearEditing()
+{
+	foreach (CodeScene* i, CodeScene::all())
+		i->setEditing(0);
+}
+EditDelegateFace* Entity::editDelegate(CodeScene* _s)
+{
+	return _s->editDelegate();
+}
+
+// Drawing
+void Entity::resetLayoutCache()
+{
+	foreach (CodeScene* i, CodeScene::all())
+		i->resetLayoutCache(this);
+}
+void Entity::relayout()
+{
+	foreach (CodeScene* i, CodeScene::all())
+		relayout(i);
+}
+void Entity::relayout(CodeScene* _s)
+{
+	_s->relayout(this);
+}
+void Entity::relayoutLater()
+{
+	foreach (CodeScene* i, CodeScene::all())
+		relayoutLater(i);
+}
+void Entity::relayoutLater(CodeScene* _s)
+{
+	_s->relayoutLater(this);
+}
+void Entity::repaint(CodeScene* _s)
+{
+	if (_s->isInScene(this))
+		_s->repaint(this);
+	else if (context())
+		context()->repaint(_s);
+}
+void Entity::repaint()
+{
+	foreach (CodeScene* i, CodeScene::all())
+		repaint(i);
+}
+QString Entity::defineLayout(ViewKeys&) const
+{
+	return "^;ycode;'[]'";
+}
+void Entity::decorate(DecorationContext const& _c) const
+{
+	if (!isValid())
+	{
+		_c->setPen(QPen(QColor(255, 128, 128), 2, Qt::DotLine, Qt::RoundCap));
+		_c->drawLine(QPointF(_c().left(), _c().bottom() - 2.f), QPointF(_c().right() - 2.f, _c().bottom() - 2.f));
+	}
+}
+
+// Keypress/UI event handlers.
+void Entity::activateEvent(CodeScene* _s)
+{
+	if (!activated(_s) && context())
+		context()->activateEvent(_s);
+}
+bool Entity::activated(CodeScene* _s)
+{
+	if (Entity* e = isExpander())
+	{
+		_s->viewKeys(this)["expanded"] = !(_s->viewKeys(this)["expanded"].toBool());
+		relayout(_s);
+		
+		if (_s->viewKeys(this)["expanded"].toBool())
+			e->setCurrent();
+		else
+			setCurrent();
+		return true;
+	}
+	else
+	{
+		setEditing(_s);
+		return isEditing(_s);
+	}
+}
+void Entity::keyPressEventStarter(EntityKeyEvent* _e)
+{
+	if (_e->focus()->isEditing(_e->codeScene()) && _e->codeScene()->editDelegate() && _e->codeScene()->editDelegate()->keyPressed(_e))
+	{
+		_e->accept();
+		if (_e->codeScene()->editDelegate())
+		{
+			_e->codeScene()->editDelegate()->lazyCommit();
+			_e->codeScene()->relayout(_e->focus());
+		}
+		return;
+	}
+	
+	if (_e->text().isEmpty())
+		return;
+	
+	SafePointer<Entity> fe = _e->focus();
+	_e->codeScene()->setEditing(0);
+
+	while (fe)
+	{
+		if (fe && fe->keyPressed(_e) || fe && fe->attemptInsert(_e))
+		{
+			_e->accept();
+			return;
+		}
+	
+		if (fe && fe->context())
+		{
+			_e->setIsFocused(false);
+			_e->setFocalIndex(fe->contextIndex());
+			fe = fe->context();
+		}
+		else
+			fe = 0;
+	}
+}
+void Entity::keyPressEvent(EntityKeyEvent* _e)
+{
+	if (keyPressed(_e) || attemptInsert(_e))
+	{
+		_e->accept();
+		return;
+	}
+	
+	if (context())
+	{
+		_e->setIsFocused(false);
+		_e->setFocalIndex(contextIndex());
+		context()->keyPressEvent(_e);
+	}
+}
+bool Entity::keyPressed(EntityKeyEvent const* _e)
+{
+	InsertionPoint p = over();
+	if (_e->codeScene()->isCurrent(this) && (_e->key() == Qt::Key_Delete && _e->modifiers() == Qt::ShiftModifier || _e->key() == Qt::Key_Backspace && isEditing(_e->codeScene())))
+	{
+//		p.context()->debugTree();
+//		qDebug() << p.index();
+//		debugTree();
+		deleteAndRefill(0, false);	// NOTE: Was true; changed to false to avoid erroneous currents being set. May need a rethink.
+//		p.context()->debugTree();
+//		qDebug() << p.index();
+		if (p.exists())
+			_e->codeScene()->setCurrent(p.entity());
+	}
+	else if (_e->codeScene()->isCurrent(this) && _e->key() == Qt::Key_Delete)
+	{
+//		p.context()->debugTree();
+//		qDebug() << p.index();
+//		debugTree();
+		if (nonPlaceholderCount() == 1 && isAllowed(nonPlaceholder(0)->kind()))
+			deleteAndRefill(nonPlaceholder(0), false);	// SEE ABOVE.
+		else
+			deleteAndRefill(0, false);	// SEE ABOVE.
+//		p.context()->debugTree();
+//		qDebug() << p.index();
+		if (p.exists())
+			_e->codeScene()->setCurrent(p.entity());
+	}
+	else if (_e->codeScene()->isCurrent(this) && (_e->key() == Qt::Key_Escape) && isEditing(_e->codeScene()))
+		_e->codeScene()->setEditing(0);
+	else if (_e->codeScene()->isCurrent(this) && _e->key() == Qt::Key_Tab && !isEditing(_e->codeScene()))
+		_e->codeScene()->setEditing(this);
+	else if (_e->text() == "{" && !_e->codeScene()->viewKeys(this)["expanded"].toBool() && isExpander())
+	{
+		_e->codeScene()->viewKeys(this)["expanded"] = true;
+		relayout(_e->codeScene());
+		isExpander()->setCurrent();
+	}
+	else if (_e->text() == "}" && _e->codeScene()->viewKeys(this)["expanded"].toBool() && isExpander())
+	{
+		_e->codeScene()->viewKeys(this)["expanded"] = false;
+		relayout(_e->codeScene());
+		setCurrent();
+	}
+	else
+		return false;
+	return true;
+}
+bool Entity::attemptInsert(EntityKeyEvent const* _e)
+{
+	if (context())
+		foreach (Kind i, context()->allowedKinds(contextIndex()))
+			if (AuxilliaryRegistrar::get()->auxilliary(i.name())->dispatchKeyPress(over(), _e))
+				return true;
+	return false;
+}
+bool Entity::attemptAppend(EntityKeyEvent const* _e)
+{
+	foreach (Kind i, allowedKinds(entities().size()))
+		if (AuxilliaryRegistrar::get()->auxilliary(i.name())->dispatchKeyPress(back(), _e))
+			return true;
+	return false;
+}
+
+// Context/position changing.
 void Entity::setContext(Entity* _newContext)
 {
 	if (_newContext == m_context) return;
@@ -291,7 +595,6 @@ void Entity::setContext(Entity* _newContext)
 	if (ore)
 		ore->setChanged();
 }
-
 void Entity::setContextTentatively(Entity* _newContext)
 {
 	if (_newContext == m_context) return;
@@ -316,7 +619,6 @@ void Entity::setContextTentatively(Entity* _newContext)
 		m_contextIndex = -1;
 	}
 }
-
 void Entity::commitTentativeSetContext(InsertionPoint const& _oldPosition)
 {
 	Entity* oldContext = _oldPosition.context();
@@ -335,7 +637,6 @@ void Entity::commitTentativeSetContext(InsertionPoint const& _oldPosition)
 	foreach (Entity* e, m_children)
 		e->checkRoot();
 }
-
 void Entity::undoTentativeSetContext(InsertionPoint const& _oldPosition)
 {
 	if (_oldPosition.context() == m_context) return;
@@ -362,7 +663,86 @@ void Entity::undoTentativeSetContext(InsertionPoint const& _oldPosition)
 		m_contextIndex = -1;
 	}
 }
+void Entity::moveToPosition(int _index)
+{
+	M_ASSERT(m_context);
+	
+	int oi = contextIndex();
+	
+	if (_index < 0 || _index > parentsChildrenCount())
+		_index = parentsChildrenCount() - 1;
+	
+	m_context->m_children.removeAll(this);
+	m_context->m_children.insert(_index, this);
+	
+	for (int i = qMin(_index, oi); i <= qMax(_index, oi); i++)
+		parentsChild(i)->m_contextIndex = i;
+}
+void Entity::checkRoot()
+{
+	onLeaveScene(context()->rootEntity(), rootEntity());
+	m_rootEntity = context()->rootEntity();
+	foreach (Entity* e, entities())
+		e->checkRoot();
+}
 
+// Freeform dependency management.
+QList<Entity*> Entity::dependencies() const
+{
+	if (!isInModel())
+		return QList<Entity*>();
+	QSet<Entity*> ret = m_dependencies;
+	foreach (Entity* e, m_children)
+		if (familyDependencies() & DependsOnChildren)
+			ret << e;
+	if (familyDependencies() & DependsOnContext)
+		ret << context();
+	return ret.values();
+}
+QList<Entity*> Entity::dependents() const
+{
+	if (!isInModel())
+		return QList<Entity*>();
+	QList<Entity*> ret = m_dependents;
+	foreach (Entity* e, m_children)
+		if (e->familyDependencies() & DependsOnContext)
+			ret << e;
+	if (context() && (context()->familyDependencies() & DependsOnChildren))
+		ret << context();
+	return ret;
+}
+void Entity::clearDependents()
+{
+	foreach (Entity* i, m_dependents)
+	{
+		i->removeDependency(this);
+		i->dependencyRemoved(this);
+	}
+}
+void Entity::addDependency(Entity* _e)
+{
+	if (_e && !m_dependencies.contains(_e))
+	{
+		m_dependencies << _e;
+		_e->m_dependents << this;
+	}
+}
+void Entity::removeDependency(Entity* _e)
+{
+	if (_e && m_dependencies.contains(_e))
+	{
+		m_dependencies.remove(_e);
+		_e->m_dependents.removeAt(_e->m_dependents.indexOf(this));
+	}
+}
+void Entity::removeAllDependencies()
+{
+	foreach (Entity* i, m_dependencies)
+	{
+		m_dependencies.remove(i);
+		i->m_dependents.removeAt(i->m_dependents.indexOf(this));
+	}
+}
 void Entity::updateAncestralDependencies()
 {
 	int i = 0;
@@ -381,7 +761,7 @@ void Entity::updateAncestralDependencies()
 			else if (!na && oa)
 				dependencyRemoved(oa);
 			else
-				dependencySwitched(na);
+				dependencySwitched(na, oa);
 			
 			if (i == m_ancestralDependencies.size())
 				m_ancestralDependencies << na;
@@ -393,10 +773,9 @@ void Entity::updateAncestralDependencies()
 		i++;
 	}
 }
-
 void Entity::changed()
 {
-	if (!isInModel() || !isAllowed() || m_notifiedOfChange)
+	if (!isInModel() || m_notifiedOfChange)
 		return;
 	m_notifiedOfChange = true;
 	m_rootEntity->setChanged();
@@ -412,7 +791,6 @@ void Entity::changed()
 		}
 	m_notifiedOfChange = false;
 }
-
 void Entity::notifyOfChange(Entity* _dependent)
 {
 	if (!isInModel() || !isAllowed())
@@ -422,64 +800,43 @@ void Entity::notifyOfChange(Entity* _dependent)
 	_dependent->onDependencyChanged(this);
 }
 
-void Entity::moveToPosition(int _index)
-{
-	M_ASSERT(m_context);
-	
-	int oi = contextIndex();
-	
-	if (_index < 0 || _index > parentsChildrenCount())
-		_index = parentsChildrenCount() - 1;
-	
-	m_context->m_children.removeAll(this);
-	m_context->m_children.insert(_index, this);
-	
-	for (int i = qMin(_index, oi); i <= qMax(_index, oi); i++)
-		parentsChild(i)->m_contextIndex = i;
-}
+//****************************************************************
+//****************************************************************
+//****************************************************************
+//****************************************************************
+//
+// Stuff that causes changes to model and notifies thereof.
+//
+//****************************************************************
+//****************************************************************
+//****************************************************************
+//****************************************************************
 
-bool Entity::isSuperfluous() const
+bool Entity::validifyChildren()
 {
-	return isPlaceholder() && !isNecessary() || !isAllowed();
-}
-
-void Entity::checkForCullingLater()
-{
-	if (rootEntity())
-		rootEntity()->checkCull(this);
-}
-
-bool Entity::cull()
-{
-	Entity* c = context();
-	if (c && !isCurrentOrAncestor() && isSuperfluous())
+	bool ret = false;
+	for (int i = 0; i < qMax(minimumRequired(), m_children.size()); i++)
 	{
-		deleteAndRefill();
-		c->relayoutLater();
-		return true;
+		if (i >= m_children.size())
+			back().spawnPreparedSilent()->contextAdded();
+		else if (!m_children[i]->isAllowed() && i < minimumRequired())
+			m_children[i]->deleteAndRefill();
+		else if (!m_children[i]->isAllowed())
+			m_children[i]->killAndDelete();
+		else
+			continue;
+		ret = true;
 	}
-	return false;
+	childrenAdded();
+	return ret;
 }
-
-void Entity::checkRoot()
+Entity* Entity::prepareChildren()
 {
-	onLeaveScene(context()->rootEntity(), rootEntity());
-	m_rootEntity = context()->rootEntity();
-	foreach (Entity* e, entities())
-		e->checkRoot();
+	for (int i = m_children.size(); i < minimumRequired(); ++i)
+		back().spawnPreparedSilent()->contextAdded();
+	childrenAdded();
+	return this;
 }
-
-QList<DeclarationEntity*> Entity::spacesInScope() const
-{
-	return entitiesOf<DeclarationEntity>();
-}
-
-void Entity::clearEntities()
-{
-	while (entities().size())
-		entities().last()->kill();
-}
-
 bool Entity::removeInvalidChildren()
 {
 	bool ret = false;
@@ -491,71 +848,34 @@ bool Entity::removeInvalidChildren()
 		}
 	return ret;
 }
-
-bool Entity::validifyChildren()
-{
-	bool ret = false;
-	for (int i = 0; i < qMax(minimumRequired(), m_children.size()); i++)
-	{
-		if (i >= m_children.size())
-			back().spawnPrepared();
-		else if (!m_children[i]->isAllowed() && i < minimumRequired())
-			m_children[i]->deleteAndRefill();
-		else if (!m_children[i]->isAllowed())
-			m_children[i]->killAndDelete();
-		else
-			continue;
-		ret = true;
-	}
-	onChildrenPrepared();
-	return ret;
-}
-
-Entity* Entity::prepareChildren()
-{
-	for (int i = m_children.size(); i < minimumRequired(); ++i)
-		back().spawnPrepared();
-	onChildrenPrepared();
-	return this;
-}
-
 Entity* Entity::usurp(Entity* _u)
 {
 	InsertionPoint you = _u->over();
 
 	over().insertSilent(_u);
 	
+	// Move children over.
 	QList<Entity*> es = entities();
 	foreach (Entity* e, es)
 		e->setContext(_u);
+		
 	kill();
 	
+	// Tell _r's old context (if it has one) that it has gone, and tell _r that it has a new context.
 	_u->contextSwitchedWithChildRemoved(you);
+	
+	// Notify about the children having been moved.
 	foreach (Entity* i, es)
-	{
 		i->contextSwitched(this);
-		_u->childAdded(i);
-	}
-	_u->context()->childSwitched(_u);
+	_u->childrenAdded();
+	
+	// Tell _r's new context that it's here instead of us.
+	if (_u->m_context)
+		_u->m_context->childSwitched(_u, this);
+		
 	delete this;
 	return _u;
 }
-
-Entity* Entity::insert(Entity* _e)
-{
-	InsertionPoint you = _e->over();
-	
-	over().insertSilent(_e);
-	_e->front().insertSilent(this);
-	
-	_e->contextSwitchedWithChildRemoved(you);
-	contextSwitched(_e->context());
-	_e->childAdded(0);
-	if (_e->context())
-		_e->context()->childSwitched(_e);
-	return _e;
-} 
-
 Entity* Entity::replace(Entity* _r)
 {
 	InsertionPoint you = _r->over();
@@ -567,79 +887,24 @@ Entity* Entity::replace(Entity* _r)
 	_r->contextSwitchedWithChildRemoved(you);
 	// Tell _r's new context that it's here.
 	if (_r->m_context)
-		_r->m_context->childSwitched(_r);
+		_r->m_context->childSwitched(_r, this);
 	delete this;
 	return _r;
 }
-
-void Entity::kill(Entity* _substitute)
+Entity* Entity::insert(Entity* _e)
 {
-//	if (isInModel())
-//		qDebug() << "Killing" << this;
-	if (_substitute)
-		rewirePointer(_substitute);
-	setContext(0);
-	foreach (Entity* i, m_dependencies)
-		removeDependency(i);
-	clearDependents();
-}
-
-bool Entity::attemptAppend(EntityKeyEvent const* _e)
-{
-	foreach (Kind i, allowedKinds(entities().size()))
-		if (AuxilliaryRegistrar::get()->auxilliary(i.name())->dispatchKeyPress(back(), _e))
-			return true;
-	return false;
-}
-
-void Entity::decorate(DecorationContext const& _c) const
-{
-	if (!isValid())
-	{
-		_c->setPen(QPen(QColor(255, 128, 128), 2, Qt::DotLine, Qt::RoundCap));
-		_c->drawLine(QPointF(_c().left(), _c().bottom() - 2.f), QPointF(_c().right() - 2.f, _c().bottom() - 2.f));
-	}
-}
-
-bool Entity::attemptInsert(EntityKeyEvent const* _e)
-{
-	if (context())
-		foreach (Kind i, context()->allowedKinds(contextIndex()))
-			if (AuxilliaryRegistrar::get()->auxilliary(i.name())->dispatchKeyPress(over(), _e))
-				return true;
-	return false;
-}
-
-void Entity::debugTree() const
-{
-	QList<Entity const*> ancestors;
-	for (Entity const* i = context(); i; i = i->context())
-		ancestors.push_front(i);
-	QString indent = "";
-	foreach (Entity const* i, ancestors)
-	{
-		qDebug(qPrintable(indent + i->kind().name() + " (%x)"), i);
-		indent += "    ";
-	}
-	debugTree(indent);
-}
-
-void Entity::debugTree(QString const& _i) const
-{
-	qDebug(qPrintable(_i + kind().name() + " (%x)"), this);
-	foreach (Entity* i, m_children)
-		i->debugTree(_i + "|   ");
-}
-
-bool Entity::isAllowed(int _i, Kind _o) const
-{
-	if (_o.isKind(deniedKinds(_i)))
-		return false;
-	if (!_o.isKind(allowedKinds(_i)))
-		return false;
-	return true;
-}
-
+	InsertionPoint you = _e->over();
+	
+	over().insertSilent(_e);
+	_e->front().insertSilent(this);
+	
+	_e->contextSwitchedWithChildRemoved(you);
+	contextSwitched(_e->context());
+	_e->childAdded(0);
+	if (_e->context())
+		_e->context()->childSwitched(_e, _e->context());
+	return _e;
+} 
 void Entity::deleteAndRefill(Entity* _e, bool _moveToGrave)
 {
 	Entity* c = context();
@@ -652,9 +917,10 @@ void Entity::deleteAndRefill(Entity* _e, bool _moveToGrave)
 	else if (isNecessary())
 	{
 		p.spawnPreparedSilent();
-		killAndDelete(p.entity());
+		kill(p.entity());
 		p->contextAdded(c);
-		c->childSwitched(p.entity());
+		c->childSwitched(p.entity(), this);
+		delete this;
 	}
 	else
 	{
@@ -667,142 +933,33 @@ void Entity::deleteAndRefill(Entity* _e, bool _moveToGrave)
 		p.nearestEntity()->setCurrent();
 }
 
-void Entity::exportDom(QDomElement& _element) const
-{
-	foreach (Entity* e, entities())
-	{
-		QDomElement n = _element.ownerDocument().createElement("entity");
-		n.setAttribute("kind", e->kind().name());
-		e->exportDom(n);
-		_element.appendChild(n);
-	}
-}
-
-void Entity::importDom(QDomElement const& _element)
-{
-	for (QDomNode i = _element.firstChild(); !i.isNull(); i = i.nextSibling())
-		if (i.isElement() && i.toElement().tagName() == "entity")
-		{
-			Entity* e = spawn(i.toElement().attribute("kind"));
-			e->setContext(this);
-			if (e)
-				e->importDom(i.toElement());
-			else
-				qCritical() << "Unknown element of kind" << i.toElement().attribute("kind");
-		}
-}
-
-Entity* Entity::spawn(QString const& _kind)
-{
-	AuxilliaryFace const* f = AuxilliaryRegistrar::get()->auxilliary(_kind);
-	M_ASSERT(f);
-	return f->create();
-}
-
-void Entity::clearEditing()
-{
-	foreach (CodeScene* i, CodeScene::all())
-		i->setEditing(0);
-}
-
-bool Entity::isEditing() const
-{
-	foreach (CodeScene* i, CodeScene::all())
-		if (isEditing(i))
-			return true;
-	return false;
-}
-
-bool Entity::isCurrent() const
-{
-	foreach (CodeScene* i, CodeScene::all())
-		if (isCurrent(i))
-			return true;
-	return false;
-}
-
-bool Entity::isCurrentOrAncestor() const
-{
-	foreach (CodeScene* i, CodeScene::all())
-		if (isCurrentOrAncestor(i))
-			return true;
-	return false;
-}
-
-bool Entity::isEditing(CodeScene* _s) const
-{
-	return _s->editEntity() == this;
-}
-
-bool Entity::isCurrent(CodeScene* _s) const
-{
-	return _s->current() == this;
-}
-
-bool Entity::isCurrentOrAncestor(CodeScene* _s) const
-{
-	return _s->current()->hasSelfAncestor(this);
-}
-
-void Entity::setEditing(CodeScene* _s)
-{
-	_s->setEditing(this);
-}
-
-EditDelegateFace* Entity::editDelegate(CodeScene* _s)
-{
-	return _s->editDelegate();
-}
-
-void Entity::setCurrent()
-{
-	foreach (CodeScene* i, CodeScene::all())
-		i->setCurrent(this);
-}
-
-void Entity::navigateInto(CodeScene* _s)
-{
-	_s->navigateInto(this);
-}
-
-void Entity::navigateToNew(CodeScene* _s)
-{
-	_s->navigateToNew(this);
-}
-
-void Entity::navigateOnto(CodeScene* _s)
-{
-	_s->navigateOnto(this);
-}
-
-void Entity::dropCursor()
-{
-	QList<Entity*> s = entities();
-	while (s.size())
-	{
-		Entity* e = s.takeFirst();
-		if (e->isPlaceholder())
-		{
-			e->setCurrent();
-			return;
-		}
-		else
-			s = e->entities() + s;
-	}
-	setCurrent();
-}
+//****************************************************************
+//****************************************************************
+//****************************************************************
+//****************************************************************
+//
+// The actual notification code.
+//
+//****************************************************************
+//****************************************************************
+//****************************************************************
+//****************************************************************
 
 void Entity::childAdded(int _index)
 {
 	if (_index >= 0 && _index < m_children.size() && familyDependencies() & DependsOnChildren)
 	{
-		dependencyAdded(m_children[_index]);
-//		dependencySwitched(entity(_index));
-/*		for (int i = _index + 1; i < entityCount(); i++)
-			if (entity(i)->familyDependencies() & DependsOnContextIndex)
-				entity(i)->contextIndexChanged(i - 1);*/
+		if (botherNotifying())
+			dependencyAdded(m_children[_index]);
+		for (int i = _index + 1; i < entityCount(); i++)
+		{
+			if (entity(i)->botherNotifying() && entity(i)->familyDependencies() & DependsOnContextIndex)
+				entity(i)->contextIndexChanged(i - 1);
+			if (botherNotifying() && familyDependencies() & TestOnOrder)
+				childMoved(entity(i), i - 1);
+		}
 	}
-	else if (m_children.size() && familyDependencies() & DependsOnChildren)
+	else if (botherNotifying() && m_children.size() && familyDependencies() & DependsOnChildren)
 	{
 		dependencyAdded(m_children.last());
 	}
@@ -810,37 +967,48 @@ void Entity::childAdded(int _index)
 		// This would be a relayoutLater() call, except we know the child will call that, so we can optimise thus:
 		resetLayoutCache();
 }
-
-void Entity::childSwitched(Entity* _ch)
+void Entity::childrenAdded()
 {
-	if (_ch && familyDependencies() & DependsOnChildren)
-		dependencySwitched(_ch);
+	if (botherNotifying() && m_children.size() && familyDependencies() & DependsOnChildren)
+	{
+		change(this, EntityChildrenAdded, 0);
+		onChildrenAdded();
+	}
+	else
+		qDebug() << "Not bothering to notify (" << botherNotifying() << " - " << isComplete() << ")";
+	if (isInModel())
+		resetLayoutCache();
 }
-
+void Entity::childSwitched(Entity* _ch, Entity* _old)
+{
+	if (botherNotifying() && _ch && familyDependencies() & DependsOnChildren)
+		dependencySwitched(_ch, _old);
+}
 void Entity::childRemoved(Entity* _ch, int _index)
 {
 	if (_ch && familyDependencies() & DependsOnChildren)
 	{
-		dependencyRemoved(_ch, _index);
+		if (botherNotifying())
+			dependencyRemoved(_ch, _index);
 		for (int i = _index; i < entityCount(); i++)
-			if (entity(i)->familyDependencies() & DependsOnContextIndex)
+		{
+			if (entity(i)->botherNotifying() && entity(i)->familyDependencies() & DependsOnContextIndex)
 				entity(i)->contextIndexChanged(i + 1);
+			if (botherNotifying() && familyDependencies() & TestOnOrder)
+				childMoved(entity(i), i + 1);
+		}
 	}
 	if (isInModel())
-	{
 		relayoutLater();
-	}
 }
-
 void Entity::contextAdded(Entity* _con)
 {
-	if (_con && familyDependencies() & DependsOnContext)
+	if (botherNotifying() && _con && familyDependencies() & DependsOnContext)
 		dependencyAdded(_con);
 	updateAncestralDependencies();
 	if (isInModel())
 		relayoutLater();
 }
-
 void Entity::contextSwitched(Entity* _old)
 {
 	if (m_context && !_old)
@@ -849,194 +1017,17 @@ void Entity::contextSwitched(Entity* _old)
 		contextRemoved(_old);
 	else if (_old != m_context)
 	{
-		if (familyDependencies() & DependsOnContext)
-			dependencySwitched(m_context);
+		if (botherNotifying() && familyDependencies() & DependsOnContext)
+			dependencySwitched(m_context, _old);
 		updateAncestralDependencies();
 		relayoutLater();
 	}
 }
-
 void Entity::contextRemoved(Entity* _old)
 {
-	if (_old && familyDependencies() & DependsOnContext)
+	if (botherNotifying() && _old && familyDependencies() & DependsOnContext)
 		dependencyRemoved(_old);
 	updateAncestralDependencies();
-}
-
-void Entity::relayout(CodeScene* _s)
-{
-	_s->relayout(this);
-}
-
-void Entity::resetLayoutCache()
-{
-	foreach (CodeScene* i, CodeScene::all())
-		i->resetLayoutCache(this);
-}
-
-void Entity::relayoutLater(CodeScene* _s)
-{
-	_s->relayoutLater(this);
-}
-
-void Entity::repaint(CodeScene* _s)
-{
-	if (_s->isInScene(this))
-		_s->repaint(this);
-	else if (context())
-		context()->repaint(_s);
-}
-
-void Entity::repaint()
-{
-	foreach (CodeScene* i, CodeScene::all())
-		repaint(i);
-}
-
-void Entity::relayout()
-{
-	foreach (CodeScene* i, CodeScene::all())
-		relayout(i);
-}
-
-void Entity::relayoutLater()
-{
-	foreach (CodeScene* i, CodeScene::all())
-		relayoutLater(i);
-}
-
-void Entity::activateEvent(CodeScene* _s)
-{
-	if (!activated(_s) && context())
-		context()->activateEvent(_s);
-}
-
-bool Entity::activated(CodeScene* _s)
-{
-	if (Entity* e = isExpander())
-	{
-		_s->viewKeys(this)["expanded"] = !(_s->viewKeys(this)["expanded"].toBool());
-		relayout(_s);
-		
-		if (_s->viewKeys(this)["expanded"].toBool())
-			e->setCurrent();
-		else
-			setCurrent();
-		return true;
-	}
-	else
-	{
-		setEditing(_s);
-		return isEditing(_s);
-	}
-}
-
-void Entity::keyPressEventStarter(EntityKeyEvent* _e)
-{
-	if (_e->focus()->isEditing(_e->codeScene()) && _e->codeScene()->editDelegate() && _e->codeScene()->editDelegate()->keyPressed(_e))
-	{
-		_e->accept();
-		if (_e->codeScene()->editDelegate())
-		{
-			_e->codeScene()->editDelegate()->lazyCommit();
-			_e->codeScene()->relayout(_e->focus());
-		}
-		return;
-	}
-	
-	if (_e->text().isEmpty())
-		return;
-	
-	SafePointer<Entity> fe = _e->focus();
-	_e->codeScene()->setEditing(0);
-
-	while (fe)
-	{
-		if (fe && fe->keyPressed(_e) || fe && fe->attemptInsert(_e))
-		{
-			_e->accept();
-			return;
-		}
-	
-		if (fe && fe->context())
-		{
-			_e->setIsFocused(false);
-			_e->setFocalIndex(fe->contextIndex());
-			fe = fe->context();
-		}
-		else
-			fe = 0;
-	}
-}
-
-QString Entity::defineLayout(ViewKeys&) const
-{
-	return "^;ycode;'[]'";
-}
-
-void Entity::keyPressEvent(EntityKeyEvent* _e)
-{
-	if (keyPressed(_e) || attemptInsert(_e))
-	{
-		_e->accept();
-		return;
-	}
-	
-	if (context())
-	{
-		_e->setIsFocused(false);
-		_e->setFocalIndex(contextIndex());
-		context()->keyPressEvent(_e);
-	}
-}
-
-bool Entity::keyPressed(EntityKeyEvent const* _e)
-{
-	InsertionPoint p = over();
-	if (_e->codeScene()->isCurrent(this) && (_e->key() == Qt::Key_Delete && _e->modifiers() == Qt::ShiftModifier || _e->key() == Qt::Key_Backspace && isEditing(_e->codeScene())))
-	{
-//		p.context()->debugTree();
-//		qDebug() << p.index();
-//		debugTree();
-		deleteAndRefill(0, false);	// NOTE: Was true; changed to false to avoid erroneous currents being set. May need a rethink.
-//		p.context()->debugTree();
-//		qDebug() << p.index();
-		if (p.exists())
-			_e->codeScene()->setCurrent(p.entity());
-	}
-	else if (_e->codeScene()->isCurrent(this) && _e->key() == Qt::Key_Delete)
-	{
-//		p.context()->debugTree();
-//		qDebug() << p.index();
-//		debugTree();
-		if (nonPlaceholderCount() == 1 && isAllowed(nonPlaceholder(0)->kind()))
-			deleteAndRefill(nonPlaceholder(0), false);	// SEE ABOVE.
-		else
-			deleteAndRefill(0, false);	// SEE ABOVE.
-//		p.context()->debugTree();
-//		qDebug() << p.index();
-		if (p.exists())
-			_e->codeScene()->setCurrent(p.entity());
-	}
-	else if (_e->codeScene()->isCurrent(this) && (_e->key() == Qt::Key_Escape) && isEditing(_e->codeScene()))
-		_e->codeScene()->setEditing(0);
-	else if (_e->codeScene()->isCurrent(this) && _e->key() == Qt::Key_Tab && !isEditing(_e->codeScene()))
-		_e->codeScene()->setEditing(this);
-	else if (_e->text() == "{" && !_e->codeScene()->viewKeys(this)["expanded"].toBool() && isExpander())
-	{
-		_e->codeScene()->viewKeys(this)["expanded"] = true;
-		relayout(_e->codeScene());
-		isExpander()->setCurrent();
-	}
-	else if (_e->text() == "}" && _e->codeScene()->viewKeys(this)["expanded"].toBool() && isExpander())
-	{
-		_e->codeScene()->viewKeys(this)["expanded"] = false;
-		relayout(_e->codeScene());
-		setCurrent();
-	}
-	else
-		return false;
-	return true;
 }
 
 }

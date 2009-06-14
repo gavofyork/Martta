@@ -67,7 +67,7 @@ void AssignedVariable::onDependencyChanged(Entity* _e)
 	changed();
 }
 
-void AssignedVariable::onDependencySwitched(Entity* _e)
+void AssignedVariable::onDependencySwitched(Entity* _e, Entity*)
 {
 	qDebug() << this << ": Dependency Switched: " << _e;
 	debugTree();
