@@ -3,7 +3,6 @@ CHECK Class notification when not in model.
 TODO codescene needs to track changes and keep an uptodate (or at least knowingly out-of-date) next/previous functions for leaving to work properly. otherwise leaving could be called e.g. half way through usurption where something in the scene has a context which is not.
 
 CHECK empty name fscks Identifiable/DeclarationEntity ::key?
-TODO AssignedVariable - change back to DefaultConstructedVariable
 TODO anonymous -> metasyntactic variable
 TODO optimise Class.
 TODO special EntryMethod

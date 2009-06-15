@@ -113,6 +113,10 @@ public:
 		if (_dependencyVariable != _dependency)
 		{
 			Entity* old = _dependencyVariable->asKind<Entity>();
+			if (_dependency)
+				M_ASSERT(_dependency->asKind<Entity>()->isInModel());
+			if (old)
+				M_ASSERT(old->asKind<Entity>()->isInModel());
 			if (old)
 				removeDependency(old);
 			_dependencyVariable = _dependency;
@@ -566,6 +570,7 @@ protected:
 	void								removeAllDependencies();
 	
 	/// Called when the state of this object has changed.
+	/// @note This is only called when the object is in the model.
 	/// @returns true to notify dependents that we have changed.
 	virtual bool						onChanged() { relayoutLater(); return true; }
 	/// Called when:
@@ -583,9 +588,9 @@ protected:
 	/// - A family member is replaced, and there is a family dependency (_e is the new family member).
 	/// @note By default, it just called the onDependencyChanged() method. 
 	virtual void						onDependencySwitched(Entity* _e, Entity* /*_old*/) { onDependencyChanged(_e); }
-	/// Called when child order is a family dependency and:
+	/// Called when familyDependencies includes DependsOnChildOrder and:
 	/// - A child entity has had its contextIndex changed (usually through the insertion of another child at an earlier
-	/// position.
+	/// position).
 	/// @note By default, it just called the onDependencyChanged() method. 
 	virtual void						onChildMoved(Entity* _e, int /*_oldIndex*/) { onDependencyChanged(_e); }
 	/// Called when:
@@ -600,13 +605,17 @@ protected:
 	/// - What was a dependent ancestor is removed (_e is the old ancestor).
 	/// - A registered dependency has removed itself (_e is the old dependency).
 	/// @note By default, it does nothing. 
-	virtual void						onDependencyRemoved(Entity* _e) { onDependencyChanged(_e); }
-	virtual void						onDependencyRemoved(Entity* _e, int /*_index*/) { onDependencyRemoved(_e); }
-	/// Called at a point where several entities are added in a batch operation, usually when the object has been fully
-	/// populated with children, if we depend on children.
-	/// This would be called instead of a number of onDependencyAdded()s.
-	/// @note By default, it calls onDependencyAdded() for each child entity. 
-	/// @note If you intend to use this, you may find it useful to change notificationRequirements() from BeInModel.
+	virtual void						onDependencyRemoved(Entity* _e, int /*_index*/) {}
+	/// Called when we depend on children and:
+	/// - This entity has been created with prepareChildren called on it.
+	/// - This entity has usurped all of another entity's children.
+	/// - This entity has had its children "validified", whereby invalid ones are removed and new ones added
+	///   as necessary. This is only called if > 1 child was added during the operation.
+	/// This is called instead of a number of onDependencyAdded()s, and removed confusion about the state of the object
+	/// as each dependency is added.
+	/// @note By default, it calls onDependencyAdded() for every child entity (whether recently added or not). 
+	/// @note If you intend to use this, you may find it useful to change notificationRequirements() so it doesn't
+	/// include BeInModel.
 	virtual void						onChildrenAdded() { foreach (Entity* e, entities()) onDependencyAdded(e); }
 	
 	/// Called when our rootEntity is changing. This currently just means either going into or out of the program model.

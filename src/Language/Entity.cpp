@@ -815,10 +815,14 @@ void Entity::notifyOfChange(Entity* _dependent)
 bool Entity::validifyChildren()
 {
 	bool ret = false;
+	int added = 0;
 	for (int i = 0; i < qMax(minimumRequired(), m_children.size()); i++)
 	{
 		if (i >= m_children.size())
+		{
 			back().spawnPreparedSilent()->contextAdded();
+			added++;
+		}
 		else if (!m_children[i]->isAllowed() && i < minimumRequired())
 			m_children[i]->deleteAndRefill();
 		else if (!m_children[i]->isAllowed())
@@ -827,7 +831,10 @@ bool Entity::validifyChildren()
 			continue;
 		ret = true;
 	}
-	childrenAdded();
+	if (added == 1)
+		childAdded(entityCount() - 1);
+	else if (added > 1)
+		childrenAdded();
 	return ret;
 }
 Entity* Entity::prepareChildren()
@@ -974,9 +981,9 @@ void Entity::childrenAdded()
 		change(this, EntityChildrenAdded, 0);
 		onChildrenAdded();
 	}
-	else
+/*	else
 		qDebug() << "Not bothering to notify (" << botherNotifying() << " - " << isComplete() << ")";
-	if (isInModel())
+*/	if (isInModel())
 		resetLayoutCache();
 }
 void Entity::childSwitched(Entity* _ch, Entity* _old)

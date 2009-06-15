@@ -49,7 +49,7 @@ protected:
 	virtual void						onDependencyChanged(Entity* _e);
 	virtual void						apresLoad() { rejigDeps(); checkImplicitConstructors(); }
 	virtual void						onDependencyAdded(Entity* _e);
-	virtual void						onDependencyRemoved(Entity* _e);
+	virtual void						onDependencyRemoved(Entity* _e, int);
 	// A child has been added to the class somewhere in the middle, probably. Either way we need to rejig deps to get the new access label tracked.
 	virtual void						onDependencySwitched(Entity* _e, Entity*) { onDependencyAdded(_e); }
 	virtual bool						onChanged();

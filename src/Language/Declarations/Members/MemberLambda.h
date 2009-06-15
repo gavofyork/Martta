@@ -49,7 +49,7 @@ protected:
 
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity*) { changed(); }
-	virtual void						onDependencyRemoved(Entity*) { changed(); }
+	virtual void						onDependencyRemoved(Entity*, int) { changed(); }
 	virtual QList<DeclarationEntity*>	utilised() const;
 	
 	virtual QString						basicCode(FunctionCodeScope _ref) const;

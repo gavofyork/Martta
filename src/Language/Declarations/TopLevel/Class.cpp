@@ -149,7 +149,7 @@ void Class::onDependencyAdded(Entity* _e)
 		changed();
 }
 
-void Class::onDependencyRemoved(Entity* _e)
+void Class::onDependencyRemoved(Entity* _e, int)
 {
 	if (entities().contains(_e))
 		rejigDeps(); 

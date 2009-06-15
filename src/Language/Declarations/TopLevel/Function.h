@@ -49,7 +49,7 @@ protected:
 	
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity*) { changed(); }
-	virtual void						onDependencyRemoved(Entity*) { changed(); }
+	virtual void						onDependencyRemoved(Entity*, int) { changed(); }
 	
 	virtual Entity*						isExpander() const { return body()->entity(0); }
 	virtual QString						defineLayout(ViewKeys& _v) const { return "^;" + LambdaNamer::defineLayout(_v); }
