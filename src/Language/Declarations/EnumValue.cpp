@@ -54,20 +54,26 @@ Type EnumValue::type() const
 bool EnumValue::isChildInValidState(int _i) const
 {
 	// Nothing to say about it as it's not typed. If it's supposed to be typed, then the allowed kinds system should pick up the error.
-	if (!entityIs<Typed>(_i))
-		return true;
-	foreach (Type i, Types() << Type(Int))
-		if (entityAs<Typed>(_i)->type().isSimilarTo(i, TypeEntity::BasicallyConvertible))
-			return true;
+	if (entityIs<Typed>(_i))
+	{
+		foreach (Type i, Types() << Type(Int))
+			if (entityAs<Typed>(_i)->type().isSimilarTo(i, TypeEntity::BasicallyConvertible))
+				return true;
+		return false;
+	}
+	else if (entityIs<TextLabel>(_i))
+	{
+		return entityAs<TextLabel>(_i)->isNamed();
+	}
 	return false;
 }
 
 QString EnumValue::defineLayout(ViewKeys&) const
 {
 	if (entityCount() == 1)
-		return "0;";
+		return "^;0;";
 	else
-		return "0;' := ';1";
+		return "^;0;' := ';1";
 }
 
 bool EnumValue::isSuperfluous() const

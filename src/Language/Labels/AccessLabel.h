@@ -46,7 +46,7 @@ protected:
 	virtual QString						defineLayout(ViewKeys&) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
 	virtual QString						code() const { return Martta::code(m_access); }
-	virtual bool						activated(CodeScene*) { setAccess((Access)(((int)m_access + 1) % (int)AccessCount)); return true; }
+	virtual bool						onActivated(CodeScene*) { setAccess((Access)(((int)m_access + 1) % (int)AccessCount)); return true; }
 	
 private:
 	Access								m_access;

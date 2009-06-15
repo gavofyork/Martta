@@ -88,9 +88,6 @@ template<class T> class ModelPtr;
 class Entity;
 class Nothing { public: static AuxilliaryFace const* staticAuxilliary() { return 0; } };
 
-template<class T> struct TotalOffset { static const int value = TotalOffset<typename T::Super>::value + T::OffsetForDerivatives; };
-template<> struct TotalOffset<Entity> { static const int value = 0; };
-
 /**
  * Note regarding rootEntity/null-Context: You can never depend on something which does not share the
  * same RootEntity object as you. Objects yet to be inserted into the program have a nullContext and thus
@@ -199,12 +196,12 @@ public:
 	template<class T> inline int		entityCountOf() const { int r = 0; foreach (Entity* i, m_children) if (i->isKind<T>()) r++; return r; }
 	template<class T> inline bool		entityIs(int _i) const { return (_i >= 0 && _i < m_children.size() && m_children[_i]) ? m_children[_i]->isKind<T>() : false; }
 	template<class T> inline T*			entityAs(int _i) const { M_ASSERT(_i >= 0 && _i < m_children.size() && m_children[_i]); return m_children[_i]->asKind<T>(); }
-	template<class L> inline QList<Entity*>			localsFor() const { return m_children.mid(TotalOffset<L>::value); }
-	template<class L> inline int					localCountFor() const { return m_children.size() - TotalOffset<L>::value; }
-	template<class L> inline Entity*				localFor(int _i) const { if (_i >= 0 && _i < m_children.size() - TotalOffset<L>::value) { M_ASSERT(m_children[_i + TotalOffset<L>::value]->m_context == this); return m_children[TotalOffset<L>::value + _i]; } else return 0; }
-	template<class L, class T> inline QList<T*>		localsOfFor() const { return filterEntities<T>(m_children.mid(TotalOffset<L>::value)); }
-	template<class L, class T> inline bool			localIsFor(int _i) const { return (_i >= 0 && _i < m_children.size() - TotalOffset<L>::value && m_children[_i + TotalOffset<L>::value]) ? m_children[_i + TotalOffset<L>::value]->isKind<T>() : false; }
-	template<class L, class T> inline T*			localAsFor(int _i) const { M_ASSERT(_i >= 0); M_ASSERT(_i < m_children.size() - TotalOffset<L>::value); M_ASSERT(m_children[_i + TotalOffset<L>::value]); return m_children[_i + TotalOffset<L>::value]->asKind<T>(); }
+	template<class L> inline QList<Entity*>			localsFor() const { return m_children.mid(L::MyOffset); }
+	template<class L> inline int					localCountFor() const { return m_children.size() - L::MyOffset; }
+	template<class L> inline Entity*				localFor(int _i) const { if (_i >= 0 && _i < m_children.size() - L::MyOffset) { M_ASSERT(m_children[_i + L::MyOffset]->m_context == this); return m_children[L::MyOffset + _i]; } else return 0; }
+	template<class L, class T> inline QList<T*>		localsOfFor() const { return filterEntities<T>(m_children.mid(L::MyOffset)); }
+	template<class L, class T> inline bool			localIsFor(int _i) const { return (_i >= 0 && _i < m_children.size() - L::MyOffset && m_children[_i + L::MyOffset]) ? m_children[_i + L::MyOffset]->isKind<T>() : false; }
+	template<class L, class T> inline T*			localAsFor(int _i) const { M_ASSERT(_i >= 0); M_ASSERT(_i < m_children.size() - L::MyOffset); M_ASSERT(m_children[_i + L::MyOffset]); return m_children[_i + L::MyOffset]->asKind<T>(); }
 	inline QList<Entity*>				parentsChildren() const { if (!m_context) return QList<Entity*>(); return m_context->m_children; }
 	inline int							parentsChildrenCount() const { M_ASSERT(context()); return context()->m_children.size(); }
 	inline Entity*						parentsChild(int _i) const { M_ASSERT(context()); return context()->entity(_i); }
@@ -451,7 +448,8 @@ public:
 	virtual void						decorate(DecorationContext const&) const;
 	virtual EditDelegateFace*			newDelegate(CodeScene*) { return 0; }
 	// We've been double-clicked.
-	virtual bool						activated(CodeScene* _s);
+	bool								activated(CodeScene* _s);
+	virtual bool						onActivated(CodeScene*) { return false; }
 	virtual bool						keyPressed(EntityKeyEvent const*);
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const&, EntityKeyEvent const*) { return false; }
 	
@@ -485,7 +483,7 @@ public:
 	/// Reset-layout cache.
 	void								resetLayoutCache();
 	
-	static void							keyPressEventStarter(EntityKeyEvent* _e);
+	static void							keyPressEventStarter(EntityKeyEvent* _e, bool _abortive = false);
 	void								keyPressEvent(EntityKeyEvent* _e);
 	void								activateEvent(CodeScene* _s);
 	
@@ -605,7 +603,7 @@ protected:
 	/// - What was a dependent ancestor is removed (_e is the old ancestor).
 	/// - A registered dependency has removed itself (_e is the old dependency).
 	/// @note By default, it does nothing. 
-	virtual void						onDependencyRemoved(Entity* _e, int /*_index*/) {}
+	virtual void						onDependencyRemoved(Entity*, int /*_index*/) {}
 	/// Called when we depend on children and:
 	/// - This entity has been created with prepareChildren called on it.
 	/// - This entity has usurped all of another entity's children.

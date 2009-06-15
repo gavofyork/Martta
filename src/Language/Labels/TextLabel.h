@@ -32,9 +32,14 @@ class TextLabel: public IdLabel
 public:
 	TextLabel(QString const& _t = QString()): m_text(_t) {}
 	
+	// Queries the parent's isChildInValidState() to check if we're valid - if so and we're null it makes up a name. If not it just returns "".
+	// @note NEVER call them from the parent's isChildInValidState() function.
 	QString								name() const;
-	QString								text() const { return m_text; }
 	virtual QString						code() const;
+	
+	// These tell the truth (i.e. independent of what parent thinks).
+	bool								isNamed() const { return !m_text.isEmpty(); }
+	QString								text() const { return m_text; }
 	void								setText(QString const& _t) { m_text = _t; changed(); }
 	
 protected:
@@ -44,7 +49,6 @@ protected:
 	virtual QString						defineLayout(ViewKeys&) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
 	virtual void						decorate(DecorationContext const& _c) const;
-	virtual bool						isInValidState() const { return m_text != ""; }
 	
 private:
 	QString								m_text;

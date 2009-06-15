@@ -36,8 +36,8 @@ public:
 
 protected:
 	// From Member
+	virtual int							memberMinimumRequired() const;
 	virtual Kinds						memberAllowedKinds(int _i) const;
-	virtual int							memberMinimumRequired() const { return 2; }
 	virtual QString						memberDefineLayout(const ViewKeys& _k) const { return EnumerationNamer::defineLayout(_k); }
 	virtual QString						memberInterfaceCode() const { return EnumerationNamer::interfaceCode(); }
 	virtual QString						memberImplementationCode() const { return QString::null; }
@@ -53,9 +53,16 @@ protected:
 
 	// From Entity
 	virtual int							familyDependencies() { return DependsOnChildren; }
-	virtual void						onDependencyChanged(Entity* _e);
+	virtual void						onDependencyAdded(Entity* _e) { EnumerationNamer::onDependencyAdded(_e); }
+	virtual void						onDependencyChanged(Entity* _e) { EnumerationNamer::onDependencyChanged(_e); }
+	virtual void						onDependencyRemoved(Entity* _e, int) { EnumerationNamer::onDependencyRemoved(_e); }
+	virtual bool						onActivated(CodeScene* _s) { return EnumerationNamer::onActivated(_s); }
 	virtual bool						keyPressed(EntityKeyEvent const* _e) { M_ASSERT(isComplete()); return EnumerationNamer::keyPressed(_e) ? true : Super::keyPressed(_e); }
-	virtual Entity*						isExpander() const { return entity(1); }
+	virtual Entity*						isExpander() const { return EnumerationNamer::isExpander(); }
+	
+	// From EnumerationNamer
+	virtual void						setNamed();
+	virtual void						setUnnamed();
 };
 
 }

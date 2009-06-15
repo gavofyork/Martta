@@ -42,8 +42,6 @@ protected:
 	/// Overriding this will still do the const decoration etc. If you don't want that, override Member::memberDefineLayout or Entity::defineLayout.
 	virtual QString						memberLambdaDefineLayout(ViewKeys& _v) const { return LambdaNamer::defineLayout(_v); }
 
-	virtual Type						type() const;
-	
 	virtual QString						memberImplementationCode() const { return LambdaNamer::implementationCode(); }
 	virtual QString						memberInterfaceCode() const { return LambdaNamer::interfaceCode(); }
 
@@ -59,6 +57,7 @@ protected:
 	virtual QString						memberDefineLayout(ViewKeys& _v) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
 	virtual void						memberDecorate(DecorationContext const& _p) const;
+	virtual Type						type() const { return MemberValue::memberifiedType(LambdaNamer::type()); }
 };
 
 }

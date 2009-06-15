@@ -40,7 +40,7 @@ protected:
 	virtual QString						defineLayout(ViewKeys&) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
 	virtual QString						code() const { return m_isConst ? " const" : ""; }
-	virtual bool						activated(CodeScene*) { setIsConst(!m_isConst); return true; }
+	virtual bool						onActivated(CodeScene*) { setIsConst(!m_isConst); return true; }
 	
 private:
 	bool								m_isConst;

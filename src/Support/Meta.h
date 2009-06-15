@@ -70,22 +70,25 @@ template<class T, class F> T tryCast(F _f) { return tryCastPrivate::XL<T, F, try
 
 #define MARTTA_COMMON(S, o) \
 	public: \
-	static const int					OffsetForDerivatives = o; \
-	virtual Entity const*				self() const { return this; } \
-	virtual Entity*						self() { return this; } \
 	typedef S Super; \
+	static const int					OffsetForDerivatives = o; \
+	static const int					MyOffset = Super::OffsetForDerivatives + Super::MyOffset; \
 	Entity::asKind; \
 	Entity::tryKind; \
 	Entity::isKind; \
+	virtual Entity const*				self() const { return this; } \
+	virtual Entity*						self() { return this; } \
 	inline QList<Entity*>				locals() const { return localsFor<S>(); } \
 	inline int							localCount() const { return localCountFor<S>(); } \
 	inline Entity*						local(int _i) const { return localFor<S>(_i); } \
 	template<class T> inline QList<T*>	localsOf() const { return localsOfFor<S, T>(); } \
 	template<class T> inline bool		localIs(int _i) const { return localIsFor<S, T>(_i); } \
 	template<class T> inline T*			localAs(int _i) const { return localAsFor<S, T>(_i); } \
-	static const int MyOffset = TotalOffset<S>::value; \
 	static inline int					fromLocal(int _i) { return MyOffset + _i; } \
 	static inline int					toLocal(int _i) { return MyOffset - _i; } \
+	inline InsertionPoint				localFront() { return localMiddle(0); } \
+	inline InsertionPoint				localMiddle(int _i) { return middle(_i + MyOffset); } \
+	inline InsertionPoint				localBack() { return back(); } \
 	MARTTA_BASIC
 
 #define MARTTA_OBJECT_WITH_OFFSET(S, o) \

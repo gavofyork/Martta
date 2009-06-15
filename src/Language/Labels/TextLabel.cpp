@@ -38,20 +38,18 @@ MARTTA_OBJECT_CPP(TextLabel);
 
 QString TextLabel::code() const
 {
+	if (name().isEmpty())
+		return QString::null;
+		
 	QString prefix = "";
 	if (context()->hasAncestor<NamespaceEntity>())
 	{
 		if (contextIs<Argument>())
-		{
 			prefix = "a_";
-		}
-		else if (contextIs<Variable>())
-		{
-			if (context()->contextIs<MemberVariable>())
-				prefix = "m_";
-			else
-				prefix = "l_";
-		}
+		else if (contextIs<MemberVariable>())
+			prefix = "m_";
+		else if (contextIs<VariableNamer>())
+			prefix = "l_";
 		else
 			prefix = "";
 	}
@@ -76,7 +74,11 @@ void TextLabel::exportDom(QDomElement& _element) const
 
 QString TextLabel::name() const
 {
-	if (contextIs<TypeDefinition>() || contextIs<NamespaceEntity>())
+	if (m_text.isEmpty() && isValid())
+		return "foo";	// TODO: make it proper.
+	else if (m_text.isEmpty())
+		return QString::null;
+	else if (contextIs<TypeDefinition>() || contextIs<NamespaceEntity>())
 		return m_text.left(1).toUpper() + camelCase(m_text.mid(1));
 	else
 		return camelCase(m_text);
@@ -88,11 +90,11 @@ QString TextLabel::defineLayout(ViewKeys&) const
 	if (context()->hasAncestor<NamespaceEntity>())
 	{
 		if (contextIs<Argument>())
-			key = "(;M4;[[[;fs-2;fb;c#777;e#fff;'_';]]];)";
-		else if (contextIs<Variable>() && context()->contextIs<MemberVariable>())
-			key = "(;M4;[[[;fs-2;fb;c#777;e#fff;'M';]]];)";
+			key = "(;M4;[[[;fs-2;fb;c#777;e#fff;'_';]]];);";
+		else if (contextIs<MemberVariable>())
+			key = "(;M4;[[[;fs-2;fb;c#777;e#fff;'M';]]];);";
 	}
-	return "^;" + (text().isEmpty() ? QString("yminor;'ANONYMOUS'") : (key + ";'" + name() + "'"));
+	return "^;" + key + (name().isEmpty() ? "yminor;'[ANONYMOUS]'" : (QString(isNamed() ? "c#000" : "c#aaa") + ";'" + name() + "'"));
 }
 
 void TextLabel::decorate(DecorationContext const& _c) const
@@ -170,11 +172,19 @@ public:
 	}
 	virtual bool isValid() const
 	{
-		return !m_text.isEmpty();
+		return true;//!m_text.isEmpty();
 	}
 	virtual QString defineLayout(ViewKeys&) const
 	{
-		return "^;'" + m_text + "'";
+		QString key = "";
+		if (subject()->context()->hasAncestor<NamespaceEntity>())
+		{
+			if (subject()->contextIs<Argument>())
+				key = "(;M4;[[[;fs-2;fb;c#777;e#fff;'_';]]];)";
+			else if (subject()->contextIs<MemberVariable>())
+				key = "(;M4;[[[;fs-2;fb;c#777;e#fff;'M';]]];)";
+		}
+		return "^;" + (m_text.isEmpty() ? QString("yminor;'ANONYMOUS'") : (key + ";'" + m_text + "'"));
 	}
 	QString m_text;
 };

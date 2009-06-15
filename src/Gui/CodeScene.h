@@ -52,7 +52,7 @@ public:
 
 	// What's happening?
 	inline Entity*				current() const { return m_current ? (Entity*)m_current : m_subject; }
-	inline Entity*				editEntity() const { return m_editDelegate ? m_current : 0; }
+	Entity*						editEntity() const;
 	inline EditDelegateFace*	editDelegate() const { return m_editDelegate; }
 	inline bool					isCurrent(Entity* _e) const { return current() == _e; }
 	inline bool					isEditing(Entity* _e) const { return editEntity() == _e; }

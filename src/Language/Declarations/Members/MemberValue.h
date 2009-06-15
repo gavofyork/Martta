@@ -31,6 +31,11 @@ class MemberValue: public Member, public_interface ValueDefiner
 	MARTTA_PLACEHOLDER(Member)
 	MARTTA_INHERITS(ValueDefiner, 0)
 	
+public:	
+	virtual bool						isConst() const { return false; }
+	
+protected:
+	Type								memberifiedType(Type const& _t) const;
 };
 
 }

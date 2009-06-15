@@ -488,6 +488,17 @@ int test()
 			}
 	}
 	
+	TEST("Class creation...")
+	{
+		RootEntity* r = new RootEntity;
+		Class* X = new Class;
+		X->prepareChildren();
+		r->back().place(X);
+		X->changed();
+		FAILED_IF(!X->isValid());
+		foreach (Entity* e, X->entities())
+			FAILED_IF(!e->isValid());
+	}
 #define TEST_THIS_CAST(F, T, R) \
 	if (TypeEntity::R == TypeEntity::Logical) \
 		FAILED_IF(!F.isSimilarTo(T, TypeEntity::Convertible) || !F.isSimilarTo(T, TypeEntity::Physical)); \
@@ -546,6 +557,7 @@ int test()
 		RootEntity* r = new RootEntity;
 		Enumeration* X = new Enumeration;
 		X->prepareChildren();
+		X->setUnnamed();
 		r->back().place(X);
 		EnumValue* Xv = new EnumValue;
 		Xv->prepareChildren();
@@ -560,6 +572,9 @@ int test()
 		Type x = Xv->type();
 		Type y = Yv->type();
 		Type i = Type(Int);
+		qDebug() << x->code();
+		qDebug() << y->code();
+		qDebug() << i->code();
 //		CAST_TEST(x, x, Logical);
 		CAST_TEST(x, y, Unrelated);
 		CAST_TEST(x, i, Logical);

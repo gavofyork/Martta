@@ -143,7 +143,7 @@ void CodeScene::setEditing(Entity* _e)
 	if (m_editDelegate)
 	{
 		// If the edit delegate is half-way to destruction, we can allow it to have a null subject.
-		M_ASSERT(m_editDelegate->subject() == m_current || !m_editDelegate->subject());
+		M_ASSERT(m_editDelegate->subject() == m_current || m_current->usurpsChild(m_editDelegate->subject()) || !m_editDelegate->subject());
 		if (m_visible.contains(m_editDelegate->subject()))
 		{
 			editDelegate()->tryCommit();
@@ -165,9 +165,13 @@ void CodeScene::setEditing(Entity* _e)
 	{
 		if (!isInScene(_e))
 			doRefreshLayout();
-		if (!isFocusable(_e))
+		if (isFocusable(_e))
+			setCurrent(_e);
+		else if (_e->isUsurped())
+			setCurrent(_e->context());
+		else
 			return;
-		setCurrent(_e);
+		
 		_e->newDelegate(this);
 		if (m_editDelegate)
 		{
@@ -379,6 +383,11 @@ void CodeScene::paintEvent(QPaintEvent*)
 					p.drawRect(obr);
 				}
 			}
+}
+
+Entity* CodeScene::editEntity() const
+{
+	return m_editDelegate ? m_editDelegate->subject() : 0;
 }
 
 void CodeScene::keyPressEvent(QKeyEvent* _e)

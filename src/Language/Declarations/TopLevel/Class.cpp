@@ -211,10 +211,7 @@ QList<DeclarationEntity*> Class::utilised() const
 QList<DeclarationEntity*> Class::members(bool _isConst, Access _access) const
 {
 	QList<DeclarationEntity*> ret;
-	foreach (MemberVariable* i, entitiesOf<MemberVariable>())
-		if (i->access() <= _access)
-			 ret += i;
-	foreach (MemberLambda* i, entitiesOf<MemberLambda>())
+	foreach (MemberValue* i, entitiesOf<MemberValue>())
 		if ((i->isConst() || !_isConst) && i->access() <= _access)
 			ret += i;
 	foreach (Base* i, entitiesOf<Base>())

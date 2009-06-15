@@ -20,26 +20,31 @@
 
 #pragma once
 
-#include "Variable.h"
+#include "VariableNamer.h"
 #include "MemberValue.h"
 
 namespace Martta
 {
 
-class MemberVariable: public MemberValue
+class MemberVariable: public MemberValue, public_interface VariableNamer
 {
 	MARTTA_OBJECT(MemberValue)
+	MARTTA_INHERITS(VariableNamer, 0)
 	
 public:
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
 	
 protected:
-	virtual Kinds						memberAllowedKinds(int _i) const { if (_i == 0) return Kind::of<Variable>(); else return Kinds(); }
-	
-	virtual Type						type() const;
-	virtual QString						name() const { return localAs<DeclarationEntity>(0)->name(); }
-	virtual QString						codeName() const { return localAs<DeclarationEntity>(0)->codeName(); }
-	virtual bool						usurpsChild(Entity const* _e) const { return _e == local(0); }
+	virtual bool						keyPressed(EntityKeyEvent const* _e) { return VariableNamer::keyPressed(_e) ? true : Super::keyPressed(_e); }
+	virtual int							familyDependencies() const { return DependsOnChildren; }
+	virtual void						onDependencyChanged(Entity*) { changed(); }
+	virtual QList<DeclarationEntity*>	utilised() const { return actualType()->utilised(); }
+	virtual QString						memberInterfaceCode() const { return VariableNamer::interfaceCode(); }
+	virtual QString						memberImplementationCode() const { return VariableNamer::implementationCode(); }
+	virtual QString						memberDefineLayout(ViewKeys& _k) const { return VariableNamer::defineLayout(_k); }
+	virtual int							memberMinimumRequired() const { return 2; }
+	virtual Kinds						memberAllowedKinds(int _i) const;
+	virtual Type						type() const { return MemberValue::memberifiedType(VariableNamer::type()); }
 };
 
 }

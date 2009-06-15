@@ -322,7 +322,12 @@ void VariableResolver::resolve(DeclarationsHandler* _h)
 
 void TypeResolver::init(QXmlAttributes const& _a)
 {
-	subject()->back().place(new TextLabel(properName(_a)));
+	if (properName(_a).startsWith(".") && subject()->isKind<Enumeration>())
+	{
+		// Don't do anything - we're an anonymous enum.
+	}
+	else
+		subject()->back().place(new TextLabel(properName(_a)));
 	subject()->m_location.m_lineNumber = _a.value("line").toInt();
 
 	m_id = _a.value("id");

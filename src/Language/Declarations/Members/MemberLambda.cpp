@@ -33,17 +33,6 @@ namespace Martta
 
 MARTTA_PLACEHOLDER_CPP(MemberLambda);
 
-Type MemberLambda::type() const
-{
-	if (!isComplete())
-		return Type();
-	Type ret = LambdaNamer::type();
-	if (!ancestor<Class>() || !ret->isType<Reference>() || !ret->asType<Reference>()->child())
-		return Type();
-	ret->asType<Reference>()->child()->knitIn(new Memberify(ancestor<Class>(), isConst()));
-	return ret;
-}
-
 bool MemberLambda::isConst() const
 {
 	if (!isComplete())
@@ -54,7 +43,10 @@ bool MemberLambda::isConst() const
 
 Entity* MemberLambda::isExpander() const
 {
-	return body()->entity(0);
+	if (body())
+		return body()->entity(0);
+	else
+		return 0;
 }
 
 void MemberLambda::memberDecorate(DecorationContext const& _p) const

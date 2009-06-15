@@ -33,6 +33,9 @@ class EnumerationNamer: public_interface TypeDefinition
 	
 public:
 	void								updateStem();
+	virtual void						setUnnamed() = 0;
+	virtual void						setNamed() = 0;
+	bool								isNamed() const;
 
 protected:
 	virtual bool						hasDefaultConstructor() const { return true; }
@@ -41,6 +44,12 @@ protected:
 	QString								interfaceCode() const;
 	bool								keyPressed(EntityKeyEvent const* _e);
 	QList<ValueDefiner*>				valuesAdded() const { return castEntities<ValueDefiner>(self()->entitiesOf<ValueDefiner>()); }
+	
+	bool								onActivated(CodeScene*);
+	void								onDependencyAdded(Entity* _e);
+	void								onDependencyChanged(Entity* _e);
+	void								onDependencyRemoved(Entity* _e);
+	Entity*								isExpander() const;
 	
 	QString								m_stem;
 };

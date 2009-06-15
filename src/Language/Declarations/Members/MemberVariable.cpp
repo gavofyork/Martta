@@ -18,12 +18,10 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "DecorationContext.h"
-#include "CommonGraphics.h"
+#include "TextLabel.h"
+#include "TypeEntity.h"
 #include "Reference.h"
-#include "Memberify.h"
-#include "AccessLabel.h"
-#include "Const.h"
+#include "Class.h"
 #include "MemberVariable.h"
 
 namespace Martta
@@ -31,15 +29,13 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(MemberVariable);
 
-Type MemberVariable::type() const
+Kinds MemberVariable::memberAllowedKinds(int _i) const
 {
-	if (!isComplete())
-		return Type();
-	Type ret = localAs<TypeNamer>(0)->type();
-	if (!ancestor<Class>() || !ret->isType<Reference>() || !ret->asType<Reference>()->child())
-		return Type();
-	ret->asType<Reference>()->child()->knitIn(new Memberify(ancestor<Class>()));
-	return ret;
+	if (_i == 0)
+		return Kind::of<TextLabel>();
+	if (_i == 1)
+		return Kind::of<TypeEntity>();
+	return Kinds();
 }
 
 bool MemberVariable::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)

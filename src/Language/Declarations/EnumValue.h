@@ -50,6 +50,7 @@ protected:
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
 	virtual bool						isChildInValidState(int _i) const;
 	virtual bool						isSuperfluous() const;
+	virtual bool						usurpsChild(Entity const* _e) const { return _e == entity(0); }
 
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity* _e) { if (_e == entity(0)) { /*checkForCullingLater(); */changed(); } }

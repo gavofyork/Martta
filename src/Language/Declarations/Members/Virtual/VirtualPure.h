@@ -20,15 +20,17 @@
 
 #pragma once
 
-#include "VirtualMethod.h"
+#include "Virtual.h"
+#include "MemberLambda.h"
 
 namespace Martta
 {
 
 // Only has ReturnType, ArgumentVariable...
-class VirtualPure: public VirtualMethod
+class VirtualPure: public MemberLambda, public_interface Virtual
 {
-	MARTTA_OBJECT(VirtualMethod)
+	MARTTA_OBJECT(MemberLambda)
+	MARTTA_INHERITS(Virtual, 0)
 
 public:
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);

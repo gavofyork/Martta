@@ -1,15 +1,8 @@
-CHECK Class notification when not in model.
-
-TODO codescene needs to track changes and keep an uptodate (or at least knowingly out-of-date) next/previous functions for leaving to work properly. otherwise leaving could be called e.g. half way through usurption where something in the scene has a context which is not.
-
-CHECK empty name fscks Identifiable/DeclarationEntity ::key?
-TODO anonymous -> metasyntactic variable
 TODO optimise Class.
 TODO special EntryMethod
 TODO virtual interface
 TODO virtual overload
-TODO variable -> basevariable, new variable & membervariable - no need if class stores access.
-OR member enumeration with decoration code moved to class, but not ideal since no clear way of getting enumeration into member enumeration without a basically useless 3rd class to act as sharing base.
+TODO anonymous -> metasyntactic variable
 
 TODO references leave hopeful names behind when invalid
 

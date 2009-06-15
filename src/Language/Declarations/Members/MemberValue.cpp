@@ -18,11 +18,23 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "Const.h"
+#include "Reference.h"
+#include "Memberify.h"
 #include "MemberValue.h"
 
 namespace Martta
 {
 
 MARTTA_PLACEHOLDER_CPP(MemberValue);
+
+Type MemberValue::memberifiedType(Type const& _t) const
+{
+	Type ret = _t;
+	if (!classType() || !ret->isType<Reference>() || !ret->asType<Reference>()->child())
+		return Type();
+	ret->asType<Reference>()->child()->knitIn(new Memberify(classType(), isConst()));
+	return ret;
+}
 
 }

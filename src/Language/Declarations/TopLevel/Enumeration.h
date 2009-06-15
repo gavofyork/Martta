@@ -37,22 +37,28 @@ class Enumeration: public TopLevelType, public_interface EnumerationNamer
 
 public:
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
-	virtual QString						code() const { return isHidden() ? "enum ["+m_stem+"*]" : codeName(); }
+	
+	virtual void						setNamed();
+	virtual void						setUnnamed();
+	virtual QString						code() const { return isNamed() ? codeName() : "enum ["+m_stem+"*]"; }
 	
 protected:
-	virtual int							minimumRequired() const { return 2; }
-	virtual Kinds						allowedKinds(int) const;
+	virtual int							minimumRequired() const;
+	virtual Kinds						allowedKinds(int _i) const;
 	virtual QString						defineLayout(const ViewKeys& _k) const { return "^;" + EnumerationNamer::defineLayout(_k); }
 	virtual QString						interfaceCode() const { return EnumerationNamer::interfaceCode(); }
 	virtual bool						hasDefaultConstructor() const { return EnumerationNamer::hasDefaultConstructor(); }
 	virtual QList<ValueDefiner*>		valuesAdded() const { return EnumerationNamer::valuesAdded(); }
 	virtual Types						assignableTypes() const { return Type(const_cast<Enumeration*>(this)); }
+	virtual bool						onActivated(CodeScene* _s) { return EnumerationNamer::onActivated(_s); }
 
 	virtual bool						keyPressed(EntityKeyEvent const* _e) { M_ASSERT(isComplete()); return EnumerationNamer::keyPressed(_e) ? true : Super::keyPressed(_e); }
-	virtual Entity*						isExpander() const { return entity(1); }
+	virtual Entity*						isExpander() const { return entity(isNamed() ? 1 : 0); }
 
 	virtual int							familyDependencies() { return DependsOnChildren; }
-	virtual void						onDependencyChanged(Entity* _e);
+	virtual void						onDependencyAdded(Entity* _e) { EnumerationNamer::onDependencyAdded(_e); }
+	virtual void						onDependencyChanged(Entity* _e) { EnumerationNamer::onDependencyChanged(_e); }
+	virtual void						onDependencyRemoved(Entity* _e, int) { EnumerationNamer::onDependencyRemoved(_e); }
 };
 
 }

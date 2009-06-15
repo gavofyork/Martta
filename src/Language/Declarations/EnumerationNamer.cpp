@@ -20,6 +20,7 @@
 
 #include "CommonGraphics.h"
 #include "DecorationContext.h"
+#include "CodeScene.h"
 #include "Class.h"
 #include "TextLabel.h"
 #include "EnumValue.h"
@@ -50,7 +51,7 @@ void EnumerationNamer::updateStem()
 	foreach (EnumValue* i, self()->entitiesOf<EnumValue>())
 		if (m_stem.isEmpty())
 			m_stem = i->codeName();
-		else
+		else if (!i->codeName().isEmpty())
 			while (m_stem != i->codeName().left(m_stem.length()))
 				m_stem.chop(1);
 	if (oldStem != m_stem)
@@ -59,7 +60,7 @@ void EnumerationNamer::updateStem()
 
 bool EnumerationNamer::keyPressed(EntityKeyEvent const* _e)
 {
-	if (_e->key() == Qt::Key_Return)
+	if (_e->key() == Qt::Key_Return && _e->codeScene()->viewKeys(self())["expanded"].toBool())
 	{
 		InsertionPoint p = (_e->isFocused() || _e->focalIndex() == 0) ?
 		(/*_e->inserting() || */_e->modifiers() & Qt::ShiftModifier) ?
@@ -79,6 +80,14 @@ bool EnumerationNamer::keyPressed(EntityKeyEvent const* _e)
 	{
 		self()->setCurrent();
 	}
+	else if (QRegExp("[a-z]").exactMatch(_e->text()) && !isNamed())
+	{
+		self()->debugTree();
+		setNamed();
+		self()->debugTree();
+		_e->codeScene()->setCurrent(self()->entitiesOf<TextLabel>()[0]);
+		_e->reinterpretLater();
+	}
 	else
 		return false;
 	return true;
@@ -87,16 +96,21 @@ bool EnumerationNamer::keyPressed(EntityKeyEvent const* _e)
 QString EnumerationNamer::defineLayout(ViewKeys& _viewKeys) const
 {
 	QString ret;
+	QString name;
+	if (isNamed())
+		name = (";Mo;fb;cblack;s" + Type(const_cast<TypeDefinition*>(asKind<TypeDefinition>()))->idColour() + ";!%1").arg(self()->entityIndexOf<IdLabel>());
+	else
+		name = ";Mo;c#777;yminor;'[" + m_stem + "...]'";
 	if (_viewKeys["expanded"].toBool())
 	{
-		ret += "ycode;'enum ';fb;cblack;s" + Type(const_cast<TypeDefinition*>(asKind<TypeDefinition>()))->idColour() + ";!%1;s;ycode;n;'{'";
+		ret += "ycode;'enum'" + name + ";s;ycode;n;'{'";
 		foreach (EnumValue* f, self()->entitiesOf<EnumValue>())
 			ret += QString(";n;i;%1").arg(f->contextIndex());
 		ret += ";n;'}'";
 	}
 	else
 	{
-		ret += "ycode;'enum ';fb;cblack;s" + Type(const_cast<TypeDefinition*>(asKind<TypeDefinition>()))->idColour() + ";!%1;s;yminor;' (";
+		ret += "ycode;'enum'" + name + ";s;yminor;' (";
 		int n = self()->entitiesOf<EnumValue>().count();
 		if (n > 1 || !self()->entitiesOf<EnumValue>()[0]->codeName().isEmpty())
 			ret += QString::number(n) + " entr" + (n > 1 ? "ies" : "y");
@@ -104,7 +118,53 @@ QString EnumerationNamer::defineLayout(ViewKeys& _viewKeys) const
 			ret += "empty";
 		ret += ")'";
 	}
-	return ret.arg(self()->entityIndexOf<IdLabel>());
+	return ret;
+}
+
+Entity* EnumerationNamer::isExpander() const
+{
+	return self()->isComplete() ? self()->entitiesOf<EnumValue>()[0] : 0;
+}
+
+void EnumerationNamer::onDependencyRemoved(Entity* _e)
+{
+	if (_e->isKind<EnumValue>())
+		updateStem();
+}
+
+void EnumerationNamer::onDependencyAdded(Entity* _e)
+{
+	if (_e->isKind<EnumValue>())
+		updateStem();
+	else
+		self()->changed();
+}
+
+void EnumerationNamer::onDependencyChanged(Entity* _e)
+{
+	if (_e->isKind<TextLabel>())
+	{
+		if (!_e->asKind<TextLabel>()->isNamed())
+			setUnnamed();
+		else
+			self()->changed();
+	}
+	else
+		updateStem();
+}
+
+bool EnumerationNamer::isNamed() const
+{
+	return !self()->entityCountOf<EnumValue>() || self()->entityCountOf<TextLabel>() == 1;
+}
+
+bool EnumerationNamer::onActivated(CodeScene*)
+{
+	if (isNamed())
+		setUnnamed();
+	else
+		setNamed();
+	return true;
 }
 
 }
