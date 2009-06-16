@@ -60,7 +60,7 @@ bool Compound::keyPressed(EntityKeyEvent const* _e)
 		p.place(s);
 		s->setCurrent();
 	}
-	else if (_e->key() == Qt::Key_Home && _e->focalIndex() > -1)
+	else if (_e->key() == Qt::Key_Home && _e->focalIndex() != UndefinedIndex)
 	{
 		entity(_e->focalIndex())->setCurrent();
 	}

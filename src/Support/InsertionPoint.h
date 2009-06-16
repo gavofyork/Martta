@@ -20,6 +20,8 @@
 
 #pragma once
 
+#include <climits>
+
 #include <QList>
 
 #include "SafePointer.h"
@@ -27,6 +29,8 @@
 
 namespace Martta
 {
+
+static const int UndefinedIndex = INT_MAX;
 
 class Entity;
 	
@@ -36,7 +40,7 @@ class InsertionPoint
 	friend QDebug operator<<(QDebug _out, InsertionPoint const& _item);
 	
 public:
-	InsertionPoint(): m_context(0), m_index(-1) {}
+	InsertionPoint(): m_context(0), m_index(UndefinedIndex) {}
 	InsertionPoint(InsertionPoint const& _c): m_context(_c.m_context), m_index(_c.m_index) {}
 	InsertionPoint& operator=(InsertionPoint const& _c) { m_context = _c.m_context; m_index = _c.m_index; return *this; }
 	
@@ -99,7 +103,7 @@ public:
 //	template<class T> inline InsertionPoint const& operator<<(T* _e) const { place(_e); return InsertionPoint(m_context, (m_index == -1) ? -1 : (_e->contextIndex() + 1)); }
 	
 private:
-	InsertionPoint(Entity* _context, int _index = -1): m_context(_context), m_index(_index) {}
+	InsertionPoint(Entity* _context, int _index = UndefinedIndex): m_context(_context), m_index(_index) {}
 
 	SafePointer<Entity>					m_context;
 	int									m_index;

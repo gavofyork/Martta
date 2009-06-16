@@ -50,7 +50,6 @@ protected:
 	virtual bool						hasDefaultConstructor() const { return EnumerationNamer::hasDefaultConstructor(); }
 	virtual QList<ValueDefiner*>		valuesAdded() const { return EnumerationNamer::valuesAdded(); }
 	virtual Types						assignableTypes() const { return Type(const_cast<Enumeration*>(this)); }
-	virtual bool						onActivated(CodeScene* _s) { return EnumerationNamer::onActivated(_s); }
 
 	virtual bool						keyPressed(EntityKeyEvent const* _e) { M_ASSERT(isComplete()); return EnumerationNamer::keyPressed(_e) ? true : Super::keyPressed(_e); }
 	virtual Entity*						isExpander() const { return entity(isNamed() ? 1 : 0); }

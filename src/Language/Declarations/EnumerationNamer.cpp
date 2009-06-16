@@ -72,7 +72,7 @@ bool EnumerationNamer::keyPressed(EntityKeyEvent const* _e)
 		p.place(s);
 		s->entity(0)->setCurrent();
 	}
-	else if (_e->key() == Qt::Key_Home && _e->focalIndex() > -1)
+	else if (_e->key() == Qt::Key_Home && _e->focalIndex() != UndefinedIndex)
 	{
 		self()->entity(_e->focalIndex())->setCurrent();
 	}
@@ -82,9 +82,7 @@ bool EnumerationNamer::keyPressed(EntityKeyEvent const* _e)
 	}
 	else if (QRegExp("[a-z]").exactMatch(_e->text()) && !isNamed())
 	{
-		self()->debugTree();
 		setNamed();
-		self()->debugTree();
 		_e->codeScene()->setCurrent(self()->entitiesOf<TextLabel>()[0]);
 		_e->reinterpretLater();
 	}
@@ -156,15 +154,6 @@ void EnumerationNamer::onDependencyChanged(Entity* _e)
 bool EnumerationNamer::isNamed() const
 {
 	return !self()->entityCountOf<EnumValue>() || self()->entityCountOf<TextLabel>() == 1;
-}
-
-bool EnumerationNamer::onActivated(CodeScene*)
-{
-	if (isNamed())
-		setUnnamed();
-	else
-		setNamed();
-	return true;
 }
 
 }

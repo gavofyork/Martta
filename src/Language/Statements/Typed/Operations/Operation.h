@@ -48,7 +48,7 @@ protected:
 	static QList<ValueDefiner*>			allOperators(Operator _o);
 	
 	/// The argument type of the method or function type _t. argument -1 is the return type.
-	static Type							prototypeOf(Type const& _t, int _index = -1);
+	static Type							prototypeOf(Type const& _t, int _index = UndefinedIndex);
 	static bool							prototypeHasArgumentAt(Type const& _t, int _index);
 	static QList<ValueDefiner*>			findBestOverload(Types const& _actual, QList<ValueDefiner*> const _candidates);
 	

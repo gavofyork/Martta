@@ -168,16 +168,20 @@ public:
 	}
 #endif
 	
-	inline Entity(): m_rootEntity(0), m_context(0), m_contextIndex(-1), m_notifiedOfChange(false) {}
+	enum { LastNamed = 0, Reserved = INT_MIN };
+	
+	inline Entity(): m_rootEntity(0), m_context(0), m_contextIndex(UndefinedIndex), m_notifiedOfChange(false) {}
 	
 	static void							initialiseClass() {}
 	static void							finaliseClass() {}
 	
-	void								setContext(Entity* _e);
-	void								setContextTentatively(Entity* _e);
+	void								setContext(Entity* _e, int _i = UndefinedIndex);	/// default arg sends it to back
+	void								setContextTentatively(Entity* _e, int _i = UndefinedIndex);	/// default arg sends it to back
 	void								commitTentativeSetContext(InsertionPoint const& _oldPosition);
 	void								undoTentativeSetContext(InsertionPoint const& _oldPosition);
-	void								moveToPosition(int _index);
+	void								insert(int _index, Entity* _e);
+	void								remove(int _index, Entity* _e);
+	void								removeAll(int _index);
 	inline Entity*						context() const { return m_context; }
 	template<class T> inline bool		contextIs() const { return m_context ? m_context->isKind<T>() : false; }
 	template<class T> inline T*			contextAs() const { M_ASSERT(m_context); return m_context->asKind<T>(); }
@@ -189,13 +193,17 @@ public:
 	template<class T> inline ModelPtr<T>locateEntity(QString const& _key) const { return ModelPtr<T>(_key, rootEntity()); }
 	template<class T> QList<T*>			findAll() const { QList<T*> ret = entitiesOf<T>(); foreach (Entity* i, m_children) ret << i->findAll<T>(); return ret; }
 	inline QList<Entity*> const&		entities() const { return m_children; }
+	inline QList<Entity*>				entities(int _i) const { if(_i < 0) return m_namedChildren.values(_i); if (_i < m_children.size()) return QList<Entity*>() << entity(_i); return QList<Entity*>(); }
 	inline int							entityCount() const { return m_children.size(); }
-	inline Entity*						entity(int _i) const { if (_i >= 0 && _i < m_children.size()) { M_ASSERT(m_children[_i]->m_context == this); return m_children[_i]; } else return 0; }
+	inline int							entityCount(int _i) const { if (_i >= 0) return _i < m_children.size() ? 1 : 0; int r = 0; QHash<int, Entity*>::ConstIterator i = m_namedChildren.find(_i); while (i != m_namedChildren.end() && i.key() == _i) ++r, ++i; return r; }
+	inline QList<Entity*>				allEntities() const { return m_namedChildren.values() + m_children; }
+	inline int							allEntityCount() const { return m_namedChildren.size() + m_children.size(); }
+	inline Entity*						entity(int _i) const { if (_i >= 0 && _i < m_children.size()) { M_ASSERT(m_children[_i]->m_context == this); return m_children[_i]; } else return _i < 0 ? m_namedChildren.value(_i) : 0; }
 	template<class T> inline QList<T*>	entitiesOf() const { return filterEntities<T>(m_children); }
-	template<class T> inline int		entityIndexOf() const { for (int r = 0; r < m_children.size(); ++r) if (entityIs<T>(r)) return r; return -1; }
+	template<class T> inline int		entityIndexOf() const { for (int r = 0; r < m_children.size(); ++r) if (entityIs<T>(r)) return r; return UndefinedIndex; }
 	template<class T> inline int		entityCountOf() const { int r = 0; foreach (Entity* i, m_children) if (i->isKind<T>()) r++; return r; }
-	template<class T> inline bool		entityIs(int _i) const { return (_i >= 0 && _i < m_children.size() && m_children[_i]) ? m_children[_i]->isKind<T>() : false; }
-	template<class T> inline T*			entityAs(int _i) const { M_ASSERT(_i >= 0 && _i < m_children.size() && m_children[_i]); return m_children[_i]->asKind<T>(); }
+	template<class T> inline bool		entityIs(int _i) const { if (Entity* r = entity(_i)) return r->isKind<T>(); return false; }
+	template<class T> inline T*			entityAs(int _i) const { Entity* e = entity(_i); M_ASSERT(e); return e->asKind<T>(); }
 	template<class L> inline QList<Entity*>			localsFor() const { return m_children.mid(L::MyOffset); }
 	template<class L> inline int					localCountFor() const { return m_children.size() - L::MyOffset; }
 	template<class L> inline Entity*				localFor(int _i) const { if (_i >= 0 && _i < m_children.size() - L::MyOffset) { M_ASSERT(m_children[_i + L::MyOffset]->m_context == this); return m_children[L::MyOffset + _i]; } else return 0; }
@@ -214,7 +222,7 @@ public:
 	
 	template<class T> bool				hasAncestor() const { return hasAncestor(T::staticKind); }
 	bool								hasAncestor(Kind _k) const;
-	bool								hasAncestor(Entity const* _a) const { return ancestorIndex(_a) != -1; }
+	bool								hasAncestor(Entity const* _a) const { return ancestorIndex(_a) != UndefinedIndex; }
 	template<class T> T*				ancestor() const { Entity* r = ancestor(T::staticKind); return r ? r->asKind<T>() : 0; }
 	Entity*								ancestor(Kind _k) const;
 	template<class T> int				ancestorIndex() const { return ancestorIndex(T::staticKind); }
@@ -434,7 +442,7 @@ public:
 	// Insertion points
 	inline InsertionPoint				over() const { return InsertionPoint(context(), contextIndex()); }
 	inline InsertionPoint				front() { return InsertionPoint(this, 0); }
-	inline InsertionPoint				back() { return InsertionPoint(this, -1); }
+	inline InsertionPoint				back() { return InsertionPoint(this, UndefinedIndex); }
 	inline InsertionPoint				middle(int _at) { return InsertionPoint(this, _at); }
 	bool								attemptAppend(EntityKeyEvent const* _e);
 	bool								attemptInsert(EntityKeyEvent const* _e);
@@ -524,7 +532,7 @@ public:
 	void								contextSwitchedWithChildRemoved(InsertionPoint const& _old) { contextSwitchedWithChildRemoved(_old.context(), _old.index()); }
 	
 	void								dependencyAdded(Entity* _e) { change(this, DependencyAdded, _e); onDependencyAdded(_e); }
-	void								dependencyRemoved(Entity* _e, int _index = -1) { change(this, DependencyRemoved, _e); onDependencyRemoved(_e, _index); }
+	void								dependencyRemoved(Entity* _e, int _index = UndefinedIndex) { change(this, DependencyRemoved, _e); onDependencyRemoved(_e, _index); }
 	void								dependencyChanged(Entity* _e) { change(this, DependencyChanged, _e); onDependencyChanged(_e); }
 	void								dependencySwitched(Entity* _e, Entity* _o) { change(this, DependencySwitched, _e); onDependencySwitched(_e, _o); }
 	void								childMoved(Entity* _e, int _oI) { change(this, ChildMoved, _e); onChildMoved(_e, _oI); }
@@ -635,6 +643,7 @@ private:
 	Entity*								m_context;
 	int									m_contextIndex;
 	QList<Entity*>						m_children;
+	QHash<int, Entity*>					m_namedChildren;
 	QSet<Entity*>						m_dependencies;
 	QList<Entity*>						m_ancestralDependencies;
 	bool								m_notifiedOfChange;

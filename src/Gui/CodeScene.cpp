@@ -184,7 +184,7 @@ void CodeScene::setEditing(Entity* _e)
 
 InsertionPoint CodeScene::nearestBracket(InsertionPoint const& _p) const
 {
-	int n = -1;
+	int n = UndefinedIndex;
 	InsertionPoint ret;
 	foreach (InsertionPoint i, m_bracketed)
 		if (_p == i)
@@ -194,7 +194,7 @@ InsertionPoint CodeScene::nearestBracket(InsertionPoint const& _p) const
 		}
 		else if (int d = _p->hasAncestor(i.entity()))
 		{
-			if (d < n || n == -1)
+			if (d < n)
 			{
 				n = d;
 				ret = i;
@@ -399,7 +399,7 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 	
 	m_doInsert = false;
 
-	EntityKeyEvent e(*_e, 0, false, false, -1, 0);
+	EntityKeyEvent e(*_e, 0, false, false, UndefinedIndex, 0);
 	e.setAccepted(false);
 	
 	if (m_strobeFocus && !_e->text().isEmpty() && _e->text() != " ")
@@ -416,8 +416,7 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 			sCrPoint = m_strobeCreation->over();
 			sChPoint = m_strobeChild->over();
 			m_strobeCreation->setContextTentatively(0);
-			m_strobeChild->setContextTentatively(sCrPoint.context());
-			m_strobeChild->moveToPosition(sCrPoint.index());
+			m_strobeChild->setContextTentatively(sCrPoint.context(), sCrPoint.index());
 		}
 		qDebug() << "strobeText: " << m_strobeText;
 		e = EntityKeyEvent(*_e, m_strobeText, &*m_strobeFocus, true, m_strobeFocus->isPlaceholder(), -1, this);
@@ -452,7 +451,6 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 		}
 		else if (sCrPoint && sChPoint)
 		{
-			m_strobeChild->moveToPosition(-1);
 			m_strobeChild->undoTentativeSetContext(sChPoint);
 			m_strobeCreation->undoTentativeSetContext(sCrPoint);
 		}	
@@ -885,7 +883,7 @@ void CodeScene::navigateToNew(Entity* _e)
 	
 	QList<Entity*> o = m_orders[_e->context()];
 	int i = o.indexOf(_e);
-	if (i != -1 && i < o.count() - 1)
+	if (i != UndefinedIndex && i < o.count() - 1)
 		navigateInto(o[i + 1]);
 	else
 		setCurrent(nearest(_e->context()));
@@ -915,7 +913,7 @@ Entity* CodeScene::traverse(Entity* _e, bool _upwards, float _x)
 	// Step 1: Find a direct ancestor that has siblings of non-overlapping, Y positions.
 	float ourBound = _upwards ? bounds(_e).top() : bounds(_e).bottom();
 	Entity* e = _e;
-	int ci = -1;
+	int ci = UndefinedIndex;
 	float mb = -1.f;
 	for (; e && isInScene(e); ci = e->contextIndex(), e = e->context())
 	{

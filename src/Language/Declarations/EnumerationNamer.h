@@ -45,7 +45,6 @@ protected:
 	bool								keyPressed(EntityKeyEvent const* _e);
 	QList<ValueDefiner*>				valuesAdded() const { return castEntities<ValueDefiner>(self()->entitiesOf<ValueDefiner>()); }
 	
-	bool								onActivated(CodeScene*);
 	void								onDependencyAdded(Entity* _e);
 	void								onDependencyChanged(Entity* _e);
 	void								onDependencyRemoved(Entity* _e);

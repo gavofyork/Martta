@@ -27,7 +27,7 @@ namespace Martta
 	
 bool InsertionPoint::exists() const
 {
-	return isValid() && m_index >= 0 && m_context->entity(m_index);
+	return isValid() && m_index != UndefinedIndex && m_context->entity(m_index);
 }
 
 Entity* InsertionPoint::entity() const
@@ -63,9 +63,7 @@ Entity* InsertionPoint::place(Entity* _e) const
 		entity()->replace(_e);
 	else
 	{
-		_e->setContext(m_context);
-		if (m_context && m_index > -1)
-			_e->moveToPosition(m_index);
+		_e->setContext(m_context, m_index);
 		if (oc != m_context)
 			_e->contextSwitchedWithChildRemoved(oc, oci);
 		m_context->childAdded(m_index);
@@ -76,30 +74,28 @@ Entity* InsertionPoint::place(Entity* _e) const
 void InsertionPoint::insertSilent(Entity* _e) const
 {
 	M_ASSERT(_e);
-	_e->setContext(m_context);
-	if (m_context && m_index > -1)
-		_e->moveToPosition(m_index);
+	_e->setContext(m_context, m_index);
 }
 
 bool InsertionPoint::allowedToBeKind(Kind _k) const
 {
-	return _k.isKind(m_context->allowedKinds(m_index < 0 ? m_context->entities().size() : m_index))
-			&& !_k.isKind(m_context->deniedKinds(m_index < 0 ? m_context->entities().size() : m_index));
+	return _k.isKind(m_context->allowedKinds(m_index == UndefinedIndex ? m_context->entities().size() : m_index))
+			&& !_k.isKind(m_context->deniedKinds(m_index == UndefinedIndex ? m_context->entities().size() : m_index));
 }
 
 bool InsertionPoint::isRequired() const
 {
-	return (m_index < 0 ? m_context->entities().size() : m_index) < m_context->minimumRequired();
+	return (m_index == UndefinedIndex ? m_context->entities().size() : m_index) < m_context->minimumRequired();
 }
 
 Kinds InsertionPoint::allowedKinds() const
 {
-	return m_context->allowedKinds(m_index < 0 ? m_context->entities().size() : m_index);
+	return m_context->allowedKinds(m_index == UndefinedIndex ? m_context->entities().size() : m_index);
 }
 
 Kinds InsertionPoint::deniedKinds() const
 {
-	return m_context->deniedKinds(m_index < 0 ? m_context->entities().size() : m_index);
+	return m_context->deniedKinds(m_index == UndefinedIndex ? m_context->entities().size() : m_index);
 }
 
 Entity* InsertionPoint::nearestEntity() const

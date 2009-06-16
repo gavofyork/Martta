@@ -77,7 +77,7 @@ int Entity::ancestorIndex(Kind _k) const
 	for (Entity* e = this ? context() : 0; e; ret = e->contextIndex(), e = e->context())
 		if (e->isKind(_k))
 			return ret;
-	return -1;
+	return UndefinedIndex;
 }
 bool Entity::hasSelfAncestor(Kind _k) const
 {
@@ -105,7 +105,7 @@ int Entity::ancestorIndex(Entity const* _a) const
 	for (Entity const* i = this; i; i = i->context())
 		if (i->context() == _a)
 			return i->contextIndex();
-	return -1;
+	return UndefinedIndex;
 }
 
 // Identification, search & location.
@@ -564,9 +564,10 @@ bool Entity::attemptAppend(EntityKeyEvent const* _e)
 }
 
 // Context/position changing.
-void Entity::setContext(Entity* _newContext)
+void Entity::setContext(Entity* _newContext, int _index)
 {
-	if (_newContext == m_context) return;
+	if (_newContext == m_context)
+		return;
 
 //	qDebug() << "setContext:";
 //	debugTree();
@@ -582,31 +583,11 @@ void Entity::setContext(Entity* _newContext)
 	if ((_newContext ? _newContext->rootEntity() : 0) != rootEntity())
 		onLeaveScene(_newContext ? _newContext->rootEntity() : 0, rootEntity());
 
-	if (m_context)
-	{
-		int oi = contextIndex();
-		m_context->m_children.removeAll(this);
-		for (int i = oi; i < parentsChildrenCount(); i++)
-			parentsChild(i)->m_contextIndex = i;
-	}
-	
 	RootEntity* ore = m_rootEntity;
-	
-	m_context = _newContext;
-	
-	if (m_context)
-	{
-		m_context->m_children.append(this);
-		m_contextIndex = parentsChildrenCount() - 1;
-		m_rootEntity = m_context->rootEntity();
-	}
-	else
-	{
-		m_contextIndex = -1;
-		m_rootEntity = 0;
-	}
+	setContextTentatively(_newContext, _index);
+	m_rootEntity = m_context ? m_context->m_rootEntity : 0;
 		
-	foreach (Entity* e, m_children)
+	foreach (Entity* e, allEntities())
 		e->checkRoot();
 
 	if (isInModel())
@@ -614,29 +595,24 @@ void Entity::setContext(Entity* _newContext)
 	if (ore)
 		ore->setChanged();
 }
-void Entity::setContextTentatively(Entity* _newContext)
+void Entity::setContextTentatively(Entity* _newContext, int _index)
 {
-	if (_newContext == m_context) return;
+	if (_newContext == m_context)
+		return;
 
 	if (m_context)
-	{
-		int oi = contextIndex();
-		m_context->m_children.removeAll(this);
-		for (int i = oi; i < parentsChildrenCount(); i++)
-			parentsChild(i)->m_contextIndex = i;
-	}
+		m_context->remove(m_contextIndex, this);
 	
 	m_context = _newContext;
 	
 	if (m_context)
-	{
-		m_context->m_children.append(this);
-		m_contextIndex = parentsChildrenCount() - 1;
-	}
+		m_context->insert(_index, this);	//m_contextIndex set by this, too.
 	else
-	{
-		m_contextIndex = -1;
-	}
+		m_contextIndex = UndefinedIndex;
+}
+void Entity::undoTentativeSetContext(InsertionPoint const& _oldPosition)
+{
+	setContextTentatively(_oldPosition.context(), _oldPosition.index());
 }
 void Entity::commitTentativeSetContext(InsertionPoint const& _oldPosition)
 {
@@ -656,52 +632,46 @@ void Entity::commitTentativeSetContext(InsertionPoint const& _oldPosition)
 	foreach (Entity* e, m_children)
 		e->checkRoot();
 }
-void Entity::undoTentativeSetContext(InsertionPoint const& _oldPosition)
+void Entity::remove(int _index, Entity* _e)
 {
-	if (_oldPosition.context() == m_context) return;
-	
-	if (m_context)
+	M_ASSERT(_index < m_children.size());
+	if (_index >= 0)
 	{
-		int oi = contextIndex();
-		m_context->m_children.removeAll(this);
-		for (int i = oi; i < parentsChildrenCount(); i++)
-			parentsChild(i)->m_contextIndex = i;
+		Entity* t = m_children.takeAt(_index);
+		M_ASSERT(t == _e);	// confirm that we're taken the right one. if this fails, the parent has something else in the position that the child thinks it occupies.
+		for (int i = _index; i < m_children.size(); i++)
+			m_children[i]->m_contextIndex = i;
 	}
-
-	m_context = _oldPosition.context();
-	
-	if (m_context)
+	else
+		for (QHash<int, Entity*>::iterator i = m_namedChildren.find(_index); i != m_namedChildren.end() && i.key() == _index; ++i)
+			if (i.value() == _e)
+			{
+				m_namedChildren.erase(i);
+				break;
+			}
+}
+void Entity::insert(int _index, Entity* _e)
+{
+	if (_index == UndefinedIndex)
+		_index = m_children.size();
+	M_ASSERT(_index <= m_children.size());
+	if (_index < 0)
 	{
-		int oi = _oldPosition.index();
-		m_context->m_children.insert(oi, this);
-		for (int i = oi; i < parentsChildrenCount(); i++)
-			parentsChild(i)->m_contextIndex = i;
+		_e->m_contextIndex = _index;
+		m_namedChildren.insertMulti(_index, _e);
 	}
 	else
 	{
-		m_contextIndex = -1;
+		m_children.insert(_index, _e);
+		for (int i = _index; i < m_children.size(); i++)
+			m_children[i]->m_contextIndex = i;
 	}
-}
-void Entity::moveToPosition(int _index)
-{
-	M_ASSERT(m_context);
-	
-	int oi = contextIndex();
-	
-	if (_index < 0 || _index > parentsChildrenCount())
-		_index = parentsChildrenCount() - 1;
-	
-	m_context->m_children.removeAll(this);
-	m_context->m_children.insert(_index, this);
-	
-	for (int i = qMin(_index, oi); i <= qMax(_index, oi); i++)
-		parentsChild(i)->m_contextIndex = i;
 }
 void Entity::checkRoot()
 {
 	onLeaveScene(context()->rootEntity(), rootEntity());
 	m_rootEntity = context()->rootEntity();
-	foreach (Entity* e, entities())
+	foreach (Entity* e, allEntities())
 		e->checkRoot();
 }
 
@@ -711,7 +681,7 @@ QList<Entity*> Entity::dependencies() const
 	if (!isInModel())
 		return QList<Entity*>();
 	QSet<Entity*> ret = m_dependencies;
-	foreach (Entity* e, m_children)
+	foreach (Entity* e, allEntities())
 		if (familyDependencies() & DependsOnChildren)
 			ret << e;
 	if (familyDependencies() & DependsOnContext)
@@ -723,7 +693,7 @@ QList<Entity*> Entity::dependents() const
 	if (!isInModel())
 		return QList<Entity*>();
 	QList<Entity*> ret = m_dependents;
-	foreach (Entity* e, m_children)
+	foreach (Entity* e, allEntities())
 		if (e->familyDependencies() & DependsOnContext)
 			ret << e;
 	if (context() && (context()->familyDependencies() & DependsOnChildren))

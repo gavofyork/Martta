@@ -33,7 +33,8 @@ Type MemberValue::memberifiedType(Type const& _t) const
 	Type ret = _t;
 	if (!classType() || !ret->isType<Reference>() || !ret->asType<Reference>()->child())
 		return Type();
-	ret->asType<Reference>()->child()->knitIn(new Memberify(classType(), isConst()));
+	Memberify* m = new Memberify(classType(), isConst());
+	ret->asType<Reference>()->child()->knitIn(m);
 	return ret;
 }
 

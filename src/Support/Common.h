@@ -39,7 +39,7 @@ template<class T> inline T round(T x) { return ((x)>=0?(long)((x)+0.5):(long)((x
 
 namespace Martta
 {
-	
+
 extern bool s_testing;
 extern char const* s_asserted;
 
