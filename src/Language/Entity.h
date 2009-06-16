@@ -169,14 +169,13 @@ public:
 #endif
 	
 	enum { EndOfNamed = -1, Reserved = INT_MIN };
-	virtual int							virtualEndOfNamed() const { return EndOfNamed; }
 	
 	inline Entity(): m_rootEntity(0), m_context(0), m_contextIndex(UndefinedIndex), m_notifiedOfChange(false) {}
 	
 	static void							initialiseClass() {}
 	static void							finaliseClass() {}
 	
-	void								move(InsertionPoint const& _to);
+	void								move(InsertionPoint const& _to) { InsertionPoint from = over(); moveVirtually(_to); commitVirtualMove(from); }
 	void								remove() { move(Nowhere); }
 	
 	// This acts according to 
@@ -671,6 +670,8 @@ private:
 	
 	/// Just makes sure that the rootEntity is the context's root entity. Should only be called from the context.
 	void								checkRoot();
+
+	virtual int							virtualEndOfNamed() const { return EndOfNamed; }
 
 	Entity*								m_context;
 	int									m_contextIndex;

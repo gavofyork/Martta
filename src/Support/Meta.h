@@ -73,7 +73,9 @@ template<class T, class F> T tryCast(F _f) { return tryCastPrivate::XL<T, F, try
 	typedef S Super; \
 	static const int					OffsetForDerivatives = o; \
 	static const int					MyOffset = Super::OffsetForDerivatives + Super::MyOffset; \
+	private: \
 	virtual int							virtualEndOfNamed() const { return EndOfNamed; } \
+	public: \
 	Entity::asKind; \
 	Entity::tryKind; \
 	Entity::isKind; \

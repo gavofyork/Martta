@@ -579,44 +579,6 @@ bool Entity::attemptAppend(EntityKeyEvent const* _e)
 }
 
 // Context/position changing.
-#define OLD_WAY 1
-void Entity::move(InsertionPoint const& _to)
-{
-#ifdef OLD_WAY
-	if (_to.context() == m_context)
-		return;
-
-//	qDebug() << "move:";
-//	debugTree();
-
-//	M_ASSERT(!_e || _e->rootEntity());
-
-	if (rootEntity() && (!_to.context() || rootEntity() != _to.context()->rootEntity()))
-		foreach (CodeScene* i, CodeScene::all())
-			i->leaving(this);
-	
-	InsertionPoint p = over();
-	
-	if ((_to.context() ? _to.context()->rootEntity() : 0) != rootEntity())
-		onLeaveScene(_to.context() ? _to.context()->rootEntity() : 0, rootEntity());
-
-	RootEntity* ore = m_rootEntity;
-	moveVirtually(_to);
-	m_rootEntity = m_context ? m_context->m_rootEntity : 0;
-		
-	foreach (Entity* e, allEntities())
-		e->checkRoot();
-
-	if (isInModel())
-		m_rootEntity->setChanged();
-	if (ore)
-		ore->setChanged();
-#else
-	InsertionPoint from = over();
-	moveVirtually(_to);
-	commitVirtualMove(from);
-#endif
-}
 void Entity::moveVirtually(InsertionPoint const& _newPosition)
 {
 	if (_newPosition.context() == m_context)
@@ -634,21 +596,30 @@ void Entity::moveVirtually(InsertionPoint const& _newPosition)
 }
 void Entity::commitVirtualMove(InsertionPoint const& _oldPosition)
 {
-	Entity* oldContext = _oldPosition.context();
-	Entity* newContext = m_context;
+	if (_oldPosition.context() == m_context) return;
+
+	RootEntity* oldRoot = m_rootEntity;
+	RootEntity* newRoot = m_context ? m_context->m_rootEntity : 0;
 	
-	if (oldContext == newContext) return;
-
-	m_rootEntity = m_context ? m_context->rootEntity() : 0;
-
-	if (oldContext->rootEntity() && (!newContext || oldContext->rootEntity() != newContext->rootEntity()))
+	// Tell scene we're leaving if we had a non-null root entity and it's different.
+	if (oldRoot && newRoot != oldRoot)
 		foreach (CodeScene* i, CodeScene::all())
 			i->leaving(this, _oldPosition);
-	if ((newContext ? newContext->rootEntity() : 0) != oldContext->rootEntity())
-		onLeaveScene(newContext ? newContext->rootEntity() : 0, oldContext ? oldContext->rootEntity() : 0);
-
+	// Notify ourself if the root entity has changed.
+	if (newRoot != oldRoot)
+		onLeaveScene(newRoot, oldRoot);
+	
+	// Change root here, since onLeaveScene requries it to be how it was (existing model poointers will use the cached pointer's - our - rootEntity to unhook itself).
+	m_rootEntity = newRoot;
+	
+	// Update the root of all entities to which we are an ancestor.
 	foreach (Entity* e, m_children)
 		e->checkRoot();
+		
+	if (newRoot)
+		newRoot->setChanged();
+	if (oldRoot && oldRoot != newRoot)
+		oldRoot->setChanged();
 }
 void Entity::removeFromBrood(int _index, Entity* _e)
 {
