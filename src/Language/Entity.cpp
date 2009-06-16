@@ -842,7 +842,7 @@ bool Entity::validifyChildren()
 				j = m_namedChildren.erase(j);
 				ret = true;
 			}
-		while (minimumRequired(i) < entityCount(i))
+		while (entityCount(i) < minimumRequired(i))
 		{
 			middle(i).spawnPreparedSilent()->contextAdded();
 			added = (added == INT_MAX - 1) ? i : INT_MAX;
@@ -857,7 +857,7 @@ bool Entity::validifyChildren()
 Entity* Entity::prepareChildren()
 {
 	for (int i = virtualEndOfNamed() + 1; i < 0; i++)
-		while (minimumRequired(i) < entityCount(i))
+		while (entityCount(i) < minimumRequired(i))
 			middle(i).spawnPreparedSilent()->contextAdded();
 	for (int i = m_children.size(); i < minimumRequired(); ++i)
 		back().spawnPreparedSilent()->contextAdded();

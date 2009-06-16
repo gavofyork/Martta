@@ -204,6 +204,17 @@ class TestNegatives: public Entity
 };
 MARTTA_OBJECT_CPP(TestNegatives);
 
+class TestNegativesB: public TestNegatives
+{
+	MARTTA_OBJECT(TestNegatives)
+	enum { NamedChildC = XthAndLast(0) };
+	int minimumRequired(int _i) const { return _i != NamedChildA ? _i != NamedChildB ? _i != NamedChildC ? Super::minimumRequired(_i) : 2 : 1 : 0; }
+	Kinds allowedKinds(int) const { return Kind::of<TestNegatives>(); }
+};
+MARTTA_OBJECT_CPP(TestNegativesB);
+
+
+
 int test()
 {
 	s_testing = true;
@@ -456,6 +467,27 @@ int test()
 	CLEAR_TEST(TestNegatives::NamedChildA)
 	CLEAR_TEST(TestNegatives::NamedChildB)
 #undef CLEAR_TEST
+	TEST("Negatives prepareChildren/validifyChildren/isComplete")
+	{
+		RootEntity* r = new RootEntity;
+		SafePointer<TestNegativesB> a = new TestNegativesB;
+		a->move(r->back());
+		FAILED_IF(a->isComplete());
+		a->prepareChildren();
+		FAILED_IF(!a->isComplete());
+		FAILED_IF(a->entityCount() != 0);
+		FAILED_IF(a->entityCount(TestNegativesB::NamedChildA) != 0);
+		FAILED_IF(a->entityCount(TestNegativesB::NamedChildB) != 1);
+		FAILED_IF(a->entityCount(TestNegativesB::NamedChildC) != 2);
+		FAILED_IF(a->entityCount(TestNegativesB::NamedChildC - 1) != 0);
+		a->entity(TestNegativesB::NamedChildC)->replace(new Label);
+		FAILED_IF(a->isComplete());
+		a->validifyChildren();
+		FAILED_IF(!a->isComplete());
+		a->validifyChildren();
+		FAILED_IF(!a->isComplete());
+		r->clearEntities();
+	}
 	TEST("Type construction adoption")
 	{
 		SafePointer<TypeEntity> p;
