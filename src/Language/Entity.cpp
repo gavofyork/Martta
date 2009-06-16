@@ -260,10 +260,12 @@ void Entity::debugTree(QString const& _i) const
 // I/O
 void Entity::exportDom(QDomElement& _element) const
 {
-	foreach (Entity* e, entities())
+	foreach (Entity* e, allEntities())
 	{
 		QDomElement n = _element.ownerDocument().createElement("entity");
 		n.setAttribute("kind", e->kind().name());
+		if (e->contextIndex() < 0)
+			n.setAttribute("contextIndex", e->contextIndex());
 		e->exportDom(n);
 		_element.appendChild(n);
 	}
@@ -274,7 +276,7 @@ void Entity::importDom(QDomElement const& _element)
 		if (i.isElement() && i.toElement().tagName() == "entity")
 		{
 			Entity* e = spawn(i.toElement().attribute("kind"));
-			e->setContext(this);
+			e->setContext(this, i.toElement().hasAttribute("contextIndex") ? i.toElement().attribute("contextIndex").toInt() : UndefinedIndex);
 			if (e)
 				e->importDom(i.toElement());
 			else

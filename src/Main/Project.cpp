@@ -75,7 +75,7 @@ Project::Project(QString const& _load):
 
 	m_classes.setParent(this);
 
-	connect(&m_cDepends, SIGNAL(modelReset()), SLOT(reloadHeaders()));
+	connect(&m_cDepends, SIGNAL(modelReset()), SLOT(reloadHeadersAndUpdateSubject()));
 	connect(&m_declarations, SIGNAL(modelChanged()), SIGNAL(changed()));
 
 	{
@@ -367,9 +367,6 @@ void Project::deserialise(QDomDocument& _d)
 			e->apresLoad();
 		}
 	}
-	
-	// Overuse?
-	emit subjectInvalid();
 }
 
 void Project::revert()
@@ -446,9 +443,6 @@ void Project::reloadHeaders()
 		M_ASSERT(e->rootEntity() == &m_declarations);
 		es << e->entities();
 	}
-	
-	// Overuse?
-	emit subjectInvalid();
 }
 
 ////////////////////

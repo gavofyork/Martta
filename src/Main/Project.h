@@ -88,7 +88,8 @@ public slots:
 	void triggerChange() { changed(); }
 
 private slots:
-	void reloadHeaders();
+	void reloadHeaders();	// don't forget to update any subjects after this! 
+	void reloadHeadersAndUpdateSubject() { reloadHeaders(); emit subjectInvalid(); }
 	void stopCompile();
 	void compileFinished();
 
