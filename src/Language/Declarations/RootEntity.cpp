@@ -65,7 +65,7 @@ void RootEntity::ensureSyncedModel()
 	m_changed = false;
 }
 
-void RootEntity::noteDeletion(DeclarationEntity* _e)
+void RootEntity::noteDeletion(Identifiable* _e)
 {
 	foreach (ModelPtrFace* i, m_modelPtrs)
 		i->gone(_e);
@@ -121,6 +121,7 @@ void RootEntity::restorePtrs() const
 		if (i->isArchived())
 		{
 			qCritical() << "ERROR: Couldn't restore model pointer with key: " << i->key();
+			i->tryRestore();
 			i->gone(0);
 		}
 	m_archivalState = Restored;

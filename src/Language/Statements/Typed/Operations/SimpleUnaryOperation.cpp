@@ -48,7 +48,8 @@ bool SimpleUnaryOperation::keyPressedOnInsertionPoint(InsertionPoint const& _p, 
 	
 	Operator o(_e->text(), pre ? Operator::UnaryPrefix : Operator::UnaryPostfix);
 	InsertionPoint p = slideOnPrecedence(_p, o.precedence(), o.associativity(), _e->nearestBracket(_p));
-	if (findOperators(o, p->isKind<Typed>() ? p->asKind<Typed>()->type() : Type()).size() && !isTemporary(p.entity()))
+	bool b = findOperators(o, p->isKind<Typed>() ? p->asKind<Typed>()->type() : Type()).size();
+	if (b && !isTemporary(p.entity()))
 	{
 		SimpleUnaryOperation* n = new SimpleUnaryOperation(o, p->isKind<Typed>() ? p->asKind<Typed>()->type() : Type());
 //		p->debugTree();

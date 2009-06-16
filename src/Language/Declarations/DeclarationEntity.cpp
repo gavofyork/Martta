@@ -62,13 +62,6 @@ Kinds DeclarationEntity::allowedKinds(int _i) const
 	return _i ? Kinds() : Kind::of<TextLabel>();
 }
 
-void DeclarationEntity::onLeaveScene(RootEntity* _new, RootEntity* _old)
-{
-	Super::onLeaveScene(_new, _old);
-	if (_old && _old != _new)
-		_old->noteDeletion(this);
-}
-
 Identifiable* DeclarationEntity::lookupChild(QString const& _key) const
 {
 	bool ok;
@@ -112,17 +105,13 @@ QList<DeclarationEntity*> DeclarationEntity::utilised() const
 
 void DeclarationEntity::importDom(QDomElement const& _element)
 {
-	if (_element.hasAttribute("index"))
-		ancestor<DeclarationEntity>()->registerAnonymous(this, _element.attribute("index").toInt());
-
+	Identifiable::importDom(_element);
 	Super::importDom(_element);
 }
 
 void DeclarationEntity::exportDom(QDomElement& _element) const
 {
-	if (!addressableContext())
-		_element.setAttribute("index", ancestor<DeclarationEntity>()->registerAnonymous(this));
-
+	Identifiable::exportDom(_element);
 	Super::exportDom(_element);
 }
 

@@ -18,24 +18,11 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "FunctionType.h"
-#include "Memberify.h"
-#include "Type.h"
-#include "Reference.h"
-#include "RootEntity.h"
-#include "Operation.h"
-#include "SimpleOperator.h"
+#include "SceneLeaver.h"
 
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(SimpleOperator);
-
-void SimpleOperator::construct(int _id, Operator _o, Type const& _returns, Types const& _args, RootEntity* _root, char const* _key)
-{
-	m_operator = _o;
-	Simple::construct(0, _id, false, _returns, _args, _root, _key);
-	Operation::registerOperator(_o, this, _root);
-}
+MARTTA_INTERFACE_CPP(SceneLeaver);	
 
 }

@@ -26,6 +26,9 @@
 namespace Martta
 {
 
+class Entity;
+class Nothing { public: static AuxilliaryFace const* staticAuxilliary() { return 0; } };
+
 namespace tryCastPrivate
 {
 template<class T, class F> struct isCompatible { static char testCompat(...); static int testCompat(T); static const bool value = sizeof(testCompat((F)0)) - 1; };

@@ -99,6 +99,7 @@ Project::~Project()
 void Project::resetAsNew()
 {
 	clear();
+	m_declarations.debugTree();
 	m_filename = QString();
 	m_namespace = new NamespaceEntity;
 	m_declarations.back().place(m_namespace);
@@ -169,6 +170,7 @@ void Project::clear()
 	m_program = 0;
 	m_namespace = 0;
 	m_declarations.clearEntities();
+	M_ASSERT(m_declarations.modelPtrs().size() == 0);
 //	while (m_classes.size()) m_classes.takeLast()->killAndDelete();
 	m_classes.reset();
 	while (m_cDepends.size()) delete m_cDepends.takeLast();

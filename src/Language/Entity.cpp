@@ -51,9 +51,10 @@ void change(Entity* _s, ChangeOperation _op, Entity* _o)
 Entity::~Entity()
 {
 	M_ASSERT(!m_context);
-	foreach (Entity* i, m_children)
+	foreach (Entity* i, allEntities())
 		i->killAndDelete();
 	M_ASSERT(!m_children.size());
+	M_ASSERT(!m_namedChildren.size());
 }
 
 // Model structure management.
@@ -117,8 +118,8 @@ Identifiable* Entity::findEntity(QString const& _key) const
 		return r;
 	if (_key.startsWith("::"))
 		return rootEntity()->findEntity(_key.mid(2));
-	if (isKind<DeclarationEntity>())
-		if (Identifiable* e = asKind<DeclarationEntity>()->lookupChild(_key.section("::", 0, 0)))
+	if (isKind<Identifiable>())
+		if (Identifiable* e = asKind<Identifiable>()->lookupChild(_key.section("::", 0, 0)))
 			return _key.contains("::") ? e->self()->findEntity(_key.section("::", 1)) : e;
 	return 0;
 }
@@ -230,10 +231,19 @@ void Entity::kill(Entity* _substitute)
 }
 void Entity::clearEntities()
 {
+	QList<Entity*> tbd;
 	while (m_children.size())
+	{
+		tbd << m_children.last();
 		m_children.last()->kill();
+	}
 	while (m_namedChildren.size())
+	{
+		tbd << m_namedChildren.values().last();
 		m_namedChildren.values().last()->kill();
+	}
+	while (tbd.size())
+		delete tbd.takeLast();
 }
 
 // Debug
@@ -613,7 +623,7 @@ void Entity::commitVirtualMove(InsertionPoint const& _oldPosition)
 	m_rootEntity = newRoot;
 	
 	// Update the root of all entities to which we are an ancestor.
-	foreach (Entity* e, m_children)
+	foreach (Entity* e, allEntities())
 		e->checkRoot();
 		
 	if (newRoot)

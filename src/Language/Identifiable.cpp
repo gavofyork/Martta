@@ -18,6 +18,9 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include <QtXml>
+
+#include "RootEntity.h"
 #include "IdLabel.h"
 #include "TextLabel.h"
 #include "Entity.h"
@@ -28,7 +31,6 @@ namespace Martta
 {
 
 MARTTA_INTERFACE_CPP(Identifiable);	
-
 
 QString Identifiable::name() const
 {
@@ -53,6 +55,32 @@ QString Identifiable::key() const
 Identifiable* Identifiable::addressableContext() const
 {
 	return self()->contextIs<Identifiable>() ? self()->contextAs<Identifiable>() : 0;
+}
+
+void Identifiable::onLeaveScene(RootEntity* _new, RootEntity* _old)
+{
+	if (_old && _old != _new)
+		_old->noteDeletion(this);
+}
+
+Identifiable* Identifiable::lookupChild(QString const& _key) const
+{
+	foreach (Identifiable* e, self()->entitiesOf<Identifiable>())
+		if (e->identity() == _key)
+			return e;
+	return 0;
+}
+
+void Identifiable::importDom(QDomElement const& _element)
+{
+	if (_element.hasAttribute("index"))
+		self()->ancestor<DeclarationEntity>()->registerAnonymous(this, _element.attribute("index").toInt());
+}
+
+void Identifiable::exportDom(QDomElement& _element) const
+{
+	if (!addressableContext())
+		_element.setAttribute("index", self()->ancestor<DeclarationEntity>()->registerAnonymous(this));
 }
 
 }

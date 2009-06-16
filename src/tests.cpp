@@ -130,6 +130,7 @@ class TagA
 	virtual char tagAVirtual() { return 'A'; }
 	virtual ~TagA() {}
 };
+MARTTA_INTERFACE_CPP(TagA);
 
 class Another
 {
@@ -145,6 +146,7 @@ class TagB
 	virtual char tagBVirtual() { return 'B'; }
 	virtual ~TagB() {}
 };
+MARTTA_INTERFACE_CPP(TagB);
 
 class TagC
 {
@@ -153,6 +155,7 @@ class TagC
 	virtual char tagCVirtual() { return 'C'; }
 	virtual ~TagC() {}
 };
+MARTTA_INTERFACE_CPP(TagC);
 
 class TagD: public Another, public TagB
 {
@@ -162,6 +165,7 @@ class TagD: public Another, public TagB
 	virtual char tagDVirtual() { return 'D'; }
 	virtual ~TagD() {}
 };
+MARTTA_INTERFACE_CPP(TagD);
 
 class TagE
 {
@@ -170,6 +174,7 @@ class TagE
 	virtual char tagEVirtual() { return 'E'; }
 	virtual ~TagE() {}
 };
+MARTTA_INTERFACE_CPP(TagE);
 
 class TestEntity: public Entity, public TagA, public TagE
 {
@@ -179,6 +184,7 @@ class TestEntity: public Entity, public TagA, public TagE
 	virtual void oneVirtual() {};
 	void killAndDelete() { Entity::killAndDelete(); }
 };
+MARTTA_OBJECT_CPP(TestEntity);
 
 class TestEntityB: public TestEntity, public TagC, public TagD
 {
@@ -188,14 +194,18 @@ class TestEntityB: public TestEntity, public TagC, public TagD
 	virtual void anotherVirtual() {};
 	void killAndDelete() { Entity::killAndDelete(); }
 };
-
-MARTTA_INTERFACE_CPP(TagA);
-MARTTA_OBJECT_CPP(TestEntity);
-MARTTA_INTERFACE_CPP(TagB);
-MARTTA_INTERFACE_CPP(TagC);
-MARTTA_INTERFACE_CPP(TagD);
-MARTTA_INTERFACE_CPP(TagE);
 MARTTA_OBJECT_CPP(TestEntityB);
+
+#define Xth(X) Super::EndOfNamed - X
+#define XthAndLast(X) Xth(X), EndOfNamed = Super::EndOfNamed - (X + 1)
+
+class TestNegatives: public Entity
+{
+	MARTTA_OBJECT(Entity)
+	enum { NamedChildA = Xth(0), NamedChildB = XthAndLast(1) };
+	
+};
+MARTTA_OBJECT_CPP(TestNegatives);
 
 int test()
 {
@@ -420,6 +430,35 @@ int test()
 		
 		r->killAndDelete();
 	}
+	TEST("Pre-test")
+	{
+		RootEntity* r = new RootEntity;
+		SafePointer<TestNegatives> a = new TestNegatives;
+		SafePointer<TestNegatives> b = new TestNegatives;
+		a->move(r->back());
+		b->move(a->middle(0));
+		r->killAndDelete();
+		FAILED_IF(a);
+		FAILED_IF(b);
+	}
+#define CLEAR_TEST(pos) \
+	{ \
+		RootEntity* r = new RootEntity; \
+		SafePointer<TestNegatives> a = new TestNegatives; \
+		SafePointer<TestNegatives> b = new TestNegatives; \
+		a->move(r->back()); \
+		b->move(pos ? a->middle(pos) : a->back()); \
+		TEST("Clearing entities (allEntities: " #pos ")") FAILED_IF(!a->allEntities().contains(b)); \
+		TEST("Clearing entities (entities(): " #pos ")") FAILED_IF(bool(pos) == a->entities().contains(b)); \
+		TEST("Clearing entities (entities(int): " #pos ")") FAILED_IF(!a->entities(pos).contains(b)); \
+		r->killAndDelete(); \
+		TEST("Clearing entities (a pointer: " #pos ")") FAILED_IF(a); \
+		TEST("Clearing entities (b pointer: " #pos ")") FAILED_IF(b); \
+	}
+	CLEAR_TEST(0)
+	CLEAR_TEST(TestNegatives::NamedChildA)
+	CLEAR_TEST(TestNegatives::NamedChildB)
+#undef CLEAR_TEST
 	TEST("Type construction adoption")
 	{
 		SafePointer<TypeEntity> p;

@@ -40,6 +40,7 @@
 #include "InsertionPoint.h"
 #include "EntityKeyEvent.h"
 #include "SafePointer.h"
+#include "SceneLeaver.h"
 
 class QTextStream;
 class QDomElement;
@@ -85,8 +86,6 @@ inline void clearChanges() { s_changes.clear(); }
 
 template<class T> class ModelPtr;
 
-class Entity;
-class Nothing { public: static AuxilliaryFace const* staticAuxilliary() { return 0; } };
 
 /**
  * Note regarding rootEntity/null-Context: You can never depend on something which does not share the
@@ -96,7 +95,7 @@ class Nothing { public: static AuxilliaryFace const* staticAuxilliary() { return
  * scene. This applies even if the situation is temporary, since the check/changes happen at move
  * time.
  */
-class Entity: public SafePointerTarget
+class Entity: public SafePointerTarget, public_interface SceneLeaver
 {
 	friend class EntityStylist;
 	friend class EditDelegateFace;
@@ -169,6 +168,8 @@ public:
 #endif
 	
 	enum { EndOfNamed = -1, Reserved = INT_MIN };
+	
+	MARTTA_INHERITS(SceneLeaver, 0)
 	
 	inline Entity(): m_rootEntity(0), m_context(0), m_contextIndex(UndefinedIndex), m_notifiedOfChange(false) {}
 	
@@ -374,6 +375,8 @@ public:
 	template<class T> inline T const*	asKind() const { M_ASSERT(this); M_ASSERT(isKind<T>()); return T::IsInterface ? asInterface<T>() : tryCast<T const*>(this); }
 	template<class T> inline T*			tryKind() { if (this && isKind<T>()) return asKind<T>(); return 0; }
 	template<class T> inline T const*	tryKind() const { if (this && isKind<T>()) return asKind<T>(); return 0; }
+	virtual Entity const*				self() const { return this; }
+	virtual Entity*						self() { return this; }
 
 	// The following are information for checking and selection mechanisms.
 	// These values could change depending upon elements already in place (e.g. dereference operators), so should be rechecked whenever anything changes.
@@ -628,11 +631,6 @@ protected:
 	/// @note If you intend to use this, you may find it useful to change notificationRequirements() so it doesn't
 	/// include BeInModel.
 	virtual void						onChildrenAdded() { foreach (Entity* e, entities()) onDependencyAdded(e); }
-	
-	/// Called when our rootEntity is changing. This currently just means either going into or out of the program model.
-	/// This is called from a list of its siblings. Don't try to alter the (immediate) model from it or otherwise make a
-	/// sibling invalid.
-	virtual void						onLeaveScene(RootEntity* _new, RootEntity* _old) { (void)_new; (void)_old; }
 	
 	virtual Entity*						isExpander() const { return 0; }
 	

@@ -35,7 +35,7 @@ class Memberify: public ModifyingType
 public:
 	Memberify(Class* _scope = 0, bool _isConst = true) { if (_scope) setScopeClass(_scope, _isConst); }
 	Memberify(Type const& _object);
-	~Memberify() { clearEntities(); }
+//	~Memberify() { if (entity(1)) entity(1)->killAndDelete(); }
 	
 	bool								isConst() const;
 	void								setConst(bool _c);

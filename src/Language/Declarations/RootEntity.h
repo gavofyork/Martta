@@ -23,6 +23,7 @@
 #include <QTimer>
 
 #include "Operator.h"
+#include "Identifiable.h"
 #include "DeclarationEntity.h"
 
 namespace Martta
@@ -63,7 +64,8 @@ public:
 	void								restorePtrs() const;
 	void								addModelPtr(ModelPtrFace* _p);
 	void								removeModelPtr(ModelPtrFace* _p);
-	void								noteDeletion(DeclarationEntity* _e);
+	void								noteDeletion(Identifiable* _e);
+	QList<ModelPtrFace*> const&			modelPtrs() const { return m_modelPtrs; }
 
 	void								setChanged();
 	

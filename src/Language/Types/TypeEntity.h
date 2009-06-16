@@ -41,7 +41,7 @@ class TypeEntity: public TypedOwner
 
 public:
 	TypeEntity(): m_owner(0) { g_typeCount++; }
-	TypeEntity(TypeEntity const&): TypedOwner() { M_ASSERT(false); }
+	TypeEntity(TypeEntity const&): SceneLeaver(), TypedOwner() { M_ASSERT(false); }
 	~TypeEntity() { g_typeCount--; }
 	
 	virtual QString						idColour() const { return "#777"; }

@@ -41,6 +41,8 @@ CodeScene::CodeScene(QWidget* _p):
 	m_leavingEdit		(false),
 	m_showHover			(true),
 	m_hover				(0),
+	m_lastRealCurrent	(0),
+	m_editDelegate		(0),
 	m_navigated			(false),
 	m_strobeCreation	(0),
 	m_strobeChild		(0),
