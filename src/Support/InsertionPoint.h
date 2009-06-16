@@ -109,4 +109,6 @@ private:
 	int									m_index;
 };
 
+static const InsertionPoint Nowhere;
+
 }

@@ -223,15 +223,17 @@ void Entity::kill(Entity* _substitute)
 //		qDebug() << "Killing" << this;
 	if (_substitute)
 		rewirePointer(_substitute);
-	setContext(0);
+	remove();
 	foreach (Entity* i, m_dependencies)
 		removeDependency(i);
 	clearDependents();
 }
 void Entity::clearEntities()
 {
-	while (entities().size())
-		entities().last()->kill();
+	while (m_children.size())
+		m_children.last()->kill();
+	while (m_namedChildren.size())
+		m_namedChildren.values().last()->kill();
 }
 
 // Debug
@@ -276,7 +278,7 @@ void Entity::importDom(QDomElement const& _element)
 		if (i.isElement() && i.toElement().tagName() == "entity")
 		{
 			Entity* e = spawn(i.toElement().attribute("kind"));
-			e->setContext(this, i.toElement().hasAttribute("contextIndex") ? i.toElement().attribute("contextIndex").toInt() : UndefinedIndex);
+			e->move(i.toElement().hasAttribute("contextIndex") ? middle(i.toElement().attribute("contextIndex").toInt()) : back());
 			if (e)
 				e->importDom(i.toElement());
 			else
@@ -577,27 +579,29 @@ bool Entity::attemptAppend(EntityKeyEvent const* _e)
 }
 
 // Context/position changing.
-void Entity::setContext(Entity* _newContext, int _index)
+#define OLD_WAY 1
+void Entity::move(InsertionPoint const& _to)
 {
-	if (_newContext == m_context)
+#ifdef OLD_WAY
+	if (_to.context() == m_context)
 		return;
 
-//	qDebug() << "setContext:";
+//	qDebug() << "move:";
 //	debugTree();
 
 //	M_ASSERT(!_e || _e->rootEntity());
 
-	if (rootEntity() && (!_newContext || rootEntity() != _newContext->rootEntity()))
+	if (rootEntity() && (!_to.context() || rootEntity() != _to.context()->rootEntity()))
 		foreach (CodeScene* i, CodeScene::all())
 			i->leaving(this);
 	
 	InsertionPoint p = over();
 	
-	if ((_newContext ? _newContext->rootEntity() : 0) != rootEntity())
-		onLeaveScene(_newContext ? _newContext->rootEntity() : 0, rootEntity());
+	if ((_to.context() ? _to.context()->rootEntity() : 0) != rootEntity())
+		onLeaveScene(_to.context() ? _to.context()->rootEntity() : 0, rootEntity());
 
 	RootEntity* ore = m_rootEntity;
-	setContextTentatively(_newContext, _index);
+	moveVirtually(_to);
 	m_rootEntity = m_context ? m_context->m_rootEntity : 0;
 		
 	foreach (Entity* e, allEntities())
@@ -607,27 +611,28 @@ void Entity::setContext(Entity* _newContext, int _index)
 		m_rootEntity->setChanged();
 	if (ore)
 		ore->setChanged();
+#else
+	InsertionPoint from = over();
+	moveVirtually(_to);
+	commitVirtualMove(from);
+#endif
 }
-void Entity::setContextTentatively(Entity* _newContext, int _index)
+void Entity::moveVirtually(InsertionPoint const& _newPosition)
 {
-	if (_newContext == m_context)
+	if (_newPosition.context() == m_context)
 		return;
 
 	if (m_context)
-		m_context->remove(m_contextIndex, this);
+		m_context->removeFromBrood(m_contextIndex, this);
 	
-	m_context = _newContext;
+	m_context = _newPosition.context();
 	
 	if (m_context)
-		m_context->insert(_index, this);	//m_contextIndex set by this, too.
+		m_context->insertIntoBrood(_newPosition.index(), this);	//m_contextIndex set by this, too.
 	else
 		m_contextIndex = UndefinedIndex;
 }
-void Entity::undoTentativeSetContext(InsertionPoint const& _oldPosition)
-{
-	setContextTentatively(_oldPosition.context(), _oldPosition.index());
-}
-void Entity::commitTentativeSetContext(InsertionPoint const& _oldPosition)
+void Entity::commitVirtualMove(InsertionPoint const& _oldPosition)
 {
 	Entity* oldContext = _oldPosition.context();
 	Entity* newContext = m_context;
@@ -645,7 +650,7 @@ void Entity::commitTentativeSetContext(InsertionPoint const& _oldPosition)
 	foreach (Entity* e, m_children)
 		e->checkRoot();
 }
-void Entity::remove(int _index, Entity* _e)
+void Entity::removeFromBrood(int _index, Entity* _e)
 {
 	M_ASSERT(_index < m_children.size());
 	if (_index >= 0)
@@ -663,7 +668,19 @@ void Entity::remove(int _index, Entity* _e)
 				break;
 			}
 }
-void Entity::insert(int _index, Entity* _e)
+void Entity::removeAllFromBrood(int _index)
+{
+	M_ASSERT(_index < m_children.size());
+	if (_index >= 0)
+	{
+		m_children.removeAt(_index);
+		for (int i = _index; i < m_children.size(); i++)
+			m_children[i]->m_contextIndex = i;
+	}
+	else
+		m_namedChildren.remove(_index);
+}
+void Entity::insertIntoBrood(int _index, Entity* _e)
 {
 	if (_index == UndefinedIndex)
 		_index = m_children.size();
@@ -682,8 +699,11 @@ void Entity::insert(int _index, Entity* _e)
 }
 void Entity::checkRoot()
 {
-	onLeaveScene(context()->rootEntity(), rootEntity());
-	m_rootEntity = context()->rootEntity();
+	if (context()->rootEntity() != rootEntity())
+	{
+		onLeaveScene(context()->rootEntity(), rootEntity());
+		m_rootEntity = context()->rootEntity();
+	}
 	foreach (Entity* e, allEntities())
 		e->checkRoot();
 }
@@ -817,13 +837,13 @@ void Entity::notifyOfChange(Entity* _dependent)
 bool Entity::validifyChildren()
 {
 	bool ret = false;
-	int added = 0;
+	int added = INT_MAX - 1;
 	for (int i = 0; i < qMax(minimumRequired(), m_children.size()); i++)
 	{
 		if (i >= m_children.size())
 		{
 			back().spawnPreparedSilent()->contextAdded();
-			added++;
+			added = (added == INT_MAX - 1) ? i : INT_MAX;
 		}
 		else if (!m_children[i]->isAllowed() && i < minimumRequired())
 			m_children[i]->deleteAndRefill();
@@ -833,14 +853,31 @@ bool Entity::validifyChildren()
 			continue;
 		ret = true;
 	}
-	if (added == 1)
-		childAdded(entityCount() - 1);
-	else if (added > 1)
+	for (int i = virtualEndOfNamed() + 1; i < 0; i++)
+	{
+		for (QHash<int, Entity*>::Iterator j = m_namedChildren.find(i); j != m_namedChildren.end() && j.key() == i; ++j)
+			if (!j.value()->isAllowed())
+			{
+				j = m_namedChildren.erase(j);
+				ret = true;
+			}
+		while (minimumRequired(i) < entityCount(i))
+		{
+			middle(i).spawnPreparedSilent()->contextAdded();
+			added = (added == INT_MAX - 1) ? i : INT_MAX;
+		}
+	}
+	if (added == INT_MAX)
 		childrenAdded();
+	else if (added < INT_MAX - 1)
+		childAdded(added);
 	return ret;
 }
 Entity* Entity::prepareChildren()
 {
+	for (int i = virtualEndOfNamed() + 1; i < 0; i++)
+		while (minimumRequired(i) < entityCount(i))
+			middle(i).spawnPreparedSilent()->contextAdded();
 	for (int i = m_children.size(); i < minimumRequired(); ++i)
 		back().spawnPreparedSilent()->contextAdded();
 	childrenAdded();
@@ -849,6 +886,12 @@ Entity* Entity::prepareChildren()
 bool Entity::removeInvalidChildren()
 {
 	bool ret = false;
+	foreach (Entity* i, m_namedChildren)
+		if (!i->isAllowed())
+		{
+			ret = true;
+			i->deleteAndRefill();
+		}
 	for (int i = m_children.size() - 1; i >= 0; i--)
 		if (!m_children[i]->isAllowed())
 		{
@@ -864,9 +907,11 @@ Entity* Entity::usurp(Entity* _u)
 	over().insertSilent(_u);
 	
 	// Move children over.
-	QList<Entity*> es = entities();
-	foreach (Entity* e, es)
-		e->setContext(_u);
+	QList<Entity*> es = m_children + m_namedChildren.values();
+	foreach (Entity* e, m_children)
+		e->move(_u->back());
+	foreach (Entity* e, m_namedChildren.values())
+		e->move(_u->middle(e->m_contextIndex));
 		
 	kill();
 	

@@ -268,18 +268,18 @@ void ReferencedEdit::leavingEditIntact()
 			int x;
 			if ((x = SimpleType::id(m_entityName)) != -1)
 			{
-				e->entity(0)->entity(1)->replace(new SimpleType(x));
-				codeScene()->silentlySetCurrent(e->entity(0)->entity(1));	// set to the place where the user expects the cursor to be (silently, sicne we might (possibly) already be in a setCurrent!).
+				e->entitiesOf<TypeEntity>()[0]->replace(new SimpleType(x));
+				codeScene()->silentlySetCurrent(e->entitiesOf<TextLabel>()[0]);	// set to the place where the user expects the cursor to be (silently, sicne we might (possibly) already be in a setCurrent!).
 			}
 			else if (m_entityName == "string")
 			{
-				e->entity(0)->entity(1)->replace(new StringType);
-				codeScene()->silentlySetCurrent(e->entity(0)->entity(1));	// set to the place where the user expects the cursor to be (silently, sicne we might (possibly) already be in a setCurrent!).
+				e->entitiesOf<TypeEntity>()[0]->replace(new StringType);
+				codeScene()->silentlySetCurrent(e->entitiesOf<TextLabel>()[0]);	// set to the place where the user expects the cursor to be (silently, sicne we might (possibly) already be in a setCurrent!).
 			}
 			else
 			{
-				e->entity(0)->entityAs<TextLabel>(0)->setText(m_entityName);
-				codeScene()->silentlySetCurrent(e->entity(0));				// set to the place where the user expects the cursor to be (silently, sicne we might (possibly) already be in a setCurrent!).
+				e->entitiesOf<TextLabel>()[0]->setText(m_entityName);
+				codeScene()->silentlySetCurrent(e->entitiesOf<TypeEntity>()[0]);							// set to the place where the user expects the cursor to be (silently, sicne we might (possibly) already be in a setCurrent!).
 			}
 			
 			// set subject to zero so we don't go through this again when the kill()ed subject gets removed from the scene.

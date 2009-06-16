@@ -93,7 +93,7 @@ class Nothing { public: static AuxilliaryFace const* staticAuxilliary() { return
  * same RootEntity object as you. Objects yet to be inserted into the program have a nullContext and thus
  * no RootEntity. If you make objects within the scene children of such objects they will be moved
  * out of scene, and thus can have no interactions (i.e. dependencies/references) with objects within the
- * scene. This applies even if the situation is temporary, since the check/changes happen at setContext
+ * scene. This applies even if the situation is temporary, since the check/changes happen at move
  * time.
  */
 class Entity: public SafePointerTarget
@@ -176,13 +176,13 @@ public:
 	static void							initialiseClass() {}
 	static void							finaliseClass() {}
 	
-	void								setContext(Entity* _e, int _i = UndefinedIndex);	/// default arg sends it to back
-	void								setContextTentatively(Entity* _e, int _i = UndefinedIndex);	/// default arg sends it to back
-	void								commitTentativeSetContext(InsertionPoint const& _oldPosition);
-	void								undoTentativeSetContext(InsertionPoint const& _oldPosition);
-	void								insert(int _index, Entity* _e);
-	void								remove(int _index, Entity* _e);
-	void								removeAll(int _index);
+	void								move(InsertionPoint const& _to);
+	void								remove() { move(Nowhere); }
+	
+	// This acts according to 
+	void								moveVirtually(InsertionPoint const& _newPosition);
+	void								commitVirtualMove(InsertionPoint const& _oldPosition);
+
 	inline Entity*						context() const { return m_context; }
 	template<class T> inline bool		contextIs() const { return m_context ? m_context->isKind<T>() : false; }
 	template<class T> inline T*			contextAs() const { M_ASSERT(m_context); return m_context->asKind<T>(); }
@@ -631,6 +631,8 @@ protected:
 	virtual void						onChildrenAdded() { foreach (Entity* e, entities()) onDependencyAdded(e); }
 	
 	/// Called when our rootEntity is changing. This currently just means either going into or out of the program model.
+	/// This is called from a list of its siblings. Don't try to alter the (immediate) model from it or otherwise make a
+	/// sibling invalid.
 	virtual void						onLeaveScene(RootEntity* _new, RootEntity* _old) { (void)_new; (void)_old; }
 	
 	virtual Entity*						isExpander() const { return 0; }
@@ -639,6 +641,30 @@ protected:
 	RootEntity*							m_rootEntity;
 
 private:
+	/** This will insert an entity @a _child into our brood at index @a _childsIndex.
+	 * It will make sure all children have the correct contextIndex but nothing more. In particular
+	 * the new child's context and rootEntity will not be updated.
+	 * 
+	 * This handles the case of negative and positive child indices, and the index may be
+	 * UndefinedIndex, in which case the child is appended.
+	 */
+	void								insertIntoBrood(int _childsIndex, Entity* _child);
+	/** This removes a previously inserted @a _child from our brood.
+	 * It makes sure all children have the correct contextIndex but nothing more. In particular
+	 * the old child's contextIndex, context and rootEntity are not updated.
+	 * 
+	 * This handles the case of negative and position child indices.
+	 */
+	void								removeFromBrood(int _childsIndex, Entity* _child);
+	/** Removes all children at index @a _childsIndex from the brood of children.
+	 * 
+	 * It makes sure all children have the correct contextIndex but nothing more. In particular
+	 * the old children's contextIndex, context and rootEntity are not updated.
+	 * 
+	 * This handles the case of negative and position child indices.
+	 */
+	void								removeAllFromBrood(int _childsIndex);
+
 	/// Rejigs our ancestral dependencies. This should be (TODO: and isn't yet) called whenever any of our ancestors have changed context
 	/// or been switched.
 	void								updateAncestralDependencies();

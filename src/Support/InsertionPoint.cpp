@@ -24,7 +24,7 @@
 
 namespace Martta
 {
-	
+
 bool InsertionPoint::exists() const
 {
 	return isValid() && m_index != UndefinedIndex && m_context->entity(m_index);
@@ -63,7 +63,7 @@ Entity* InsertionPoint::place(Entity* _e) const
 		entity()->replace(_e);
 	else
 	{
-		_e->setContext(m_context, m_index);
+		_e->move(*this);
 		if (oc != m_context)
 			_e->contextSwitchedWithChildRemoved(oc, oci);
 		m_context->childAdded(m_index);
@@ -74,7 +74,7 @@ Entity* InsertionPoint::place(Entity* _e) const
 void InsertionPoint::insertSilent(Entity* _e) const
 {
 	M_ASSERT(_e);
-	_e->setContext(m_context, m_index);
+	_e->move(*this);
 }
 
 bool InsertionPoint::allowedToBeKind(Kind _k) const

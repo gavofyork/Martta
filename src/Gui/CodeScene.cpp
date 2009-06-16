@@ -405,8 +405,6 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 	if (m_strobeFocus && !_e->text().isEmpty() && _e->text() != " ")
 	{
 		Entity* originalStrobeChild = m_strobeChild;
-		if (m_strobeChild)
-			m_strobeChild->debugTree();
 		InsertionPoint sCrPoint;
 		InsertionPoint sChPoint;
 		if (m_strobeCreation)
@@ -415,8 +413,8 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 			M_ASSERT(m_strobeChild);
 			sCrPoint = m_strobeCreation->over();
 			sChPoint = m_strobeChild->over();
-			m_strobeCreation->setContextTentatively(0);
-			m_strobeChild->setContextTentatively(sCrPoint.context(), sCrPoint.index());
+			m_strobeCreation->moveVirtually(Nowhere);
+			m_strobeChild->moveVirtually(sCrPoint);
 		}
 		qDebug() << "strobeText: " << m_strobeText;
 		e = EntityKeyEvent(*_e, m_strobeText, &*m_strobeFocus, true, m_strobeFocus->isPlaceholder(), -1, this);
@@ -426,11 +424,11 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 		{
 			// TODO: Move this stuff to the EKE's notifyStrobeCreation... This will avoid having to test the child for originality.
 			if (sCrPoint)
-				m_strobeCreation->commitTentativeSetContext(sCrPoint);
+				m_strobeCreation->commitVirtualMove(sCrPoint);
 			// If the child wasn't replaced by something else.
 			if (m_strobeChild == originalStrobeChild && sChPoint)	// && c because we only need to move the strobeChild if there was a strobe creation (before, anyways).
 			{
-				m_strobeChild->commitTentativeSetContext(sChPoint);
+				m_strobeChild->commitVirtualMove(sChPoint);
 				m_strobeChild->contextSwitched(m_strobeCreation);
 				m_strobeChild->context()->childSwitched(m_strobeChild, m_strobeCreation);
 			}
@@ -451,8 +449,8 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 		}
 		else if (sCrPoint && sChPoint)
 		{
-			m_strobeChild->undoTentativeSetContext(sChPoint);
-			m_strobeCreation->undoTentativeSetContext(sCrPoint);
+			m_strobeChild->moveVirtually(sChPoint);
+			m_strobeCreation->moveVirtually(sCrPoint);
 		}	
 	}
 

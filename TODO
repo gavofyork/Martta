@@ -1,6 +1,8 @@
 TODO -ve entities
-- prepareChildren
-- export/import
+- validifyChildren: needs testing!
+- usurp
+- kill
+- 
 
 TODO optimise Class.
 TODO special EntryMethod
