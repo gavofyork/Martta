@@ -116,6 +116,9 @@ template<class T, class F> T tryCast(F _f) { return tryCastPrivate::XL<T, F, try
 #define MARTTA_OBJECT(S) MARTTA_OBJECT_WITH_OFFSET(S, 0)
 #define MARTTA_PLACEHOLDER(S) MARTTA_PLACEHOLDER_WITH_OFFSET(S, 0)
 
+#define Xth(X) Super::EndOfNamed - X
+#define XthAndLast(X) Xth(X), EndOfNamed = Super::EndOfNamed - (X + 1)
+
 #define MARTTA_CPP_BASIC(E) \
 	static AuxilliaryFace const* s_auxilliary_##E = 0; \
 	Kind E::staticKind = Kind(E::staticAuxilliary());

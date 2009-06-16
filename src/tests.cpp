@@ -196,9 +196,6 @@ class TestEntityB: public TestEntity, public TagC, public TagD
 };
 MARTTA_OBJECT_CPP(TestEntityB);
 
-#define Xth(X) Super::EndOfNamed - X
-#define XthAndLast(X) Xth(X), EndOfNamed = Super::EndOfNamed - (X + 1)
-
 class TestNegatives: public Entity
 {
 	MARTTA_OBJECT(Entity)

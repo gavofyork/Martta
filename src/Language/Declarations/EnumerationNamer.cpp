@@ -52,8 +52,12 @@ void EnumerationNamer::updateStem()
 		if (m_stem.isEmpty())
 			m_stem = i->codeName();
 		else if (!i->codeName().isEmpty())
+		{
 			while (m_stem != i->codeName().left(m_stem.length()))
 				m_stem.chop(1);
+			if (m_stem.isEmpty())
+				break;
+		}
 	if (oldStem != m_stem)
 		self()->changed();
 }
