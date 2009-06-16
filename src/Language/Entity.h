@@ -168,7 +168,8 @@ public:
 	}
 #endif
 	
-	enum { LastNamed = 0, Reserved = INT_MIN };
+	enum { EndOfNamed = -1, Reserved = INT_MIN };
+	virtual int							virtualEndOfNamed() const { return EndOfNamed; }
 	
 	inline Entity(): m_rootEntity(0), m_context(0), m_contextIndex(UndefinedIndex), m_notifiedOfChange(false) {}
 	
@@ -383,6 +384,11 @@ public:
 	/// Default returns zero (i.e. no minimum).
 	/// @note Do not call this directly; use isAllowed() on the child entity instead, since that is a more complete test.
 	virtual int							minimumRequired() const { return 0; }
+	/// @returns the minimum number of entities than can be allowed in a sub-zero entity slot.
+	/// A greater amount than this may be allowed, but never less than this.
+	/// Default returns zero (i.e. no entity strictly needed).
+	/// @note Do not call this directly; use isAllowed() on the child entity instead, since that is a more complete test.
+	virtual int							minimumRequired(int) const { return 0; }
 	/// @returns the kind of entities allowed in the given child position.
 	/// Reimplement to allow particular entity kinds.
 	/// Default returns the empty list (i.e. entity may not have any children).

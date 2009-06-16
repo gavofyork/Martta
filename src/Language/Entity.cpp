@@ -136,10 +136,16 @@ bool Entity::isNecessary() const
 {
 	if (!context())
 		return false;
-	if (context()->entities().size() <= context()->minimumRequired())
-		return true;
-	for (int i = contextIndex() + 1; i < context()->entities().size(); i++)
-		if (!context()->entity(i)->isKind(context()->allowedKinds(i - 1)))
+	if (m_contextIndex >= 0)
+	{
+		if (context()->entities().size() <= context()->minimumRequired())
+			return true;
+		for (int i = contextIndex() + 1; i < context()->entities().size(); i++)
+			if (!context()->entity(i)->isKind(context()->allowedKinds(i - 1)))
+				return true;
+	}
+	else
+		if (context()->entityCount(m_contextIndex) - 1 < context()->minimumRequired(m_contextIndex))
 			return true;
 	return false;
 }
@@ -148,7 +154,10 @@ bool Entity::isComplete() const
 	QList<Entity*> e = entities();
 	if (e.size() < minimumRequired())
 		return false;
-	foreach (Entity* i, e)
+	for (int i = virtualEndOfNamed() + 1; i > 0; i++)
+		if (entityCount(i) < minimumRequired(i))
+			return false;
+	foreach (Entity* i, allEntities())
 		if (!i->isAllowed())
 			return false;
 	return true;
@@ -242,6 +251,8 @@ void Entity::debugTree() const
 void Entity::debugTree(QString const& _i) const
 {
 	qDebug(qPrintable(_i + kind().name() + " (%x)"), this);
+	for (QHash<int, Entity*>::ConstIterator i = m_namedChildren.begin(); i != m_namedChildren.end(); ++i)
+		i.value()->debugTree(_i + "|" + QString::number(i.key()) + " ");
 	foreach (Entity* i, m_children)
 		i->debugTree(_i + "|   ");
 }
