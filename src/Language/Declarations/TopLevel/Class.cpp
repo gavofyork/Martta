@@ -43,6 +43,8 @@ MARTTA_OBJECT_CPP(Class);
 
 Access Class::baseAccess(Class* _c) const
 {
+	if (_c == this)
+		return Public;
 	foreach (Base* i, entitiesOf<Base>())
 	{
 		if (i->classType() == _c)

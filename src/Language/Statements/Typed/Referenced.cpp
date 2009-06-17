@@ -132,7 +132,7 @@ Type Referenced::type() const
 		// There is; check to see if we can remove it (by being in a scoped context and assuming the "this->" precedent).
 		Memberify* m = t->asType<Memberify>();
 		M_ASSERT(m->isKind<Memberify>());
-		if (m->scopeClass() == ancestor<Class>())
+		if (ancestor<Class>()->baseAccess(m->scopeClass()) <= Protected)
 		{
 			bool memberIsCallable = m->child()->isType<FunctionType>();
 			bool constScope = ancestor<MemberLambda>()->isConst();
