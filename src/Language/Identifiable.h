@@ -35,6 +35,7 @@ class Identifiable: public_interface SceneLeaver
 {
 	MARTTA_INTERFACE
 	MARTTA_INHERITS(SceneLeaver, 0)
+	MARTTA_NAMED(Identity)
 	
 public:	
 	/// @returns the user-visible name used for this entity. (e.g. "foo", "bar", "my class")

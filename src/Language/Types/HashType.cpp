@@ -131,9 +131,9 @@ QList<ValueDefiner*> HashType::applicableMembers(Entity*, bool _isConst) const
 
 Kinds HashType::allowedKinds(int _i) const
 {
-	if (_i < 2)
+	if (_i >= 0  && _i < 2)
 		return Kind::of<TypeEntity>();
-	return Kinds();
+	return Super::allowedKinds(_i);
 }
 
 bool HashType::defineSimilarityTo(TypeEntity const* _t, Castability _c) const

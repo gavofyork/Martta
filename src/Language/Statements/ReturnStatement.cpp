@@ -58,7 +58,7 @@ Kinds ReturnStatement::allowedKinds(int _i) const
 
 	if (_i == 0 && !ancestor<LambdaNamer>()->returns().isNull() && ancestor<LambdaNamer>()->returns() != Type(Void))
 		return Kind::of<Typed>();
-	return Kinds();
+	return Super::allowedKinds(_i);
 }
 
 Types ReturnStatement::allowedTypes(int _i) const

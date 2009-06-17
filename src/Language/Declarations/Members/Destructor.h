@@ -35,8 +35,9 @@ public:
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
 
 protected:
-	virtual int							memberMinimumRequired() const { return 1; }
-	virtual Kinds						memberAllowedKinds(int _i) const;
+	virtual int							minimumRequired() const { return 1; }
+	virtual int							minimumRequiredNamed(int _i) const { return _i == Identity ? 0 : Super::minimumRequiredNamed(_i); }
+	virtual Kinds						allowedKinds(int _i) const;
 	virtual QString						defineReturnLayout(ViewKeys&) const { return QString::null; }
 	virtual bool						isConst() const { return false; }
 	virtual bool						isInValidState() const { return Super::Super::isInValidState(); }

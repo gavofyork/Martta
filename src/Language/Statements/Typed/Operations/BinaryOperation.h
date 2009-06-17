@@ -31,7 +31,7 @@ class BinaryOperation: public Operation
 
 public:
 	virtual int							minimumRequired() const { return 2; }
-	virtual Kinds						allowedKinds(int _index) const { if (_index < 2) return Kind::of<Typed>(); else return Kinds(); }
+	virtual Kinds						allowedKinds(int _index) const { if (_index < 2) return Kind::of<Typed>(); else return Super::allowedKinds(_index); }
 
 protected:
 	bool								haveLeft() const { return isTyped(0); }

@@ -32,9 +32,9 @@ MARTTA_OBJECT_CPP(MethodOperator);
 	
 Operator MethodOperator::id() const
 {
-	if (!entityIs<OperatorLabel>(0))
+	if (!entityIs<OperatorLabel>(Identity))
 		return Operator();
-	return entityAs<OperatorLabel>(0)->id();
+	return entityAs<OperatorLabel>(Identity)->id();
 }
 
 int MethodOperator::argumentCount() const
@@ -47,19 +47,19 @@ Type MethodOperator::argumentType(int _i) const
 	return (isComplete() && id().isConfusablePostfix() && _i == argumentCount() - 1) ? Type(Int) : Super::argumentType(_i);
 }
 
-Kinds MethodOperator::memberAllowedKinds(int _i) const
+Kinds MethodOperator::allowedKinds(int _i) const
 {
-	if (_i == 0)
+	if (_i == Identity)
 		return Kind::of<OperatorLabel>();
-	if (_i == 1)
+	if (_i == 0)
 		return Kind::of<Compound>();
-	if (_i == 2)
+	if (_i == 1)
 		return Kind::of<TypeEntity>();
-	if (_i == 3)
+	if (_i == 2)
 		return Kind::of<ConstLabel>();
-	if (_i == 4 && isBinary())
+	if (_i == 3 && isBinary())
 		return Kind::of<Argument>();
-	return Kinds();
+	return Super::allowedKinds(_i);
 }
 
 }

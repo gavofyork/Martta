@@ -35,12 +35,11 @@ bool DefaultConstructedVariable::keyPressedOnInsertionPoint(InsertionPoint const
 
 Kinds DefaultConstructedVariable::allowedKinds(int _index) const
 {
-	switch (_index)
-	{
-		case 0: return Kind::of<TextLabel>();
-		case 1: return Kind::of<TypeEntity>();
-		default: return Kinds();
-	}
+	if (_index == OurType)
+		return Kind::of<TypeEntity>();
+	else if (_index == Identity)
+		return Kind::of<TextLabel>();
+	return Super::allowedKinds(_index);
 }
 
 bool DefaultConstructedVariable::keyPressed(EntityKeyEvent const* _e)
@@ -51,7 +50,7 @@ bool DefaultConstructedVariable::keyPressed(EntityKeyEvent const* _e)
 	{
 		Entity* o = usurp(new AssignedVariable);
 		o->prepareChildren();
-		o->entity(2)->navigateOnto(_e->codeScene());
+		o->entity(Identity)->navigateOnto(_e->codeScene());
 	}
 	else
 		return Super::keyPressed(_e);

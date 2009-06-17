@@ -43,7 +43,7 @@ Kinds Construction::allowedKinds(int _index) const
 	if (m_subject.isUsable() && _index < m_subject->entities().size() - 2)
 		return Kind::of<Typed>();
 	else
-		return Kinds();
+		return Super::allowedKinds(_index);
 }
 
 Types Construction::allowedTypes(int _index) const

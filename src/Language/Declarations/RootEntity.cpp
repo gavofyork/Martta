@@ -40,9 +40,11 @@ RootEntity::~RootEntity()
 	clearEntities();
 }
 
-Kinds RootEntity::allowedKinds(int) const
+Kinds RootEntity::allowedKinds(int _i) const
 {
-	return Kinds() << Kind::of<TopLevel>();
+	if (_i >= 0)
+		return Kind::of<TopLevel>();
+	return Super::allowedKinds(_i);
 }
 
 void RootEntity::doCulling()

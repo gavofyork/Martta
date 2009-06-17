@@ -34,7 +34,7 @@ bool VirtualPure::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKey
 	return simpleInsertionPointKeyPressHandler<VirtualPure>(_p, _e, "0");
 }
 	
-Kinds VirtualPure::memberAllowedKinds(int _i) const
+Kinds VirtualPure::allowedKinds(int _i) const
 {
 	if (_i == 0)
 		return Kind::of<TextLabel>();
@@ -42,8 +42,9 @@ Kinds VirtualPure::memberAllowedKinds(int _i) const
 		return Kind::of<TypeEntity>();
 	else if (_i == 2)
 		return Kind::of<ConstLabel>();
-	else
+	else if (_i > 2)
 		return Kind::of<Argument>();
+	return Super::allowedKinds(_i);
 }
 
 QString VirtualPure::memberInterfaceCode() const

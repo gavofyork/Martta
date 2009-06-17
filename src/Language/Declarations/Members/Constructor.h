@@ -36,8 +36,9 @@ public:
 
 protected:
 	// From MemberLambda
-	virtual int							memberMinimumRequired() const { return 1; }
-	virtual Kinds						memberAllowedKinds(int _i) const;
+	virtual int							minimumRequired() const { return 1; }
+	virtual int							minimumRequiredNamed(int _i) const { return _i == Identity ? 0 : Super::minimumRequiredNamed(_i); }
+	virtual Kinds						allowedKinds(int _i) const;
 	virtual QString						defineReturnLayout(ViewKeys&) const { return QString::null; }
 	virtual bool						isConst() const { return false; }
 

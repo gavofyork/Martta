@@ -33,9 +33,9 @@ MARTTA_OBJECT_CPP(EnumValue);
 Kinds EnumValue::allowedKinds(int _i) const
 {
 	if (_i == 0)
-		return Kind::of<TextLabel>();
-	else
 		return Kind::of<Typed>();
+	else
+		return Super::allowedKinds(_i);
 }
 
 Type EnumValue::type() const
@@ -70,10 +70,10 @@ bool EnumValue::isChildInValidState(int _i) const
 
 QString EnumValue::defineLayout(ViewKeys&) const
 {
-	if (entityCount() == 1)
-		return "^;0;";
-	else
-		return "^;0;' := ';1";
+	QString r = QString("^;%d").arg(Identity);
+	if (entityCount())
+		return r + ";' := ';1";
+	return r;
 }
 
 bool EnumValue::isSuperfluous() const

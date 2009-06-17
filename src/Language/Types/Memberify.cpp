@@ -68,11 +68,11 @@ void Memberify::setScope(Type const& _newScope)
 {
 	entity(1)->replace(TypeEntity::cloneOf(&*_newScope, owner()));
 	QList<TypeEntity*> l;
-	l << entitiesOf<TypeEntity>();
+	l << allEntitiesOf<TypeEntity>();
 	while (!l.isEmpty())
 	{
 		TypeEntity* t = l.takeLast();
-		l << t->entitiesOf<TypeEntity>();
+		l << t->allEntitiesOf<TypeEntity>();
 		if (t->isKind<MemberTemplateType>())
 			t->asKind<MemberTemplateType>()->substitute();
 	}

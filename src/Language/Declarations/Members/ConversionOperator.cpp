@@ -41,7 +41,7 @@ bool ConversionOperator::keyPressedOnInsertionPoint(InsertionPoint const& _p, En
 
 QString ConversionOperator::defineNameLayout(ViewKeys&) const
 {
-	return QString("ycode;'operator';Mi;%1").arg(fromLocal(1));
+	return QString("ycode;'operator';Mi;1");
 }
 
 QString ConversionOperator::name() const
@@ -54,15 +54,17 @@ QString ConversionOperator::codeName() const
 	return "operator " + returns()->code();
 }
 
-Kinds ConversionOperator::memberAllowedKinds(int _i) const
+Kinds ConversionOperator::allowedKinds(int _i) const
 {
+	if (_i == Identity)
+		return Kinds();
 	if (_i == 0)
 		return Kind::of<Compound>();
 	if (_i == 1)
 		return Kind::of<TypeEntity>();
 	if (_i == 2)
 		return Kind::of<ConstLabel>();
-	return Kinds();
+	return Super::allowedKinds(_i);
 }
 
 }

@@ -33,14 +33,12 @@ MARTTA_OBJECT_CPP(Function);
 Kinds Function::allowedKinds(int _i) const
 {
 	if (_i == 0)
-		return Kind::of<TextLabel>();
-	if (_i == 1)
 		return Kind::of<Compound>();
-	if (_i == 2)
+	if (_i == 1)
 		return Kind::of<TypeEntity>();
-	if (_i >= 3)
+	if (_i >= 2)
 		return Kind::of<Argument>();
-	return Kinds();
+	return Super::allowedKinds(_i);
 }
 
 void Function::importDom(QDomElement const& _element)

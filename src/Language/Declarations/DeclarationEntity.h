@@ -42,8 +42,8 @@ public:
 
 	/// From Identifiable (default implementations).
 	virtual QString						key() const;
-	
 	virtual Identifiable*				lookupChild(QString const& _key) const;
+	
 	int									registerAnonymous(Identifiable const* _e) const { if (m_anonyma.contains(_e)) return m_anonyma.indexOf(_e); m_anonyma << _e; return m_anonyma.size() - 1; }
 	void								registerAnonymous(Identifiable const* _e, int _k) { while (m_anonyma.size() <= _k) m_anonyma << 0; m_anonyma[_k] = _e; }
 
@@ -60,7 +60,7 @@ public:
 	virtual void						importDom(QDomElement const& _element);
 	
 protected:
-	virtual int							minimumRequired() const { return 1; }
+	virtual int							minimumRequiredNamed(int _i) const { return _i == Identity ? 1 : 0; }
 	virtual Kinds						allowedKinds(int _i) const;
 
 private:

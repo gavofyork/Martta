@@ -39,7 +39,7 @@ public:
 	
 protected:
 	virtual Types						allowedTypes(int) const { return Type(Void).topWith(Const()).topWith(Pointer()); }
-	virtual Kinds						allowedKinds(int _index) const { return _index == 0 ? Kind::of<Typed>() : Kinds(); }
+	virtual Kinds						allowedKinds(int _index) const { return _index == 0 ? Kind::of<Typed>() : Super::allowedKinds(_index); }
 	virtual Type						type() const { return Type(Void); }
 	virtual QString						code() const { return "delete " + entityAs<Statement>(0)->code(); }	
 	virtual QString						defineLayout(ViewKeys&) const { return "p:/delete.svg;^;0;p:/delete.svg"; }

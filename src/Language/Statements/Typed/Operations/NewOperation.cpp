@@ -48,7 +48,7 @@ Kinds NewOperation::allowedKinds(int _index) const
 {
 	if (_index == 0)
 		return Kind::of<Pointer>(), Kind::of<Array>(), Kind::of<ExplicitType>(), Kind::of<SimpleType>(), Kind::of<FunctionType>();
-	return Kinds();
+	return Super::allowedKinds(_index);
 }
 
 Type NewOperation::type() const

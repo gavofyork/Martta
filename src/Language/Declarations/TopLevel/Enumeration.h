@@ -38,12 +38,11 @@ class Enumeration: public TopLevelType, public_interface EnumerationNamer
 public:
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
 	
-	virtual void						setNamed();
-	virtual void						setUnnamed();
 	virtual QString						code() const { return isNamed() ? codeName() : "enum ["+m_stem+"*]"; }
 	
 protected:
-	virtual int							minimumRequired() const;
+	virtual int							minimumRequired() const { return 1; }
+	virtual int							minimumRequiredNamed(int _i) const { if (_i == Identity) return 0; else return Super::minimumRequiredNamed(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual QString						defineLayout(const ViewKeys& _k) const { return "^;" + EnumerationNamer::defineLayout(_k); }
 	virtual QString						interfaceCode() const { return EnumerationNamer::interfaceCode(); }

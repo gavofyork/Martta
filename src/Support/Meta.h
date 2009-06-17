@@ -26,6 +26,8 @@
 namespace Martta
 {
 
+int registerName(int _n, char const* _class, char const* _name);
+
 class Entity;
 class Nothing { public: static AuxilliaryFace const* staticAuxilliary() { return 0; } };
 
@@ -74,8 +76,6 @@ template<class T, class F> T tryCast(F _f) { return tryCastPrivate::XL<T, F, try
 #define MARTTA_COMMON(S, o) \
 	public: \
 	typedef S Super; \
-	static const int					OffsetForDerivatives = o; \
-	static const int					MyOffset = Super::OffsetForDerivatives + Super::MyOffset; \
 	private: \
 	virtual int							virtualEndOfNamed() const { return EndOfNamed; } \
 	public: \
@@ -84,17 +84,6 @@ template<class T, class F> T tryCast(F _f) { return tryCastPrivate::XL<T, F, try
 	Entity::isKind; \
 	virtual Entity const*				self() const { return this; } \
 	virtual Entity*						self() { return this; } \
-	inline QList<Entity*>				locals() const { return localsFor<S>(); } \
-	inline int							localCount() const { return localCountFor<S>(); } \
-	inline Entity*						local(int _i) const { return localFor<S>(_i); } \
-	template<class T> inline QList<T*>	localsOf() const { return localsOfFor<S, T>(); } \
-	template<class T> inline bool		localIs(int _i) const { return localIsFor<S, T>(_i); } \
-	template<class T> inline T*			localAs(int _i) const { return localAsFor<S, T>(_i); } \
-	static inline int					fromLocal(int _i) { return MyOffset + _i; } \
-	static inline int					toLocal(int _i) { return MyOffset - _i; } \
-	inline InsertionPoint				localFront() { return localMiddle(0); } \
-	inline InsertionPoint				localMiddle(int _i) { return middle(_i + MyOffset); } \
-	inline InsertionPoint				localBack() { return back(); } \
 	MARTTA_BASIC
 
 #define MARTTA_OBJECT_WITH_OFFSET(S, o) \
@@ -116,8 +105,10 @@ template<class T, class F> T tryCast(F _f) { return tryCastPrivate::XL<T, F, try
 #define MARTTA_OBJECT(S) MARTTA_OBJECT_WITH_OFFSET(S, 0)
 #define MARTTA_PLACEHOLDER(S) MARTTA_PLACEHOLDER_WITH_OFFSET(S, 0)
 
-#define Xth(X) Super::EndOfNamed - X
-#define XthAndLast(X) Xth(X), EndOfNamed = Super::EndOfNamed - (X + 1)
+#define MARTTA_NAMED(X) static const int X;
+#define MARTTA_NAMED_CPP(E, X) const int E::X = registerName(-((int)(((unsigned)&X) / sizeof(X))), #E "::" #X);
+
+#define FirstNamed Super::EndOfNamed
 
 #define MARTTA_CPP_BASIC(E) \
 	static AuxilliaryFace const* s_auxilliary_##E = 0; \

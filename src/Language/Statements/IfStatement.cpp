@@ -49,7 +49,7 @@ Kinds IfStatement::allowedKinds(int _index) const
 		case 0: return Kind::of<BareTyped>();
 		case 1:
 		case 2: return Kind::of<Compound>();
-		default: return Kinds();
+		default: return Super::allowedKinds(_index);
 	}
 }
 
@@ -64,8 +64,8 @@ Types IfStatement::allowedTypes(int _index) const
 
 bool IfStatement::keyPressed(EntityKeyEvent const* _e)
 {
-	if ((_e->text() == ")" || _e->text() == "{") && _e->focalIndex() == 0 && entitiesOf<Compound>().size())
-		entitiesOf<Compound>()[0]->navigateOnto(_e->codeScene());
+	if ((_e->text() == ")" || _e->text() == "{") && _e->focalIndex() == 0 && allEntitiesOf<Compound>().size())
+		allEntitiesOf<Compound>()[0]->navigateOnto(_e->codeScene());
 	else if (_e->text() == "E" && _e->focalIndex() != 2)
 	{
 		if (!entity(2)) back().place(new Compound);

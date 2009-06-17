@@ -31,25 +31,25 @@ MARTTA_OBJECT_CPP(AssignedVariable);
 	
 Kinds AssignedVariable::allowedKinds(int _index) const
 {
-	switch (_index)
-	{
-		case 0: return Kind::of<TextLabel>();
-		case 1: return Kind::of<TypeEntity>();
-		case 2: return Kind::of<Typed>();
-		default: return Kinds();
-	}
+	if (_index == OurType)
+		return Kind::of<TypeEntity>();
+	else if (_index == AssignedValue)
+		return Kind::of<Typed>();
+	else if (_index == Identity)
+		return Kind::of<TextLabel>();
+	return Super::allowedKinds(_index);
 }
 
 Types AssignedVariable::allowedTypes(int _index) const
 {
-	if (_index == 2)
+	if (_index == AssignedValue)
 		return Type(*actualType());
 	return Types();
 }
 
 QString AssignedVariable::code() const
 {
-	return basicCode() + " = " + asTyped(2)->code();
+	return basicCode() + " = " + asTyped(AssignedValue)->code();
 }
 
 bool AssignedVariable::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
@@ -71,7 +71,7 @@ void AssignedVariable::onDependencySwitched(Entity* _e, Entity*)
 {
 	qDebug() << this << ": Dependency Switched: " << _e;
 	debugTree();
-	if (_e == entity(2) && _e->kind() == Kind::of<Typed>())
+	if (_e == entity(AssignedValue) && _e->kind() == Kind::of<Typed>())
 	{
 		Entity* o = usurp(new DefaultConstructedVariable);
 		_e->kill();
@@ -84,7 +84,7 @@ bool AssignedVariable::keyPressed(EntityKeyEvent const* _e)
 	if (VariableNamer::keyPressed(_e))
 		return true;
 	else if (_e->text() == "=")
-		entity(2)->setCurrent();
+		entity(AssignedValue)->setCurrent();
 	else
 		return Super::keyPressed(_e);
 	return true;

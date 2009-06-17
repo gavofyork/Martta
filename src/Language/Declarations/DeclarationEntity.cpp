@@ -21,6 +21,10 @@
 #include <QtCore>
 #include <QtXml>
 
+// TODO REMOVE!
+#include "NamespaceEntity.h"
+#include "Class.h"
+
 #include "Common.h"
 #include "RootEntity.h"
 #include "TextLabel.h"
@@ -59,20 +63,27 @@ QString DeclarationEntity::key() const
 
 Kinds DeclarationEntity::allowedKinds(int _i) const
 {
-	return _i ? Kinds() : Kind::of<TextLabel>();
+	if (_i == Identity)
+		return Kind::of<TextLabel>();
+	return Super::allowedKinds(_i);
 }
 
 Identifiable* DeclarationEntity::lookupChild(QString const& _key) const
 {
+//	qDebug() << "DE::lookupChild: " << _key;
 	bool ok;
 	int k = _key.toInt(&ok);
 	if (ok && m_anonyma.size() > k)
 		return const_cast<Identifiable*>(m_anonyma[k]);
 //	qDebug() << "Matching for " << _key;
-	foreach (DeclarationEntity* e, entitiesOf<DeclarationEntity>())
+	foreach (DeclarationEntity* e, allEntitiesOf<DeclarationEntity>())
 	{	
-//		if (entitiesOf<DeclarationEntity>().size() < 10)
+//		if (allEntitiesOf<DeclarationEntity>().size() < 10)
 //			qDebug() << "    " << e->identity();
+/*		if (e->isKind<Class>() || e->isKind<NamespaceEntity>())
+		{	e->debugTree();
+			qDebug() << e->identity();
+		}*/
 		if (e->identity() == _key)
 			return e;
 	}
@@ -95,7 +106,7 @@ QList<DeclarationEntity*> DeclarationEntity::utilisedSiblings() const
 QList<DeclarationEntity*> DeclarationEntity::utilised() const
 {
 	QList<DeclarationEntity*> ret;
-	foreach (DeclarationEntity* i, entitiesOf<DeclarationEntity>())
+	foreach (DeclarationEntity* i, allEntitiesOf<DeclarationEntity>())
 		ret << i->utilised();
 //	qDebug() << name() << "(" << kind().name() << ") utilises:";
 //	foreach (DeclarationEntity* i, ret)

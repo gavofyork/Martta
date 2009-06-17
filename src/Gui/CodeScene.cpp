@@ -365,7 +365,7 @@ void CodeScene::paintEvent(QPaintEvent*)
 				{
 					case EntityChanged: c = QColor(0, 0, 255); break;
 					case DependencyAdded: c = QColor(0, 255, 0); break;
-					case EntityChildrenAdded: c = QColor(0, 127, 0); break;
+					case EntityChildrenInitialised: c = QColor(0, 127, 0); break;
 					case DependencyRemoved: c = QColor(255, 0, 0); break;
 					case DependencyChanged: c = QColor(0, 255, 255); break;
 					case DependencySwitched: c = QColor(255, 255, 0); break;
@@ -678,8 +678,8 @@ void CodeScene::setCurrent(Entity* _e)
 /*	qDebug() << "";
 	qDebug() << "setCurrent: setting current to" << _e;
 	qDebug() << "";
-	_e->debugTree();
 	qDebug() << "";*/
+	_e->debugTree();
 	m_current = _e;
 	
 	
@@ -1424,7 +1424,7 @@ void CodeScene::doRefreshLayout()
 				m_leftmostChild[f->subject->context()] = m_leftmostChild[f->subject];
 			m_rightmostChild[f->subject->context()] = m_rightmostChild[f->subject];
 		}
-		else if (QRegExp("[0-9]+").exactMatch(e) && f->subject->entity(e.toInt()) && m_pictures.contains(f->subject->entity(e.toInt())))
+		else if (QRegExp("-?[0-9]+").exactMatch(e) && f->subject->entity(e.toInt()) && m_pictures.contains(f->subject->entity(e.toInt())))
 		{
 			Entity* c = f->subject->entity(e.toInt());
 			m_visible.insert(c);
@@ -1436,7 +1436,7 @@ void CodeScene::doRefreshLayout()
 			f->nextX += p.boundingRect().width();
 			f->maxHeight = qMax<float>(f->maxHeight, p.boundingRect().height());
 		}
-		else if (QRegExp("![0-9]+").exactMatch(e) && f->subject->entity(e.mid(1).toInt()) || QRegExp("[0-9]+").exactMatch(e) && f->subject->entity(e.toInt()))
+		else if (QRegExp("!-?[0-9]+").exactMatch(e) && f->subject->entity(e.mid(1).toInt()) || QRegExp("-?[0-9]+").exactMatch(e) && f->subject->entity(e.toInt()))
 		{
 			QString s = e.startsWith("!") ? e.mid(1) : e;
 			Entity* c = f->subject->entity(s.toInt());

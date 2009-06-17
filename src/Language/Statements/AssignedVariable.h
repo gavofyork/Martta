@@ -30,16 +30,17 @@ class AssignedVariable: public BareTyped, public_interface VariableNamer
 {
 	MARTTA_OBJECT(BareTyped)
 	MARTTA_INHERITS(VariableNamer, 0)
+	enum { AssignedValue = FirstNamed, EndOfNamed };
 
 public:
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
 	
 protected:
 	// From Entity via BareTyped
-	virtual int							minimumRequired() const { return 3; }
+	virtual int							minimumRequiredNamed(int _i) const { return _i == OurType || _i == AssignedValue || _i == Identity ? 1 : Super::minimumRequiredNamed(_i); }
 	virtual Kinds						allowedKinds(int _index) const;
 	virtual int							familyDependencies() const { return DependsOnChildren; }
-	virtual QString						defineLayout(ViewKeys& _k) const { return VariableNamer::defineLayout(_k) + ";Mi;^;ycode;':=';Mi;2"; }
+	virtual QString						defineLayout(ViewKeys& _k) const { return (VariableNamer::defineLayout(_k) + ";Mi;^;ycode;':=';Mi;%1").arg(AssignedValue); }
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
 	virtual void						onDependencyChanged(Entity*);
 	virtual void						onDependencySwitched(Entity*, Entity*);

@@ -33,6 +33,7 @@ class ArtificialCopyConstructor: public Constructor, public_interface Artificial
 	
 protected:
 	virtual int							minimumRequired() const { return 0; }
+	virtual int							minimumRequiredNamed(int) const { return 0; }
 	virtual Kinds						allowedKinds(int) const { return Kinds(); }
 	virtual QString						defineLayout(ViewKeys&) const { return QString(); }
 	virtual QString						interfaceCode() const { return ""; }

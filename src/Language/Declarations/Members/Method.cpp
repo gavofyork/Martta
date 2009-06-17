@@ -30,19 +30,17 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(Method);
 
-Kinds Method::memberAllowedKinds(int _i) const
+Kinds Method::allowedKinds(int _i) const
 {
 	if (_i == 0)
-		return Kind::of<TextLabel>();
-	if (_i == 1)
 		return Kind::of<Compound>();
-	if (_i == 2)
+	if (_i == 1)
 		return Kind::of<TypeEntity>();
-	if (_i == 3)
+	if (_i == 2)
 		return Kind::of<ConstLabel>();
-	if (_i >= 4)
+	if (_i >= 3)
 		return Kind::of<Argument>();
-	return Kinds();
+	return Super::allowedKinds(_i);
 }
 
 }

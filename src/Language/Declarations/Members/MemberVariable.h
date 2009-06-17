@@ -42,8 +42,9 @@ protected:
 	virtual QString						memberInterfaceCode() const { return VariableNamer::interfaceCode(); }
 	virtual QString						memberImplementationCode() const { return VariableNamer::implementationCode(); }
 	virtual QString						memberDefineLayout(ViewKeys& _k) const { return VariableNamer::defineLayout(_k); }
-	virtual int							memberMinimumRequired() const { return 2; }
-	virtual Kinds						memberAllowedKinds(int _i) const;
+	virtual int							minimumRequiredNamed(int _i) const { return _i == OurType ? 1 : Super::minimumRequiredNamed(_i); }
+	virtual int							minimumRequired() const { return 1; }
+	virtual Kinds						allowedKinds(int _i) const;
 	virtual Type						type() const { return MemberValue::memberifiedType(VariableNamer::type()); }
 };
 

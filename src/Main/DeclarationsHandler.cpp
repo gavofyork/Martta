@@ -264,13 +264,13 @@ QString properName(QXmlAttributes const& _a)
 
 EnumValueResolver::EnumValueResolver(EnumValue* _s, QXmlAttributes const& _a)
 {
-	_s->back().place(new TextLabel(properName(_a)));
+	_s->middle(Identifiable::Identity).place(new TextLabel(properName(_a)));
 }
 
 FunctionResolver::FunctionResolver(Function* _s, QXmlAttributes const& _a):
 	m_subject(_s)
 {
-	_s->back().place(new TextLabel(properName(_a)));
+	_s->middle(Identifiable::Identity).place(new TextLabel(properName(_a)));
 	_s->back().place(new Compound);
 	_s->back().place(new TypeEntity);
 //	setFlag(m_subject->m_qualifiers, Extern, _a.value("extern") == "1");
@@ -287,24 +287,24 @@ void FunctionResolver::addArgument(QXmlAttributes const& _a)
 	m_argIds << _a.value("type");
 	Argument* v = new Argument;
 	m_subject->back().place(v);
-	v->back().place(new TextLabel(_a.value("name")));
+	v->middle(Identifiable::Identity).place(new TextLabel(_a.value("name")));
 	v->back().place(new TypeEntity);
 }
 
 void FunctionResolver::resolve(DeclarationsHandler* _h)
 {
 	// at position 2 it's just a placeholder so this will work ok.
-	m_subject->middle(2).place(_h->resolveType(m_returnsId));
+	m_subject->middle(1).place(_h->resolveType(m_returnsId));
 
 	for (int i = 0; i < m_argIds.size(); i++)
-		m_subject->argument(i)->middle(1).place(_h->resolveType(m_argIds[i]));
+		m_subject->argument(i)->middle(0).place(_h->resolveType(m_argIds[i]));
 	m_subject->m_location.m_file = _h->commitToFile(m_fileId, m_subject);
 }
 
 VariableResolver::VariableResolver(Variable* _s, QXmlAttributes const& _a):
 	m_subject(_s)
 {
-	_s->back().place(new TextLabel(properName(_a)));
+	_s->middle(Identifiable::Identity).place(new TextLabel(properName(_a)));
 	setFlag(m_subject->m_qualifiers, Extern, _a.value("extern") == "1");
 	m_subject->m_location.m_lineNumber = _a.value("line").toInt();
 
@@ -315,7 +315,7 @@ VariableResolver::VariableResolver(Variable* _s, QXmlAttributes const& _a):
 
 void VariableResolver::resolve(DeclarationsHandler* _h)
 {
-	m_subject->middle(1).place(_h->resolveType(m_typeId));
+	m_subject->middle(0).place(_h->resolveType(m_typeId));
 	if (!m_subject->context()->context())
 		m_subject->m_location.m_file = _h->commitToFile(m_fileId, m_subject);
 }
@@ -327,7 +327,7 @@ void TypeResolver::init(QXmlAttributes const& _a)
 		// Don't do anything - we're an anonymous enum.
 	}
 	else
-		subject()->back().place(new TextLabel(properName(_a)));
+		subject()->middle(Identifiable::Identity).place(new TextLabel(properName(_a)));
 	subject()->m_location.m_lineNumber = _a.value("line").toInt();
 
 	m_id = _a.value("id");
@@ -353,10 +353,10 @@ void TypedefResolver::resolve(DeclarationsHandler* _h)
 {
 	TypeResolver::resolve(_h);
 	m_subject->back().place(_h->resolveType(m_typeId));
-	if (m_subject->entityIs<ExplicitType>(1) && m_subject->entityAs<ExplicitType>(1)->subject()->isKind<Struct>() && m_subject->entityAs<ExplicitType>(1)->subject()->asKind<Struct>()->codeName() == m_subject->codeName())
+	if (m_subject->entityIs<ExplicitType>(0) && m_subject->entityAs<ExplicitType>(0)->subject()->isKind<Struct>() && m_subject->entityAs<ExplicitType>(0)->subject()->asKind<Struct>()->codeName() == m_subject->codeName())
 	{
 		// Cloned struct name; make the structure anonymous.
-		TopLevelType* e = m_subject->entityAs<ExplicitType>(1)->subject()->asKind<Struct>();
+		TopLevelType* e = m_subject->entityAs<ExplicitType>(0)->subject()->asKind<Struct>();
 		e->move(m_subject->back());
 		_h->removeFromFile(e);
 	}

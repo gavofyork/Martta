@@ -44,7 +44,7 @@ Kinds WhileLoop::allowedKinds(int _index) const
 	{
 		case 0: return Kind::of<BareTyped>();
 		case 1: return Kind::of<Compound>();
-		default: return Kinds();
+		default: return Super::allowedKinds(_index);
 	}
 }
 
@@ -65,8 +65,8 @@ QString WhileLoop::defineLayout(ViewKeys&) const
 
 bool WhileLoop::keyPressed(EntityKeyEvent const* _e)
 {
-	if ((_e->text() == ")" || _e->text() == "{") && _e->focalIndex() == 0 && entitiesOf<Compound>().size())
-		entitiesOf<Compound>()[0]->navigateOnto(_e->codeScene());
+	if ((_e->text() == ")" || _e->text() == "{") && _e->focalIndex() == 0 && allEntitiesOf<Compound>().size())
+		allEntitiesOf<Compound>()[0]->navigateOnto(_e->codeScene());
 	else
 		return Super::keyPressed(_e);
 	return true;

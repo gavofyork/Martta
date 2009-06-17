@@ -44,7 +44,7 @@ Type Statement::typeOf(int _i) const
 
 QList<Typed*> Statement::typeds() const
 {
-	return entitiesOf<Typed>();
+	return allEntitiesOf<Typed>();
 }
 
 QList<ValueDefiner*> Statement::valuesInLocalScope() const

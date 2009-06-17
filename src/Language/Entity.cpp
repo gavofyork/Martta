@@ -44,7 +44,7 @@ AuxilliaryFace const* Entity::staticAuxilliary() { if (!s_auxilliary_Entity) s_a
 QList<ChangeEntry> s_changes;
 void change(Entity* _s, ChangeOperation _op, Entity* _o)
 {
-	static const QStringList ops = QStringList() << "EntityChanged" << "ChildrenAdded" << "DependencyAdded" << "DependencyRemoved" << "DependencyChanged" << "DependencySwitched" << "ChildMoved" << "ContextIndexChanged";
+	static const QStringList ops = QStringList() << "EntityChanged" << "ChildrenInitialised" << "DependencyAdded" << "DependencyRemoved" << "DependencyChanged" << "DependencySwitched" << "ChildMoved" << "ContextIndexChanged";
 	s_changes << ChangeEntry(_s, _op, _o);
 }
 
@@ -112,6 +112,7 @@ int Entity::ancestorIndex(Entity const* _a) const
 // Identification, search & location.
 Identifiable* Entity::findEntity(QString const& _key) const
 {
+//	qDebug() << "findEntity: " << _key;
 	if (_key.isEmpty())
 		return const_cast<RootEntity*>(rootEntity());
 	if (DeclarationEntity* r = rootEntity()->findDeclaration(_key))
@@ -125,7 +126,7 @@ Identifiable* Entity::findEntity(QString const& _key) const
 }
 QList<DeclarationEntity*> Entity::spacesInScope() const
 {
-	return entitiesOf<DeclarationEntity>();
+	return allEntitiesOf<DeclarationEntity>();
 }
 
 // Validity/status checking
@@ -146,7 +147,7 @@ bool Entity::isNecessary() const
 				return true;
 	}
 	else
-		if (context()->entityCount(m_contextIndex) - 1 < context()->minimumRequired(m_contextIndex))
+		if (context()->entityCount(m_contextIndex) - 1 < context()->minimumRequiredNamed(m_contextIndex))
 			return true;
 	return false;
 }
@@ -155,8 +156,11 @@ bool Entity::isComplete() const
 	QList<Entity*> e = entities();
 	if (e.size() < minimumRequired())
 		return false;
-	for (int i = virtualEndOfNamed() + 1; i > 0; i++)
-		if (entityCount(i) < minimumRequired(i))
+	for (int i = INT_MIN; i < virtualEndOfNamed(); i++)
+		if (entityCount(i) < minimumRequiredNamed(i))
+			return false;
+	foreach (int i, AuxilliaryRegistrar::get()->names())
+		if (entityCount(i) < minimumRequiredNamed(i))
 			return false;
 	foreach (Entity* i, allEntities())
 		if (!i->isAllowed())
@@ -264,7 +268,10 @@ void Entity::debugTree(QString const& _i) const
 {
 	qDebug(qPrintable(_i + kind().name() + " (%x)"), this);
 	for (QHash<int, Entity*>::ConstIterator i = m_namedChildren.begin(); i != m_namedChildren.end(); ++i)
-		i.value()->debugTree(_i + "|" + QString::number(i.key()) + " ");
+		if (i.key() < virtualEndOfNamed())
+			i.value()->debugTree(_i + "|   [" + QString::number(i.key() - INT_MIN) + "] ");
+		else
+			i.value()->debugTree(_i + "|   [" + AuxilliaryRegistrar::get()->nameOfArbitrary(i.key()) + "] ");
 	foreach (Entity* i, m_children)
 		i->debugTree(_i + "|   ");
 }
@@ -277,7 +284,11 @@ void Entity::exportDom(QDomElement& _element) const
 		QDomElement n = _element.ownerDocument().createElement("entity");
 		n.setAttribute("kind", e->kind().name());
 		if (e->contextIndex() < 0)
-			n.setAttribute("contextIndex", e->contextIndex());
+		{	if (e->contextIndex() > e->virtualEndOfNamed())	// proper name - store as name
+				n.setAttribute("childname", AuxilliaryRegistrar::get()->nameOfArbitrary(e->contextIndex()));
+			else
+				n.setAttribute("contextindex", e->contextIndex());
+		}
 		e->exportDom(n);
 		_element.appendChild(n);
 	}
@@ -288,7 +299,12 @@ void Entity::importDom(QDomElement const& _element)
 		if (i.isElement() && i.toElement().tagName() == "entity")
 		{
 			Entity* e = spawn(i.toElement().attribute("kind"));
-			e->move(i.toElement().hasAttribute("contextIndex") ? middle(i.toElement().attribute("contextIndex").toInt()) : back());
+			if (i.toElement().hasAttribute("contextindex"))
+				e->move(middle(i.toElement().attribute("contextindex").toInt()));
+			else if (i.toElement().hasAttribute("childname"))
+				e->move(middle(AuxilliaryRegistrar::get()->arbitraryOfName(i.toElement().attribute("childname"))));
+			else
+				e->move(back());
 			if (e)
 				e->importDom(i.toElement());
 			else
@@ -815,6 +831,23 @@ void Entity::notifyOfChange(Entity* _dependent)
 //****************************************************************
 //****************************************************************
 
+bool Entity::validifyChild(int _i, int* _added)
+{
+	bool ret = false;
+	for (QHash<int, Entity*>::Iterator j = m_namedChildren.find(_i); j != m_namedChildren.end() && j.key() == _i; ++j)
+		if (!j.value()->isAllowed())
+		{
+			j = m_namedChildren.erase(j);
+			ret = true;
+		}
+	while (entityCount(_i) < minimumRequiredNamed(_i))
+	{
+		middle(_i).spawnPreparedSilent()->contextAdded();
+		*_added = (*_added == INT_MAX - 1) ? _i : INT_MAX;
+		ret = true;
+	}
+	return ret;
+}
 bool Entity::validifyChildren()
 {
 	bool ret = false;
@@ -834,34 +867,28 @@ bool Entity::validifyChildren()
 			continue;
 		ret = true;
 	}
-	for (int i = virtualEndOfNamed() + 1; i < 0; i++)
-	{
-		for (QHash<int, Entity*>::Iterator j = m_namedChildren.find(i); j != m_namedChildren.end() && j.key() == i; ++j)
-			if (!j.value()->isAllowed())
-			{
-				j = m_namedChildren.erase(j);
-				ret = true;
-			}
-		while (entityCount(i) < minimumRequired(i))
-		{
-			middle(i).spawnPreparedSilent()->contextAdded();
-			added = (added == INT_MAX - 1) ? i : INT_MAX;
-		}
-	}
+	for (int i = INT_MIN; i < virtualEndOfNamed(); i++)
+		ret = ret || validifyChild(i, &added);
+	foreach (int i, AuxilliaryRegistrar::get()->names())
+		ret = ret || validifyChild(i, &added);
+	
 	if (added == INT_MAX)
-		childrenAdded();
+		childrenInitialised();
 	else if (added < INT_MAX - 1)
 		childAdded(added);
 	return ret;
 }
 Entity* Entity::prepareChildren()
 {
-	for (int i = virtualEndOfNamed() + 1; i < 0; i++)
-		while (entityCount(i) < minimumRequired(i))
+	for (int i = INT_MIN; i < virtualEndOfNamed(); i++)
+		while (entityCount(i) < minimumRequiredNamed(i))
+			middle(i).spawnPreparedSilent()->contextAdded();
+	foreach (int i, AuxilliaryRegistrar::get()->names())
+		while (entityCount(i) < minimumRequiredNamed(i))
 			middle(i).spawnPreparedSilent()->contextAdded();
 	for (int i = m_children.size(); i < minimumRequired(); ++i)
 		back().spawnPreparedSilent()->contextAdded();
-	childrenAdded();
+	childrenInitialised();
 	return this;
 }
 bool Entity::removeInvalidChildren()
@@ -902,7 +929,7 @@ Entity* Entity::usurp(Entity* _u)
 	// Notify about the children having been moved.
 	foreach (Entity* i, es)
 		i->contextSwitched(this);
-	_u->childrenAdded();
+	_u->childrenInitialised();
 	
 	// Tell _r's new context that it's here instead of us.
 	if (_u->m_context)
@@ -1002,12 +1029,12 @@ void Entity::childAdded(int _index)
 		// This would be a relayoutLater() call, except we know the child will call that, so we can optimise thus:
 		resetLayoutCache();
 }
-void Entity::childrenAdded()
+void Entity::childrenInitialised()
 {
-	if (botherNotifying() && m_children.size() && familyDependencies() & DependsOnChildren)
+	if (botherNotifying() && familyDependencies() & DependsOnChildren)
 	{
-		change(this, EntityChildrenAdded, 0);
-		onChildrenAdded();
+		change(this, EntityChildrenInitialised, 0);
+		onChildrenInitialised();
 	}
 /*	else
 		qDebug() << "Not bothering to notify (" << botherNotifying() << " - " << isComplete() << ")";

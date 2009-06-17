@@ -40,14 +40,16 @@ Type VirtualOverload::returns() const
 	
 QString VirtualOverload::memberLambdaDefineLayout(ViewKeys& _viewKeys) const
 {
-	return ("yminor;'VIRTUAL';Mo;>name;ycode;'" + (m_base ? m_base->asKind<LambdaNamer>()->basicCode(LambdaNamer::InsideScope) : QString("[]")) + "';Mo" + QString(_viewKeys["expanded"].toBool() ? body()->entities().size() ? ";n;i;%1" : ";%1" : "")).arg(fromLocal(0));
+	return ("yminor;'VIRTUAL';Mo;>name;ycode;'" + (m_base ? m_base->asKind<LambdaNamer>()->basicCode(LambdaNamer::InsideScope) : QString("[]")) + "';Mo" + QString(_viewKeys["expanded"].toBool() ? body()->entities().size() ? ";n;i;0" : ";0" : ""));
 }
 
-Kinds VirtualOverload::memberAllowedKinds(int _i) const
+Kinds VirtualOverload::allowedKinds(int _i) const
 {
-	if (_i == 0)
+	if (_i == Identity)
+		return Kinds();
+	else if (_i == 0)
 		return Kind::of<Compound>();
-	return Kinds();
+	return Super::allowedKinds(_i);
 }
 
 bool VirtualOverload::keyPressed(EntityKeyEvent const* _e)
@@ -86,7 +88,7 @@ QList<VirtualMethod*> VirtualOverload::possibilities() const
 QString VirtualOverload::defineEditLayout(ViewKeys& _viewKeys, VirtualMethod*) const
 {
 	// having the margin here is horrible, but it'll do for now
-	return "m24,0,0,0;^;ycode;'virtual';Mo;>name;ynormal;%1;Mo" + QString(_viewKeys["expanded"].toBool() ? (body()->entities().size() ? ";n;i;" : ";") + QString::number(fromLocal(0)) : "");
+	return "m24,0,0,0;^;ycode;'virtual';Mo;>name;ynormal;%1;Mo" + QString(_viewKeys["expanded"].toBool() ? (body()->entities().size() ? ";n;i;0" : ";0") : "");
 }
 
 EditDelegateFace* VirtualOverload::newDelegate(CodeScene* _s)

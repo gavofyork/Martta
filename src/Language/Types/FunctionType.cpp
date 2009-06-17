@@ -46,7 +46,7 @@ bool FunctionType::defineSimilarityTo(TypeEntity const* _t, Castability _c) cons
 QList<DeclarationEntity*> FunctionType::utilisedX() const
 {
 	QList<DeclarationEntity*> ret;
-	foreach (TypeEntity* i, entitiesOf<TypeEntity>())
+	foreach (TypeEntity* i, allEntitiesOf<TypeEntity>())
 		ret << i->utilised();
 	return ret;
 }

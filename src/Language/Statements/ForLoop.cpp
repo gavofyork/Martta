@@ -49,7 +49,7 @@ Kinds ForLoop::allowedKinds(int _index) const
 		case 1: return Kind::of<BareTyped>();
 		case 2: return Kind::of<Typed>();
 		case 3: return Kind::of<Compound>();
-		default: return Kinds();
+		default: return Super::allowedKinds(_index);
 	}
 }
 
@@ -72,8 +72,8 @@ bool ForLoop::keyPressed(EntityKeyEvent const* _e)
 {
 	if (_e->text() == ";" && _e->focalIndex() < 2)
 		entity(_e->focalIndex() + 1)->setCurrent();
-	else if ((_e->text() == ")" || _e->text() == "{") && _e->focalIndex() < 3 && entitiesOf<Compound>().size())
-		entitiesOf<Compound>()[0]->navigateOnto(_e->codeScene());
+	else if ((_e->text() == ")" || _e->text() == "{") && _e->focalIndex() < 3 && allEntitiesOf<Compound>().size())
+		allEntitiesOf<Compound>()[0]->navigateOnto(_e->codeScene());
 	else if (_e->text() == "B" && _e->focus()->isPlaceholder() && _e->focus()->isAllowed<BreakStatement>())
 	{
 		Entity* e = new BreakStatement;

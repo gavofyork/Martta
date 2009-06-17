@@ -65,8 +65,8 @@ void Class::rejigDeps()
 {
 	removeAllDependencies();
 	foreach (Entity* i, entities())
-		if (i->entitiesOf<AccessLabel>().size())
-			addDependency(i->entitiesOf<AccessLabel>()[0]);
+		if (i->allEntityCountOf<AccessLabel>())
+			addDependency(i->allEntitiesOf<AccessLabel>()[0]);
 }
 
 bool Class::onChanged()
@@ -76,7 +76,7 @@ bool Class::onChanged()
 
 Entity* Class::isExpander() const
 {
-	return entityCount() > 4 ? entity(4) : const_cast<Class*>(this);
+	return entityCount() > 3 ? entity(3) : const_cast<Class*>(this);
 }
 
 bool Class::checkImplicitConstructors()
@@ -133,7 +133,7 @@ bool Class::checkImplicitConstructors()
 	return ret;
 }
 
-void Class::onChildrenAdded()
+void Class::onChildrenInitialised()
 {
 	rejigDeps();
 	checkImplicitConstructors();
@@ -143,16 +143,14 @@ void Class::onChildrenAdded()
 
 void Class::onDependencyAdded(Entity* _e)
 {
-	if (entities().contains(_e))
-		rejigDeps(); 
+	rejigDeps();
 	if (_e->isKind<ConversionOperator>() || (_e->isKind<MethodOperator>() && !_e->isKind<ArtificialAssignmentOperator>()) || (_e->isKind<Constructor>() && !_e->isKind<ArtificialDefaultConstructor>() && !_e->isKind<ArtificialCopyConstructor>()))
 		changed();
 }
 
 void Class::onDependencyRemoved(Entity* _e, int)
 {
-	if (entities().contains(_e))
-		rejigDeps(); 
+	// TODO: Will it remove the Access label dep? Even if the member is only moved to another class?
 	if (_e->isKind<ConversionOperator>() || (_e->isKind<MethodOperator>() && !_e->isKind<ArtificialAssignmentOperator>()) || (_e->isKind<Constructor>() && !_e->isKind<ArtificialDefaultConstructor>() && !_e->isKind<ArtificialCopyConstructor>()))
 		changed();
 }
@@ -167,15 +165,13 @@ void Class::onDependencyChanged(Entity* _e)
 
 Kinds Class::allowedKinds(int _i) const
 {
-	if (_i == 0)
-		return Kind::of<TextLabel>();
-	return (Kind::of<MemberLambda>(), Kind::of<Member>(), Kind::of<Base>());
+	return _i >= 0 ? (Kind::of<Member>(), Kind::of<Base>()) : Super::allowedKinds(_i);
 }
 
 QString Class::implementationCode() const
 {
 	QString ret;
-	foreach (DeclarationEntity* f, entitiesOf<DeclarationEntity>())
+	foreach (DeclarationEntity* f, allEntitiesOf<DeclarationEntity>())
 		ret += f->implementationCode() + "\n";
 	if (ret.endsWith("\n\n")) ret.chop(1);
 	return ret;
@@ -186,13 +182,13 @@ QString Class::interfaceCode() const
 	// TODO: ordering for enums?
 	QString ret;
 	ret += "class " + codeName() + "\n";
-	if (entitiesOf<Base>().size())
+	if (allEntitiesOf<Base>().size())
 		ret += ":";
-	foreach (Base* f, entitiesOf<Base>())
+	foreach (Base* f, allEntitiesOf<Base>())
 		ret += f->code() + ", ";
 	if (ret.endsWith(", ")) ret.chop(2);
 	ret += "{\n";
-	foreach (DeclarationEntity* f, entitiesOf<DeclarationEntity>())
+	foreach (Member* f, allEntitiesOf<Member>())
 		ret += f->interfaceCode();
 	if (ret.endsWith("\n\n")) ret.chop(1);
 	ret += "};\n";
@@ -202,7 +198,7 @@ QString Class::interfaceCode() const
 QList<DeclarationEntity*> Class::utilised() const
 {
 	QList<DeclarationEntity*> ret;
-	foreach (Base* i, entitiesOf<Base>())
+	foreach (Base* i, allEntitiesOf<Base>())
 		ret << i->classType();
 	ret += Super::utilised();
 	return ret;
@@ -211,10 +207,10 @@ QList<DeclarationEntity*> Class::utilised() const
 QList<DeclarationEntity*> Class::members(bool _isConst, Access _access) const
 {
 	QList<DeclarationEntity*> ret;
-	foreach (MemberValue* i, entitiesOf<MemberValue>())
+	foreach (MemberValue* i, allEntitiesOf<MemberValue>())
 		if ((i->isConst() || !_isConst) && i->access() <= _access)
 			ret += i;
-	foreach (Base* i, entitiesOf<Base>())
+	foreach (Base* i, allEntitiesOf<Base>())
 		if (!i->classType())
 			continue;
 		else if (_access == Private || _access == Protected && i->access() <= Protected)
@@ -257,11 +253,11 @@ bool Class::keyPressed(EntityKeyEvent const* _e)
 
 QString Class::defineLayout(ViewKeys& _keys) const
 {
-	QString ret = "^;ycode;'class ';fb;cblack;s" + Type(const_cast<Class*>(this))->idColour() + ";!0;s;ycode";
+	QString ret = ("^;ycode;'class ';fb;cblack;s" + Type(const_cast<Class*>(this))->idColour() + ";!%1;s;ycode").arg(Identity);
 	
 	if (_keys["expanded"].toBool())
 	{
-		foreach (Base* i, entitiesOf<Base>())
+		foreach (Base* i, allEntitiesOf<Base>())
 			ret += QString(";n;i;%1").arg(i->contextIndex());
 		
 		ret += ";n;'{'";
@@ -271,24 +267,24 @@ QString Class::defineLayout(ViewKeys& _keys) const
 			QString mem;
 			Kinds recognised;
 			recognised << Kind::of<Constructor>();
-			foreach (MemberLambda* f, entitiesOf<Constructor>())
+			foreach (MemberLambda* f, allEntitiesOf<Constructor>())
 				if (f->access() == Access(i))
 					mem += QString(";n;%1").arg(f->contextIndex());
 			recognised << Kind::of<Destructor>();
-			foreach (MemberLambda* f, entitiesOf<Destructor>())
+			foreach (MemberLambda* f, allEntitiesOf<Destructor>())
 				if (f->access() == Access(i))
 					mem += QString(";n;%1").arg(f->contextIndex());
 			recognised << Kind::of<Method>();
-			foreach (MemberLambda* f, entitiesOf<Method>())
+			foreach (MemberLambda* f, allEntitiesOf<Method>())
 				if (f->access() == Access(i))
 					mem += QString(";n;%1").arg(f->contextIndex());
-			foreach (MemberLambda* f, entitiesOf<MemberLambda>())
+			foreach (MemberLambda* f, allEntitiesOf<MemberLambda>())
 				if (f->access() == Access(i) && !f->Entity::isKind(recognised))
 					mem += QString(";n;%1").arg(f->contextIndex());
-			foreach (MemberVariable* f, entitiesOf<MemberVariable>())
+			foreach (MemberVariable* f, allEntitiesOf<MemberVariable>())
 				if (f->access() == Access(i))
 					mem += QString(";n;%1").arg(f->contextIndex());
-			foreach (MemberEnumeration* f, entitiesOf<MemberEnumeration>())
+			foreach (MemberEnumeration* f, allEntitiesOf<MemberEnumeration>())
 				if (f->access() == Access(i))
 					mem += QString(";n;%1").arg(f->contextIndex());
 			if (!mem.isEmpty())
@@ -298,23 +294,23 @@ QString Class::defineLayout(ViewKeys& _keys) const
 	}
 	else
 	{
-		if (entitiesOf<Base>().count())
+		if (allEntitiesOf<Base>().count())
 		{
 			ret += ";ynormal;' ['";
-			foreach (Base* i, entitiesOf<Base>())
+			foreach (Base* i, allEntitiesOf<Base>())
 				ret += QString(";%1").arg(i->contextIndex());
 			ret += ";']'";
 		}
 		ret += ";yminor;' (";
-		if (int n = entitiesOf<Method>().size())
+		if (int n = allEntitiesOf<Method>().size())
 			ret += QString::number(n) + " method" + (n > 1 ? "s, " : ", ");
-		if (int n = entitiesOf<MemberVariable>().size())
+		if (int n = allEntitiesOf<MemberVariable>().size())
 			ret += QString::number(n) + " variable" + (n > 1 ? "s, " : ", ");
-		if (int n = (entitiesOf<Constructor>().size() - entitiesOf<ArtificialCopyConstructor>().size() - entitiesOf<ArtificialDefaultConstructor>().size()))
+		if (int n = (allEntitiesOf<Constructor>().size() - allEntitiesOf<ArtificialCopyConstructor>().size() - allEntitiesOf<ArtificialDefaultConstructor>().size()))
 			ret += QString::number(n) + " constructor" + (n > 1 ? "s, " : ", ");
-		if (int n = entitiesOf<Destructor>().size())
+		if (int n = allEntitiesOf<Destructor>().size())
 			ret += QString::number(n) + " destructor" + (n > 1 ? "s, " : ", ");
-		if (int n = (entitiesOf<MethodOperator>().size() - entitiesOf<ArtificialAssignmentOperator>().size()))
+		if (int n = (allEntitiesOf<MethodOperator>().size() - allEntitiesOf<ArtificialAssignmentOperator>().size()))
 			ret += QString::number(n) + " operator" + (n > 1 ? "s, " : ", ");
 		if (ret.endsWith(", "))
 			ret.chop(2);

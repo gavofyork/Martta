@@ -30,19 +30,20 @@
 namespace Martta
 {
 
-MARTTA_INTERFACE_CPP(Identifiable);	
+MARTTA_INTERFACE_CPP(Identifiable);
+MARTTA_NAMED_CPP(Identifiable, Identity);
 
 QString Identifiable::name() const
 {
-	if (self()->entityCountOf<TextLabel>() == 1)
-		return self()->entitiesOf<TextLabel>()[0]->name();
+	if (TextLabel* l = self()->tryEntityAs<TextLabel>(Identity))
+		return l->name();
 	return QString::null;
 }
 
 QString Identifiable::codeName() const
 {
-	if (self()->entityCountOf<IdLabel>() == 1)
-		return self()->entitiesOf<IdLabel>()[0]->code();
+	if (IdLabel* l = self()->tryEntityAs<IdLabel>(Identity))
+		return l->code();
 	return QString::null;
 }
 
@@ -65,9 +66,13 @@ void Identifiable::onLeaveScene(RootEntity* _new, RootEntity* _old)
 
 Identifiable* Identifiable::lookupChild(QString const& _key) const
 {
-	foreach (Identifiable* e, self()->entitiesOf<Identifiable>())
+//	qDebug() << "Id::lookupChild: " << _key;
+	foreach (Identifiable* e, self()->allEntitiesOf<Identifiable>())
+	{	e->self()->debugTree();
+		qDebug() << e->identity();
 		if (e->identity() == _key)
 			return e;
+	}
 	return 0;
 }
 

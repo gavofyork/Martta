@@ -34,13 +34,13 @@ MARTTA_INTERFACE_CPP(LambdaNamer);
 
 QString LambdaNamer::defineReturnLayout(ViewKeys&) const
 {
-	int sReturn = self()->entityIndexOf<TypeEntity>();
+	int sReturn = self()->allEntityIndexOf<TypeEntity>();
 	return QString::number(sReturn) + ";Mo";
 }
 
 QString LambdaNamer::defineNameLayout(ViewKeys&) const
 {
-	int sName = self()->entityIndexOf<IdLabel>();
+	int sName = self()->allEntityIndexOf<IdLabel>();
 	if (sName != UndefinedIndex)
 		return "ynormal;s" + FunctionType().idColour() + ";!" + QString::number(sName);
 	else
@@ -49,14 +49,14 @@ QString LambdaNamer::defineNameLayout(ViewKeys&) const
 
 QString LambdaNamer::defineArgListLayout(ViewKeys&) const
 {
-	int sFirstArg = self()->entityIndexOf<Argument>();
-	int sArgCount = self()->entityCountOf<Argument>();
+	int sFirstArg = self()->allEntityIndexOf<Argument>();
+	int sArgCount = self()->allEntityCountOf<Argument>();
 	return "ycode;'(';" + times(sFirstArg, sFirstArg + sArgCount, ";', ';") + ";')'";
 }
 
 QString LambdaNamer::defineBodyLayout(ViewKeys& _viewKeys) const
 {
-	int sBody = self()->entityIndexOf<Compound>();
+	int sBody = self()->allEntityIndexOf<Compound>();
 	QString ret;
 	if (body() && sBody != UndefinedIndex)
 		if (_viewKeys["expanded"].toBool())
@@ -64,7 +64,7 @@ QString LambdaNamer::defineBodyLayout(ViewKeys& _viewKeys) const
 		else
 		{
 			ret += "yminor;' (";
-			if (int n = body()->entitiesOf<Primary>().count() + body()->entitiesOf<Untyped>().count())
+			if (int n = body()->allEntitiesOf<Primary>().count() + body()->allEntitiesOf<Untyped>().count())
 				ret += QString::number(n) + " statement" + (n > 1 ? "s, " : ", ");
 			if (ret.endsWith(", "))
 				ret.chop(2);
@@ -86,8 +86,8 @@ QString LambdaNamer::defineLayout(ViewKeys& _k, QString _middle) const
 
 bool LambdaNamer::keyPressed(EntityKeyEvent const* _e)
 {
-	int sFirstArg = self()->entityIndexOf<Argument>();
-	int sName = self()->entityIndexOf<IdLabel>();
+	int sFirstArg = self()->allEntityIndexOf<Argument>();
+	int sName = self()->allEntityIndexOf<IdLabel>();
 	if ((_e->text() == "(" && !argumentCount() && (_e->focalIndex() == sName || _e->isFocused()) || _e->text() == "," && _e->focalIndex() >= sFirstArg) && self()->back().allowedToBeKind<Argument>())
 	{
 		Argument* v = new Argument;
@@ -99,9 +99,9 @@ bool LambdaNamer::keyPressed(EntityKeyEvent const* _e)
 	{
 		argument(0)->navigateInto(_e->codeScene());
 	}
-	else if (_e->text() == " " && self()->entityIs<TypeEntity>(_e->focalIndex()) && self()->entityCountOf<IdLabel>())
+	else if (_e->text() == " " && self()->entityIs<TypeEntity>(_e->focalIndex()) && self()->allEntityCountOf<IdLabel>())
 	{
-		self()->entitiesOf<IdLabel>()[0]->navigateOnto(_e->codeScene());
+		self()->allEntitiesOf<IdLabel>()[0]->navigateOnto(_e->codeScene());
 	}
 	else
 		return false;
@@ -145,27 +145,27 @@ QString LambdaNamer::basicCode(FunctionCodeScope _ref) const
 
 Compound* LambdaNamer::body() const
 {
-	if (self()->entitiesOf<Compound>().size())
-		return self()->entitiesOf<Compound>()[0];
+	if (self()->allEntitiesOf<Compound>().size())
+		return self()->allEntitiesOf<Compound>()[0];
 	return 0;
 }
 
 int LambdaNamer::argumentCount() const
 {
-	return self()->entitiesOf<Argument>().size();
+	return self()->allEntitiesOf<Argument>().size();
 }
 
 Argument* LambdaNamer::argument(int _index) const
 {
-	if (_index < self()->entitiesOf<Argument>().size())
-		return self()->entitiesOf<Argument>()[_index];
+	if (_index < self()->allEntitiesOf<Argument>().size())
+		return self()->allEntitiesOf<Argument>()[_index];
 	return 0;
 }
 
 Type LambdaNamer::returns() const
 {
-	if (self()->entitiesOf<TypeEntity>().size())
-		return *self()->entitiesOf<TypeEntity>()[0];
+	if (self()->allEntitiesOf<TypeEntity>().size())
+		return *self()->allEntitiesOf<TypeEntity>()[0];
 	return 0;
 }
 

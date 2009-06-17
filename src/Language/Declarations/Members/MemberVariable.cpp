@@ -29,13 +29,11 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(MemberVariable);
 
-Kinds MemberVariable::memberAllowedKinds(int _i) const
+Kinds MemberVariable::allowedKinds(int _i) const
 {
-	if (_i == 0)
-		return Kind::of<TextLabel>();
-	if (_i == 1)
+	if (_i == OurType)
 		return Kind::of<TypeEntity>();
-	return Kinds();
+	return Super::allowedKinds(_i);
 }
 
 bool MemberVariable::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)

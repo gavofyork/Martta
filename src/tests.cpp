@@ -199,16 +199,18 @@ MARTTA_OBJECT_CPP(TestEntityB);
 class TestNegatives: public Entity
 {
 	MARTTA_OBJECT(Entity)
-	enum { NamedChildA = Xth(0), NamedChildB = XthAndLast(1) };
+	MARTTA_NAMED(NamedChildB)
+	enum { NamedChildA = FirstNamed, EndOfNamed };
 	
 };
 MARTTA_OBJECT_CPP(TestNegatives);
+MARTTA_NAMED_CPP(TestNegatives, NamedChildB);
 
 class TestNegativesB: public TestNegatives
 {
 	MARTTA_OBJECT(TestNegatives)
-	enum { NamedChildC = XthAndLast(0) };
-	int minimumRequired(int _i) const { return _i != NamedChildA ? _i != NamedChildB ? _i != NamedChildC ? Super::minimumRequired(_i) : 2 : 1 : 0; }
+	enum { NamedChildC = FirstNamed, EndOfNamed };
+	int minimumRequiredNamed(int _i) const { return _i != NamedChildA ? _i != NamedChildB ? _i != NamedChildC ? Super::minimumRequiredNamed(_i) : 2 : 1 : 0; }
 	Kinds allowedKinds(int) const { return Kind::of<TestNegatives>(); }
 };
 MARTTA_OBJECT_CPP(TestNegativesB);
@@ -390,23 +392,23 @@ int test()
 		NamespaceEntity* n = new NamespaceEntity;
 		n->prepareChildren();
 		r->back().place(n);
-		n->entitiesOf<TextLabel>()[0]->setText("n");
+		n->entityAs<TextLabel>(Identifiable::Identity)->setText("n");
 
 		Class* X = new Class;
 		X->prepareChildren();
 		n->back().place(X);
-		X->entitiesOf<TextLabel>()[0]->setText("X");
+		X->entityAs<TextLabel>(Identifiable::Identity)->setText("X");
 
 		Class* Y = new Class;
 		Y->prepareChildren();
 		n->back().place(Y);
-		Y->entitiesOf<TextLabel>()[0]->setText("Y");
+		Y->entityAs<TextLabel>(Identifiable::Identity)->setText("Y");
 
 		Method* M = new Method;
 		M->prepareChildren();
 		X->back().place(M);
-		M->entitiesOf<TextLabel>()[0]->setText("foo");
-		M->entitiesOf<TypeEntity>()[0]->over()->replace(new SimpleType(Void));
+		M->entityAs<TextLabel>(Identifiable::Identity)->setText("foo");
+		M->entitiesOf<TypeEntity>()[0]->replace(new SimpleType(Void));
 		
 		Argument* v = new Argument;
 		v->back().place(new TextLabel("a"));
@@ -415,8 +417,9 @@ int test()
 		
 		Referenced* f = new Referenced(v); 
 		f->prepareChildren();
-		M->entitiesOf<Compound>()[0]->back().place(f);
+		M->allEntitiesOf<Compound>()[0]->back().place(f);
 		
+		r->debugTree();
 		r->archivePtrs(true);
 		r->restorePtrs();
 		QDomDocument doc;
@@ -432,9 +435,9 @@ int test()
 		r->importDom(doc.documentElement());
 		r->restorePtrs();
 	
-		FAILED_IF(!r->entity(0)->entitiesOf<Class>()[0]->entitiesOf<Method>()[0]->entitiesOf<Compound>()[0]->entityIs<Referenced>(1));
-		qDebug() << &*r->entity(0)->entitiesOf<Class>()[0]->entitiesOf<Method>()[0]->entitiesOf<Compound>()[0]->entityAs<Referenced>(1)->subject();
-		FAILED_IF(!r->entity(0)->entitiesOf<Class>()[0]->entitiesOf<Method>()[0]->entitiesOf<Compound>()[0]->entityAs<Referenced>(1)->subject());
+		FAILED_IF(!r->entity(0)->allEntitiesOf<Class>()[0]->allEntitiesOf<Method>()[0]->allEntitiesOf<Compound>()[0]->entityIs<Referenced>(1));
+		qDebug() << &*r->entity(0)->allEntitiesOf<Class>()[0]->allEntitiesOf<Method>()[0]->allEntitiesOf<Compound>()[0]->entityAs<Referenced>(1)->subject();
+		FAILED_IF(!r->entity(0)->allEntitiesOf<Class>()[0]->allEntitiesOf<Method>()[0]->allEntitiesOf<Compound>()[0]->entityAs<Referenced>(1)->subject());
 		
 		r->killAndDelete();
 	}
@@ -467,25 +470,53 @@ int test()
 	CLEAR_TEST(TestNegatives::NamedChildA)
 	CLEAR_TEST(TestNegatives::NamedChildB)
 #undef CLEAR_TEST
-	TEST("Negatives prepareChildren/validifyChildren/isComplete")
+#define TEST_FOR(T, X) TEST(T) FAILED_IF(!(X))
 	{
 		RootEntity* r = new RootEntity;
 		SafePointer<TestNegativesB> a = new TestNegativesB;
 		a->move(r->back());
-		FAILED_IF(a->isComplete());
+		TEST_FOR("Negatives: start incomplete", !a->isComplete());
 		a->prepareChildren();
-		FAILED_IF(!a->isComplete());
+		TEST_FOR("Negatives: prepareChildren() makes complete", a->isComplete());
+		TEST_FOR("Negatives: no entities", a->entityCount() == 0);
+		TEST_FOR("Negatives: no As", a->entityCount(TestNegativesB::NamedChildA) == 0);
+		TEST_FOR("Negatives: one B", a->entityCount(TestNegativesB::NamedChildB) == 1);
+		TEST_FOR("Negatives: two Cs", a->entityCount(TestNegativesB::NamedChildC) == 2);
+		TEST_FOR("Negatives: no 'D's", a->entityCount(TestNegativesB::NamedChildC + 1) == 0);
+		a->entity(TestNegativesB::NamedChildC)->replace(new Label);
+		TEST_FOR("Negatives: bad replacement makes incomplete", !a->isComplete());
+		a->validifyChildren();
+		TEST_FOR("Negatives: validifyChildren() makes complete", a->isComplete());
+		a->validifyChildren();
+		TEST_FOR("Negatives: 2nd validifyChildren() and still complete", a->isComplete());
+		r->clearEntities();
+	}
+	TEST("Negatives save/load")
+	{
+		RootEntity* r = new RootEntity;
+		SafePointer<TestNegativesB> a = new TestNegativesB;
+		a->move(r->back());
+		a->prepareChildren();
+
+		QDomDocument doc;
+		QDomElement prj = doc.createElement("project");
+		doc.appendChild(prj);
+		QDomElement ele = doc.createElement("entity");
+		ele.setAttribute("kind", a->kind().name());
+		prj.appendChild(ele);
+		
+		r->archivePtrs();
+		a->exportDom(ele);
+		a->killAndDelete();
+		r->importDom(doc.documentElement());
+		r->restorePtrs();
+		a = r->entityAs<TestNegativesB>(0);
+		
 		FAILED_IF(a->entityCount() != 0);
 		FAILED_IF(a->entityCount(TestNegativesB::NamedChildA) != 0);
 		FAILED_IF(a->entityCount(TestNegativesB::NamedChildB) != 1);
 		FAILED_IF(a->entityCount(TestNegativesB::NamedChildC) != 2);
-		FAILED_IF(a->entityCount(TestNegativesB::NamedChildC - 1) != 0);
-		a->entity(TestNegativesB::NamedChildC)->replace(new Label);
-		FAILED_IF(a->isComplete());
-		a->validifyChildren();
-		FAILED_IF(!a->isComplete());
-		a->validifyChildren();
-		FAILED_IF(!a->isComplete());
+		FAILED_IF(a->entityCount(TestNegativesB::NamedChildC + 1) != 0);
 		r->clearEntities();
 	}
 	TEST("Type construction adoption")
@@ -631,7 +662,8 @@ int test()
 		X->back().place(Xv);
 		Enumeration* Y = new Enumeration;
 		Y->prepareChildren();
-		Y->entitiesOf<TextLabel>()[0]->setText("Y");
+		Y->setNamed();
+		Y->entityAs<TextLabel>(Identifiable::Identity)->setText("Y");
 		r->back().place(Y);
 		EnumValue* Yv = new EnumValue;
 		Yv->prepareChildren();
@@ -687,6 +719,15 @@ int test()
 		CAST_TEST(vr, vr, Logical);
 #undef CAST_TEST
 	}
+	TEST("Class construction testing.")
+	{
+		RootEntity* r = new RootEntity;
+		Class* X = new Class;
+		X->prepareChildren();
+		r->back().place(X);
+		X->debugTree();
+		delete r;
+	}
 	{
 #define CAST_TEST(F, T, R) TEST("Reference casting... " #F "->" #T) TEST_THIS_CAST(F, T, R)
 		RootEntity* r = new RootEntity;
@@ -717,9 +758,9 @@ int test()
 		Class* B = new Class;
 		Class* D = new Class;
 		B->prepareChildren();
-		B->entitiesOf<TextLabel>()[0]->replace(new TextLabel("B"));
+		B->entityAs<TextLabel>(Identifiable::Identity)->setText("B");
 		D->prepareChildren();
-		D->entitiesOf<TextLabel>()[0]->replace(new TextLabel("D"));
+		D->entityAs<TextLabel>(Identifiable::Identity)->setText("D");
 		r->back().place(B);
 		r->back().place(D);
 		Base* b = new Base;

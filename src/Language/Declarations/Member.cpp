@@ -32,7 +32,7 @@ MARTTA_OBJECT_CPP(Member);
 
 Access Member::access() const
 {
-	return isComplete() ? entityAs<AccessLabel>(0)->access() : NoAccess;
+	return isComplete() ? entityAs<AccessLabel>(Accessibility)->access() : NoAccess;
 }
 
 Class* Member::classType() const
@@ -42,17 +42,17 @@ Class* Member::classType() const
 
 Kinds Member::allowedKinds(int _i) const
 {
-	if (_i == 0)
+	if (_i == Accessibility)
 		return Kind::of<AccessLabel>();
 	else
-		return memberAllowedKinds(_i - OffsetForDerivatives);
+		return Super::allowedKinds(_i);
 }
 
 QString Member::interfaceCode() const
 {
 	if (!isComplete())
 		return QString();
-	return entityAs<Label>(0)->code() + ": " + memberInterfaceCode();
+	return entityAs<Label>(Accessibility)->code() + ": " + memberInterfaceCode();
 }
 
 QString Member::defineLayout(ViewKeys& _k) const
@@ -65,7 +65,7 @@ void Member::decorate(DecorationContext const& _p) const
 	if (isComplete())
 	{
 		_p->setPen(Qt::NoPen);
-		QColor c = entityAs<AccessLabel>(0)->idColour();
+		QColor c = entityAs<AccessLabel>(Accessibility)->idColour();
 		c.setAlpha(64);
 		_p->setBrush(c);
 		_p->drawRect(QRectF(16.f, 0.f, 4.f, _p.cap(0).height()));
@@ -76,7 +76,8 @@ void Member::decorate(DecorationContext const& _p) const
 
 bool Member::keyPressed(EntityKeyEvent const* _e)
 {
-	if (entity(0)->keyPressed(_e))
+	// TODO: exchange for usurps
+	if (entity(Accessibility)->keyPressed(_e))
 		return true;
 	return Super::keyPressed(_e);
 }

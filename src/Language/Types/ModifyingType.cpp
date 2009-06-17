@@ -56,8 +56,8 @@ void ModifyingType::unknit()
 Kinds ModifyingType::allowedKinds(int _index) const
 {
 	if (_index == 0)
-		return Kinds() << Kind::of<TypeEntity>();
-	return Kinds();
+		return Kind::of<TypeEntity>();
+	return Super::allowedKinds(_index);
 }
 
 }

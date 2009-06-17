@@ -128,7 +128,7 @@ Kinds ListType::allowedKinds(int _i) const
 		return Kind::of<TypeEntity>();
 	if (_i == 1)
 		return Kind::of<Typed>();
-	return Kinds();
+	return Super::allowedKinds(_i);
 }
 
 Types ListType::allowedTypes(int _i) const

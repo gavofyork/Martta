@@ -87,7 +87,7 @@ Kinds Const::allowedKinds(int _i) const
 {
 	if (_i == 0)
 		return Kind::of<TypeEntity>();
-	return Kinds();
+	return Super::allowedKinds(_i);
 }
 
 }

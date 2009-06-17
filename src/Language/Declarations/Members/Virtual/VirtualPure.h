@@ -36,8 +36,8 @@ public:
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
 	
 protected:
-	virtual int							memberMinimumRequired() const { return 3; }
-	virtual Kinds						memberAllowedKinds(int _i) const;
+	virtual int							minimumRequired() const { return 3; }
+	virtual Kinds						allowedKinds(int _i) const;
 	virtual QString						memberInterfaceCode() const;
 	virtual QString						memberImplementationCode() const { return QString::null; }
 	virtual Entity*						isExpander() const { return 0; }

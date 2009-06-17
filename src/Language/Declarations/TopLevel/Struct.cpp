@@ -28,9 +28,9 @@ MARTTA_OBJECT_CPP(Struct);
 	
 Kinds Struct::allowedKinds(int _i) const
 {
-	if (_i == 0)
-		return Kind::of<TextLabel>();
-	return Kind::of<DeclarationEntity>();
+	if (_i >= 0)
+		return Kind::of<DeclarationEntity>();
+	return Super::allowedKinds(_i);
 }
 	
 }

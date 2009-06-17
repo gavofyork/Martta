@@ -74,7 +74,7 @@ Kinds Invocation::allowedKinds(int _index) const
 		&& typeOf(0)->asType<FunctionType>()->hasArgumentAt(_index - 1))
 		return Kind::of<Typed>();
 	else
-		return Kinds();
+		return Super::allowedKinds(_index);
 }
 
 Types Invocation::allowedTypes(int _index) const

@@ -52,12 +52,15 @@ QString Constructor::codeName() const
 	return classType()->codeName();
 }
 
-Kinds Constructor::memberAllowedKinds(int _i) const
+Kinds Constructor::allowedKinds(int _i) const
 {
-	if (_i == 0)
+	if (_i == Identity)
+		return Kinds();
+	else if (_i == 0)
 		return Kind::of<Compound>();
-	else
+	else if (_i > 0)
 		return Kind::of<Argument>();
+	return Super::allowedKinds(_i);
 }
 
 bool Constructor::isInValidState() const

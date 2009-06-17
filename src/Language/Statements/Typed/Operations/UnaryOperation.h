@@ -31,7 +31,7 @@ class UnaryOperation: public Operation
 
 public:
 	virtual int							minimumRequired() const { return 1; }
-	virtual Kinds						allowedKinds(int _index) const { if (_index == 0) return Kind::of<Typed>(); else return Kinds(); }
+	virtual Kinds						allowedKinds(int _index) const { if (_index == 0) return Kind::of<Typed>(); else return Super::allowedKinds(_index); }
 	virtual bool						isPostfix() const { return id().isPostfix(); }
 
 protected:

@@ -39,7 +39,7 @@ public:
 
 	virtual QList<ValueDefiner*>		valuesInLocalScope() const;
 
-	QList<Statement*>					statements() const { return entitiesOf<Statement>(); }
+	QList<Statement*>					statements() const { return allEntitiesOf<Statement>(); }
 	bool			 					isStatement(int _i) const { return entityIs<Statement>(_i); }
 	Statement*		 					asStatement(int _i) const { return entityAs<Statement>(_i); }
 

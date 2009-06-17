@@ -26,27 +26,28 @@ namespace Martta
 {
 
 MARTTA_INTERFACE_CPP(VariableNamer);
+MARTTA_NAMED_CPP(VariableNamer, OurType);
 
 TypeEntity* VariableNamer::actualType() const
 {
-	if (self()->entityCountOf<TypeEntity>() == 1)
-		return self()->entitiesOf<TypeEntity>()[0];
+	if (TypeEntity* t = self()->tryEntityAs<TypeEntity>(OurType))
+		return t;
 	return TypeEntity::null;
 }
 
 QString VariableNamer::basicCode() const
 {
-	if (self()->entityCountOf<IdLabel>() == 1)
-		return actualType()->code(" " + self()->entitiesOf<IdLabel>()[0]->code());
+	if (IdLabel* i = self()->tryEntityAs<IdLabel>(Identity))
+		return actualType()->code(" " + i->code());
 	else
 		return QString::null;
 }
 
 bool VariableNamer::keyPressed(EntityKeyEvent const* _e)
 {
-	if (_e->text() == " " && _e->focalIndex() == 1)
+	if (_e->text() == " " && _e->focalIndex() == OurType)
 	{
-		self()->entity(0)->navigateOnto(_e->codeScene());
+		self()->entity(Identity)->navigateOnto(_e->codeScene());
 	}
 	else
 		return false;
@@ -55,9 +56,9 @@ bool VariableNamer::keyPressed(EntityKeyEvent const* _e)
 
 Type VariableNamer::type() const
 {
-	if (self()->entityCountOf<TypeEntity>() == 1)
+	if (!actualType()->isNull())
 	{
-		Type ret(*self()->entitiesOf<TypeEntity>()[0]);
+		Type ret(*actualType());
 		if (!ret->isType<Reference>())
 			ret.topWith(Reference());
 		return ret;
@@ -68,7 +69,7 @@ Type VariableNamer::type() const
 
 QString VariableNamer::defineLayout(ViewKeys&) const
 {
-	return "1;s" + actualType()->idColour() + ";Mi;>name;fb0;!0";
+	return ("%1;s" + actualType()->idColour() + ";Mi;>name;fb0;!%2").arg(OurType).arg(Identity);
 }
 
 }

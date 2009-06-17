@@ -31,11 +31,9 @@ MARTTA_OBJECT_CPP(Variable);
 
 Kinds Variable::allowedKinds(int _i) const
 {
-	if (_i == 0)
-		return Kind::of<TextLabel>();
-	if (_i == 1)
+	if (_i == OurType)
 		return Kind::of<TypeEntity>();
-	return Kinds();
+	return Super::allowedKinds(_i);
 }
 
 void Variable::importDom(QDomElement const& _element)

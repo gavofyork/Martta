@@ -74,7 +74,7 @@ Kinds Base::allowedKinds(int _i) const
 		return Kind::of<AccessLabel>();
 	if (_i == 1)
 		return Kind::of<ExplicitType>();
-	return Kinds();
+	return Super::allowedKinds(_i);
 }
 
 QString Base::defineLayout(ViewKeys&) const

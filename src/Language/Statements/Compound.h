@@ -34,7 +34,7 @@ public:
 
 protected:
 	virtual int							minimumRequired() const { return 1; }
-	virtual Kinds						allowedKinds(int) const { return Kind::of<Statement>(); }
+	virtual Kinds						allowedKinds(int _i) const { return _i >= 0 ? Kind::of<Statement>() : Super::allowedKinds(_i); }
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
 	virtual QString						defineLayout(ViewKeys&) const;
 };

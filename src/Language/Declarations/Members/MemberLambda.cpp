@@ -37,7 +37,7 @@ bool MemberLambda::isConst() const
 {
 	if (!isComplete())
 		return false;
-	QList<ConstLabel*> l = entitiesOf<ConstLabel>();
+	QList<ConstLabel*> l = allEntitiesOf<ConstLabel>();
 	return l.size() ? l[0]->isConst() : false;
 }
 
@@ -96,7 +96,7 @@ bool MemberLambda::keyPressed(EntityKeyEvent const* _e)
 	M_ASSERT(isComplete());
 	if (LambdaNamer::keyPressed(_e))
 		return true;
-	else if ((_e->isFocused() || !entityIs<Compound>(_e->focalIndex())) && entityCountOf<ConstLabel>() && entitiesOf<ConstLabel>()[0]->asKind<Label>()->keyPressed(_e))
+	else if ((_e->isFocused() || !entityIs<Compound>(_e->focalIndex())) && allEntityCountOf<ConstLabel>() && allEntitiesOf<ConstLabel>()[0]->asKind<Label>()->keyPressed(_e))
 		return true;
 	return Super::keyPressed(_e);
 }

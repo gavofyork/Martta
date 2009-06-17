@@ -36,8 +36,6 @@ public:
 
 protected:
 	// From Member
-	virtual int							memberMinimumRequired() const;
-	virtual Kinds						memberAllowedKinds(int _i) const;
 	virtual QString						memberDefineLayout(const ViewKeys& _k) const { return EnumerationNamer::defineLayout(_k); }
 	virtual QString						memberInterfaceCode() const { return EnumerationNamer::interfaceCode(); }
 	virtual QString						memberImplementationCode() const { return QString::null; }
@@ -52,16 +50,15 @@ protected:
 	virtual QList<ValueDefiner*>		valuesAdded() const { return EnumerationNamer::valuesAdded(); }
 
 	// From Entity
+	virtual int							minimumRequired() const { return 1; }
+	virtual int							minimumRequiredNamed(int _i) const { if (_i == Identity) return 0; else return Super::minimumRequiredNamed(_i); }
+	virtual Kinds						allowedKinds(int _i) const;
 	virtual int							familyDependencies() { return DependsOnChildren; }
 	virtual void						onDependencyAdded(Entity* _e) { EnumerationNamer::onDependencyAdded(_e); }
 	virtual void						onDependencyChanged(Entity* _e) { EnumerationNamer::onDependencyChanged(_e); }
 	virtual void						onDependencyRemoved(Entity* _e, int) { EnumerationNamer::onDependencyRemoved(_e); }
 	virtual bool						keyPressed(EntityKeyEvent const* _e) { M_ASSERT(isComplete()); return EnumerationNamer::keyPressed(_e) ? true : Super::keyPressed(_e); }
 	virtual Entity*						isExpander() const { return EnumerationNamer::isExpander(); }
-	
-	// From EnumerationNamer
-	virtual void						setNamed();
-	virtual void						setUnnamed();
 };
 
 }

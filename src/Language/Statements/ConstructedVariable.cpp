@@ -30,18 +30,18 @@ MARTTA_OBJECT_CPP(ConstructedVariable);
 
 Kinds ConstructedVariable::allowedKinds(int _index) const
 {
-	switch (_index)
-	{
-		case 0: return Kind::of<TextLabel>();
-		case 1: return Kind::of<TypeEntity>();
-		case 2: return Kind::of<Construction>();
-		default: return Kinds();
-	}
+	if (_index == OurType)
+		return Kind::of<TypeEntity>();
+	else if (_index == OurConstruction)
+		return Kind::of<Construction>();
+	else if (_index == Identity)
+		return Kind::of<TextLabel>();
+	return Super::allowedKinds(_index);
 }
 
 QString ConstructedVariable::code() const
 {
-	return basicCode() + entityAs<Construction>(2)->callList();
+	return basicCode() + entityAs<Construction>(OurConstruction)->callList();
 }
 
 bool ConstructedVariable::keyPressed(EntityKeyEvent const* _e)
@@ -49,7 +49,7 @@ bool ConstructedVariable::keyPressed(EntityKeyEvent const* _e)
 	if (VariableNamer::keyPressed(_e))
 		return true;
 	else if (_e->text() == "(")
-		entity(2)->setCurrent();
+		entity(OurConstruction)->setCurrent();
 	else
 		return Super::keyPressed(_e);
 	return true;
