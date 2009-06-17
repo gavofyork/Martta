@@ -4,7 +4,7 @@ virtual int functionName(...) { return 0; } collate +
 [Derived]
 virtual int functionName(...)
 { ... return Supers::functionName(...); }
-
+TODO inherited methods don't work.
 
 TODO optimise Class.
 TODO special EntryMethod

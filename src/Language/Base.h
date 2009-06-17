@@ -30,6 +30,7 @@ class Class;
 class Base: public Entity
 {
 	MARTTA_OBJECT(Entity)
+	enum { Accessibility = FirstNamed, Superclass, EndOfNamed };
 	
 public:
 	Access								access() const;
@@ -41,7 +42,7 @@ public:
 protected:
 	virtual QString						defineLayout(ViewKeys&) const;
 	virtual Kinds						allowedKinds(int _i) const;
-	virtual int							minimumRequired() const { return 2; }
+	virtual int							minimumRequiredNamed(int _i) const { return _i == Accessibility || _i == Superclass ? 1 : Super::minimumRequiredNamed(_i); }
 	virtual bool						isChildInValidState(int _i) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
 };

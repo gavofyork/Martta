@@ -30,9 +30,9 @@ MARTTA_OBJECT_CPP(Base);
 
 Class* Base::classType() const
 {
-	if (!isComplete() || !entityAs<ExplicitType>(1)->subject()->isKind<Class>())
+	if (!isComplete() || !entityAs<ExplicitType>(Superclass)->subject()->isKind<Class>())
 		return 0;
-	return entityAs<ExplicitType>(1)->subject()->asKind<Class>();
+	return entityAs<ExplicitType>(Superclass)->subject()->asKind<Class>();
 }
 	
 bool Base::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
@@ -51,35 +51,35 @@ Access Base::access() const
 {
 	if (!isComplete())
 		return NoAccess;
-	return entityAs<AccessLabel>(0)->access();
+	return entityAs<AccessLabel>(Accessibility)->access();
 }
 
 QString Base::code() const
 {
 	if (!isComplete())
 		return QString();
-	return entityAs<Label>(0)->code() + " " + entityAs<TypeEntity>(1)->code();
+	return entityAs<Label>(Accessibility)->code() + " " + entityAs<TypeEntity>(Superclass)->code();
 }
 
 bool Base::keyPressed(EntityKeyEvent const* _e)
 {
-	if (entity(0) && entity(0)->keyPressed(_e))
+	if (entity(Accessibility) && entity(Accessibility)->keyPressed(_e))		//QUICK do with usurp
 		return true;
 	return Super::keyPressed(_e);
 }
 
 Kinds Base::allowedKinds(int _i) const
 {
-	if (_i == 0)
+	if (_i == Accessibility)
 		return Kind::of<AccessLabel>();
-	if (_i == 1)
+	if (_i == Superclass)
 		return Kind::of<ExplicitType>();
 	return Super::allowedKinds(_i);
 }
 
 QString Base::defineLayout(ViewKeys&) const
 {
-	return QString("^;ycode;'inherits';Mi;1;Mi;'as';Mi;0");
+	return QString("^;ycode;'inherits';Mi;%1;Mi;'as';Mi;%2").arg(Superclass).arg(Accessibility);
 }
 
 }

@@ -182,9 +182,9 @@ QString Class::interfaceCode() const
 	// TODO: ordering for enums?
 	QString ret;
 	ret += "class " + codeName() + "\n";
-	if (allEntitiesOf<Base>().size())
+	if (entitiesOf<Base>().size())
 		ret += ":";
-	foreach (Base* f, allEntitiesOf<Base>())
+	foreach (Base* f, entitiesOf<Base>())
 		ret += f->code() + ", ";
 	if (ret.endsWith(", ")) ret.chop(2);
 	ret += "{\n";
@@ -198,7 +198,7 @@ QString Class::interfaceCode() const
 QList<DeclarationEntity*> Class::utilised() const
 {
 	QList<DeclarationEntity*> ret;
-	foreach (Base* i, allEntitiesOf<Base>())
+	foreach (Base* i, entitiesOf<Base>())
 		ret << i->classType();
 	ret += Super::utilised();
 	return ret;
@@ -210,7 +210,7 @@ QList<DeclarationEntity*> Class::members(bool _isConst, Access _access) const
 	foreach (MemberValue* i, allEntitiesOf<MemberValue>())
 		if ((i->isConst() || !_isConst) && i->access() <= _access)
 			ret += i;
-	foreach (Base* i, allEntitiesOf<Base>())
+	foreach (Base* i, entitiesOf<Base>())
 		if (!i->classType())
 			continue;
 		else if (_access == Private || _access == Protected && i->access() <= Protected)
@@ -257,7 +257,7 @@ QString Class::defineLayout(ViewKeys& _keys) const
 	
 	if (_keys["expanded"].toBool())
 	{
-		foreach (Base* i, allEntitiesOf<Base>())
+		foreach (Base* i, entitiesOf<Base>())
 			ret += QString(";n;i;%1").arg(i->contextIndex());
 		
 		ret += ";n;'{'";
@@ -294,10 +294,10 @@ QString Class::defineLayout(ViewKeys& _keys) const
 	}
 	else
 	{
-		if (allEntitiesOf<Base>().count())
+		if (entitiesOf<Base>().count())
 		{
 			ret += ";ynormal;' ['";
-			foreach (Base* i, allEntitiesOf<Base>())
+			foreach (Base* i, entitiesOf<Base>())
 				ret += QString(";%1").arg(i->contextIndex());
 			ret += ";']'";
 		}

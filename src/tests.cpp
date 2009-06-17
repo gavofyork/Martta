@@ -764,8 +764,8 @@ int test()
 		r->back().place(B);
 		r->back().place(D);
 		Base* b = new Base;
-		b->back().place(new AccessLabel(Public));
-		b->back().place(new ExplicitType(B));
+		b->middle(Base::Accessibility).place(new AccessLabel(Public));
+		b->middle(Base::Superclass).place(new ExplicitType(B));
 		D->back().place(b);
 		{
 		// void (B:: b)()
