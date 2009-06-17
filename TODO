@@ -1,7 +1,3 @@
-BUG Arguments don't work
-BUG names not clickable
-
-
 TODO support:
 [Base]
 virtual int functionName(...) { return 0; } collate +

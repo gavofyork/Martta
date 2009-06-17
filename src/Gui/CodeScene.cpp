@@ -101,7 +101,7 @@ void CodeScene::leaving(Entity* _e, InsertionPoint const&)
 			e = p;
 	}
 	
-	foreach (Entity* i, _e->entities())
+	foreach (Entity* i, _e->allEntities())
 		leaving(i);
 	
 	m_pictures.remove(_e);
@@ -789,7 +789,7 @@ Entity* CodeScene::at(QPointF const& _p) const
 	Entity* r = m_subject;
 	QPointF pos = _p - m_borderOffset;
 NEXT:
-	foreach (Entity* i, e->entities())
+	foreach (Entity* i, e->allEntities())
 	{
 		if (m_bounds.contains(i) && m_bounds[i].contains(pos))
 		{
@@ -917,11 +917,11 @@ Entity* CodeScene::traverse(Entity* _e, bool _upwards, float _x)
 	float mb = -1.f;
 	for (; e && isInScene(e); ci = e->contextIndex(), e = e->context())
 	{
-		for (int i = 0; i < e->entities().size(); ++i)
+		foreach (Entity* i, e->allEntities())
 		{
-			if (i != ci && isInScene(e->entity(i)))
+			if (i->contextIndex() != ci && isInScene(i))
 			{
-				QRectF b = bounds(e->entity(i));
+				QRectF b = bounds(i);
 				if (_upwards ? b.bottom() <= ourBound : (b.top() >= ourBound))
 					if (mb == -1.f || (_upwards ? b.bottom() > mb : (b.top() < mb)))
 						mb = _upwards ? b.bottom() : b.top();
@@ -939,17 +939,17 @@ Entity* CodeScene::traverse(Entity* _e, bool _upwards, float _x)
 	// Step 2: Search all siblings to determine closest to us in Y axis aside from our direct ancestor.
 	float d = -1.f;
 	Entity* x;
-	for (int i = 0; i < e->entities().size(); ++i)
-	if (i != ci && isInScene(e->entity(i)))
+	foreach (Entity* i, e->allEntities())
+	if (i->contextIndex() != ci && isInScene(i))
 	{
-		QRectF b = bounds(e->entity(i));
+		QRectF b = bounds(i);
 		if ((_upwards ? b.bottom() : b.top()) == mb)
 		{
 			float di = qMin(fabs(b.left() - _x), fabs(b.right() - _x));
 			if (d == -1.f || di < d)
 			{
 				d = di;
-				x = e->entity(i);
+				x = i;
 			}
 		}
 	}
@@ -957,16 +957,16 @@ Entity* CodeScene::traverse(Entity* _e, bool _upwards, float _x)
 
 	// Step 3: Search all (great-)children to determine closest to us in the X axis.
 	e = x;
-	while (isInScene(e) && e->entities().size())
+	while (isInScene(e) && e->allEntities().size())
 	{
 		QRectF cb = bounds(e);
 		float mb = -1.f;
 		float maxtop = cb.top();
 		float minbot = cb.bottom();
-		for (int i = 0; i < e->entities().size(); i++)
-			if (isInScene(e->entity(i)))
+		foreach (Entity* i, e->allEntities())
+			if (isInScene(i))
 			{
-				QRectF b = bounds(e->entity(i));
+				QRectF b = bounds(i);
 				maxtop = qMax<float>(maxtop, b.top());
 				minbot = qMin<float>(minbot, b.bottom());
 				if (mb == -1.f || _upwards ? b.bottom() > mb : (b.top() < mb))
@@ -982,17 +982,17 @@ Entity* CodeScene::traverse(Entity* _e, bool _upwards, float _x)
 			if (d == -1.f || di < d)
 				d = di;
 		}
-		for (int i = 0; i < e->entities().size(); i++)
-			if (isInScene(e->entity(i)))
+		foreach (Entity* i, e->allEntities())
+			if (isInScene(i))
 			{
-				QRectF b = bounds(e->entity(i));
+				QRectF b = bounds(i);
 				if ((_upwards ? b.bottom() : b.top()) == mb)
 				{
 					float di = (fabs(b.left() - _x) + fabs(b.right() - _x));
 					if (d == -1.f || di < d)
 					{
 						d = di;
-						x = e->entity(i);
+						x = i;
 					}
 				}
 			}
@@ -1443,7 +1443,7 @@ void CodeScene::doRefreshLayout()
 			if (layoutList(c).size())
 			{
 				// Remove all of child's entities.
-				m_visible.subtract(QSet<Entity*>::fromList(c->entities()));
+				m_visible.subtract(QSet<Entity*>::fromList(c->allEntities()));
 				list.insert(i + 1, e.startsWith("!") ? "[" : "[[");
 				list.insert(i + 2, "include" + s);
 				list.insert(i + 3, e.startsWith("!") ? "]" : "]]");
