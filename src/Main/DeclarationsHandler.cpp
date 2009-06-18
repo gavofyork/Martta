@@ -288,7 +288,6 @@ void FunctionResolver::addArgument(QXmlAttributes const& _a)
 	Argument* v = new Argument;
 	m_subject->back().place(v);
 	v->middle(Identifiable::Identity).place(new TextLabel(_a.value("name")));
-	v->back().place(new TypeEntity);
 }
 
 void FunctionResolver::resolve(DeclarationsHandler* _h)
@@ -297,7 +296,7 @@ void FunctionResolver::resolve(DeclarationsHandler* _h)
 	m_subject->middle(1).place(_h->resolveType(m_returnsId));
 
 	for (int i = 0; i < m_argIds.size(); i++)
-		m_subject->argument(i)->middle(0).place(_h->resolveType(m_argIds[i]));
+		m_subject->argument(i)->middle(VariableNamer::OurType).place(_h->resolveType(m_argIds[i]));
 	m_subject->m_location.m_file = _h->commitToFile(m_fileId, m_subject);
 }
 
@@ -315,7 +314,7 @@ VariableResolver::VariableResolver(Variable* _s, QXmlAttributes const& _a):
 
 void VariableResolver::resolve(DeclarationsHandler* _h)
 {
-	m_subject->middle(0).place(_h->resolveType(m_typeId));
+	m_subject->middle(VariableNamer::OurType).place(_h->resolveType(m_typeId));
 	if (!m_subject->context()->context())
 		m_subject->m_location.m_file = _h->commitToFile(m_fileId, m_subject);
 }

@@ -1,5 +1,3 @@
-BUG first parameter of function calls don't work.
-
 TODO:
 entity			child
 entityAs		childAs
@@ -11,8 +9,7 @@ allEntitiesOf		childrenOf
 entities		cardinalChildren
 entityCount		cardinalChildrenCount
 entitiesOf		cardinalChildrenOf
-minimumRequired		minRequired
-minimumRequiredNamed	isRequired(int)
+minimumRequiredNamed	minRequired(int) - Docs note arg can = Cardinals.
 
 TODO support:
 [Base]

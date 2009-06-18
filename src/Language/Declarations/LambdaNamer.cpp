@@ -152,13 +152,13 @@ Compound* LambdaNamer::body() const
 
 int LambdaNamer::argumentCount() const
 {
-	return self()->allEntitiesOf<Argument>().size();
+	return self()->entitiesOf<Argument>().size();
 }
 
 Argument* LambdaNamer::argument(int _index) const
 {
-	if (_index < self()->allEntitiesOf<Argument>().size())
-		return self()->allEntitiesOf<Argument>()[_index];
+	if (_index < self()->entitiesOf<Argument>().size())
+		return self()->entitiesOf<Argument>()[_index];
 	return 0;
 }
 
