@@ -36,7 +36,7 @@ protected:
 	virtual QString						code() const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
 	virtual QString						defineLayout(ViewKeys&) const;
-	virtual int							minimumRequired() const { return 2; }
+	virtual int							minRequired(int _i) const { return _i == Cardinals ? 2 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _index) const;
 	virtual Types						allowedTypes(int _index) const;
 };

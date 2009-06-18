@@ -67,7 +67,7 @@ void Identifiable::onLeaveScene(RootEntity* _new, RootEntity* _old)
 Identifiable* Identifiable::lookupChild(QString const& _key) const
 {
 //	qDebug() << "Id::lookupChild: " << _key;
-	foreach (Identifiable* e, self()->childrenOf<Identifiable>())
+	foreach (Identifiable* e, self()->cardinalChildrenOf<Identifiable>())
 	{	e->self()->debugTree();
 		qDebug() << e->identity();
 		if (e->identity() == _key)

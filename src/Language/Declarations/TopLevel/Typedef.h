@@ -34,7 +34,7 @@ class Typedef: public TopLevelType
 	friend class TypedefResolver;
 
 public:
-	virtual int							minimumRequired() const { return 2; }
+	virtual int							minRequired(int _i) const { return _i == Cardinals ? 2 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int) const;
 };
 

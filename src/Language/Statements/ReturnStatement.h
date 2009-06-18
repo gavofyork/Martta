@@ -31,7 +31,7 @@ class ReturnStatement: public Untyped
 	MARTTA_OBJECT(Untyped)
 
 public:
-	virtual int							minimumRequired() const;
+	virtual int							minRequired(int _i) const;
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual Types						allowedTypes(int _index) const;
 	virtual QString						code() const;

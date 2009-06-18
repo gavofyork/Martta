@@ -51,7 +51,7 @@ public:
 	
 private:
 	virtual Types						assignableTypes() const;
-	virtual int							minimumRequired() const { return m_wild ? 0 : 1; }
+	virtual int							minRequired(int _i) const { return _i == Cardinals ? m_wild ? 0 : 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int) const { return m_wild ? Kinds() : Kinds(Kind::of<TypeEntity>()); }
 	virtual QString						code(QString const& _middle) const;
 	virtual TypeEntity*					newClone() const { return new FunctionType(m_ellipsis, m_wild); }

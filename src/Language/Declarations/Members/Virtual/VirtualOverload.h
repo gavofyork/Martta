@@ -39,8 +39,7 @@ public:
 	QList<VirtualMethod*>				possibilities() const;
 	
 protected:
-	virtual int							minimumRequired() const { return 1; }
-	virtual int							minimumRequiredNamed(int _i) const { return _i == Identity ? 0 : Super::minimumRequiredNamed(_i); }
+	virtual int							minRequired(int _i) const { return _i == Cardinals ? 1 : _i == Identity ? 0 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual QString						memberLambdaDefineLayout(ViewKeys&) const;
 	virtual QString						name() const { return m_base.isUsable() ? m_base->name() : QString(); }

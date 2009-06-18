@@ -44,7 +44,7 @@ protected:
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual void						onDependencyChanged(Entity* _e);
 	virtual int							familyDependencies() const { return DependsOnChildren; }
-	virtual int							minimumRequiredNamed(int _i) const { return _i == Accessibility || _i == Superclass ? 1 : Super::minimumRequiredNamed(_i); }
+	virtual int							minRequired(int _i) const { return _i == Accessibility || _i == Superclass ? 1 : Super::minRequired(_i); }
 	virtual bool						isChildInValidState(int _i) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
 };

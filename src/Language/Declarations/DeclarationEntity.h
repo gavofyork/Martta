@@ -60,7 +60,7 @@ public:
 	virtual void						importDom(QDomElement const& _element);
 	
 protected:
-	virtual int							minimumRequiredNamed(int _i) const { return _i == Identity ? 1 : 0; }
+	virtual int							minRequired(int _i) const { return _i == Identity ? 1 : 0; }
 	virtual Kinds						allowedKinds(int _i) const;
 
 private:

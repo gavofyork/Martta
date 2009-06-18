@@ -33,9 +33,12 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(Construction);	
 	
-int Construction::minimumRequired() const
+int Construction::minRequired(int _i) const
 {
-	return m_subject->cardinalChildCount() - 2;
+	if (_i == Cardinals)
+		return m_subject->cardinalChildCount() - 2;
+	else
+		return Super::minRequired(_i);
 }
 
 Kinds Construction::allowedKinds(int _index) const

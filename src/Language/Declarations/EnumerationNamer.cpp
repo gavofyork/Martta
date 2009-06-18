@@ -48,7 +48,7 @@ void EnumerationNamer::updateStem()
 {
 	QString oldStem = m_stem;
 	m_stem = QString();
-	foreach (EnumValue* i, self()->childrenOf<EnumValue>())
+	foreach (EnumValue* i, self()->cardinalChildrenOf<EnumValue>())
 		if (m_stem.isEmpty())
 			m_stem = i->codeName();
 		else if (!i->codeName().isEmpty())

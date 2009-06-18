@@ -50,8 +50,7 @@ protected:
 	virtual QList<ValueDefiner*>		valuesAdded() const { return EnumerationNamer::valuesAdded(); }
 
 	// From Entity
-	virtual int							minimumRequired() const { return 1; }
-	virtual int							minimumRequiredNamed(int _i) const { if (_i == Identity) return 0; else return Super::minimumRequiredNamed(_i); }
+	virtual int							minRequired(int _i) const { return _i == Cardinals ? 1 : _i == Identity ? 0 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual int							familyDependencies() { return DependsOnChildren; }
 	virtual void						onDependencyAdded(Entity* _e) { EnumerationNamer::onDependencyAdded(_e); }

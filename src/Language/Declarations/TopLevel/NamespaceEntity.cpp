@@ -58,7 +58,7 @@ QString NamespaceEntity::interfaceCode() const
 
 	QList<DeclarationEntity*> q;
 	QMultiMap<DeclarationEntity*, DeclarationEntity*> deps;
-	foreach (DeclarationEntity* i, childrenOf<DeclarationEntity>())
+	foreach (DeclarationEntity* i, cardinalChildrenOf<DeclarationEntity>())
 	{
 		foreach (DeclarationEntity* j, i->utilisedSiblings())
 			deps.insert(i, j);
@@ -81,7 +81,7 @@ QString NamespaceEntity::implementationCode() const
 {
 	QString ret;
 	QList<DeclarationEntity*> ordered;
-	foreach (DeclarationEntity* i, childrenOf<DeclarationEntity>())
+	foreach (DeclarationEntity* i, cardinalChildrenOf<DeclarationEntity>())
 		ret += i->implementationCode() + "\n";
 	if (ret.endsWith("\n\n")) ret.chop(1);
 	return ret;

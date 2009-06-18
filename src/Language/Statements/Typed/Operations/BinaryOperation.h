@@ -30,7 +30,7 @@ class BinaryOperation: public Operation
 	MARTTA_PLACEHOLDER(Operation)
 
 public:
-	virtual int							minimumRequired() const { return 2; }
+	virtual int							minRequired(int _i) const { return _i == Cardinals ? 2 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _index) const { if (_index < 2) return Kind::of<Typed>(); else return Super::allowedKinds(_index); }
 
 protected:

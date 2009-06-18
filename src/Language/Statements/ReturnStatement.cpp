@@ -28,7 +28,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(ReturnStatement);	
 	
-int ReturnStatement::minimumRequired() const
+int ReturnStatement::minRequired(int _i) const
 {
 	if (!hasAncestor<LambdaNamer>())
 	{
@@ -36,10 +36,13 @@ int ReturnStatement::minimumRequired() const
 		return 0;
 	}
 
-	if (ancestor<LambdaNamer>()->returns().isNull() || ancestor<LambdaNamer>()->returns() == Type(Void))
-		return 0;
+	if (_i == Cardinals)
+		if (!ancestor<LambdaNamer>()->returns().isNull() && ancestor<LambdaNamer>()->returns() != Type(Void))
+			return 1;
+		else
+			return 0;
 	else
-		return 1;
+		return Super::minRequired(_i);
 }
 
 void ReturnStatement::onDependencyChanged(Entity*)

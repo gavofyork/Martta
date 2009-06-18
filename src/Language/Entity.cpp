@@ -126,7 +126,7 @@ Identifiable* Entity::findEntity(QString const& _key) const
 }
 QList<DeclarationEntity*> Entity::spacesInScope() const
 {
-	return childrenOf<DeclarationEntity>();
+	return cardinalChildrenOf<DeclarationEntity>();
 }
 
 // Validity/status checking
@@ -140,27 +140,27 @@ bool Entity::isNecessary() const
 		return false;
 	if (m_index >= 0)
 	{
-		if (parent()->cardinalChildCount() <= parent()->minimumRequired())
+		if (parent()->cardinalChildCount() <= parent()->minRequired(Cardinals))
 			return true;
 		for (int i = index() + 1; i < parent()->cardinalChildCount(); i++)
 			if (!parent()->child(i)->isKind(parent()->allowedKinds(i - 1)))
 				return true;
 	}
 	else
-		if (parent()->childCountAt(m_index) - 1 < parent()->minimumRequiredNamed(m_index))
+		if (parent()->childCountAt(m_index) - 1 < parent()->minRequired(m_index))
 			return true;
 	return false;
 }
 bool Entity::isComplete() const
 {
 	QList<Entity*> e = cardinalChildren();
-	if (e.size() < minimumRequired())
+	if (e.size() < minRequired(Cardinals))
 		return false;
 	for (int i = INT_MIN; i < virtualEndOfNamed(); i++)
-		if (childCountAt(i) < minimumRequiredNamed(i))
+		if (childCountAt(i) < minRequired(i))
 			return false;
 	foreach (int i, AuxilliaryRegistrar::get()->names())
-		if (childCountAt(i) < minimumRequiredNamed(i))
+		if (childCountAt(i) < minRequired(i))
 			return false;
 	foreach (Entity* i, children())
 		if (!i->isAllowed())
@@ -840,7 +840,7 @@ bool Entity::validifyChild(int _i, int* _added)
 			j = m_namedChildren.erase(j);
 			ret = true;
 		}
-	while (childCountAt(_i) < minimumRequiredNamed(_i))
+	while (childCountAt(_i) < minRequired(_i))
 	{
 		middle(_i).spawnPreparedSilent()->contextAdded();
 		*_added = (*_added == INT_MAX - 1) ? _i : INT_MAX;
@@ -852,14 +852,14 @@ bool Entity::validifyChildren()
 {
 	bool ret = false;
 	int added = INT_MAX - 1;
-	for (int i = 0; i < qMax(minimumRequired(), m_cardinalChildren.size()); i++)
+	for (int i = 0; i < qMax(minRequired(Cardinals), m_cardinalChildren.size()); i++)
 	{
 		if (i >= m_cardinalChildren.size())
 		{
 			back().spawnPreparedSilent()->contextAdded();
 			added = (added == INT_MAX - 1) ? i : INT_MAX;
 		}
-		else if (!m_cardinalChildren[i]->isAllowed() && i < minimumRequired())
+		else if (!m_cardinalChildren[i]->isAllowed() && i < minRequired(Cardinals))
 			m_cardinalChildren[i]->deleteAndRefill();
 		else if (!m_cardinalChildren[i]->isAllowed())
 			m_cardinalChildren[i]->killAndDelete();
@@ -881,12 +881,12 @@ bool Entity::validifyChildren()
 Entity* Entity::prepareChildren()
 {
 	for (int i = INT_MIN; i < virtualEndOfNamed(); i++)
-		while (childCountAt(i) < minimumRequiredNamed(i))
+		while (childCountAt(i) < minRequired(i))
 			middle(i).spawnPreparedSilent()->contextAdded();
 	foreach (int i, AuxilliaryRegistrar::get()->names())
-		while (childCountAt(i) < minimumRequiredNamed(i))
+		while (childCountAt(i) < minRequired(i))
 			middle(i).spawnPreparedSilent()->contextAdded();
-	for (int i = m_cardinalChildren.size(); i < minimumRequired(); ++i)
+	for (int i = m_cardinalChildren.size(); i < minRequired(Cardinals); ++i)
 		back().spawnPreparedSilent()->contextAdded();
 	childrenInitialised();
 	return this;

@@ -213,7 +213,7 @@ QList<DeclarationEntity*> Class::utilised() const
 QList<DeclarationEntity*> Class::members(bool _isConst, Access _access) const
 {
 	QList<DeclarationEntity*> ret;
-	foreach (MemberValue* i, childrenOf<MemberValue>())
+	foreach (MemberValue* i, cardinalChildrenOf<MemberValue>())
 		if ((i->isConst() || !_isConst) && i->access() <= _access)
 			ret += i;
 	foreach (Base* i, cardinalChildrenOf<Base>())

@@ -50,7 +50,7 @@ protected:
 	virtual QString						memberDefineLayout(ViewKeys&) const { return QString::null; }
 	
 	// Old virtuals.
-	virtual int							minimumRequiredNamed(int _i) const { return _i == Accessibility ? 1 : Super::minimumRequiredNamed(_i); }
+	virtual int							minRequired(int _i) const { return _i == Accessibility ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual void						decorate(DecorationContext const& _p) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);

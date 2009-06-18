@@ -33,7 +33,7 @@ public:
 	inline static bool					keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e) { return simplePlaceholderKeyPressHandler<WhileLoop>(_p, _e, "W"); }
 
 private:
-	virtual int							minimumRequired() const { return 2; }
+	virtual int							minRequired(int _i) const { return _i == Cardinals ? 2 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _index) const;
 	virtual Types						allowedTypes(int _index) const;
 	virtual QString						code() const;

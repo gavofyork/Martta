@@ -30,7 +30,7 @@ class UnaryOperation: public Operation
 	MARTTA_PLACEHOLDER(Operation)
 
 public:
-	virtual int							minimumRequired() const { return 1; }
+	virtual int							minRequired(int _i) const { return _i == Cardinals ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _index) const { if (_index == 0) return Kind::of<Typed>(); else return Super::allowedKinds(_index); }
 	virtual bool						isPostfix() const { return id().isPostfix(); }
 

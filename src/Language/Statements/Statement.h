@@ -39,7 +39,7 @@ public:
 
 	virtual QList<ValueDefiner*>		valuesInLocalScope() const;
 
-	QList<Statement*>					statements() const { return childrenOf<Statement>(); }
+	QList<Statement*>					statements() const { return cardinalChildrenOf<Statement>(); }
 	bool			 					isStatement(int _i) const { return childIs<Statement>(_i); }
 	Statement*		 					asStatement(int _i) const { return childAs<Statement>(_i); }
 

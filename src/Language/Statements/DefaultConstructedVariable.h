@@ -36,7 +36,7 @@ public:
 
 protected:
 	// From Entity via BareTyped
-	virtual int							minimumRequiredNamed(int _i) const { return _i == OurType || _i == Identity ? 1 : Super::minimumRequiredNamed(_i); }
+	virtual int							minRequired(int _i) const { return _i == OurType || _i == Identity ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _index) const;
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity*) { changed(); }

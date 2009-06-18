@@ -194,7 +194,7 @@ public:
 	template<class T> inline QList<T*>	childrenOf() const { return filterEntities<T>(children()); }
 	template<class T> inline int		childIndexOf() const { foreach (Entity* e, children()) if (e->isKind<T>()) return e->m_index; return UndefinedIndex; }
 	template<class T> inline int		childCountOf() const { int r = 0; foreach (Entity* i, children()) if (i->isKind<T>()) r++; return r; }
-	template<class T> inline T*			childOf() const { M_ASSERT(childCountOf<T>()); return child(childIndexOf<T>()); }
+	template<class T> inline T*			childOf() const { M_ASSERT(childCountOf<T>()); return childAs<T>(childIndexOf<T>()); }
 	template<class T> inline bool		childIs(int _i) const { if (Entity* r = child(_i)) return r->isKind<T>(); return false; }
 	template<class T> inline T*			childAs(int _i) const { Entity* e = child(_i); M_ASSERT(e); return e->asKind<T>(); }
 	template<class T> inline T*			tryChildAs(int _i) const { if (Entity* e = child(_i)) return e->tryKind<T>(); return 0; }
@@ -202,7 +202,7 @@ public:
 	inline QList<Entity*> const&		cardinalChildren() const { return m_cardinalChildren; }
 	inline int							cardinalChildCount() const { return m_cardinalChildren.size(); }
 	template<class T> inline QList<T*>	cardinalChildrenOf() const { return filterEntities<T>(m_cardinalChildren); }
-	template<class T> inline T*			cardinalChildOf() const { M_ASSERT(cardinalChildCountOf<T>()); return child(cardinalChildIndexOf<T>()); }
+	template<class T> inline T*			cardinalChildOf() const { M_ASSERT(cardinalChildCountOf<T>()); return childAs<T>(cardinalChildIndexOf<T>()); }
 	template<class T> inline int		cardinalChildIndexOf() const { for (int r = 0; r < m_cardinalChildren.size(); ++r) if (childIs<T>(r)) return r; return UndefinedIndex; }
 	template<class T> inline int		cardinalChildCountOf() const { int r = 0; foreach (Entity* i, m_cardinalChildren) if (i->isKind<T>()) r++; return r; }
 
@@ -383,16 +383,13 @@ public:
 	// The following are information for checking and selection mechanisms.
 	// These values could change depending upon elements already in place (e.g. dereference operators), so should be rechecked whenever anything changes.
 
-	/// @returns the minimum number of entities than can be allowed for the object still to be valid.
-	/// A greater amount than this may be allowed, depending on the output of allowedKinds, but never less than this.
-	/// Default returns zero (i.e. no minimum).
 	/// @note Do not call this directly; use isAllowed() on the child entity instead, since that is a more complete test.
-	virtual int							minimumRequired() const { return 0; }
-	/// @returns the minimum number of entities than can be allowed in a sub-zero entity slot.
-	/// A greater amount than this may be allowed, but never less than this.
+	/// @returns the minimum number of entities than can be allowed in a entity slot, if @a _i does not equal Cardinals,
+	/// or the required minimum number of cardinals, if @a _i equals Cardinals.
+	/// A greater amount than these may be allowed, but never fewer.
 	/// Default returns zero (i.e. no entity strictly needed).
 	/// @note Do not call this directly; use isAllowed() on the child entity instead, since that is a more complete test.
-	virtual int							minimumRequiredNamed(int) const { return 0; }
+	virtual int							minRequired(int) const { return 0; }
 	/// @returns the kind of entities allowed in the given child position.
 	/// Reimplement to allow particular entity kinds.
 	/// Default returns the empty list (i.e. entity may not have any children).
@@ -441,7 +438,7 @@ public:
 	/// @returns true if this entity cannot be killed without costing the validity of its context's children set.
 	bool								isNecessary() const;
 	/// @returns true if all entity positions are filled validly, including all those required. 
-	/// @warning This uses allowedKinds() and minimumRequired, and so is not safe to be called from your reimplementation of
+	/// @warning This uses allowedKinds() and minRequired, and so is not safe to be called from your reimplementation of
 	/// these or anything that they (indirectly) use.
 	bool								isComplete() const;
 	/// @returns true if object is current in heirarchy leading to a RootEntity.

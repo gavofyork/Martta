@@ -42,7 +42,7 @@ public:
 	virtual bool						isWellDefined() const { return childType() && childType()->isWellDefined(); }
 	
 protected:
-	virtual int							minimumRequired() const { return 1; }
+	virtual int							minRequired(int _i) const { return _i == Cardinals ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _index) const;
 	virtual QString						idColour() const { return childType() ? childType()->idColour() : TypeEntity::null->idColour(); }
 	virtual QString						defineLayout(ViewKeys&) const { return "0;^;" + modifierLayout(); }

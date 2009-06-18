@@ -59,11 +59,15 @@ QString Invocation::callList(QList<Typed*> _parameters) const
 	return ret;
 }
 
-int Invocation::minimumRequired() const
+int Invocation::minRequired(int _i) const
 {
-	if (typeOf(0)->isType<FunctionType>())
-		return typeOf(0)->asType<FunctionType>()->minimumArgCount() + 1;
-	return 1;
+	if (_i == Cardinals)
+		if (typeOf(0)->isType<FunctionType>())
+			return typeOf(0)->asType<FunctionType>()->minimumArgCount() + 1;
+		else
+			return 1;
+	else
+		return Super::minRequired(_i);
 }
 
 Kinds Invocation::allowedKinds(int _index) const

@@ -210,7 +210,7 @@ class TestNegativesB: public TestNegatives
 {
 	MARTTA_OBJECT(TestNegatives)
 	enum { NamedChildC = FirstNamed, EndOfNamed };
-	int minimumRequiredNamed(int _i) const { return _i != NamedChildA ? _i != NamedChildB ? _i != NamedChildC ? Super::minimumRequiredNamed(_i) : 2 : 1 : 0; }
+	int minRequired(int _i) const { return _i != NamedChildA ? _i != NamedChildB ? _i != NamedChildC ? Super::minRequired(_i) : 2 : 1 : 0; }
 	Kinds allowedKinds(int) const { return Kind::of<TestNegatives>(); }
 };
 MARTTA_OBJECT_CPP(TestNegativesB);

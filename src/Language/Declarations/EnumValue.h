@@ -45,7 +45,7 @@ public:
 protected:
 	virtual Identifiable*				addressableContext() const { return parentAs<Identifiable>()->addressableContext(); }
 	virtual QString						defineLayout(ViewKeys&) const;
-	virtual int							minimumRequired() const { return 1; }
+	virtual int							minRequired(int _i) const { return _i == Cardinals ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
 	virtual bool						isChildInValidState(int _i) const;

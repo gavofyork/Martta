@@ -44,7 +44,7 @@ public:
 	void								setEllipsis(bool _e) { m_ellipsis = _e; changed(); }
 	
 protected:
-	virtual int							minimumRequired() const { return 2; }
+	virtual int							minRequired(int _i) const { return _i == Cardinals ? 2 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
 	
 	virtual int							familyDependencies() const { return DependsOnChildren; }

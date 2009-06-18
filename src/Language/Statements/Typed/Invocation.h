@@ -34,7 +34,7 @@ public:
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
 
 protected:
-	virtual int							minimumRequired() const;
+	virtual int							minRequired(int _i) const;
 	virtual Kinds						allowedKinds(int _index) const;
 	virtual Types						allowedTypes(int _index) const;
 	virtual Type						type() const;

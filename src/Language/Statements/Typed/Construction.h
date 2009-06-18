@@ -36,7 +36,7 @@ class Construction: public Invocation
 public:
 	Construction(Constructor* _c = 0) : m_subject(0) { setDependency(m_subject, _c); }
 
-	virtual int							minimumRequired() const;
+	virtual int							minRequired(int _i) const;
 	virtual Kinds						allowedKinds(int _index) const;
 	virtual Types						allowedTypes(int _index) const;
 

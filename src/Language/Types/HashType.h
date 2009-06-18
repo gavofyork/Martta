@@ -48,7 +48,7 @@ protected:
 	virtual Types						assignableTypes() const;
 	virtual QList<ValueDefiner*>		applicableMembers(Entity* _s = 0, bool _isConst = false) const;
 	
-	virtual int							minimumRequired() const { return 2; }
+	virtual int							minRequired(int _i) const { return _i == Cardinals ? 2 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual TypeEntity*					newClone() const { return new HashType; }
 	virtual QString						code(QString const& _middle) const;

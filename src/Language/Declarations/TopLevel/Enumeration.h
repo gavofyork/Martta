@@ -41,8 +41,7 @@ public:
 	virtual QString						code() const { return isNamed() ? codeName() : "enum ["+m_stem+"*]"; }
 	
 protected:
-	virtual int							minimumRequired() const { return 1; }
-	virtual int							minimumRequiredNamed(int _i) const { if (_i == Identity) return 0; else return Super::minimumRequiredNamed(_i); }
+	virtual int							minRequired(int _i) const { return _i == Cardinals ? 1 : _i == Identity ? 0 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual QString						defineLayout(const ViewKeys& _k) const { return "^;" + EnumerationNamer::defineLayout(_k); }
 	virtual QString						interfaceCode() const { return EnumerationNamer::interfaceCode(); }

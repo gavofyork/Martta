@@ -4,13 +4,6 @@ minimumRequired 	minRequired(Cardinals)
 
 parentsChildren, siblings etc.
 
-context			parent
-contextIs<T>		parentIs<T>
-contextAs<T>		parentAs<T>
-contextIndex		index
-contextIndexExclusive<T>
-entitiesHereAndBeforeOf<T>
-			tryParent<T>
 
 TODO try to remove findEntity/locateEntity/finalAll? Get rid of DE/Id deps.
 

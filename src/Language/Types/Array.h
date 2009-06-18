@@ -35,7 +35,7 @@ public:
 protected:
 	virtual bool						hasDefaultConstructor() const { return true; }
 	virtual QString						code(QString const& _middle) const;
-	virtual int							minimumRequired() const { return 2; }
+	virtual int							minRequired(int _i) const { return _i == Cardinals ? 2 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual Types						allowedTypes(int _i) const;
 	virtual TypeEntity*					newClone() const;

@@ -292,7 +292,7 @@ void ReferencedEdit::leavingEditIntact()
 			}
 			else if (m_entityName == "string")
 			{
-				e->childrenOf<TypeEntity>()[0]->replace(new StringType);
+				e->childOf<TypeEntity>()->replace(new StringType);
 				codeScene()->silentlySetCurrent(e->child(Identifiable::Identity));	// set to the place where the user expects the cursor to be (silently, sicne we might (possibly) already be in a setCurrent!).
 			}
 			else

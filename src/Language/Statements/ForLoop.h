@@ -32,7 +32,7 @@ class ForLoop: public Untyped
 	friend class Entity;
 
 public:
-	virtual int							minimumRequired() const { return 4; }
+	virtual int							minRequired(int _i) const { return _i == Cardinals ? 4 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _index) const;
 	virtual Types						allowedTypes(int _index) const;
 
