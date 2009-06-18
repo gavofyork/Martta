@@ -27,8 +27,8 @@ namespace Martta
 {
 
 // Arguments+1 children.
-// entity(0) is return type.
-// entity(n+1) is argument n
+// child(0) is return type.
+// child(n+1) is argument n
 // For ... functions, m_ellipsis is set.
 class FunctionType: public TypeEntity
 {
@@ -39,10 +39,10 @@ public:
 
 	bool								ellipsis() const { return m_ellipsis; }
 	virtual bool						isUltimatelyNull() const { return m_wild; }
-	Type								returnType() const { return m_wild ? Type() : *entityAs<TypeEntity>(0); }
-	Type								argumentType(int _i) const { return !m_wild && entityIs<TypeEntity>(_i + 1) ? *entityAs<TypeEntity>(_i + 1) : Type(); }
-	int									minimumArgCount() const { return m_wild ? 0 : (entities().size() - 1); }
-	bool								hasArgumentAt(int _i) const { return m_wild || m_ellipsis || _i < entities().size() - 1; }
+	Type								returnType() const { return m_wild ? Type() : *childAs<TypeEntity>(0); }
+	Type								argumentType(int _i) const { return !m_wild && childIs<TypeEntity>(_i + 1) ? *childAs<TypeEntity>(_i + 1) : Type(); }
+	int									minimumArgCount() const { return m_wild ? 0 : (cardinalChildCount() - 1); }
+	bool								hasArgumentAt(int _i) const { return m_wild || m_ellipsis || _i < cardinalChildCount() - 1; }
 	virtual bool						isWellDefined() const { for (int i = 0; i < minimumArgCount(); ++i) if (!argumentType(i)->isWellDefined()) return false; return returnType()->isWellDefined(); }
 
 	void								setEllipsis(bool _on = true) { m_ellipsis = _on; }

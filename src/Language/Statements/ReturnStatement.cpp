@@ -75,7 +75,7 @@ Types ReturnStatement::allowedTypes(int _i) const
 
 QString ReturnStatement::code() const
 {
-	return entity(0) ? "return " + entityAs<Typed>(0)->codeAsStatement() : "return;";
+	return child(0) ? "return " + childAs<Typed>(0)->codeAsStatement() : "return;";
 }
 
 }

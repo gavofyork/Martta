@@ -34,23 +34,23 @@ class ModifyingType: public TypeEntity
 	MARTTA_PLACEHOLDER(TypeEntity)
 
 public:
-	inline TypeEntity*					child() const { return entityIs<TypeEntity>(0) ? entityAs<TypeEntity>(0) : TypeEntity::null; }
+	inline TypeEntity*					childType() const { return childIs<TypeEntity>(0) ? childAs<TypeEntity>(0) : TypeEntity::null; }
 
 	/// Deletes this object and puts its child in its place.
 	void								unknit();
-	virtual bool						isUltimatelyNull() const { return !child() || child()->isUltimatelyNull(); }
-	virtual bool						isWellDefined() const { return child() && child()->isWellDefined(); }
+	virtual bool						isUltimatelyNull() const { return !childType() || childType()->isUltimatelyNull(); }
+	virtual bool						isWellDefined() const { return childType() && childType()->isWellDefined(); }
 	
 protected:
 	virtual int							minimumRequired() const { return 1; }
 	virtual Kinds						allowedKinds(int _index) const;
-	virtual QString						idColour() const { return child() ? child()->idColour() : TypeEntity::null->idColour(); }
+	virtual QString						idColour() const { return childType() ? childType()->idColour() : TypeEntity::null->idColour(); }
 	virtual QString						defineLayout(ViewKeys&) const { return "0;^;" + modifierLayout(); }
 	virtual QString						modifierLayout() const { return QString(); }
 	virtual TypeEntity*					newClone() const { return new ModifyingType; }
-	virtual TypeEntity*					bottom() { return entityIs<TypeEntity>(0) ? entityAs<TypeEntity>(0) : this; }
-	virtual bool						canStandAlone() const { return child() ? child()->canStandAlone() : false; }
-	virtual QList<DeclarationEntity*>	utilisedX() const { return child() ? child()->utilised() : Super::utilised(); }
+	virtual TypeEntity*					bottom() { return childIs<TypeEntity>(0) ? childAs<TypeEntity>(0) : this; }
+	virtual bool						canStandAlone() const { return childType() ? childType()->canStandAlone() : false; }
+	virtual QList<DeclarationEntity*>	utilisedX() const { return childType() ? childType()->utilised() : Super::utilised(); }
 };
 
 }

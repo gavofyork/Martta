@@ -39,7 +39,7 @@ private:
 	virtual QString						operatorLayout() const { return "ycode;':='"; }
 	virtual Operator					id() const { return Operator::Equals; }
 	virtual int							familyDependencies() const { return Super::familyDependencies() | DependsOnChildren; }
-	virtual void						onDependencyChanged(Entity* _e) { if (allEntities().contains(_e)) changed(); Super::onDependencyChanged(_e); }
+	virtual void						onDependencyChanged(Entity* _e) { if (children().contains(_e)) changed(); Super::onDependencyChanged(_e); }
 };
 
 }

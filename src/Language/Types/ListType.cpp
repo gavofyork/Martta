@@ -118,7 +118,7 @@ QList<ValueDefiner*> ListType::applicableMembers(Entity*, bool _isConst) const
 
 bool ListType::defineSimilarityFrom(TypeEntity const* _f, Castability _c) const
 {
-	return _f->isKind<ListType>() && (Type(*child()).isNull() || _f->asKind<ListType>()->child()->isEquivalentTo(child())) ||
+	return _f->isKind<ListType>() && (Type(*childType()).isNull() || _f->asKind<ListType>()->childType()->isEquivalentTo(childType())) ||
 		Super::defineSimilarityFrom(_f, _c);
 }
 
@@ -141,8 +141,8 @@ Types ListType::allowedTypes(int _i) const
 
 QString ListType::code(QString const& _middle) const
 {
-	if (entityIs<TypeEntity>(0))
-		return "::MarttaSupport::List< " + entityAs<TypeEntity>(0)->code() + " >" + _middle;
+	if (childIs<TypeEntity>(0))
+		return "::MarttaSupport::List< " + childAs<TypeEntity>(0)->code() + " >" + _middle;
 	else
 		return "::MarttaSupport::List<>" + _middle;
 }

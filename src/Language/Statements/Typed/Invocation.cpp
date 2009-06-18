@@ -93,14 +93,14 @@ Types Invocation::allowedTypes(int _index) const
 QString Invocation::defineLayout(ViewKeys&) const
 {
 	QString ret = "0;ycode;'(';^";
-	for (int i = 1; i < entities().size(); i++)
+	for (int i = 1; i < cardinalChildCount(); i++)
 		ret += QString((i == 1) ? ";%1" : ";', ';%1").arg(i);
 	return ret + ";')'";
 }
 
 void Invocation::onDependencyChanged(Entity* _e)
 {
-	if (_e == entity(0))
+	if (_e == child(0))
 	{
 		// The function we are calling has changed.
 		validifyChildren();
@@ -111,15 +111,15 @@ void Invocation::onDependencyChanged(Entity* _e)
 
 bool Invocation::keyPressed(EntityKeyEvent const* _e)
 {
-	if (_e->text() == "(" && _e->focalIndex() == 0 && entity(1))
-		entity(1)->navigateOnto(_e->codeScene());
+	if (_e->text() == "(" && _e->focalIndex() == 0 && child(1))
+		child(1)->navigateOnto(_e->codeScene());
 	else if (_e->text() == "(" && _e->focalIndex() == 0)
 		setCurrent();
 	else if (_e->text() == ")" && !_e->isFocused())
 		setCurrent();
-	else if (_e->text() == "," && _e->focalIndex() > 0 && _e->focalIndex() < entities().size() - 1)
+	else if (_e->text() == "," && _e->focalIndex() > 0 && _e->focalIndex() < cardinalChildCount() - 1)
 		// Jump to next if we press a comma in the parameter list, before the last item.
-		entity(_e->focalIndex() + 1)->setCurrent();
+		child(_e->focalIndex() + 1)->setCurrent();
 	else if (_e->text() == "," && back().allowedKinds().size())
 		// Insert a new item if we press a comma anywhere else, if we're allowed to.
 		back().spawnPrepared()->setCurrent();
@@ -131,12 +131,12 @@ bool Invocation::keyPressed(EntityKeyEvent const* _e)
 bool Invocation::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
 {
 	if (_p.exists() && !_p->isPlaceholder() && _p->isKind<Typed>() && _e->text() == "(" &&
-		_p->asKind<Typed>()->type()->isType<FunctionType>() && !(_p->contextIs<Invocation>() && _p->contextIndex() == 0) && !isTemporary(_p.entity()))
+		_p->asKind<Typed>()->type()->isType<FunctionType>() && !(_p->contextIs<Invocation>() && _p->contextIndex() == 0) && !isTemporary(_p.childType()))
 	{
 		Entity* n = new Invocation;
 		_p->insert(n);
 		n->prepareChildren();
-		if (n->entityCount() > 1)
+		if (n->cardinalChildCount() > 1)
 			n->dropCursor();
 		else
 		{

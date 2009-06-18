@@ -30,14 +30,14 @@ MARTTA_NAMED_CPP(VariableNamer, OurType);
 
 TypeEntity* VariableNamer::actualType() const
 {
-	if (TypeEntity* t = self()->tryEntityAs<TypeEntity>(OurType))
+	if (TypeEntity* t = self()->tryChildAs<TypeEntity>(OurType))
 		return t;
 	return TypeEntity::null;
 }
 
 QString VariableNamer::basicCode() const
 {
-	if (IdLabel* i = self()->tryEntityAs<IdLabel>(Identity))
+	if (IdLabel* i = self()->tryChildAs<IdLabel>(Identity))
 		return actualType()->code(" " + i->code());
 	else
 		return QString::null;
@@ -47,7 +47,7 @@ bool VariableNamer::keyPressed(EntityKeyEvent const* _e)
 {
 	if (_e->text() == " " && _e->focalIndex() == OurType)
 	{
-		self()->entity(Identity)->navigateOnto(_e->codeScene());
+		self()->child(Identity)->navigateOnto(_e->codeScene());
 	}
 	else
 		return false;

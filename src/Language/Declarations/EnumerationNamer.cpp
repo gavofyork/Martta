@@ -36,7 +36,7 @@ QString EnumerationNamer::interfaceCode() const
 	QString ret;
 	ret += "enum " + codeName() + "\n";
 	ret += "{\n";
-	foreach (EnumValue* f, self()->entitiesOf<EnumValue>())
+	foreach (EnumValue* f, self()->cardinalChildrenOf<EnumValue>())
 		ret += f->code() + ",\n";
 	if (ret.endsWith(",\n"))
 		ret.chop(2), ret += "\n";
@@ -48,7 +48,7 @@ void EnumerationNamer::updateStem()
 {
 	QString oldStem = m_stem;
 	m_stem = QString();
-	foreach (EnumValue* i, self()->allEntitiesOf<EnumValue>())
+	foreach (EnumValue* i, self()->childrenOf<EnumValue>())
 		if (m_stem.isEmpty())
 			m_stem = i->codeName();
 		else if (!i->codeName().isEmpty())
@@ -74,11 +74,11 @@ bool EnumerationNamer::keyPressed(EntityKeyEvent const* _e)
 		EnumValue* s = new EnumValue;
 		s->prepareChildren();
 		p.place(s);
-		s->entity(0)->setCurrent();
+		s->child(0)->setCurrent();
 	}
 	else if (_e->key() == Qt::Key_Home && _e->focalIndex() != UndefinedIndex)
 	{
-		self()->entity(_e->focalIndex())->setCurrent();
+		self()->child(_e->focalIndex())->setCurrent();
 	}
 	else if (_e->text() == "H")
 	{
@@ -87,7 +87,7 @@ bool EnumerationNamer::keyPressed(EntityKeyEvent const* _e)
 	else if (QRegExp("[a-z]").exactMatch(_e->text()) && !isNamed())
 	{
 		setNamed();
-		_e->codeScene()->setCurrent(self()->entity(Identity));
+		_e->codeScene()->setCurrent(self()->child(Identity));
 		_e->reinterpretLater();
 	}
 	else
@@ -106,15 +106,15 @@ QString EnumerationNamer::defineLayout(ViewKeys& _viewKeys) const
 	if (_viewKeys["expanded"].toBool())
 	{
 		ret += "ycode;'enum'" + name + ";s;ycode;n;'{'";
-		foreach (EnumValue* f, self()->allEntitiesOf<EnumValue>())
+		foreach (EnumValue* f, self()->childrenOf<EnumValue>())
 			ret += QString(";n;i;%1").arg(f->contextIndex());
 		ret += ";n;'}'";
 	}
 	else
 	{
 		ret += "ycode;'enum'" + name + ";s;yminor;' (";
-		int n = self()->allEntitiesOf<EnumValue>().count();
-		if (n > 1 || !self()->allEntitiesOf<EnumValue>()[0]->codeName().isEmpty())
+		int n = self()->childrenOf<EnumValue>().count();
+		if (n > 1 || !self()->childrenOf<EnumValue>()[0]->codeName().isEmpty())
 			ret += QString::number(n) + " entr" + (n > 1 ? "ies" : "y");
 		if (ret.endsWith("("))
 			ret += "empty";
@@ -125,7 +125,7 @@ QString EnumerationNamer::defineLayout(ViewKeys& _viewKeys) const
 
 Entity* EnumerationNamer::isExpander() const
 {
-	return self()->isComplete() ? self()->entitiesOf<EnumValue>()[0] : 0;
+	return self()->isComplete() ? self()->cardinalChildrenOf<EnumValue>()[0] : 0;
 }
 
 void EnumerationNamer::onDependencyRemoved(Entity* _e)
@@ -158,7 +158,7 @@ void EnumerationNamer::onDependencyChanged(Entity* _e)
 void EnumerationNamer::setUnnamed()
 {
 	if (isNamed())
-		self()->entity(Identity)->killAndDelete();
+		self()->child(Identity)->killAndDelete();
 	self()->changed();
 }
 
@@ -170,7 +170,7 @@ void EnumerationNamer::setNamed()
 
 bool EnumerationNamer::isNamed() const
 {
-	return self()->entity(Identity);
+	return self()->child(Identity);
 }
 
 }

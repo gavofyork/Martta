@@ -30,9 +30,9 @@ MARTTA_OBJECT_CPP(Base);
 
 Class* Base::classType() const
 {
-	if (!isComplete() || !entityAs<ExplicitType>(Superclass)->subject()->isKind<Class>())
+	if (!isComplete() || !childAs<ExplicitType>(Superclass)->subject()->isKind<Class>())
 		return 0;
-	return entityAs<ExplicitType>(Superclass)->subject()->asKind<Class>();
+	return childAs<ExplicitType>(Superclass)->subject()->asKind<Class>();
 }
 	
 bool Base::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
@@ -42,7 +42,7 @@ bool Base::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent c
 
 void Base::onDependencyChanged(Entity* _e)
 {
-/*	if (_e == entity(Superclass))
+/*	if (_e == child(Superclass))
 		if (ExplicitType* t = _e->tryKind<ExplicitType>())
 			if (!haveDependency(t->subject()))
 			{	
@@ -54,8 +54,8 @@ void Base::onDependencyChanged(Entity* _e)
 
 bool Base::isChildInValidState(int _i) const
 {
-	if (entityIs<ExplicitType>(_i))
-		return Super::isChildInValidState(_i) && entityAs<ExplicitType>(_i)->subject()->isKind<Class>() && entityAs<ExplicitType>(_i)->subject()->self() != context();
+	if (childIs<ExplicitType>(_i))
+		return Super::isChildInValidState(_i) && childAs<ExplicitType>(_i)->subject()->isKind<Class>() && childAs<ExplicitType>(_i)->subject()->self() != context();
 	return Super::isChildInValidState(_i);
 }
 
@@ -63,19 +63,19 @@ Access Base::access() const
 {
 	if (!isComplete())
 		return NoAccess;
-	return entityAs<AccessLabel>(Accessibility)->access();
+	return childAs<AccessLabel>(Accessibility)->access();
 }
 
 QString Base::code() const
 {
 	if (!isComplete())
 		return QString();
-	return entityAs<Label>(Accessibility)->code() + " " + entityAs<TypeEntity>(Superclass)->code();
+	return childAs<Label>(Accessibility)->code() + " " + childAs<TypeEntity>(Superclass)->code();
 }
 
 bool Base::keyPressed(EntityKeyEvent const* _e)
 {
-	if (entity(Accessibility) && entity(Accessibility)->keyPressed(_e))		//QUICK do with usurp
+	if (child(Accessibility) && child(Accessibility)->keyPressed(_e))		//QUICK do with usurp
 		return true;
 	return Super::keyPressed(_e);
 }

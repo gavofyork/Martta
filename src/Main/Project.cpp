@@ -124,17 +124,17 @@ void Project::resetAsNew()
 	m_namespace = new NamespaceEntity;
 	m_declarations.back().place(m_namespace);
 	m_namespace->prepareChildren();
-	m_namespace->entityAs<TextLabel>(Identifiable::Identity)->setText("Project");
+	m_namespace->childAs<TextLabel>(Identifiable::Identity)->setText("Project");
 	Class* c = new Class;
 	m_namespace->back().place(c);
 	c->prepareChildren();
-	c->entityAs<TextLabel>(Identifiable::Identity)->setText("Program");
+	c->childAs<TextLabel>(Identifiable::Identity)->setText("Program");
 	m_classes << c;
 
 	c->back().place(m_program = new Method);
 	m_program->prepareChildren();
-	m_program->entityAs<TextLabel>(Identifiable::Identity)->setText("main");
-	m_program->allEntitiesOf<TypeEntity>()[0]->over().place(new SimpleType(Void));
+	m_program->childAs<TextLabel>(Identifiable::Identity)->setText("main");
+	m_program->childrenOf<TypeEntity>()[0]->over().place(new SimpleType(Void));
 	
 	emit subjectInvalid();
 	emit nameChanged();
@@ -348,10 +348,10 @@ void Project::deserialise(QDomDocument& _d)
 	TIME_STATEMENT(importDom) m_declarations.importDom(_d.documentElement());
 	TIME_STATEMENT(restorePtrs) m_declarations.restorePtrs();
 
-	m_namespace = m_declarations.allEntitiesOf<NamespaceEntity>()[0];
+	m_namespace = m_declarations.childrenOf<NamespaceEntity>()[0];
 	M_ASSERT(m_namespace);
 
-	m_classes << m_namespace->allEntitiesOf<Class>();
+	m_classes << m_namespace->childrenOf<Class>();
 
 	// Load "program"
 	Entity* e = m_namespace->findEntity(_d.documentElement().namedItem("program").toElement().attribute("key"))->self();
@@ -365,7 +365,7 @@ void Project::deserialise(QDomDocument& _d)
 		Entity* e = uplist.takeLast();
 		if (e)
 		{
-			foreach (Entity* i, e->allEntities())
+			foreach (Entity* i, e->children())
 				uplist << i;
 			e->apresLoad();
 		}
@@ -444,7 +444,7 @@ void Project::reloadHeaders()
 		Entity* e = es.back();
 		es.pop_back();
 		M_ASSERT(e->rootEntity() == &m_declarations);
-		es << e->allEntities();
+		es << e->children();
 	}
 }
 

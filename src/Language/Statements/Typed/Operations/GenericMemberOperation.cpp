@@ -33,7 +33,7 @@ MARTTA_OBJECT_CPP(GenericMemberOperation);
 Type GenericMemberOperation::memberified(Type _t, Type const& _scope) const
 {
 	if (_t->isType<Reference>())
-		_t->asType<Reference>()->child()->knitIn(new Memberify(_scope));
+		_t->asType<Reference>()->childType()->knitIn(new Memberify(_scope));
 	else
 		_t.topWith(Memberify(_scope));
 	return _t;
@@ -72,7 +72,7 @@ bool GenericMemberOperation::isChildInValidState(int _index) const
 		if (scope().isNull())
 			return false;
 		// If we somehow managed to end up at a Memberified type despite not being a Referenced, fair play.
-		if (entityIs<Referenced>(1) && !scope()->applicableMembers(context()).contains(entityAs<Referenced>(1)->subject()))
+		if (childIs<Referenced>(1) && !scope()->applicableMembers(context()).contains(childAs<Referenced>(1)->subject()))
 			return false;
 	}
 	return Super::isChildInValidState(_index);
@@ -91,8 +91,8 @@ Type GenericMemberOperation::type() const
 	}
 	m->setScope(st);
 	// if the memberified thing isn't const, and the memberify is a const, then make the type const.
-	if (st->isType<Const>() && !m->child()->isType<Const>() && !m->child()->isType<FunctionType>())
-		m->child()->knit<Const>();
+	if (st->isType<Const>() && !m->childType()->isType<Const>() && !m->childType()->isType<FunctionType>())
+		m->childType()->knit<Const>();
 	m->unknit();
 	return rt;
 }

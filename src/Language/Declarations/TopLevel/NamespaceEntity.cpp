@@ -39,7 +39,7 @@ QString NamespaceEntity::defineLayout(ViewKeys&) const
 {
 	QString ret = QString("ycode;'namespace';Mi;%1;n;").arg(Identity);
 	
-	for(int i = 0; i < entities().size(); i++)
+	for(int i = 0; i < cardinalChildCount(); i++)
 		ret += QString("i;%1;v8;").arg(i);
 	return ret;
 }
@@ -58,7 +58,7 @@ QString NamespaceEntity::interfaceCode() const
 
 	QList<DeclarationEntity*> q;
 	QMultiMap<DeclarationEntity*, DeclarationEntity*> deps;
-	foreach (DeclarationEntity* i, allEntitiesOf<DeclarationEntity>())
+	foreach (DeclarationEntity* i, childrenOf<DeclarationEntity>())
 	{
 		foreach (DeclarationEntity* j, i->utilisedSiblings())
 			deps.insert(i, j);
@@ -81,7 +81,7 @@ QString NamespaceEntity::implementationCode() const
 {
 	QString ret;
 	QList<DeclarationEntity*> ordered;
-	foreach (DeclarationEntity* i, allEntitiesOf<DeclarationEntity>())
+	foreach (DeclarationEntity* i, childrenOf<DeclarationEntity>())
 		ret += i->implementationCode() + "\n";
 	if (ret.endsWith("\n\n")) ret.chop(1);
 	return ret;

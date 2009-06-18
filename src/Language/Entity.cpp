@@ -51,9 +51,9 @@ void change(Entity* _s, ChangeOperation _op, Entity* _o)
 Entity::~Entity()
 {
 	M_ASSERT(!m_context);
-	foreach (Entity* i, allEntities())
+	foreach (Entity* i, children())
 		i->killAndDelete();
-	M_ASSERT(!m_children.size());
+	M_ASSERT(!m_cardinalChildren.size());
 	M_ASSERT(!m_namedChildren.size());
 }
 
@@ -126,7 +126,7 @@ Identifiable* Entity::findEntity(QString const& _key) const
 }
 QList<DeclarationEntity*> Entity::spacesInScope() const
 {
-	return allEntitiesOf<DeclarationEntity>();
+	return childrenOf<DeclarationEntity>();
 }
 
 // Validity/status checking
@@ -140,29 +140,29 @@ bool Entity::isNecessary() const
 		return false;
 	if (m_contextIndex >= 0)
 	{
-		if (context()->entities().size() <= context()->minimumRequired())
+		if (context()->cardinalChildCount() <= context()->minimumRequired())
 			return true;
-		for (int i = contextIndex() + 1; i < context()->entities().size(); i++)
-			if (!context()->entity(i)->isKind(context()->allowedKinds(i - 1)))
+		for (int i = contextIndex() + 1; i < context()->cardinalChildCount(); i++)
+			if (!context()->child(i)->isKind(context()->allowedKinds(i - 1)))
 				return true;
 	}
 	else
-		if (context()->entityCount(m_contextIndex) - 1 < context()->minimumRequiredNamed(m_contextIndex))
+		if (context()->childCountAt(m_contextIndex) - 1 < context()->minimumRequiredNamed(m_contextIndex))
 			return true;
 	return false;
 }
 bool Entity::isComplete() const
 {
-	QList<Entity*> e = entities();
+	QList<Entity*> e = cardinalChildren();
 	if (e.size() < minimumRequired())
 		return false;
 	for (int i = INT_MIN; i < virtualEndOfNamed(); i++)
-		if (entityCount(i) < minimumRequiredNamed(i))
+		if (childCountAt(i) < minimumRequiredNamed(i))
 			return false;
 	foreach (int i, AuxilliaryRegistrar::get()->names())
-		if (entityCount(i) < minimumRequiredNamed(i))
+		if (childCountAt(i) < minimumRequiredNamed(i))
 			return false;
-	foreach (Entity* i, allEntities())
+	foreach (Entity* i, children())
 		if (!i->isAllowed())
 			return false;
 	return true;
@@ -236,10 +236,10 @@ void Entity::kill(Entity* _substitute)
 void Entity::clearEntities()
 {
 	QList<Entity*> tbd;
-	while (m_children.size())
+	while (m_cardinalChildren.size())
 	{
-		tbd << m_children.last();
-		m_children.last()->kill();
+		tbd << m_cardinalChildren.last();
+		m_cardinalChildren.last()->kill();
 	}
 	while (m_namedChildren.size())
 	{
@@ -272,14 +272,14 @@ void Entity::debugTree(QString const& _i) const
 			i.value()->debugTree(_i + "|   [" + QString::number(i.key() - INT_MIN) + "] ");
 		else
 			i.value()->debugTree(_i + "|   [" + AuxilliaryRegistrar::get()->nameOfArbitrary(i.key()) + "] ");
-	foreach (Entity* i, m_children)
+	foreach (Entity* i, m_cardinalChildren)
 		i->debugTree(_i + "|   ");
 }
 
 // I/O
 void Entity::exportDom(QDomElement& _element) const
 {
-	foreach (Entity* e, allEntities())
+	foreach (Entity* e, children())
 	{
 		QDomElement n = _element.ownerDocument().createElement("entity");
 		n.setAttribute("kind", e->kind().name());
@@ -354,7 +354,7 @@ void Entity::navigateOnto(CodeScene* _s)
 }
 void Entity::dropCursor()
 {
-	QList<Entity*> s = allEntities();
+	QList<Entity*> s = children();
 	while (s.size())
 	{
 		Entity* e = s.takeFirst();
@@ -364,7 +364,7 @@ void Entity::dropCursor()
 			return;
 		}
 		else
-			s = e->allEntities() + s;
+			s = e->children() + s;
 	}
 	setCurrent();
 }
@@ -474,7 +474,7 @@ bool Entity::activated(CodeScene* _s)
 void Entity::keyPressEventStarter(EntityKeyEvent* _e, bool _abortive)
 {
 	Entity* f = _e->focus();
-	foreach (Entity* e, f->m_children)
+	foreach (Entity* e, f->m_cardinalChildren)
 		if (f->usurpsChild(e))
 		{
 			_e->setFocus(e);
@@ -550,7 +550,7 @@ bool Entity::keyPressed(EntityKeyEvent const* _e)
 //		p.context()->debugTree();
 //		qDebug() << p.index();
 		if (p.exists())
-			_e->codeScene()->setCurrent(p.entity());
+			_e->codeScene()->setCurrent(p.childType());
 	}
 	else if (_e->codeScene()->isCurrent(this) && _e->key() == Qt::Key_Delete)
 	{
@@ -564,7 +564,7 @@ bool Entity::keyPressed(EntityKeyEvent const* _e)
 //		p.context()->debugTree();
 //		qDebug() << p.index();
 		if (p.exists())
-			_e->codeScene()->setCurrent(p.entity());
+			_e->codeScene()->setCurrent(p.childType());
 	}
 	else if (_e->codeScene()->isCurrent(this) && (_e->key() == Qt::Key_Escape) && isEditing(_e->codeScene()))
 		_e->codeScene()->setEditing(0);
@@ -598,7 +598,7 @@ bool Entity::attemptInsert(EntityKeyEvent const* _e)
 }
 bool Entity::attemptAppend(EntityKeyEvent const* _e)
 {
-	foreach (Kind i, allowedKinds(entities().size()))
+	foreach (Kind i, allowedKinds(cardinalChildCount()))
 		if (AuxilliaryRegistrar::get()->auxilliary(i.name())->dispatchKeyPress(back(), _e))
 			return true;
 	return false;
@@ -639,7 +639,7 @@ void Entity::commitVirtualMove(InsertionPoint const& _oldPosition)
 	m_rootEntity = newRoot;
 	
 	// Update the root of all entities to which we are an ancestor.
-	foreach (Entity* e, allEntities())
+	foreach (Entity* e, children())
 		e->checkRoot();
 		
 	if (newRoot)
@@ -649,13 +649,13 @@ void Entity::commitVirtualMove(InsertionPoint const& _oldPosition)
 }
 void Entity::removeFromBrood(int _index, Entity* _e)
 {
-	M_ASSERT(_index < m_children.size());
+	M_ASSERT(_index < m_cardinalChildren.size());
 	if (_index >= 0)
 	{
-		Entity* t = m_children.takeAt(_index);
+		Entity* t = m_cardinalChildren.takeAt(_index);
 		M_ASSERT(t == _e);	// confirm that we're taken the right one. if this fails, the parent has something else in the position that the child thinks it occupies.
-		for (int i = _index; i < m_children.size(); i++)
-			m_children[i]->m_contextIndex = i;
+		for (int i = _index; i < m_cardinalChildren.size(); i++)
+			m_cardinalChildren[i]->m_contextIndex = i;
 	}
 	else
 		for (QHash<int, Entity*>::iterator i = m_namedChildren.find(_index); i != m_namedChildren.end() && i.key() == _index; ++i)
@@ -667,12 +667,12 @@ void Entity::removeFromBrood(int _index, Entity* _e)
 }
 void Entity::removeAllFromBrood(int _index)
 {
-	M_ASSERT(_index < m_children.size());
+	M_ASSERT(_index < m_cardinalChildren.size());
 	if (_index >= 0)
 	{
-		m_children.removeAt(_index);
-		for (int i = _index; i < m_children.size(); i++)
-			m_children[i]->m_contextIndex = i;
+		m_cardinalChildren.removeAt(_index);
+		for (int i = _index; i < m_cardinalChildren.size(); i++)
+			m_cardinalChildren[i]->m_contextIndex = i;
 	}
 	else
 		m_namedChildren.remove(_index);
@@ -680,8 +680,8 @@ void Entity::removeAllFromBrood(int _index)
 void Entity::insertIntoBrood(int _index, Entity* _e)
 {
 	if (_index == UndefinedIndex)
-		_index = m_children.size();
-	M_ASSERT(_index <= m_children.size());
+		_index = m_cardinalChildren.size();
+	M_ASSERT(_index <= m_cardinalChildren.size());
 	if (_index < 0)
 	{
 		_e->m_contextIndex = _index;
@@ -689,9 +689,9 @@ void Entity::insertIntoBrood(int _index, Entity* _e)
 	}
 	else
 	{
-		m_children.insert(_index, _e);
-		for (int i = _index; i < m_children.size(); i++)
-			m_children[i]->m_contextIndex = i;
+		m_cardinalChildren.insert(_index, _e);
+		for (int i = _index; i < m_cardinalChildren.size(); i++)
+			m_cardinalChildren[i]->m_contextIndex = i;
 	}
 }
 void Entity::checkRoot()
@@ -701,7 +701,7 @@ void Entity::checkRoot()
 		onLeaveScene(context()->rootEntity(), rootEntity());
 		m_rootEntity = context()->rootEntity();
 	}
-	foreach (Entity* e, allEntities())
+	foreach (Entity* e, children())
 		e->checkRoot();
 }
 
@@ -711,7 +711,7 @@ QList<Entity*> Entity::dependencies() const
 	if (!isInModel())
 		return QList<Entity*>();
 	QSet<Entity*> ret = m_dependencies;
-	foreach (Entity* e, allEntities())
+	foreach (Entity* e, children())
 		if (familyDependencies() & DependsOnChildren)
 			ret << e;
 	if (familyDependencies() & DependsOnContext)
@@ -723,7 +723,7 @@ QList<Entity*> Entity::dependents() const
 	if (!isInModel())
 		return QList<Entity*>();
 	QList<Entity*> ret = m_dependents;
-	foreach (Entity* e, allEntities())
+	foreach (Entity* e, children())
 		if (e->familyDependencies() & DependsOnContext)
 			ret << e;
 	if (context() && (context()->familyDependencies() & DependsOnChildren))
@@ -840,7 +840,7 @@ bool Entity::validifyChild(int _i, int* _added)
 			j = m_namedChildren.erase(j);
 			ret = true;
 		}
-	while (entityCount(_i) < minimumRequiredNamed(_i))
+	while (childCountAt(_i) < minimumRequiredNamed(_i))
 	{
 		middle(_i).spawnPreparedSilent()->contextAdded();
 		*_added = (*_added == INT_MAX - 1) ? _i : INT_MAX;
@@ -852,17 +852,17 @@ bool Entity::validifyChildren()
 {
 	bool ret = false;
 	int added = INT_MAX - 1;
-	for (int i = 0; i < qMax(minimumRequired(), m_children.size()); i++)
+	for (int i = 0; i < qMax(minimumRequired(), m_cardinalChildren.size()); i++)
 	{
-		if (i >= m_children.size())
+		if (i >= m_cardinalChildren.size())
 		{
 			back().spawnPreparedSilent()->contextAdded();
 			added = (added == INT_MAX - 1) ? i : INT_MAX;
 		}
-		else if (!m_children[i]->isAllowed() && i < minimumRequired())
-			m_children[i]->deleteAndRefill();
-		else if (!m_children[i]->isAllowed())
-			m_children[i]->killAndDelete();
+		else if (!m_cardinalChildren[i]->isAllowed() && i < minimumRequired())
+			m_cardinalChildren[i]->deleteAndRefill();
+		else if (!m_cardinalChildren[i]->isAllowed())
+			m_cardinalChildren[i]->killAndDelete();
 		else
 			continue;
 		ret = true;
@@ -881,12 +881,12 @@ bool Entity::validifyChildren()
 Entity* Entity::prepareChildren()
 {
 	for (int i = INT_MIN; i < virtualEndOfNamed(); i++)
-		while (entityCount(i) < minimumRequiredNamed(i))
+		while (childCountAt(i) < minimumRequiredNamed(i))
 			middle(i).spawnPreparedSilent()->contextAdded();
 	foreach (int i, AuxilliaryRegistrar::get()->names())
-		while (entityCount(i) < minimumRequiredNamed(i))
+		while (childCountAt(i) < minimumRequiredNamed(i))
 			middle(i).spawnPreparedSilent()->contextAdded();
-	for (int i = m_children.size(); i < minimumRequired(); ++i)
+	for (int i = m_cardinalChildren.size(); i < minimumRequired(); ++i)
 		back().spawnPreparedSilent()->contextAdded();
 	childrenInitialised();
 	return this;
@@ -900,11 +900,11 @@ bool Entity::removeInvalidChildren()
 			ret = true;
 			i->deleteAndRefill();
 		}
-	for (int i = m_children.size() - 1; i >= 0; i--)
-		if (!m_children[i]->isAllowed())
+	for (int i = m_cardinalChildren.size() - 1; i >= 0; i--)
+		if (!m_cardinalChildren[i]->isAllowed())
 		{
 			ret = true;
-			m_children[i]->deleteAndRefill();
+			m_cardinalChildren[i]->deleteAndRefill();
 		}
 	return ret;
 }
@@ -915,8 +915,8 @@ Entity* Entity::usurp(Entity* _u)
 	over().insertSilent(_u);
 	
 	// Move children over.
-	QList<Entity*> es = m_children + m_namedChildren.values();
-	foreach (Entity* e, m_children)
+	QList<Entity*> es = m_cardinalChildren + m_namedChildren.values();
+	foreach (Entity* e, m_cardinalChildren)
 		e->move(_u->back());
 	foreach (Entity* e, m_namedChildren.values())
 		e->move(_u->middle(e->m_contextIndex));
@@ -979,9 +979,9 @@ void Entity::deleteAndRefill(Entity* _e, bool _moveToGrave)
 	else if (isNecessary())
 	{
 		p.spawnPreparedSilent();
-		kill(p.entity());
+		kill(p.childType());
 		p->contextAdded(c);
-		c->childSwitched(p.entity(), this);
+		c->childSwitched(p.childType(), this);
 		delete this;
 	}
 	else
@@ -1009,21 +1009,21 @@ void Entity::deleteAndRefill(Entity* _e, bool _moveToGrave)
 
 void Entity::childAdded(int _index)
 {
-	if (_index >= 0 && _index < m_children.size() && familyDependencies() & DependsOnChildren)
+	if (_index >= 0 && _index < m_cardinalChildren.size() && familyDependencies() & DependsOnChildren)
 	{
 		if (botherNotifying())
-			dependencyAdded(m_children[_index]);
-		for (int i = _index + 1; i < entityCount(); i++)
+			dependencyAdded(m_cardinalChildren[_index]);
+		for (int i = _index + 1; i < cardinalChildCount(); i++)
 		{
-			if (entity(i)->botherNotifying() && entity(i)->familyDependencies() & DependsOnContextIndex)
-				entity(i)->contextIndexChanged(i - 1);
+			if (child(i)->botherNotifying() && child(i)->familyDependencies() & DependsOnContextIndex)
+				child(i)->contextIndexChanged(i - 1);
 			if (botherNotifying() && familyDependencies() & TestOnOrder)
-				childMoved(entity(i), i - 1);
+				childMoved(child(i), i - 1);
 		}
 	}
-	else if (botherNotifying() && m_children.size() && familyDependencies() & DependsOnChildren)
+	else if (botherNotifying() && m_cardinalChildren.size() && familyDependencies() & DependsOnChildren)
 	{
-		dependencyAdded(m_children.last());
+		dependencyAdded(m_cardinalChildren.last());
 	}
 	if (isInModel())
 		// This would be a relayoutLater() call, except we know the child will call that, so we can optimise thus:
@@ -1052,12 +1052,12 @@ void Entity::childRemoved(Entity* _ch, int _index)
 	{
 		if (botherNotifying())
 			dependencyRemoved(_ch, _index);
-		for (int i = _index; i < entityCount(); i++)
+		for (int i = _index; i < cardinalChildCount(); i++)
 		{
-			if (entity(i)->botherNotifying() && entity(i)->familyDependencies() & DependsOnContextIndex)
-				entity(i)->contextIndexChanged(i + 1);
+			if (child(i)->botherNotifying() && child(i)->familyDependencies() & DependsOnContextIndex)
+				child(i)->contextIndexChanged(i + 1);
 			if (botherNotifying() && familyDependencies() & TestOnOrder)
-				childMoved(entity(i), i + 1);
+				childMoved(child(i), i + 1);
 		}
 	}
 	if (isInModel())

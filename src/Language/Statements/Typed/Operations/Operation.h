@@ -41,7 +41,7 @@ public:
 	static void							unregisterOperator(Operator _o, ValueDefiner* _v, RootEntity*) { s_operatorCatalogue.remove(_o, _v); }
 
 protected:
-	virtual bool						isSlidable(int _i) const { return _i != entities().size() - 1; }
+	virtual bool						isSlidable(int _i) const { return _i != cardinalChildCount() - 1; }
 	static InsertionPoint				slideOnPrecedence(InsertionPoint _p, Precedence _d, Associativity _a, InsertionPoint const& _block);
 	
 	// Must return all entities that are LambdaNamer-derived and whose id() is operator _o.

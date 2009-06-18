@@ -39,7 +39,7 @@ public:
 
 	virtual Kinds						ancestralDependencies() const { return Kind::of<LambdaNamer>(); }
 	virtual void						onDependencyChanged(Entity* _e);
-	virtual QString						defineLayout(ViewKeys&) const { return QString("^;ycode;'return ';") + (entity(0) ? ";0" : ""); }
+	virtual QString						defineLayout(ViewKeys&) const { return QString("^;ycode;'return ';") + (child(0) ? ";0" : ""); }
 };
 
 }

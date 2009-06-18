@@ -84,16 +84,16 @@ Type SubscriptOperation::type() const
 {
 	if (leftType()->isType<StringType>())
 		return Type(Wchar).topWith(Reference());
-	else if (leftType()->isType<Const>() && leftType()->asType<Const>()->child()->isType<StringType>())
+	else if (leftType()->isType<Const>() && leftType()->asType<Const>()->childType()->isType<StringType>())
 		return Type(Wchar);
 	else if (leftType()->isType<AddressType>())
-		return Type(*leftType()->asType<AddressType>()->child()).topWith(Reference());
-	else if (leftType()->isType<Const>() && leftType()->asType<Const>()->child()->isType<ListType>())
-		return Type(*leftType()->asType<Const>()->child()->asType<ListType>()->child()).topWith(Const()).topWith(Reference());
+		return Type(*leftType()->asType<AddressType>()->childType()).topWith(Reference());
+	else if (leftType()->isType<Const>() && leftType()->asType<Const>()->childType()->isType<ListType>())
+		return Type(*leftType()->asType<Const>()->childType()->asType<ListType>()->childType()).topWith(Const()).topWith(Reference());
 	else if (leftType()->isType<ListType>())
-		return Type(*leftType()->asType<ListType>()->child()).topWith(Reference());
-	else if (leftType()->isType<Const>() && leftType()->asType<Const>()->child()->isType<HashType>())
-		return Type(*leftType()->asType<Const>()->child()->asType<HashType>()->value()).topWith(Const()).topWith(Reference());
+		return Type(*leftType()->asType<ListType>()->childType()).topWith(Reference());
+	else if (leftType()->isType<Const>() && leftType()->asType<Const>()->childType()->isType<HashType>())
+		return Type(*leftType()->asType<Const>()->childType()->asType<HashType>()->value()).topWith(Const()).topWith(Reference());
 	else if (leftType()->isType<HashType>())
 		return Type(*leftType()->asType<HashType>()->value()).topWith(Reference());
 	return Type();

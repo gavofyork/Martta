@@ -37,9 +37,9 @@ public:
 protected:
 	virtual Types						assignableTypes() const;
 	virtual bool						hasDefaultConstructor() const { return true; }
-	virtual QString						code(QString const& _middle) const { return child()->code("*" + _middle); }
+	virtual QString						code(QString const& _middle) const { return childType()->code("*" + _middle); }
 	virtual QString						modifierLayout() const { return "ycode;'*'"; }
-	virtual QString						idColour() const { return QColor(child() ? child()->idColour() : TypeEntity::null->idColour()).darker(120).name(); }
+	virtual QString						idColour() const { return QColor(childType() ? childType()->idColour() : TypeEntity::null->idColour()).darker(120).name(); }
 	virtual TypeEntity*					newClone() const { return new Pointer; }
 	virtual QList<DeclarationEntity*>	utilised() const { return QList<DeclarationEntity*>(); }
 };

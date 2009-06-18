@@ -28,7 +28,7 @@ MARTTA_OBJECT_CPP(AddressType);
 
 bool AddressType::defineSimilarityTo(TypeEntity const* _t, Castability _c) const
 {
-	return _t->isKind<AddressType>() && child()->isSimilarTo(_t->asKind<AddressType>()->child(), Physical) ||
+	return _t->isKind<AddressType>() && childType()->isSimilarTo(_t->asKind<AddressType>()->childType(), Physical) ||
 		isAnyConvertible(_c) && _t->isKind<SimpleType>() && _t->asKind<SimpleType>()->id() == Bool || 
 		Super::defineSimilarityTo(_t, _c);
 }

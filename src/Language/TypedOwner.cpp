@@ -47,9 +47,9 @@ Kinds TypedOwner::deniedKinds(int) const
 
 Type TypedOwner::effectiveType(int _i) const
 {
-	if (!entityIs<Typed>(_i))
+	if (!childIs<Typed>(_i))
 		return Type();
-	Type p(entityAs<Typed>(_i)->type());
+	Type p(childAs<Typed>(_i)->type());
 	foreach (Type t, allowedTypes(0))
 		if (p.isSimilarTo(t, TypeEntity::Convertible))
 			return t->isUltimatelyNull() ? p : t;
@@ -58,25 +58,25 @@ Type TypedOwner::effectiveType(int _i) const
 
 bool TypedOwner::isChildInValidState(int _i) const
 {
-//	entity(_i)->debugTree();
+//	child(_i)->debugTree();
 	// Nothing to say about it as it's not typed. If it's supposed to be typed, then the allowed kinds system should pick up the error.
-	if (!entityIs<Typed>(_i))
+	if (!childIs<Typed>(_i))
 		return true;
 	foreach (Type i, deniedTypes(_i))
-		if (entityAs<Typed>(_i)->type() == i)
+		if (childAs<Typed>(_i)->type() == i)
 			return false;
 	foreach (Type i, allowedTypes(_i))
-		if (!entityIs<Typed>(_i))
+		if (!childIs<Typed>(_i))
 		{
 			debugTree();
 			M_ASSERT(false);
 		}
 		else
-			if (entityAs<Typed>(_i)->type().isSimilarTo(i, TypeEntity::Convertible))
+			if (childAs<Typed>(_i)->type().isSimilarTo(i, TypeEntity::Convertible))
 				return true;
 			else
 			{
-				qDebug() << entityAs<Typed>(_i)->type()->code() << " != " << i->code();
+				qDebug() << childAs<Typed>(_i)->type()->code() << " != " << i->code();
 			}
 	return false;
 }

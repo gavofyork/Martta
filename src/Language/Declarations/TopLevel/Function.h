@@ -51,7 +51,7 @@ protected:
 	virtual void						onDependencyChanged(Entity*) { changed(); }
 	virtual void						onDependencyRemoved(Entity*, int) { changed(); }
 	
-	virtual Entity*						isExpander() const { return body()->entity(0); }
+	virtual Entity*						isExpander() const { return body()->child(0); }
 	virtual QString						defineLayout(ViewKeys& _v) const { return "^;" + LambdaNamer::defineLayout(_v); }
 	virtual bool						keyPressed(EntityKeyEvent const* _e) { return LambdaNamer::keyPressed(_e) ? true : Super::keyPressed(_e); }
 	virtual void						exportDom(QDomElement& _element) const;

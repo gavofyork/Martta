@@ -60,13 +60,13 @@ Types WhileLoop::allowedTypes(int _index) const
 QString WhileLoop::defineLayout(ViewKeys&) const
 {
 	return QString("ycode;^;'while (';0;')'") +
-		(entity(1) && entity(1)->entities().size() ? ";n;i;1" : ";1");
+		(child(1) && child(1)->cardinalChildCount() ? ";n;i;1" : ";1");
 }
 
 bool WhileLoop::keyPressed(EntityKeyEvent const* _e)
 {
-	if ((_e->text() == ")" || _e->text() == "{") && _e->focalIndex() == 0 && allEntitiesOf<Compound>().size())
-		allEntitiesOf<Compound>()[0]->navigateOnto(_e->codeScene());
+	if ((_e->text() == ")" || _e->text() == "{") && _e->focalIndex() == 0 && childrenOf<Compound>().size())
+		childrenOf<Compound>()[0]->navigateOnto(_e->codeScene());
 	else
 		return Super::keyPressed(_e);
 	return true;

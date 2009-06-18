@@ -71,7 +71,7 @@ void AssignedVariable::onDependencySwitched(Entity* _e, Entity*)
 {
 	qDebug() << this << ": Dependency Switched: " << _e;
 	debugTree();
-	if (_e == entity(AssignedValue) && _e->kind() == Kind::of<Typed>())
+	if (_e == child(AssignedValue) && _e->kind() == Kind::of<Typed>())
 	{
 		Entity* o = usurp(new DefaultConstructedVariable);
 		_e->kill();
@@ -84,7 +84,7 @@ bool AssignedVariable::keyPressed(EntityKeyEvent const* _e)
 	if (VariableNamer::keyPressed(_e))
 		return true;
 	else if (_e->text() == "=")
-		entity(AssignedValue)->setCurrent();
+		child(AssignedValue)->setCurrent();
 	else
 		return Super::keyPressed(_e);
 	return true;

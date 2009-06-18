@@ -352,10 +352,10 @@ void TypedefResolver::resolve(DeclarationsHandler* _h)
 {
 	TypeResolver::resolve(_h);
 	m_subject->back().place(_h->resolveType(m_typeId));
-	if (m_subject->entityIs<ExplicitType>(0) && m_subject->entityAs<ExplicitType>(0)->subject()->isKind<Struct>() && m_subject->entityAs<ExplicitType>(0)->subject()->asKind<Struct>()->codeName() == m_subject->codeName())
+	if (m_subject->childIs<ExplicitType>(0) && m_subject->childAs<ExplicitType>(0)->subject()->isKind<Struct>() && m_subject->childAs<ExplicitType>(0)->subject()->asKind<Struct>()->codeName() == m_subject->codeName())
 	{
 		// Cloned struct name; make the structure anonymous.
-		TopLevelType* e = m_subject->entityAs<ExplicitType>(0)->subject()->asKind<Struct>();
+		TopLevelType* e = m_subject->childAs<ExplicitType>(0)->subject()->asKind<Struct>();
 		e->move(m_subject->back());
 		_h->removeFromFile(e);
 	}

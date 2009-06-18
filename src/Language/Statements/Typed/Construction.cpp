@@ -35,12 +35,12 @@ MARTTA_OBJECT_CPP(Construction);
 	
 int Construction::minimumRequired() const
 {
-	return m_subject->entities().size() - 2;
+	return m_subject->cardinalChildCount() - 2;
 }
 
 Kinds Construction::allowedKinds(int _index) const
 {
-	if (m_subject.isUsable() && _index < m_subject->entities().size() - 2)
+	if (m_subject.isUsable() && _index < m_subject->cardinalChildCount() - 2)
 		return Kind::of<Typed>();
 	else
 		return Super::allowedKinds(_index);
@@ -50,7 +50,7 @@ Types Construction::allowedTypes(int _index) const
 {
 	if (!m_subject.isUsable()) return Types();
 	
-	Type t = *m_subject->entityAs<Argument>(_index + 1)->actualType();
+	Type t = *m_subject->childAs<Argument>(_index + 1)->actualType();
 	if (t.isNull())
 		return Type(Void).topWith(Const());
 	return t;

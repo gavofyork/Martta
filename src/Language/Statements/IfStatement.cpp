@@ -64,12 +64,12 @@ Types IfStatement::allowedTypes(int _index) const
 
 bool IfStatement::keyPressed(EntityKeyEvent const* _e)
 {
-	if ((_e->text() == ")" || _e->text() == "{") && _e->focalIndex() == 0 && allEntitiesOf<Compound>().size())
-		allEntitiesOf<Compound>()[0]->navigateOnto(_e->codeScene());
+	if ((_e->text() == ")" || _e->text() == "{") && _e->focalIndex() == 0 && childrenOf<Compound>().size())
+		childrenOf<Compound>()[0]->navigateOnto(_e->codeScene());
 	else if (_e->text() == "E" && _e->focalIndex() != 2)
 	{
-		if (!entity(2)) back().place(new Compound);
-		entity(2)->navigateOnto(_e->codeScene());
+		if (!child(2)) back().place(new Compound);
+		child(2)->navigateOnto(_e->codeScene());
 	}
 	else
 		return Super::keyPressed(_e);
@@ -79,8 +79,8 @@ bool IfStatement::keyPressed(EntityKeyEvent const* _e)
 QString IfStatement::defineLayout(ViewKeys&) const
 {
 	return QString("ycode;^;'if (';0;')'") +
-			(entity(1) && entity(1)->entities().size() ? ";n;i;1" : ";1") +
-			(entity(2) ? ";n;'else'" + QString(entity(2)->entities().size() ? ";n;i;2" : ";2") : QString());
+			(child(1) && child(1)->cardinalChildCount() ? ";n;i;1" : ";1") +
+			(child(2) ? ";n;'else'" + QString(child(2)->cardinalChildCount() ? ";n;i;2" : ";2") : QString());
 }
 
 }

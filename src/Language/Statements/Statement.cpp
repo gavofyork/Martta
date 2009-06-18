@@ -29,22 +29,22 @@ MARTTA_OBJECT_CPP(Statement);
 	
 bool Statement::isTyped(int _i) const
 {
-	return entityIs<Typed>(_i);
+	return childIs<Typed>(_i);
 }
 
 Typed* Statement::asTyped(int _i) const
 {
-	return entityAs<Typed>(_i);
+	return childAs<Typed>(_i);
 }
 
 Type Statement::typeOf(int _i) const
 {
-	return entityIs<Typed>(_i) ? entityAs<Typed>(_i)->type() : Type();
+	return childIs<Typed>(_i) ? childAs<Typed>(_i)->type() : Type();
 }
 
 QList<Typed*> Statement::typeds() const
 {
-	return allEntitiesOf<Typed>();
+	return childrenOf<Typed>();
 }
 
 QList<ValueDefiner*> Statement::valuesInLocalScope() const

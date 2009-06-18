@@ -35,11 +35,11 @@ class Memberify: public ModifyingType
 public:
 	Memberify(Class* _scope = 0, bool _isConst = true) { if (_scope) setScopeClass(_scope, _isConst); }
 	Memberify(Type const& _object);
-//	~Memberify() { if (entity(1)) entity(1)->killAndDelete(); }
+//	~Memberify() { if (child(1)) child(1)->killAndDelete(); }
 	
 	bool								isConst() const;
 	void								setConst(bool _c);
-	TypeEntity*							scope() const { return entity(1)->isKind<TypeEntity>() ? entity(1)->asKind<TypeEntity>() : 0; }
+	TypeEntity*							scope() const { return child(1)->isKind<TypeEntity>() ? child(1)->asKind<TypeEntity>() : 0; }
 	TypeEntity*							scopeType() const;
 	Class*								scopeClass(bool* _isConst = 0) const;
 	void								setScope(Type const& _newScope);
@@ -51,7 +51,7 @@ protected:
 	virtual Types						assignableTypes() const;
 	virtual TypeEntity*					newClone() const;
 	virtual QString						modifierLayout() const;
-	virtual bool						isSuperfluous() const { return entityCount() < 2 || Super::isSuperfluous(); }
+	virtual bool						isSuperfluous() const { return cardinalChildCount() < 2 || Super::isSuperfluous(); }
 	virtual bool						canStandAlone() const { return false; }
 	virtual bool						defineSimilarityFrom(TypeEntity const* _f, Castability _c) const;
 	virtual Kinds						allowedKinds(int _i) const;

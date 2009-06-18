@@ -71,9 +71,9 @@ bool ForLoop::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEven
 bool ForLoop::keyPressed(EntityKeyEvent const* _e)
 {
 	if (_e->text() == ";" && _e->focalIndex() < 2)
-		entity(_e->focalIndex() + 1)->setCurrent();
-	else if ((_e->text() == ")" || _e->text() == "{") && _e->focalIndex() < 3 && allEntitiesOf<Compound>().size())
-		allEntitiesOf<Compound>()[0]->navigateOnto(_e->codeScene());
+		child(_e->focalIndex() + 1)->setCurrent();
+	else if ((_e->text() == ")" || _e->text() == "{") && _e->focalIndex() < 3 && childrenOf<Compound>().size())
+		childrenOf<Compound>()[0]->navigateOnto(_e->codeScene());
 	else if (_e->text() == "B" && _e->focus()->isPlaceholder() && _e->focus()->isAllowed<BreakStatement>())
 	{
 		Entity* e = new BreakStatement;
@@ -88,8 +88,8 @@ bool ForLoop::keyPressed(EntityKeyEvent const* _e)
 QString ForLoop::defineLayout(ViewKeys&) const
 {
 	return "Hfull;ycode;^;'for (';0;'\\; ';1;'\\; ';2;')'" +
-	QString(entity(3) && entity(3)->entities().size() ? ";n;i;3" : ";3");
-//	QString((!entity(3) || !entity(3)->entity(0) || entity(3)->entity(0)->isPlaceholder()) ? ";' ';(;3;)" : ";n;i;(;3;)");
+	QString(child(3) && child(3)->cardinalChildCount() ? ";n;i;3" : ";3");
+//	QString((!child(3) || !child(3)->child(0) || child(3)->child(0)->isPlaceholder()) ? ";' ';(;3;)" : ";n;i;(;3;)");
 }
 
 void ForLoop::decorate(DecorationContext const& /*_c*/) const

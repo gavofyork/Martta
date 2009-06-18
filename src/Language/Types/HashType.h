@@ -38,8 +38,8 @@ class HashType: public ModifyingType
 public:
 	static void							initialiseClass();
 	static void							finaliseClass();
-	TypeEntity const*					key() const { return entityIs<TypeEntity>(1) ? entityAs<TypeEntity>(1) : TypeEntity::null; }
-	TypeEntity const*					value() const { return entityIs<TypeEntity>(0) ? entityAs<TypeEntity>(0) : TypeEntity::null; }
+	TypeEntity const*					key() const { return childIs<TypeEntity>(1) ? childAs<TypeEntity>(1) : TypeEntity::null; }
+	TypeEntity const*					value() const { return childIs<TypeEntity>(0) ? childAs<TypeEntity>(0) : TypeEntity::null; }
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
 	virtual bool						isWellDefined() const { return key() && value() && key()->isWellDefined() && value()->isWellDefined(); }
 	

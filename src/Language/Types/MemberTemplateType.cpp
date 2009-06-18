@@ -31,9 +31,9 @@ void MemberTemplateType::substitute()
 	if (hasAncestor<Memberify>())
 	{
 		Memberify* m = ancestor<Memberify>();
-		if (m->scopeType()->entityIs<TypeEntity>(m_index) && !m->scopeType()->entityAs<TypeEntity>(m_index)->isNull())
+		if (m->scopeType()->childIs<TypeEntity>(m_index) && !m->scopeType()->childAs<TypeEntity>(m_index)->isNull())
 		{
-			replace(cloneOf(m->scopeType()->entityAs<TypeEntity>(m_index), owner()));
+			replace(cloneOf(m->scopeType()->childAs<TypeEntity>(m_index), owner()));
 			return;
 		}
 	}
@@ -44,15 +44,15 @@ bool MemberTemplateType::defineSimilarityFrom(TypeEntity const* _f, Castability 
 	if (hasAncestor<Memberify>())
 	{
 		Memberify* m = ancestor<Memberify>();
-		if (m->scopeType()->entityIs<TypeEntity>(m_index))
+		if (m->scopeType()->childIs<TypeEntity>(m_index))
 		{
-			if (m->scopeType()->entityAs<TypeEntity>(m_index)->isNull())
+			if (m->scopeType()->childAs<TypeEntity>(m_index)->isNull())
 			{
 				// Redefine the template type if it hasn't been already
-				m->scopeType()->entityAs<TypeEntity>(m_index)->replace(cloneOf(_f, m->scopeType()->entityAs<MemberTemplateType>(m_index)->owner()));
+				m->scopeType()->childAs<TypeEntity>(m_index)->replace(cloneOf(_f, m->scopeType()->childAs<MemberTemplateType>(m_index)->owner()));
 				return true;
 			}
-			else if (_f->isSimilarTo(m->scopeType()->entityAs<TypeEntity>(m_index), _c))
+			else if (_f->isSimilarTo(m->scopeType()->childAs<TypeEntity>(m_index), _c))
 			{
 				// Otherwise compare on it (we wouldn't normally have to do this because of substitution, but the above
 				// can't really substitute i nthe middle of the a similarity check!
@@ -75,15 +75,15 @@ bool MemberTemplateType::defineEquivalenceFrom(TypeEntity const* _f) const
 	if (hasAncestor<Memberify>())
 	{
 		Memberify* m = ancestor<Memberify>();
-		if (m->scopeType()->entityIs<TypeEntity>(m_index))
+		if (m->scopeType()->childIs<TypeEntity>(m_index))
 		{
-			if (m->scopeType()->entityAs<TypeEntity>(m_index)->isNull())
+			if (m->scopeType()->childAs<TypeEntity>(m_index)->isNull())
 			{
 				// Redefine the template type if it hasn't been already
-				m->scopeType()->entityAs<TypeEntity>(m_index)->replace(cloneOf(_f, m->scopeType()->entityAs<MemberTemplateType>(m_index)->owner()));
+				m->scopeType()->childAs<TypeEntity>(m_index)->replace(cloneOf(_f, m->scopeType()->childAs<MemberTemplateType>(m_index)->owner()));
 				return true;
 			}
-			else if (_f->isEquivalentTo(m->scopeType()->entityAs<TypeEntity>(m_index)))
+			else if (_f->isEquivalentTo(m->scopeType()->childAs<TypeEntity>(m_index)))
 			{
 				// Otherwise compare on it (we wouldn't normally have to do this because of substitution, but the above
 				// can't really substitute i nthe middle of the a similarity check!

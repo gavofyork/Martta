@@ -47,13 +47,13 @@ protected:
 			return false;
 
 		InsertionPoint p = slideOnPrecedence(_p, _d, _a, _e->nearestBracket(_p));
-		if (!isTemporary(p.entity()))
+		if (!isTemporary(p.childType()))
 		{
 			Entity* n = new T;
 			_e->noteStrobeCreation(n, &*p);
 			p->insert(n);
 			n->validifyChildren();
-			n->entity(1)->navigateOnto(_e->codeScene());
+			n->child(1)->navigateOnto(_e->codeScene());
 			return true;
 		}
 		return false;

@@ -392,23 +392,23 @@ int test()
 		NamespaceEntity* n = new NamespaceEntity;
 		n->prepareChildren();
 		r->back().place(n);
-		n->entityAs<TextLabel>(Identifiable::Identity)->setText("n");
+		n->childAs<TextLabel>(Identifiable::Identity)->setText("n");
 
 		Class* X = new Class;
 		X->prepareChildren();
 		n->back().place(X);
-		X->entityAs<TextLabel>(Identifiable::Identity)->setText("X");
+		X->childAs<TextLabel>(Identifiable::Identity)->setText("X");
 
 		Class* Y = new Class;
 		Y->prepareChildren();
 		n->back().place(Y);
-		Y->entityAs<TextLabel>(Identifiable::Identity)->setText("Y");
+		Y->childAs<TextLabel>(Identifiable::Identity)->setText("Y");
 
 		Method* M = new Method;
 		M->prepareChildren();
 		X->back().place(M);
-		M->entityAs<TextLabel>(Identifiable::Identity)->setText("foo");
-		M->entitiesOf<TypeEntity>()[0]->replace(new SimpleType(Void));
+		M->childAs<TextLabel>(Identifiable::Identity)->setText("foo");
+		M->cardinalChildrenOf<TypeEntity>()[0]->replace(new SimpleType(Void));
 		
 		Argument* v = new Argument;
 		v->back().place(new TextLabel("a"));
@@ -417,7 +417,7 @@ int test()
 		
 		Referenced* f = new Referenced(v); 
 		f->prepareChildren();
-		M->allEntitiesOf<Compound>()[0]->back().place(f);
+		M->childrenOf<Compound>()[0]->back().place(f);
 		
 		r->debugTree();
 		r->archivePtrs(true);
@@ -435,9 +435,9 @@ int test()
 		r->importDom(doc.documentElement());
 		r->restorePtrs();
 	
-		FAILED_IF(!r->entity(0)->allEntitiesOf<Class>()[0]->allEntitiesOf<Method>()[0]->allEntitiesOf<Compound>()[0]->entityIs<Referenced>(1));
-		qDebug() << &*r->entity(0)->allEntitiesOf<Class>()[0]->allEntitiesOf<Method>()[0]->allEntitiesOf<Compound>()[0]->entityAs<Referenced>(1)->subject();
-		FAILED_IF(!r->entity(0)->allEntitiesOf<Class>()[0]->allEntitiesOf<Method>()[0]->allEntitiesOf<Compound>()[0]->entityAs<Referenced>(1)->subject());
+		FAILED_IF(!r->child(0)->childrenOf<Class>()[0]->childrenOf<Method>()[0]->childrenOf<Compound>()[0]->childIs<Referenced>(1));
+		qDebug() << &*r->child(0)->childrenOf<Class>()[0]->childrenOf<Method>()[0]->childrenOf<Compound>()[0]->childAs<Referenced>(1)->subject();
+		FAILED_IF(!r->child(0)->childrenOf<Class>()[0]->childrenOf<Method>()[0]->childrenOf<Compound>()[0]->childAs<Referenced>(1)->subject());
 		
 		r->killAndDelete();
 	}
@@ -459,9 +459,9 @@ int test()
 		SafePointer<TestNegatives> b = new TestNegatives; \
 		a->move(r->back()); \
 		b->move(pos ? a->middle(pos) : a->back()); \
-		TEST("Clearing entities (allEntities: " #pos ")") FAILED_IF(!a->allEntities().contains(b)); \
-		TEST("Clearing entities (entities(): " #pos ")") FAILED_IF(bool(pos) == a->entities().contains(b)); \
-		TEST("Clearing entities (entities(int): " #pos ")") FAILED_IF(!a->entities(pos).contains(b)); \
+		TEST("Clearing entities (children: " #pos ")") FAILED_IF(!a->children().contains(b)); \
+		TEST("Clearing entities (cardinalChildren(): " #pos ")") FAILED_IF(bool(pos) == a->cardinalChildren().contains(b)); \
+		TEST("Clearing entities (children(int): " #pos ")") FAILED_IF(!a->children(pos).contains(b)); \
 		r->killAndDelete(); \
 		TEST("Clearing entities (a pointer: " #pos ")") FAILED_IF(a); \
 		TEST("Clearing entities (b pointer: " #pos ")") FAILED_IF(b); \
@@ -478,12 +478,12 @@ int test()
 		TEST_FOR("Negatives: start incomplete", !a->isComplete());
 		a->prepareChildren();
 		TEST_FOR("Negatives: prepareChildren() makes complete", a->isComplete());
-		TEST_FOR("Negatives: no entities", a->entityCount() == 0);
-		TEST_FOR("Negatives: no As", a->entityCount(TestNegativesB::NamedChildA) == 0);
-		TEST_FOR("Negatives: one B", a->entityCount(TestNegativesB::NamedChildB) == 1);
-		TEST_FOR("Negatives: two Cs", a->entityCount(TestNegativesB::NamedChildC) == 2);
-		TEST_FOR("Negatives: no 'D's", a->entityCount(TestNegativesB::NamedChildC + 1) == 0);
-		a->entity(TestNegativesB::NamedChildC)->replace(new Label);
+		TEST_FOR("Negatives: no entities", a->cardinalChildCount() == 0);
+		TEST_FOR("Negatives: no As", a->childCountAt(TestNegativesB::NamedChildA) == 0);
+		TEST_FOR("Negatives: one B", a->childCountAt(TestNegativesB::NamedChildB) == 1);
+		TEST_FOR("Negatives: two Cs", a->childCountAt(TestNegativesB::NamedChildC) == 2);
+		TEST_FOR("Negatives: no 'D's", a->childCountAt(TestNegativesB::NamedChildC + 1) == 0);
+		a->child(TestNegativesB::NamedChildC)->replace(new Label);
 		TEST_FOR("Negatives: bad replacement makes incomplete", !a->isComplete());
 		a->validifyChildren();
 		TEST_FOR("Negatives: validifyChildren() makes complete", a->isComplete());
@@ -510,13 +510,13 @@ int test()
 		a->killAndDelete();
 		r->importDom(doc.documentElement());
 		r->restorePtrs();
-		a = r->entityAs<TestNegativesB>(0);
+		a = r->childAs<TestNegativesB>(0);
 		
-		FAILED_IF(a->entityCount() != 0);
-		FAILED_IF(a->entityCount(TestNegativesB::NamedChildA) != 0);
-		FAILED_IF(a->entityCount(TestNegativesB::NamedChildB) != 1);
-		FAILED_IF(a->entityCount(TestNegativesB::NamedChildC) != 2);
-		FAILED_IF(a->entityCount(TestNegativesB::NamedChildC + 1) != 0);
+		FAILED_IF(a->cardinalChildCount() != 0);
+		FAILED_IF(a->childCountAt(TestNegativesB::NamedChildA) != 0);
+		FAILED_IF(a->childCountAt(TestNegativesB::NamedChildB) != 1);
+		FAILED_IF(a->childCountAt(TestNegativesB::NamedChildC) != 2);
+		FAILED_IF(a->childCountAt(TestNegativesB::NamedChildC + 1) != 0);
 		r->clearEntities();
 	}
 	TEST("Type construction adoption")
@@ -594,7 +594,7 @@ int test()
 		r->back().place(X);
 		X->changed();
 		FAILED_IF(!X->isValid());
-		foreach (Entity* e, X->allEntities())
+		foreach (Entity* e, X->children())
 			FAILED_IF(!e->isValid());
 	}
 #define TEST_THIS_CAST(F, T, R) \
@@ -663,7 +663,7 @@ int test()
 		Enumeration* Y = new Enumeration;
 		Y->prepareChildren();
 		Y->setNamed();
-		Y->entityAs<TextLabel>(Identifiable::Identity)->setText("Y");
+		Y->childAs<TextLabel>(Identifiable::Identity)->setText("Y");
 		r->back().place(Y);
 		EnumValue* Yv = new EnumValue;
 		Yv->prepareChildren();
@@ -758,9 +758,9 @@ int test()
 		Class* B = new Class;
 		Class* D = new Class;
 		B->prepareChildren();
-		B->entityAs<TextLabel>(Identifiable::Identity)->setText("B");
+		B->childAs<TextLabel>(Identifiable::Identity)->setText("B");
 		D->prepareChildren();
-		D->entityAs<TextLabel>(Identifiable::Identity)->setText("D");
+		D->childAs<TextLabel>(Identifiable::Identity)->setText("D");
 		r->back().place(B);
 		r->back().place(D);
 		Base* b = new Base;

@@ -34,12 +34,12 @@ void ModifyingType::unknit()
 {
 	if (owner() && &**owner() == this)
 	{
-		M_ASSERT(child()->owner() == owner());
+		M_ASSERT(childType()->owner() == owner());
 		M_ASSERT(!context());
-		owner()->m_top = child();
+		owner()->m_top = childType();
 	}
 	InsertionPoint p = over();
-	TypeEntity* ch = child();
+	TypeEntity* ch = childType();
 	
 	//	P -p-> this -0-> ch    BECOMES    P -p-> ch
 	

@@ -39,16 +39,16 @@ public:
 
 	virtual QList<ValueDefiner*>		valuesInLocalScope() const;
 
-	QList<Statement*>					statements() const { return allEntitiesOf<Statement>(); }
-	bool			 					isStatement(int _i) const { return entityIs<Statement>(_i); }
-	Statement*		 					asStatement(int _i) const { return entityAs<Statement>(_i); }
+	QList<Statement*>					statements() const { return childrenOf<Statement>(); }
+	bool			 					isStatement(int _i) const { return childIs<Statement>(_i); }
+	Statement*		 					asStatement(int _i) const { return childAs<Statement>(_i); }
 
 	QList<Typed*>						typeds() const;
 	bool								isTyped(int _i) const;
 	Typed*								asTyped(int _i) const;
 	Type								typeOf(int _i) const;
 	
-	virtual bool						onChanged() { foreach (Entity* i, allEntities()) i->relayoutLater(); return Super::onChanged(); }
+	virtual bool						onChanged() { foreach (Entity* i, children()) i->relayoutLater(); return Super::onChanged(); }
 };
 
 }

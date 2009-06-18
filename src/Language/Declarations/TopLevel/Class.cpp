@@ -45,7 +45,7 @@ Access Class::baseAccess(Class* _c) const
 {
 	if (_c == this)
 		return Public;
-	foreach (Base* i, entitiesOf<Base>())
+	foreach (Base* i, cardinalChildrenOf<Base>())
 	{
 		if (i->classType() == _c)
 			return i->access();
@@ -67,13 +67,13 @@ void Class::rejigDeps()
 {
 	removeAllDependencies();
 	foreach (Entity* i, members())
-		if (i->allEntityCountOf<AccessLabel>())
-			addDependency(i->allEntitiesOf<AccessLabel>()[0]);
+		if (i->childCountOf<AccessLabel>())
+			addDependency(i->childrenOf<AccessLabel>()[0]);
 }
 
 Entity* Class::isExpander() const
 {
-	return entityCount() > 3 ? entity(3) : const_cast<Class*>(this);
+	return cardinalChildCount() > 3 ? child(3) : const_cast<Class*>(this);
 }
 
 bool Class::checkImplicitConstructors()
@@ -178,7 +178,7 @@ Kinds Class::allowedKinds(int _i) const
 QString Class::implementationCode() const
 {
 	QString ret;
-	foreach (DeclarationEntity* f, allEntitiesOf<DeclarationEntity>())
+	foreach (DeclarationEntity* f, childrenOf<DeclarationEntity>())
 		ret += f->implementationCode() + "\n";
 	if (ret.endsWith("\n\n")) ret.chop(1);
 	return ret;
@@ -189,13 +189,13 @@ QString Class::interfaceCode() const
 	// TODO: ordering for enums?
 	QString ret;
 	ret += "class " + codeName() + "\n";
-	if (entitiesOf<Base>().size())
+	if (cardinalChildrenOf<Base>().size())
 		ret += ":";
-	foreach (Base* f, entitiesOf<Base>())
+	foreach (Base* f, cardinalChildrenOf<Base>())
 		ret += f->code() + ", ";
 	if (ret.endsWith(", ")) ret.chop(2);
 	ret += "{\n";
-	foreach (Member* f, allEntitiesOf<Member>())
+	foreach (Member* f, childrenOf<Member>())
 		ret += f->interfaceCode();
 	if (ret.endsWith("\n\n")) ret.chop(1);
 	ret += "};\n";
@@ -205,7 +205,7 @@ QString Class::interfaceCode() const
 QList<DeclarationEntity*> Class::utilised() const
 {
 	QList<DeclarationEntity*> ret;
-	foreach (Base* i, entitiesOf<Base>())
+	foreach (Base* i, cardinalChildrenOf<Base>())
 		ret << i->classType();
 	ret += Super::utilised();
 	return ret;
@@ -214,10 +214,10 @@ QList<DeclarationEntity*> Class::utilised() const
 QList<DeclarationEntity*> Class::members(bool _isConst, Access _access) const
 {
 	QList<DeclarationEntity*> ret;
-	foreach (MemberValue* i, allEntitiesOf<MemberValue>())
+	foreach (MemberValue* i, childrenOf<MemberValue>())
 		if ((i->isConst() || !_isConst) && i->access() <= _access)
 			ret += i;
-	foreach (Base* i, entitiesOf<Base>())
+	foreach (Base* i, cardinalChildrenOf<Base>())
 		if (!i->classType())
 			continue;
 		else if (_access == Private || _access == Protected && i->access() <= Protected)
@@ -264,7 +264,7 @@ QString Class::defineLayout(ViewKeys& _keys) const
 	
 	if (_keys["expanded"].toBool())
 	{
-		foreach (Base* i, entitiesOf<Base>())
+		foreach (Base* i, cardinalChildrenOf<Base>())
 			ret += QString(";n;i;%1").arg(i->contextIndex());
 		
 		ret += ";n;'{'";
@@ -274,24 +274,24 @@ QString Class::defineLayout(ViewKeys& _keys) const
 			QString mem;
 			Kinds recognised;
 			recognised << Kind::of<Constructor>();
-			foreach (MemberLambda* f, allEntitiesOf<Constructor>())
+			foreach (MemberLambda* f, childrenOf<Constructor>())
 				if (f->access() == Access(i))
 					mem += QString(";n;%1").arg(f->contextIndex());
 			recognised << Kind::of<Destructor>();
-			foreach (MemberLambda* f, allEntitiesOf<Destructor>())
+			foreach (MemberLambda* f, childrenOf<Destructor>())
 				if (f->access() == Access(i))
 					mem += QString(";n;%1").arg(f->contextIndex());
 			recognised << Kind::of<Method>();
-			foreach (MemberLambda* f, allEntitiesOf<Method>())
+			foreach (MemberLambda* f, childrenOf<Method>())
 				if (f->access() == Access(i))
 					mem += QString(";n;%1").arg(f->contextIndex());
-			foreach (MemberLambda* f, allEntitiesOf<MemberLambda>())
+			foreach (MemberLambda* f, childrenOf<MemberLambda>())
 				if (f->access() == Access(i) && !f->Entity::isKind(recognised))
 					mem += QString(";n;%1").arg(f->contextIndex());
-			foreach (MemberVariable* f, allEntitiesOf<MemberVariable>())
+			foreach (MemberVariable* f, childrenOf<MemberVariable>())
 				if (f->access() == Access(i))
 					mem += QString(";n;%1").arg(f->contextIndex());
-			foreach (MemberEnumeration* f, allEntitiesOf<MemberEnumeration>())
+			foreach (MemberEnumeration* f, childrenOf<MemberEnumeration>())
 				if (f->access() == Access(i))
 					mem += QString(";n;%1").arg(f->contextIndex());
 			if (!mem.isEmpty())
@@ -301,23 +301,23 @@ QString Class::defineLayout(ViewKeys& _keys) const
 	}
 	else
 	{
-		if (entitiesOf<Base>().count())
+		if (cardinalChildrenOf<Base>().count())
 		{
 			ret += ";ynormal;' ['";
-			foreach (Base* i, entitiesOf<Base>())
+			foreach (Base* i, cardinalChildrenOf<Base>())
 				ret += QString(";%1").arg(i->contextIndex());
 			ret += ";']'";
 		}
 		ret += ";yminor;' (";
-		if (int n = allEntitiesOf<Method>().size())
+		if (int n = childrenOf<Method>().size())
 			ret += QString::number(n) + " method" + (n > 1 ? "s, " : ", ");
-		if (int n = allEntitiesOf<MemberVariable>().size())
+		if (int n = childrenOf<MemberVariable>().size())
 			ret += QString::number(n) + " variable" + (n > 1 ? "s, " : ", ");
-		if (int n = (allEntitiesOf<Constructor>().size() - allEntitiesOf<ArtificialCopyConstructor>().size() - allEntitiesOf<ArtificialDefaultConstructor>().size()))
+		if (int n = (childrenOf<Constructor>().size() - childrenOf<ArtificialCopyConstructor>().size() - childrenOf<ArtificialDefaultConstructor>().size()))
 			ret += QString::number(n) + " constructor" + (n > 1 ? "s, " : ", ");
-		if (int n = allEntitiesOf<Destructor>().size())
+		if (int n = childrenOf<Destructor>().size())
 			ret += QString::number(n) + " destructor" + (n > 1 ? "s, " : ", ");
-		if (int n = (allEntitiesOf<MethodOperator>().size() - allEntitiesOf<ArtificialAssignmentOperator>().size()))
+		if (int n = (childrenOf<MethodOperator>().size() - childrenOf<ArtificialAssignmentOperator>().size()))
 			ret += QString::number(n) + " operator" + (n > 1 ? "s, " : ", ");
 		if (ret.endsWith(", "))
 			ret.chop(2);

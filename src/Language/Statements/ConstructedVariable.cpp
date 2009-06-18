@@ -41,7 +41,7 @@ Kinds ConstructedVariable::allowedKinds(int _index) const
 
 QString ConstructedVariable::code() const
 {
-	return basicCode() + entityAs<Construction>(OurConstruction)->callList();
+	return basicCode() + childAs<Construction>(OurConstruction)->callList();
 }
 
 bool ConstructedVariable::keyPressed(EntityKeyEvent const* _e)
@@ -49,7 +49,7 @@ bool ConstructedVariable::keyPressed(EntityKeyEvent const* _e)
 	if (VariableNamer::keyPressed(_e))
 		return true;
 	else if (_e->text() == "(")
-		entity(OurConstruction)->setCurrent();
+		child(OurConstruction)->setCurrent();
 	else
 		return Super::keyPressed(_e);
 	return true;

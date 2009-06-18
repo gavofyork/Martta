@@ -40,7 +40,7 @@ QString Compound::code() const
 QString Compound::defineLayout(ViewKeys&) const
 {
 	if (statements().size() > 1 || contextIs<LambdaNamer>())
-		return "ycode;-i;'{';n;" + times(0, entityCount(), ";n;") + ";n;-i;'}'";
+		return "ycode;-i;'{';n;" + times(0, cardinalChildCount(), ";n;") + ";n;-i;'}'";
 	else if (statements().size())
 		return "ycode;0";
 	else
@@ -62,11 +62,11 @@ bool Compound::keyPressed(EntityKeyEvent const* _e)
 	}
 	else if (_e->key() == Qt::Key_Home && _e->focalIndex() != UndefinedIndex)
 	{
-		entity(_e->focalIndex())->setCurrent();
+		child(_e->focalIndex())->setCurrent();
 	}
 	else if (_e->text() == "{")
 	{
-		entity(0)->setCurrent();
+		child(0)->setCurrent();
 	}
 	else
 		return Super::keyPressed(_e);

@@ -54,16 +54,16 @@ Type EnumValue::type() const
 bool EnumValue::isChildInValidState(int _i) const
 {
 	// Nothing to say about it as it's not typed. If it's supposed to be typed, then the allowed kinds system should pick up the error.
-	if (entityIs<Typed>(_i))
+	if (childIs<Typed>(_i))
 	{
 		foreach (Type i, Types() << Type(Int))
-			if (entityAs<Typed>(_i)->type().isSimilarTo(i, TypeEntity::BasicallyConvertible))
+			if (childAs<Typed>(_i)->type().isSimilarTo(i, TypeEntity::BasicallyConvertible))
 				return true;
 		return false;
 	}
-	else if (entityIs<TextLabel>(_i))
+	else if (childIs<TextLabel>(_i))
 	{
-		return entityAs<TextLabel>(_i)->isNamed();
+		return childAs<TextLabel>(_i)->isNamed();
 	}
 	return false;
 }
@@ -71,20 +71,20 @@ bool EnumValue::isChildInValidState(int _i) const
 QString EnumValue::defineLayout(ViewKeys&) const
 {
 	QString r = QString("^;%d").arg(Identity);
-	if (entityCount())
+	if (cardinalChildCount())
 		return r + ";' := ';1";
 	return r;
 }
 
 bool EnumValue::isSuperfluous() const
 {
-	return entityAs<TextLabel>(0)->text().isEmpty();
+	return childAs<TextLabel>(0)->text().isEmpty();
 }
 
 QString EnumValue::code() const
 {
-	if (entityCount() == 2 && entityIs<Typed>(1))
-		return codeName() + " = " + entityAs<Typed>(1)->code();
+	if (cardinalChildCount() == 2 && childIs<Typed>(1))
+		return codeName() + " = " + childAs<Typed>(1)->code();
 	else
 		return codeName();
 }
@@ -93,9 +93,9 @@ bool EnumValue::keyPressed(EntityKeyEvent const* _e)
 {
 	if (_e->text() == "=" && _e->focalIndex() == 0)
 	{
-		if (entityCount() == 1)
+		if (cardinalChildCount() == 1)
 			back().spawnPrepared();
-		entity(1)->setCurrent();
+		child(1)->setCurrent();
 	}
 	else
 		return Super::keyPressed(_e);

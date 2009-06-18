@@ -34,14 +34,14 @@ MARTTA_OBJECT_CPP(NewOperation);
 bool NewOperation::isValidState() const
 {
 	M_ASSERT(isComplete());
-	return entityAs<TypeEntity>(0)->canStandAlone();
+	return childAs<TypeEntity>(0)->canStandAlone();
 }
 	
 QString NewOperation::code() const
 {
 	if (!isComplete())
 		return QString();
-	return parenthesise("new " + entityAs<TypeEntity>(0)->code());
+	return parenthesise("new " + childAs<TypeEntity>(0)->code());
 }
 
 Kinds NewOperation::allowedKinds(int _index) const
@@ -55,9 +55,9 @@ Type NewOperation::type() const
 {
 	if (!isComplete())
 		return Type();
-	if (entityIs<Array>(0))
-		return *entityAs<TypeEntity>(0);
-	return Type(*entityAs<TypeEntity>(0)).topWith(Pointer());
+	if (childIs<Array>(0))
+		return *childAs<TypeEntity>(0);
+	return Type(*childAs<TypeEntity>(0)).topWith(Pointer());
 }
 
 }

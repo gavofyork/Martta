@@ -153,9 +153,9 @@ Type Referenced::type() const
 		M_ASSERT(m->isKind<Memberify>());
 		if (ancestor<Class>()->baseAccess(m->scopeClass()) <= Protected)
 		{
-			bool memberIsCallable = m->child()->isType<FunctionType>();
+			bool memberIsCallable = m->childType()->isType<FunctionType>();
 			bool constScope = ancestor<MemberLambda>()->isConst();
-			bool constMember = memberIsCallable ? m->isConst() : m->child()->isType<Const>();
+			bool constMember = memberIsCallable ? m->isConst() : m->childType()->isType<Const>();
 			if (constMember || !constMember && !constScope)
 			{
 				// Member Variable/FunctionType inside a method. Either enclosing method is non-const or FunctionType is const.
@@ -166,7 +166,7 @@ Type Referenced::type() const
 			{
 				// Member Variable referenced inside a const method
 				// Allowed but made const.
-				m->child()->knit<Const>();
+				m->childType()->knit<Const>();
 				m->unknit();
 			}
 		}
@@ -287,19 +287,19 @@ void ReferencedEdit::leavingEditIntact()
 			int x;
 			if ((x = SimpleType::id(m_entityName)) != -1)
 			{
-				e->allEntitiesOf<TypeEntity>()[0]->replace(new SimpleType(x));
-				codeScene()->silentlySetCurrent(e->entity(Identifiable::Identity));	// set to the place where the user expects the cursor to be (silently, sicne we might (possibly) already be in a setCurrent!).
+				e->childrenOf<TypeEntity>()[0]->replace(new SimpleType(x));
+				codeScene()->silentlySetCurrent(e->child(Identifiable::Identity));	// set to the place where the user expects the cursor to be (silently, sicne we might (possibly) already be in a setCurrent!).
 			}
 			else if (m_entityName == "string")
 			{
-				e->allEntitiesOf<TypeEntity>()[0]->replace(new StringType);
-				codeScene()->silentlySetCurrent(e->entity(Identifiable::Identity));	// set to the place where the user expects the cursor to be (silently, sicne we might (possibly) already be in a setCurrent!).
+				e->childrenOf<TypeEntity>()[0]->replace(new StringType);
+				codeScene()->silentlySetCurrent(e->child(Identifiable::Identity));	// set to the place where the user expects the cursor to be (silently, sicne we might (possibly) already be in a setCurrent!).
 			}
 			else
 			{
-				M_ASSERT(e->entityIs<TextLabel>(Identifiable::Identity));
-				e->entityAs<TextLabel>(Identifiable::Identity)->setText(m_entityName);
-				codeScene()->silentlySetCurrent(e->allEntitiesOf<TypeEntity>()[0]);							// set to the place where the user expects the cursor to be (silently, sicne we might (possibly) already be in a setCurrent!).
+				M_ASSERT(e->childIs<TextLabel>(Identifiable::Identity));
+				e->childAs<TextLabel>(Identifiable::Identity)->setText(m_entityName);
+				codeScene()->silentlySetCurrent(e->childrenOf<TypeEntity>()[0]);							// set to the place where the user expects the cursor to be (silently, sicne we might (possibly) already be in a setCurrent!).
 			}
 			
 			// set subject to zero so we don't go through this again when the kill()ed subject gets removed from the scene.

@@ -143,14 +143,14 @@ bool ExplicitType::defineSimilarityTo(TypeEntity const* _t, Castability _c) cons
 				if (c == ts)
 					return true;
 				// Note Physical attribute should be tested last.
-				QList<Base*> bases = c->allEntitiesOf<Base>();
+				QList<Base*> bases = c->childrenOf<Base>();
 				while (bases.size())
 				{
 					Base* b = bases.takeLast();
 					if (ts && b->classType() == ts)
 						return true;
 					else if (b->classType())
-						bases += b->classType()->allEntitiesOf<Base>();
+						bases += b->classType()->childrenOf<Base>();
 				}
 			}
 		}
@@ -181,7 +181,7 @@ QString ExplicitType::idColour() const
 
 bool ExplicitType::canStandAlone() const
 {
-	return m_subject.isUsable() && m_subject->isKind<Class>() ? !m_subject->self()->allEntitiesOf<VirtualPure>().size() : true;
+	return m_subject.isUsable() && m_subject->isKind<Class>() ? !m_subject->self()->childrenOf<VirtualPure>().size() : true;
 }
 
 bool ExplicitType::keyPressed(EntityKeyEvent const* _e)

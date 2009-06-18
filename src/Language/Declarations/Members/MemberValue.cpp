@@ -31,10 +31,10 @@ MARTTA_PLACEHOLDER_CPP(MemberValue);
 Type MemberValue::memberifiedType(Type const& _t) const
 {
 	Type ret = _t;
-	if (!classType() || !ret->isType<Reference>() || !ret->asType<Reference>()->child())
+	if (!classType() || !ret->isType<Reference>() || !ret->asType<Reference>()->childType())
 		return Type();
 	Memberify* m = new Memberify(classType(), isConst());
-	ret->asType<Reference>()->child()->knitIn(m);
+	ret->asType<Reference>()->childType()->knitIn(m);
 	return ret;
 }
 

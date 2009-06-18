@@ -45,14 +45,14 @@ Type Operation::prototypeOf(Type const& _t, int _index)
 		else if (_index == -1)
 			return _t->asType<FunctionType>()->returnType();
 	}
-	else if (_t->isType<Memberify>() && _t->asType<Memberify>()->child()->isKind<FunctionType>())
+	else if (_t->isType<Memberify>() && _t->asType<Memberify>()->childType()->isKind<FunctionType>())
 	{
 		if (_index == 0)
 			return Type(*_t->asType<Memberify>()->scope()).topWith(Reference());
 		else if (_index == 1)
-			return _t->asType<Memberify>()->child()->asKind<FunctionType>()->argumentType(0);
+			return _t->asType<Memberify>()->childType()->asKind<FunctionType>()->argumentType(0);
 		else if (_index == -1)
-			return _t->asType<Memberify>()->child()->asKind<FunctionType>()->returnType();
+			return _t->asType<Memberify>()->childType()->asKind<FunctionType>()->returnType();
 	}
 	return Type();
 }
@@ -62,8 +62,8 @@ bool Operation::prototypeHasArgumentAt(Type const& _t, int _i)
 	// Check if it's declared in a class (first param is encoded as this if so).
 	if (_t->isType<FunctionType>())
 		return _t->asType<FunctionType>()->hasArgumentAt(_i);
-	else if (_t->isType<Memberify>() && _t->asType<Memberify>()->child()->isKind<FunctionType>())
-		return _t->asType<Memberify>()->child()->asKind<FunctionType>()->hasArgumentAt(_i - 1);
+	else if (_t->isType<Memberify>() && _t->asType<Memberify>()->childType()->isKind<FunctionType>())
+		return _t->asType<Memberify>()->childType()->asKind<FunctionType>()->hasArgumentAt(_i - 1);
 	return false;
 }
 
@@ -157,8 +157,8 @@ InsertionPoint Operation::slideOnPrecedence(InsertionPoint _p, Precedence _d, As
 	while (_block != p && p->contextIs<Operation>() && p.index() == p->parentsChildrenCount() - 1 &&
 		   (_d > p->contextAs<Operation>()->precedence() || _d == p->contextAs<Operation>()->precedence() && _a == LeftAssociativity))
 		p = p.context()->over();
-	while (_block != p && p->isKind<Operation>() && !p->entity(p->entityCount() - 1)->isPlaceholder() && p->asKind<Operation>()->precedence() == _d && _a == RightAssociativity)
-		p = p->entity(p->entityCount() - 1)->over();
+	while (_block != p && p->isKind<Operation>() && !p->child(p->cardinalChildCount() - 1)->isPlaceholder() && p->asKind<Operation>()->precedence() == _d && _a == RightAssociativity)
+		p = p->child(p->cardinalChildCount() - 1)->over();
 	if (p->contextIs<Operation>() && p->contextAs<Operation>()->isSlidable(p.index()))
 		return _p;
 	return p;

@@ -79,7 +79,7 @@ public:
 	virtual TypeEntity*					asType(Kind _typeKind) { M_ASSERT(isType(_typeKind)); return this; }
 	template<class T> inline T*			asType() { return static_cast<T*>(asType(Kind::of<T>())); }
 	
-	template<class T> inline TypeEntity*ignore() { return isKind<T>() ? entityAs<TypeEntity>(0) : this; }
+	template<class T> inline TypeEntity*ignore() { return isKind<T>() ? childAs<TypeEntity>(0) : this; }
 
 	/// 
 	template<class T> inline T*			knit() { T* ret = new T; knitIn(ret); return ret; }

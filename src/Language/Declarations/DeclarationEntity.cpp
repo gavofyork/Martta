@@ -76,9 +76,9 @@ Identifiable* DeclarationEntity::lookupChild(QString const& _key) const
 	if (ok && m_anonyma.size() > k)
 		return const_cast<Identifiable*>(m_anonyma[k]);
 //	qDebug() << "Matching for " << _key;
-	foreach (DeclarationEntity* e, allEntitiesOf<DeclarationEntity>())
+	foreach (DeclarationEntity* e, childrenOf<DeclarationEntity>())
 	{	
-//		if (allEntitiesOf<DeclarationEntity>().size() < 10)
+//		if (childrenOf<DeclarationEntity>().size() < 10)
 //			qDebug() << "    " << e->identity();
 /*		if (e->isKind<Class>() || e->isKind<NamespaceEntity>())
 		{	e->debugTree();
@@ -106,7 +106,7 @@ QList<DeclarationEntity*> DeclarationEntity::utilisedSiblings() const
 QList<DeclarationEntity*> DeclarationEntity::utilised() const
 {
 	QList<DeclarationEntity*> ret;
-	foreach (DeclarationEntity* i, allEntitiesOf<DeclarationEntity>())
+	foreach (DeclarationEntity* i, childrenOf<DeclarationEntity>())
 		ret << i->utilised();
 //	qDebug() << name() << "(" << kind().name() << ") utilises:";
 //	foreach (DeclarationEntity* i, ret)

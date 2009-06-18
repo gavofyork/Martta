@@ -32,9 +32,9 @@ MARTTA_OBJECT_CPP(MethodOperator);
 	
 Operator MethodOperator::id() const
 {
-	if (!entityIs<OperatorLabel>(Identity))
+	if (!childIs<OperatorLabel>(Identity))
 		return Operator();
-	return entityAs<OperatorLabel>(Identity)->id();
+	return childAs<OperatorLabel>(Identity)->id();
 }
 
 int MethodOperator::argumentCount() const
