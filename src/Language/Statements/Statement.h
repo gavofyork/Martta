@@ -48,7 +48,7 @@ public:
 	Typed*								asTyped(int _i) const;
 	Type								typeOf(int _i) const;
 	
-	virtual bool						onChanged() { foreach (Entity* i, entities()) i->relayoutLater(); return Super::onChanged(); }
+	virtual bool						onChanged() { foreach (Entity* i, allEntities()) i->relayoutLater(); return Super::onChanged(); }
 };
 
 }

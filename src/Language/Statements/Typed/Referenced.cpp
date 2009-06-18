@@ -101,6 +101,7 @@ bool Referenced::onChanged()
 {
 	Super::onChanged();
 	checkForCullingLater();
+	updateAncestralDependencies();
 	return true;
 }
 
@@ -115,7 +116,25 @@ QString Referenced::code() const
 
 Kinds Referenced::ancestralDependencies() const
 {
-	return Kind::of<MemberLambda>();
+	Kinds ret = Kind::of<MemberLambda>();
+	if (!m_subject.isNull() && !contextIs<GenericMemberOperation>() && m_subject->isKind<MemberValue>() && hasAncestor<MemberLambda>() && ancestor<Class>() != m_subject->asKind<MemberValue>()->classType())
+		ret << Kind::of<Class>();
+	return ret;
+}
+
+bool Referenced::isInValidState() const
+{
+	// If we're not referencing anything yet, return null.
+	if (!m_subject.isUsable())
+		return false;
+		
+	if (!contextIs<GenericMemberOperation>() && m_subject->isKind<MemberValue>() && hasAncestor<MemberLambda>())
+	{
+		M_ASSERT(hasAncestor<Class>());
+		if (!ancestor<Class>()->membersOf<MemberValue>(ancestor<MemberLambda>()->isConst()).contains(m_subject->asKind<MemberValue>()))
+			return false;
+	}
+	return Super::isInValidState();
 }
 
 Type Referenced::type() const

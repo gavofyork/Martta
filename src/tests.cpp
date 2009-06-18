@@ -594,7 +594,7 @@ int test()
 		r->back().place(X);
 		X->changed();
 		FAILED_IF(!X->isValid());
-		foreach (Entity* e, X->entities())
+		foreach (Entity* e, X->allEntities())
 			FAILED_IF(!e->isValid());
 	}
 #define TEST_THIS_CAST(F, T, R) \

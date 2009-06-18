@@ -1,4 +1,18 @@
-TODO && is accessible to us (i.e. could be public inherited but private in it's class)? WORKS - but make base private and should change - reevaluate class, members, and therefore referenceds. doesn't yet.
+BUG first parameter of function calls don't work.
+
+TODO:
+entity			child
+entityAs		childAs
+entityIs		childIs
+tryEntityAs		tryChildAs
+allEntities		children
+entities(i)		children(i)
+allEntitiesOf		childrenOf
+entities		cardinalChildren
+entityCount		cardinalChildrenCount
+entitiesOf		cardinalChildrenOf
+minimumRequired		minRequired
+minimumRequiredNamed	isRequired(int)
 
 TODO support:
 [Base]

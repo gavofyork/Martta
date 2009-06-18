@@ -577,6 +577,7 @@ protected:
 	void								removeDependency(Entity* _e);
 	/// Removes all dependencies.
 	void								removeAllDependencies();
+	bool								haveDependency(Entity* _e) const { return m_dependencies.contains(_e); }
 	
 	/// Called when the state of this object has changed.
 	/// @note This is only called when the object is in the model.
@@ -625,9 +626,13 @@ protected:
 	/// @note By default, it calls onDependencyAdded() for every child entity (whether recently added or not). 
 	/// @note If you intend to use this, you may find it useful to change notificationRequirements() so it doesn't
 	/// include BeInModel.
-	virtual void						onChildrenInitialised() { foreach (Entity* e, entities()) onDependencyAdded(e); }
+	virtual void						onChildrenInitialised() { foreach (Entity* e, allEntities()) onDependencyAdded(e); }
 	
 	virtual Entity*						isExpander() const { return 0; }
+
+	/// Rejigs our ancestral dependencies. This should be (TODO: and isn't yet) called whenever any of our ancestors have changed context
+	/// or been switched, or when the ouput of ancestralDependencies() changes.
+	void								updateAncestralDependencies();
 	
 protected:
 	RootEntity*							m_rootEntity;
@@ -656,10 +661,6 @@ private:
 	 * This handles the case of negative and position child indices.
 	 */
 	void								removeAllFromBrood(int _childsIndex);
-
-	/// Rejigs our ancestral dependencies. This should be (TODO: and isn't yet) called whenever any of our ancestors have changed context
-	/// or been switched.
-	void								updateAncestralDependencies();
 	
 	/// Just makes sure that the rootEntity is the context's root entity. Should only be called from the context.
 	void								checkRoot();

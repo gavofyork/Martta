@@ -100,7 +100,7 @@ Kinds InsertionPoint::deniedKinds() const
 
 Entity* InsertionPoint::nearestEntity() const
 {
-	if (m_index < m_context->entities().size())
+	if (m_context->entity(m_index))
 		return m_context->entity(m_index);
 	else if (m_context->entities().size())
 		return m_context->entities().last();

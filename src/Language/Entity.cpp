@@ -284,7 +284,7 @@ void Entity::exportDom(QDomElement& _element) const
 		QDomElement n = _element.ownerDocument().createElement("entity");
 		n.setAttribute("kind", e->kind().name());
 		if (e->contextIndex() < 0)
-		{	if (e->contextIndex() > e->virtualEndOfNamed())	// proper name - store as name
+		{	if (e->contextIndex() >= virtualEndOfNamed())	// proper name - store as name
 				n.setAttribute("childname", AuxilliaryRegistrar::get()->nameOfArbitrary(e->contextIndex()));
 			else
 				n.setAttribute("contextindex", e->contextIndex());
@@ -354,7 +354,7 @@ void Entity::navigateOnto(CodeScene* _s)
 }
 void Entity::dropCursor()
 {
-	QList<Entity*> s = entities();
+	QList<Entity*> s = allEntities();
 	while (s.size())
 	{
 		Entity* e = s.takeFirst();
@@ -364,7 +364,7 @@ void Entity::dropCursor()
 			return;
 		}
 		else
-			s = e->entities() + s;
+			s = e->allEntities() + s;
 	}
 	setCurrent();
 }

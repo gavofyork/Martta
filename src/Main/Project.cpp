@@ -365,7 +365,7 @@ void Project::deserialise(QDomDocument& _d)
 		Entity* e = uplist.takeLast();
 		if (e)
 		{
-			foreach (Entity* i, e->entities())
+			foreach (Entity* i, e->allEntities())
 				uplist << i;
 			e->apresLoad();
 		}
@@ -444,7 +444,7 @@ void Project::reloadHeaders()
 		Entity* e = es.back();
 		es.pop_back();
 		M_ASSERT(e->rootEntity() == &m_declarations);
-		es << e->entities();
+		es << e->allEntities();
 	}
 }
 

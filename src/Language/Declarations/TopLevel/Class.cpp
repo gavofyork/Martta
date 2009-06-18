@@ -66,14 +66,9 @@ bool Class::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent 
 void Class::rejigDeps()
 {
 	removeAllDependencies();
-	foreach (Entity* i, entities())
+	foreach (Entity* i, members())
 		if (i->allEntityCountOf<AccessLabel>())
 			addDependency(i->allEntitiesOf<AccessLabel>()[0]);
-}
-
-bool Class::onChanged()
-{
-	return isInModel() && checkImplicitConstructors() || Super::onChanged();
 }
 
 Entity* Class::isExpander() const
@@ -135,6 +130,11 @@ bool Class::checkImplicitConstructors()
 	return ret;
 }
 
+bool Class::onChanged()
+{
+	return isInModel() && checkImplicitConstructors() || Super::onChanged();
+}
+
 void Class::onChildrenInitialised()
 {
 	rejigDeps();
@@ -145,13 +145,16 @@ void Class::onChildrenInitialised()
 
 void Class::onDependencyAdded(Entity* _e)
 {
-	rejigDeps();
+	if (_e->isKind<Member>())
+		rejigDeps();
 	if (_e->isKind<ConversionOperator>() || (_e->isKind<MethodOperator>() && !_e->isKind<ArtificialAssignmentOperator>()) || (_e->isKind<Constructor>() && !_e->isKind<ArtificialDefaultConstructor>() && !_e->isKind<ArtificialCopyConstructor>()))
 		changed();
 }
 
 void Class::onDependencyRemoved(Entity* _e, int)
 {
+	if (_e->isKind<Member>())
+		rejigDeps();
 	// TODO: Will it remove the Access label dep? Even if the member is only moved to another class?
 	if (_e->isKind<ConversionOperator>() || (_e->isKind<MethodOperator>() && !_e->isKind<ArtificialAssignmentOperator>()) || (_e->isKind<Constructor>() && !_e->isKind<ArtificialDefaultConstructor>() && !_e->isKind<ArtificialCopyConstructor>()))
 		changed();
@@ -159,7 +162,9 @@ void Class::onDependencyRemoved(Entity* _e, int)
 
 void Class::onDependencyChanged(Entity* _e)
 {
-	if (_e->isKind<TextLabel>() || _e->isKind<ConversionOperator>() || (_e->isKind<MethodOperator>() && !_e->isKind<ArtificialAssignmentOperator>()) || (_e->isKind<Constructor>() && !_e->isKind<ArtificialDefaultConstructor>() && !_e->isKind<ArtificialCopyConstructor>()))
+	if (_e->isKind<Base>() || _e->isKind<ConversionOperator>() || (_e->isKind<MethodOperator>() && !_e->isKind<ArtificialAssignmentOperator>()) || (_e->isKind<Constructor>() && !_e->isKind<ArtificialDefaultConstructor>() && !_e->isKind<ArtificialCopyConstructor>()))
+		changed();
+	if (_e->isKind<TextLabel>())
 		changed();
 	if (_e->isKind<AccessLabel>())
 		relayoutLater();
