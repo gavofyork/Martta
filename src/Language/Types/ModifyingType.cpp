@@ -35,7 +35,7 @@ void ModifyingType::unknit()
 	if (owner() && &**owner() == this)
 	{
 		M_ASSERT(childType()->owner() == owner());
-		M_ASSERT(!context());
+		M_ASSERT(!parent());
 		owner()->m_top = childType();
 	}
 	InsertionPoint p = over();
@@ -46,8 +46,8 @@ void ModifyingType::unknit()
 	p.insertSilent(ch);
 	kill();
 	
-	if (p.context())
-		p.context()->childSwitched(ch, this);
+	if (p.parent())
+		p.parent()->childSwitched(ch, this);
 	ch->contextSwitched(this);
 	
 	delete this;

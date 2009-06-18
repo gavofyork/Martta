@@ -49,10 +49,10 @@ QList<Typed*> Statement::typeds() const
 
 QList<ValueDefiner*> Statement::valuesInLocalScope() const
 {
-	if (!contextIs<Statement>())
+	if (!parentIs<Statement>())
 		return QList<ValueDefiner*>();
-	QList<ValueDefiner*> ret = contextAs<Statement>()->valuesInLocalScope();
-	for(int i = 0; i < contextIndex(); ++i)
+	QList<ValueDefiner*> ret = parentAs<Statement>()->valuesInLocalScope();
+	for(int i = 0; i < index(); ++i)
 		if (parentsChildIs<ValueDefiner>(i))
 			ret += parentsChildAs<ValueDefiner>(i);
 	return ret;

@@ -67,8 +67,7 @@ void Class::rejigDeps()
 {
 	removeAllDependencies();
 	foreach (Entity* i, members())
-		if (i->childCountOf<AccessLabel>())
-			addDependency(i->childrenOf<AccessLabel>()[0]);
+		addDependency(i->child(Member::Accessibility));
 }
 
 Entity* Class::isExpander() const
@@ -178,7 +177,7 @@ Kinds Class::allowedKinds(int _i) const
 QString Class::implementationCode() const
 {
 	QString ret;
-	foreach (DeclarationEntity* f, childrenOf<DeclarationEntity>())
+	foreach (DeclarationEntity* f, cardinalChildrenOf<DeclarationEntity>())
 		ret += f->implementationCode() + "\n";
 	if (ret.endsWith("\n\n")) ret.chop(1);
 	return ret;
@@ -195,7 +194,7 @@ QString Class::interfaceCode() const
 		ret += f->code() + ", ";
 	if (ret.endsWith(", ")) ret.chop(2);
 	ret += "{\n";
-	foreach (Member* f, childrenOf<Member>())
+	foreach (Member* f, cardinalChildrenOf<Member>())
 		ret += f->interfaceCode();
 	if (ret.endsWith("\n\n")) ret.chop(1);
 	ret += "};\n";
@@ -265,7 +264,7 @@ QString Class::defineLayout(ViewKeys& _keys) const
 	if (_keys["expanded"].toBool())
 	{
 		foreach (Base* i, cardinalChildrenOf<Base>())
-			ret += QString(";n;i;%1").arg(i->contextIndex());
+			ret += QString(";n;i;%1").arg(i->index());
 		
 		ret += ";n;'{'";
 
@@ -274,26 +273,26 @@ QString Class::defineLayout(ViewKeys& _keys) const
 			QString mem;
 			Kinds recognised;
 			recognised << Kind::of<Constructor>();
-			foreach (MemberLambda* f, childrenOf<Constructor>())
+			foreach (MemberLambda* f, cardinalChildrenOf<Constructor>())
 				if (f->access() == Access(i))
-					mem += QString(";n;%1").arg(f->contextIndex());
+					mem += QString(";n;%1").arg(f->index());
 			recognised << Kind::of<Destructor>();
-			foreach (MemberLambda* f, childrenOf<Destructor>())
+			foreach (MemberLambda* f, cardinalChildrenOf<Destructor>())
 				if (f->access() == Access(i))
-					mem += QString(";n;%1").arg(f->contextIndex());
+					mem += QString(";n;%1").arg(f->index());
 			recognised << Kind::of<Method>();
-			foreach (MemberLambda* f, childrenOf<Method>())
+			foreach (MemberLambda* f, cardinalChildrenOf<Method>())
 				if (f->access() == Access(i))
-					mem += QString(";n;%1").arg(f->contextIndex());
-			foreach (MemberLambda* f, childrenOf<MemberLambda>())
+					mem += QString(";n;%1").arg(f->index());
+			foreach (MemberLambda* f, cardinalChildrenOf<MemberLambda>())
 				if (f->access() == Access(i) && !f->Entity::isKind(recognised))
-					mem += QString(";n;%1").arg(f->contextIndex());
-			foreach (MemberVariable* f, childrenOf<MemberVariable>())
+					mem += QString(";n;%1").arg(f->index());
+			foreach (MemberVariable* f, cardinalChildrenOf<MemberVariable>())
 				if (f->access() == Access(i))
-					mem += QString(";n;%1").arg(f->contextIndex());
-			foreach (MemberEnumeration* f, childrenOf<MemberEnumeration>())
+					mem += QString(";n;%1").arg(f->index());
+			foreach (MemberEnumeration* f, cardinalChildrenOf<MemberEnumeration>())
 				if (f->access() == Access(i))
-					mem += QString(";n;%1").arg(f->contextIndex());
+					mem += QString(";n;%1").arg(f->index());
 			if (!mem.isEmpty())
 				ret += ";n;s" + AccessLabel(Access(i)).idColour().name() + "44;'" + Martta::code(Access(i)) + "';s" + mem;
 		}
@@ -305,19 +304,19 @@ QString Class::defineLayout(ViewKeys& _keys) const
 		{
 			ret += ";ynormal;' ['";
 			foreach (Base* i, cardinalChildrenOf<Base>())
-				ret += QString(";%1").arg(i->contextIndex());
+				ret += QString(";%1").arg(i->index());
 			ret += ";']'";
 		}
 		ret += ";yminor;' (";
-		if (int n = childrenOf<Method>().size())
+		if (int n = cardinalChildCountOf<Method>())
 			ret += QString::number(n) + " method" + (n > 1 ? "s, " : ", ");
-		if (int n = childrenOf<MemberVariable>().size())
+		if (int n = cardinalChildCountOf<MemberVariable>())
 			ret += QString::number(n) + " variable" + (n > 1 ? "s, " : ", ");
-		if (int n = (childrenOf<Constructor>().size() - childrenOf<ArtificialCopyConstructor>().size() - childrenOf<ArtificialDefaultConstructor>().size()))
+		if (int n = (cardinalChildCountOf<Constructor>() - cardinalChildCountOf<ArtificialCopyConstructor>() - cardinalChildCountOf<ArtificialDefaultConstructor>()))
 			ret += QString::number(n) + " constructor" + (n > 1 ? "s, " : ", ");
-		if (int n = childrenOf<Destructor>().size())
+		if (int n = cardinalChildCountOf<Destructor>())
 			ret += QString::number(n) + " destructor" + (n > 1 ? "s, " : ", ");
-		if (int n = (childrenOf<MethodOperator>().size() - childrenOf<ArtificialAssignmentOperator>().size()))
+		if (int n = (cardinalChildCountOf<MethodOperator>() - cardinalChildCountOf<ArtificialAssignmentOperator>()))
 			ret += QString::number(n) + " operator" + (n > 1 ? "s, " : ", ");
 		if (ret.endsWith(", "))
 			ret.chop(2);

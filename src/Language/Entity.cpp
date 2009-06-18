@@ -50,7 +50,7 @@ void change(Entity* _s, ChangeOperation _op, Entity* _o)
 
 Entity::~Entity()
 {
-	M_ASSERT(!m_context);
+	M_ASSERT(!m_parent);
 	foreach (Entity* i, children())
 		i->killAndDelete();
 	M_ASSERT(!m_cardinalChildren.size());
@@ -60,52 +60,52 @@ Entity::~Entity()
 // Model structure management.
 bool Entity::hasAncestor(Kind _k) const
 {
-	for (Entity* e = this ? context() : 0; e; e = e->context())
+	for (Entity* e = this ? parent() : 0; e; e = e->parent())
 		if (e->isKind(_k))
 			return true;
 	return false;
 }
 Entity* Entity::ancestor(Kind _k) const
 {
-	for (Entity* e = this ? context() : 0; e; e = e->context())
+	for (Entity* e = this ? parent() : 0; e; e = e->parent())
 		if (e->isKind(_k))
 			return e;
 	return 0;
 }
 int Entity::ancestorIndex(Kind _k) const
 {
-	int ret = contextIndex();
-	for (Entity* e = this ? context() : 0; e; ret = e->contextIndex(), e = e->context())
+	int ret = index();
+	for (Entity* e = this ? parent() : 0; e; ret = e->index(), e = e->parent())
 		if (e->isKind(_k))
 			return ret;
 	return UndefinedIndex;
 }
 bool Entity::hasSelfAncestor(Kind _k) const
 {
-	for (Entity* e = const_cast<Entity*>(this); e; e = e->context())
+	for (Entity* e = const_cast<Entity*>(this); e; e = e->parent())
 		if (e->isKind(_k))
 			return true;
 	return false;
 }
 Entity* Entity::selfAncestor(Kind _k) const
 {
-	for (Entity const* e = this; e; e = e->context())
+	for (Entity const* e = this; e; e = e->parent())
 		if (e->isKind(_k))
 			return const_cast<Entity*>(e);
 	return 0;
 }
 bool Entity::hasSelfAncestor(Entity const* _a) const
 {
-	for (Entity const* i = this; i; i = i->context())
+	for (Entity const* i = this; i; i = i->parent())
 		if (i == _a)
 			return true;
 	return false;
 }
 int Entity::ancestorIndex(Entity const* _a) const
 {
-	for (Entity const* i = this; i; i = i->context())
-		if (i->context() == _a)
-			return i->contextIndex();
+	for (Entity const* i = this; i; i = i->parent())
+		if (i->parent() == _a)
+			return i->index();
 	return UndefinedIndex;
 }
 
@@ -136,18 +136,18 @@ bool Entity::isValidName(QString const& _n)
 }
 bool Entity::isNecessary() const
 {
-	if (!context())
+	if (!parent())
 		return false;
-	if (m_contextIndex >= 0)
+	if (m_index >= 0)
 	{
-		if (context()->cardinalChildCount() <= context()->minimumRequired())
+		if (parent()->cardinalChildCount() <= parent()->minimumRequired())
 			return true;
-		for (int i = contextIndex() + 1; i < context()->cardinalChildCount(); i++)
-			if (!context()->child(i)->isKind(context()->allowedKinds(i - 1)))
+		for (int i = index() + 1; i < parent()->cardinalChildCount(); i++)
+			if (!parent()->child(i)->isKind(parent()->allowedKinds(i - 1)))
 				return true;
 	}
 	else
-		if (context()->childCountAt(m_contextIndex) - 1 < context()->minimumRequiredNamed(m_contextIndex))
+		if (parent()->childCountAt(m_index) - 1 < parent()->minimumRequiredNamed(m_index))
 			return true;
 	return false;
 }
@@ -174,7 +174,7 @@ bool Entity::isValid() const
 	
 	if (!isAllowed())
 	{
-		qInformation() << this << "invalid because it's not allowed here by context." << context();
+		qInformation() << this << "invalid because it's not allowed here by context." << parent();
 		return false;
 	}
 	if (!isInValidState())
@@ -182,8 +182,8 @@ bool Entity::isValid() const
 		qInformation() << this << "invalid because it's in an invalid entity state.";
 		return false;
 	}
-	if (context())
-		if (!context()->isChildInValidState(contextIndex()))
+	if (parent())
+		if (!parent()->isChildInValidState(index()))
 		{
 			qInformation() << this << "invalid because its context considers it in an invalid state.";
 			return false;
@@ -211,7 +211,7 @@ void Entity::checkForCullingLater()
 }
 bool Entity::cull()
 {
-	Entity* c = context();
+	Entity* c = parent();
 	if (c && !isCurrentOrAncestor() && isSuperfluous())
 	{
 		deleteAndRefill();
@@ -254,7 +254,7 @@ void Entity::clearEntities()
 void Entity::debugTree() const
 {
 	QList<Entity const*> ancestors;
-	for (Entity const* i = context(); i; i = i->context())
+	for (Entity const* i = parent(); i; i = i->parent())
 		ancestors.push_front(i);
 	QString indent = "";
 	foreach (Entity const* i, ancestors)
@@ -283,11 +283,11 @@ void Entity::exportDom(QDomElement& _element) const
 	{
 		QDomElement n = _element.ownerDocument().createElement("entity");
 		n.setAttribute("kind", e->kind().name());
-		if (e->contextIndex() < 0)
-		{	if (e->contextIndex() >= virtualEndOfNamed())	// proper name - store as name
-				n.setAttribute("childname", AuxilliaryRegistrar::get()->nameOfArbitrary(e->contextIndex()));
+		if (e->index() < 0)
+		{	if (e->index() >= virtualEndOfNamed())	// proper name - store as name
+				n.setAttribute("childname", AuxilliaryRegistrar::get()->nameOfArbitrary(e->index()));
 			else
-				n.setAttribute("contextindex", e->contextIndex());
+				n.setAttribute("contextindex", e->index());
 		}
 		e->exportDom(n);
 		_element.appendChild(n);
@@ -423,8 +423,8 @@ void Entity::repaint(CodeScene* _s)
 {
 	if (_s->isInScene(this))
 		_s->repaint(this);
-	else if (context())
-		context()->repaint(_s);
+	else if (parent())
+		parent()->repaint(_s);
 }
 void Entity::repaint()
 {
@@ -447,8 +447,8 @@ void Entity::decorate(DecorationContext const& _c) const
 // Keypress/UI event handlers.
 void Entity::activateEvent(CodeScene* _s)
 {
-	if (!activated(_s) && context())
-		context()->activateEvent(_s);
+	if (!activated(_s) && parent())
+		parent()->activateEvent(_s);
 }
 bool Entity::activated(CodeScene* _s)
 {
@@ -510,11 +510,11 @@ void Entity::keyPressEventStarter(EntityKeyEvent* _e, bool _abortive)
 			return;
 		}
 	
-		if (fe && fe->context())
+		if (fe && fe->parent())
 		{
 			_e->setIsFocused(false);
-			_e->setFocalIndex(fe->contextIndex());
-			fe = fe->context();
+			_e->setFocalIndex(fe->index());
+			fe = fe->parent();
 		}
 		else
 			fe = 0;
@@ -531,11 +531,11 @@ void Entity::keyPressEvent(EntityKeyEvent* _e)
 		return;
 	}
 	
-	if (context())
+	if (parent())
 	{
 		_e->setIsFocused(false);
-		_e->setFocalIndex(contextIndex());
-		context()->keyPressEvent(_e);
+		_e->setFocalIndex(index());
+		parent()->keyPressEvent(_e);
 	}
 }
 bool Entity::keyPressed(EntityKeyEvent const* _e)
@@ -543,25 +543,25 @@ bool Entity::keyPressed(EntityKeyEvent const* _e)
 	InsertionPoint p = over();
 	if (_e->codeScene()->isCurrent(this) && (_e->key() == Qt::Key_Delete && _e->modifiers() == Qt::ShiftModifier || _e->key() == Qt::Key_Backspace && isEditing(_e->codeScene())))
 	{
-//		p.context()->debugTree();
+//		p.parent()->debugTree();
 //		qDebug() << p.index();
 //		debugTree();
 		deleteAndRefill(0, false);	// NOTE: Was true; changed to false to avoid erroneous currents being set. May need a rethink.
-//		p.context()->debugTree();
+//		p.parent()->debugTree();
 //		qDebug() << p.index();
 		if (p.exists())
 			_e->codeScene()->setCurrent(p.childType());
 	}
 	else if (_e->codeScene()->isCurrent(this) && _e->key() == Qt::Key_Delete)
 	{
-//		p.context()->debugTree();
+//		p.parent()->debugTree();
 //		qDebug() << p.index();
 //		debugTree();
 		if (nonPlaceholderCount() == 1 && isAllowed(nonPlaceholder(0)->kind()))
 			deleteAndRefill(nonPlaceholder(0), false);	// SEE ABOVE.
 		else
 			deleteAndRefill(0, false);	// SEE ABOVE.
-//		p.context()->debugTree();
+//		p.parent()->debugTree();
 //		qDebug() << p.index();
 		if (p.exists())
 			_e->codeScene()->setCurrent(p.childType());
@@ -590,8 +590,8 @@ bool Entity::keyPressed(EntityKeyEvent const* _e)
 }
 bool Entity::attemptInsert(EntityKeyEvent const* _e)
 {
-	if (context())
-		foreach (Kind i, context()->allowedKinds(contextIndex()))
+	if (parent())
+		foreach (Kind i, parent()->allowedKinds(index()))
 			if (AuxilliaryRegistrar::get()->auxilliary(i.name())->dispatchKeyPress(over(), _e))
 				return true;
 	return false;
@@ -607,25 +607,25 @@ bool Entity::attemptAppend(EntityKeyEvent const* _e)
 // Context/position changing.
 void Entity::moveVirtually(InsertionPoint const& _newPosition)
 {
-	if (_newPosition.context() == m_context)
+	if (_newPosition.parent() == m_parent)
 		return;
 
-	if (m_context)
-		m_context->removeFromBrood(m_contextIndex, this);
+	if (m_parent)
+		m_parent->removeFromBrood(m_index, this);
 	
-	m_context = _newPosition.context();
+	m_parent = _newPosition.parent();
 	
-	if (m_context)
-		m_context->insertIntoBrood(_newPosition.index(), this);	//m_contextIndex set by this, too.
+	if (m_parent)
+		m_parent->insertIntoBrood(_newPosition.index(), this);	//m_index set by this, too.
 	else
-		m_contextIndex = UndefinedIndex;
+		m_index = UndefinedIndex;
 }
 void Entity::commitVirtualMove(InsertionPoint const& _oldPosition)
 {
-	if (_oldPosition.context() == m_context) return;
+	if (_oldPosition.parent() == m_parent) return;
 
 	RootEntity* oldRoot = m_rootEntity;
-	RootEntity* newRoot = m_context ? m_context->m_rootEntity : 0;
+	RootEntity* newRoot = m_parent ? m_parent->m_rootEntity : 0;
 	
 	// Tell scene we're leaving if we had a non-null root entity and it's different.
 	if (oldRoot && newRoot != oldRoot)
@@ -655,7 +655,7 @@ void Entity::removeFromBrood(int _index, Entity* _e)
 		Entity* t = m_cardinalChildren.takeAt(_index);
 		M_ASSERT(t == _e);	// confirm that we're taken the right one. if this fails, the parent has something else in the position that the child thinks it occupies.
 		for (int i = _index; i < m_cardinalChildren.size(); i++)
-			m_cardinalChildren[i]->m_contextIndex = i;
+			m_cardinalChildren[i]->m_index = i;
 	}
 	else
 		for (QHash<int, Entity*>::iterator i = m_namedChildren.find(_index); i != m_namedChildren.end() && i.key() == _index; ++i)
@@ -672,7 +672,7 @@ void Entity::removeAllFromBrood(int _index)
 	{
 		m_cardinalChildren.removeAt(_index);
 		for (int i = _index; i < m_cardinalChildren.size(); i++)
-			m_cardinalChildren[i]->m_contextIndex = i;
+			m_cardinalChildren[i]->m_index = i;
 	}
 	else
 		m_namedChildren.remove(_index);
@@ -684,22 +684,22 @@ void Entity::insertIntoBrood(int _index, Entity* _e)
 	M_ASSERT(_index <= m_cardinalChildren.size());
 	if (_index < 0)
 	{
-		_e->m_contextIndex = _index;
+		_e->m_index = _index;
 		m_namedChildren.insertMulti(_index, _e);
 	}
 	else
 	{
 		m_cardinalChildren.insert(_index, _e);
 		for (int i = _index; i < m_cardinalChildren.size(); i++)
-			m_cardinalChildren[i]->m_contextIndex = i;
+			m_cardinalChildren[i]->m_index = i;
 	}
 }
 void Entity::checkRoot()
 {
-	if (context()->rootEntity() != rootEntity())
+	if (parent()->rootEntity() != rootEntity())
 	{
-		onLeaveScene(context()->rootEntity(), rootEntity());
-		m_rootEntity = context()->rootEntity();
+		onLeaveScene(parent()->rootEntity(), rootEntity());
+		m_rootEntity = parent()->rootEntity();
 	}
 	foreach (Entity* e, children())
 		e->checkRoot();
@@ -715,7 +715,7 @@ QList<Entity*> Entity::dependencies() const
 		if (familyDependencies() & DependsOnChildren)
 			ret << e;
 	if (familyDependencies() & DependsOnContext)
-		ret << context();
+		ret << parent();
 	return ret.values();
 }
 QList<Entity*> Entity::dependents() const
@@ -726,8 +726,8 @@ QList<Entity*> Entity::dependents() const
 	foreach (Entity* e, children())
 		if (e->familyDependencies() & DependsOnContext)
 			ret << e;
-	if (context() && (context()->familyDependencies() & DependsOnChildren))
-		ret << context();
+	if (parent() && (parent()->familyDependencies() & DependsOnChildren))
+		ret << parent();
 	return ret;
 }
 void Entity::clearDependents()
@@ -919,7 +919,7 @@ Entity* Entity::usurp(Entity* _u)
 	foreach (Entity* e, m_cardinalChildren)
 		e->move(_u->back());
 	foreach (Entity* e, m_namedChildren.values())
-		e->move(_u->middle(e->m_contextIndex));
+		e->move(_u->middle(e->m_index));
 		
 	kill();
 	
@@ -932,8 +932,8 @@ Entity* Entity::usurp(Entity* _u)
 	_u->childrenInitialised();
 	
 	// Tell _r's new context that it's here instead of us.
-	if (_u->m_context)
-		_u->m_context->childSwitched(_u, this);
+	if (_u->m_parent)
+		_u->m_parent->childSwitched(_u, this);
 		
 	delete this;
 	return _u;
@@ -948,8 +948,8 @@ Entity* Entity::replace(Entity* _r)
 	// Tell _r's old context (if it has one) that it has gone, and tell _r that it has a new context.
 	_r->contextSwitchedWithChildRemoved(you);
 	// Tell _r's new context that it's here.
-	if (_r->m_context)
-		_r->m_context->childSwitched(_r, this);
+	if (_r->m_parent)
+		_r->m_parent->childSwitched(_r, this);
 	delete this;
 	return _r;
 }
@@ -961,15 +961,15 @@ Entity* Entity::insert(Entity* _e)
 	_e->front().insertSilent(this);
 	
 	_e->contextSwitchedWithChildRemoved(you);
-	contextSwitched(_e->context());
+	contextSwitched(_e->parent());
 	_e->childAdded(0);
-	if (_e->context())
-		_e->context()->childSwitched(_e, _e->context());
+	if (_e->parent())
+		_e->parent()->childSwitched(_e, _e->parent());
 	return _e;
 } 
 void Entity::deleteAndRefill(Entity* _e, bool _moveToGrave)
 {
-	Entity* c = context();
+	Entity* c = parent();
 	InsertionPoint p = over();
 	
 	if (_e)
@@ -986,7 +986,7 @@ void Entity::deleteAndRefill(Entity* _e, bool _moveToGrave)
 	}
 	else
 	{
-		int ci = m_contextIndex;
+		int ci = m_index;
 		kill();
 		c->childRemoved(this, ci);
 		delete this;
@@ -1073,14 +1073,14 @@ void Entity::contextAdded(Entity* _con)
 }
 void Entity::contextSwitched(Entity* _old)
 {
-	if (m_context && !_old)
+	if (m_parent && !_old)
 		contextAdded();
-	else if (!m_context && _old)
+	else if (!m_parent && _old)
 		contextRemoved(_old);
-	else if (_old != m_context)
+	else if (_old != m_parent)
 	{
 		if (botherNotifying() && familyDependencies() & DependsOnContext)
-			dependencySwitched(m_context, _old);
+			dependencySwitched(m_parent, _old);
 		updateAncestralDependencies();
 		relayoutLater();
 	}

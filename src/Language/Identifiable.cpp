@@ -55,7 +55,7 @@ QString Identifiable::key() const
 
 Identifiable* Identifiable::addressableContext() const
 {
-	return self()->contextIs<Identifiable>() ? self()->contextAs<Identifiable>() : 0;
+	return self()->parentIs<Identifiable>() ? self()->parentAs<Identifiable>() : 0;
 }
 
 void Identifiable::onLeaveScene(RootEntity* _new, RootEntity* _old)

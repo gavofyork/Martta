@@ -154,12 +154,12 @@ bool Operation::keyPressed(EntityKeyEvent const* _e)
 InsertionPoint Operation::slideOnPrecedence(InsertionPoint _p, Precedence _d, Associativity _a, InsertionPoint const& _block)
 {
 	InsertionPoint p = _p;
-	while (_block != p && p->contextIs<Operation>() && p.index() == p->parentsChildrenCount() - 1 &&
-		   (_d > p->contextAs<Operation>()->precedence() || _d == p->contextAs<Operation>()->precedence() && _a == LeftAssociativity))
-		p = p.context()->over();
+	while (_block != p && p->parentIs<Operation>() && p.index() == p->parentsChildrenCount() - 1 &&
+		   (_d > p->parentAs<Operation>()->precedence() || _d == p->parentAs<Operation>()->precedence() && _a == LeftAssociativity))
+		p = p.parent()->over();
 	while (_block != p && p->isKind<Operation>() && !p->child(p->cardinalChildCount() - 1)->isPlaceholder() && p->asKind<Operation>()->precedence() == _d && _a == RightAssociativity)
 		p = p->child(p->cardinalChildCount() - 1)->over();
-	if (p->contextIs<Operation>() && p->contextAs<Operation>()->isSlidable(p.index()))
+	if (p->parentIs<Operation>() && p->parentAs<Operation>()->isSlidable(p.index()))
 		return _p;
 	return p;
 }

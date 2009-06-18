@@ -40,22 +40,15 @@ bool Base::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent c
 	return simpleInsertionPointKeyPressHandler<Base>(_p, _e, "B");
 }
 
-void Base::onDependencyChanged(Entity* _e)
+void Base::onDependencyChanged(Entity*)
 {
-/*	if (_e == child(Superclass))
-		if (ExplicitType* t = _e->tryKind<ExplicitType>())
-			if (!haveDependency(t->subject()))
-			{	
-				removeAllDependencies();
-				addDependency(t->subject()->self());
-			}*/
 	changed();
 }
 
 bool Base::isChildInValidState(int _i) const
 {
 	if (childIs<ExplicitType>(_i))
-		return Super::isChildInValidState(_i) && childAs<ExplicitType>(_i)->subject()->isKind<Class>() && childAs<ExplicitType>(_i)->subject()->self() != context();
+		return Super::isChildInValidState(_i) && childAs<ExplicitType>(_i)->subject()->isKind<Class>() && childAs<ExplicitType>(_i)->subject()->self() != parent();
 	return Super::isChildInValidState(_i);
 }
 

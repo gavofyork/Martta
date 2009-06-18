@@ -39,7 +39,7 @@ public:
 	virtual int							minimumRequired() const { return 1; }
 	virtual Kinds						allowedKinds(int) const;
 	
-	virtual QString						code() const { return isHidden() ? "[struct of " + contextAs<DeclarationEntity>()->codeName() + "]" : (/*"struct " + */codeName()); }
+	virtual QString						code() const { return isHidden() ? "[struct of " + parentAs<DeclarationEntity>()->codeName() + "]" : (/*"struct " + */codeName()); }
 };
 
 }

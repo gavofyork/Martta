@@ -114,7 +114,7 @@ protected:
 	// i.e. It will return false if the requirement includes Physical, VeryConvertible etc.
 	static inline bool					isBasicallyConvertibleAtMost(Castability _required) { return !(_required & ~BasicallyConvertible); }
 	
-	virtual bool						isSuperfluous() const { return context()->allowedKinds(contextIndex()).commonBase() != kind() && isNull(); }
+	virtual bool						isSuperfluous() const { return parent()->allowedKinds(index()).commonBase() != kind() && isNull(); }
 	virtual bool						isInValidState() const { return isWellDefined(); }
 
 	

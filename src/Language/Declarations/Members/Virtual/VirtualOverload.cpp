@@ -79,8 +79,8 @@ void VirtualOverload::importDom(QDomElement const& _element)
 QList<VirtualMethod*> VirtualOverload::possibilities() const
 {
 	QList<VirtualMethod*> ret;
-	foreach (VirtualMethod* i, contextAs<Class>()->membersOf<VirtualMethod>())
-		if (i->context() != context())
+	foreach (VirtualMethod* i, parentAs<Class>()->membersOf<VirtualMethod>())
+		if (i->parent() != parent())
 			ret << i;
 	return ret;
 }

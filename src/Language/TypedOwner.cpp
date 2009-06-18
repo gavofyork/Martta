@@ -42,7 +42,7 @@ Types TypedOwner::deniedTypes(int) const
 
 Kinds TypedOwner::deniedKinds(int) const
 {
-	return context() ? context()->deniedKinds(contextIndex()) : Kinds();
+	return parent() ? parent()->deniedKinds(index()) : Kinds();
 };
 
 Type TypedOwner::effectiveType(int _i) const

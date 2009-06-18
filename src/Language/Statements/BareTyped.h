@@ -34,13 +34,13 @@ class BareTyped: public Primary, public_interface TypeNamer
 public:
 	inline Types allowedTypes() const
 	{
-		if (!contextIs<TypedOwner>()) return Types();
-		return contextAs<TypedOwner>()->allowedTypes(contextIndex());
+		if (!parentIs<TypedOwner>()) return Types();
+		return parentAs<TypedOwner>()->allowedTypes(index());
 	}
 	inline Types deniedTypes() const
 	{
-		if (!contextIs<TypedOwner>()) return Types();
-		return contextAs<TypedOwner>()->deniedTypes(contextIndex());
+		if (!parentIs<TypedOwner>()) return Types();
+		return parentAs<TypedOwner>()->deniedTypes(index());
 	}
 };
 

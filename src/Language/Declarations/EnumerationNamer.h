@@ -43,7 +43,7 @@ protected:
 	QString								defineLayout(const ViewKeys& _k) const;
 	QString								interfaceCode() const;
 	bool								keyPressed(EntityKeyEvent const* _e);
-	QList<ValueDefiner*>				valuesAdded() const { return castEntities<ValueDefiner>(self()->childrenOf<ValueDefiner>()); }
+	QList<ValueDefiner*>				valuesAdded() const { return self()->cardinalChildrenOf<ValueDefiner>(); }
 	
 	void								onDependencyAdded(Entity* _e);
 	void								onDependencyChanged(Entity* _e);

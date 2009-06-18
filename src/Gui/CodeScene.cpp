@@ -84,10 +84,10 @@ void CodeScene::leaving(Entity* _e, InsertionPoint const&)
 //		qDebug() << "Trying to calculate next...";
 //		_e->debugTree();
 		Entity* n = next(_e);
-		M_ASSERT(!n || n->context());
+		M_ASSERT(!n || n->parent());
 		while (n && n->hasAncestor(_e)) n = next(n);
 		Entity* p = previous(_e);
-		M_ASSERT(!p || p->context());
+		M_ASSERT(!p || p->parent());
 		while (p && p->hasAncestor(_e)) p = previous(p);
 		/*{
 			qDebug() << "Leaving entity:";
@@ -170,7 +170,7 @@ void CodeScene::setEditing(Entity* _e)
 		if (isFocusable(_e))
 			setCurrent(_e);
 		else if (_e->isUsurped())
-			setCurrent(_e->context());
+			setCurrent(_e->parent());
 		else
 			return;
 		
@@ -432,7 +432,7 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 			{
 				m_strobeChild->commitVirtualMove(sChPoint);
 				m_strobeChild->contextSwitched(m_strobeCreation);
-				m_strobeChild->context()->childSwitched(m_strobeChild, m_strobeCreation);
+				m_strobeChild->parent()->childSwitched(m_strobeChild, m_strobeCreation);
 			}
 			if (m_strobeCreation)
 				m_strobeCreation->killAndDelete();
@@ -492,7 +492,7 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 	if (!_e->text().isEmpty() && _e->text()[0] > 32 && allowStrobeInit)
 	{
 		// Add to m_strobe.
-		if (!m_strobeFocus && currentPoint.exists() && n && n->context() == currentPoint.childType())
+		if (!m_strobeFocus && currentPoint.exists() && n && n->parent() == currentPoint.childType())
 		{
 			// Kick off the strobe sequence.
 			m_strobeFocus = n;
@@ -565,15 +565,15 @@ bool CodeScene::keyPressedAsNavigation(EntityKeyEvent const* _e)
 			m_pagingRoute.clear();
 		}
 		Entity const* e = current();
-		while (e->context() && isInScene(e->context()) && !isFocusable(e->context()))
+		while (e->parent() && isInScene(e->parent()) && !isFocusable(e->parent()))
 		{
-			m_pagingRoute << current()->contextIndex();
-			e = e->context();
+			m_pagingRoute << current()->index();
+			e = e->parent();
 		}
-		if (e->context() && isFocusable(e->context()))
+		if (e->parent() && isFocusable(e->parent()))
 		{
-			m_pagingRoute << current()->contextIndex();
-			setCurrent(current()->context());
+			m_pagingRoute << current()->index();
+			setCurrent(current()->parent());
 			m_lastDefiniteX = bounds(current()).center().x();
 		}
 	}
@@ -620,7 +620,7 @@ Entity* CodeScene::nearest(Entity* _e)
 	
 		i = _e;
 		while (i && !isFocusable(i))
-			i = i->context();
+			i = i->parent();
 		if (i)
 			return i;
 	}
@@ -685,7 +685,7 @@ void CodeScene::setCurrent(Entity* _e)
 	
 	if (old)
 	{
-		for (Entity* e = old; e && m_current && !m_current->hasAncestor(e); e = e->context())
+		for (Entity* e = old; e && m_current && !m_current->hasAncestor(e); e = e->parent())
 			e->checkForCullingLater();
 	}
 	currentChanged(current());
@@ -712,7 +712,7 @@ bool CodeScene::markDirty(Entity* _e)
 {
 	resetLayoutCache(_e);
 	bool relayoutActuallyNeeded = false;
-	for (Entity* i = _e; i; i = i->context())
+	for (Entity* i = _e; i; i = i->parent())
 	{
 		// TODO: There should be a break condition.
 		
@@ -878,15 +878,15 @@ void CodeScene::navigateToNew(Entity* _e)
 {
 	leaveEdit();
 
-	if (!isInScene(_e) || !isInScene(_e->context()))
+	if (!isInScene(_e) || !isInScene(_e->parent()))
 		doRefreshLayout();
 	
-	QList<Entity*> o = m_orders[_e->context()];
+	QList<Entity*> o = m_orders[_e->parent()];
 	int i = o.indexOf(_e);
 	if (i != UndefinedIndex && i < o.count() - 1)
 		navigateInto(o[i + 1]);
 	else
-		setCurrent(nearest(_e->context()));
+		setCurrent(nearest(_e->parent()));
 }
 
 void CodeScene::navigateAway(Entity* _from, NavigationDirection _d)
@@ -903,7 +903,7 @@ void CodeScene::navigateAway(Entity* _from, NavigationDirection _d)
 QRectF CodeScene::bounds(Entity* _e)
 {
 	QRectF ret = m_bounds[_e];
-	for (Entity* e = _e->context(); e && m_bounds.contains(e); e = e->context())
+	for (Entity* e = _e->parent(); e && m_bounds.contains(e); e = e->parent())
 		ret.moveTopLeft(ret.topLeft() + m_bounds[e].topLeft());
 	return QRectF(ret.x() - 1.f, ret.y(), ret.width() + 1.f, ret.height());
 }
@@ -915,11 +915,11 @@ Entity* CodeScene::traverse(Entity* _e, bool _upwards, float _x)
 	Entity* e = _e;
 	int ci = UndefinedIndex;
 	float mb = -1.f;
-	for (; e && isInScene(e); ci = e->contextIndex(), e = e->context())
+	for (; e && isInScene(e); ci = e->index(), e = e->parent())
 	{
 		foreach (Entity* i, e->children())
 		{
-			if (i->contextIndex() != ci && isInScene(i))
+			if (i->index() != ci && isInScene(i))
 			{
 				QRectF b = bounds(i);
 				if (_upwards ? b.bottom() <= ourBound : (b.top() >= ourBound))
@@ -940,7 +940,7 @@ Entity* CodeScene::traverse(Entity* _e, bool _upwards, float _x)
 	float d = -1.f;
 	Entity* x;
 	foreach (Entity* i, e->children())
-	if (i->contextIndex() != ci && isInScene(i))
+	if (i->index() != ci && isInScene(i))
 	{
 		QRectF b = bounds(i);
 		if ((_upwards ? b.bottom() : b.top()) == mb)
@@ -1414,15 +1414,15 @@ void CodeScene::doRefreshLayout()
 		else if (e == "^")
 		{
 			f->order << f->subject;
-			if (!m_leftmostChild.contains(f->subject->context()))
-				m_leftmostChild[f->subject->context()] = f->subject;
-			m_rightmostChild[f->subject->context()] = f->subject;
+			if (!m_leftmostChild.contains(f->subject->parent()))
+				m_leftmostChild[f->subject->parent()] = f->subject;
+			m_rightmostChild[f->subject->parent()] = f->subject;
 		}
 		else if (e == "^!")
 		{
-			if (!m_leftmostChild.contains(f->subject->context()))
-				m_leftmostChild[f->subject->context()] = m_leftmostChild[f->subject];
-			m_rightmostChild[f->subject->context()] = m_rightmostChild[f->subject];
+			if (!m_leftmostChild.contains(f->subject->parent()))
+				m_leftmostChild[f->subject->parent()] = m_leftmostChild[f->subject];
+			m_rightmostChild[f->subject->parent()] = m_rightmostChild[f->subject];
 		}
 		else if (QRegExp("-?[0-9]+").exactMatch(e) && f->subject->child(e.toInt()) && m_pictures.contains(f->subject->child(e.toInt())))
 		{

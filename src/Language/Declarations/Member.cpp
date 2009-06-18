@@ -37,7 +37,7 @@ Access Member::access() const
 
 Class* Member::classType() const
 {
-	return contextAs<Class>();
+	return parentAs<Class>();
 }
 
 Kinds Member::allowedKinds(int _i) const

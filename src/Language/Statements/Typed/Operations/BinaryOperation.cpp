@@ -27,7 +27,7 @@ MARTTA_OBJECT_CPP(BinaryOperation);
 
 QString BinaryOperation::defineLayout(ViewKeys&) const
 {
-	if (!context()->isKind<Operation>())
+	if (!parent()->isKind<Operation>())
 		return QString("0;Mi;^;%1;Mi;1").arg(operatorLayout());
 	return QString("B#0000000a;Mo;0;Mi;^;%1;Mi;1;Mo").arg(operatorLayout());
 }

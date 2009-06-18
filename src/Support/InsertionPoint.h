@@ -40,11 +40,11 @@ class InsertionPoint
 	friend QDebug operator<<(QDebug _out, InsertionPoint const& _item);
 	
 public:
-	InsertionPoint(): m_context(0), m_index(UndefinedIndex) {}
-	InsertionPoint(InsertionPoint const& _c): m_context(_c.m_context), m_index(_c.m_index) {}
-	InsertionPoint& operator=(InsertionPoint const& _c) { m_context = _c.m_context; m_index = _c.m_index; return *this; }
+	InsertionPoint(): m_parent(0), m_index(UndefinedIndex) {}
+	InsertionPoint(InsertionPoint const& _c): m_parent(_c.m_parent), m_index(_c.m_index) {}
+	InsertionPoint& operator=(InsertionPoint const& _c) { m_parent = _c.m_parent; m_index = _c.m_index; return *this; }
 	
-	inline bool							operator==(InsertionPoint const& _c) const { return _c.m_context == m_context && _c.m_index == m_index; }
+	inline bool							operator==(InsertionPoint const& _c) const { return _c.m_parent == m_parent && _c.m_index == m_index; }
 	inline bool							operator!=(InsertionPoint const& _c) const { return !operator==(_c); }
 	
 	inline 								operator bool() const { return isValid(); }
@@ -60,8 +60,8 @@ public:
 	bool								exists() const;
 	Entity*								childType() const;
 
-	inline bool							isNull() const { return !m_context; }
-	inline bool							isValid() const { return m_context; }
+	inline bool							isNull() const { return !m_parent; }
+	inline bool							isValid() const { return m_parent; }
 	
 	/**
 	 * Inserts @a _e into the context's entity list, so it becomes at the position
@@ -84,7 +84,7 @@ public:
 	 */
 	void								insertSilent(Entity* _e) const;
 
-	inline Entity*						context() const { return m_context; }
+	inline Entity*						parent() const { return m_parent; }
 	inline int							index() const { return m_index; }
 
 	/**
@@ -100,12 +100,12 @@ public:
 	
 	// TODO: Bring these in once I'm comfortable with them.
 //	template<class T> inline T*			operator<<=(T* _e) const { place(_e); return _e; }
-//	template<class T> inline InsertionPoint const& operator<<(T* _e) const { place(_e); return InsertionPoint(m_context, (m_index == -1) ? -1 : (_e->contextIndex() + 1)); }
+//	template<class T> inline InsertionPoint const& operator<<(T* _e) const { place(_e); return InsertionPoint(m_parent, (m_index == -1) ? -1 : (_e->index() + 1)); }
 	
 private:
-	InsertionPoint(Entity* _context, int _index = UndefinedIndex): m_context(_context), m_index(_index) {}
+	InsertionPoint(Entity* _context, int _index = UndefinedIndex): m_parent(_context), m_index(_index) {}
 
-	SafePointer<Entity>					m_context;
+	SafePointer<Entity>					m_parent;
 	int									m_index;
 };
 

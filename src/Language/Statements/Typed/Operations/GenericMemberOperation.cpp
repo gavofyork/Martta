@@ -72,7 +72,7 @@ bool GenericMemberOperation::isChildInValidState(int _index) const
 		if (scope().isNull())
 			return false;
 		// If we somehow managed to end up at a Memberified type despite not being a Referenced, fair play.
-		if (childIs<Referenced>(1) && !scope()->applicableMembers(context()).contains(childAs<Referenced>(1)->subject()))
+		if (childIs<Referenced>(1) && !scope()->applicableMembers(parent()).contains(childAs<Referenced>(1)->subject()))
 			return false;
 	}
 	return Super::isChildInValidState(_index);

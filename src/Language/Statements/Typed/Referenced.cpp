@@ -117,7 +117,7 @@ QString Referenced::code() const
 Kinds Referenced::ancestralDependencies() const
 {
 	Kinds ret = Kind::of<MemberLambda>();
-	if (!m_subject.isNull() && !contextIs<GenericMemberOperation>() && m_subject->isKind<MemberValue>() && hasAncestor<MemberLambda>() && ancestor<Class>() != m_subject->asKind<MemberValue>()->classType())
+	if (!m_subject.isNull() && !parentIs<GenericMemberOperation>() && m_subject->isKind<MemberValue>() && hasAncestor<MemberLambda>() && ancestor<Class>() != m_subject->asKind<MemberValue>()->classType())
 		ret << Kind::of<Class>();
 	return ret;
 }
@@ -128,7 +128,7 @@ bool Referenced::isInValidState() const
 	if (!m_subject.isUsable())
 		return false;
 		
-	if (!contextIs<GenericMemberOperation>() && m_subject->isKind<MemberValue>() && hasAncestor<MemberLambda>())
+	if (!parentIs<GenericMemberOperation>() && m_subject->isKind<MemberValue>() && hasAncestor<MemberLambda>())
 	{
 		M_ASSERT(hasAncestor<Class>());
 		if (!ancestor<Class>()->membersOf<MemberValue>(ancestor<MemberLambda>()->isConst()).contains(m_subject->asKind<MemberValue>()))
@@ -145,7 +145,7 @@ Type Referenced::type() const
 	
 	Type t = m_subject->type();
 	// If we're not in a member operation, check if there's some memberification that we can silently discard; 
-	if (!contextIs<GenericMemberOperation>() && t->isType<Memberify>() && hasAncestor<MemberLambda>())
+	if (!parentIs<GenericMemberOperation>() && t->isType<Memberify>() && hasAncestor<MemberLambda>())
 	{
 		M_ASSERT(hasAncestor<Class>());
 		// There is; check to see if we can remove it (by being in a scoped context and assuming the "this->" precedent).
@@ -287,7 +287,7 @@ void ReferencedEdit::leavingEditIntact()
 			int x;
 			if ((x = SimpleType::id(m_entityName)) != -1)
 			{
-				e->childrenOf<TypeEntity>()[0]->replace(new SimpleType(x));
+				e->childOf<TypeEntity>()->replace(new SimpleType(x));
 				codeScene()->silentlySetCurrent(e->child(Identifiable::Identity));	// set to the place where the user expects the cursor to be (silently, sicne we might (possibly) already be in a setCurrent!).
 			}
 			else if (m_entityName == "string")
@@ -299,7 +299,7 @@ void ReferencedEdit::leavingEditIntact()
 			{
 				M_ASSERT(e->childIs<TextLabel>(Identifiable::Identity));
 				e->childAs<TextLabel>(Identifiable::Identity)->setText(m_entityName);
-				codeScene()->silentlySetCurrent(e->childrenOf<TypeEntity>()[0]);							// set to the place where the user expects the cursor to be (silently, sicne we might (possibly) already be in a setCurrent!).
+				codeScene()->silentlySetCurrent(e->childOf<TypeEntity>());							// set to the place where the user expects the cursor to be (silently, sicne we might (possibly) already be in a setCurrent!).
 			}
 			
 			// set subject to zero so we don't go through this again when the kill()ed subject gets removed from the scene.
@@ -324,7 +324,7 @@ void ReferencedEdit::updateSubset()
 	if (subject()->m_lastSet & ScopedSet)
 		m_valuesInScope << castEntities<ValueDefiner>(subject()->ancestor<DeclarationEntity>()->valuesKnown());
 	if (subject()->m_lastSet & GlobalSet)
-		m_valuesInScope << subject()->rootEntity()->entitiesHereAndBeforeOf<ValueDefiner>();
+		m_valuesInScope << subject()->rootEntity()->childrenHereAndBeforeOf<ValueDefiner>();
 	if (subject()->m_lastSet & ArgumentSet && subject()->hasAncestor<LambdaNamer>())
 		for (int i = 0; i < subject()->ancestor<LambdaNamer>()->argumentCount(); i++)
 			m_valuesInScope << subject()->ancestor<LambdaNamer>()->argument(i);

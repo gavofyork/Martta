@@ -96,7 +96,7 @@ bool MemberLambda::keyPressed(EntityKeyEvent const* _e)
 	M_ASSERT(isComplete());
 	if (LambdaNamer::keyPressed(_e))
 		return true;
-	else if ((_e->isFocused() || !childIs<Compound>(_e->focalIndex())) && childCountOf<ConstLabel>() && childrenOf<ConstLabel>()[0]->asKind<Label>()->keyPressed(_e))
+	else if ((_e->isFocused() || !childIs<Compound>(_e->focalIndex())) && childCountOf<ConstLabel>() && childOf<ConstLabel>()->asKind<Label>()->keyPressed(_e))
 		return true;
 	return Super::keyPressed(_e);
 }

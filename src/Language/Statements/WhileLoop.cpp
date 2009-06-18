@@ -65,8 +65,8 @@ QString WhileLoop::defineLayout(ViewKeys&) const
 
 bool WhileLoop::keyPressed(EntityKeyEvent const* _e)
 {
-	if ((_e->text() == ")" || _e->text() == "{") && _e->focalIndex() == 0 && childrenOf<Compound>().size())
-		childrenOf<Compound>()[0]->navigateOnto(_e->codeScene());
+	if ((_e->text() == ")" || _e->text() == "{") && _e->focalIndex() == 0 && childCountOf<Compound>())
+		childOf<Compound>()->navigateOnto(_e->codeScene());
 	else
 		return Super::keyPressed(_e);
 	return true;

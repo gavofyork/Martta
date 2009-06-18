@@ -143,14 +143,14 @@ bool ExplicitType::defineSimilarityTo(TypeEntity const* _t, Castability _c) cons
 				if (c == ts)
 					return true;
 				// Note Physical attribute should be tested last.
-				QList<Base*> bases = c->childrenOf<Base>();
+				QList<Base*> bases = c->cardinalChildrenOf<Base>();
 				while (bases.size())
 				{
 					Base* b = bases.takeLast();
 					if (ts && b->classType() == ts)
 						return true;
 					else if (b->classType())
-						bases += b->classType()->childrenOf<Base>();
+						bases += b->classType()->cardinalChildrenOf<Base>();
 				}
 			}
 		}
@@ -181,7 +181,7 @@ QString ExplicitType::idColour() const
 
 bool ExplicitType::canStandAlone() const
 {
-	return m_subject.isUsable() && m_subject->isKind<Class>() ? !m_subject->self()->childrenOf<VirtualPure>().size() : true;
+	return m_subject.isUsable() && m_subject->isKind<Class>() ? !m_subject->self()->childCountOf<VirtualPure>() : true;
 }
 
 bool ExplicitType::keyPressed(EntityKeyEvent const* _e)
@@ -210,11 +210,11 @@ QList<TypeDefinition*> ExplicitType::possibilities()
 {
 	QList<TypeDefinition*> ret;
 	TypeDefinition* old = m_subject;
-	foreach (TypeDefinition* i, context()->entitiesHereAndBeforeOf<TypeDefinition>())
+	foreach (TypeDefinition* i, parent()->childrenHereAndBeforeOf<TypeDefinition>())
 	{
 		qDebug() << i->name();
 		m_subject = i;
-		if (context()->isChildInValidState(contextIndex()))
+		if (parent()->isChildInValidState(index()))
 			ret << i;
 	}
 	m_subject = old;

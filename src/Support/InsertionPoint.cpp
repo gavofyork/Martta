@@ -27,13 +27,13 @@ namespace Martta
 
 bool InsertionPoint::exists() const
 {
-	return isValid() && m_index != UndefinedIndex && m_context->child(m_index);
+	return isValid() && m_index != UndefinedIndex && m_parent->child(m_index);
 }
 
 Entity* InsertionPoint::childType() const
 {
 	M_ASSERT(exists());
-	return m_context->child(m_index);
+	return m_parent->child(m_index);
 }
 
 Entity* InsertionPoint::spawnPreparedSilent() const
@@ -47,8 +47,8 @@ Entity* InsertionPoint::spawnPreparedSilent() const
 Entity* InsertionPoint::spawnPrepared() const
 {
 	Entity* ret = spawnPreparedSilent();
-	if (m_context)
-		m_context->childAdded(ret);
+	if (m_parent)
+		m_parent->childAdded(ret);
 	ret->contextAdded();
 	return ret;
 }
@@ -56,17 +56,17 @@ Entity* InsertionPoint::spawnPrepared() const
 Entity* InsertionPoint::place(Entity* _e) const
 {
 	M_ASSERT(_e);
-	Entity* oc = _e->context();
-	int oci = _e->contextIndex();
+	Entity* oc = _e->parent();
+	int oci = _e->index();
 	
 	if (exists() && childType()->isPlaceholder())
 		childType()->replace(_e);
 	else
 	{
 		_e->move(*this);
-		if (oc != m_context)
+		if (oc != m_parent)
 			_e->contextSwitchedWithChildRemoved(oc, oci);
-		m_context->childAdded(m_index);
+		m_parent->childAdded(m_index);
 	}
 	return _e;
 }
@@ -79,38 +79,38 @@ void InsertionPoint::insertSilent(Entity* _e) const
 
 bool InsertionPoint::allowedToBeKind(Kind _k) const
 {
-	return _k.isKind(m_context->allowedKinds(m_index == UndefinedIndex ? m_context->cardinalChildCount() : m_index))
-			&& !_k.isKind(m_context->deniedKinds(m_index == UndefinedIndex ? m_context->cardinalChildCount() : m_index));
+	return _k.isKind(m_parent->allowedKinds(m_index == UndefinedIndex ? m_parent->cardinalChildCount() : m_index))
+			&& !_k.isKind(m_parent->deniedKinds(m_index == UndefinedIndex ? m_parent->cardinalChildCount() : m_index));
 }
 
 bool InsertionPoint::isRequired() const
 {
-	return (m_index == UndefinedIndex ? m_context->cardinalChildCount() : m_index) < m_context->minimumRequired();
+	return (m_index == UndefinedIndex ? m_parent->cardinalChildCount() : m_index) < m_parent->minimumRequired();
 }
 
 Kinds InsertionPoint::allowedKinds() const
 {
-	return m_context->allowedKinds(m_index == UndefinedIndex ? m_context->cardinalChildCount() : m_index);
+	return m_parent->allowedKinds(m_index == UndefinedIndex ? m_parent->cardinalChildCount() : m_index);
 }
 
 Kinds InsertionPoint::deniedKinds() const
 {
-	return m_context->deniedKinds(m_index == UndefinedIndex ? m_context->cardinalChildCount() : m_index);
+	return m_parent->deniedKinds(m_index == UndefinedIndex ? m_parent->cardinalChildCount() : m_index);
 }
 
 Entity* InsertionPoint::nearestEntity() const
 {
-	if (m_context->child(m_index))
-		return m_context->child(m_index);
-	else if (m_context->cardinalChildCount())
-		return m_context->cardinalChildren().last();
+	if (m_parent->child(m_index))
+		return m_parent->child(m_index);
+	else if (m_parent->cardinalChildCount())
+		return m_parent->cardinalChildren().last();
 	else
-		return m_context;
+		return m_parent;
 }
 
 QDebug operator<<(QDebug _out, InsertionPoint const& _item)
 {
-	_out << _item.m_index << "@" << &*_item.m_context;
+	_out << _item.m_index << "@" << &*_item.m_parent;
 	if (_item.exists())
 		_out << "[" << _item.childType() << "]";
 	return _out;

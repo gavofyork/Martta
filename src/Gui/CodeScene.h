@@ -57,7 +57,7 @@ public:
 	inline bool					isCurrent(Entity* _e) const { return current() == _e; }
 	inline bool					isEditing(Entity* _e) const { return editEntity() == _e; }
 	inline bool					isInScene(Entity* _e) const { return m_visible.contains(_e); }
-	inline bool					isFocusable(Entity* _e) const { return _e && m_orders[_e->context()].contains(_e); }
+	inline bool					isFocusable(Entity* _e) const { return _e && m_orders[_e->parent()].contains(_e); }
 	QRectF						bounds(Entity* _e);
 	Entity*						at(QPointF const&) const;
 	

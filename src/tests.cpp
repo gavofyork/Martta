@@ -417,7 +417,7 @@ int test()
 		
 		Referenced* f = new Referenced(v); 
 		f->prepareChildren();
-		M->childrenOf<Compound>()[0]->back().place(f);
+		M->childOf<Compound>()->back().place(f);
 		
 		r->debugTree();
 		r->archivePtrs(true);
@@ -435,9 +435,9 @@ int test()
 		r->importDom(doc.documentElement());
 		r->restorePtrs();
 	
-		FAILED_IF(!r->child(0)->childrenOf<Class>()[0]->childrenOf<Method>()[0]->childrenOf<Compound>()[0]->childIs<Referenced>(1));
-		qDebug() << &*r->child(0)->childrenOf<Class>()[0]->childrenOf<Method>()[0]->childrenOf<Compound>()[0]->childAs<Referenced>(1)->subject();
-		FAILED_IF(!r->child(0)->childrenOf<Class>()[0]->childrenOf<Method>()[0]->childrenOf<Compound>()[0]->childAs<Referenced>(1)->subject());
+		FAILED_IF(!r->child(0)->childOf<Class>()->childOf<Method>()->childOf<Compound>()->childIs<Referenced>(1));
+		qDebug() << &*r->child(0)->childOf<Class>()->childOf<Method>()->childOf<Compound>()->childAs<Referenced>(1)->subject();
+		FAILED_IF(!r->child(0)->childOf<Class>()->childOf<Method>()->childOf<Compound>()->childAs<Referenced>(1)->subject());
 		
 		r->killAndDelete();
 	}
@@ -461,7 +461,7 @@ int test()
 		b->move(pos ? a->middle(pos) : a->back()); \
 		TEST("Clearing entities (children: " #pos ")") FAILED_IF(!a->children().contains(b)); \
 		TEST("Clearing entities (cardinalChildren(): " #pos ")") FAILED_IF(bool(pos) == a->cardinalChildren().contains(b)); \
-		TEST("Clearing entities (children(int): " #pos ")") FAILED_IF(!a->children(pos).contains(b)); \
+		TEST("Clearing entities (childrenAt(int): " #pos ")") FAILED_IF(!a->childrenAt(pos).contains(b)); \
 		r->killAndDelete(); \
 		TEST("Clearing entities (a pointer: " #pos ")") FAILED_IF(a); \
 		TEST("Clearing entities (b pointer: " #pos ")") FAILED_IF(b); \

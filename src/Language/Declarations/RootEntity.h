@@ -51,7 +51,7 @@ public:
 	static RootEntity*					get() { return s_this; }
 
 	virtual QString						name() const { return QString(); }
-	virtual Entity*						context() const { return 0; }
+	virtual Entity*						parent() const { return 0; }
 	virtual QString						reference() const { return ""; }
 	virtual QString						key() const { return ""; }
 	virtual Kinds						allowedKinds(int) const;

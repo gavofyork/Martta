@@ -43,7 +43,7 @@ public:
 	virtual QString						code() const;
 
 protected:
-	virtual Identifiable*				addressableContext() const { return contextAs<Identifiable>()->addressableContext(); }
+	virtual Identifiable*				addressableContext() const { return parentAs<Identifiable>()->addressableContext(); }
 	virtual QString						defineLayout(ViewKeys&) const;
 	virtual int							minimumRequired() const { return 1; }
 	virtual Kinds						allowedKinds(int) const;

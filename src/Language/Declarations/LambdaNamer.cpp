@@ -64,7 +64,7 @@ QString LambdaNamer::defineBodyLayout(ViewKeys& _viewKeys) const
 		else
 		{
 			ret += "yminor;' (";
-			if (int n = body()->childrenOf<Primary>().count() + body()->childrenOf<Untyped>().count())
+			if (int n = body()->cardinalChildrenOf<Primary>().count() + body()->cardinalChildrenOf<Untyped>().count())
 				ret += QString::number(n) + " statement" + (n > 1 ? "s, " : ", ");
 			if (ret.endsWith(", "))
 				ret.chop(2);
@@ -101,7 +101,7 @@ bool LambdaNamer::keyPressed(EntityKeyEvent const* _e)
 	}
 	else if (_e->text() == " " && self()->childIs<TypeEntity>(_e->focalIndex()) && self()->childCountOf<IdLabel>())
 	{
-		self()->childrenOf<IdLabel>()[0]->navigateOnto(_e->codeScene());
+		self()->childOf<IdLabel>()->navigateOnto(_e->codeScene());
 	}
 	else
 		return false;
@@ -145,8 +145,8 @@ QString LambdaNamer::basicCode(FunctionCodeScope _ref) const
 
 Compound* LambdaNamer::body() const
 {
-	if (self()->childrenOf<Compound>().size())
-		return self()->childrenOf<Compound>()[0];
+	if (self()->childCountOf<Compound>())
+		return self()->childOf<Compound>();
 	return 0;
 }
 
@@ -164,8 +164,8 @@ Argument* LambdaNamer::argument(int _index) const
 
 Type LambdaNamer::returns() const
 {
-	if (self()->childrenOf<TypeEntity>().size())
-		return *self()->childrenOf<TypeEntity>()[0];
+	if (self()->childCountOf<TypeEntity>())
+		return *self()->childOf<TypeEntity>();
 	return 0;
 }
 

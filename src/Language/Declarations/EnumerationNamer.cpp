@@ -106,15 +106,15 @@ QString EnumerationNamer::defineLayout(ViewKeys& _viewKeys) const
 	if (_viewKeys["expanded"].toBool())
 	{
 		ret += "ycode;'enum'" + name + ";s;ycode;n;'{'";
-		foreach (EnumValue* f, self()->childrenOf<EnumValue>())
-			ret += QString(";n;i;%1").arg(f->contextIndex());
+		foreach (EnumValue* f, self()->cardinalChildrenOf<EnumValue>())
+			ret += QString(";n;i;%1").arg(f->index());
 		ret += ";n;'}'";
 	}
 	else
 	{
 		ret += "ycode;'enum'" + name + ";s;yminor;' (";
-		int n = self()->childrenOf<EnumValue>().count();
-		if (n > 1 || !self()->childrenOf<EnumValue>()[0]->codeName().isEmpty())
+		int n = self()->cardinalChildCountOf<EnumValue>();
+		if (n > 1 || !self()->cardinalChildOf<EnumValue>()->codeName().isEmpty())
 			ret += QString::number(n) + " entr" + (n > 1 ? "ies" : "y");
 		if (ret.endsWith("("))
 			ret += "empty";

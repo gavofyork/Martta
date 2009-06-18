@@ -131,7 +131,7 @@ bool Invocation::keyPressed(EntityKeyEvent const* _e)
 bool Invocation::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
 {
 	if (_p.exists() && !_p->isPlaceholder() && _p->isKind<Typed>() && _e->text() == "(" &&
-		_p->asKind<Typed>()->type()->isType<FunctionType>() && !(_p->contextIs<Invocation>() && _p->contextIndex() == 0) && !isTemporary(_p.childType()))
+		_p->asKind<Typed>()->type()->isType<FunctionType>() && !(_p->parentIs<Invocation>() && _p->index() == 0) && !isTemporary(_p.childType()))
 	{
 		Entity* n = new Invocation;
 		_p->insert(n);

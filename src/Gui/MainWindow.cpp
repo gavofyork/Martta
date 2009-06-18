@@ -129,14 +129,14 @@ void MainWindow::entityFocused(Entity* _e)
 		m_codeScene->setCurrent(_e);
 
 	QString t;
-	if (_e && _e->context())
+	if (_e && _e->parent())
 	{
 		t += "<table><tr>";
 		t += "<td><b>" + _e->kind().name() + "</b>";
-		foreach (Kind k, _e->context()->allowedKinds(_e->contextIndex()))
+		foreach (Kind k, _e->parent()->allowedKinds(_e->index()))
 			t += "<br>" + k.name();
 		t += "<br>";
-		foreach (Kind k, _e->context()->deniedKinds(_e->contextIndex()))
+		foreach (Kind k, _e->parent()->deniedKinds(_e->index()))
 			t += "<br><i>" + k.name() + "</i>";
 		t += "</td>";
 		if (_e->isKind<BareTyped>())
@@ -170,7 +170,7 @@ void MainWindow::entityFocused(Entity* _e)
 		foreach (ValueDefiner* v, _e->ancestor<DeclarationEntity>()->valuesKnown())
 			new QTreeWidgetItem(g, QStringList() << QString(v->name()) << QString(v->type()->code()));
 		QTreeWidgetItem* gl = new QTreeWidgetItem(typesVisible, QStringList() << QString("Global"));
-		foreach (ValueDefiner* v, _e->rootEntity()->entitiesHereAndBeforeOf<ValueDefiner>())
+		foreach (ValueDefiner* v, _e->rootEntity()->childrenHereAndBeforeOf<ValueDefiner>())
 			new QTreeWidgetItem(gl, QStringList() << QString(v->name()) << QString(v->type()->code()));
 		typesVisible->expandAll();
 		typesVisible->verticalScrollBar()->setValue(vvalue);

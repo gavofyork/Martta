@@ -72,8 +72,8 @@ bool ForLoop::keyPressed(EntityKeyEvent const* _e)
 {
 	if (_e->text() == ";" && _e->focalIndex() < 2)
 		child(_e->focalIndex() + 1)->setCurrent();
-	else if ((_e->text() == ")" || _e->text() == "{") && _e->focalIndex() < 3 && childrenOf<Compound>().size())
-		childrenOf<Compound>()[0]->navigateOnto(_e->codeScene());
+	else if ((_e->text() == ")" || _e->text() == "{") && _e->focalIndex() < 3 && childCountOf<Compound>())
+		childOf<Compound>()->navigateOnto(_e->codeScene());
 	else if (_e->text() == "B" && _e->focus()->isPlaceholder() && _e->focus()->isAllowed<BreakStatement>())
 	{
 		Entity* e = new BreakStatement;

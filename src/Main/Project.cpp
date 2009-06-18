@@ -134,7 +134,7 @@ void Project::resetAsNew()
 	c->back().place(m_program = new Method);
 	m_program->prepareChildren();
 	m_program->childAs<TextLabel>(Identifiable::Identity)->setText("main");
-	m_program->childrenOf<TypeEntity>()[0]->over().place(new SimpleType(Void));
+	m_program->childOf<TypeEntity>()->over().place(new SimpleType(Void));
 	
 	emit subjectInvalid();
 	emit nameChanged();
@@ -158,8 +158,8 @@ QString Project::code() const
 		if (ic.isEmpty())
 			return QString();
 		ret += ic + "\n" + m_namespace->implementationCode() + "\n";
-		if (m_program && m_program->contextIs<DeclarationEntity>())
-			ret += "int main(int, char**)\n{\n" + m_program->contextAs<DeclarationEntity>()->reference() + " p;\np." + m_program->codeName() + "();\n}\n";
+		if (m_program && m_program->parentIs<DeclarationEntity>())
+			ret += "int main(int, char**)\n{\n" + m_program->parentAs<DeclarationEntity>()->reference() + " p;\np." + m_program->codeName() + "();\n}\n";
 	}
 
 	return ret;
@@ -348,10 +348,10 @@ void Project::deserialise(QDomDocument& _d)
 	TIME_STATEMENT(importDom) m_declarations.importDom(_d.documentElement());
 	TIME_STATEMENT(restorePtrs) m_declarations.restorePtrs();
 
-	m_namespace = m_declarations.childrenOf<NamespaceEntity>()[0];
+	m_namespace = m_declarations.childOf<NamespaceEntity>();
 	M_ASSERT(m_namespace);
 
-	m_classes << m_namespace->childrenOf<Class>();
+	m_classes << m_namespace->cardinalChildrenOf<Class>();
 
 	// Load "program"
 	Entity* e = m_namespace->findEntity(_d.documentElement().namedItem("program").toElement().attribute("key"))->self();

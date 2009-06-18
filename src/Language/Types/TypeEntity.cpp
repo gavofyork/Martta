@@ -67,7 +67,7 @@ TypeEntity* TypeEntity::newClone(Type* _o) const
 	ret->m_owner = _o;
 	foreach (Entity* e, children())
 		if (e->isKind<TypeEntity>())
-			(e->contextIndex() < 0 ? ret->middle(e->contextIndex()) : ret->back()).place(e->asKind<TypeEntity>()->clone(_o));
+			(e->index() < 0 ? ret->middle(e->index()) : ret->back()).place(e->asKind<TypeEntity>()->clone(_o));
 		else
 			break;
 	return ret;
@@ -91,12 +91,12 @@ bool TypeEntity::defineEquivalenceTo(TypeEntity const* _t) const
 	if (_t->kind() != kind()) return false;
 	if (!contentsEquivalentTo(_t)) return false;
 	foreach (Entity* e, children())
-		if (e->isKind<TypeEntity>() && _t->childIs<TypeEntity>(e->contextIndex()))
-			if (!e->asKind<TypeEntity>()->isEquivalentTo(_t->childAs<TypeEntity>(e->contextIndex())))
+		if (e->isKind<TypeEntity>() && _t->childIs<TypeEntity>(e->index()))
+			if (!e->asKind<TypeEntity>()->isEquivalentTo(_t->childAs<TypeEntity>(e->index())))
 				return false;
 			else {}
 		else
-			if (e->isKind<TypeEntity>() != _t->childIs<TypeEntity>(e->contextIndex()))
+			if (e->isKind<TypeEntity>() != _t->childIs<TypeEntity>(e->index()))
 				return false;
 	return true;
 }

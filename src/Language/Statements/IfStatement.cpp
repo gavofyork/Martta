@@ -64,8 +64,8 @@ Types IfStatement::allowedTypes(int _index) const
 
 bool IfStatement::keyPressed(EntityKeyEvent const* _e)
 {
-	if ((_e->text() == ")" || _e->text() == "{") && _e->focalIndex() == 0 && childrenOf<Compound>().size())
-		childrenOf<Compound>()[0]->navigateOnto(_e->codeScene());
+	if ((_e->text() == ")" || _e->text() == "{") && _e->focalIndex() == 0 && childCountOf<Compound>())
+		childOf<Compound>()->navigateOnto(_e->codeScene());
 	else if (_e->text() == "E" && _e->focalIndex() != 2)
 	{
 		if (!child(2)) back().place(new Compound);

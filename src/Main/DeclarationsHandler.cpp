@@ -315,7 +315,7 @@ VariableResolver::VariableResolver(Variable* _s, QXmlAttributes const& _a):
 void VariableResolver::resolve(DeclarationsHandler* _h)
 {
 	m_subject->middle(VariableNamer::OurType).place(_h->resolveType(m_typeId));
-	if (!m_subject->context()->context())
+	if (!m_subject->parent()->parent())
 		m_subject->m_location.m_file = _h->commitToFile(m_fileId, m_subject);
 }
 
@@ -338,7 +338,7 @@ void TypeResolver::init(QXmlAttributes const& _a)
 
 void TypeResolver::resolve(DeclarationsHandler* _h)
 {
-	if (!subject()->context()->context())
+	if (!subject()->parent()->parent())
 		subject()->m_location.m_file = _h->commitToFile(m_fileId, subject());
 }
 
