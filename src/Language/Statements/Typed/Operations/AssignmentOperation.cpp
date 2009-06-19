@@ -29,19 +29,19 @@ MARTTA_OBJECT_CPP(AssignmentOperation);
 	
 QString AssignmentOperation::code() const
 {
-	Typed* e = asTyped(0);
-	Typed* f = asTyped(1);
+	Typed* e = asTyped(FirstOperand);
+	Typed* f = asTyped(SecondOperand);
 	if (!e || !f) return "";
 	return parenthesise(e->code() + " = " + f->code());
 }
 
 Types AssignmentOperation::allowedTypes(int _index) const
 {
-	if (_index == 0)
+	if (_index == FirstOperand)
 		return Type().topWith(Reference());
-	if (_index == 1 && asTyped(0) && typeOf(0)->isType<Reference>())
+	if (_index == SecondOperand && asTyped(FirstOperand) && typeOf(FirstOperand)->isType<Reference>())
 	{
-		return typeOf(0)->asType<Reference>()->childType()->assignableTypes();
+		return typeOf(FirstOperand)->asType<Reference>()->childType()->assignableTypes();
 	}
 	return Types();
 }
@@ -49,7 +49,7 @@ Types AssignmentOperation::allowedTypes(int _index) const
 Type AssignmentOperation::type() const
 {
 	// TODO: Handle types whose "=" is overloaded.
-	return typeOf(0);
+	return typeOf(FirstOperand);
 }
 
 }

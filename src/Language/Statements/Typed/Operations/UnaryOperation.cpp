@@ -27,10 +27,10 @@ MARTTA_OBJECT_CPP(UnaryOperation);
 	
 QString UnaryOperation::defineLayout(ViewKeys&) const
 {
-	QString ret = isPostfix() ? "0;^;%1" : "^;%1;0";
+	QString ret = isPostfix() ? "%2;^;%1" : "^;%1;%2";
 	if (parent()->isKind<Operation>())
 		ret = "B#0000000a;Mi;" + ret + ";Mi";
-	return ret.arg(operatorLayout());
+	return ret.arg(operatorLayout()).arg(TheOperand);
 }
 	
 }

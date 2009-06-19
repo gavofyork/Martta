@@ -55,7 +55,7 @@ protected:
 	
 private:
 	Type								prototypeOf(int _index) const { if (!m_symbolCache.isUsable()) return Type(); return Operation::prototypeOf(m_symbolCache->type(), _index); }
-	Type								protoReturn() const { if (!m_symbolCache.isUsable()) return Type(); return Operation::prototypeOf(m_symbolCache->type(), -1); }
+	Type								protoReturn() const { if (!m_symbolCache.isUsable()) return Type(); return Operation::prototypeOf(m_symbolCache->type()); }
 	// Note these don't call changed().
 	void								refreshOperation() { setOperation(m_operator, operandType()); }
 	void								setOperation(Operator _o, Type const& _type = Type());

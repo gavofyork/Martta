@@ -35,10 +35,10 @@ MARTTA_OBJECT_CPP(MemberOperation);
 	
 Types MemberOperation::allowedTypes(int _index) const
 {
-	if (_index == 0)
+	if (_index == FirstOperand)
 	{
 		Types ret;
-		foreach (Type i, Super::allowedTypes(0))
+		foreach (Type i, Super::allowedTypes(FirstOperand))
 			ret << i.topWith(Reference());
 		return ret;
 	}

@@ -30,15 +30,16 @@ class UnaryOperation: public Operation
 	MARTTA_PLACEHOLDER(Operation)
 
 public:
-	virtual int							minRequired(int _i) const { return _i == Cardinals ? 1 : Super::minRequired(_i); }
-	virtual Kinds						allowedKinds(int _index) const { if (_index == 0) return Kind::of<Typed>(); else return Super::allowedKinds(_index); }
+	virtual int							minRequired(int _i) const { return _i == TheOperand ? 1 : Super::minRequired(_i); }
+	virtual Kinds						allowedKinds(int _i) const { return _i == TheOperand ? Kinds() << Kind::of<Typed>() : Super::allowedKinds(_i); }
 	virtual bool						isPostfix() const { return id().isPostfix(); }
+	virtual bool						isSlidable(int _i) const { return _i != TheOperand; }
 
 protected:
-	inline bool							haveOperand() const { return isTyped(0); }
-	inline Typed*						operand() const { return asTyped(0); }
-	inline Type							operandType() const { return typeOf(0); }
-	inline Type							effectiveOperandType() const { return effectiveType(0); }
+	inline bool							haveOperand() const { return isTyped(TheOperand); }
+	inline Typed*						operand() const { return asTyped(TheOperand); }
+	inline Type							operandType() const { return typeOf(TheOperand); }
+	inline Type							effectiveOperandType() const { return effectiveType(TheOperand); }
 
 	virtual QString						operatorLayout() const { return "ycode;'" + id().code() + "'"; }
 	virtual QString						defineLayout(ViewKeys&) const;
@@ -61,7 +62,7 @@ protected:
 		
 		InsertionPoint p = pre ? _p : slideOnPrecedence(_p, _d, _a, _e->nearestBracket(_p));
 		
-		if (isTemporary(p.childType()))
+		if (isTemporary(p.entity()))
 			return false;
 		
 		Entity* n = new T;

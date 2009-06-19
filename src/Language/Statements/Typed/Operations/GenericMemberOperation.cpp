@@ -41,9 +41,9 @@ Type GenericMemberOperation::memberified(Type _t, Type const& _scope) const
 
 Types GenericMemberOperation::allowedTypes(int _index) const
 {
-	if (_index == 0)
+	if (_index == FirstOperand)
 		return Type();
-	if (_index == 1 && !scope().isNull())
+	if (_index == SecondOperand && !scope().isNull())
 	{
 		Types ret;
 		foreach (Type t, BareTyped::allowedTypes())
@@ -55,7 +55,7 @@ Types GenericMemberOperation::allowedTypes(int _index) const
 
 Types GenericMemberOperation::deniedTypes(int _index) const
 {
-	if (_index == 1)
+	if (_index == SecondOperand)
 	{
 		Types ret;
 		foreach (Type t, BareTyped::deniedTypes())
@@ -67,12 +67,12 @@ Types GenericMemberOperation::deniedTypes(int _index) const
 
 bool GenericMemberOperation::isChildInValidState(int _index) const
 {
-	if (_index == 1)
+	if (_index == SecondOperand)
 	{
 		if (scope().isNull())
 			return false;
 		// If we somehow managed to end up at a Memberified type despite not being a Referenced, fair play.
-		if (childIs<Referenced>(1) && !scope()->applicableMembers(parent()).contains(childAs<Referenced>(1)->subject()))
+		if (childIs<Referenced>(SecondOperand) && !scope()->applicableMembers(parent()).contains(childAs<Referenced>(SecondOperand)->subject()))
 			return false;
 	}
 	return Super::isChildInValidState(_index);

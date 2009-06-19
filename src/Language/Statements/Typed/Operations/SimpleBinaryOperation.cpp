@@ -40,7 +40,7 @@ bool SimpleBinaryOperation::keyPressedOnInsertionPoint(InsertionPoint const& _p,
 		
 	bool ok = false;
 	InsertionPoint p = slideOnPrecedence(_p, o.precedence(), o.associativity(), _e->nearestBracket(_p));
-	M_ASSERT(!p.childType()->isEditing());
+	M_ASSERT(!p.entity()->isEditing());
 	if (p->isKind<Typed>() && findOperators(o, p->asKind<Typed>()->type()).size())
 		ok = true;
 	if (!ok)
@@ -126,12 +126,12 @@ QString SimpleBinaryOperation::code() const
 
 Types SimpleBinaryOperation::allowedTypes(int _index) const
 {
-	if (m_symbolCache.isUsable() && (_index == 0 || _index == 1))
+	if (m_symbolCache.isUsable() && (_index == FirstOperand || _index == SecondOperand))
 	{
-		qDebug() << prototypeOf(0)->code() << prototypeOf(1)->code() << " " << _index << " " << typeOf(0)->code();
-		if (_index == 1 && prototypeOf(1).isUltimatelyNull() && !typeOf(0).isNull())
-			return typeOf(0).strippedTo(prototypeOf(1));
-		if (_index == 1 && prototypeOf(1).isUltimatelyNull())
+		qDebug() << prototypeOf(FirstOperand)->code() << prototypeOf(SecondOperand)->code() << " " << _index << " " << typeOf(FirstOperand)->code();
+		if (_index == SecondOperand && prototypeOf(SecondOperand).isUltimatelyNull() && !typeOf(FirstOperand).isNull())
+			return typeOf(FirstOperand).strippedTo(prototypeOf(SecondOperand));
+		if (_index == SecondOperand && prototypeOf(SecondOperand).isUltimatelyNull())
 			return Types();
 		M_ASSERT(!prototypeOf(_index).isNull());
 		return prototypeOf(_index);
@@ -143,8 +143,8 @@ Type SimpleBinaryOperation::type() const
 {
 	if (!m_symbolCache.isUsable())
 		return Type();
-	if (protoReturn().isUltimatelyNull() && !typeOf(0).isNull())
-		return typeOf(0).strippedTo(protoReturn());
+	if (protoReturn().isUltimatelyNull() && !typeOf(FirstOperand).isNull())
+		return typeOf(FirstOperand).strippedTo(protoReturn());
 	else
 		return protoReturn();
 }

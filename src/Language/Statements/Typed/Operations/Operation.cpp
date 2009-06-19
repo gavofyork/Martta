@@ -38,32 +38,32 @@ Type Operation::prototypeOf(Type const& _t, int _index)
 	// Check if it's declared in a class (first param is encoded as this if so).
 	if (_t->isType<FunctionType>())
 	{
-		if (_index == 0)
+		if (_index == FirstOperand)
 			return _t->asType<FunctionType>()->argumentType(0);
-		else if (_index == 1)
+		else if (_index == SecondOperand)
 			return _t->asType<FunctionType>()->argumentType(1);
-		else if (_index == -1)
+		else if (_index == UndefinedIndex)
 			return _t->asType<FunctionType>()->returnType();
 	}
 	else if (_t->isType<Memberify>() && _t->asType<Memberify>()->childType()->isKind<FunctionType>())
 	{
-		if (_index == 0)
+		if (_index == FirstOperand)
 			return Type(*_t->asType<Memberify>()->scope()).topWith(Reference());
-		else if (_index == 1)
+		else if (_index == SecondOperand)
 			return _t->asType<Memberify>()->childType()->asKind<FunctionType>()->argumentType(0);
-		else if (_index == -1)
+		else if (_index == UndefinedIndex)
 			return _t->asType<Memberify>()->childType()->asKind<FunctionType>()->returnType();
 	}
 	return Type();
 }
 
-bool Operation::prototypeHasArgumentAt(Type const& _t, int _i)
+bool Operation::prototypeHasArgumentAt(Type const& _t, int _cardinal)
 {
 	// Check if it's declared in a class (first param is encoded as this if so).
 	if (_t->isType<FunctionType>())
-		return _t->asType<FunctionType>()->hasArgumentAt(_i);
+		return _t->asType<FunctionType>()->hasArgumentAt(_cardinal);
 	else if (_t->isType<Memberify>() && _t->asType<Memberify>()->childType()->isKind<FunctionType>())
-		return _t->asType<Memberify>()->childType()->asKind<FunctionType>()->hasArgumentAt(_i - 1);
+		return _t->asType<Memberify>()->childType()->asKind<FunctionType>()->hasArgumentAt(_cardinal - 1);
 	return false;
 }
 
@@ -84,7 +84,7 @@ QList<ValueDefiner*> Operation::findBestOverload(Types const& _actual, QList<Val
 			
 		// Go through each type and give a score
 		int score = 0;
-		int j = 0;
+		int j = FirstOperand;
 		foreach (Type f, _actual)
 		{
 			// No point matching against a null value.
@@ -154,11 +154,11 @@ bool Operation::keyPressed(EntityKeyEvent const* _e)
 InsertionPoint Operation::slideOnPrecedence(InsertionPoint _p, Precedence _d, Associativity _a, InsertionPoint const& _block)
 {
 	InsertionPoint p = _p;
-	while (_block != p && p->parentIs<Operation>() && p.index() == p->parentsCardinalChildCount() - 1 &&
+	while (_block != p && p->parentIs<Operation>() && !p->parentAs<Operation>()->isSlidable(p.index()) &&
 		   (_d > p->parentAs<Operation>()->precedence() || _d == p->parentAs<Operation>()->precedence() && _a == LeftAssociativity))
 		p = p.parent()->over();
-	while (_block != p && p->isKind<Operation>() && !p->child(p->cardinalChildCount() - 1)->isPlaceholder() && p->asKind<Operation>()->precedence() == _d && _a == RightAssociativity)
-		p = p->child(p->cardinalChildCount() - 1)->over();
+	while (_block != p && p->isKind<Operation>() && !p->asKind<Operation>()->lastOperand()->isPlaceholder() && p->asKind<Operation>()->precedence() == _d && _a == RightAssociativity)
+		p = p->asKind<Operation>()->lastOperand()->over();
 	if (p->parentIs<Operation>() && p->parentAs<Operation>()->isSlidable(p.index()))
 		return _p;
 	return p;

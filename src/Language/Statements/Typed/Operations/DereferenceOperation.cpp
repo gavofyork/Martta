@@ -30,7 +30,8 @@ MARTTA_OBJECT_CPP(DereferenceOperation);
 	
 QString DereferenceOperation::code() const
 {
-	if (!haveOperand()) return "";
+	if (!haveOperand())
+		return "";
 	return parenthesise("*" + operand()->code());
 }
 
@@ -64,7 +65,7 @@ Type DereferenceOperation::apparentType() const
 
 	// Disguard pointer.
 	if (p->isKind<AddressType>())
-		p = *p->childAs<TypeEntity>(0);
+		p = *p->childAs<TypeEntity>(TheOperand);
 	else
 		p = Type();
 
@@ -85,7 +86,7 @@ Type DereferenceOperation::type() const
 
 	// Disguard pointer.
 	if (p->isKind<AddressType>())
-		p = *p->childAs<TypeEntity>(0);
+		p = *p->childAs<TypeEntity>(TheOperand);
 	else
 		p = Type();
 

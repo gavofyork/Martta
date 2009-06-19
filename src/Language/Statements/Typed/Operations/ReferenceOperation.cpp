@@ -30,7 +30,8 @@ MARTTA_OBJECT_CPP(ReferenceOperation);
 	
 QString ReferenceOperation::code() const
 {
-	if (!haveOperand()) return "";
+	if (!haveOperand())
+		return "";
 	return parenthesise("&" + operand()->code());
 }
 

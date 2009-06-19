@@ -47,7 +47,7 @@ bool SubscriptOperation::isValidState() const
 
 Types SubscriptOperation::allowedTypes(int _index) const
 {
-	if (_index == 0)
+	if (_index == FirstOperand)
 	{
 		Types ret;
 		foreach (Type t, BareTyped::allowedTypes())
@@ -69,7 +69,7 @@ Types SubscriptOperation::allowedTypes(int _index) const
 
 Types SubscriptOperation::deniedTypes(int _index) const
 {
-	if (_index == 0)
+	if (_index == FirstOperand)
 	{
 		Types ret;
 		foreach (Type t, BareTyped::deniedTypes())

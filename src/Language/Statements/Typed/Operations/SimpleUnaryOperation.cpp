@@ -49,7 +49,7 @@ bool SimpleUnaryOperation::keyPressedOnInsertionPoint(InsertionPoint const& _p, 
 	Operator o(_e->text(), pre ? Operator::UnaryPrefix : Operator::UnaryPostfix);
 	InsertionPoint p = slideOnPrecedence(_p, o.precedence(), o.associativity(), _e->nearestBracket(_p));
 	bool b = findOperators(o, p->isKind<Typed>() ? p->asKind<Typed>()->type() : Type()).size();
-	if (b && !isTemporary(p.childType()))
+	if (b && !isTemporary(p.entity()))
 	{
 		SimpleUnaryOperation* n = new SimpleUnaryOperation(o, p->isKind<Typed>() ? p->asKind<Typed>()->type() : Type());
 //		p->debugTree();
@@ -83,15 +83,15 @@ Type SimpleUnaryOperation::type() const
 {
 	if (!m_symbolCache.isUsable())
 		return Type();
-	if (protoReturn().isUltimatelyNull() && !typeOf(0).isNull())
+	if (protoReturn().isUltimatelyNull() && !typeOf(TheOperand).isNull())
 	{
-/*		qDebug() << typeOf(0)->code();
-		typeOf(0)->debugTree();
+/*		qDebug() << typeOf(TheOperand)->code();
+		typeOf(TheOperand)->debugTree();
 		qDebug() << protoReturn()->code();
 		protoReturn()->debugTree();
-		qDebug() << typeOf(0).strippedTo(protoReturn())->code();
-		typeOf(0).strippedTo(protoReturn())->debugTree();*/
-		return typeOf(0).strippedTo(protoReturn());
+		qDebug() << typeOf(TheOperand).strippedTo(protoReturn())->code();
+		typeOf(TheOperand).strippedTo(protoReturn())->debugTree();*/
+		return typeOf(TheOperand).strippedTo(protoReturn());
 	}
 	return protoReturn();
 }
