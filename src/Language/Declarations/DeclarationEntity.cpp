@@ -48,7 +48,7 @@ DeclarationEntity::~DeclarationEntity()
 QList<ValueDefiner*> DeclarationEntity::valuesKnown() const
 {
 	QList<ValueDefiner*> ret = parentIs<DeclarationEntity>() ? parentAs<DeclarationEntity>()->valuesKnown() : QList<ValueDefiner*>();
-	foreach (DeclarationEntity* d, siblingsOf<DeclarationEntity>())
+	foreach (DeclarationEntity* d, cardinalSiblingsOf<DeclarationEntity>())
 		ret += d->valuesAdded();
 	return ret;
 }
@@ -96,7 +96,7 @@ QList<DeclarationEntity*> DeclarationEntity::utilisedSiblings() const
 	foreach (DeclarationEntity* i, utilised())
 		if (i->hasAncestor(parent()))
 		{
-			DeclarationEntity* e = parentsChild(i->ancestorIndex(parent()))->asKind<DeclarationEntity>();
+			DeclarationEntity* e = sibling(i->ancestorIndex(parent()))->asKind<DeclarationEntity>();
 			if (e && !ret.contains(e))
 				ret << e;
 		}

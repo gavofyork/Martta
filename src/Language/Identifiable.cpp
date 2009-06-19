@@ -35,14 +35,14 @@ MARTTA_NAMED_CPP(Identifiable, Identity);
 
 QString Identifiable::name() const
 {
-	if (TextLabel* l = self()->tryChildAs<TextLabel>(Identity))
+	if (TextLabel* l = self()->tryChild<TextLabel>(Identity))
 		return l->name();
 	return QString::null;
 }
 
 QString Identifiable::codeName() const
 {
-	if (IdLabel* l = self()->tryChildAs<IdLabel>(Identity))
+	if (IdLabel* l = self()->tryChild<IdLabel>(Identity))
 		return l->code();
 	return QString::null;
 }

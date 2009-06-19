@@ -1,10 +1,3 @@
-TODO
-minimumRequiredNamed	minRequired(int) - Docs note arg can = Cardinals.
-minimumRequired 	minRequired(Cardinals)
-
-parentsChildren, siblings etc.
-
-
 TODO try to remove findEntity/locateEntity/finalAll? Get rid of DE/Id deps.
 
 TODO support:
