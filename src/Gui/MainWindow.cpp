@@ -123,6 +123,20 @@ void MainWindow::on_actAboutQt_triggered()
 	QMessageBox::aboutQt(this);
 }
 
+static void addChild(QTreeWidgetItem* _p, Entity const* _c)
+{
+	QString x;
+	if (_c->index() >= 0)
+		x = QString("[Cardinal %1]").arg(_c->index());
+	else if (_c->index() < _c->parent()->virtualEndOfNamed())
+		x = QString((char)('A' + _c->index() - INT_MIN));
+	else
+		x = AuxilliaryRegistrar::get()->nameOfArbitrary(_c->index());
+	QTreeWidgetItem* t = new QTreeWidgetItem(_p, QStringList() << x << _c->kind().name());
+	foreach (Entity* e, _c->children())
+		addChild(t, e);
+}
+
 void MainWindow::entityFocused(Entity* _e)
 {
 	if (m_codeScene->current() != _e)
@@ -196,6 +210,20 @@ void MainWindow::entityFocused(Entity* _e)
 			foreach (ValueDefiner* v, td->type()->applicableMembers())
 				new QTreeWidgetItem(te, QStringList() << QString(v->name()) << QString(v->type()->code()));
 		}
+		
+		QTreeWidgetItem* rc = new QTreeWidgetItem(entityInfo, QStringList() << "Required children");
+		for (int i = INT_MIN; i < _e->virtualEndOfNamed(); i++)
+			if (_e->minRequired(i))
+				new QTreeWidgetItem(rc, QStringList() << QString((char)('A' + i - INT_MIN)) << QString::number(_e->minRequired(i)));
+		foreach (int i, AuxilliaryRegistrar::get()->names())
+			if (_e->minRequired(i))
+				new QTreeWidgetItem(rc, QStringList() << AuxilliaryRegistrar::get()->nameOfArbitrary(i) << QString::number(_e->minRequired(i)));
+		if (_e->minRequired(Entity::Cardinals))
+			new QTreeWidgetItem(rc, QStringList() << "[Cardinals]" << QString::number(_e->minRequired(Entity::Cardinals)));
+		
+		QTreeWidgetItem* ac = new QTreeWidgetItem(entityInfo, QStringList() << "Actual children");
+		addChild(ac, _e);
+		
 		
 		entityInfo->expandAll();
 		entityInfo->verticalScrollBar()->setValue(vvalue);

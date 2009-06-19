@@ -116,6 +116,8 @@ public:
 		}
 	}
 	
+	virtual int							virtualEndOfNamed() const { return EndOfNamed; }
+
 	typedef Nothing Super;
 	static const bool IsInterface = false;
 	static const bool IsPlaceholder = true;
@@ -426,6 +428,7 @@ public:
 	inline InsertionPoint				front() { return InsertionPoint(this, 0); }
 	inline InsertionPoint				back() { return InsertionPoint(this, UndefinedIndex); }
 	inline InsertionPoint				middle(int _at) { return InsertionPoint(this, _at); }
+	InsertionPoint						firstFor(Kind const& _k);
 	bool								attemptAppend(EntityKeyEvent const* _e);
 	bool								attemptInsert(EntityKeyEvent const* _e);
 
@@ -643,8 +646,6 @@ private:
 	
 	/// Just makes sure that the rootEntity is the context's root entity. Should only be called from the context.
 	void								checkRoot();
-
-	virtual int							virtualEndOfNamed() const { return EndOfNamed; }
 
 	/// Helper function for validifyChildren()
 	bool								validifyChild(int _i, int* _added);

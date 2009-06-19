@@ -48,12 +48,16 @@ protected:
 			return false;
 
 		InsertionPoint p = slideOnPrecedence(_p, _d, _a, _e->nearestBracket(_p));
+		qDebug() << "Slide from" << _p << "to" << p;
 		if (!isTemporary(p.entity()))
 		{
 			Entity* n = new T;
 			_e->noteStrobeCreation(n, &*p);
+			p->debugTree();
 			p->insert(n);
+			n->debugTree();
 			n->validifyChildren();
+			n->debugTree();
 			n->child(SecondOperand)->navigateOnto(_e->codeScene());
 			return true;
 		}

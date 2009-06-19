@@ -819,6 +819,30 @@ void Entity::notifyOfChange(Entity* _dependent)
 	_dependent->onDependencyChanged(this);
 }
 
+InsertionPoint Entity::firstFor(Kind const& _k)
+{
+	for (int i = INT_MIN; i < virtualEndOfNamed(); i++)
+		if (middle(i).allowedToBeKind(_k) && (middle(i).exists() && middle(i)->isPlaceholder() || childCountAt(i) < minRequired(i)))
+			return middle(i);
+	foreach (int i, AuxilliaryRegistrar::get()->names())
+		if (middle(i).allowedToBeKind(_k) && (middle(i).exists() && middle(i)->isPlaceholder() || childCountAt(i) < minRequired(i)))
+			return middle(i);
+	if (back().allowedToBeKind(_k) && cardinalChildCount() < minRequired(Cardinals))
+		return back();
+	foreach (Entity* i, cardinalChildren())
+		if (i->isPlaceholder() && i->isAllowed(_k))
+			return i->over();
+	for (int i = INT_MIN; i < virtualEndOfNamed(); i++)
+		if (middle(i).allowedToBeKind(_k))
+			return middle(i);
+	foreach (int i, AuxilliaryRegistrar::get()->names())
+		if (middle(i).allowedToBeKind(_k))
+			return middle(i);
+	M_ASSERT(back().allowedToBeKind(_k));	// Exhausted all other options.
+	return back();
+}
+
+
 //****************************************************************
 //****************************************************************
 //****************************************************************
@@ -974,7 +998,7 @@ Entity* Entity::insert(Entity* _e)
 	InsertionPoint you = _e->over();
 	
 	over().insertSilent(_e);
-	_e->front().insertSilent(this);
+	_e->firstFor(kind()).insertSilent(this);
 	
 	_e->contextSwitchedWithChildRemoved(you);
 	contextSwitched(_e->parent());
