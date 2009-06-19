@@ -455,7 +455,7 @@ bool Entity::activated(CodeScene* _s)
 void Entity::keyPressEventStarter(EntityKeyEvent* _e, bool _abortive)
 {
 	Entity* f = _e->focus();
-	foreach (Entity* e, f->m_cardinalChildren)
+	foreach (Entity* e, f->children())
 		if (f->usurpsChild(e))
 		{
 			_e->setFocus(e);
@@ -465,7 +465,6 @@ void Entity::keyPressEventStarter(EntityKeyEvent* _e, bool _abortive)
 				return;
 		}
 	
-	// GAA FALSE
 	if (_e->focus()->isEditing(_e->codeScene()) && _e->codeScene()->editDelegate() && _e->codeScene()->editDelegate()->keyPressed(_e))
 	{
 		_e->accept();

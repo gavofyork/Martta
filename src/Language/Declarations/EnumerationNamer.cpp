@@ -68,13 +68,13 @@ bool EnumerationNamer::keyPressed(EntityKeyEvent const* _e)
 	{
 		InsertionPoint p = (_e->isFocused() || _e->focalIndex() == 0) ?
 		(/*_e->inserting() || */_e->modifiers() & Qt::ShiftModifier) ?
-		self()->middle(1) :
+		self()->front() :
 		self()->back() :
 		self()->middle(_e->focalIndex() + ((/*_e->inserting() || */_e->modifiers() & Qt::ShiftModifier) ? 0 : 1));
 		EnumValue* s = new EnumValue;
 		s->prepareChildren();
 		p.place(s);
-		s->child(0)->setCurrent();
+		s->child(Identity)->setCurrent();
 	}
 	else if (_e->key() == Qt::Key_Home && _e->focalIndex() != UndefinedIndex)
 	{

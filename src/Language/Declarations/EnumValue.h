@@ -32,7 +32,8 @@ class EnumValue: public DeclarationEntity, public_interface ValueDefiner
 {
 	MARTTA_OBJECT(DeclarationEntity)
 	MARTTA_INHERITS(ValueDefiner, 0)
-
+	enum { Definition = FirstNamed, EndOfNamed };
+	
 	friend class Entity;
 	friend class EnumValueResolver;
 
@@ -45,15 +46,15 @@ public:
 protected:
 	virtual Identifiable*				addressableContext() const { return parentAs<Identifiable>()->addressableContext(); }
 	virtual QString						defineLayout(ViewKeys&) const;
-	virtual int							minRequired(int _i) const { return _i == Cardinals ? 1 : Super::minRequired(_i); }
+	virtual int							minRequired(int _i) const { return _i == Identity ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
 	virtual bool						isChildInValidState(int _i) const;
 	virtual bool						isSuperfluous() const;
-	virtual bool						usurpsChild(Entity const* _e) const { return _e == child(0); }
+	virtual bool						usurpsChild(Entity const* _e) const { return _e == child(Identity); }
 
 	virtual int							familyDependencies() const { return DependsOnChildren; }
-	virtual void						onDependencyChanged(Entity* _e) { if (_e == child(0)) { /*checkForCullingLater(); */changed(); } }
+	virtual void						onDependencyChanged(Entity* _e) { if (_e == child(Identity)) { /*checkForCullingLater(); */changed(); } }
 };
 
 }

@@ -32,7 +32,7 @@ MARTTA_OBJECT_CPP(EnumValue);
 
 Kinds EnumValue::allowedKinds(int _i) const
 {
-	if (_i == 0)
+	if (_i == Definition)
 		return Kind::of<Typed>();
 	else
 		return Super::allowedKinds(_i);
@@ -70,32 +70,32 @@ bool EnumValue::isChildInValidState(int _i) const
 
 QString EnumValue::defineLayout(ViewKeys&) const
 {
-	QString r = QString("^;%d").arg(Identity);
-	if (cardinalChildCount())
-		return r + ";' := ';1";
+	QString r = QString("^;%1").arg(Identity);
+	if (child(Definition))
+		return (r + ";' := ';%1").arg(Definition);
 	return r;
 }
 
 bool EnumValue::isSuperfluous() const
 {
-	return childAs<TextLabel>(0)->text().isEmpty();
+	return childAs<TextLabel>(Identity)->text().isEmpty();
 }
 
 QString EnumValue::code() const
 {
-	if (cardinalChildCount() == 2 && childIs<Typed>(1))
-		return codeName() + " = " + childAs<Typed>(1)->code();
+	if (childIs<Typed>(Definition))
+		return codeName() + " = " + childAs<Typed>(Definition)->code();
 	else
 		return codeName();
 }
 
 bool EnumValue::keyPressed(EntityKeyEvent const* _e)
 {
-	if (_e->text() == "=" && _e->focalIndex() == 0)
+	if (_e->text() == "=" && _e->focalIndex() == Identity)
 	{
-		if (cardinalChildCount() == 1)
-			back().spawnPrepared();
-		child(1)->setCurrent();
+		if (!child(Definition))
+			middle(Definition).spawnPrepared();
+		child(Definition)->setCurrent();
 	}
 	else
 		return Super::keyPressed(_e);

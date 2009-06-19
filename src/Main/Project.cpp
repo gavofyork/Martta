@@ -354,8 +354,12 @@ void Project::deserialise(QDomDocument& _d)
 	m_classes << m_namespace->cardinalChildrenOf<Class>();
 
 	// Load "program"
-	Entity* e = m_declarations.findEntity(_d.documentElement().namedItem("program").toElement().attribute("key"))->self();
-	m_program = e->isKind<Method>() ? e->asKind<Method>() : 0;
+	QString k = _d.documentElement().namedItem("program").toElement().attribute("key");
+	
+	if (Identifiable* e = m_declarations.findEntity(k))
+		m_program = e->self()->tryKind<Method>();
+	else
+		m_program = 0;
 
 	QList<SafePointer<Entity> > uplist;
 	uplist << m_namespace;

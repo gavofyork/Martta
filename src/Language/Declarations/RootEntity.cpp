@@ -43,15 +43,17 @@ RootEntity::~RootEntity()
 // Identification, search & location.
 Identifiable* RootEntity::findEntity(QString const& _key) const
 {
+//	qDebug() << *this << "Seaching for" << _key;
 	if (_key.startsWith("::"))
 	{
 		Identifiable const* i = this;
 		QString k = _key;
 		while (i && !k.isEmpty())
 		{
-			QString s = k.section("::", 0, 0);
+			QString s = k.section("::", 1, 1);
 			k = k.mid(s.size() + 2);
 			i = i->lookupChild(s);
+//			qDebug() << "Key" << s << "gives" << (i ? i->self() : 0);
 		}
 		return const_cast<Identifiable*>(i);
 	}
