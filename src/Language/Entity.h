@@ -20,27 +20,21 @@
 
 #pragma once
 
-#define POOL_ALLOCATOR 0
-
-#if POOL_ALLOCATOR
-#include <boost/pool/pool.hpp>
-#endif
-
 #include <QDebug>
 #include <QList>
 #include <QHash>
-#include <QPointF>
+
+// Could do without this... - perhaps move all associated methods to an interface?
+#include "ModelPtrFace.h"
+
+// Same here - move to interface?
+#include "EntityKeyEvent.h"
+
+#include "SceneLeaver.h"	// And this?
 
 #include "Meta.h"
-#include "Kind.h"
-#include "AuxilliaryFace.h"
-#include "AuxilliaryFace.h"
-#include "Location.h"
-#include "ModelPtrFace.h"
 #include "InsertionPoint.h"
-#include "EntityKeyEvent.h"
 #include "SafePointer.h"
-#include "SceneLeaver.h"
 
 class QTextStream;
 class QDomElement;
@@ -127,30 +121,6 @@ public:
 	static const bool IsPlaceholder = true;
 	static const bool IsObject = false;
 	
-#if POOL_ALLOCATOR
-	static QMap<size_t, boost::pool<>* >* s_pools;
-	inline void* operator new(size_t _size)
-	{
-		if (!s_pools)
-			s_pools = new QMap<size_t, boost::pool<>* >;
-		if (!s_pools->contains(_size))
-			s_pools->insert(_size, new boost::pool<>(_size));
-		s_news++;
-		void* ret = s_pools->value(_size)->malloc();
-		return ret;
-	}
-	inline void operator delete(void* p)
-	{
-		s_deletes++;
-		foreach (boost::pool<>* i, s_pools->values())
-			if (i->is_from(p))
-			{
-				i->free(p);
-				return;
-			}
-		M_ASSERT(0);
-	}
-#else
 	inline void* operator new(size_t _size)
 	{
 		s_news++;
@@ -162,7 +132,6 @@ public:
 		s_deletes++;
 		free(p);
 	}
-#endif
 	
 	enum { EndOfNamed = INT_MIN, Cardinals = 0 };
 	
@@ -173,12 +142,11 @@ public:
 	static void							initialiseClass() {}
 	static void							finaliseClass() {}
 	
-	void								move(InsertionPoint const& _to) { InsertionPoint from = over(); moveVirtually(_to); commitVirtualMove(from); }
-	void								remove() { move(Nowhere); }
-	
-	// This acts according to 
-	void								moveVirtually(InsertionPoint const& _newPosition);
-	void								commitVirtualMove(InsertionPoint const& _oldPosition);
+	void								prepareMove(InsertionPoint const& _newPosition);
+	void								commitMove(InsertionPoint const& _oldPosition);
+	void								silentMove(InsertionPoint const& _to) { InsertionPoint from = over(); prepareMove(_to); commitMove(from); }
+	void								silentRemove() { silentMove(Nowhere); }
+	void								move(InsertionPoint const& _newPosition);
 
 	inline int							index() const { return m_index; }
 	inline Entity*						parent() const { return m_parent; }
@@ -747,7 +715,7 @@ bool Martta::Entity::simpleInsertionPointKeyPressHandler(InsertionPoint const& _
 		{
 			// insert
 			// when pressed on _p refers to a, changes from x->(a->(d, e), b, c) to x->(N->(a->(d, e)), b, c)
-			Entity* e = _p.childType();
+			Entity* e = _p.entity();
 			e->insert(n);
 			_e->noteStrobeCreation(e, n);
 			n->prepareChildren();

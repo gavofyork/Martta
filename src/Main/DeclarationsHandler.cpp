@@ -356,7 +356,7 @@ void TypedefResolver::resolve(DeclarationsHandler* _h)
 	{
 		// Cloned struct name; make the structure anonymous.
 		TopLevelType* e = m_subject->childAs<ExplicitType>(0)->subject()->asKind<Struct>();
-		e->move(m_subject->back());
+		e->silentMove(m_subject->back());
 		_h->removeFromFile(e);
 	}
 }

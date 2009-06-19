@@ -55,10 +55,10 @@ public:
 	bool								isRequired() const;
 	Entity*								nearestEntity() const;
 
-	Entity&								operator*() const { return *childType(); }
-	Entity*								operator->() const { return childType(); }
+	Entity&								operator*() const { return *entity(); }
+	Entity*								operator->() const { return entity(); }
 	bool								exists() const;
-	Entity*								childType() const;
+	Entity*								entity() const;
 
 	inline bool							isNull() const { return !m_parent; }
 	inline bool							isValid() const { return m_parent; }

@@ -228,7 +228,7 @@ void Entity::kill(Entity* _substitute)
 //		qDebug() << "Killing" << this;
 	if (_substitute)
 		rewirePointer(_substitute);
-	remove();
+	silentRemove();
 	foreach (Entity* i, m_dependencies)
 		removeDependency(i);
 	clearDependents();
@@ -300,11 +300,11 @@ void Entity::importDom(QDomElement const& _element)
 		{
 			Entity* e = spawn(i.toElement().attribute("kind"));
 			if (i.toElement().hasAttribute("contextindex"))
-				e->move(middle(i.toElement().attribute("contextindex").toInt()));
+				e->silentMove(middle(i.toElement().attribute("contextindex").toInt()));
 			else if (i.toElement().hasAttribute("childname"))
-				e->move(middle(AuxilliaryRegistrar::get()->arbitraryOfName(i.toElement().attribute("childname"))));
+				e->silentMove(middle(AuxilliaryRegistrar::get()->arbitraryOfName(i.toElement().attribute("childname"))));
 			else
-				e->move(back());
+				e->silentMove(back());
 			if (e)
 				e->importDom(i.toElement());
 			else
@@ -550,7 +550,7 @@ bool Entity::keyPressed(EntityKeyEvent const* _e)
 //		p.parent()->debugTree();
 //		qDebug() << p.index();
 		if (p.exists())
-			_e->codeScene()->setCurrent(p.childType());
+			_e->codeScene()->setCurrent(p.entity());
 	}
 	else if (_e->codeScene()->isCurrent(this) && _e->key() == Qt::Key_Delete)
 	{
@@ -564,7 +564,7 @@ bool Entity::keyPressed(EntityKeyEvent const* _e)
 //		p.parent()->debugTree();
 //		qDebug() << p.index();
 		if (p.exists())
-			_e->codeScene()->setCurrent(p.childType());
+			_e->codeScene()->setCurrent(p.entity());
 	}
 	else if (_e->codeScene()->isCurrent(this) && (_e->key() == Qt::Key_Escape) && isEditing(_e->codeScene()))
 		_e->codeScene()->setEditing(0);
@@ -605,7 +605,7 @@ bool Entity::attemptAppend(EntityKeyEvent const* _e)
 }
 
 // Context/position changing.
-void Entity::moveVirtually(InsertionPoint const& _newPosition)
+void Entity::prepareMove(InsertionPoint const& _newPosition)
 {
 	if (_newPosition.parent() == m_parent)
 		return;
@@ -620,7 +620,7 @@ void Entity::moveVirtually(InsertionPoint const& _newPosition)
 	else
 		m_index = UndefinedIndex;
 }
-void Entity::commitVirtualMove(InsertionPoint const& _oldPosition)
+void Entity::commitMove(InsertionPoint const& _oldPosition)
 {
 	if (_oldPosition.parent() == m_parent) return;
 
@@ -908,6 +908,22 @@ bool Entity::removeInvalidChildren()
 		}
 	return ret;
 }
+void Entity::move(InsertionPoint const& _newPosition)
+{
+	M_ASSERT(this);
+	Entity* oc = m_parent;
+	int oci = m_index;
+	
+	if (_newPosition.exists() && _newPosition->isPlaceholder())
+		_newPosition->replace(this);
+	else
+	{
+		silentMove(_newPosition);
+		if (oc != m_parent)
+			contextSwitchedWithChildRemoved(oc, oci);
+		m_parent->childAdded(m_index);
+	}
+}
 Entity* Entity::usurp(Entity* _u)
 {
 	InsertionPoint you = _u->over();
@@ -917,9 +933,9 @@ Entity* Entity::usurp(Entity* _u)
 	// Move children over.
 	QList<Entity*> es = m_cardinalChildren + m_namedChildren.values();
 	foreach (Entity* e, m_cardinalChildren)
-		e->move(_u->back());
+		e->silentMove(_u->back());
 	foreach (Entity* e, m_namedChildren.values())
-		e->move(_u->middle(e->m_index));
+		e->silentMove(_u->middle(e->m_index));
 		
 	kill();
 	
@@ -979,9 +995,9 @@ void Entity::deleteAndRefill(Entity* _e, bool _moveToGrave)
 	else if (isNecessary())
 	{
 		p.spawnPreparedSilent();
-		kill(p.childType());
+		kill(p.entity());
 		p->contextAdded(c);
-		c->childSwitched(p.childType(), this);
+		c->childSwitched(p.entity(), this);
 		delete this;
 	}
 	else

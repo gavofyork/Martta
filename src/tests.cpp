@@ -446,8 +446,8 @@ int test()
 		RootEntity* r = new RootEntity;
 		SafePointer<TestNegatives> a = new TestNegatives;
 		SafePointer<TestNegatives> b = new TestNegatives;
-		a->move(r->back());
-		b->move(a->middle(0));
+		a->silentMove(r->back());
+		b->silentMove(a->middle(0));
 		r->killAndDelete();
 		FAILED_IF(a);
 		FAILED_IF(b);
@@ -457,8 +457,8 @@ int test()
 		RootEntity* r = new RootEntity; \
 		SafePointer<TestNegatives> a = new TestNegatives; \
 		SafePointer<TestNegatives> b = new TestNegatives; \
-		a->move(r->back()); \
-		b->move(pos ? a->middle(pos) : a->back()); \
+		a->silentMove(r->back()); \
+		b->silentMove(pos ? a->middle(pos) : a->back()); \
 		TEST("Clearing entities (children: " #pos ")") FAILED_IF(!a->children().contains(b)); \
 		TEST("Clearing entities (cardinalChildren(): " #pos ")") FAILED_IF(bool(pos) == a->cardinalChildren().contains(b)); \
 		TEST("Clearing entities (childrenAt(int): " #pos ")") FAILED_IF(!a->childrenAt(pos).contains(b)); \
@@ -474,7 +474,7 @@ int test()
 	{
 		RootEntity* r = new RootEntity;
 		SafePointer<TestNegativesB> a = new TestNegativesB;
-		a->move(r->back());
+		a->silentMove(r->back());
 		TEST_FOR("Negatives: start incomplete", !a->isComplete());
 		a->prepareChildren();
 		TEST_FOR("Negatives: prepareChildren() makes complete", a->isComplete());
@@ -495,7 +495,7 @@ int test()
 	{
 		RootEntity* r = new RootEntity;
 		SafePointer<TestNegativesB> a = new TestNegativesB;
-		a->move(r->back());
+		a->silentMove(r->back());
 		a->prepareChildren();
 
 		QDomDocument doc;

@@ -21,6 +21,7 @@
 #pragma once
 
 #include "VariableNamer.h"
+#include "Location.h"
 #include "TopLevel.h"
 
 namespace Martta

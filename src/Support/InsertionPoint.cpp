@@ -30,7 +30,7 @@ bool InsertionPoint::exists() const
 	return isValid() && m_index != UndefinedIndex && m_parent->child(m_index);
 }
 
-Entity* InsertionPoint::childType() const
+Entity* InsertionPoint::entity() const
 {
 	M_ASSERT(exists());
 	return m_parent->child(m_index);
@@ -56,25 +56,14 @@ Entity* InsertionPoint::spawnPrepared() const
 Entity* InsertionPoint::place(Entity* _e) const
 {
 	M_ASSERT(_e);
-	Entity* oc = _e->parent();
-	int oci = _e->index();
-	
-	if (exists() && childType()->isPlaceholder())
-		childType()->replace(_e);
-	else
-	{
-		_e->move(*this);
-		if (oc != m_parent)
-			_e->contextSwitchedWithChildRemoved(oc, oci);
-		m_parent->childAdded(m_index);
-	}
+	_e->move(*this);
 	return _e;
 }
 
 void InsertionPoint::insertSilent(Entity* _e) const
 {
 	M_ASSERT(_e);
-	_e->move(*this);
+	_e->silentMove(*this);
 }
 
 bool InsertionPoint::allowedToBeKind(Kind _k) const
@@ -112,7 +101,7 @@ QDebug operator<<(QDebug _out, InsertionPoint const& _item)
 {
 	_out << _item.m_index << "@" << &*_item.m_parent;
 	if (_item.exists())
-		_out << "[" << _item.childType() << "]";
+		_out << "[" << _item.entity() << "]";
 	return _out;
 }
 

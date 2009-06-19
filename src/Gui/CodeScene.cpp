@@ -194,7 +194,7 @@ InsertionPoint CodeScene::nearestBracket(InsertionPoint const& _p) const
 			n = 0;
 			return i;
 		}
-		else if (int d = _p->hasAncestor(i.childType()))
+		else if (int d = _p->hasAncestor(i.entity()))
 		{
 			if (d < n)
 			{
@@ -276,7 +276,7 @@ void CodeScene::paintEvent(QPaintEvent*)
 	}
 
 	foreach (InsertionPoint i, m_bracketed)
-		if (!i.exists() || (i.childType() != m_current && !m_current->hasAncestor(i.childType())))
+		if (!i.exists() || (i.entity() != m_current && !m_current->hasAncestor(i.entity())))
 			m_bracketed.removeAll(i);
 	
 	QPainter p(this);
@@ -285,7 +285,7 @@ void CodeScene::paintEvent(QPaintEvent*)
 	p.setPen(Qt::NoPen);
 	foreach (InsertionPoint i, m_bracketed)
 	{
-		QRectF br = bounds(i.childType());
+		QRectF br = bounds(i.entity());
 		QLinearGradient g(br.topLeft(), br.bottomLeft());
 		g.setColorAt(0.f, QColor(224, 255, 192, 32));
 		g.setColorAt(1.f, QColor(192, 255, 127, 32));
@@ -415,8 +415,8 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 			M_ASSERT(m_strobeChild);
 			sCrPoint = m_strobeCreation->over();
 			sChPoint = m_strobeChild->over();
-			m_strobeCreation->moveVirtually(Nowhere);
-			m_strobeChild->moveVirtually(sCrPoint);
+			m_strobeCreation->prepareMove(Nowhere);
+			m_strobeChild->prepareMove(sCrPoint);
 		}
 		qDebug() << "strobeText: " << m_strobeText;
 		e = EntityKeyEvent(*_e, m_strobeText, &*m_strobeFocus, true, m_strobeFocus->isPlaceholder(), -1, this);
@@ -426,11 +426,11 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 		{
 			// TODO: Move this stuff to the EKE's notifyStrobeCreation... This will avoid having to test the child for originality.
 			if (sCrPoint)
-				m_strobeCreation->commitVirtualMove(sCrPoint);
+				m_strobeCreation->commitMove(sCrPoint);
 			// If the child wasn't replaced by something else.
 			if (m_strobeChild == originalStrobeChild && sChPoint)	// && c because we only need to move the strobeChild if there was a strobe creation (before, anyways).
 			{
-				m_strobeChild->commitVirtualMove(sChPoint);
+				m_strobeChild->commitMove(sChPoint);
 				m_strobeChild->contextSwitched(m_strobeCreation);
 				m_strobeChild->parent()->childSwitched(m_strobeChild, m_strobeCreation);
 			}
@@ -451,8 +451,8 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 		}
 		else if (sCrPoint && sChPoint)
 		{
-			m_strobeChild->moveVirtually(sChPoint);
-			m_strobeCreation->moveVirtually(sCrPoint);
+			m_strobeChild->prepareMove(sChPoint);
+			m_strobeCreation->prepareMove(sCrPoint);
 		}	
 	}
 
@@ -492,12 +492,12 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 	if (!_e->text().isEmpty() && _e->text()[0] > 32 && allowStrobeInit)
 	{
 		// Add to m_strobe.
-		if (!m_strobeFocus && currentPoint.exists() && n && n->parent() == currentPoint.childType())
+		if (!m_strobeFocus && currentPoint.exists() && n && n->parent() == currentPoint.entity())
 		{
 			// Kick off the strobe sequence.
 			m_strobeFocus = n;
 			m_strobeChild = n;
-			m_strobeCreation = currentPoint.childType();
+			m_strobeCreation = currentPoint.entity();
 		}
 		else if (!m_strobeFocus && n && e.strobeCreation() && e.strobeCreation() != n)
 		{
