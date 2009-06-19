@@ -184,7 +184,7 @@ void MainWindow::entityFocused(Entity* _e)
 		foreach (ValueDefiner* v, _e->ancestor<DeclarationEntity>()->valuesKnown())
 			new QTreeWidgetItem(g, QStringList() << QString(v->name()) << QString(v->type()->code()));
 		QTreeWidgetItem* gl = new QTreeWidgetItem(typesVisible, QStringList() << QString("Global"));
-		foreach (ValueDefiner* v, _e->rootEntity()->childrenHereAndBeforeOf<ValueDefiner>())
+		foreach (ValueDefiner* v, _e->rootEntity()->selfAndAncestorsChildrenOf<ValueDefiner>())
 			new QTreeWidgetItem(gl, QStringList() << QString(v->name()) << QString(v->type()->code()));
 		typesVisible->expandAll();
 		typesVisible->verticalScrollBar()->setValue(vvalue);

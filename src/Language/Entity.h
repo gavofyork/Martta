@@ -24,13 +24,10 @@
 #include <QList>
 #include <QHash>
 
-// Could do without this... - perhaps move all associated methods to an interface?
-#include "ModelPtrFace.h"
-
 // Same here - move to interface?
 #include "EntityKeyEvent.h"
-
-#include "SceneLeaver.h"	// And this?
+// And this?
+#include "SceneLeaver.h"
 
 #include "Meta.h"
 #include "InsertionPoint.h"
@@ -43,17 +40,15 @@ namespace Martta
 {
 
 class EntityStylist;
+class EditDelegateFace;
+
 class CodeScene;
 class DecorationContext;
-class EditDelegateFace;
-class EntityKeyPress;
-class DeclarationEntity;
-class TypeDefinition;
-class EntityKeyEvent;
 
 extern int s_news;
 extern int s_deletes;
 
+// Would be nice to annex this, too...
 enum ChangeOperation
 {
 	EntityChanged = 0,
@@ -78,8 +73,7 @@ void change(Entity* _s, ChangeOperation _op, Entity* _o = 0);
 inline QList<ChangeEntry> const& changes() { return s_changes; }
 inline void clearChanges() { s_changes.clear(); }
 
-template<class T> class ModelPtr;
-
+class RootEntity;
 
 /**
  * Note regarding rootEntity/null-Context: You can never depend on something which does not share the
@@ -95,15 +89,13 @@ class Entity: public SafePointerTarget, public_interface SceneLeaver
 	friend class EditDelegateFace;
 
 public:
-	template<class T> void setDependency(ModelPtr<T>& _dependencyVariable, T* _dependency)
+	template<class T, class U> void setDependency(T& _dependencyVariable, U const& _dependency)
 	{
 		if (_dependencyVariable != _dependency)
 		{
 			Entity* old = _dependencyVariable->asKind<Entity>();
-			if (_dependency)
-				M_ASSERT(_dependency->asKind<Entity>()->isInModel());
-			if (old)
-				M_ASSERT(old->asKind<Entity>()->isInModel());
+			M_ASSERT(!_dependency || _dependency->asKind<Entity>()->isInModel());
+			M_ASSERT(!old || old->asKind<Entity>()->isInModel());
 			if (old)
 				removeDependency(old);
 			_dependencyVariable = _dependency;
@@ -208,20 +200,15 @@ public:
 	template<class T> T*				selfAncestor() const { Entity* r = selfAncestor(T::staticKind); return r ? r->asKind<T>() : 0; }
 	Entity*								selfAncestor(Kind _k) const;
 	
-	// TODO: try to remove these.
-	virtual QList<DeclarationEntity*>	spacesInScope() const;
-	virtual Identifiable*				findEntity(QString const& _key) const;
-	template<class T> inline ModelPtr<T>locateEntity(QString const& _key) const { return ModelPtr<T>(_key, rootEntity()); }
-	template<class T> QList<T*>			findAll() const { QList<T*> ret = childrenOf<T>(); foreach (Entity* i, m_cardinalChildren) ret << i->findAll<T>(); return ret; }
-	template<class T> QList<T*>			childrenHereAndBeforeOf() const { QList<T*> ret = childrenOf<T>(); return parent() ? ret + parent()->childrenHereAndBeforeOf<T>() : ret; }
-
-	virtual bool						usurpsChild(Entity const*) const { return false; }
-	bool								isUsurped() const { return m_parent->usurpsChild(this); }
+	template<class T> QList<T*>			selfAndAncestorsChildrenOf() const { QList<T*> ret = childrenOf<T>(); return parent() ? ret + parent()->selfAndAncestorsChildrenOf<T>() : ret; }
 	
 	inline int							nonPlaceholderCount() const { int ret = 0; foreach (Entity* i, m_cardinalChildren) if (!i->isPlaceholder()) ret++; return ret; }
 	inline QList<Entity*>				nonPlaceholders() const { QList<Entity*> ret; foreach (Entity* i, m_cardinalChildren) if (!i->isPlaceholder()) ret += i; return ret; }
 	inline Entity*						nonPlaceholder(int _i) const { int c = 0; foreach (Entity* i, m_cardinalChildren) if (c++ == _i) return i; M_ASSERT(false); return 0; }
 
+	virtual bool						usurpsChild(Entity const*) const { return false; }
+	bool								isUsurped() const { return m_parent->usurpsChild(this); }
+	
 	/// Clears all children. This does *not* notify anything of any familial changes.
 	void								clearEntities();
 	/// Brute-force makes the children valid. Deletes invalids, and reprepares the list.

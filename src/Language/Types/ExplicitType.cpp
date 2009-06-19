@@ -21,6 +21,7 @@
 #include <QtXml>
 
 #include "CodeScene.h"
+#include "RootEntity.h"
 #include "Class.h"
 #include "Enumeration.h"
 #include "Const.h"
@@ -210,7 +211,7 @@ QList<TypeDefinition*> ExplicitType::possibilities()
 {
 	QList<TypeDefinition*> ret;
 	TypeDefinition* old = m_subject;
-	foreach (TypeDefinition* i, parent()->childrenHereAndBeforeOf<TypeDefinition>())
+	foreach (TypeDefinition* i, parent()->selfAndAncestorsChildrenOf<TypeDefinition>())
 	{
 		qDebug() << i->name();
 		m_subject = i;
@@ -234,7 +235,7 @@ EditDelegateFace* ExplicitType::newDelegate(CodeScene* _s)
 void ExplicitType::importDom(QDomElement const& _element)
 {
 	Super::importDom(_element);
-	m_subject = locateEntity<TypeDefinition>(_element.attribute("subject"));
+	m_subject = rootEntity()->locate<TypeDefinition>(_element.attribute("subject"));
 }
 
 void ExplicitType::exportDom(QDomElement& _element) const

@@ -177,7 +177,7 @@ Type Referenced::type() const
 void Referenced::importDom(QDomElement const& _element)
 {
 	Entity::importDom(_element);
-	m_subject = locateEntity<ValueDefiner>(_element.attribute("subject"));
+	m_subject = rootEntity()->locate<ValueDefiner>(_element.attribute("subject"));
 	m_specific = _element.attribute("specific").toInt();
 	m_lastSet = _element.attribute("lastSet").toInt();
 	// TODO: check if depend system needs reseting here.
@@ -324,7 +324,7 @@ void ReferencedEdit::updateSubset()
 	if (subject()->m_lastSet & ScopedSet)
 		m_valuesInScope << castEntities<ValueDefiner>(subject()->ancestor<DeclarationEntity>()->valuesKnown());
 	if (subject()->m_lastSet & GlobalSet)
-		m_valuesInScope << subject()->rootEntity()->childrenHereAndBeforeOf<ValueDefiner>();
+		m_valuesInScope << subject()->rootEntity()->selfAndAncestorsChildrenOf<ValueDefiner>();
 	if (subject()->m_lastSet & ArgumentSet && subject()->hasAncestor<LambdaNamer>())
 		for (int i = 0; i < subject()->ancestor<LambdaNamer>()->argumentCount(); i++)
 			m_valuesInScope << subject()->ancestor<LambdaNamer>()->argument(i);

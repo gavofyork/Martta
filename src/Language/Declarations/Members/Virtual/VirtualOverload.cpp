@@ -20,6 +20,7 @@
 
 #include <QtXml>
 
+#include "RootEntity.h"
 #include "Class.h"
 #include "Compound.h"
 #include "LambdaNamer.h"
@@ -73,7 +74,7 @@ void VirtualOverload::exportDom(QDomElement& _element) const
 void VirtualOverload::importDom(QDomElement const& _element)
 {
 	Super::importDom(_element);
-	m_base = locateEntity<VirtualMethod>(_element.attribute("base"));
+	m_base = rootEntity()->locate<VirtualMethod>(_element.attribute("base"));
 }
 
 QList<VirtualMethod*> VirtualOverload::possibilities() const

@@ -20,11 +20,12 @@
 
 #include <QtXml>
 
+#include "RootEntity.h"	// Might be able to get rid of this later.
+
 #include "CommonGraphics.h"
 #include "DecorationContext.h"
 #include "CodeScene.h"
 #include "TypeDefinition.h"
-#include "RootEntity.h"
 #include "EditDelegate.h"
 #include "Entity.h"
 
@@ -107,26 +108,6 @@ int Entity::ancestorIndex(Entity const* _a) const
 		if (i->parent() == _a)
 			return i->index();
 	return UndefinedIndex;
-}
-
-// Identification, search & location.
-Identifiable* Entity::findEntity(QString const& _key) const
-{
-//	qDebug() << "findEntity: " << _key;
-	if (_key.isEmpty())
-		return const_cast<RootEntity*>(rootEntity());
-	if (DeclarationEntity* r = rootEntity()->findDeclaration(_key))
-		return r;
-	if (_key.startsWith("::"))
-		return rootEntity()->findEntity(_key.mid(2));
-	if (isKind<Identifiable>())
-		if (Identifiable* e = asKind<Identifiable>()->lookupChild(_key.section("::", 0, 0)))
-			return _key.contains("::") ? e->self()->findEntity(_key.section("::", 1)) : e;
-	return 0;
-}
-QList<DeclarationEntity*> Entity::spacesInScope() const
-{
-	return cardinalChildrenOf<DeclarationEntity>();
 }
 
 // Validity/status checking

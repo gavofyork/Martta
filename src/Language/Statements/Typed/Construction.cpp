@@ -21,6 +21,7 @@
 #include <QtXml>
 
 #include "Argument.h"
+#include "RootEntity.h"
 #include "Class.h"
 #include "Constructor.h"
 #include "ExplicitType.h"
@@ -76,7 +77,7 @@ QString Construction::code() const
 void Construction::importDom(QDomElement const& _element)
 {
 	Entity::importDom(_element);
-	m_subject = locateEntity<Constructor>(_element.attribute("subject"));
+	m_subject = rootEntity()->locate<Constructor>(_element.attribute("subject"));
 }
 
 void Construction::exportDom(QDomElement& _element) const

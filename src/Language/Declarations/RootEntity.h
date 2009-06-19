@@ -24,6 +24,7 @@
 
 #include "Operator.h"
 #include "Identifiable.h"
+#include "ModelPtr.h"
 #include "DeclarationEntity.h"
 
 namespace Martta
@@ -66,6 +67,8 @@ public:
 	void								removeModelPtr(ModelPtrFace* _p);
 	void								noteDeletion(Identifiable* _e);
 	QList<ModelPtrFace*> const&			modelPtrs() const { return m_modelPtrs; }
+	virtual Identifiable*				findEntity(QString const& _key) const;
+	template<class T> ModelPtr<T>		locate(QString const& _key) { return ModelPtr<T>(_key, this); }
 
 	void								setChanged();
 	

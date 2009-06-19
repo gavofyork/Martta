@@ -40,6 +40,25 @@ RootEntity::~RootEntity()
 	clearEntities();
 }
 
+// Identification, search & location.
+Identifiable* RootEntity::findEntity(QString const& _key) const
+{
+	if (_key.startsWith("::"))
+	{
+		Identifiable const* i = this;
+		QString k = _key;
+		while (i && !k.isEmpty())
+		{
+			QString s = k.section("::", 0, 0);
+			k = k.mid(s.size() + 2);
+			i = i->lookupChild(s);
+		}
+		return const_cast<Identifiable*>(i);
+	}
+	else
+		return findDeclaration(_key);
+}
+
 Kinds RootEntity::allowedKinds(int _i) const
 {
 	if (_i >= 0)
