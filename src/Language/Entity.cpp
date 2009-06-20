@@ -955,7 +955,8 @@ Entity* Entity::usurp(Entity* _u)
 	foreach (Entity* e, m_cardinalChildren)
 		e->silentMove(_u->back());
 	foreach (Entity* e, m_namedChildren.values())
-		e->silentMove(_u->middle(e->m_index));
+		if (_u->isAllowed(e->m_index, e->kind()))
+			e->silentMove(_u->middle(e->m_index));
 		
 	kill();
 	
