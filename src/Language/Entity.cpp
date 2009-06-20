@@ -32,21 +32,35 @@
 namespace Martta
 {
 
-#if POOL_ALLOCATOR
-QMap<size_t, boost::pool<>* >* Entity::s_pools = 0;
-#endif
-	
 int s_news = 0;
 int s_deletes = 0;
 	
-MARTTA_CPP_BASIC(Entity);
-AuxilliaryFace const* Entity::staticAuxilliary() { if (!s_auxilliary_Entity) s_auxilliary_Entity = new Auxilliary<Entity>("Martta::Entity"); return s_auxilliary_Entity; }
+MARTTA_PLACEHOLDER_CPP(Entity);
 
 QList<ChangeEntry> s_changes;
 void change(Entity* _s, ChangeOperation _op, Entity* _o)
 {
 	static const QStringList ops = QStringList() << "EntityChanged" << "ChildrenInitialised" << "DependencyAdded" << "DependencyRemoved" << "DependencyChanged" << "DependencySwitched" << "ChildMoved" << "ContextIndexChanged";
 	s_changes << ChangeEntry(_s, _op, _o);
+}
+
+QString Entity::indexName(int _i) const
+{
+	if (_i == UndefinedIndex)
+		return "[Undefined]";
+	if (_i >= 0)
+		return QString::number(_i);
+	if (_i < virtualEndOfNamed())
+		return QString((char)('A' + _i - INT_MIN));
+	return AuxilliaryRegistrar::get()->nameOfArbitrary(_i);
+}
+
+QList<int> Entity::knownNames() const
+{
+	QList<int> ret = AuxilliaryRegistrar::get()->names();
+	for (int i = INT_MIN; i < virtualEndOfNamed(); ++i)
+		ret << i;
+	return ret;
 }
 
 Entity::~Entity()
@@ -838,12 +852,14 @@ InsertionPoint Entity::firstFor(Kind const& _k)
 bool Entity::validifyChild(int _i, int* _added)
 {
 	bool ret = false;
-	for (QHash<int, Entity*>::Iterator j = m_namedChildren.find(_i); j != m_namedChildren.end() && j.key() == _i; ++j)
+	for (QHash<int, Entity*>::Iterator j = m_namedChildren.find(_i); j != m_namedChildren.end() && j.key() == _i;)
 		if (!j.value()->isAllowed())
 		{
 			j = m_namedChildren.erase(j);
 			ret = true;
 		}
+		else
+			++j;
 	while (childCountAt(_i) < minRequired(_i))
 	{
 		middle(_i).spawnPreparedSilent()->contextAdded();

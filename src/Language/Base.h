@@ -30,9 +30,10 @@ class Class;
 class Base: public Entity
 {
 	MARTTA_OBJECT(Entity)
-	enum { Accessibility = FirstNamed, Superclass, EndOfNamed };
 	
 public:
+	enum { Accessibility = FirstNamed, Superclass, EndOfNamed };
+	
 	Access								access() const;
 	QString								code() const;
 	Class*								classType() const;

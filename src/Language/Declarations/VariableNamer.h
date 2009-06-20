@@ -29,9 +29,10 @@ class VariableNamer: public_interface ValueDefiner
 {
 	MARTTA_INTERFACE
 	MARTTA_INHERITS(ValueDefiner, 0)
-	MARTTA_NAMED(OurType)
 	
 public:	
+	MARTTA_NAMED(OurType)
+	
 	TypeEntity*							actualType() const;
 	QString								basicCode() const;
 	

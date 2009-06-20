@@ -31,6 +31,8 @@ class ReturnStatement: public Untyped
 	MARTTA_OBJECT(Untyped)
 
 public:
+	enum { Returned = FirstNamed, EndOfNamed };
+	
 	virtual int							minRequired(int _i) const;
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual Types						allowedTypes(int _index) const;
@@ -39,7 +41,7 @@ public:
 
 	virtual Kinds						ancestralDependencies() const { return Kind::of<LambdaNamer>(); }
 	virtual void						onDependencyChanged(Entity* _e);
-	virtual QString						defineLayout(ViewKeys&) const { return QString("^;ycode;'return ';") + (child(0) ? ";0" : ""); }
+	virtual QString						defineLayout(ViewKeys&) const { return "^;ycode;'return'" + (child(Returned) ? QString(";Mo;%1").arg(Returned) : QString::null); }
 };
 
 }

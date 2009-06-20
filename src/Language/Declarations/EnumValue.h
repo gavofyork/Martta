@@ -32,12 +32,13 @@ class EnumValue: public DeclarationEntity, public_interface ValueDefiner
 {
 	MARTTA_OBJECT(DeclarationEntity)
 	MARTTA_INHERITS(ValueDefiner, 0)
-	enum { Definition = FirstNamed, EndOfNamed };
 	
 	friend class Entity;
 	friend class EnumValueResolver;
 
 public:
+	enum { Definition = FirstNamed, EndOfNamed };
+	
 	// Accessor methods.
 	// From ValueDefiner from TypeNamer.
 	virtual Type						type() const;

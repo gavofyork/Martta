@@ -30,9 +30,10 @@ class AssignedVariable: public BareTyped, public_interface VariableNamer
 {
 	MARTTA_OBJECT(BareTyped)
 	MARTTA_INHERITS(VariableNamer, 0)
-	enum { AssignedValue = FirstNamed, EndOfNamed };
 
 public:
+	enum { AssignedValue = FirstNamed, EndOfNamed };
+	
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
 	
 protected:

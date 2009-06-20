@@ -45,9 +45,6 @@ class EditDelegateFace;
 class CodeScene;
 class DecorationContext;
 
-extern int s_news;
-extern int s_deletes;
-
 // Would be nice to annex this, too...
 enum ChangeOperation
 {
@@ -83,53 +80,24 @@ class RootEntity;
  * scene. This applies even if the situation is temporary, since the check/changes happen at move
  * time.
  */
-class Entity: public SafePointerTarget, public_interface SceneLeaver
+class Entity: public Nothing, public SafePointerTarget, public_interface SceneLeaver
 {
+	MARTTA_COMMON(Nothing)
+	MARTTA_INHERITS(SceneLeaver, 0)
+	
 	friend class EntityStylist;
 	friend class EditDelegateFace;
 
-public:
-	template<class T, class U> void setDependency(T& _dependencyVariable, U const& _dependency)
-	{
-		if (_dependencyVariable != _dependency)
-		{
-			Entity* old = _dependencyVariable->asKind<Entity>();
-			M_ASSERT(!_dependency || _dependency->asKind<Entity>()->isInModel());
-			M_ASSERT(!old || old->asKind<Entity>()->isInModel());
-			if (old)
-				removeDependency(old);
-			_dependencyVariable = _dependency;
-			if (_dependency)
-			{
-				addDependency(_dependency->asKind<Entity>());
-				dependencySwitched(_dependency->asKind<Entity>(), old);
-			}
-			changed();
-		}
-	}
-	
-	virtual int							virtualEndOfNamed() const { return EndOfNamed; }
-
-	typedef Nothing Super;
-	static const bool IsInterface = false;
-	static const bool IsPlaceholder = true;
-	static const bool IsObject = false;
-	
-	inline void* operator new(size_t _size)
-	{
-		s_news++;
-		void* ret = malloc(_size);
-		return ret;
-	}
-	inline void operator delete(void* p)
-	{
-		s_deletes++;
-		free(p);
-	}
-	
+protected:
 	enum { EndOfNamed = INT_MIN, Cardinals = 0 };
 	
-	MARTTA_INHERITS(SceneLeaver, 0)
+public:
+	static const bool					IsInterface = false;
+	static const bool					IsPlaceholder = true;
+	static const bool					IsObject = false;
+	
+	inline void*						operator new(size_t _size);
+	inline void							operator delete(void* p);
 	
 	inline Entity(): m_rootEntity(0), m_parent(0), m_index(UndefinedIndex), m_notifiedOfChange(false) {}
 	
@@ -294,43 +262,6 @@ public:
 
 	inline RootEntity*					rootEntity() const { return m_rootEntity; }
 	
-	/// Stuff to do with RTTI. [ Same as MARTTA_BASIC macro ]
-	static AuxilliaryFace const*		staticAuxilliary();
-	static Kind							staticKind;
-	template<int i, int d>						
-	struct AltSuper {
-		typedef Nothing TheType;
-	};
-	
-	template<int m = -1, typename T = void>
-	struct AltSuperCount {
-		static const int count = AltSuperCount<m + 1, typename AltSuper<m + 1, 0>::TheType>::count;
-	};
-	
-	template<int m>						
-	struct AltSuperCount<m, Nothing> {
-		static const int count = m;
-	};
-	
-	template<int m, int d = 0>			
-	struct ASHelper {
-		public: static AuxilliaryFace const** altSupers() {
-			static AuxilliaryFace const* r[m];
-			r[m - 1] = AltSuper<m - 1, 0>::TheType::staticAuxilliary();
-			memcpy(r, ASHelper<m - 1>::altSupers(), (m - 1) * sizeof(AuxilliaryFace const*));
-			return r;
-		}
-	};
-	
-	template<int d>						
-	struct ASHelper<0, d> {
-		public: static AuxilliaryFace const** altSupers() {
-			static AuxilliaryFace const* r[0]; return r;
-		}
-	};
-	
-	inline virtual Kind					kind() const { return this ? staticKind : Kind(Nothing::staticAuxilliary()); }
-	
 	template<class T> inline bool		isKind() const { return this && kind().isKind(T::staticKind); }
 	inline bool							isKind(Kind _k) const { return this && kind().isKind(_k); }
 	inline bool							isKind(Kinds _k) const { return this && kind().isKind(_k); }
@@ -341,8 +272,6 @@ public:
 	template<class T> inline T const*	asKind() const { M_ASSERT(this); M_ASSERT(isKind<T>()); return T::IsInterface ? asInterface<T>() : tryCast<T const*>(this); }
 	template<class T> inline T*			tryKind() { if (this && isKind<T>()) return asKind<T>(); return 0; }
 	template<class T> inline T const*	tryKind() const { if (this && isKind<T>()) return asKind<T>(); return 0; }
-	virtual Entity const*				self() const { return this; }
-	virtual Entity*						self() { return this; }
 
 	// The following are information for checking and selection mechanisms.
 	// These values could change depending upon elements already in place (e.g. dereference operators), so should be rechecked whenever anything changes.
@@ -353,7 +282,7 @@ public:
 	/// A greater amount than these may be allowed, but never fewer.
 	/// Default returns zero (i.e. no entity strictly needed).
 	/// @note Do not call this directly; use isAllowed() on the child entity instead, since that is a more complete test.
-	virtual int							minRequired(int) const { return 0; }
+	virtual int							minRequired(int = Cardinals) const { return 0; }
 	/// @returns the kind of entities allowed in the given child position.
 	/// Reimplement to allow particular entity kinds.
 	/// Default returns the empty list (i.e. entity may not have any children).
@@ -432,6 +361,10 @@ public:
 	virtual bool						onActivated(CodeScene*) { return false; }
 	virtual bool						keyPressed(EntityKeyEvent const*);
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const&, EntityKeyEvent const*) { return false; }
+	
+	QString								indexName(int _i) const;
+	QString								indexName() const { return m_parent ? m_parent->indexName(m_index) : "[Orphan]"; }
+	QList<int>							knownNames() const;
 	
 	/// We become current in all code scenes.
 	void								setCurrent();
@@ -527,9 +460,6 @@ public:
 protected:
 	virtual ~Entity();
 
-	virtual void const*					toInterface(Kind) const { return 0; }
-	void const*							tryInterface(Kind) const { return 0; }
-
 	enum { DependsOnNothing = 0, DependsOnContext = 1, DependsOnChildren = 2, DependsOnBoth = 3, DependsOnContextIndex = 4, TestOnOrder = 8, DependsOnChildOrder = DependsOnChildren | TestOnOrder };
 	virtual int							familyDependencies() const { return DependsOnNothing; }
 	virtual Kinds						ancestralDependencies() const { return Kinds(); }
@@ -538,6 +468,9 @@ protected:
 	
 	inline bool							botherNotifying() const { return (~notificationRequirements() & BeInModel || isInModel()) && (~notificationRequirements() & BeComplete || isComplete()); }
 	
+	/// Given an Entity/Interface-pointer-style variable and a value, set the variable and call add, change and remove
+	/// dependency as necessary.
+	template<class T, class U> void		setDependency(T& _dependencyVariable, U const& _dependency);
 	/// Adds a dependency. Should only be called from inside registerDependencies().
 	/// Note this will *not* call onDependencyAdded(_e) for you. You must call it yourself if you want it to run.
 	void								addDependency(Entity* _e);
@@ -660,6 +593,22 @@ public:
 	}
 };
 
+extern int s_news;
+extern int s_deletes;
+
+}
+
+void* Martta::Entity::operator new(size_t _size)
+{
+	s_news++;
+	void* ret = malloc(_size);
+	return ret;
+}
+
+void Martta::Entity::operator delete(void* p)
+{
+	s_deletes++;
+	free(p);
 }
 
 inline QDebug operator<<(QDebug _out, const Martta::Kind& _item)
@@ -678,6 +627,26 @@ inline QDebug operator<<(QDebug _out, const Martta::Entity* _item)
 		return _out << _item->kind() << "*(" << ((void*)_item) << ")";
 	else
 		return _out << "Entity *( 0 )";
+}
+
+template<class T, class U>
+void Martta::Entity::setDependency(T& _dependencyVariable, U const& _dependency)
+{
+	if (_dependencyVariable != _dependency)
+	{
+		Entity* old = _dependencyVariable->asKind<Entity>();
+		M_ASSERT(!_dependency || _dependency->asKind<Entity>()->isInModel());
+		M_ASSERT(!old || old->asKind<Entity>()->isInModel());
+		if (old)
+			removeDependency(old);
+		_dependencyVariable = _dependency;
+		if (_dependency)
+		{
+			addDependency(_dependency->asKind<Entity>());
+			dependencySwitched(_dependency->asKind<Entity>(), old);
+		}
+		changed();
+	}
 }
 
 template<class T>

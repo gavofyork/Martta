@@ -35,9 +35,10 @@ class Identifiable: public_interface SceneLeaver
 {
 	MARTTA_INTERFACE
 	MARTTA_INHERITS(SceneLeaver, 0)
+
+public:
 	MARTTA_NAMED(Identity)
 	
-public:	
 	/// @returns the user-visible name used for this entity. (e.g. "foo", "bar", "my class")
 	virtual QString						name() const;
 	/// @returns the name used for this declaration in the CPP code. (e.g. "foo", "m_bar", "MyClass")

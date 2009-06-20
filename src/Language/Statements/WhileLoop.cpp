@@ -33,8 +33,8 @@ MARTTA_OBJECT_CPP(WhileLoop);
 QString WhileLoop::code() const
 {
 	QString ret;
-	ret += "while (" + (asStatement(0) ? asStatement(0)->code() : "");
-	ret += ")\n" + (asStatement(1) ? asStatement(1)->codeAsStatement() : "");
+	ret += "while (" + (asStatement(Condition) ? asStatement(Condition)->code() : "");
+	ret += ")\n" + (asStatement(Body) ? asStatement(Body)->codeAsStatement() : "");
 	return ret;
 }
 
@@ -42,8 +42,8 @@ Kinds WhileLoop::allowedKinds(int _index) const
 {
 	switch (_index)
 	{
-		case 0: return Kind::of<BareTyped>();
-		case 1: return Kind::of<Compound>();
+		case Condition: return Kind::of<BareTyped>();
+		case Body: return Kind::of<Compound>();
 		default: return Super::allowedKinds(_index);
 	}
 }
@@ -52,21 +52,21 @@ Types WhileLoop::allowedTypes(int _index) const
 {
 	switch (_index)
 	{
-		case 0: return Type(Bool).topWith(Const());
+		case Condition: return Type(Bool).topWith(Const());
 		default: return Types();
 	}
 }
 
 QString WhileLoop::defineLayout(ViewKeys&) const
 {
-	return QString("ycode;^;'while (';0;')'") +
-		(child(1) && child(1)->cardinalChildCount() ? ";n;i;1" : ";1");
+	return ("ycode;^;'while (';%1;')'" +
+		QString(child(Body) && child(Body)->cardinalChildCount() ? ";n;i;%2" : ";%2")).arg(Condition).arg(Body);
 }
 
 bool WhileLoop::keyPressed(EntityKeyEvent const* _e)
 {
-	if ((_e->text() == ")" || _e->text() == "{") && _e->focalIndex() == 0 && childCountOf<Compound>())
-		childOf<Compound>()->navigateOnto(_e->codeScene());
+	if ((_e->text() == ")" || _e->text() == "{") && _e->focalIndex() == Condition && childIs<Compound>(Body))
+		child(Body)->navigateOnto(_e->codeScene());
 	else
 		return Super::keyPressed(_e);
 	return true;

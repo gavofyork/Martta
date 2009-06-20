@@ -31,9 +31,10 @@ class ConstructedVariable: public Primary, public_interface VariableNamer
 {
 	MARTTA_OBJECT(Primary)
 	MARTTA_INHERITS(VariableNamer, 0)
-	enum { OurConstruction = FirstNamed, EndOfNamed };
 	
 private:
+	enum { OurConstruction = FirstNamed, EndOfNamed };
+	
 	// From Entity via BareTyped
 	virtual int							minRequired(int _i) const { return _i == OurType || _i == OurConstruction || _i == Identity ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _index) const;

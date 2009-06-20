@@ -29,9 +29,10 @@ namespace Martta
 class Operation: public Evaluation
 {
 	MARTTA_PLACEHOLDER(Evaluation)
-	enum { FirstOperand = FirstNamed, TheOperand = FirstOperand, SecondOperand, EndOfNamed };
 
 public:
+	enum { FirstOperand = FirstNamed, TheOperand = FirstOperand, SecondOperand, EndOfNamed };
+	
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const&, EntityKeyEvent const*);
 	bool								keyPressed(EntityKeyEvent const*);
 	

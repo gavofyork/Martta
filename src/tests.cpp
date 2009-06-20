@@ -20,6 +20,17 @@
 
 #include <errno.h>
 
+#include <QDomDocument>
+#include <QDomElement>
+
+#include "msList.h"
+#include "msString.h"
+#include "msHash.h"
+#include "msSupport.h"
+using namespace MarttaSupport;
+
+#include "Meta.h"
+
 #include "Type.h"
 #include "TypeEntity.h"
 #include "Const.h"
@@ -41,22 +52,12 @@
 #include "EnumValue.h"
 #include "Argument.h"
 
-#include <QDomDocument>
-#include <QDomElement>
-
 #include "Method.h"
 #include "Variable.h"
 #include "Referenced.h"
 #include "NamespaceEntity.h"
 #include "Compound.h"
 using namespace Martta;
-
-#include "msList.h"
-#include "msString.h"
-#include "msHash.h"
-#include "msSupport.h"
-using namespace MarttaSupport;
-
 
 template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Box returnMeBox(GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey> const& _me)
@@ -123,14 +124,17 @@ private:
 
 class SPT: public SafePointerTarget { public: SafePointerTarget::rewirePointer; };
 
+using namespace Martta;
 class TagA
 {
 	MARTTA_INTERFACE
-	public: void killAndDelete() { delete this; }
+public:
+	void killAndDelete() { delete this; }
 	virtual char tagAVirtual() { return 'A'; }
 	virtual ~TagA() {}
 };
 MARTTA_INTERFACE_CPP(TagA);
+
 
 class Another
 {
@@ -142,7 +146,8 @@ public:
 class TagB
 {
 	MARTTA_INTERFACE
-	public: void killAndDelete() { delete this; }
+public:
+	void killAndDelete() { delete this; }
 	virtual char tagBVirtual() { return 'B'; }
 	virtual ~TagB() {}
 };
@@ -151,7 +156,8 @@ MARTTA_INTERFACE_CPP(TagB);
 class TagC
 {
 	MARTTA_INTERFACE
-	public: void killAndDelete() { delete this; }
+public:
+	void killAndDelete() { delete this; }
 	virtual char tagCVirtual() { return 'C'; }
 	virtual ~TagC() {}
 };
@@ -161,7 +167,8 @@ class TagD: public Another, public TagB
 {
 	MARTTA_INTERFACE
 	MARTTA_INHERITS(TagB, 0)
-	public: void killAndDelete() { delete this; }
+public:
+	void killAndDelete() { delete this; }
 	virtual char tagDVirtual() { return 'D'; }
 	virtual ~TagD() {}
 };
@@ -170,7 +177,8 @@ MARTTA_INTERFACE_CPP(TagD);
 class TagE
 {
 	MARTTA_INTERFACE
-	public: void killAndDelete() { delete this; }
+public:
+	void killAndDelete() { delete this; }
 	virtual char tagEVirtual() { return 'E'; }
 	virtual ~TagE() {}
 };
@@ -181,6 +189,7 @@ class TestEntity: public Entity, public TagA, public TagE
 	MARTTA_OBJECT(Entity)
 	MARTTA_INHERITS(TagA, 0)
 	MARTTA_INHERITS(TagE, 1)
+public:
 	virtual void oneVirtual() {};
 	void killAndDelete() { Entity::killAndDelete(); }
 };
@@ -191,6 +200,7 @@ class TestEntityB: public TestEntity, public TagC, public TagD
 	MARTTA_OBJECT(TestEntity)
 	MARTTA_INHERITS(TagC, 0)
 	MARTTA_INHERITS(TagD, 1)
+public:
 	virtual void anotherVirtual() {};
 	void killAndDelete() { Entity::killAndDelete(); }
 };
@@ -199,9 +209,10 @@ MARTTA_OBJECT_CPP(TestEntityB);
 class TestNegatives: public Entity
 {
 	MARTTA_OBJECT(Entity)
+public:
 	MARTTA_NAMED(NamedChildB)
-	enum { NamedChildA = FirstNamed, EndOfNamed };
 	
+	enum { NamedChildA = FirstNamed, EndOfNamed };
 };
 MARTTA_OBJECT_CPP(TestNegatives);
 MARTTA_NAMED_CPP(TestNegatives, NamedChildB);
@@ -209,6 +220,8 @@ MARTTA_NAMED_CPP(TestNegatives, NamedChildB);
 class TestNegativesB: public TestNegatives
 {
 	MARTTA_OBJECT(TestNegatives)
+	
+public:
 	enum { NamedChildC = FirstNamed, EndOfNamed };
 	int minRequired(int _i) const { return _i != NamedChildA ? _i != NamedChildB ? _i != NamedChildC ? Super::minRequired(_i) : 2 : 1 : 0; }
 	Kinds allowedKinds(int) const { return Kind::of<TestNegatives>(); }

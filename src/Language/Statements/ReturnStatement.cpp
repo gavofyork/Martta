@@ -36,7 +36,7 @@ int ReturnStatement::minRequired(int _i) const
 		return 0;
 	}
 
-	if (_i == Cardinals)
+	if (_i == Returned)
 		if (!ancestor<LambdaNamer>()->returns().isNull() && ancestor<LambdaNamer>()->returns() != Type(Void))
 			return 1;
 		else
@@ -59,7 +59,7 @@ Kinds ReturnStatement::allowedKinds(int _i) const
 		return Kinds();
 	}
 
-	if (_i == 0 && !ancestor<LambdaNamer>()->returns().isNull() && ancestor<LambdaNamer>()->returns() != Type(Void))
+	if (_i == Returned && !ancestor<LambdaNamer>()->returns().isNull() && ancestor<LambdaNamer>()->returns() != Type(Void))
 		return Kind::of<Typed>();
 	return Super::allowedKinds(_i);
 }
@@ -71,14 +71,14 @@ Types ReturnStatement::allowedTypes(int _i) const
 		qCritical("Return statement without lambda ancestor!");
 		return Types();
 	}
-	if (_i == 0 && !ancestor<LambdaNamer>()->returns().isNull() && ancestor<LambdaNamer>()->returns() != Type(Void))
+	if (_i == Returned && !ancestor<LambdaNamer>()->returns().isNull() && ancestor<LambdaNamer>()->returns() != Type(Void))
 		return ancestor<LambdaNamer>()->returns();
 	return Types();
 }
 
 QString ReturnStatement::code() const
 {
-	return child(0) ? "return " + childAs<Typed>(0)->codeAsStatement() : "return;";
+	return childIs<Typed>(Returned) ? "return " + childAs<Typed>(Returned)->codeAsStatement() : "return;";
 }
 
 }

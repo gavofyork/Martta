@@ -74,7 +74,7 @@ bool InsertionPoint::allowedToBeKind(Kind _k) const
 
 bool InsertionPoint::isRequired() const
 {
-	return m_index < 0 ? (m_parent->childCountAt(m_index) < m_parent->minRequired(m_index)) : ((m_index == UndefinedIndex ? m_parent->cardinalChildCount() : m_index) < m_parent->minRequired(Entity::Cardinals));
+	return m_index < 0 ? (m_parent->childCountAt(m_index) < m_parent->minRequired(m_index)) : ((m_index == UndefinedIndex ? m_parent->cardinalChildCount() : m_index) < m_parent->minRequired());
 }
 
 Kinds InsertionPoint::allowedKinds() const

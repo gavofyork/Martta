@@ -30,10 +30,12 @@ class WhileLoop: public Untyped
 	MARTTA_OBJECT(Untyped)
 
 public:
+	enum { Condition = FirstNamed, Body, EndOfNamed };
+	
 	inline static bool					keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e) { return simplePlaceholderKeyPressHandler<WhileLoop>(_p, _e, "W"); }
 
 private:
-	virtual int							minRequired(int _i) const { return _i == Cardinals ? 2 : Super::minRequired(_i); }
+	virtual int							minRequired(int _i) const { return _i == Condition || _i == Body ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _index) const;
 	virtual Types						allowedTypes(int _index) const;
 	virtual QString						code() const;

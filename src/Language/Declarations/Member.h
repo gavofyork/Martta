@@ -33,9 +33,10 @@ class Class;
 class Member: public DeclarationEntity
 {
 	MARTTA_PLACEHOLDER(DeclarationEntity)
-	enum { Accessibility = FirstNamed, EndOfNamed };
 	
 public:
+	enum { Accessibility = FirstNamed, EndOfNamed };
+	
 	virtual Access						access() const;
 	Class*								classType() const;
 	
