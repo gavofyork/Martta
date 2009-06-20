@@ -31,8 +31,6 @@ class Construction: public Invocation
 {
 	MARTTA_OBJECT(Invocation)
 
-	friend class Entity;
-
 public:
 	Construction(Constructor* _c = 0) : m_subject(0) { setDependency(m_subject, _c); }
 

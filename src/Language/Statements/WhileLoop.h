@@ -26,23 +26,37 @@
 namespace Martta
 {
 
-class WhileLoop: public Untyped, public_interface Corporal
+class WhileLoop: public Untyped, public_interface Corporal, public_interface Conditional
 {
 	MARTTA_OBJECT(Untyped)
 	MARTTA_INHERITS(Corporal, 0)
+	MARTTA_INHERITS(Conditional, 1)
 
 public:
-	enum { Condition = FirstNamed, EndOfNamed };
-	
 	inline static bool					keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e) { return simplePlaceholderKeyPressHandler<WhileLoop>(_p, _e, "W"); }
-
+	
+protected:
+	virtual Kinds						allowedKinds(int _index) const;
+	
 private:
 	virtual int							minRequired(int _i) const { return _i == Condition || _i == Body ? 1 : Super::minRequired(_i); }
-	virtual Kinds						allowedKinds(int _index) const;
 	virtual Types						allowedTypes(int _index) const;
 	virtual QString						code() const;
 	virtual QString						defineLayout(ViewKeys&) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
+};
+
+class UntilLoop: public WhileLoop
+{
+	MARTTA_OBJECT(WhileLoop)
+
+public:
+	inline static bool					keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e) { return simplePlaceholderKeyPressHandler<UntilLoop>(_p, _e, "U"); }
+	
+private:
+	virtual QString						code() const;
+	virtual QString						defineLayout(ViewKeys&) const;
+	virtual Kinds						allowedKinds(int _index) const;
 };
 
 }

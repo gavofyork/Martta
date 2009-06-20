@@ -33,15 +33,15 @@ MARTTA_OBJECT_CPP(Invocation);
 	
 Type Invocation::type() const
 {
-	if (isTyped(0) && typeOf(0)->isType<FunctionType>())
-		return typeOf(0)->asType<FunctionType>()->returnType();
+	if (isTyped(Callee) && typeOf(Callee)->isType<FunctionType>())
+		return typeOf(Callee)->asType<FunctionType>()->returnType();
 	return Type();
 	// TODO: Handle objects with () operators.
 }
 
 QString Invocation::code() const
 {
-	return isTyped(0) ? asTyped(0)->code() + callList(typeds().mid(1)) : "";
+	return isTyped(Callee) ? asTyped(Callee)->code() + callList(castEntities<Typed>(cardinalChildren())) : "";
 }
 
 QString Invocation::callList(QList<Typed*> _parameters) const
@@ -61,21 +61,23 @@ QString Invocation::callList(QList<Typed*> _parameters) const
 
 int Invocation::minRequired(int _i) const
 {
+	if (_i == Callee)
+		return 1;
 	if (_i == Cardinals)
-		if (typeOf(0)->isType<FunctionType>())
-			return typeOf(0)->asType<FunctionType>()->minimumArgCount() + 1;
+		if (typeOf(Callee)->isType<FunctionType>())
+			return typeOf(Callee)->asType<FunctionType>()->minimumArgCount();
 		else
-			return 1;
+			return 0;
 	else
 		return Super::minRequired(_i);
 }
 
 Kinds Invocation::allowedKinds(int _index) const
 {
-	if (_index == 0)
+	if (_index == Callee)
 		return Kind::of<Typed>();
-	else if (typeOf(0)->isType<FunctionType>()
-		&& typeOf(0)->asType<FunctionType>()->hasArgumentAt(_index - 1))
+	else if (_index >= 0 && typeOf(Callee)->isType<FunctionType>()
+		&& typeOf(Callee)->asType<FunctionType>()->hasArgumentAt(_index))
 		return Kind::of<Typed>();
 	else
 		return Super::allowedKinds(_index);
@@ -83,28 +85,29 @@ Kinds Invocation::allowedKinds(int _index) const
 
 Types Invocation::allowedTypes(int _index) const
 {
-	if (_index == 0)
+	if (_index == Callee)
 	{
 		return Type(FunctionType(false, true));
 	}
-	else if (typeOf(0)->isType<FunctionType>() && typeOf(0)->asType<FunctionType>()->hasArgumentAt(_index - 1))
+	else if (_index >= 0 && typeOf(Callee)->isType<FunctionType>() && typeOf(Callee)->asType<FunctionType>()->hasArgumentAt(_index))
 	{
-		return typeOf(0)->asType<FunctionType>()->argumentType(_index - 1);
+		return typeOf(Callee)->asType<FunctionType>()->argumentType(_index);
 	}
 	return Types();
 }
 
 QString Invocation::defineLayout(ViewKeys&) const
 {
-	QString ret = "0;ycode;'(';^";
-	for (int i = 1; i < cardinalChildCount(); i++)
-		ret += QString((i == 1) ? ";%1" : ";', ';%1").arg(i);
+	QString ret = "%1;ycode;'(';^";
+	ret = ret.arg(Callee);
+	for (int i = 0; i < cardinalChildCount(); i++)
+		ret += QString((i == 0) ? ";%1" : ";', ';%1").arg(i);
 	return ret + ";')'";
 }
 
 void Invocation::onDependencyChanged(Entity* _e)
 {
-	if (_e == child(0))
+	if (_e == child(Callee))
 	{
 		// The function we are calling has changed.
 		validifyChildren();
@@ -115,13 +118,13 @@ void Invocation::onDependencyChanged(Entity* _e)
 
 bool Invocation::keyPressed(EntityKeyEvent const* _e)
 {
-	if (_e->text() == "(" && _e->focalIndex() == 0 && child(1))
-		child(1)->navigateOnto(_e->codeScene());
-	else if (_e->text() == "(" && _e->focalIndex() == 0)
+	if (_e->text() == "(" && _e->focalIndex() == Callee && child(0))
+		child(0)->navigateOnto(_e->codeScene());
+	else if (_e->text() == "(" && _e->focalIndex() == Callee)
 		setCurrent();
 	else if (_e->text() == ")" && !_e->isFocused())
 		setCurrent();
-	else if (_e->text() == "," && _e->focalIndex() > 0 && _e->focalIndex() < cardinalChildCount() - 1)
+	else if (_e->text() == "," && _e->focalIndex() >= 0 && _e->focalIndex() < cardinalChildCount() - 1)
 		// Jump to next if we press a comma in the parameter list, before the last item.
 		child(_e->focalIndex() + 1)->setCurrent();
 	else if (_e->text() == "," && back().allowedKinds().size())
@@ -135,12 +138,12 @@ bool Invocation::keyPressed(EntityKeyEvent const* _e)
 bool Invocation::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
 {
 	if (_p.exists() && !_p->isPlaceholder() && _p->isKind<Typed>() && _e->text() == "(" &&
-		_p->asKind<Typed>()->type()->isType<FunctionType>() && !(_p->parentIs<Invocation>() && _p->index() == 0) && !isTemporary(_p.entity()))
+		_p->asKind<Typed>()->type()->isType<FunctionType>() && !(_p->parentIs<Invocation>() && _p->index() == Callee) && !isTemporary(_p.entity()))
 	{
 		Entity* n = new Invocation;
 		_p->insert(n);
 		n->prepareChildren();
-		if (n->cardinalChildCount() > 1)
+		if (n->cardinalChildCount())
 			n->dropCursor();
 		else
 		{

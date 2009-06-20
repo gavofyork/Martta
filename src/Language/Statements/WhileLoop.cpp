@@ -20,7 +20,7 @@
 
 #include <QtXml>
 
-#include "BareTyped.h"
+#include "Typed.h"
 #include "Const.h"
 #include "Compound.h"
 #include "WhileLoop.h"
@@ -29,14 +29,7 @@ namespace Martta
 {
 
 MARTTA_OBJECT_CPP(WhileLoop);	
-	
-QString WhileLoop::code() const
-{
-	QString ret;
-	ret += "while (" + (asStatement(Condition) ? asStatement(Condition)->code() : "");
-	ret += ")\n" + (asStatement(Body) ? asStatement(Body)->codeAsStatement() : "");
-	return ret;
-}
+MARTTA_OBJECT_CPP(UntilLoop);	
 
 Kinds WhileLoop::allowedKinds(int _index) const
 {
@@ -54,6 +47,14 @@ Types WhileLoop::allowedTypes(int _index) const
 	return Types();
 }
 
+QString WhileLoop::code() const
+{
+	QString ret;
+	ret += "while (" + (asStatement(Condition) ? asStatement(Condition)->code() : "");
+	ret += ")\n" + (asStatement(Body) ? asStatement(Body)->codeAsStatement() : "");
+	return ret;
+}
+
 QString WhileLoop::defineLayout(ViewKeys& _k) const
 {
 	return ("ycode;^;'while (';%1;')'" + Corporal::defineLayout(_k, true)).arg(Condition);
@@ -66,6 +67,26 @@ bool WhileLoop::keyPressed(EntityKeyEvent const* _e)
 	else
 		return Super::keyPressed(_e);
 	return true;
+}
+
+Kinds UntilLoop::allowedKinds(int _index) const
+{
+	if (_index == Condition)
+		return Kind::of<Typed>();
+	return Super::allowedKinds(_index);
+}
+
+QString UntilLoop::code() const
+{
+	QString ret;
+	ret += "while (!(" + (asStatement(Condition) ? asStatement(Condition)->code() : "");
+	ret += "))\n" + (asStatement(Body) ? asStatement(Body)->codeAsStatement() : "");
+	return ret;
+}
+
+QString UntilLoop::defineLayout(ViewKeys& _k) const
+{
+	return ("ycode;^;'until (';%1;')'" + Corporal::defineLayout(_k, true)).arg(Condition);
 }
 
 }
