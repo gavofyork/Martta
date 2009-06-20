@@ -30,37 +30,27 @@ namespace Martta
 {
 
 MARTTA_OBJECT_CPP(ForLoop);	
-	
-QString ForLoop::code() const
-{
-	QString ret;
-	ret += "for (" + (asStatement(0) ? asStatement(0)->code() : "");
-	ret += "; " + (asStatement(1) ? asStatement(1)->code() : "");
-	ret += "; " + (asStatement(2) ? asStatement(2)->code() : "");
-	ret += ")\n" + (asStatement(3) ? asStatement(3)->codeAsStatement() : "");
-	return ret;
-}
 
 Kinds ForLoop::allowedKinds(int _index) const
 {
-	switch (_index)
-	{
-		case 0: return Kind::of<Primary>();
-		case 1: return Kind::of<BareTyped>();
-		case 2: return Kind::of<Typed>();
-		case 3: return Kind::of<Compound>();
-		default: return Super::allowedKinds(_index);
-	}
+	if (_index == Initialiser)
+		return Kind::of<Primary>();
+	if (_index == Condition)
+		return Kind::of<BareTyped>();
+	if (_index == Ticker)
+		return Kind::of<Typed>();
+	if (_index == Body)
+		return Kind::of<Compound>();
+	return Super::allowedKinds(_index);
 }
 
 Types ForLoop::allowedTypes(int _index) const
 {
-	switch (_index)
-	{
-		case 2: return Type(Void).topWith(Const());
-		case 1: return Type(Bool).topWith(Const());
-		default: return Types();
-	}
+	if (_index == Condition)
+		return Type(Void).topWith(Const());
+	if (_index == Initialiser)
+		return Type(Bool).topWith(Const());
+	return Types();
 }
 
 bool ForLoop::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
@@ -70,14 +60,16 @@ bool ForLoop::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEven
 
 bool ForLoop::keyPressed(EntityKeyEvent const* _e)
 {
-	if (_e->text() == ";" && _e->focalIndex() < 2)
-		child(_e->focalIndex() + 1)->setCurrent();
-	else if ((_e->text() == ")" || _e->text() == "{") && _e->focalIndex() < 3 && childCountOf<Compound>())
-		childOf<Compound>()->navigateOnto(_e->codeScene());
+	if (Corporal::keyPressed(_e))
+	{}
+	else if (_e->text() == ";" && _e->focalIndex() == Initialiser)
+		child(Condition)->setCurrent();
+	else if (_e->text() == ";" && _e->focalIndex() == Condition)
+		child(Ticker)->setCurrent();
 	else if (_e->text() == "B" && _e->focus()->isPlaceholder() && _e->focus()->isAllowed<BreakStatement>())
 	{
 		Entity* e = new BreakStatement;
-		_e->focus()->back().place(e);
+		_e->focus()->replace(e);
 		e->setCurrent();
 	}
 	else
@@ -85,11 +77,20 @@ bool ForLoop::keyPressed(EntityKeyEvent const* _e)
 	return true;
 }
 
-QString ForLoop::defineLayout(ViewKeys&) const
+QString ForLoop::defineLayout(ViewKeys& _k) const
 {
-	return "Hfull;ycode;^;'for (';0;'\\; ';1;'\\; ';2;')'" +
-	QString(child(3) && child(3)->cardinalChildCount() ? ";n;i;3" : ";3");
+	return ("Hfull;ycode;^;'for (';%1;'\\; ';%2;'\\; ';%3;')'" + Corporal::defineLayout(_k, true)).arg(Initialiser).arg(Condition).arg(Ticker);
 //	QString((!child(3) || !child(3)->child(0) || child(3)->child(0)->isPlaceholder()) ? ";' ';(;3;)" : ";n;i;(;3;)");
+}
+
+QString ForLoop::code() const
+{
+	QString ret;
+	ret += "for (" + (asStatement(Initialiser) ? asStatement(Initialiser)->code() : "");
+	ret += "; " + (asStatement(Condition) ? asStatement(Condition)->code() : "");
+	ret += "; " + (asStatement(Ticker) ? asStatement(Ticker)->code() : "");
+	ret += ")\n" + (asStatement(Body) ? asStatement(Body)->codeAsStatement() : "");
+	return ret;
 }
 
 void ForLoop::decorate(DecorationContext const& /*_c*/) const

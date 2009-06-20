@@ -20,19 +20,22 @@
 
 #pragma once
 
+#include "Corporal.h"
 #include "Untyped.h"
 
 namespace Martta
 {
 
-class ForLoop: public Untyped
+class ForLoop: public Untyped, public_interface Corporal, public_interface Conditional
 {
 	MARTTA_OBJECT(Untyped)
-
-	friend class Entity;
+	MARTTA_INHERITS(Corporal, 0)
+	MARTTA_INHERITS(Conditional, 1)
 
 public:
-	virtual int							minRequired(int _i) const { return _i == Cardinals ? 4 : Super::minRequired(_i); }
+	enum { Initialiser = FirstNamed, Ticker, EndOfNamed };
+	
+	virtual int							minRequired(int _i) const { return _i == Body || _i == Initialiser || _i == Condition || _i == Ticker ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _index) const;
 	virtual Types						allowedTypes(int _index) const;
 

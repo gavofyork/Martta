@@ -247,13 +247,23 @@ public:
 	Entity*								replace(Entity* _r);
 	template<class T> inline T*			replace() { T* r = new T; replace(r); return r; }
 	
+	enum { NonePrefered = INT_MAX - 1 };
 	/**
-	 * Moves this to become the first child of _e, and puts _e into our place.
-	 * Never removes placeholders (i.e. everything is inserted).
-	 * Our children are preserved. _e's children are shunted along to allow us to be the first.
+	 * Moves this to become the child of @a _e (at the first allowable place), and puts _e into our place.
+	 * Will assert against failure.
+	 * Order of preference according to firstFor().
+	 * Our children are preserved.
 	 */
-	Entity*								insert(Entity* _e);
-	template<class T> inline T*			insert() { T* r = new T; insert(r); return r; }
+	Entity*								insert(Entity* _e, int _preferedIndex = NonePrefered);
+	template<class T> inline T*			insert(int _preferedIndex = NonePrefered) { T* r = new T; insert(r, _preferedIndex); return r; }
+	
+	/**
+	 * Attempts to make this the child of @a _e (at the first allowable place).
+	 * If no such position is found, it is removed from the model but not deleted.
+	 * @returns true iff we are still in the model (as a child of @a _e).
+	 * Our children are preserved.
+	 */
+	bool								tryInsert(Entity* _e, int _preferedIndex = NonePrefered);
 	
 	/**
 	 * Safe, model-aware deletion operation. It keeps everything in order according to allowedKinds().
@@ -344,9 +354,19 @@ public:
 	inline InsertionPoint				front() { return InsertionPoint(this, 0); }
 	inline InsertionPoint				back() { return InsertionPoint(this, UndefinedIndex); }
 	inline InsertionPoint				middle(int _at) { return InsertionPoint(this, _at); }
+	/**
+	 * Order of preference:
+	 * - A named position that requires us to be there.
+	 * - A placeholder of a cardinal position.
+	 * - The back of the cardinals that requires us to be there.
+	 * - A named position that allows us being there.
+	 * - The back of the cardinals if it allows us being there.
+	 */
 	InsertionPoint						firstFor(Kind const& _k);
 	bool								attemptAppend(EntityKeyEvent const* _e);
 	bool								attemptInsert(EntityKeyEvent const* _e);
+	
+	virtual int							definePreferedFor(Kind const&) const { return NonePrefered; }
 
 	// Save/load
 	virtual void						exportDom(QDomElement& _element) const;

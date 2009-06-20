@@ -815,6 +815,9 @@ void Entity::notifyOfChange(Entity* _dependent)
 
 InsertionPoint Entity::firstFor(Kind const& _k)
 {
+	int pi = definePreferedFor(_k);
+	if (pi != NonePrefered)
+		return middle(pi);
 	for (int i = INT_MIN; i < virtualEndOfNamed(); i++)
 		if (middle(i).allowedToBeKind(_k) && (middle(i).exists() && middle(i)->isPlaceholder() || childCountAt(i) < minRequired(i)))
 			return middle(i);
@@ -832,8 +835,9 @@ InsertionPoint Entity::firstFor(Kind const& _k)
 	foreach (int i, AuxilliaryRegistrar::get()->names())
 		if (middle(i).allowedToBeKind(_k))
 			return middle(i);
-	M_ASSERT(back().allowedToBeKind(_k));	// Exhausted all other options.
-	return back();
+//	if (back().allowedToBeKind(_k))
+		return back();
+	return Nowhere;
 }
 
 
@@ -941,7 +945,8 @@ void Entity::move(InsertionPoint const& _newPosition)
 		silentMove(_newPosition);
 		if (oc != m_parent)
 			contextSwitchedWithChildRemoved(oc, oci);
-		m_parent->childAdded(m_index);
+		if (m_parent)
+			m_parent->childAdded(m_index);
 	}
 }
 Entity* Entity::usurp(Entity* _u)
@@ -990,19 +995,60 @@ Entity* Entity::replace(Entity* _r)
 	delete this;
 	return _r;
 }
-Entity* Entity::insert(Entity* _e)
+Entity* Entity::insert(Entity* _e, int _preferedIndex)
 {
 	InsertionPoint you = _e->over();
 	
 	over().insertSilent(_e);
-	_e->firstFor(kind()).insertSilent(this);
+	InsertionPoint ip = _preferedIndex == NonePrefered ? _e->firstFor(kind()) : _e->middle(_preferedIndex);
+	M_ASSERT(ip != Nowhere);
+	if (ip.allowedToBeKind(kind()))
+	{
+		// Everything going according to plan.
+		// P -n-> this   BECOMES   P -n-> _e -ip.i-> this
+		ip.insertSilent(this);
+		_e->childAdded(m_index);
+		if (_e->parent())
+			_e->parent()->childSwitched(_e, this);
+		_e->contextSwitchedWithChildRemoved(you);
+		contextSwitched(_e->parent());
+	}
+	else
+	{
+		// There's nowhere we can go - the prefered index failed:
+		// We get deleted and substituted against a newly created entity to fill the prefered index.
+		// NEW created at _prefInd, this killed, NEW replaces this.
+		// P -n-> this   BECOMES   P -n-> _e -pi-> NEW
+		// P's child switched (at n, was this, now _e)
+		// _e's parent's child removed, _e's context switched.
+		// this will be dead.
+		silentMove(Nowhere);
+		int x; _e->validifyChild(_preferedIndex, &x);
+		if (_e->parent())
+			_e->parent()->childSwitched(_e, this);
+		_e->contextSwitchedWithChildRemoved(you);
+		contextSwitched(_e->parent());
+		killAndDelete(_e->child(_preferedIndex));
+	}
+	return _e;
+} 
+bool Entity::tryInsert(Entity* _e, int _preferedIndex)
+{
+	InsertionPoint you = _e->over();
+	
+	over().insertSilent(_e);
+	InsertionPoint ip = _preferedIndex == NonePrefered ? _e->firstFor(kind()) : _e->middle(_preferedIndex);
+	if (!ip.allowedToBeKind(kind()))
+		ip = Nowhere;
+	ip.insertSilent(this);
 	
 	_e->contextSwitchedWithChildRemoved(you);
 	contextSwitched(_e->parent());
-	_e->childAdded(0);
+	if (ip != Nowhere)
+		_e->childAdded(m_index);
 	if (_e->parent())
-		_e->parent()->childSwitched(_e, _e->parent());
-	return _e;
+		_e->parent()->childSwitched(_e, this);
+	return ip != Nowhere;
 } 
 void Entity::deleteAndRefill(Entity* _e, bool _moveToGrave)
 {
