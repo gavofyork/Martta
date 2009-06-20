@@ -51,7 +51,7 @@ bool SimpleBinaryOperation::keyPressedOnInsertionPoint(InsertionPoint const& _p,
 	{
 		SimpleBinaryOperation* n = new SimpleBinaryOperation(o, p->asKind<Typed>()->type());
 		_e->noteStrobeCreation(n, &*p);
-		p->insert(n);
+		p->insert(n, FirstOperand);
 		n->validifyChildren();
 		n->dropCursor();
 		return true;
