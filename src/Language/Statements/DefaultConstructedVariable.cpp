@@ -50,7 +50,7 @@ bool DefaultConstructedVariable::keyPressed(EntityKeyEvent const* _e)
 	{
 		Entity* o = usurp(new AssignedVariable);
 		o->prepareChildren();
-		o->child(Identity)->navigateOnto(_e->codeScene());
+		o->child(AssignedVariable::AssignedValue)->navigateOnto(_e->codeScene());
 	}
 	else
 		return Super::keyPressed(_e);
