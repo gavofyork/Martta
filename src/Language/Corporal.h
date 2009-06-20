@@ -20,29 +20,22 @@
 
 #pragma once
 
-#include "Corporal.h"
-#include "Untyped.h"
+#include "Meta.h"
 
 namespace Martta
 {
 
-class WhileLoop: public Untyped, public_interface Corporal
+class Corporal
 {
-	MARTTA_OBJECT(Untyped)
-	MARTTA_INHERITS(Corporal, 0)
+	MARTTA_INTERFACE
 
 public:
-	enum { Condition = FirstNamed, EndOfNamed };
+	MARTTA_NAMED(Body)
 	
-	inline static bool					keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e) { return simplePlaceholderKeyPressHandler<WhileLoop>(_p, _e, "W"); }
-
-private:
-	virtual int							minRequired(int _i) const { return _i == Condition || _i == Body ? 1 : Super::minRequired(_i); }
-	virtual Kinds						allowedKinds(int _index) const;
-	virtual Types						allowedTypes(int _index) const;
-	virtual QString						code() const;
-	virtual QString						defineLayout(ViewKeys&) const;
-	virtual bool						keyPressed(EntityKeyEvent const* _e);
+	QString							defineLayout(ViewKeys&, bool _shrink) const;
+	bool							keyPressed(EntityKeyEvent const* _e);
+	
+	virtual ~Corporal() {}
 };
 
 }

@@ -40,33 +40,29 @@ QString WhileLoop::code() const
 
 Kinds WhileLoop::allowedKinds(int _index) const
 {
-	switch (_index)
-	{
-		case Condition: return Kind::of<BareTyped>();
-		case Body: return Kind::of<Compound>();
-		default: return Super::allowedKinds(_index);
-	}
+	if (_index == Condition)
+		return Kind::of<BareTyped>();
+	if (_index == Body)
+		return Kind::of<Compound>();
+	return Super::allowedKinds(_index);
 }
 
 Types WhileLoop::allowedTypes(int _index) const
 {
-	switch (_index)
-	{
-		case Condition: return Type(Bool).topWith(Const());
-		default: return Types();
-	}
+	if (_index == Condition)
+		return Type(Bool).topWith(Const());
+	return Types();
 }
 
-QString WhileLoop::defineLayout(ViewKeys&) const
+QString WhileLoop::defineLayout(ViewKeys& _k) const
 {
-	return ("ycode;^;'while (';%1;')'" +
-		QString(child(Body) && child(Body)->cardinalChildCount() ? ";n;i;%2" : ";%2")).arg(Condition).arg(Body);
+	return ("ycode;^;'while (';%1;')'" + Corporal::defineLayout(_k, true)).arg(Condition);
 }
 
 bool WhileLoop::keyPressed(EntityKeyEvent const* _e)
 {
-	if ((_e->text() == ")" || _e->text() == "{") && _e->focalIndex() == Condition && childIs<Compound>(Body))
-		child(Body)->navigateOnto(_e->codeScene());
+	if (Corporal::keyPressed(_e))
+		return true;
 	else
 		return Super::keyPressed(_e);
 	return true;

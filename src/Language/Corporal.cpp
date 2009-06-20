@@ -18,31 +18,27 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#pragma once
-
+#include "EntityKeyEvent.h"
 #include "Corporal.h"
-#include "Untyped.h"
 
 namespace Martta
 {
 
-class WhileLoop: public Untyped, public_interface Corporal
+MARTTA_INTERFACE_CPP(Corporal);
+MARTTA_NAMED_CPP(Corporal, Body);
+
+QString Corporal::defineLayout(ViewKeys&, bool _shrink) const
 {
-	MARTTA_OBJECT(Untyped)
-	MARTTA_INHERITS(Corporal, 0)
+	return (QString(!_shrink || self()->child(Body) && self()->child(Body)->cardinalChildCount() ? ";n;i;%2" : ";%2")).arg(Body);
+}
 
-public:
-	enum { Condition = FirstNamed, EndOfNamed };
-	
-	inline static bool					keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e) { return simplePlaceholderKeyPressHandler<WhileLoop>(_p, _e, "W"); }
-
-private:
-	virtual int							minRequired(int _i) const { return _i == Condition || _i == Body ? 1 : Super::minRequired(_i); }
-	virtual Kinds						allowedKinds(int _index) const;
-	virtual Types						allowedTypes(int _index) const;
-	virtual QString						code() const;
-	virtual QString						defineLayout(ViewKeys&) const;
-	virtual bool						keyPressed(EntityKeyEvent const* _e);
-};
+bool Corporal::keyPressed(EntityKeyEvent const* _e)
+{
+	if ((_e->text() == ")" || _e->text() == "{") && _e->focalIndex() != Body && self()->child(Body))
+		self()->child(Body)->navigateOnto(_e->codeScene());
+	else
+		return false;
+	return true;
+}
 
 }
