@@ -49,6 +49,9 @@ public:
 	Type								typeOf(int _i) const;
 	
 	virtual bool						onChanged() { foreach (Entity* i, children()) i->relayoutLater(); return Super::onChanged(); }
+
+protected:
+	virtual void						appendDefinedUptoHere(int, QList<ValueDefiner*>*) const {}
 };
 
 }

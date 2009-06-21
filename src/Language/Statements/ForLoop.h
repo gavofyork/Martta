@@ -44,6 +44,7 @@ public:
 	virtual QString						code() const;
 
 private:
+	virtual void						appendDefinedUptoHere(int _i, QList<ValueDefiner*>* _list) const;
 	virtual void						decorate(DecorationContext const& _c) const;
 	virtual QString						defineLayout(ViewKeys&) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);

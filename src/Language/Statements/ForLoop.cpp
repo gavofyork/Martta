@@ -18,6 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "ValueDefiner.h"
 #include "Primary.h"
 #include "BareTyped.h"
 #include "Typed.h"
@@ -51,6 +52,22 @@ Types ForLoop::allowedTypes(int _index) const
 	if (_index == Initialiser)
 		return Type(Bool).topWith(Const());
 	return Types();
+}
+
+void ForLoop::appendDefinedUptoHere(int _index, QList<ValueDefiner*>* _list) const
+{
+	if (_index == Initialiser)
+		return;
+	if (ValueDefiner* v = tryChild<ValueDefiner>(Initialiser))
+		*_list << v;
+	if (_index == Condition)
+		return;
+	if (ValueDefiner* v = tryChild<ValueDefiner>(Condition))
+		*_list << v;
+	if (_index == Ticker)
+		return;
+	if (ValueDefiner* v = tryChild<ValueDefiner>(Ticker))
+		*_list << v;
 }
 
 bool ForLoop::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)

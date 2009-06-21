@@ -37,6 +37,14 @@ QString Compound::code() const
 	return ret;
 }
 
+void Compound::appendDefinedUptoHere(int _i, QList<ValueDefiner*>* _list) const
+{
+	if (_i >= 0)
+		for(int i = 0; i < _i; ++i)
+			if (childIs<ValueDefiner>(i))
+				*_list += childAs<ValueDefiner>(i);
+}
+
 QString Compound::defineLayout(ViewKeys&) const
 {
 	if (statements().size() > 1 || parentIs<LambdaNamer>())
