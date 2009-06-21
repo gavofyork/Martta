@@ -51,7 +51,8 @@ public:
 	virtual bool						onChanged() { foreach (Entity* i, children()) i->relayoutLater(); return Super::onChanged(); }
 
 protected:
-	virtual void						appendDefinedUptoHere(int, QList<ValueDefiner*>*) const {}
+	virtual QList<int> const&			defineDeclarationOrder() const { static const QList<int> r; return r; }
+	virtual void						appendDefinedUptoHere(int, QList<ValueDefiner*>*) const;
 };
 
 }

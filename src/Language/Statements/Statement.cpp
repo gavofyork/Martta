@@ -47,6 +47,17 @@ QList<Typed*> Statement::typeds() const
 	return childrenOf<Typed>();
 }
 
+void Statement::appendDefinedUptoHere(int _index, QList<ValueDefiner*>* _list) const
+{
+	QList<int> const& order = defineDeclarationOrder();
+	if (order.contains(_index))
+		foreach (int i, order)
+			if (_index == i)
+				return;
+			else if (ValueDefiner* v = tryChild<ValueDefiner>(i))
+				*_list << v;
+}
+
 QList<ValueDefiner*> Statement::valuesInLocalScope() const
 {
 	if (!parentIs<Statement>())

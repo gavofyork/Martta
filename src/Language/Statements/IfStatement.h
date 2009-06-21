@@ -20,12 +20,13 @@
 
 #pragma once
 
+#include "Corporal.h"
 #include "Untyped.h"
 
 namespace Martta
 {
 
-class IfStatement: public Untyped
+class IfStatement: public Untyped, public_interface Conditional
 {
 	MARTTA_OBJECT(Untyped)
 
@@ -39,6 +40,7 @@ protected:
 	virtual int							minRequired(int _i) const { return _i == Cardinals ? 2 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _index) const;
 	virtual Types						allowedTypes(int _index) const;
+//	virtual QList<int>					defineDeclarationOrder() const { static const QList<int> r = QList<int>() << Initialiser << Condition << Ticker << Body; }
 };
 
 }
