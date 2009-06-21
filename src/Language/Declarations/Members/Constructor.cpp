@@ -54,11 +54,11 @@ QString Constructor::codeName() const
 
 Kinds Constructor::allowedKinds(int _i) const
 {
-	if (_i == Identity)
+	if (_i == Identity || _i == Constness || _i == Returned)
 		return Kinds();
-	else if (_i == 0)
+	else if (_i == Body)
 		return Kind::of<Compound>();
-	else if (_i > 0)
+	else if (_i >= 0)
 		return Kind::of<Argument>();
 	return Super::allowedKinds(_i);
 }

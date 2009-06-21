@@ -31,11 +31,15 @@ namespace Martta
 {
 
 MARTTA_INTERFACE_CPP(LambdaNamer);
+MARTTA_NAMED_CPP(LambdaNamer, Body)
+MARTTA_NAMED_CPP(LambdaNamer, Name)
+MARTTA_NAMED_CPP(LambdaNamer, Returned)
 
 QString LambdaNamer::defineReturnLayout(ViewKeys&) const
 {
 	int sReturn = self()->childIndexOf<TypeEntity>();
 	return QString::number(sReturn) + ";Mo";
+	return QString("%1;Mo").arg(Returned);
 }
 
 QString LambdaNamer::defineNameLayout(ViewKeys&) const

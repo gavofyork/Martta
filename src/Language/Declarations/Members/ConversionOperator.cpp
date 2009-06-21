@@ -58,12 +58,6 @@ Kinds ConversionOperator::allowedKinds(int _i) const
 {
 	if (_i == Identity)
 		return Kinds();
-	if (_i == 0)
-		return Kind::of<Compound>();
-	if (_i == 1)
-		return Kind::of<TypeEntity>();
-	if (_i == 2)
-		return Kind::of<ConstLabel>();
 	return Super::allowedKinds(_i);
 }
 

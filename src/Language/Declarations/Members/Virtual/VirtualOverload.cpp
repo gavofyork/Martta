@@ -46,10 +46,8 @@ QString VirtualOverload::memberLambdaDefineLayout(ViewKeys& _viewKeys) const
 
 Kinds VirtualOverload::allowedKinds(int _i) const
 {
-	if (_i == Identity)
+	if (_i == Identity || _i == Constness || _i == Returned)
 		return Kinds();
-	else if (_i == 0)
-		return Kind::of<Compound>();
 	return Super::allowedKinds(_i);
 }
 
@@ -89,7 +87,7 @@ QList<VirtualMethod*> VirtualOverload::possibilities() const
 QString VirtualOverload::defineEditLayout(ViewKeys& _viewKeys, VirtualMethod*) const
 {
 	// having the margin here is horrible, but it'll do for now
-	return "m24,0,0,0;^;ycode;'virtual';Mo;>name;ynormal;%1;Mo" + QString(_viewKeys["expanded"].toBool() ? (body()->cardinalChildCount() ? ";n;i;0" : ";0") : "");
+	return "m24,0,0,0;^;ycode;'virtual';Mo;>name;ynormal;%1;Mo" + QString(_viewKeys["expanded"].toBool() ? QString(body()->cardinalChildCount() ? ";n;i;%1" : ";%1").arg(Body) : "");
 }
 
 EditDelegateFace* VirtualOverload::newDelegate(CodeScene* _s)

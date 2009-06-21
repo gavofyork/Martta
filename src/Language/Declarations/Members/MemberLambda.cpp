@@ -26,6 +26,7 @@
 #include "Compound.h"
 #include "Reference.h"
 #include "Memberify.h"
+#include "Argument.h"
 #include "MemberLambda.h"
 
 namespace Martta
@@ -33,12 +34,24 @@ namespace Martta
 
 MARTTA_PLACEHOLDER_CPP(MemberLambda);
 
+Kinds MemberLambda::allowedKinds(int _i) const
+{
+	if (_i == Constness)
+		return Kind::of<ConstLabel>();
+	if (_i == Body)
+		return Kind::of<Compound>();
+	if (_i == Returned)
+		return Kind::of<TypeEntity>();
+	if (_i >= 0)
+		return Kind::of<Argument>();
+	return Super::allowedKinds(_i);
+}
+
 bool MemberLambda::isConst() const
 {
-	if (!isComplete())
-		return false;
-	QList<ConstLabel*> l = childrenOf<ConstLabel>();
-	return l.size() ? l[0]->isConst() : false;
+	if (ConstLabel* c = tryChild<ConstLabel>(Constness))
+		return c->isConst();
+	return false;
 }
 
 Entity* MemberLambda::isExpander() const
@@ -96,7 +109,7 @@ bool MemberLambda::keyPressed(EntityKeyEvent const* _e)
 	M_ASSERT(isComplete());
 	if (LambdaNamer::keyPressed(_e))
 		return true;
-	else if ((_e->isFocused() || !childIs<Compound>(_e->focalIndex())) && childCountOf<ConstLabel>() && childOf<ConstLabel>()->asKind<Label>()->keyPressed(_e))
+	else if ((_e->isFocused() || !childIs<Compound>(_e->focalIndex())) && child(Constness) && childAs<Label>(Constness)->keyPressed(_e))
 		return true;
 	return Super::keyPressed(_e);
 }

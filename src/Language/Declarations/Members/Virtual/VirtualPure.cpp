@@ -36,14 +36,8 @@ bool VirtualPure::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKey
 	
 Kinds VirtualPure::allowedKinds(int _i) const
 {
-	if (_i == 0)
-		return Kind::of<TextLabel>();
-	else if (_i == 1)
-		return Kind::of<TypeEntity>();
-	else if (_i == 2)
-		return Kind::of<ConstLabel>();
-	else if (_i > 2)
-		return Kind::of<Argument>();
+	if (_i == Body)
+		return Kinds();
 	return Super::allowedKinds(_i);
 }
 

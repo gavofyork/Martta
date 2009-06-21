@@ -34,8 +34,8 @@ bool Destructor::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyE
 
 Kinds Destructor::allowedKinds(int _i) const
 {
-	if (_i == 0)
-		return Kind::of<Compound>();
+	if (_i >= 0)
+		return Kinds();
 	return Super::allowedKinds(_i);
 }
 

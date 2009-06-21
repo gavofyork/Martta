@@ -36,6 +36,10 @@ class LambdaNamer: public_interface ValueDefiner
 	MARTTA_INHERITS(ValueDefiner, 0)
 	
 public:
+	MARTTA_NAMED(Body)
+	MARTTA_NAMED(Name)
+	MARTTA_NAMED(Returned)
+
 	// WHAT YOU GET:
 	
 	enum FunctionCodeScope { InsideScope = 0, OutsideScope = 1 };

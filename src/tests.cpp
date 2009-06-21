@@ -421,11 +421,11 @@ int test()
 		M->prepareChildren();
 		X->back().place(M);
 		M->childAs<TextLabel>(Identifiable::Identity)->setText("foo");
-		M->cardinalChildrenOf<TypeEntity>()[0]->replace(new SimpleType(Void));
+		M->child(LambdaNamer::Returned)->replace(new SimpleType(Void));
 		
 		Argument* v = new Argument;
-		v->back().place(new TextLabel("a"));
-		v->back().place(new ExplicitType(Y));
+		v->middle(Identifiable::Identity).place(new TextLabel("a"));
+		v->middle(VariableNamer::OurType).place(new ExplicitType(Y));
 		M->back().place(v);
 		
 		Referenced* f = new Referenced(v); 

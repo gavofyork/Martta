@@ -271,8 +271,6 @@ FunctionResolver::FunctionResolver(Function* _s, QXmlAttributes const& _a):
 	m_subject(_s)
 {
 	_s->middle(Identifiable::Identity).place(new TextLabel(properName(_a)));
-	_s->back().place(new Compound);
-	_s->back().place(new TypeEntity);
 //	setFlag(m_subject->m_qualifiers, Extern, _a.value("extern") == "1");
 	m_subject->m_location.m_lineNumber = _a.value("line").toInt();
 
@@ -293,7 +291,7 @@ void FunctionResolver::addArgument(QXmlAttributes const& _a)
 void FunctionResolver::resolve(DeclarationsHandler* _h)
 {
 	// at position 2 it's just a placeholder so this will work ok.
-	m_subject->middle(1).place(_h->resolveType(m_returnsId));
+	m_subject->middle(Function::Returned).place(_h->resolveType(m_returnsId));
 
 	for (int i = 0; i < m_argIds.size(); i++)
 		m_subject->argument(i)->middle(VariableNamer::OurType).place(_h->resolveType(m_argIds[i]));

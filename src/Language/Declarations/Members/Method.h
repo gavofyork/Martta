@@ -31,10 +31,6 @@ class Method: public MemberLambda
 
 public:
 	static bool keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e) { return simpleInsertionPointKeyPressHandler<Method>(_p, _e, "M"); }
-	
-protected:
-	virtual int							minRequired(int _i) const { return _i == Cardinals ? 3 : Super::minRequired(_i); }
-	virtual Kinds						allowedKinds(int _i) const;
 };
 
 }

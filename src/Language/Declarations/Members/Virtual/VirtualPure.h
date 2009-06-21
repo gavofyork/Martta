@@ -36,7 +36,7 @@ public:
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
 	
 protected:
-	virtual int							minRequired(int _i) const { return _i == Cardinals ? 3 : Super::minRequired(_i); }
+	virtual int							minRequired(int _i) const { return _i == Body ? 0 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual QString						memberInterfaceCode() const;
 	virtual QString						memberImplementationCode() const { return QString::null; }

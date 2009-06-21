@@ -51,13 +51,7 @@ Kinds MethodOperator::allowedKinds(int _i) const
 {
 	if (_i == Identity)
 		return Kind::of<OperatorLabel>();
-	if (_i == 0)
-		return Kind::of<Compound>();
-	if (_i == 1)
-		return Kind::of<TypeEntity>();
-	if (_i == 2)
-		return Kind::of<ConstLabel>();
-	if (_i == 3 && isBinary())
+	if (_i == 0 && isBinary())
 		return Kind::of<Argument>();
 	return Super::allowedKinds(_i);
 }
