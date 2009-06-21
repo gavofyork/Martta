@@ -432,7 +432,6 @@ int test()
 		f->prepareChildren();
 		M->childOf<Compound>()->back().place(f);
 		
-		r->debugTree();
 		r->archivePtrs(true);
 		r->restorePtrs();
 		QDomDocument doc;
@@ -738,7 +737,6 @@ int test()
 		Class* X = new Class;
 		X->prepareChildren();
 		r->back().place(X);
-		X->debugTree();
 		delete r;
 	}
 	{

@@ -70,24 +70,11 @@ Kinds DeclarationEntity::allowedKinds(int _i) const
 
 Identifiable* DeclarationEntity::lookupChild(QString const& _key) const
 {
-//	qDebug() << "DE::lookupChild: " << _key;
 	bool ok;
 	int k = _key.toInt(&ok);
 	if (ok && m_anonyma.size() > k)
 		return const_cast<Identifiable*>(m_anonyma[k]);
-//	qDebug() << "Matching for " << _key;
-	foreach (DeclarationEntity* e, cardinalChildrenOf<DeclarationEntity>())
-	{	
-//		if (childrenOf<DeclarationEntity>().size() < 10)
-//			qDebug() << "    " << e->identity();
-/*		if (e->isKind<Class>() || e->isKind<NamespaceEntity>())
-		{	e->debugTree();
-			qDebug() << e->identity();
-		}*/
-		if (e->identity() == _key)
-			return e;
-	}
-	return 0;
+	return Identifiable::lookupChild(_key);
 }
 
 QList<DeclarationEntity*> DeclarationEntity::utilisedSiblings() const

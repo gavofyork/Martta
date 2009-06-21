@@ -98,12 +98,17 @@ Class* Memberify::scopeClass(bool* _isConst) const
 
 void Memberify::setScopeClass(Class* _scope, bool _isConst)
 {
+	debugTree();
 	prepareChildren();
+	debugTree();
 	if (child(1))
 		child(1)->killAndDelete();
+	debugTree();
 	middle(1).place(new ExplicitType(_scope));
+	debugTree();
 	if (_isConst)
 		child(1)->insert(new Const);
+	debugTree();
 }
 
 Kinds Memberify::allowedKinds(int _i) const

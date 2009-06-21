@@ -33,6 +33,8 @@ class Memberify: public ModifyingType
 	MARTTA_OBJECT(ModifyingType)
 
 public:
+	enum { Scoped = FirstNamed, EndOfNamed };
+
 	Memberify(Class* _scope = 0, bool _isConst = true) { if (_scope) setScopeClass(_scope, _isConst); }
 	Memberify(Type const& _object);
 //	~Memberify() { if (child(1)) child(1)->killAndDelete(); }

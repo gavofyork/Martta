@@ -679,7 +679,7 @@ void CodeScene::setCurrent(Entity* _e)
 	qDebug() << "setCurrent: setting current to" << _e;
 	qDebug() << "";
 	qDebug() << "";*/
-	_e->debugTree();
+//	_e->debugTree();
 	m_current = _e;
 	
 	

@@ -83,7 +83,7 @@ void TypeEntity::knitIn(ModifyingType* _t)
 	}
 	if (_t->child(0) && _t->child(0)->isPlaceholder())
 		_t->child(0)->killAndDelete();
-	insert(_t);
+	insert(_t, 0);
 }
 
 bool TypeEntity::defineEquivalenceTo(TypeEntity const* _t) const
