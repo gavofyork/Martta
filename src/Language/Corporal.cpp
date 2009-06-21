@@ -27,9 +27,6 @@ namespace Martta
 MARTTA_INTERFACE_CPP(Corporal);
 MARTTA_NAMED_CPP(Corporal, Body);
 
-MARTTA_INTERFACE_CPP(Conditional);
-MARTTA_NAMED_CPP(Conditional, Condition);
-
 QString Corporal::defineLayout(ViewKeys&, bool _shrink) const
 {
 	return (QString(!_shrink || self()->child(Body) && self()->child(Body)->cardinalChildCount() ? ";n;i;%2" : ";%2")).arg(Body);

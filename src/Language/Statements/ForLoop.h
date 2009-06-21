@@ -21,6 +21,7 @@
 #pragma once
 
 #include "Corporal.h"
+#include "Conditional.h"
 #include "Untyped.h"
 
 namespace Martta

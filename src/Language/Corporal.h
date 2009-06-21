@@ -25,16 +25,6 @@
 namespace Martta
 {
 
-class Conditional
-{
-	MARTTA_INTERFACE
-
-public:
-	MARTTA_NAMED(Condition)
-	
-	virtual ~Conditional() {}
-};
-
 class Corporal
 {
 	MARTTA_INTERFACE

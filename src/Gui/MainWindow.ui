@@ -546,6 +546,9 @@
           <property name="frameShape" >
            <enum>QFrame::NoFrame</enum>
           </property>
+          <property name="indentation" >
+           <number>10</number>
+          </property>
           <property name="headerHidden" >
            <bool>false</bool>
           </property>

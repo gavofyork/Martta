@@ -3,6 +3,7 @@
 #include "Gui/CodeScene.cpp"
 #include "Gui/MainWindow.cpp"
 #include "Language/Base.cpp"
+#include "Language/Conditional.cpp"
 #include "Language/Corporal.cpp"
 #include "Language/Declarations/Argument.cpp"
 #include "Language/Declarations/DeclarationEntity.cpp"
