@@ -36,51 +36,47 @@ bool IfStatement::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKey
 QString IfStatement::code() const
 {
 	QString ret;
-	ret += "if (" + (isStatement(0) ? asStatement(0)->code() : "");
-	ret += ")\n" + (isStatement(1) ? asStatement(1)->codeAsStatement() : "");
-	ret += "else\n" + (isStatement(2) ? asStatement(2)->codeAsStatement() : "{}");
+	ret += "if (" + (isStatement(Condition) ? asStatement(Condition)->code() : "");
+	ret += ")\n" + (isStatement(Body) ? asStatement(Body)->codeAsStatement() : "");
+	ret += "else\n" + (isStatement(AltBody) ? asStatement(AltBody)->codeAsStatement() : "{}");
 	return ret;
 }
 
 Kinds IfStatement::allowedKinds(int _index) const
 {
-	switch (_index)
-	{
-		case 0: return Kind::of<BareTyped>();
-		case 1:
-		case 2: return Kind::of<Compound>();
-		default: return Super::allowedKinds(_index);
-	}
+	if (_index == Condition)
+		return Kind::of<BareTyped>();
+	if (_index == Body || _index == AltBody)
+		return Kind::of<Compound>();
+	return Super::allowedKinds(_index);
 }
 
 Types IfStatement::allowedTypes(int _index) const
 {
-	switch (_index)
-	{
-		case 0: return Type(Bool).topWith(Const());
-		default: return Types();
-	}
+	if (_index == Condition)
+		return Type(Bool).topWith(Const());
+	return Types();
 }
 
 bool IfStatement::keyPressed(EntityKeyEvent const* _e)
 {
-	if ((_e->text() == ")" || _e->text() == "{") && _e->focalIndex() == 0 && childCountOf<Compound>())
-		childOf<Compound>()->navigateOnto(_e->codeScene());
-	else if (_e->text() == "E" && _e->focalIndex() != 2)
+	if (Corporal::keyPressed(_e))
+	{}
+	else if (_e->text() == "E" && _e->focalIndex() != AltBody)
 	{
-		if (!child(2)) back().place(new Compound);
-		child(2)->navigateOnto(_e->codeScene());
+		if (!child(AltBody))
+			back().place(new Compound);
+		child(AltBody)->navigateOnto(_e->codeScene());
 	}
 	else
 		return Super::keyPressed(_e);
 	return true;
 }
 
-QString IfStatement::defineLayout(ViewKeys&) const
+QString IfStatement::defineLayout(ViewKeys& _k) const
 {
-	return QString("ycode;^;'if (';0;')'") +
-			(child(1) && child(1)->cardinalChildCount() ? ";n;i;1" : ";1") +
-			(child(2) ? ";n;'else'" + QString(child(2)->cardinalChildCount() ? ";n;i;2" : ";2") : QString());
+	return QString("ycode;^;'if (';%1;')'").arg(Condition) + Corporal::defineLayout(_k, true) +
+			(child(AltBody) ? ";n;'else'" + QString(child(AltBody)->cardinalChildCount() ? ";n;i;%1" : ";%1").arg(AltBody) : QString());
 }
 
 }
