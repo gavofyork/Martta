@@ -34,9 +34,9 @@ MARTTA_OBJECT_CPP(Memberify);
 Memberify::Memberify(Type const& _object)
 {
 	prepareChildren();
-	if (child(1))
-		child(1)->killAndDelete();
-	_object.placeCopy(middle(1));
+	if (child(Scope))
+		child(Scope)->killAndDelete();
+	_object.placeCopy(middle(Scope));
 }
 
 Types Memberify::assignableTypes() const
@@ -46,7 +46,7 @@ Types Memberify::assignableTypes() const
 
 bool Memberify::isConst() const
 {
-	TypeEntity* te = child(1) ? child(1)->asKind<TypeEntity>() : 0;
+	TypeEntity* te = scope();
 	if (te && te->isType<Const>())
 		return true;
 	return false;
@@ -55,7 +55,7 @@ bool Memberify::isConst() const
 void Memberify::setConst(bool _c)
 {
 	// !!!UNTESTED!!!
-	TypeEntity* te = child(1) ? child(1)->asKind<TypeEntity>() : 0;
+	TypeEntity* te = scope();
 	if (!te)
 		return;
 	if (!_c && te->isType<Const>())
@@ -66,7 +66,8 @@ void Memberify::setConst(bool _c)
 
 void Memberify::setScope(Type const& _newScope)
 {
-	child(1)->replace(TypeEntity::cloneOf(&*_newScope, owner()));
+	M_ASSERT(scope());
+	scope()->replace(TypeEntity::cloneOf(&*_newScope, owner()));
 	QList<TypeEntity*> l;
 	l << childrenOf<TypeEntity>();
 	while (!l.isEmpty())
@@ -80,7 +81,7 @@ void Memberify::setScope(Type const& _newScope)
 
 Class* Memberify::scopeClass(bool* _isConst) const
 {
-	TypeEntity* te = child(1) ? child(1)->asKind<TypeEntity>() : 0;
+	TypeEntity* te = scope();
 	if (te && te->isType<ExplicitType>() && te->asType<ExplicitType>()->subject()->isKind<Class>())
 	{
 		if (_isConst)
@@ -98,22 +99,17 @@ Class* Memberify::scopeClass(bool* _isConst) const
 
 void Memberify::setScopeClass(Class* _scope, bool _isConst)
 {
-	debugTree();
 	prepareChildren();
-	debugTree();
-	if (child(1))
-		child(1)->killAndDelete();
-	debugTree();
-	middle(1).place(new ExplicitType(_scope));
-	debugTree();
+	if (child(Scope))
+		child(Scope)->killAndDelete();
+	middle(Scope).place(new ExplicitType(_scope));
 	if (_isConst)
-		child(1)->insert(new Const);
-	debugTree();
+		child(Scope)->insert(new Const);
 }
 
 Kinds Memberify::allowedKinds(int _i) const
 {
-	if (_i == 1)
+	if (_i == Scope)
 		return Kind::of<TypeEntity>();
 	return Super::allowedKinds(_i);
 }
