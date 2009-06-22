@@ -39,6 +39,7 @@ private:
 	virtual Type						type() const;
 	virtual QString						code() const;
 	virtual bool						isValidState() const;
+	virtual bool						keyPressed(EntityKeyEvent const* _e);
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 };
 

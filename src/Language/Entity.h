@@ -361,6 +361,7 @@ public:
 	 * - The back of the cardinals that requires us to be there.
 	 * - A named position that allows us being there.
 	 * - The back of the cardinals if it allows us being there.
+	 * - Nowhere
 	 */
 	InsertionPoint						firstFor(Kind const& _k);
 	bool								attemptAppend(EntityKeyEvent const* _e);
@@ -698,7 +699,7 @@ bool Martta::Entity::simpleInsertionPointKeyPressHandler(InsertionPoint const& _
 	if (_e->text() == _t && _p.allowedToBeKind<T>())
 	{
 		T* n = new T;
-		if (_p.exists() && !_p->isPlaceholder() && n->back().allowedToBeKind(_p->kind()))
+		if (_p.exists() && !_p->isPlaceholder() && n->firstFor(_p->kind()) != Nowhere)
 		{
 			// insert
 			// when pressed on _p refers to a, changes from x->(a->(d, e), b, c) to x->(N->(a->(d, e)), b, c)

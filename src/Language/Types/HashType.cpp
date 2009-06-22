@@ -145,7 +145,7 @@ bool HashType::defineSimilarityTo(TypeEntity const* _t, Castability _c) const
 
 QString HashType::code(QString const& _middle) const
 {
-	if (childIs<TypeEntity>(0) && childIs<TypeEntity>(1))
+	if (childIs<TypeEntity>(ValueType) && childIs<TypeEntity>(KeyType))
 		return "::MarttaSupport::Hash< " + childAs<TypeEntity>(KeyType)->code() + ", " + childAs<TypeEntity>(ValueType)->code() + "> " + _middle;
 	else
 		return "::MarttaSupport::Hash< >" + _middle;
@@ -153,7 +153,7 @@ QString HashType::code(QString const& _middle) const
 
 QString HashType::defineLayout(ViewKeys&) const
 {
-	return (";%1;" + typeLayout() + "^;'#';%2").arg(KeyType).arg(ValueType);
+	return (";%1;" + typeLayout() + "^;'#';%2").arg(ValueType).arg(KeyType);
 }
 
 }

@@ -51,6 +51,8 @@ Types ForLoop::allowedTypes(int _index) const
 		return Type(Void).topWith(Const());
 	if (_index == Initialiser)
 		return Type(Bool).topWith(Const());
+	if (_index == Ticker)
+		return Type();
 	return Types();
 }
 

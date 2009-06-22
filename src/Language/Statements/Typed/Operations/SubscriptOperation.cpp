@@ -99,6 +99,15 @@ Type SubscriptOperation::type() const
 	return Type();
 }
 
+bool SubscriptOperation::keyPressed(EntityKeyEvent const* _e)
+{
+	if (_e->text() == "]")
+		setCurrent();
+	else
+		return Super::keyPressed(_e);
+	return true;
+}
+
 bool SubscriptOperation::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
 {
 	if (_p.exists() && !_p->isPlaceholder() && _p->isKind<Typed>() &&

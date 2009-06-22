@@ -879,7 +879,7 @@ InsertionPoint Entity::firstFor(Kind const& _k)
 	foreach (int i, AuxilliaryRegistrar::get()->names())
 		if (middle(i).allowedToBeKind(_k))
 			return middle(i);
-//	if (back().allowedToBeKind(_k))
+	if (back().allowedToBeKind(_k))
 		return back();
 	return Nowhere;
 }
@@ -1169,8 +1169,9 @@ void Entity::childAdded(int _index)
 	{
 		if (botherNotifying())
 			dependencyAdded(m_cardinalChildren[_index]);
-		for (int i = _index + 1; i < cardinalChildCount(); i++)
-			childMoved(child(i), i - 1);
+		if (_index >= 0)
+			for (int i = _index + 1; i < cardinalChildCount(); i++)
+				childMoved(child(i), i - 1);
 	}
 	else if (botherNotifying() && m_cardinalChildren.size() && familyDependencies() & DependsOnChildren)
 	{
@@ -1203,8 +1204,9 @@ void Entity::childRemoved(Entity* _ch, int _index)
 	{
 		if (botherNotifying())
 			dependencyRemoved(_ch, _index);
-		for (int i = _index; i < cardinalChildCount(); i++)
-			childMoved(child(i), i + 1);
+		if (_index >= 0)
+			for (int i = _index; i < cardinalChildCount(); i++)
+				childMoved(child(i), i + 1);
 	}
 	if (isInModel())
 		relayoutLater();
