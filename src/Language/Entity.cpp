@@ -29,6 +29,9 @@
 #include "EditDelegate.h"
 #include "Entity.h"
 
+#include <msSupport.h>
+using namespace MarttaSupport;
+
 namespace Martta
 {
 
@@ -601,22 +604,28 @@ bool Entity::attemptAppend(EntityKeyEvent const* _e)
 // Context/position changing.
 void Entity::prepareMove(InsertionPoint const& _newPosition)
 {
-	if (_newPosition.parent() == m_parent)
+	if (_newPosition == over())
 		return;
 
-	if (m_parent)
-		m_parent->removeFromBrood(m_index, this);
-	
-	m_parent = _newPosition.parent();
-	
-	if (m_parent)
-		m_parent->insertIntoBrood(_newPosition.index(), this);	//m_index set by this, too.
+	if (m_parent == _newPosition.parent())
+		m_parent->moveWithinBrood(m_index, _newPosition.index());
 	else
-		m_index = UndefinedIndex;
+	{
+		if (m_parent && m_parent != _newPosition.parent())
+			m_parent->removeFromBrood(m_index, this);
+		
+		m_parent = _newPosition.parent();
+		
+		if (m_parent)
+			m_parent->insertIntoBrood(_newPosition.index(), this);	//m_index set by this, too.
+		else
+			m_index = UndefinedIndex;
+	}
 }
 void Entity::commitMove(InsertionPoint const& _oldPosition)
 {
-	if (_oldPosition.parent() == m_parent) return;
+	if (_oldPosition.parent() == m_parent)
+		return;
 
 	RootEntity* oldRoot = m_rootEntity;
 	RootEntity* newRoot = m_parent ? m_parent->m_rootEntity : 0;
@@ -687,6 +696,41 @@ void Entity::insertIntoBrood(int _index, Entity* _e)
 		for (int i = _index; i < m_cardinalChildren.size(); i++)
 			m_cardinalChildren[i]->m_index = i;
 	}
+}
+void Entity::moveWithinBrood(int _old, int _new)
+{
+	if (_old == UndefinedIndex)
+		_old = m_cardinalChildren.size() - 1;
+	if (_new == UndefinedIndex)
+		_new = m_cardinalChildren.size() - 1;
+	M_ASSERT(_new <= m_cardinalChildren.size());
+	M_ASSERT(child(_old));
+	if (_new == _old)
+		return;
+		
+	int rejigFrom = UndefinedIndex;
+	if (_old >= 0 && _new >= 0)
+	{
+		m_cardinalChildren.move(_old, _new);
+		rejigFrom = min(_old, _new);
+	}
+	else if (_old >= 0)
+	{
+		m_namedChildren.insert(_new, m_cardinalChildren.takeAt(_old));
+		m_namedChildren[_old]->m_index = _old;
+		rejigFrom = _old;
+	}
+	else if (_new >= 0)
+	{
+		m_cardinalChildren.insert(_new, m_namedChildren.take(_old));
+		rejigFrom = _new;
+	}
+	else
+		m_namedChildren.insert(_new, m_namedChildren.take(_old));
+	
+	if (rejigFrom != UndefinedIndex)
+		for (int i = rejigFrom; i < m_cardinalChildren.size(); i++)
+			m_cardinalChildren[i]->m_index = i;
 }
 void Entity::checkRoot()
 {
@@ -932,6 +976,15 @@ bool Entity::removeInvalidChildren()
 		}
 	return ret;
 }
+
+void Entity::childMoved(Entity* _e, int _oI)
+{
+	if (_e->botherNotifying() && _e->familyDependencies() & DependsOnContextIndex)
+		_e->contextIndexChanged(_oI);
+	if (botherNotifying() && familyDependencies() & TestOnOrder)
+		notifyOfChildMove(_e, _oI);
+}
+
 void Entity::move(InsertionPoint const& _newPosition)
 {
 	M_ASSERT(this);
@@ -939,14 +992,34 @@ void Entity::move(InsertionPoint const& _newPosition)
 	int oci = m_index;
 	
 	if (_newPosition.exists() && _newPosition->isPlaceholder())
-		_newPosition->replace(this);
+		_newPosition->replace(this);	// TODO: handle brood-move/replace.
 	else
 	{
 		silentMove(_newPosition);
-		if (oc != m_parent)
+		if (oc == m_parent)
+		{
+			//-2-1 0 1 2 3 4 5 6
+			//   x A B C D E F      Start
+			// B x A C D E F        (home = 1, end = 5, s = +1) -2(1)		1(2) 2(3) 3(4) 4(5)	i(i+s)
+			//     A B C D x E F	(home = 6, end = 4, s = -1) 4(-2)		6(5) 5(4)			i(i+s)
+			//     A C D E B F		(home = 1, end = 4, s = +1)  4(1)		1(2) 2(3) 3(4)		i(i+s)
+			//     A E B C D F		(home = 4, end = 1, s = -1)  1(4)		4(3) 3(2) 2(1)		i(i+s)
+
+			// Move children between home & end, when i's index has changed from i+sign(end - home) to i.
+			// except for us; we handle that specially below.
+			int home = oci < 0 ? m_parent->m_cardinalChildren.size() - 1 : oci;
+			int end = m_index < 0 ? m_parent->m_cardinalChildren.size() : m_index;
+			if (int s = sign(end - home))
+				for (int i = home; i != end; i += s)
+					childMoved(child(i), i + s);
+			childMoved(this, oci);
+		}
+		else
+		{
 			contextSwitchedWithChildRemoved(oc, oci);
-		if (m_parent)
-			m_parent->childAdded(m_index);
+			if (m_parent)
+				m_parent->childAdded(m_index);
+		}
 	}
 }
 Entity* Entity::usurp(Entity* _u)
@@ -1097,12 +1170,7 @@ void Entity::childAdded(int _index)
 		if (botherNotifying())
 			dependencyAdded(m_cardinalChildren[_index]);
 		for (int i = _index + 1; i < cardinalChildCount(); i++)
-		{
-			if (child(i)->botherNotifying() && child(i)->familyDependencies() & DependsOnContextIndex)
-				child(i)->contextIndexChanged(i - 1);
-			if (botherNotifying() && familyDependencies() & TestOnOrder)
-				childMoved(child(i), i - 1);
-		}
+			childMoved(child(i), i - 1);
 	}
 	else if (botherNotifying() && m_cardinalChildren.size() && familyDependencies() & DependsOnChildren)
 	{
@@ -1136,12 +1204,7 @@ void Entity::childRemoved(Entity* _ch, int _index)
 		if (botherNotifying())
 			dependencyRemoved(_ch, _index);
 		for (int i = _index; i < cardinalChildCount(); i++)
-		{
-			if (child(i)->botherNotifying() && child(i)->familyDependencies() & DependsOnContextIndex)
-				child(i)->contextIndexChanged(i + 1);
-			if (botherNotifying() && familyDependencies() & TestOnOrder)
-				childMoved(child(i), i + 1);
-		}
+			childMoved(child(i), i + 1);
 	}
 	if (isInModel())
 		relayoutLater();

@@ -444,6 +444,7 @@ public:
 	void								childSwitched(int _index, Entity* _o) { if (_index >= 0 && _index < m_cardinalChildren.size()) childSwitched(child(_index), _o); }
 	void								childSwitched(Entity* _ch, Entity* _o);
 	void								childRemoved(Entity* _ch, int _index);
+	void								childMoved(Entity* _e, int _oI);
 	void								contextAdded() { contextAdded(parent()); }
 	void								contextAdded(Entity* _con);
 	/// Our context has changed object. Will usually end up with dependencySwitched(). dependencyAdded/Removed() are called if _old/m_parent is null.
@@ -460,7 +461,7 @@ public:
 	void								dependencyRemoved(Entity* _e, int _index = UndefinedIndex) { change(this, DependencyRemoved, _e); onDependencyRemoved(_e, _index); }
 	void								dependencyChanged(Entity* _e) { change(this, DependencyChanged, _e); onDependencyChanged(_e); }
 	void								dependencySwitched(Entity* _e, Entity* _o) { change(this, DependencySwitched, _e); onDependencySwitched(_e, _o); }
-	void								childMoved(Entity* _e, int _oI) { change(this, ChildMoved, _e); onChildMoved(_e, _oI); }
+	void								notifyOfChildMove(Entity* _e, int _oI) { change(this, ChildMoved, _e); onChildMoved(_e, _oI); }
 	void								contextIndexChanged(int _oI) { change(this, ContextIndexChanged, 0); onContextIndexChanged(_oI); }
 	
 	/// To be called when something in the object has changed. Calls onChanged() and notifies dependents.
@@ -583,6 +584,15 @@ private:
 	 * This handles the case of negative and position child indices.
 	 */
 	void								removeAllFromBrood(int _childsIndex);
+	/**
+	 * Just moves the child of index @a _old in the brood to have index @a _new, still within the brood.
+	 * 
+	 * It makes sure all children have the correct contextIndex but nothing more. In particular
+	 * the old children's contextIndex, context and rootEntity are not updated.
+	 * 
+	 * This handles the case of negative and position child indices.
+	 */
+	void								moveWithinBrood(int _old, int _new);
 	
 	/// Just makes sure that the rootEntity is the context's root entity. Should only be called from the context.
 	void								checkRoot();
