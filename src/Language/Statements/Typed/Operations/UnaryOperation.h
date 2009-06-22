@@ -67,7 +67,7 @@ protected:
 		
 		Entity* n = new T;
 		_e->noteStrobeCreation(n, &*p);
-		p->insert(n);
+		p->insert(n, TheOperand);
 		n->validifyChildren();
 		if (pre)
 			n->navigateInto(_e->codeScene());

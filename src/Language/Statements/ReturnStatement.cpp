@@ -49,6 +49,7 @@ void ReturnStatement::onDependencyChanged(Entity*)
 {
 	if (validifyChildren())
 		relayoutLater();
+	changed();
 }
 
 Kinds ReturnStatement::allowedKinds(int _i) const
@@ -59,7 +60,7 @@ Kinds ReturnStatement::allowedKinds(int _i) const
 		return Kinds();
 	}
 
-	if (_i == Returned && !ancestor<LambdaNamer>()->returns().isNull() && ancestor<LambdaNamer>()->returns() != Type(Void))
+	if (_i == Returned && (ancestor<LambdaNamer>()->returns().isNull() || ancestor<LambdaNamer>()->returns() != Type(Void)))
 		return Kind::of<Typed>();
 	return Super::allowedKinds(_i);
 }

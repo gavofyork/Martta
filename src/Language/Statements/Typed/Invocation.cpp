@@ -111,7 +111,7 @@ void Invocation::onDependencyChanged(Entity* _e)
 	{
 		// The function we are calling has changed.
 		validifyChildren();
-//		changed();
+		changed();
 	}
 	Super::onDependencyChanged(_e);
 }
@@ -141,7 +141,7 @@ bool Invocation::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyE
 		_p->asKind<Typed>()->type()->isType<FunctionType>() && !(_p->parentIs<Invocation>() && _p->index() == Callee) && !isTemporary(_p.entity()))
 	{
 		Entity* n = new Invocation;
-		_p->insert(n);
+		_p->insert(n, Callee);
 		n->prepareChildren();
 		if (n->cardinalChildCount())
 			n->dropCursor();

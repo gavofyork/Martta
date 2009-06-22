@@ -1,9 +1,9 @@
-CHECK Test HashType's key/value methods' prototypes.
-TODO validate statement::typeds()
+TODO validate statement::typeds(), apparent/efffectiveType()
 TODO Get rid of DE/Id deps.
 TODO Cache includes, so don't take so long to load.
 TODO Statements to reject placeholders.
 TODO inherited methods don't work.
+TODO Profile QWebView 
 
 TODO optimise Class.
 TODO special EntryMethod
@@ -12,12 +12,27 @@ TODO virtual overload
 TODO anonymous -> metasyntactic variable
 
 TODO references leave hopeful names behind when invalid
+TODO same with invocations when function arg is deleted, return when return type is removed.
 
 TODO TypeNamer::type = 0;
 TODO move crap from ExplicitType to TypeDefinition.
+
 TODO page up & down broken.
 TODO join statements or tree insert.
 TODO insertion of entities in, e.g. argument lists for function calls.
+
+Dynamic code-loading (plugins).
+- Move everything over so that plugins use Martta-specific data types.
+  - Will need QRgb-like type & QHashSet type.
+  - Get rid of XML dependencies.
+  - Will need to move all decoration code into layout system and invent markup for it.
+- Include language-addition project type.
+
+--------------------------------------------------------------------------------
+
+RELEASE M1 (TBD)
+
+================================================================================
 
 Allow "usurption" for stuff like DefaultConstructedVariable to usurp Variable.
 - All good.
@@ -38,19 +53,6 @@ Multiple projects in a solution
   - pickup if entry point is private
 - Add other libraries (SDL, openGL)
 - Use other binary-only libraries.
-
---------------------------------------------------------------------------------
-
-RELEASE M1 (TBD)
-
-================================================================================
-
-Dynamic code-loading (plugins).
-- Move everything over so that plugins use Martta-specific data types.
-  - Will need QRgb-like type & QHashSet type.
-  - Get rid of XML dependencies.
-  - Will need to move all decoration code into layout system and invent markup for it.
-- Include language-addition project type.
 
 --------------------------------------------------------------------------------
 

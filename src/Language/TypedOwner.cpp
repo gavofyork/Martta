@@ -50,7 +50,7 @@ Type TypedOwner::effectiveType(int _i) const
 	if (!childIs<Typed>(_i))
 		return Type();
 	Type p(childAs<Typed>(_i)->type());
-	foreach (Type t, allowedTypes(0))
+	foreach (Type t, allowedTypes(_i))
 		if (p.isSimilarTo(t, TypeEntity::Convertible))
 			return t->isUltimatelyNull() ? p : t;
 	return Type();

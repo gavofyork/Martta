@@ -54,7 +54,7 @@ protected:
 			Entity* n = new T;
 			_e->noteStrobeCreation(n, &*p);
 //			p->debugTree();
-			p->insert(n);
+			p->insert(n, FirstOperand);
 //			n->debugTree();
 			n->validifyChildren();
 //			n->debugTree();
