@@ -1,5 +1,4 @@
 TODO read Rob's email.
-TODO Move TypeEntity over
 CHECK Test HashType's key/value methods' prototypes.
 TODO validate statement::typeds()
 TODO Get rid of DE/Id deps.
