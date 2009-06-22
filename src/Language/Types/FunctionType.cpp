@@ -61,19 +61,15 @@ QString FunctionType::code(QString const& _middle) const
 	if (m_wild)
 		return "#unknown-type#(" + _middle + ")(...)";
 	
-	M_ASSERT(child(0));
-	QString ret;
+	QString ret = returnType()->code() + "(" + _middle + ")(";
 	foreach (Entity* e, cardinalChildren())
-		if (ret.isEmpty())
-			ret = e->asKind<TypeEntity>()->code() + "(" + _middle + ")(";
-		else
-		{
-			if (ret.right(1) != "(")
-				ret += ", ";
-			ret += e->asKind<TypeEntity>()->code();
-		}
+	{
+		if (ret.right(1) != "(")
+			ret += ", ";
+		ret += e->asKind<TypeEntity>()->code();
+	}
 	if (m_ellipsis)
-		ret += (cardinalChildCount() > 1) ? ", ..." : "...";
+		ret += (cardinalChildCount()) ? ", ..." : "...";
 	ret += ")";
 
 	return ret;

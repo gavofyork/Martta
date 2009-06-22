@@ -40,7 +40,7 @@ Types ReferenceOperation::allowedTypes(int) const
 	Types ret;
 	foreach (Type t, BareTyped::allowedTypes())
 		if (t->isType<AddressType>())
-			ret << Type(*t->asType<AddressType>()->childType()).topWith(Reference());
+			ret << Type(*t->asType<AddressType>()->original()).topWith(Reference());
 		else
 			ret << Type(Void).topWith(Const()).topWith(Reference());
 	return ret;
@@ -51,7 +51,7 @@ Types ReferenceOperation::deniedTypes(int) const
 	Types ret;
 	foreach (Type t, BareTyped::deniedTypes())
 		if (t->isType<AddressType>())
-			ret << Type(*t->asType<AddressType>()->childType()).topWith(Reference());
+			ret << Type(*t->asType<AddressType>()->original()).topWith(Reference());
 	return ret;
 }
 
@@ -65,7 +65,7 @@ Type ReferenceOperation::apparentType() const
 
 	// Disguard reference if there is one.
 	if (p->isType<Reference>())
-		p = *p->asType<Reference>()->childType();
+		p = *p->asType<Reference>()->original();
 	else
 		p = Type();
 
@@ -82,7 +82,7 @@ Type ReferenceOperation::type() const
 
 	// Disguard reference if there is one.
 	if (p->isType<Reference>())
-		p = *p->asType<Reference>()->childType();
+		p = *p->asType<Reference>()->original();
 	else
 		p = Type();
 

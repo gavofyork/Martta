@@ -61,7 +61,7 @@ Type DereferenceOperation::apparentType() const
 		   
 	// Disguard reference if there is one.
 	if (p->isType<Reference>())
-		p = *p->asType<Reference>()->childType();
+		p = *p->asType<Reference>()->original();
 
 	// Disguard pointer.
 	if (p->isKind<AddressType>())
@@ -82,7 +82,7 @@ Type DereferenceOperation::type() const
 		   
 	// Disguard reference if there is one.
 	if (p->isType<Reference>())
-		p = *p->asType<Reference>()->childType();
+		p = *p->asType<Reference>()->original();
 
 	// Disguard pointer.
 	if (p->isKind<AddressType>())

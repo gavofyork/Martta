@@ -1,11 +1,10 @@
-TODO try to remove findEntity/locateEntity/finalAll? Get rid of DE/Id deps.
-
-TODO support:
-[Base]
-virtual int functionName(...) { return 0; } collate +
-[Derived]
-virtual int functionName(...)
-{ ... return Supers::functionName(...); }
+TODO read Rob's email.
+TODO Move TypeEntity over
+CHECK Test HashType's key/value methods' prototypes.
+TODO validate statement::typeds()
+TODO Get rid of DE/Id deps.
+TODO Cache includes, so don't take so long to load.
+TODO Statements to reject placeholders.
 TODO inherited methods don't work.
 
 TODO optimise Class.
@@ -226,6 +225,13 @@ Remove (or make useful) m_location?
 ================================================================================
 
 === WISH LIST ===
+
+TODO support:
+[Base]
+virtual int functionName(...) { return 0; } collate +
+[Derived]
+virtual int functionName(...)
+{ ... return Supers::functionName(...); }
 
 TODO enum value should check for CT-validity of expression?
 

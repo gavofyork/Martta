@@ -624,9 +624,9 @@ int test()
 		// ? (t1)(?)
 		Type f = Type(FunctionType(false, true));
 		// void (t2)()
-		Type fv = Type(FunctionType()).append(SimpleType(Void));
+		Type fv = Type(FunctionType()).place(SimpleType(Void), FunctionType::Returned);
 		// int (t3)()
-		Type fi = Type(FunctionType()).append(SimpleType(Int));
+		Type fi = Type(FunctionType()).place(SimpleType(Int), FunctionType::Returned);
 		CAST_TEST(f, f, Logical);
 		CAST_TEST(f, fv, Unrelated);
 		CAST_TEST(f, fi, Unrelated);
@@ -780,13 +780,13 @@ int test()
 		D->back().place(b);
 		{
 		// void (B:: b)()
-		Type b = Type(FunctionType()).append(SimpleType(Void)).topWith(Memberify(Type(B)));
+		Type b = Type(FunctionType()).place(SimpleType(Void), FunctionType::Returned).topWith(Memberify(Type(B)));
 		// void (B:: bc)() const
-		Type bc = Type(FunctionType()).append(SimpleType(Void)).topWith(Memberify(Type(B).topWith(Const())));
+		Type bc = Type(FunctionType()).place(SimpleType(Void), FunctionType::Returned).topWith(Memberify(Type(B).topWith(Const())));
 		// void (D:: d)()
-		Type d = Type(FunctionType()).append(SimpleType(Void)).topWith(Memberify(Type(D)));
+		Type d = Type(FunctionType()).place(SimpleType(Void), FunctionType::Returned).topWith(Memberify(Type(D)));
 		// void (D:: dc)() const
-		Type dc = Type(FunctionType()).append(SimpleType(Void)).topWith(Memberify(Type(D).topWith(Const())));
+		Type dc = Type(FunctionType()).place(SimpleType(Void), FunctionType::Returned).topWith(Memberify(Type(D).topWith(Const())));
 		CAST_TEST(b, b, Logical);
 		CAST_TEST(b, bc, Unrelated);
 		CAST_TEST(b, d, Logical);

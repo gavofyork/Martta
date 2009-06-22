@@ -41,7 +41,7 @@ Types AssignmentOperation::allowedTypes(int _index) const
 		return Type().topWith(Reference());
 	if (_index == SecondOperand && asTyped(FirstOperand) && typeOf(FirstOperand)->isType<Reference>())
 	{
-		return typeOf(FirstOperand)->asType<Reference>()->childType()->assignableTypes();
+		return typeOf(FirstOperand)->asType<Reference>()->original()->assignableTypes();
 	}
 	return Types();
 }

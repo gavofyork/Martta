@@ -35,31 +35,28 @@ TypeEntity* Array::newClone() const
 	
 Kinds Array::allowedKinds(int _i) const
 {
-	if (_i == 0)
-		return Kind::of<TypeEntity>();
-	if (_i == 1)
+	if (_i == Length)
 		return Kind::of<Typed>();
 	return Super::allowedKinds(_i);
 }
 
 Types Array::allowedTypes(int _i) const
 {
-	if (_i == 1)
+	if (_i == Length)
 		return Type(Int);
-	else
-		return Types();
+	return Super::allowedTypes(_i);
 }
 
 QList<DeclarationEntity*> Array::utilised() const
 {
-	if (childIs<Typed>(1))
-		return Super::utilised() + childAs<Typed>(1)->type()->utilised();
+	if (childIs<Typed>(Length))
+		return Super::utilised() + childAs<Typed>(Length)->type()->utilised();
 	return Super::utilised();
 }
 
 QString Array::code(QString const& _middle) const
 {
-	return childAs<TypeEntity>(0)->code(_middle + "[" + childAs<Typed>(1)->code() + "]");
+	return childAs<TypeEntity>(Original)->code(_middle + "[" + childAs<Typed>(Length)->code() + "]");
 }
 
 }

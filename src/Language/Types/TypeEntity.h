@@ -40,6 +40,8 @@ class TypeEntity: public TypedOwner
 	friend class ModifyingType;
 
 public:
+	enum { Default = FirstNamed, EndOfNamed };
+
 	TypeEntity(): m_owner(0) { g_typeCount++; }
 	TypeEntity(TypeEntity const&): SceneLeaver(), TypedOwner() { M_ASSERT(false); }
 	~TypeEntity() { g_typeCount--; }
@@ -79,7 +81,7 @@ public:
 	virtual TypeEntity*					asType(Kind _typeKind) { M_ASSERT(isType(_typeKind)); return this; }
 	template<class T> inline T*			asType() { return static_cast<T*>(asType(Kind::of<T>())); }
 	
-	template<class T> inline TypeEntity*ignore() { return isKind<T>() ? childAs<TypeEntity>(0) : this; }
+	template<class T> inline TypeEntity*ignore() { return isKind<T>() ? childAs<TypeEntity>(Default) : this; }
 
 	/// 
 	template<class T> inline T*			knit() { T* ret = new T; knitIn(ret); return ret; }

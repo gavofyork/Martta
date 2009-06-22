@@ -35,15 +35,14 @@ public:
 	inline static bool					keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e) { return simpleInsertionPointKeyPressHandler<Const>(_p, _e, "!", false); }
 	
 protected:
-	virtual bool						hasDefaultConstructor() const { return childType() && childType()->hasDefaultConstructor(); }
-	virtual QList<ValueDefiner*>		applicableMembers(Entity* _s = 0, bool = false) const { return childType() ? childType()->applicableMembers(_s, true) : Super::applicableMembers(_s); }
-	virtual bool						isType(Kind _typeKind) { return Entity::isKind(_typeKind) || childType()->isType(_typeKind); }
-	virtual TypeEntity*					asType(Kind _typeKind) { if (Entity::isKind(_typeKind)) return this; M_ASSERT(childType()->isType(_typeKind)); return childType()->asType(_typeKind); }
+	virtual bool						hasDefaultConstructor() const { return original() && original()->hasDefaultConstructor(); }
+	virtual QList<ValueDefiner*>		applicableMembers(Entity* _s = 0, bool = false) const { return original() ? original()->applicableMembers(_s, true) : Super::applicableMembers(_s); }
+	virtual bool						isType(Kind _typeKind) { return Entity::isKind(_typeKind) || original()->isType(_typeKind); }
+	virtual TypeEntity*					asType(Kind _typeKind) { if (Entity::isKind(_typeKind)) return this; M_ASSERT(original()->isType(_typeKind)); return original()->asType(_typeKind); }
 	virtual QString						code(QString const& _middle) const;
 	virtual QString						defineLayout(ViewKeys&) const;
 	virtual TypeEntity*					newClone() const { return new Const; }
 	virtual void						decorate(DecorationContext const& _c) const;
-	virtual Kinds						allowedKinds(int _i) const;
 	virtual Kinds						deniedKinds(int _i) const;
 	virtual bool						canStandAlone() const { return false; }
 	virtual bool						defineSimilarityFrom(TypeEntity const* _f, Castability _c) const;

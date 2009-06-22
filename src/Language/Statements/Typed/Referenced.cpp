@@ -153,9 +153,9 @@ Type Referenced::type() const
 		M_ASSERT(m->isKind<Memberify>());
 		if (ancestor<Class>()->baseAccess(m->scopeClass()) <= Protected)
 		{
-			bool memberIsCallable = m->childType()->isType<FunctionType>();
+			bool memberIsCallable = m->original()->isType<FunctionType>();
 			bool constScope = ancestor<MemberLambda>()->isConst();
-			bool constMember = memberIsCallable ? m->isConst() : m->childType()->isType<Const>();
+			bool constMember = memberIsCallable ? m->isConst() : m->original()->isType<Const>();
 			if (constMember || !constMember && !constScope)
 			{
 				// Member Variable/FunctionType inside a method. Either enclosing method is non-const or FunctionType is const.
@@ -166,7 +166,7 @@ Type Referenced::type() const
 			{
 				// Member Variable referenced inside a const method
 				// Allowed but made const.
-				m->childType()->knit<Const>();
+				m->original()->knit<Const>();
 				m->unknit();
 			}
 		}

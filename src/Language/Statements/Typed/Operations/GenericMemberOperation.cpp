@@ -33,7 +33,7 @@ MARTTA_OBJECT_CPP(GenericMemberOperation);
 Type GenericMemberOperation::memberified(Type _t, Type const& _scope) const
 {
 	if (_t->isType<Reference>())
-		_t->asType<Reference>()->childType()->knitIn(new Memberify(_scope));
+		_t->asType<Reference>()->original()->knitIn(new Memberify(_scope));
 	else
 		_t.topWith(Memberify(_scope));
 	return _t;
@@ -91,8 +91,8 @@ Type GenericMemberOperation::type() const
 	}
 	m->setScope(st);
 	// if the memberified thing isn't const, and the memberify is a const, then make the type const.
-	if (st->isType<Const>() && !m->childType()->isType<Const>() && !m->childType()->isType<FunctionType>())
-		m->childType()->knit<Const>();
+	if (st->isType<Const>() && !m->original()->isType<Const>() && !m->original()->isType<FunctionType>())
+		m->original()->knit<Const>();
 	m->unknit();
 	return rt;
 }

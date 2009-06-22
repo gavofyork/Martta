@@ -43,9 +43,9 @@ void ListType::initialiseClass()
 	Type t(MemberTemplateType(0));
 	Type tcr = Type(MemberTemplateType(0)).topWith(Const()).topWith(Reference());
 	Type tr = Type(MemberTemplateType(0)).topWith(Reference());
-	Type lt = Type(ListType()).append(MemberTemplateType(0));
-	Type ltr = Type(ListType()).append(MemberTemplateType(0)).topWith(Reference());
-	Type ltcr = Type(ListType()).append(MemberTemplateType(0)).topWith(Const()).topWith(Reference());
+	Type lt = Type(ListType()).place(MemberTemplateType(0));
+	Type ltr = Type(ListType()).place(MemberTemplateType(0)).topWith(Reference());
+	Type ltcr = Type(ListType()).place(MemberTemplateType(0)).topWith(Const()).topWith(Reference());
 	Type it = Type(Void);	// should be Iterator.
 	Type b = Type(Bool);
 	RootEntity* root = RootEntity::get();
@@ -118,7 +118,7 @@ QList<ValueDefiner*> ListType::applicableMembers(Entity*, bool _isConst) const
 
 bool ListType::defineSimilarityFrom(TypeEntity const* _f, Castability _c) const
 {
-	return _f->isKind<ListType>() && (Type(*childType()).isNull() || _f->asKind<ListType>()->childType()->isEquivalentTo(childType())) ||
+	return _f->isKind<ListType>() && (Type(*original()).isNull() || _f->asKind<ListType>()->original()->isEquivalentTo(original())) ||
 		Super::defineSimilarityFrom(_f, _c);
 }
 

@@ -381,7 +381,7 @@ TypeEntity* DeclarationsHandler::resolveType(QString const& _typeId)
 	else if (m_functionTypes.contains(_typeId))
 	{
 		FunctionType* q = new FunctionType;
-		q->back().place(resolveType(m_functionTypes[_typeId]->m_returnsId));
+		q->middle(FunctionType::Returned).place(resolveType(m_functionTypes[_typeId]->m_returnsId));
 		foreach(QString i, m_functionTypes[_typeId]->m_argIds)
 			if (i.isEmpty())
 				q->setEllipsis();
@@ -392,14 +392,14 @@ TypeEntity* DeclarationsHandler::resolveType(QString const& _typeId)
 	else if (m_pointers.contains(_typeId))
 	{
 		TypeEntity* r = new Pointer;
-		r->back().place(resolveType(m_pointers[_typeId]->m_type));
+		r->middle(ModifyingType::Original).place(resolveType(m_pointers[_typeId]->m_type));
 		return r;
 	}
 	else if (m_cvQualifieds.contains(_typeId))
 	{
 		TypeEntity* r;
 		if (m_cvQualifieds[_typeId]->m_const)
-			(r = new Const)->back().place(resolveType(m_cvQualifieds[_typeId]->m_type));
+			(r = new Const)->middle(ModifyingType::Original).place(resolveType(m_cvQualifieds[_typeId]->m_type));
 		else
 			r = resolveType(m_cvQualifieds[_typeId]->m_type);
 		return r;
@@ -407,9 +407,9 @@ TypeEntity* DeclarationsHandler::resolveType(QString const& _typeId)
 	else if (m_arrays.contains(_typeId))
 	{
 		TypeEntity* r = new Array;
-		r->back().place(resolveType(m_arrays[_typeId]->m_type));
+		r->middle(ModifyingType::Original).place(resolveType(m_arrays[_typeId]->m_type));
 		if (m_arrays[_typeId]->m_length)
-			r->back().place(new IntegerLiteral(m_arrays[_typeId]->m_length));
+			r->middle(Array::Length).place(new IntegerLiteral(m_arrays[_typeId]->m_length));
 		return r;
 	}
 	qCritical("Couldn't resolve type (%s)!", _typeId.toLatin1().data());

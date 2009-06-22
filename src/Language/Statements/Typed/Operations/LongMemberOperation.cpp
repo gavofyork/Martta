@@ -69,12 +69,12 @@ bool LongMemberOperation::keyPressedOnInsertionPoint(InsertionPoint const& _p, E
 			_p->debugTree();
 			qDebug() << _p->asKind<Typed>()->type()->isType<AddressType>();
 			if (_p->asKind<Typed>()->type()->isType<AddressType>())
-				qDebug() << _p->asKind<Typed>()->type()->asType<AddressType>()->childType()->isType<ExplicitType>();
+				qDebug() << _p->asKind<Typed>()->type()->asType<AddressType>()->original()->isType<ExplicitType>();
 		}
 	}*/
 	if (_p.exists() && !_p->isPlaceholder() && _p->isKind<Typed>() &&
 		_p->asKind<Typed>()->type()->isType<AddressType>() &&
-		_p->asKind<Typed>()->type()->asType<AddressType>()->childType()->isType<ExplicitType>())
+		_p->asKind<Typed>()->type()->asType<AddressType>()->original()->isType<ExplicitType>())
 		return simpleKeyPressedOnInsertionPointHandler<LongMemberOperation>(_p, _e, Operator::XArrow);
 	else
 		return false;

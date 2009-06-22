@@ -34,12 +34,12 @@ void ModifyingType::unknit()
 {
 	if (owner() && &**owner() == this)
 	{
-		M_ASSERT(childType()->owner() == owner());
+		M_ASSERT(original()->owner() == owner());
 		M_ASSERT(!parent());
-		owner()->m_top = childType();
+		owner()->m_top = original();
 	}
 	InsertionPoint p = over();
-	TypeEntity* ch = childType();
+	TypeEntity* ch = original();
 	
 	//	P -p-> this -0-> ch    BECOMES    P -p-> ch
 	
@@ -55,7 +55,7 @@ void ModifyingType::unknit()
 
 Kinds ModifyingType::allowedKinds(int _index) const
 {
-	if (_index == 0)
+	if (_index == Original)
 		return Kind::of<TypeEntity>();
 	return Super::allowedKinds(_index);
 }

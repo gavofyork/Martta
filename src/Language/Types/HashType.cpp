@@ -48,11 +48,11 @@ void HashType::initialiseClass()
 {
 	RootEntity* root = RootEntity::get();
 	
-	Type k = Type(MemberTemplateType(0));
+	Type k = Type(MemberTemplateType(KeyType));
 	Type kr = Type(k).topWith(Reference());
 	Type kc = Type(k).topWith(Const());
 	Type kcr = Type(k).topWith(Const()).topWith(Reference());
-	Type t = Type(MemberTemplateType(1));
+	Type t = Type(MemberTemplateType(ValueType));
 	Type tr = Type(t).topWith(Reference());
 	Type tc = Type(t).topWith(Const());
 	Type tcr = Type(t).topWith(Const()).topWith(Reference());
@@ -60,9 +60,9 @@ void HashType::initialiseClass()
 	Type b = Type(Bool);
 	Type i = Type(Int);
 	Type v = Type(Void);
-	Type lk = Type(ListType()).append(k);
-	Type lt = Type(ListType()).append(t);
-	Type h = Type(HashType()).append(k).append(t);
+	Type lk = Type(ListType()).place(k);
+	Type lt = Type(ListType()).place(t);
+	Type h = Type(HashType()).place(k, HashType::KeyType).place(t);
 	Type hr = Type(h).topWith(Reference());
 	Type hcr = Type(h).topWith(Const()).topWith(Reference());
 	Type it = v;// should be Iterator.
@@ -131,7 +131,7 @@ QList<ValueDefiner*> HashType::applicableMembers(Entity*, bool _isConst) const
 
 Kinds HashType::allowedKinds(int _i) const
 {
-	if (_i >= 0  && _i < 2)
+	if (_i == KeyType)
 		return Kind::of<TypeEntity>();
 	return Super::allowedKinds(_i);
 }
@@ -146,14 +146,14 @@ bool HashType::defineSimilarityTo(TypeEntity const* _t, Castability _c) const
 QString HashType::code(QString const& _middle) const
 {
 	if (childIs<TypeEntity>(0) && childIs<TypeEntity>(1))
-		return "::MarttaSupport::Hash< " + childAs<TypeEntity>(1)->code() + ", " + childAs<TypeEntity>(0)->code() + "> " + _middle;
+		return "::MarttaSupport::Hash< " + childAs<TypeEntity>(KeyType)->code() + ", " + childAs<TypeEntity>(ValueType)->code() + "> " + _middle;
 	else
 		return "::MarttaSupport::Hash< >" + _middle;
 }
 
 QString HashType::defineLayout(ViewKeys&) const
 {
-	return ";0;" + typeLayout() + "^;'#';1";
+	return (";%1;" + typeLayout() + "^;'#';%2").arg(KeyType).arg(ValueType);
 }
 
 }

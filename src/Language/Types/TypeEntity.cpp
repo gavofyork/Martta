@@ -81,9 +81,9 @@ void TypeEntity::knitIn(ModifyingType* _t)
 		if (&**owner() == this)
 			owner()->m_top = _t;
 	}
-	if (_t->child(0) && _t->child(0)->isPlaceholder())
-		_t->child(0)->killAndDelete();
-	insert(_t, 0);
+	if (_t->child(ModifyingType::Original) && _t->child(ModifyingType::Original)->isPlaceholder())
+		_t->child(ModifyingType::Original)->killAndDelete();
+	insert(_t, ModifyingType::Original);
 }
 
 bool TypeEntity::defineEquivalenceTo(TypeEntity const* _t) const

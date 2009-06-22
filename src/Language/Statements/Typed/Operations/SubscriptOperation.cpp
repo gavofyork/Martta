@@ -51,7 +51,7 @@ Types SubscriptOperation::allowedTypes(int _index) const
 	{
 		Types ret;
 		foreach (Type t, BareTyped::allowedTypes())
-			ret << Type(HashType()).append(t).topWith(Reference()) << Type(HashType()).append(t).topWith(Reference()).topWith(Const())
+			ret << t.toppedWith(HashType()).topWith(Reference()) << t.toppedWith(HashType()).topWith(Reference()).topWith(Const())
 				<< t.toppedWith(ListType()).topWith(Reference()) << t.toppedWith(ListType()).topWith(Reference()).topWith(Const())
 				<< t.toppedWith(AddressType());
 			// TODO: All ExplicitTypes in scope with operator[]
@@ -73,7 +73,7 @@ Types SubscriptOperation::deniedTypes(int _index) const
 	{
 		Types ret;
 		foreach (Type t, BareTyped::deniedTypes())
-			ret << Type(HashType()).append(t) << t.toppedWith(ListType()) << t.toppedWith(AddressType());
+			ret << t.toppedWith(HashType()) << t.toppedWith(ListType()) << t.toppedWith(AddressType());
 			// TODO: All ExplicitTypes in scope with operator[]
 		return ret;
 	}
@@ -84,16 +84,16 @@ Type SubscriptOperation::type() const
 {
 	if (leftType()->isType<StringType>())
 		return Type(Wchar).topWith(Reference());
-	else if (leftType()->isType<Const>() && leftType()->asType<Const>()->childType()->isType<StringType>())
+	else if (leftType()->isType<Const>() && leftType()->asType<Const>()->original()->isType<StringType>())
 		return Type(Wchar);
 	else if (leftType()->isType<AddressType>())
-		return Type(*leftType()->asType<AddressType>()->childType()).topWith(Reference());
-	else if (leftType()->isType<Const>() && leftType()->asType<Const>()->childType()->isType<ListType>())
-		return Type(*leftType()->asType<Const>()->childType()->asType<ListType>()->childType()).topWith(Const()).topWith(Reference());
+		return Type(*leftType()->asType<AddressType>()->original()).topWith(Reference());
+	else if (leftType()->isType<Const>() && leftType()->asType<Const>()->original()->isType<ListType>())
+		return Type(*leftType()->asType<Const>()->original()->asType<ListType>()->original()).topWith(Const()).topWith(Reference());
 	else if (leftType()->isType<ListType>())
-		return Type(*leftType()->asType<ListType>()->childType()).topWith(Reference());
-	else if (leftType()->isType<Const>() && leftType()->asType<Const>()->childType()->isType<HashType>())
-		return Type(*leftType()->asType<Const>()->childType()->asType<HashType>()->value()).topWith(Const()).topWith(Reference());
+		return Type(*leftType()->asType<ListType>()->original()).topWith(Reference());
+	else if (leftType()->isType<Const>() && leftType()->asType<Const>()->original()->isType<HashType>())
+		return Type(*leftType()->asType<Const>()->original()->asType<HashType>()->value()).topWith(Const()).topWith(Reference());
 	else if (leftType()->isType<HashType>())
 		return Type(*leftType()->asType<HashType>()->value()).topWith(Reference());
 	return Type();

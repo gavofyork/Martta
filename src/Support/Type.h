@@ -27,7 +27,6 @@
 namespace Martta
 {
 
-class ModifyingType;
 class TypeDefinition;
 
 class Type
@@ -74,28 +73,35 @@ public:
 		m_top->back().place(_t.m_top->clone(this));
 		return *this;
 	}
+	inline Type& place(Type const& _t, int _name = TypeEntity::Default)
+	{
+		M_ASSERT(_name < 0);
+		m_top->middle(_name).place(_t.m_top->clone(this));
+		return *this;
+	}
 	/// As append() but doesn't change this type.
 	inline Type& appendedWith(Type const& _t) const { return Type(*this).append(_t); }
+	inline Type& placedWith(Type const& _t, int _name = TypeEntity::Default) const { return Type(*this).place(_t, _name); }
 	
 	/// Append to top. This is now the value of the new top item.
-	inline Type& topWith(TypeEntity const& _newContext)
+	inline Type& topWith(TypeEntity const& _newContext, int _at = TypeEntity::Default)
 	{
 		TypeEntity* t = _newContext.clone(this);
-		t->front().place(m_top);
+		t->middle(_at).place(m_top);
 		m_top = t;
 		return *this;
 	}
 	/// As topWith(), but doesn't change this type.
-	inline Type toppedWith(TypeEntity const& _newContext) const { return Type(*this).topWith(_newContext); }
+	inline Type toppedWith(TypeEntity const& _newContext, int _at = TypeEntity::Default) const { return Type(*this).topWith(_newContext, _at); }
 	
 	/// Append to bottom of tree.
-	inline Type& tailWith(TypeEntity const& _newChild)
+	inline Type& tailWith(TypeEntity const& _newChild, int _at = TypeEntity::Default)
 	{
-		m_top->bottom()->front().place(_newChild.clone(this));
+		m_top->bottom()->middle(_at).place(_newChild.clone(this));
 		return *this;
 	}
 	/// As tailWith(), but doesn't change this type.
-	inline Type tailedWith(TypeEntity const& _newChild) const { return Type(*this).tailWith(_newChild); }
+	inline Type tailedWith(TypeEntity const& _newChild, int _at = TypeEntity::Default) const { return Type(*this).tailWith(_newChild, _at); }
 
 private:
 	TypeEntity* m_top;

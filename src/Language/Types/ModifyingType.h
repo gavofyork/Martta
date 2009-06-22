@@ -34,23 +34,25 @@ class ModifyingType: public TypeEntity
 	MARTTA_PLACEHOLDER(TypeEntity)
 
 public:
-	inline TypeEntity*					childType() const { return childIs<TypeEntity>(0) ? childAs<TypeEntity>(0) : TypeEntity::null; }
+	enum { Original = Default };
+
+	inline TypeEntity*					original() const { return childIs<TypeEntity>(Original) ? childAs<TypeEntity>(Original) : TypeEntity::null; }
 
 	/// Deletes this object and puts its child in its place.
 	void								unknit();
-	virtual bool						isUltimatelyNull() const { return !childType() || childType()->isUltimatelyNull(); }
-	virtual bool						isWellDefined() const { return childType() && childType()->isWellDefined(); }
+	virtual bool						isUltimatelyNull() const { return !original() || original()->isUltimatelyNull(); }
+	virtual bool						isWellDefined() const { return original() && original()->isWellDefined(); }
 	
 protected:
-	virtual int							minRequired(int _i) const { return _i == Cardinals ? 1 : Super::minRequired(_i); }
+	virtual int							minRequired(int _i) const { return _i == Original ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _index) const;
-	virtual QString						idColour() const { return childType() ? childType()->idColour() : TypeEntity::null->idColour(); }
-	virtual QString						defineLayout(ViewKeys&) const { return "0;^;" + modifierLayout(); }
+	virtual QString						idColour() const { return original() ? original()->idColour() : TypeEntity::null->idColour(); }
+	virtual QString						defineLayout(ViewKeys&) const { return ("%1;^;" + modifierLayout()).arg(Original); }
 	virtual QString						modifierLayout() const { return QString(); }
 	virtual TypeEntity*					newClone() const { return new ModifyingType; }
-	virtual TypeEntity*					bottom() { return childIs<TypeEntity>(0) ? childAs<TypeEntity>(0) : this; }
-	virtual bool						canStandAlone() const { return childType() ? childType()->canStandAlone() : false; }
-	virtual QList<DeclarationEntity*>	utilisedX() const { return childType() ? childType()->utilised() : Super::utilised(); }
+	virtual TypeEntity*					bottom() { return childIs<TypeEntity>(Original) ? childAs<TypeEntity>(Original) : this; }
+	virtual bool						canStandAlone() const { return original() ? original()->canStandAlone() : false; }
+	virtual QList<DeclarationEntity*>	utilisedX() const { return original() ? original()->utilised() : Super::utilised(); }
 };
 
 }

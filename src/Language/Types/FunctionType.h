@@ -26,23 +26,25 @@
 namespace Martta
 {
 
-// Arguments+1 children.
-// child(0) is return type.
-// child(n+1) is argument n
+// Arguments children.
+// child(Returned) is return type.
+// child(n) is argument n
 // For ... functions, m_ellipsis is set.
 class FunctionType: public TypeEntity
 {
 	MARTTA_OBJECT(TypeEntity)
 
 public:
+	enum { Returned = FirstNamed, EndOfNamed };
+	
 	FunctionType(bool _ellipsis = false, bool _wild = false): m_ellipsis(_ellipsis), m_wild(_wild) {}
 
 	bool								ellipsis() const { return m_ellipsis; }
 	virtual bool						isUltimatelyNull() const { return m_wild; }
-	Type								returnType() const { return m_wild ? Type() : *childAs<TypeEntity>(0); }
-	Type								argumentType(int _i) const { return !m_wild && childIs<TypeEntity>(_i + 1) ? *childAs<TypeEntity>(_i + 1) : Type(); }
-	int									minimumArgCount() const { return m_wild ? 0 : (cardinalChildCount() - 1); }
-	bool								hasArgumentAt(int _i) const { return m_wild || m_ellipsis || _i < cardinalChildCount() - 1; }
+	Type								returnType() const { return m_wild ? Type() : *childAs<TypeEntity>(Returned); }
+	Type								argumentType(int _i) const { return !m_wild && childIs<TypeEntity>(_i) ? *childAs<TypeEntity>(_i) : Type(); }
+	int									minimumArgCount() const { return m_wild ? 0 : cardinalChildCount(); }
+	bool								hasArgumentAt(int _i) const { return m_wild || m_ellipsis || _i < cardinalChildCount(); }
 	virtual bool						isWellDefined() const { for (int i = 0; i < minimumArgCount(); ++i) if (!argumentType(i)->isWellDefined()) return false; return returnType()->isWellDefined(); }
 
 	void								setEllipsis(bool _on = true) { m_ellipsis = _on; }
@@ -51,7 +53,7 @@ public:
 	
 private:
 	virtual Types						assignableTypes() const;
-	virtual int							minRequired(int _i) const { return _i == Cardinals ? m_wild ? 0 : 1 : Super::minRequired(_i); }
+	virtual int							minRequired(int _i) const { return _i == Returned ? m_wild ? 0 : 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int) const { return m_wild ? Kinds() : Kinds(Kind::of<TypeEntity>()); }
 	virtual QString						code(QString const& _middle) const;
 	virtual TypeEntity*					newClone() const { return new FunctionType(m_ellipsis, m_wild); }

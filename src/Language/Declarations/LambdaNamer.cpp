@@ -107,7 +107,7 @@ bool LambdaNamer::keyPressed(EntityKeyEvent const* _e)
 Type LambdaNamer::type() const
 {
 	Type ret = FunctionType(this->ellipsis());
-	ret.append(returns());
+	ret.place(returns(), FunctionType::Returned);
 	for (int i = 0; i < argumentCount(); i++)
 		ret.append(argumentType(i));
 	ret.topWith(Reference());

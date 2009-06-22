@@ -45,14 +45,14 @@ Type Operation::prototypeOf(Type const& _t, int _index)
 		else if (_index == UndefinedIndex)
 			return _t->asType<FunctionType>()->returnType();
 	}
-	else if (_t->isType<Memberify>() && _t->asType<Memberify>()->childType()->isKind<FunctionType>())
+	else if (_t->isType<Memberify>() && _t->asType<Memberify>()->original()->isKind<FunctionType>())
 	{
 		if (_index == FirstOperand)
 			return Type(*_t->asType<Memberify>()->scope()).topWith(Reference());
 		else if (_index == SecondOperand)
-			return _t->asType<Memberify>()->childType()->asKind<FunctionType>()->argumentType(0);
+			return _t->asType<Memberify>()->original()->asKind<FunctionType>()->argumentType(0);
 		else if (_index == UndefinedIndex)
-			return _t->asType<Memberify>()->childType()->asKind<FunctionType>()->returnType();
+			return _t->asType<Memberify>()->original()->asKind<FunctionType>()->returnType();
 	}
 	return Type();
 }
@@ -62,8 +62,8 @@ bool Operation::prototypeHasArgumentAt(Type const& _t, int _cardinal)
 	// Check if it's declared in a class (first param is encoded as this if so).
 	if (_t->isType<FunctionType>())
 		return _t->asType<FunctionType>()->hasArgumentAt(_cardinal);
-	else if (_t->isType<Memberify>() && _t->asType<Memberify>()->childType()->isKind<FunctionType>())
-		return _t->asType<Memberify>()->childType()->asKind<FunctionType>()->hasArgumentAt(_cardinal - 1);
+	else if (_t->isType<Memberify>() && _t->asType<Memberify>()->original()->isKind<FunctionType>())
+		return _t->asType<Memberify>()->original()->asKind<FunctionType>()->hasArgumentAt(_cardinal - 1);
 	return false;
 }
 
