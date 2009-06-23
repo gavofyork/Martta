@@ -42,11 +42,6 @@ Type Statement::typeOf(int _i) const
 	return childIs<Typed>(_i) ? childAs<Typed>(_i)->type() : Type();
 }
 
-QList<Typed*> Statement::typeds() const
-{
-	return childrenOf<Typed>();
-}
-
 void Statement::appendDefinedUptoHere(int _index, QList<ValueDefiner*>* _list) const
 {
 	QList<int> const& order = defineDeclarationOrder();

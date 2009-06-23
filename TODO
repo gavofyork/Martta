@@ -1,4 +1,3 @@
-TODO validate statement::typeds(), apparent/efffectiveType()
 TODO Get rid of DE/Id deps.
 TODO Cache includes, so don't take so long to load.
 TODO Statements to reject placeholders.

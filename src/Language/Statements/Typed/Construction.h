@@ -40,7 +40,6 @@ public:
 
 	virtual Type						type() const;
 	virtual QString						code() const;
-	QString								callList() const { return Invocation::callList(typeds()); }
 
 	virtual void						exportDom(QDomElement& _element) const;
 	virtual void						importDom(QDomElement const& _element);

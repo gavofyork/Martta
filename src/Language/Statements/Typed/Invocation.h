@@ -32,7 +32,7 @@ class Invocation: public Evaluation
 public:
 	enum { Callee = FirstNamed, EndOfNamed };
 
-	QString								callList() const { return callList(typeds()); }
+	QString								callList() const { return callList(castEntities<Typed>(cardinalChildren())); }
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
 
 protected:

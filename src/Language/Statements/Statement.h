@@ -43,7 +43,6 @@ public:
 	bool			 					isStatement(int _i) const { return childIs<Statement>(_i); }
 	Statement*		 					asStatement(int _i) const { return childAs<Statement>(_i); }
 
-	QList<Typed*>						typeds() const;
 	bool								isTyped(int _i) const;
 	Typed*								asTyped(int _i) const;
 	Type								typeOf(int _i) const;
