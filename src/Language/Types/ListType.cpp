@@ -40,12 +40,12 @@ QList<SimpleOperator*> ListType::s_nonMembers;
 
 void ListType::initialiseClass()
 {
-	Type t(MemberTemplateType(0));
-	Type tcr = Type(MemberTemplateType(0)).topWith(Const()).topWith(Reference());
-	Type tr = Type(MemberTemplateType(0)).topWith(Reference());
-	Type lt = Type(ListType()).place(MemberTemplateType(0));
-	Type ltr = Type(ListType()).place(MemberTemplateType(0)).topWith(Reference());
-	Type ltcr = Type(ListType()).place(MemberTemplateType(0)).topWith(Const()).topWith(Reference());
+	Type t = MemberTemplateType(Original);
+	Type tcr = Type(MemberTemplateType(Original)).topWith(Const()).topWith(Reference());
+	Type tr = Type(MemberTemplateType(Original)).topWith(Reference());
+	Type lt = Type(ListType()).place(MemberTemplateType(Original));
+	Type ltr = Type(ListType()).place(MemberTemplateType(Original)).topWith(Reference());
+	Type ltcr = Type(ListType()).place(MemberTemplateType(Original)).topWith(Const()).topWith(Reference());
 	Type it = Type(Void);	// should be Iterator.
 	Type b = Type(Bool);
 	RootEntity* root = RootEntity::get();
@@ -124,32 +124,29 @@ bool ListType::defineSimilarityFrom(TypeEntity const* _f, Castability _c) const
 
 Kinds ListType::allowedKinds(int _i) const
 {
-	if (_i == 0)
-		return Kind::of<TypeEntity>();
-	if (_i == 1)
+	if (_i == Length)
 		return Kind::of<Typed>();
 	return Super::allowedKinds(_i);
 }
 
 Types ListType::allowedTypes(int _i) const
 {
-	if (_i == 1)
+	if (_i == Length)
 		return Type(Int);
-	else
-		return Types();
+	return Super::allowedTypes(_i);
 }
 
 QString ListType::code(QString const& _middle) const
 {
-	if (childIs<TypeEntity>(0))
-		return "::MarttaSupport::List< " + childAs<TypeEntity>(0)->code() + " >" + _middle;
+	if (childIs<TypeEntity>(Original))
+		return "::MarttaSupport::List< " + childAs<TypeEntity>(Original)->code() + " >" + _middle;
 	else
 		return "::MarttaSupport::List<>" + _middle;
 }
 
 QString ListType::defineLayout(ViewKeys&) const
 {
-	return "ycode;0;^;" + typeLayout() + "'[[]]'";
+	return ("ycode;%1;^;" + typeLayout() + "'[[]]'").arg(Original);
 }
 
 }

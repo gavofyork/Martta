@@ -18,11 +18,26 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "TypedOwner.h"
 #include "TypeNamer.h"
 
 namespace Martta
 {
 
 MARTTA_INTERFACE_CPP(TypeNamer)
+
+Types TypeNamer::ourAllowedTypes() const
+{
+	if (!self()->parentIs<TypedOwner>())
+		return Types();
+	return self()->parentAs<TypedOwner>()->allowedTypes(self()->index());
+}
+
+Types TypeNamer::ourDeniedTypes() const
+{
+	if (!self()->parentIs<TypedOwner>())
+		return Types();
+	return self()->parentAs<TypedOwner>()->deniedTypes(self()->index());
+}
 
 }

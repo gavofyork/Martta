@@ -105,7 +105,9 @@ QString SimpleUnaryOperation::code() const
 
 Types SimpleUnaryOperation::allowedTypes(int _index) const
 {
-	return prototypeOf(_index);
+	if (_index == TheOperand)
+		return prototypeOf(_index);
+	return Super::allowedTypes(_index);
 }
 
 QString SimpleUnaryOperation::operatorLayout() const

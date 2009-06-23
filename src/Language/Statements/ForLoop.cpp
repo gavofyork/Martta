@@ -53,7 +53,7 @@ Types ForLoop::allowedTypes(int _index) const
 		return Type(Bool).topWith(Const());
 	if (_index == Ticker)
 		return Type();
-	return Types();
+	return Super::allowedTypes(_index);
 }
 
 bool ForLoop::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)

@@ -41,6 +41,7 @@ public:
 	
 	// @returns the type that entity _i effectively has in this place. This takes into effect implicit conversion.
 	Type								effectiveType(int _i) const;
+	Type								nominalType(int _i) const;
 	
 protected:
 	virtual bool						isChildInValidState(int _i) const;

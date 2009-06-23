@@ -32,7 +32,7 @@ MARTTA_OBJECT_CPP(TypedOwner);
 
 Types TypedOwner::allowedTypes(int) const
 {
-	return Type();//Type(Void).topWith(Const());
+	return Types();//Type(Void).topWith(Const());
 }
 
 Types TypedOwner::deniedTypes(int) const
@@ -52,8 +52,19 @@ Type TypedOwner::effectiveType(int _i) const
 	Type p(childAs<Typed>(_i)->type());
 	foreach (Type t, allowedTypes(_i))
 		if (p.isSimilarTo(t, TypeEntity::Convertible))
+//		{
+//			qDebug() << p->code() << " is convertible to " << t->code() << " t is ultnull? " << t->isUltimatelyNull();
+//			t->debugTree();
 			return t->isUltimatelyNull() ? p : t;
+//		}
 	return Type();
+}
+
+Type TypedOwner::nominalType(int _i) const
+{
+	if (!childIs<Typed>(_i))
+		return Type();
+	return childAs<Typed>(_i)->type();
 }
 
 bool TypedOwner::isChildInValidState(int _i) const

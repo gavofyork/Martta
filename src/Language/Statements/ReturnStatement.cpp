@@ -67,14 +67,19 @@ Kinds ReturnStatement::allowedKinds(int _i) const
 
 Types ReturnStatement::allowedTypes(int _i) const
 {
-	if (!hasAncestor<LambdaNamer>())
+	if (_i == Returned)
 	{
-		qCritical("Return statement without lambda ancestor!");
-		return Types();
+		if (!hasAncestor<LambdaNamer>())
+		{
+			qCritical("Return statement without lambda ancestor!");
+			return Types();
+		}
+		if (!ancestor<LambdaNamer>()->returns().isNull() && ancestor<LambdaNamer>()->returns() != Type(Void))
+			return ancestor<LambdaNamer>()->returns();
+		else
+			return Types();
 	}
-	if (_i == Returned && !ancestor<LambdaNamer>()->returns().isNull() && ancestor<LambdaNamer>()->returns() != Type(Void))
-		return ancestor<LambdaNamer>()->returns();
-	return Types();
+	return Super::allowedTypes(_i);
 }
 
 QString ReturnStatement::code() const

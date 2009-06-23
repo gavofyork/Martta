@@ -32,6 +32,8 @@ class AddressType: public ModifyingType
 private:
 	virtual TypeEntity*					newClone() const { return new AddressType; }
 	virtual bool						defineSimilarityTo(TypeEntity const* _t, Castability _c) const;
+	virtual QString						modifierLayout() const { return "ycode;'@'"; }
+	virtual QString						code(QString const& _middle) const { return original()->code("@" + _middle); }
 };
 
 }

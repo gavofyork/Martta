@@ -44,7 +44,7 @@ Types AssignedVariable::allowedTypes(int _index) const
 {
 	if (_index == AssignedValue)
 		return Type(*actualType());
-	return Types();
+	return Super::allowedTypes(_index);
 }
 
 QString AssignedVariable::code() const

@@ -43,7 +43,7 @@ Types AssignmentOperation::allowedTypes(int _index) const
 	{
 		return typeOf(FirstOperand)->asType<Reference>()->original()->assignableTypes();
 	}
-	return Types();
+	return Super::allowedTypes(_index);
 }
 
 Type AssignmentOperation::type() const

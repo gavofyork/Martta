@@ -43,14 +43,15 @@ Types GenericMemberOperation::allowedTypes(int _index) const
 {
 	if (_index == FirstOperand)
 		return Type();
-	if (_index == SecondOperand && !scope().isNull())
+	if (_index == SecondOperand)
 	{
 		Types ret;
-		foreach (Type t, BareTyped::allowedTypes())
-			ret << memberified(t, scope()); 
+		if (!scope().isNull())
+			foreach (Type t, BareTyped::ourAllowedTypes())
+				ret << memberified(t, scope()); 
 		return ret;
 	}
-	return Types();
+	return Super::allowedTypes(_index);
 }
 
 Types GenericMemberOperation::deniedTypes(int _index) const
@@ -58,11 +59,11 @@ Types GenericMemberOperation::deniedTypes(int _index) const
 	if (_index == SecondOperand)
 	{
 		Types ret;
-		foreach (Type t, BareTyped::deniedTypes())
+		foreach (Type t, BareTyped::ourDeniedTypes())
 			ret << memberified(t, scope());
 		return ret;
 	}
-	return Types();
+	return Super::deniedTypes(_index);
 }
 
 bool GenericMemberOperation::isChildInValidState(int _index) const

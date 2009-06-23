@@ -126,8 +126,10 @@ QString SimpleBinaryOperation::code() const
 
 Types SimpleBinaryOperation::allowedTypes(int _index) const
 {
-	if (m_symbolCache.isUsable() && (_index == FirstOperand || _index == SecondOperand))
+	if (_index == FirstOperand || _index == SecondOperand)
 	{
+		if (!m_symbolCache.isUsable())
+			return Types();
 		qDebug() << prototypeOf(FirstOperand)->code() << prototypeOf(SecondOperand)->code() << " " << _index << " " << typeOf(FirstOperand)->code();
 		if (_index == SecondOperand && prototypeOf(SecondOperand).isUltimatelyNull() && !typeOf(FirstOperand).isNull())
 			return typeOf(FirstOperand).strippedTo(prototypeOf(SecondOperand));
@@ -136,7 +138,7 @@ Types SimpleBinaryOperation::allowedTypes(int _index) const
 		M_ASSERT(!prototypeOf(_index).isNull());
 		return prototypeOf(_index);
 	}
-	return Types();
+	return Super::allowedTypes(_index);
 }
 
 Type SimpleBinaryOperation::type() const

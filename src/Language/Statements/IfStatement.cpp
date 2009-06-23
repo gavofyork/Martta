@@ -55,7 +55,7 @@ Types IfStatement::allowedTypes(int _index) const
 {
 	if (_index == Condition)
 		return Type(Bool).topWith(Const());
-	return Types();
+	return Super::allowedTypes(_index);
 }
 
 bool IfStatement::keyPressed(EntityKeyEvent const* _e)

@@ -30,6 +30,9 @@
 #include "CodeScene.h"
 #include "MainWindow.h"
 
+#include <msSupport.h>
+using namespace MarttaSupport;
+
 namespace Martta
 {
 
@@ -130,6 +133,26 @@ static void addChild(QTreeWidgetItem* _p, Entity const* _c)
 		addChild(t, e);
 }
 
+QString compileTypes(Types const& _t)
+{
+	QString ret;
+	foreach (Type t, _t)
+		ret += t->code() + ", ";
+	if (ret.endsWith(", "))
+		ret.chop(2);
+	return ret;
+}
+
+QString compileKinds(Kinds const& _t)
+{
+	QString ret;
+	foreach (Kind k, _t)
+		ret += k.name() + ", ";
+	if (ret.endsWith(", "))
+		ret.chop(2);
+	return ret;
+}
+
 void MainWindow::entityFocused(Entity* _e)
 {
 	if (m_codeScene->current() != _e)
@@ -149,10 +172,10 @@ void MainWindow::entityFocused(Entity* _e)
 		if (_e->isKind<BareTyped>())
 		{
 			t += "<td><b><i>" + Qt::escape(_e->asKind<BareTyped>()->type()->code()) + "</i><br/><font size=\"-2\" color=\"#888888\">(" + Qt::escape(_e->asKind<BareTyped>()->apparentType()->code()) + ")</font></b>";
-			foreach (Type i, _e->asKind<BareTyped>()->allowedTypes())
+			foreach (Type i, _e->asKind<BareTyped>()->ourAllowedTypes())
 				t += "<br>" + Qt::escape(i->code());
 			t += "<br>";
-			foreach (Type i, _e->asKind<BareTyped>()->deniedTypes())
+			foreach (Type i, _e->asKind<BareTyped>()->ourDeniedTypes())
 				t += "<br><i>" + Qt::escape(i->code()) + "</i>";
 			t += "</td>";
 		}
@@ -184,6 +207,7 @@ void MainWindow::entityFocused(Entity* _e)
 		
 		vvalue = entityInfo->verticalScrollBar()->value();
 		entityInfo->clear();
+		
 		if (DeclarationEntity* d = _e->selfAncestor<DeclarationEntity>())
 		{
 			QTreeWidgetItem* decl = new QTreeWidgetItem(entityInfo, QStringList() << QString("Declaration Context"));
@@ -195,21 +219,41 @@ void MainWindow::entityFocused(Entity* _e)
 			foreach (DeclarationEntity* u, d->utilisedSiblings())
 				new QTreeWidgetItem(us, QStringList() << QString(u ? u->name() : "NULL?") << QString(u ? u->kind().name() : "NULL?"));
 		}
+		
 		new QTreeWidgetItem(entityInfo, QStringList() << QString("Layout") << QString(_e->defineLayout(m_codeScene->viewKeys(_e))));
 		
-		if (BareTyped* td = _e->tryKind<BareTyped>())
+		QTreeWidgetItem* rc = new QTreeWidgetItem(entityInfo, QStringList() << "Child restrictions");
+		foreach (int i, _e->knownNames())
+			if (_e->allowedKinds(i).count())
+				new QTreeWidgetItem(rc, QStringList() << _e->indexName(i) << (compileKinds(_e->allowedKinds(i)) + " (%1 req'd)").arg(_e->minRequired(i)));
+		for (int i = 0; i < _e->minRequired(); ++i)
+			new QTreeWidgetItem(rc, QStringList() << QString::number(i) << (compileKinds(_e->allowedKinds(i)) + " (req'd)"));
+		if (_e->allowedKinds(_e->minRequired()).count())
+			new QTreeWidgetItem(rc, QStringList() << "..." << compileKinds(_e->allowedKinds(_e->minRequired())));
+		
+
+		if (TypeNamer* td = _e->tryKind<TypeNamer>())
 		{
-			QTreeWidgetItem* te = new QTreeWidgetItem(entityInfo, QStringList() << QString("Type Information") << td->type()->code());
+			QTreeWidgetItem* te = new QTreeWidgetItem(entityInfo, QStringList() << QString("Type Namer Information") << td->type()->code());
+			new QTreeWidgetItem(te, QStringList() << "Apparent type" << td->apparentType()->code());
+			new QTreeWidgetItem(te, QStringList() << "Type restrictions" << (compileTypes(td->ourAllowedTypes()) + " (%1 types)").arg(td->ourAllowedTypes().size()));
 			foreach (ValueDefiner* v, td->type()->applicableMembers())
 				new QTreeWidgetItem(te, QStringList() << QString(v->name()) << QString(v->type()->code()));
 		}
 		
-		QTreeWidgetItem* rc = new QTreeWidgetItem(entityInfo, QStringList() << "Required children");
-		foreach (int i, _e->knownNames())
-			if (_e->minRequired(i))
-				new QTreeWidgetItem(rc, QStringList() << _e->indexName(i) << QString::number(_e->minRequired(i)));
-		if (_e->minRequired())
-			new QTreeWidgetItem(rc, QStringList() << "[Cardinals]" << QString::number(_e->minRequired()));
+		if (TypedOwner* to = _e->tryKind<TypedOwner>())
+		{
+			QTreeWidgetItem* te = new QTreeWidgetItem(entityInfo, QStringList() << QString("Typed Owner Information"));
+			
+			foreach (int i, _e->knownNames())
+				if (to->allowedTypes(i).count())
+					new QTreeWidgetItem(te, QStringList() << _e->indexName(i) + ": " + to->nominalType(i)->code() + " {" + to->effectiveType(i)->code() + "}" << (compileTypes(to->allowedTypes(i)) + " (%1 types)").arg(to->allowedTypes(i).size()) );
+			for (int i = 0; i < max(_e->minRequired(), _e->cardinalChildCount()); ++i)
+				if (to->allowedTypes(i).count())
+					new QTreeWidgetItem(te, QStringList() << QString::number(i) + ": " + to->nominalType(i)->code() + " {" + to->effectiveType(i)->code() + "}" << (compileTypes(to->allowedTypes(i)) + " (%1 types)").arg(to->allowedTypes(i).size()) );
+			if (to->allowedTypes(max(_e->minRequired(), _e->cardinalChildCount())).count())
+				new QTreeWidgetItem(te, QStringList() << "..." << (compileTypes(to->allowedTypes(max(_e->minRequired(), _e->cardinalChildCount()))) + " (%1 types)").arg(to->allowedTypes(max(_e->minRequired(), _e->cardinalChildCount())).size()) );
+		}
 		
 		QTreeWidgetItem* ac = new QTreeWidgetItem(entityInfo, QStringList() << "Actual children" << _e->kind().name());
 		foreach (Entity* e, _e->children())

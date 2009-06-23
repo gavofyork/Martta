@@ -86,14 +86,10 @@ Kinds Invocation::allowedKinds(int _index) const
 Types Invocation::allowedTypes(int _index) const
 {
 	if (_index == Callee)
-	{
 		return Type(FunctionType(false, true));
-	}
 	else if (_index >= 0 && typeOf(Callee)->isType<FunctionType>() && typeOf(Callee)->asType<FunctionType>()->hasArgumentAt(_index))
-	{
 		return typeOf(Callee)->asType<FunctionType>()->argumentType(_index);
-	}
-	return Types();
+	return Super::allowedTypes(_index);
 }
 
 QString Invocation::defineLayout(ViewKeys&) const

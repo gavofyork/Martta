@@ -40,8 +40,8 @@ public:
 
 	/// Deletes this object and puts its child in its place.
 	void								unknit();
-	virtual bool						isUltimatelyNull() const { return !original() || original()->isUltimatelyNull(); }
-	virtual bool						isWellDefined() const { return original() && original()->isWellDefined(); }
+	virtual bool						isUltimatelyNull() const { return isPlaceholder() || !original() || original()->isUltimatelyNull(); }
+	virtual bool						isWellDefined() const { return !isPlaceholder() && original() && original()->isWellDefined(); }
 	
 protected:
 	virtual int							minRequired(int _i) const { return _i == Original ? 1 : Super::minRequired(_i); }

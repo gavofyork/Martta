@@ -35,20 +35,36 @@ QString DereferenceOperation::code() const
 	return parenthesise("*" + operand()->code());
 }
 
-Types DereferenceOperation::allowedTypes(int) const
+Types DereferenceOperation::allowedTypes(int _i) const
 {
-	Types ret;
-	foreach (Type t, BareTyped::allowedTypes())
-		ret << t.topWith(AddressType());
-	return ret;
+	if (_i == TheOperand)
+	{
+		Types ret;
+		foreach (Type t, ourAllowedTypes())
+		{
+			if (t->isType<Reference>())
+				t = *t->asType<Reference>()->original();
+			ret << t.topWith(AddressType());
+		}
+		return ret;
+	}
+	return Super::allowedTypes(_i);
 }
 
-Types DereferenceOperation::deniedTypes(int) const
+Types DereferenceOperation::deniedTypes(int _i) const
 {
-	Types ret;
-	foreach (Type t, BareTyped::deniedTypes())
-		ret << t.topWith(AddressType());
-	return ret;
+	if (_i == TheOperand)
+	{
+		Types ret;
+		foreach (Type t, BareTyped::ourDeniedTypes())
+		{
+			if (t->isType<Reference>())
+				t = *t->asType<Reference>()->original();
+			ret << t.topWith(AddressType());
+		}
+		return ret;
+	}
+	return Super::deniedTypes(_i);
 }
 
 Type DereferenceOperation::apparentType() const
@@ -65,7 +81,7 @@ Type DereferenceOperation::apparentType() const
 
 	// Disguard pointer.
 	if (p->isKind<AddressType>())
-		p = *p->childAs<TypeEntity>(TheOperand);
+		p = *p->asKind<AddressType>()->original();
 	else
 		p = Type();
 
@@ -86,7 +102,7 @@ Type DereferenceOperation::type() const
 
 	// Disguard pointer.
 	if (p->isKind<AddressType>())
-		p = *p->childAs<TypeEntity>(TheOperand);
+		p = *p->asKind<AddressType>()->original();
 	else
 		p = Type();
 

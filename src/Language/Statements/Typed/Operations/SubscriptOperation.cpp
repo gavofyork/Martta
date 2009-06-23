@@ -50,7 +50,7 @@ Types SubscriptOperation::allowedTypes(int _index) const
 	if (_index == FirstOperand)
 	{
 		Types ret;
-		foreach (Type t, BareTyped::allowedTypes())
+		foreach (Type t, BareTyped::ourAllowedTypes())
 			ret << t.toppedWith(HashType()).topWith(Reference()) << t.toppedWith(HashType()).topWith(Reference()).topWith(Const())
 				<< t.toppedWith(ListType()).topWith(Reference()) << t.toppedWith(ListType()).topWith(Reference()).topWith(Const())
 				<< t.toppedWith(AddressType());
@@ -58,13 +58,13 @@ Types SubscriptOperation::allowedTypes(int _index) const
 		ret << Type(StringType()).topWith(Reference());
 		return ret;
 	}
-	else
+	else if (_index == SecondOperand)
 	{
 		if (leftType()->isType<HashType>())
 			return Type(*leftType()->asType<HashType>()->key());
 		return Type(Int);
 	}
-	return Types();
+	return Super::allowedTypes(_index);
 }
 
 Types SubscriptOperation::deniedTypes(int _index) const
@@ -72,12 +72,16 @@ Types SubscriptOperation::deniedTypes(int _index) const
 	if (_index == FirstOperand)
 	{
 		Types ret;
-		foreach (Type t, BareTyped::deniedTypes())
+		foreach (Type t, BareTyped::ourDeniedTypes())
 			ret << t.toppedWith(HashType()) << t.toppedWith(ListType()) << t.toppedWith(AddressType());
 			// TODO: All ExplicitTypes in scope with operator[]
 		return ret;
 	}
-	return Types();
+	else if (_index == SecondOperand)
+	{
+		return Types();
+	}
+	return Super::deniedTypes(_index);
 }
 
 Type SubscriptOperation::type() const

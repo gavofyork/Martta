@@ -4,6 +4,7 @@ TODO Cache includes, so don't take so long to load.
 TODO Statements to reject placeholders.
 TODO inherited methods don't work.
 TODO Profile QWebView 
+TODO Code metrics and distribution etc.
 
 TODO optimise Class.
 TODO special EntryMethod

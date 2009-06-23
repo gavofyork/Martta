@@ -52,12 +52,14 @@ Kinds Construction::allowedKinds(int _index) const
 
 Types Construction::allowedTypes(int _index) const
 {
-	if (!m_subject.isUsable()) return Types();
-	
-	Type t = *m_subject->childAs<Argument>(_index + 1)->actualType();
-	if (t.isNull())
-		return Type(Void).topWith(Const());
-	return t;
+	if (m_subject.isUsable() && _index >= 0 && _index < m_subject->argumentCount())
+	{
+		Type t = *m_subject->argumentType(_index);
+		if (t.isNull())
+			return Types();
+		return t;
+	}
+	return Super::allowedTypes(_index);
 }
 
 Type Construction::type() const

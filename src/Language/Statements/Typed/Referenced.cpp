@@ -64,7 +64,7 @@ enum { LocalVariables = 1<<0, LocalLambdas = 1<<1, SET(Local),
 
 bool Referenced::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
 {
-	if (_p.exists() && _p->isPlaceholder() && QRegExp("[a-z]").exactMatch(_e->text()) && _p->isKind<Typed>() && _p->asKind<Typed>()->allowedTypes().size() && _p->asKind<Typed>()->allowedTypes()[0]->isType<Memberify>())
+	if (_p.exists() && _p->isPlaceholder() && QRegExp("[a-z]").exactMatch(_e->text()) && _p->isKind<Typed>() && _p->asKind<Typed>()->ourAllowedTypes().size() && _p->asKind<Typed>()->ourAllowedTypes()[0]->isType<Memberify>())
 	{
 		_e->reinterpretLater();
 		Referenced* r = new Referenced;
@@ -331,7 +331,7 @@ void ReferencedEdit::updateSubset()
 	if (subject()->m_lastSet & MemberSet)
 	{
 		Type method = Type(FunctionType(false, true)).topWith(Memberify()).topWith(Reference());
-		foreach (Type t, subject()->allowedTypes())
+		foreach (Type t, subject()->ourAllowedTypes())
 		{
 			QList<ValueDefiner*> appMems;
 			if (t->isType<Memberify>() && t->asType<Memberify>()->scope())

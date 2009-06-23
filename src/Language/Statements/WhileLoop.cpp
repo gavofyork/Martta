@@ -44,7 +44,7 @@ Types WhileLoop::allowedTypes(int _index) const
 {
 	if (_index == Condition)
 		return Type(Bool).topWith(Const());
-	return Types();
+	return Super::allowedTypes(_index);
 }
 
 QString WhileLoop::code() const
