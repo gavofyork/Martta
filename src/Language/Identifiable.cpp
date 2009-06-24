@@ -18,6 +18,9 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include <QtXml>
+
+#include "RootEntity.h"
 #include "IdLabel.h"
 #include "TextLabel.h"
 #include "Entity.h"
@@ -27,20 +30,20 @@
 namespace Martta
 {
 
-MARTTA_INTERFACE_CPP(Identifiable);	
-
+MARTTA_INTERFACE_CPP(Identifiable);
+MARTTA_NAMED_CPP(Identifiable, Identity);
 
 QString Identifiable::name() const
 {
-	if (self()->entityCountOf<TextLabel>() == 1)
-		return self()->entitiesOf<TextLabel>()[0]->name();
+	if (TextLabel* l = self()->tryChild<TextLabel>(Identity))
+		return l->name();
 	return QString::null;
 }
 
 QString Identifiable::codeName() const
 {
-	if (self()->entityCountOf<IdLabel>() == 1)
-		return self()->entitiesOf<IdLabel>()[0]->code();
+	if (IdLabel* l = self()->tryChild<IdLabel>(Identity))
+		return l->code();
 	return QString::null;
 }
 
@@ -52,7 +55,33 @@ QString Identifiable::key() const
 
 Identifiable* Identifiable::addressableContext() const
 {
-	return self()->contextIs<Identifiable>() ? self()->contextAs<Identifiable>() : 0;
+	return self()->parentIs<Identifiable>() ? self()->parentAs<Identifiable>() : 0;
+}
+
+void Identifiable::onLeaveScene(RootEntity* _new, RootEntity* _old)
+{
+	if (_old && _old != _new)
+		_old->noteDeletion(this);
+}
+
+Identifiable* Identifiable::lookupChild(QString const& _key) const
+{
+	foreach (Identifiable* e, self()->cardinalChildrenOf<Identifiable>())
+		if (e->identity() == _key)
+			return e;
+	return 0;
+}
+
+void Identifiable::importDom(QDomElement const& _element)
+{
+	if (_element.hasAttribute("index"))
+		self()->ancestor<DeclarationEntity>()->registerAnonymous(this, _element.attribute("index").toInt());
+}
+
+void Identifiable::exportDom(QDomElement& _element) const
+{
+	if (!addressableContext())
+		_element.setAttribute("index", self()->ancestor<DeclarationEntity>()->registerAnonymous(this));
 }
 
 }

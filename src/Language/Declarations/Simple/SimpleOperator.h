@@ -38,7 +38,6 @@ public:
 		T::s_nonMembers.append(s);
 		return s;
 	}
-	virtual ~SimpleOperator();
 	virtual Operator					id() const { return m_operator; }
 	virtual QString						key() const { return "@" + m_key + "@N" + QString::number(m_myId); }
 

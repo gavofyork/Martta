@@ -30,18 +30,6 @@ class BareTyped: public Primary, public_interface TypeNamer
 {
 	MARTTA_PLACEHOLDER(Primary)
 	MARTTA_INHERITS(TypeNamer, 0)
-
-public:
-	inline Types allowedTypes() const
-	{
-		if (!contextIs<TypedOwner>()) return Types();
-		return contextAs<TypedOwner>()->allowedTypes(contextIndex());
-	}
-	inline Types deniedTypes() const
-	{
-		if (!contextIs<TypedOwner>()) return Types();
-		return contextAs<TypedOwner>()->deniedTypes(contextIndex());
-	}
 };
 
 }

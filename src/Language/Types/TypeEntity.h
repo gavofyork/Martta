@@ -21,6 +21,7 @@
 #pragma once
 
 #include "TypedOwner.h"
+#include "Entity.h"
 
 namespace Martta
 {
@@ -32,16 +33,19 @@ class DeclarationEntity;
 class ModifyingType;
 class ValueDefiner;
 
-class TypeEntity: public TypedOwner
+class TypeEntity: public Entity, public_interface TypedOwner
 {
-	MARTTA_PLACEHOLDER(TypedOwner)
+	MARTTA_PLACEHOLDER(Entity)
+	MARTTA_INHERITS(TypedOwner, 0)
 
 	friend class Type;
 	friend class ModifyingType;
 
 public:
+	enum { Default = FirstNamed, EndOfNamed };
+
 	TypeEntity(): m_owner(0) { g_typeCount++; }
-	TypeEntity(TypeEntity const&): TypedOwner() { M_ASSERT(false); }
+	TypeEntity(TypeEntity const&): SceneLeaver(), ChildValidifier(), TypedOwner(), Entity() { M_ASSERT(false); }
 	~TypeEntity() { g_typeCount--; }
 	
 	virtual QString						idColour() const { return "#777"; }
@@ -79,7 +83,7 @@ public:
 	virtual TypeEntity*					asType(Kind _typeKind) { M_ASSERT(isType(_typeKind)); return this; }
 	template<class T> inline T*			asType() { return static_cast<T*>(asType(Kind::of<T>())); }
 	
-	template<class T> inline TypeEntity*ignore() { return isKind<T>() ? entityAs<TypeEntity>(0) : this; }
+	template<class T> inline TypeEntity*ignore() { return isKind<T>() ? childAs<TypeEntity>(Default) : this; }
 
 	/// 
 	template<class T> inline T*			knit() { T* ret = new T; knitIn(ret); return ret; }
@@ -114,7 +118,7 @@ protected:
 	// i.e. It will return false if the requirement includes Physical, VeryConvertible etc.
 	static inline bool					isBasicallyConvertibleAtMost(Castability _required) { return !(_required & ~BasicallyConvertible); }
 	
-	virtual bool						isSuperfluous() const { return context()->allowedKinds(contextIndex()).commonBase() != kind() && isNull(); }
+	virtual bool						isSuperfluous() const { return parent()->allowedKinds(index()).commonBase() != kind() && isNull(); }
 	virtual bool						isInValidState() const { return isWellDefined(); }
 
 	

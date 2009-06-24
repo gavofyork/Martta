@@ -21,6 +21,7 @@
 #pragma once
 
 #include "VariableNamer.h"
+#include "Location.h"
 #include "TopLevel.h"
 
 namespace Martta
@@ -43,7 +44,7 @@ protected:
 	virtual QList<DeclarationEntity*>	utilised() const { return actualType()->utilised(); }
 	
 	virtual bool						keyPressed(EntityKeyEvent const* _e) { return VariableNamer::keyPressed(_e) ? true : Super::keyPressed(_e); }
-	virtual int							minimumRequired() const { return 2; }
+	virtual int							minRequired(int _i) const { return _i == OurType ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity*) { changed(); } 

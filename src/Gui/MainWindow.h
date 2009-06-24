@@ -71,6 +71,7 @@ private slots:
 	void on_programIn_returnPressed();
 
 	void entityFocused(Entity* _e);
+	void delayedUpdate();
 
 	void projectRenamed();
 	void updateCode(Function*);
@@ -92,6 +93,7 @@ private:
 	QProcess*				m_program;
 	QString					m_outputOwed;
 	CodeScene*				m_codeScene;
+	QTimer*					m_updateTimer;
 };
 
 }

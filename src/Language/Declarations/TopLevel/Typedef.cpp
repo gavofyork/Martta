@@ -29,9 +29,9 @@ MARTTA_OBJECT_CPP(Typedef);
 	
 Kinds Typedef::allowedKinds(int _i) const
 {
-	if (_i == 0)
-		return Kind::of<TextLabel>();
-	return Kind::of<TypeEntity>();
+	if (_i == Aliased)
+		return Kind::of<TypeEntity>();
+	return Super::allowedKinds(_i);
 }
 
 }

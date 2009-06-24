@@ -23,6 +23,8 @@
 #include <QTimer>
 
 #include "Operator.h"
+#include "Identifiable.h"
+#include "ModelPtr.h"
 #include "DeclarationEntity.h"
 
 namespace Martta
@@ -50,7 +52,7 @@ public:
 	static RootEntity*					get() { return s_this; }
 
 	virtual QString						name() const { return QString(); }
-	virtual Entity*						context() const { return 0; }
+	virtual Entity*						parent() const { return 0; }
 	virtual QString						reference() const { return ""; }
 	virtual QString						key() const { return ""; }
 	virtual Kinds						allowedKinds(int) const;
@@ -63,7 +65,10 @@ public:
 	void								restorePtrs() const;
 	void								addModelPtr(ModelPtrFace* _p);
 	void								removeModelPtr(ModelPtrFace* _p);
-	void								noteDeletion(DeclarationEntity* _e);
+	void								noteDeletion(Identifiable* _e);
+	QList<ModelPtrFace*> const&			modelPtrs() const { return m_modelPtrs; }
+	virtual Identifiable*				findEntity(QString const& _key) const;
+	template<class T> ModelPtr<T>		locate(QString const& _key) { return ModelPtr<T>(_key, this); }
 
 	void								setChanged();
 	

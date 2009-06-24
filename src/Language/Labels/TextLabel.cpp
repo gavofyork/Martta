@@ -42,18 +42,18 @@ QString TextLabel::code() const
 		return QString::null;
 		
 	QString prefix = "";
-	if (context()->hasAncestor<NamespaceEntity>())
+	if (parent()->hasAncestor<NamespaceEntity>())
 	{
-		if (contextIs<Argument>())
+		if (parentIs<Argument>())
 			prefix = "a_";
-		else if (contextIs<MemberVariable>())
+		else if (parentIs<MemberVariable>())
 			prefix = "m_";
-		else if (contextIs<VariableNamer>())
+		else if (parentIs<VariableNamer>())
 			prefix = "l_";
 		else
 			prefix = "";
 	}
-	else if (context()->isKind<NamespaceEntity>() && name().size() && name()[0].isNumber())
+	else if (parent()->isKind<NamespaceEntity>() && name().size() && name()[0].isNumber())
 		prefix = "_";
 	else
 		prefix = "";
@@ -78,7 +78,7 @@ QString TextLabel::name() const
 		return "foo";	// TODO: make it proper.
 	else if (m_text.isEmpty())
 		return QString::null;
-	else if (contextIs<TypeDefinition>() || contextIs<NamespaceEntity>())
+	else if (parentIs<TypeDefinition>() || parentIs<NamespaceEntity>())
 		return m_text.left(1).toUpper() + camelCase(m_text.mid(1));
 	else
 		return camelCase(m_text);
@@ -87,11 +87,11 @@ QString TextLabel::name() const
 QString TextLabel::defineLayout(ViewKeys&) const
 {
 	QString key = "";
-	if (context()->hasAncestor<NamespaceEntity>())
+	if (parent()->hasAncestor<NamespaceEntity>())
 	{
-		if (contextIs<Argument>())
+		if (parentIs<Argument>())
 			key = "(;M4;[[[;fs-2;fb;c#777;e#fff;'_';]]];);";
-		else if (contextIs<MemberVariable>())
+		else if (parentIs<MemberVariable>())
 			key = "(;M4;[[[;fs-2;fb;c#777;e#fff;'M';]]];);";
 	}
 	return "^;" + key + (name().isEmpty() ? "yminor;'[ANONYMOUS]'" : (QString(isNamed() ? "c#000" : "c#aaa") + ";'" + name() + "'"));
@@ -100,11 +100,11 @@ QString TextLabel::defineLayout(ViewKeys&) const
 void TextLabel::decorate(DecorationContext const& _c) const
 {
 	bool dec= false;
-	if (context()->hasAncestor<NamespaceEntity>())
+	if (parent()->hasAncestor<NamespaceEntity>())
 	{
-		if (contextIs<Variable>() && context()->contextIs<Member>())
+		if (parentIs<Variable>() && parent()->parentIs<Member>())
 			dec = true;
-		else if (contextIs<Argument>())
+		else if (parentIs<Argument>())
 			dec = true;
 	}
 	if (dec)
@@ -177,11 +177,11 @@ public:
 	virtual QString defineLayout(ViewKeys&) const
 	{
 		QString key = "";
-		if (subject()->context()->hasAncestor<NamespaceEntity>())
+		if (subject()->parent()->hasAncestor<NamespaceEntity>())
 		{
-			if (subject()->contextIs<Argument>())
+			if (subject()->parentIs<Argument>())
 				key = "(;M4;[[[;fs-2;fb;c#777;e#fff;'_';]]];)";
-			else if (subject()->contextIs<MemberVariable>())
+			else if (subject()->parentIs<MemberVariable>())
 				key = "(;M4;[[[;fs-2;fb;c#777;e#fff;'M';]]];)";
 		}
 		return "^;" + (m_text.isEmpty() ? QString("yminor;'ANONYMOUS'") : (key + ";'" + m_text + "'"));

@@ -36,10 +36,13 @@ class HashType: public ModifyingType
 	friend class SimpleOperator;
 
 public:
+	enum { KeyType = FirstNamed, EndOfNamed };
+	enum { ValueType = Original };
+
 	static void							initialiseClass();
 	static void							finaliseClass();
-	TypeEntity const*					key() const { return entityIs<TypeEntity>(1) ? entityAs<TypeEntity>(1) : TypeEntity::null; }
-	TypeEntity const*					value() const { return entityIs<TypeEntity>(0) ? entityAs<TypeEntity>(0) : TypeEntity::null; }
+	TypeEntity const*					key() const { return childIs<TypeEntity>(KeyType) ? childAs<TypeEntity>(KeyType) : TypeEntity::null; }
+	TypeEntity const*					value() const { return childIs<TypeEntity>(ValueType) ? childAs<TypeEntity>(ValueType) : TypeEntity::null; }
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
 	virtual bool						isWellDefined() const { return key() && value() && key()->isWellDefined() && value()->isWellDefined(); }
 	
@@ -48,7 +51,7 @@ protected:
 	virtual Types						assignableTypes() const;
 	virtual QList<ValueDefiner*>		applicableMembers(Entity* _s = 0, bool _isConst = false) const;
 	
-	virtual int							minimumRequired() const { return 2; }
+	virtual int							minRequired(int _i) const { return _i == KeyType ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual TypeEntity*					newClone() const { return new HashType; }
 	virtual QString						code(QString const& _middle) const;

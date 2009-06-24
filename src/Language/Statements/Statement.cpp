@@ -29,32 +29,36 @@ MARTTA_OBJECT_CPP(Statement);
 	
 bool Statement::isTyped(int _i) const
 {
-	return entityIs<Typed>(_i);
+	return childIs<Typed>(_i);
 }
 
 Typed* Statement::asTyped(int _i) const
 {
-	return entityAs<Typed>(_i);
+	return childAs<Typed>(_i);
 }
 
 Type Statement::typeOf(int _i) const
 {
-	return entityIs<Typed>(_i) ? entityAs<Typed>(_i)->type() : Type();
+	return childIs<Typed>(_i) ? childAs<Typed>(_i)->type() : Type();
 }
 
-QList<Typed*> Statement::typeds() const
+void Statement::appendDefinedUptoHere(int _index, QList<ValueDefiner*>* _list) const
 {
-	return entitiesOf<Typed>();
+	QList<int> const& order = defineDeclarationOrder();
+	if (order.contains(_index))
+		foreach (int i, order)
+			if (_index == i)
+				return;
+			else if (ValueDefiner* v = tryChild<ValueDefiner>(i))
+				*_list << v;
 }
 
 QList<ValueDefiner*> Statement::valuesInLocalScope() const
 {
-	if (!contextIs<Statement>())
+	if (!parentIs<Statement>())
 		return QList<ValueDefiner*>();
-	QList<ValueDefiner*> ret = contextAs<Statement>()->valuesInLocalScope();
-	for(int i = 0; i < contextIndex(); ++i)
-		if (parentsChildIs<ValueDefiner>(i))
-			ret += parentsChildAs<ValueDefiner>(i);
+	QList<ValueDefiner*> ret = parentAs<Statement>()->valuesInLocalScope();
+	parentAs<Statement>()->appendDefinedUptoHere(index(), &ret);
 	return ret;
 }
 

@@ -34,6 +34,8 @@ class MemberLambda: public MemberValue, public_interface LambdaNamer
 	MARTTA_INHERITS(LambdaNamer, 0)
 	
 public:
+	enum { Constness = FirstNamed, EndOfNamed };
+
 	virtual bool						isConst() const;
 	Type								thisType() const;
 	
@@ -49,6 +51,8 @@ protected:
 	virtual void						onDependencyChanged(Entity*) { changed(); }
 	virtual void						onDependencyRemoved(Entity*, int) { changed(); }
 	virtual QList<DeclarationEntity*>	utilised() const;
+	virtual int							minRequired(int _i) const { return _i == Constness || _i == Body || _i == Returned ? 1 : Super::minRequired(_i); }
+	virtual Kinds						allowedKinds(int _i) const;
 	
 	virtual QString						basicCode(FunctionCodeScope _ref) const;
 

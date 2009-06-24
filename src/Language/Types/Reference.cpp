@@ -37,30 +37,30 @@ MARTTA_OBJECT_CPP(Reference);
 bool Reference::defineSimilarityTo(TypeEntity const* _t, Castability _c) const
 {
 			// X -*> Y => X& -=> Y&
-	return _t->isKind<Reference>() && child()->isSimilarTo(_t->asKind<Reference>()->child(), Physical) ||
+	return _t->isKind<Reference>() && original()->isSimilarTo(_t->asKind<Reference>()->original(), Physical) ||
 			// X -O3> Y => X& -O3> Y
-			_c == VeryConvertible && child()->isSimilarTo(_t, VeryConvertible) ||
+			_c == VeryConvertible && original()->isSimilarTo(_t, VeryConvertible) ||
 			// X -O2> Y => X& -O2> Y
-			_c == FairlyConvertible && child()->isSimilarTo(_t, FairlyConvertible) ||
+			_c == FairlyConvertible && original()->isSimilarTo(_t, FairlyConvertible) ||
 			// X -O1> Y => X& -O1> Y
-			_c == Convertible && child()->isSimilarTo(_t, Convertible) ||
+			_c == Convertible && original()->isSimilarTo(_t, Convertible) ||
 		Super::defineSimilarityTo(_t, _c);
 }
 
 bool Reference::defineSimilarityFrom(TypeEntity const* _f, Castability _c) const
 {
-	return isAnyConvertible(_c) && child()->isKind<Const>() && 
+	return isAnyConvertible(_c) && original()->isKind<Const>() && 
 			// X -O2> X const&
-			(_f->isEquivalentTo(child()->asKind<Const>()->child()) || _f->isSimilarTo(child()->asKind<Const>()->child(), _c) ||
+			(_f->isEquivalentTo(original()->asKind<Const>()->original()) || _f->isSimilarTo(original()->asKind<Const>()->original(), _c) ||
 			// X const -O2> X const&
-			_f->isKind<Const>() && (_f->asKind<Const>()->child()->isSimilarTo(child()->asKind<Const>()->child(), _c) ||
-			_f->asKind<Const>()->child()->isEquivalentTo(child()->asKind<Const>()->child()) ) ) ||
+			_f->isKind<Const>() && (_f->asKind<Const>()->original()->isSimilarTo(original()->asKind<Const>()->original(), _c) ||
+			_f->asKind<Const>()->original()->isEquivalentTo(original()->asKind<Const>()->original()) ) ) ||
 		Super::defineSimilarityFrom(_f, _c);
 }
 
 QString Reference::defineLayout(ViewKeys&) const
 {
-	return "0;(;M1;^;fb;s;e#ffffff;c#7f6f5f;fs-2;'&';M2;)";
+	return QString("%1;(;M1;^;fb;s;e#ffffff;c#7f6f5f;fs-2;'&';M2;)").arg(Original);
 }
 
 void Reference::decorate(DecorationContext const& _c) const

@@ -39,7 +39,7 @@ protected:
 	virtual	bool						isConst() const { return true; }
 	virtual Access						access() const { return Public; }
 	virtual int							firstArgumentIndex() const { return 0; }
-	virtual int							minimumRequired() const { return 0; }
+	virtual int							minRequired(int) const { return 0; }
 	virtual Kinds						allowedKinds(int) const { return Kinds(); }
 	virtual QString						interfaceCode() const { return ""; }
 	virtual QString						implementationCode() const { return ""; }

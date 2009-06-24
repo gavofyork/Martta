@@ -31,6 +31,8 @@ class Operation: public Evaluation
 	MARTTA_PLACEHOLDER(Evaluation)
 
 public:
+	enum { FirstOperand = FirstNamed, TheOperand = FirstOperand, SecondOperand, EndOfNamed };
+	
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const&, EntityKeyEvent const*);
 	bool								keyPressed(EntityKeyEvent const*);
 	
@@ -41,15 +43,16 @@ public:
 	static void							unregisterOperator(Operator _o, ValueDefiner* _v, RootEntity*) { s_operatorCatalogue.remove(_o, _v); }
 
 protected:
-	virtual bool						isSlidable(int _i) const { return _i != entities().size() - 1; }
+	virtual bool						isSlidable(int) const { return false; }
+	virtual Entity*						lastOperand() const { return child(SecondOperand) ? child(SecondOperand) : child(FirstOperand); }	// QUICK optimise into overrides
 	static InsertionPoint				slideOnPrecedence(InsertionPoint _p, Precedence _d, Associativity _a, InsertionPoint const& _block);
 	
 	// Must return all entities that are LambdaNamer-derived and whose id() is operator _o.
 	static QList<ValueDefiner*>			allOperators(Operator _o);
 	
-	/// The argument type of the method or function type _t. argument -1 is the return type.
-	static Type							prototypeOf(Type const& _t, int _index = -1);
-	static bool							prototypeHasArgumentAt(Type const& _t, int _index);
+	/// The argument type of the method or function type _t. argument _index can be UndefinedIndex (return type), TheOperand/FirstOperand or SecondOperand.
+	static Type							prototypeOf(Type const& _t, int _index = UndefinedIndex);
+	static bool							prototypeHasArgumentAt(Type const& _t, int _cardinal);
 	static QList<ValueDefiner*>			findBestOverload(Types const& _actual, QList<ValueDefiner*> const _candidates);
 	
 	// TODO: Should really be indexed on RootEntity too, but this won't matter until there are multiple RootEntities at once, 

@@ -21,6 +21,7 @@
 #include <QtXml>
 
 #include "Argument.h"
+#include "RootEntity.h"
 #include "Class.h"
 #include "Constructor.h"
 #include "ExplicitType.h"
@@ -33,27 +34,32 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(Construction);	
 	
-int Construction::minimumRequired() const
+int Construction::minRequired(int _i) const
 {
-	return m_subject->entities().size() - 2;
+	if (_i == Cardinals)
+		return m_subject->cardinalChildCount() - 2;
+	else
+		return Super::minRequired(_i);
 }
 
 Kinds Construction::allowedKinds(int _index) const
 {
-	if (m_subject.isUsable() && _index < m_subject->entities().size() - 2)
+	if (m_subject.isUsable() && _index < m_subject->cardinalChildCount() - 2)
 		return Kind::of<Typed>();
 	else
-		return Kinds();
+		return Super::allowedKinds(_index);
 }
 
 Types Construction::allowedTypes(int _index) const
 {
-	if (!m_subject.isUsable()) return Types();
-	
-	Type t = *m_subject->entityAs<Argument>(_index + 1)->actualType();
-	if (t.isNull())
-		return Type(Void).topWith(Const());
-	return t;
+	if (m_subject.isUsable() && _index >= 0 && _index < m_subject->argumentCount())
+	{
+		Type t = *m_subject->argumentType(_index);
+		if (t.isNull())
+			return Types();
+		return t;
+	}
+	return Super::allowedTypes(_index);
 }
 
 Type Construction::type() const
@@ -73,7 +79,7 @@ QString Construction::code() const
 void Construction::importDom(QDomElement const& _element)
 {
 	Entity::importDom(_element);
-	m_subject = locateEntity<Constructor>(_element.attribute("subject"));
+	m_subject = rootEntity()->locate<Constructor>(_element.attribute("subject"));
 }
 
 void Construction::exportDom(QDomElement& _element) const

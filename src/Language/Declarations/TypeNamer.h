@@ -40,6 +40,9 @@ public:
 	/// The actual type it thinks it is. This is (typically) independent of the context and
 	/// the type has not been implicitly casted according to the "hole" it is trying to fit.
 	virtual Type						type() const { return Type(); }
+
+	Types								ourAllowedTypes() const;
+	Types								ourDeniedTypes() const;
 };
 
 QList<TypeNamer*> filterTypeds(Type const& _t, QList<TypeNamer*> const& _l);

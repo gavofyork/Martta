@@ -51,7 +51,7 @@ bool SimpleBinaryOperation::keyPressedOnInsertionPoint(InsertionPoint const& _p,
 	{
 		SimpleBinaryOperation* n = new SimpleBinaryOperation(o, p->asKind<Typed>()->type());
 		_e->noteStrobeCreation(n, &*p);
-		p->insert(n);
+		p->insert(n, FirstOperand);
 		n->validifyChildren();
 		n->dropCursor();
 		return true;
@@ -126,25 +126,27 @@ QString SimpleBinaryOperation::code() const
 
 Types SimpleBinaryOperation::allowedTypes(int _index) const
 {
-	if (m_symbolCache.isUsable() && (_index == 0 || _index == 1))
+	if (_index == FirstOperand || _index == SecondOperand)
 	{
-		qDebug() << prototypeOf(0)->code() << prototypeOf(1)->code() << " " << _index << " " << typeOf(0)->code();
-		if (_index == 1 && prototypeOf(1).isUltimatelyNull() && !typeOf(0).isNull())
-			return typeOf(0).strippedTo(prototypeOf(1));
-		if (_index == 1 && prototypeOf(1).isUltimatelyNull())
+		if (!m_symbolCache.isUsable())
+			return Types();
+		qDebug() << prototypeOf(FirstOperand)->code() << prototypeOf(SecondOperand)->code() << " " << _index << " " << typeOf(FirstOperand)->code();
+		if (_index == SecondOperand && prototypeOf(SecondOperand).isUltimatelyNull() && !typeOf(FirstOperand).isNull())
+			return typeOf(FirstOperand).strippedTo(prototypeOf(SecondOperand));
+		if (_index == SecondOperand && prototypeOf(SecondOperand).isUltimatelyNull())
 			return Types();
 		M_ASSERT(!prototypeOf(_index).isNull());
 		return prototypeOf(_index);
 	}
-	return Types();
+	return Super::allowedTypes(_index);
 }
 
 Type SimpleBinaryOperation::type() const
 {
 	if (!m_symbolCache.isUsable())
 		return Type();
-	if (protoReturn().isUltimatelyNull() && !typeOf(0).isNull())
-		return typeOf(0).strippedTo(protoReturn());
+	if (protoReturn().isUltimatelyNull() && !typeOf(FirstOperand).isNull())
+		return typeOf(FirstOperand).strippedTo(protoReturn());
 	else
 		return protoReturn();
 }

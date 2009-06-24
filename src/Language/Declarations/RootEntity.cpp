@@ -40,9 +40,32 @@ RootEntity::~RootEntity()
 	clearEntities();
 }
 
-Kinds RootEntity::allowedKinds(int) const
+// Identification, search & location.
+Identifiable* RootEntity::findEntity(QString const& _key) const
 {
-	return Kinds() << Kind::of<TopLevel>();
+//	qDebug() << *this << "Seaching for" << _key;
+	if (_key.startsWith("::"))
+	{
+		Identifiable const* i = this;
+		QString k = _key;
+		while (i && !k.isEmpty())
+		{
+			QString s = k.section("::", 1, 1);
+			k = k.mid(s.size() + 2);
+			i = i->lookupChild(s);
+//			qDebug() << "Key" << s << "gives" << (i ? i->self() : 0);
+		}
+		return const_cast<Identifiable*>(i);
+	}
+	else
+		return findDeclaration(_key);
+}
+
+Kinds RootEntity::allowedKinds(int _i) const
+{
+	if (_i >= 0)
+		return Kind::of<TopLevel>();
+	return Super::allowedKinds(_i);
 }
 
 void RootEntity::doCulling()
@@ -65,7 +88,7 @@ void RootEntity::ensureSyncedModel()
 	m_changed = false;
 }
 
-void RootEntity::noteDeletion(DeclarationEntity* _e)
+void RootEntity::noteDeletion(Identifiable* _e)
 {
 	foreach (ModelPtrFace* i, m_modelPtrs)
 		i->gone(_e);
@@ -121,6 +144,7 @@ void RootEntity::restorePtrs() const
 		if (i->isArchived())
 		{
 			qCritical() << "ERROR: Couldn't restore model pointer with key: " << i->key();
+			i->tryRestore();
 			i->gone(0);
 		}
 	m_archivalState = Restored;

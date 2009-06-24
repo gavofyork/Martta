@@ -31,40 +31,38 @@ namespace Martta
 {
 
 MARTTA_INTERFACE_CPP(LambdaNamer);
+MARTTA_NAMED_CPP(LambdaNamer, Body)
+MARTTA_NAMED_CPP(LambdaNamer, Name)
+MARTTA_NAMED_CPP(LambdaNamer, Returned)
 
 QString LambdaNamer::defineReturnLayout(ViewKeys&) const
 {
-	int sReturn = self()->entityIndexOf<TypeEntity>();
-	return QString::number(sReturn) + ";Mo";
+	return QString("%1;Mo").arg(Returned);
 }
 
 QString LambdaNamer::defineNameLayout(ViewKeys&) const
 {
-	int sName = self()->entityIndexOf<IdLabel>();
-	if (sName > -1)
-		return "ynormal;s" + FunctionType().idColour() + ";!" + QString::number(sName);
+	if (self()->child(Identity))
+		return QString("ynormal;s%1;!%2").arg(FunctionType().idColour()).arg(Identity);
 	else
 		return "ycode;'" + name().replace(";", "\\;").replace("'", "\\'") + "'";
 }
 
 QString LambdaNamer::defineArgListLayout(ViewKeys&) const
 {
-	int sFirstArg = self()->entityIndexOf<Argument>();
-	int sArgCount = self()->entityCountOf<Argument>();
-	return "ycode;'(';" + times(sFirstArg, sFirstArg + sArgCount, ";', ';") + ";')'";
+	return "ycode;'(';" + times(0, self()->cardinalChildCount(), ";', ';") + ";')'";
 }
 
 QString LambdaNamer::defineBodyLayout(ViewKeys& _viewKeys) const
 {
-	int sBody = self()->entityIndexOf<Compound>();
 	QString ret;
-	if (body() && sBody > -1)
+	if (body())
 		if (_viewKeys["expanded"].toBool())
-			ret += (body()->entities().size() ? "n;i;" : "") + QString::number(sBody);
+			ret += (body()->cardinalChildCount() ? "n;i;" : "") + QString::number(Body);
 		else
 		{
 			ret += "yminor;' (";
-			if (int n = body()->entitiesOf<Primary>().count() + body()->entitiesOf<Untyped>().count())
+			if (int n = body()->cardinalChildrenOf<Primary>().count() + body()->cardinalChildrenOf<Untyped>().count())
 				ret += QString::number(n) + " statement" + (n > 1 ? "s, " : ", ");
 			if (ret.endsWith(", "))
 				ret.chop(2);
@@ -86,22 +84,20 @@ QString LambdaNamer::defineLayout(ViewKeys& _k, QString _middle) const
 
 bool LambdaNamer::keyPressed(EntityKeyEvent const* _e)
 {
-	int sFirstArg = self()->entityIndexOf<Argument>();
-	int sName = self()->entityIndexOf<IdLabel>();
-	if ((_e->text() == "(" && !argumentCount() && (_e->focalIndex() == sName || _e->isFocused()) || _e->text() == "," && _e->focalIndex() >= sFirstArg) && self()->back().allowedToBeKind<Argument>())
+	if ((_e->text() == "(" && !argumentCount() && (_e->focalIndex() == Identity || _e->isFocused()) || _e->text() == "," && _e->focalIndex() >= 0) && self()->back().allowedToBeKind<Argument>())
 	{
 		Argument* v = new Argument;
 		self()->back().place(v);
 		v->prepareChildren();
 		v->navigateInto(_e->codeScene());
 	}
-	else if (_e->text() == "(" && _e->focalIndex() == 0 && argument(0))
+	else if (_e->text() == "(" && _e->focalIndex() == Identity && argument(0))
 	{
 		argument(0)->navigateInto(_e->codeScene());
 	}
-	else if (_e->text() == " " && self()->entityIs<TypeEntity>(_e->focalIndex()) && self()->entityCountOf<IdLabel>())
+	else if (_e->text() == " " && _e->focalIndex() == Returned && self()->child(Identity))
 	{
-		self()->entitiesOf<IdLabel>()[0]->navigateOnto(_e->codeScene());
+		self()->child(Identity)->navigateOnto(_e->codeScene());
 	}
 	else
 		return false;
@@ -111,10 +107,9 @@ bool LambdaNamer::keyPressed(EntityKeyEvent const* _e)
 Type LambdaNamer::type() const
 {
 	Type ret = FunctionType(this->ellipsis());
-	ret.append(returns());
+	ret.place(returns(), FunctionType::Returned);
 	for (int i = 0; i < argumentCount(); i++)
 		ret.append(argumentType(i));
-
 	ret.topWith(Reference());
 	return ret;
 }
@@ -145,27 +140,25 @@ QString LambdaNamer::basicCode(FunctionCodeScope _ref) const
 
 Compound* LambdaNamer::body() const
 {
-	if (self()->entitiesOf<Compound>().size())
-		return self()->entitiesOf<Compound>()[0];
-	return 0;
+	return self()->tryChild<Compound>(Body);
 }
 
 int LambdaNamer::argumentCount() const
 {
-	return self()->entitiesOf<Argument>().size();
+	return self()->cardinalChildCount();
 }
 
 Argument* LambdaNamer::argument(int _index) const
 {
-	if (_index < self()->entitiesOf<Argument>().size())
-		return self()->entitiesOf<Argument>()[_index];
+	if (_index < argumentCount())
+		return self()->tryChild<Argument>(_index);
 	return 0;
 }
 
 Type LambdaNamer::returns() const
 {
-	if (self()->entitiesOf<TypeEntity>().size())
-		return *self()->entitiesOf<TypeEntity>()[0];
+	if (TypeEntity* t = self()->tryChild<TypeEntity>(Returned))
+		return *t;
 	return 0;
 }
 

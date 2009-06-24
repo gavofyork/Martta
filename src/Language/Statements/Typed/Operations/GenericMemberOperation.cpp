@@ -33,7 +33,7 @@ MARTTA_OBJECT_CPP(GenericMemberOperation);
 Type GenericMemberOperation::memberified(Type _t, Type const& _scope) const
 {
 	if (_t->isType<Reference>())
-		_t->asType<Reference>()->child()->knitIn(new Memberify(_scope));
+		_t->asType<Reference>()->original()->knitIn(new Memberify(_scope));
 	else
 		_t.topWith(Memberify(_scope));
 	return _t;
@@ -41,38 +41,39 @@ Type GenericMemberOperation::memberified(Type _t, Type const& _scope) const
 
 Types GenericMemberOperation::allowedTypes(int _index) const
 {
-	if (_index == 0)
+	if (_index == FirstOperand)
 		return Type();
-	if (_index == 1 && !scope().isNull())
+	if (_index == SecondOperand)
 	{
 		Types ret;
-		foreach (Type t, BareTyped::allowedTypes())
-			ret << memberified(t, scope()); 
+		if (!scope().isNull())
+			foreach (Type t, BareTyped::ourAllowedTypes())
+				ret << memberified(t, scope()); 
 		return ret;
 	}
-	return Types();
+	return Super::allowedTypes(_index);
 }
 
 Types GenericMemberOperation::deniedTypes(int _index) const
 {
-	if (_index == 1)
+	if (_index == SecondOperand)
 	{
 		Types ret;
-		foreach (Type t, BareTyped::deniedTypes())
+		foreach (Type t, BareTyped::ourDeniedTypes())
 			ret << memberified(t, scope());
 		return ret;
 	}
-	return Types();
+	return Super::deniedTypes(_index);
 }
 
 bool GenericMemberOperation::isChildInValidState(int _index) const
 {
-	if (_index == 1)
+	if (_index == SecondOperand)
 	{
 		if (scope().isNull())
 			return false;
 		// If we somehow managed to end up at a Memberified type despite not being a Referenced, fair play.
-		if (entityIs<Referenced>(1) && !scope()->applicableMembers(context()).contains(entityAs<Referenced>(1)->subject()))
+		if (childIs<Referenced>(SecondOperand) && !scope()->applicableMembers(parent()).contains(childAs<Referenced>(SecondOperand)->subject()))
 			return false;
 	}
 	return Super::isChildInValidState(_index);
@@ -91,8 +92,8 @@ Type GenericMemberOperation::type() const
 	}
 	m->setScope(st);
 	// if the memberified thing isn't const, and the memberify is a const, then make the type const.
-	if (st->isType<Const>() && !m->child()->isType<Const>() && !m->child()->isType<FunctionType>())
-		m->child()->knit<Const>();
+	if (st->isType<Const>() && !m->original()->isType<Const>() && !m->original()->isType<FunctionType>())
+		m->original()->knit<Const>();
 	m->unknit();
 	return rt;
 }

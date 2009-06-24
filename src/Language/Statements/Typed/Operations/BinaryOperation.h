@@ -30,16 +30,17 @@ class BinaryOperation: public Operation
 	MARTTA_PLACEHOLDER(Operation)
 
 public:
-	virtual int							minimumRequired() const { return 2; }
-	virtual Kinds						allowedKinds(int _index) const { if (_index < 2) return Kind::of<Typed>(); else return Kinds(); }
+	virtual int							minRequired(int _i) const { return _i == FirstOperand || _i == SecondOperand ? 1 : Super::minRequired(_i); }
+	virtual Kinds						allowedKinds(int _i) const { if (_i == FirstOperand || _i == SecondOperand) return Kind::of<Typed>(); else return Super::allowedKinds(_i); }
+	virtual bool						isSlidable(int _i) const { return _i != SecondOperand; }
 
 protected:
-	bool								haveLeft() const { return isTyped(0); }
-	bool								haveRight() const { return isTyped(1); }
-	Typed*								left() const { return asTyped(0); }
-	Typed*								right() const { return asTyped(1); }
-	Type								leftType() const { return typeOf(0); }
-	Type								rightType() const { return typeOf(1); }
+	bool								haveLeft() const { return isTyped(FirstOperand); }
+	bool								haveRight() const { return isTyped(SecondOperand); }
+	Typed*								left() const { return asTyped(FirstOperand); }
+	Typed*								right() const { return asTyped(SecondOperand); }
+	Type								leftType() const { return typeOf(FirstOperand); }
+	Type								rightType() const { return typeOf(SecondOperand); }
 
 	template<class T> static bool		simpleKeyPressedOnInsertionPointHandler(InsertionPoint const& _p, EntityKeyEvent const* _e, QString const& _t, Precedence _d, Associativity _a)
 	{
@@ -47,13 +48,17 @@ protected:
 			return false;
 
 		InsertionPoint p = slideOnPrecedence(_p, _d, _a, _e->nearestBracket(_p));
+//		qDebug() << "Slide from" << _p << "to" << p;
 		if (!isTemporary(p.entity()))
 		{
 			Entity* n = new T;
 			_e->noteStrobeCreation(n, &*p);
-			p->insert(n);
+//			p->debugTree();
+			p->insert(n, FirstOperand);
+//			n->debugTree();
 			n->validifyChildren();
-			n->entity(1)->navigateOnto(_e->codeScene());
+//			n->debugTree();
+			n->child(SecondOperand)->navigateOnto(_e->codeScene());
 			return true;
 		}
 		return false;
@@ -67,7 +72,7 @@ protected:
 	virtual QString						defineLayout(ViewKeys&) const;
 
 	virtual int							familyDependencies() const { return DependsOnBoth; }
-	virtual void						onDependencySwitched(Entity* _e, Entity* _o) { if (_e == context()) relayoutLater(); else Super::onDependencySwitched(_e, _o); }
+	virtual void						onDependencySwitched(Entity* _e, Entity* _o) { if (_e == parent()) relayoutLater(); else Super::onDependencySwitched(_e, _o); }
 };
 
 }

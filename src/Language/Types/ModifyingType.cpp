@@ -34,20 +34,20 @@ void ModifyingType::unknit()
 {
 	if (owner() && &**owner() == this)
 	{
-		M_ASSERT(child()->owner() == owner());
-		M_ASSERT(!context());
-		owner()->m_top = child();
+		M_ASSERT(original()->owner() == owner());
+		M_ASSERT(!parent());
+		owner()->m_top = original();
 	}
 	InsertionPoint p = over();
-	TypeEntity* ch = child();
+	TypeEntity* ch = original();
 	
 	//	P -p-> this -0-> ch    BECOMES    P -p-> ch
 	
 	p.insertSilent(ch);
 	kill();
 	
-	if (p.context())
-		p.context()->childSwitched(ch, this);
+	if (p.parent())
+		p.parent()->childSwitched(ch, this);
 	ch->contextSwitched(this);
 	
 	delete this;
@@ -55,9 +55,9 @@ void ModifyingType::unknit()
 
 Kinds ModifyingType::allowedKinds(int _index) const
 {
-	if (_index == 0)
-		return Kinds() << Kind::of<TypeEntity>();
-	return Kinds();
+	if (_index == Original)
+		return Kind::of<TypeEntity>();
+	return Super::allowedKinds(_index);
 }
 
 }

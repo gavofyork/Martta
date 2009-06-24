@@ -36,7 +36,7 @@ class Union: public TopLevelType
 	template<class T> friend class WithFieldsSimpleResolver;
 
 public:
-	virtual int							minimumRequired() const { return 1; }
+	virtual int							minRequired(int _i) const { return _i == Cardinals ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int) const;
 	
 	virtual QString						code() const { return isHidden() ? QString("[union]") : (/*"union " + */codeName()); }

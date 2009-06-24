@@ -30,11 +30,13 @@ class Invocation: public Evaluation
 	MARTTA_OBJECT(Evaluation)
 
 public:
-	QString								callList() const { return callList(typeds().mid(1)); }
+	enum { Callee = FirstNamed, EndOfNamed };
+
+	QString								callList() const { return callList(castEntities<Typed>(cardinalChildren())); }
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
 
 protected:
-	virtual int							minimumRequired() const;
+	virtual int							minRequired(int _i) const;
 	virtual Kinds						allowedKinds(int _index) const;
 	virtual Types						allowedTypes(int _index) const;
 	virtual Type						type() const;

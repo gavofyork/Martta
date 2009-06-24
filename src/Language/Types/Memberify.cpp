@@ -34,9 +34,9 @@ MARTTA_OBJECT_CPP(Memberify);
 Memberify::Memberify(Type const& _object)
 {
 	prepareChildren();
-	if (entity(1))
-		entity(1)->killAndDelete();
-	_object.placeCopy(middle(1));
+	if (child(Scope))
+		child(Scope)->killAndDelete();
+	_object.placeCopy(middle(Scope));
 }
 
 Types Memberify::assignableTypes() const
@@ -46,7 +46,7 @@ Types Memberify::assignableTypes() const
 
 bool Memberify::isConst() const
 {
-	TypeEntity* te = entity(1) ? entity(1)->asKind<TypeEntity>() : 0;
+	TypeEntity* te = scope();
 	if (te && te->isType<Const>())
 		return true;
 	return false;
@@ -55,7 +55,7 @@ bool Memberify::isConst() const
 void Memberify::setConst(bool _c)
 {
 	// !!!UNTESTED!!!
-	TypeEntity* te = entity(1) ? entity(1)->asKind<TypeEntity>() : 0;
+	TypeEntity* te = scope();
 	if (!te)
 		return;
 	if (!_c && te->isType<Const>())
@@ -66,13 +66,14 @@ void Memberify::setConst(bool _c)
 
 void Memberify::setScope(Type const& _newScope)
 {
-	entity(1)->replace(TypeEntity::cloneOf(&*_newScope, owner()));
+	M_ASSERT(scope());
+	scope()->replace(TypeEntity::cloneOf(&*_newScope, owner()));
 	QList<TypeEntity*> l;
-	l << entitiesOf<TypeEntity>();
+	l << childrenOf<TypeEntity>();
 	while (!l.isEmpty())
 	{
 		TypeEntity* t = l.takeLast();
-		l << t->entitiesOf<TypeEntity>();
+		l << t->childrenOf<TypeEntity>();
 		if (t->isKind<MemberTemplateType>())
 			t->asKind<MemberTemplateType>()->substitute();
 	}
@@ -80,7 +81,7 @@ void Memberify::setScope(Type const& _newScope)
 
 Class* Memberify::scopeClass(bool* _isConst) const
 {
-	TypeEntity* te = entity(1) ? entity(1)->asKind<TypeEntity>() : 0;
+	TypeEntity* te = scope();
 	if (te && te->isType<ExplicitType>() && te->asType<ExplicitType>()->subject()->isKind<Class>())
 	{
 		if (_isConst)
@@ -99,16 +100,16 @@ Class* Memberify::scopeClass(bool* _isConst) const
 void Memberify::setScopeClass(Class* _scope, bool _isConst)
 {
 	prepareChildren();
-	if (entity(1))
-		entity(1)->killAndDelete();
-	middle(1).place(new ExplicitType(_scope));
+	if (child(Scope))
+		child(Scope)->killAndDelete();
+	middle(Scope).place(new ExplicitType(_scope));
 	if (_isConst)
-		entity(1)->insert(new Const);
+		child(Scope)->insert(new Const);
 }
 
 Kinds Memberify::allowedKinds(int _i) const
 {
-	if (_i == 1)
+	if (_i == Scope)
 		return Kind::of<TypeEntity>();
 	return Super::allowedKinds(_i);
 }
@@ -117,7 +118,7 @@ TypeEntity* Memberify::scopeType() const
 {
 	if (scope())
 		if (scope()->isType<Const>())
-			return scope()->asType<Const>()->child();
+			return scope()->asType<Const>()->original();
 		else
 			return scope();
 	else
@@ -127,7 +128,7 @@ TypeEntity* Memberify::scopeType() const
 QString Memberify::code(QString const& _middle) const
 {
 	if (scopeType())
-		return child()->code(" " + scopeType()->code() + ":: " + _middle) + (child()->ignore<ModifyingType>()->isType<FunctionType>() && isConst() ? " const" : "");
+		return original()->code(" " + scopeType()->code() + ":: " + _middle) + (original()->ignore<ModifyingType>()->isType<FunctionType>() && isConst() ? " const" : "");
 	return QString();
 }
 
@@ -141,7 +142,7 @@ bool Memberify::defineSimilarityFrom(TypeEntity const* _f, Castability _c) const
 	// Similarly, base-class memberified-methods fit into derived-shaped caller holes,
 	// but not the other way around.
 	return _f->isKind<Memberify>() && (!scope() || _f->asKind<Memberify>()->scope() && scope()->isSimilarTo(_f->asKind<Memberify>()->scope(), Physical))
-				&& _f->asKind<Memberify>()->child()->isSimilarTo(child(), _c)
+				&& _f->asKind<Memberify>()->original()->isSimilarTo(original(), _c)
 			|| Super::defineSimilarityFrom(_f, _c);
 }
 

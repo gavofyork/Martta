@@ -20,7 +20,7 @@
 
 #include <QtXml>
 
-#include "BareTyped.h"
+#include "Typed.h"
 #include "Const.h"
 #include "Compound.h"
 #include "WhileLoop.h"
@@ -29,47 +29,64 @@ namespace Martta
 {
 
 MARTTA_OBJECT_CPP(WhileLoop);	
-	
-QString WhileLoop::code() const
-{
-	QString ret;
-	ret += "while (" + (asStatement(0) ? asStatement(0)->code() : "");
-	ret += ")\n" + (asStatement(1) ? asStatement(1)->codeAsStatement() : "");
-	return ret;
-}
+MARTTA_OBJECT_CPP(UntilLoop);	
 
 Kinds WhileLoop::allowedKinds(int _index) const
 {
-	switch (_index)
-	{
-		case 0: return Kind::of<BareTyped>();
-		case 1: return Kind::of<Compound>();
-		default: return Kinds();
-	}
+	if (_index == Condition)
+		return Kind::of<BareTyped>();
+	if (_index == Body)
+		return Kind::of<Compound>();
+	return Super::allowedKinds(_index);
 }
 
 Types WhileLoop::allowedTypes(int _index) const
 {
-	switch (_index)
-	{
-		case 0: return Type(Bool).topWith(Const());
-		default: return Types();
-	}
+	if (_index == Condition)
+		return Type(Bool).topWith(Const());
+	return Super::allowedTypes(_index);
 }
 
-QString WhileLoop::defineLayout(ViewKeys&) const
+QString WhileLoop::code() const
 {
-	return QString("ycode;^;'while (';0;')'") +
-		(entity(1) && entity(1)->entities().size() ? ";n;i;1" : ";1");
+	QString ret;
+	ret += "while (" + (asStatement(Condition) ? asStatement(Condition)->code() : "");
+	ret += ")\n" + (asStatement(Body) ? asStatement(Body)->codeAsStatement() : "");
+	return ret;
+}
+
+QString WhileLoop::defineLayout(ViewKeys& _k) const
+{
+	return ("ycode;^;'while (';%1;')'" + Corporal::defineLayout(_k, true)).arg(Condition);
 }
 
 bool WhileLoop::keyPressed(EntityKeyEvent const* _e)
 {
-	if ((_e->text() == ")" || _e->text() == "{") && _e->focalIndex() == 0 && entitiesOf<Compound>().size())
-		entitiesOf<Compound>()[0]->navigateOnto(_e->codeScene());
+	if (Corporal::keyPressed(_e))
+		return true;
 	else
 		return Super::keyPressed(_e);
 	return true;
+}
+
+Kinds UntilLoop::allowedKinds(int _index) const
+{
+	if (_index == Condition)
+		return Kind::of<Typed>();
+	return Super::allowedKinds(_index);
+}
+
+QString UntilLoop::code() const
+{
+	QString ret;
+	ret += "while (!(" + (asStatement(Condition) ? asStatement(Condition)->code() : "");
+	ret += "))\n" + (asStatement(Body) ? asStatement(Body)->codeAsStatement() : "");
+	return ret;
+}
+
+QString UntilLoop::defineLayout(ViewKeys& _k) const
+{
+	return ("ycode;^;'until (';%1;')'" + Corporal::defineLayout(_k, true)).arg(Condition);
 }
 
 }

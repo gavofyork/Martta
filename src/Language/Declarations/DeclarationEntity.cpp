@@ -21,6 +21,10 @@
 #include <QtCore>
 #include <QtXml>
 
+// TODO REMOVE!
+#include "NamespaceEntity.h"
+#include "Class.h"
+
 #include "Common.h"
 #include "RootEntity.h"
 #include "TextLabel.h"
@@ -43,8 +47,8 @@ DeclarationEntity::~DeclarationEntity()
 
 QList<ValueDefiner*> DeclarationEntity::valuesKnown() const
 {
-	QList<ValueDefiner*> ret = contextIs<DeclarationEntity>() ? contextAs<DeclarationEntity>()->valuesKnown() : QList<ValueDefiner*>();
-	foreach (DeclarationEntity* d, siblingsOf<DeclarationEntity>())
+	QList<ValueDefiner*> ret = parentIs<DeclarationEntity>() ? parentAs<DeclarationEntity>()->valuesKnown() : QList<ValueDefiner*>();
+	foreach (DeclarationEntity* d, cardinalSiblingsOf<DeclarationEntity>())
 		ret += d->valuesAdded();
 	return ret;
 }
@@ -59,14 +63,9 @@ QString DeclarationEntity::key() const
 
 Kinds DeclarationEntity::allowedKinds(int _i) const
 {
-	return _i ? Kinds() : Kind::of<TextLabel>();
-}
-
-void DeclarationEntity::onLeaveScene(RootEntity* _new, RootEntity* _old)
-{
-	Super::onLeaveScene(_new, _old);
-	if (_old && _old != _new)
-		_old->noteDeletion(this);
+	if (_i == Identity)
+		return Kind::of<TextLabel>();
+	return Super::allowedKinds(_i);
 }
 
 Identifiable* DeclarationEntity::lookupChild(QString const& _key) const
@@ -75,24 +74,16 @@ Identifiable* DeclarationEntity::lookupChild(QString const& _key) const
 	int k = _key.toInt(&ok);
 	if (ok && m_anonyma.size() > k)
 		return const_cast<Identifiable*>(m_anonyma[k]);
-//	qDebug() << "Matching for " << _key;
-	foreach (DeclarationEntity* e, entitiesOf<DeclarationEntity>())
-	{	
-//		if (entitiesOf<DeclarationEntity>().size() < 10)
-//			qDebug() << "    " << e->identity();
-		if (e->identity() == _key)
-			return e;
-	}
-	return 0;
+	return Identifiable::lookupChild(_key);
 }
 
 QList<DeclarationEntity*> DeclarationEntity::utilisedSiblings() const
 {
 	QList<DeclarationEntity*> ret;
 	foreach (DeclarationEntity* i, utilised())
-		if (i->hasAncestor(context()))
+		if (i->hasAncestor(parent()))
 		{
-			DeclarationEntity* e = parentsChild(i->ancestorIndex(context()))->asKind<DeclarationEntity>();
+			DeclarationEntity* e = sibling(i->ancestorIndex(parent()))->asKind<DeclarationEntity>();
 			if (e && !ret.contains(e))
 				ret << e;
 		}
@@ -102,7 +93,7 @@ QList<DeclarationEntity*> DeclarationEntity::utilisedSiblings() const
 QList<DeclarationEntity*> DeclarationEntity::utilised() const
 {
 	QList<DeclarationEntity*> ret;
-	foreach (DeclarationEntity* i, entitiesOf<DeclarationEntity>())
+	foreach (DeclarationEntity* i, cardinalChildrenOf<DeclarationEntity>())
 		ret << i->utilised();
 //	qDebug() << name() << "(" << kind().name() << ") utilises:";
 //	foreach (DeclarationEntity* i, ret)
@@ -112,17 +103,13 @@ QList<DeclarationEntity*> DeclarationEntity::utilised() const
 
 void DeclarationEntity::importDom(QDomElement const& _element)
 {
-	if (_element.hasAttribute("index"))
-		ancestor<DeclarationEntity>()->registerAnonymous(this, _element.attribute("index").toInt());
-
+	Identifiable::importDom(_element);
 	Super::importDom(_element);
 }
 
 void DeclarationEntity::exportDom(QDomElement& _element) const
 {
-	if (!addressableContext())
-		_element.setAttribute("index", ancestor<DeclarationEntity>()->registerAnonymous(this));
-
+	Identifiable::exportDom(_element);
 	Super::exportDom(_element);
 }
 

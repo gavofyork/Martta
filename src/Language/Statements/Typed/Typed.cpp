@@ -28,7 +28,7 @@ MARTTA_OBJECT_CPP(Typed);
 
 void Typed::onDependencyChanged(Entity* _e)
 {
-	if (_e == context())
+	if (_e == parent())
 	{
 		// If our context has changed, it might mean our validity has changed. Update.
 		relayoutLater();
@@ -37,10 +37,10 @@ void Typed::onDependencyChanged(Entity* _e)
 
 void Typed::onContextIndexChanged(int _oldIndex)
 {
-	if (!contextIs<TypedOwner>())
+	if (!parentIs<TypedOwner>())
 		return;
-	if (contextAs<TypedOwner>()->allowedTypes(_oldIndex) != contextAs<TypedOwner>()->allowedTypes(contextIndex()) ||
-		contextAs<TypedOwner>()->deniedTypes(_oldIndex) != contextAs<TypedOwner>()->deniedTypes(contextIndex()))
+	if (parentAs<TypedOwner>()->allowedTypes(_oldIndex) != parentAs<TypedOwner>()->allowedTypes(index()) ||
+		parentAs<TypedOwner>()->deniedTypes(_oldIndex) != parentAs<TypedOwner>()->deniedTypes(index()))
 		relayoutLater();
 }
 

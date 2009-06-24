@@ -35,29 +35,29 @@ MARTTA_OBJECT_CPP(Const);
 
 bool Const::defineSimilarityFrom(TypeEntity const* _f, Castability _c) const
 {
-	return _f->isKind<Const>() && _f->asKind<Const>()->child()->isSimilarTo(child(), _c) 
-		|| _f->isSimilarTo(child(), _c)
+	return _f->isKind<Const>() && _f->asKind<Const>()->original()->isSimilarTo(original(), _c) 
+		|| _f->isSimilarTo(original(), _c)
 		|| Super::defineSimilarityFrom(_f, _c);
 }
 
 bool Const::defineSimilarityTo(TypeEntity const* _t, Castability _c) const
 {
 	// Convertible means that a Reference to it will render it Unrelated.
-	return isAnyConvertible(_c) && _c != ConstPerfectConvertible && child()->isSimilarTo(_t, _c) || 
-		_c == Convertible && child()->isKind<ExplicitType>() && child()->asKind<ExplicitType>()->haveSingleCastOperator(_t, true) ||
+	return isAnyConvertible(_c) && _c != ConstPerfectConvertible && original()->isSimilarTo(_t, _c) || 
+		_c == Convertible && original()->isKind<ExplicitType>() && original()->asKind<ExplicitType>()->haveSingleCastOperator(_t, true) ||
 		Super::defineSimilarityTo(_t, _c);
 }
 
 QString Const::code(QString const& _middle) const
 {
-	if (entityIs<TypeEntity>(0))
-		return entityAs<TypeEntity>(0)->code(" const" + _middle);
+	if (childIs<TypeEntity>(Original))
+		return childAs<TypeEntity>(Original)->code(" const" + _middle);
 	return QString();
 }
 
 QString Const::defineLayout(ViewKeys&) const
 {
-	return "0;(;M2;^;fb;s;ewhite;c#5f6f7f;fs-2;'C';M3;)";
+	return QString("%1;(;M2;^;fb;s;ewhite;c#5f6f7f;fs-2;'C';M3;)").arg(Original);
 }
 
 void Const::decorate(DecorationContext const& _c) const
@@ -78,16 +78,9 @@ void Const::decorate(DecorationContext const& _c) const
 
 Kinds Const::deniedKinds(int _i) const
 {
-	if (_i == 0)
+	if (_i == Original)
 		return Kind::of<Reference>(), Kind::of<Const>();
 	return Super::deniedKinds(_i);
-}
-
-Kinds Const::allowedKinds(int _i) const
-{
-	if (_i == 0)
-		return Kind::of<TypeEntity>();
-	return Kinds();
 }
 
 }

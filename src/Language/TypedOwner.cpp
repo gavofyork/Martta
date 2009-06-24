@@ -18,21 +18,18 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include <QtCore>
-
-#include "Common.h"
-#include "Const.h"
+#include "Type.h"
 #include "Typed.h"
 #include "TypedOwner.h"
 
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(TypedOwner);	
+MARTTA_INTERFACE_CPP(TypedOwner);	
 
 Types TypedOwner::allowedTypes(int) const
 {
-	return Type();//Type(Void).topWith(Const());
+	return Types();
 }
 
 Types TypedOwner::deniedTypes(int) const
@@ -40,43 +37,49 @@ Types TypedOwner::deniedTypes(int) const
 	return Types();
 }
 
-Kinds TypedOwner::deniedKinds(int) const
-{
-	return context() ? context()->deniedKinds(contextIndex()) : Kinds();
-};
-
 Type TypedOwner::effectiveType(int _i) const
 {
-	if (!entityIs<Typed>(_i))
+	if (!self()->childIs<Typed>(_i))
 		return Type();
-	Type p(entityAs<Typed>(_i)->type());
-	foreach (Type t, allowedTypes(0))
+	Type p(self()->childAs<Typed>(_i)->type());
+	foreach (Type t, allowedTypes(_i))
 		if (p.isSimilarTo(t, TypeEntity::Convertible))
+//		{
+//			qDebug() << p->code() << " is convertible to " << t->code() << " t is ultnull? " << t->isUltimatelyNull();
+//			t->debugTree();
 			return t->isUltimatelyNull() ? p : t;
+//		}
 	return Type();
+}
+
+Type TypedOwner::nominalType(int _i) const
+{
+	if (!self()->childIs<Typed>(_i))
+		return Type();
+	return self()->childAs<Typed>(_i)->type();
 }
 
 bool TypedOwner::isChildInValidState(int _i) const
 {
-//	entity(_i)->debugTree();
+//	child(_i)->debugTree();
 	// Nothing to say about it as it's not typed. If it's supposed to be typed, then the allowed kinds system should pick up the error.
-	if (!entityIs<Typed>(_i))
+	if (!self()->childIs<Typed>(_i))
 		return true;
 	foreach (Type i, deniedTypes(_i))
-		if (entityAs<Typed>(_i)->type() == i)
+		if (self()->childAs<Typed>(_i)->type() == i)
 			return false;
 	foreach (Type i, allowedTypes(_i))
-		if (!entityIs<Typed>(_i))
+		if (!self()->childIs<Typed>(_i))
 		{
-			debugTree();
+			self()->debugTree();
 			M_ASSERT(false);
 		}
 		else
-			if (entityAs<Typed>(_i)->type().isSimilarTo(i, TypeEntity::Convertible))
+			if (self()->childAs<Typed>(_i)->type().isSimilarTo(i, TypeEntity::Convertible))
 				return true;
 			else
 			{
-				qDebug() << entityAs<Typed>(_i)->type()->code() << " != " << i->code();
+				qDebug() << self()->childAs<Typed>(_i)->type()->code() << " != " << i->code();
 			}
 	return false;
 }

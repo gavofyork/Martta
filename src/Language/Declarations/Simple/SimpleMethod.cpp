@@ -26,9 +26,4 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(SimpleMethod);
 
-SimpleMethod::~SimpleMethod()
-{
-	rootEntity()->unregisterDeclaration(this);
-}
-
 }

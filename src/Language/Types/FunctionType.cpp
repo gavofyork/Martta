@@ -46,7 +46,7 @@ bool FunctionType::defineSimilarityTo(TypeEntity const* _t, Castability _c) cons
 QList<DeclarationEntity*> FunctionType::utilisedX() const
 {
 	QList<DeclarationEntity*> ret;
-	foreach (TypeEntity* i, entitiesOf<TypeEntity>())
+	foreach (TypeEntity* i, childrenOf<TypeEntity>())
 		ret << i->utilised();
 	return ret;
 }
@@ -61,19 +61,15 @@ QString FunctionType::code(QString const& _middle) const
 	if (m_wild)
 		return "#unknown-type#(" + _middle + ")(...)";
 	
-	M_ASSERT(entity(0));
-	QString ret;
-	foreach (Entity* e, entities())
-		if (ret.isEmpty())
-			ret = e->asKind<TypeEntity>()->code() + "(" + _middle + ")(";
-		else
-		{
-			if (ret.right(1) != "(")
-				ret += ", ";
-			ret += e->asKind<TypeEntity>()->code();
-		}
+	QString ret = returnType()->code() + "(" + _middle + ")(";
+	foreach (Entity* e, cardinalChildren())
+	{
+		if (ret.right(1) != "(")
+			ret += ", ";
+		ret += e->asKind<TypeEntity>()->code();
+	}
 	if (m_ellipsis)
-		ret += (entities().size() > 1) ? ", ..." : "...";
+		ret += (cardinalChildCount()) ? ", ..." : "...";
 	ret += ")";
 
 	return ret;

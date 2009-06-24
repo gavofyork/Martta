@@ -68,7 +68,7 @@ public:
 	NamespaceEntity*			ns() { return m_namespace; }
 	NamespaceEntity const*		ns() const { return m_namespace; }
 	Method*						program() const { return m_program; }
-	Class*						programClass() const { return m_program->context()->asKind<Class>(); }
+	Class*						programClass() const { return m_program->parent()->asKind<Class>(); }
 	QString						executable();
 	QString						lastCompileError() const { return m_lastCompileError; }
 	RootEntity const*			root() const { return &m_declarations; }
@@ -88,7 +88,8 @@ public slots:
 	void triggerChange() { changed(); }
 
 private slots:
-	void reloadHeaders();
+	void reloadHeaders();	// don't forget to update any subjects after this! 
+	void reloadHeadersAndUpdateSubject() { reloadHeaders(); emit subjectInvalid(); }
 	void stopCompile();
 	void compileFinished();
 

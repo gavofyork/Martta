@@ -37,8 +37,8 @@ protected:
 	virtual QString						defineReturnLayout(ViewKeys&) const { return QString::null; }
 	virtual QString						name() const;
 	virtual QString						codeName() const;
-	virtual int							memberMinimumRequired() const { return 3; }
-	virtual Kinds						memberAllowedKinds(int _i) const;
+	virtual int							minRequired(int _i) const { return _i == Identity ? 0 : Super::minRequired(_i); }
+	virtual Kinds						allowedKinds(int _i) const;
 	virtual QString						basicCode(FunctionCodeScope _ref) const;
 };
 

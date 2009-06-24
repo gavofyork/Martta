@@ -26,6 +26,11 @@
 namespace Martta
 {
 
+int registerName(int _n, char const* _class, char const* _name);
+
+class Entity;
+class Nothing { public: static AuxilliaryFace const* staticAuxilliary() { return 0; } void const* tryInterface(Kind) const { return 0; } };
+
 namespace tryCastPrivate
 {
 template<class T, class F> struct isCompatible { static char testCompat(...); static int testCompat(T); static const bool value = sizeof(testCompat((F)0)) - 1; };
@@ -37,10 +42,15 @@ template<class T, class F> T tryCast(F _f) { return tryCastPrivate::XL<T, F, try
 }
 
 #define MARTTA_BASIC \
-	public: \
-	static AuxilliaryFace const*		staticAuxilliary(); \
+public: \
+	template<class T> friend struct Martta::GetCount; \
+	template<class T> friend class Martta::Auxilliary; \
+	template<class T> friend class Martta::InterfaceAuxilliary; \
+	inline virtual Kind					kind() const { return this ? staticKind : Kind(Nothing::staticAuxilliary()); } \
 	static Kind							staticKind; \
-	inline virtual Kind					kind() const { return staticKind; } \
+	static AuxilliaryFace const*		staticAuxilliary(); \
+	void const*							tryInterface(Kind _k) const; \
+private: \
 	template<int i, int d = 0>			struct AltSuper { typedef Nothing TheType; }; \
 	template<int m = -1, typename T = void>	struct AltSuperCount { static const int count = AltSuperCount<m + 1, typename AltSuper<m + 1>::TheType>::count; }; \
 	template<int m>						struct AltSuperCount<m, Nothing> { static const int count = m; }; \
@@ -48,19 +58,19 @@ template<class T, class F> T tryCast(F _f) { return tryCastPrivate::XL<T, F, try
 	template<int d>						struct ASHelper<0, d> { static AuxilliaryFace const** altSupers() { static AuxilliaryFace const* r[0]; return r; } }; \
 	template<int m, typename T>			struct ASTHelper { typedef typename AltSuper<m - 1>::TheType H; static void const* altSupers(T const* _this, Kind _k) { /*qDebug() << "[" << T::staticKind.name() << "] Searching on " << m << "-1th entry: " << H::staticKind.name() << " for " << _k.name();*/ return H::staticKind.isKind(_k) ? tryCast<H const*>(_this)->tryInterface(_k) : ASTHelper<m - 1, T>::altSupers(_this, _k); } }; \
 	template<typename T>				struct ASTHelper<0, T> { static void const* altSupers(T const*, Kind) { /*qDebug() << "[" << T::staticKind.name() << "] Unable to find."; */return 0; } }; \
-	virtual void const*					toInterface(Kind _k) const { return tryInterface(_k); } \
-	void const*							tryInterface(Kind _k) const;
+	virtual void const*					toInterface(Kind _k) const { return tryInterface(_k); }
 
 #define MARTTA_INHERITS(S, i) \
+private: \
 	template<int d>						struct AltSuper<i, d> { typedef S TheType; };
 
 #define MARTTA_INTERFACE \
-	public: \
-	static const bool IsInterface = true; \
-	static const bool IsObject = false; \
-	static const bool IsPlaceholder = false; \
-	virtual Entity const* self() const = 0; \
-	virtual Entity* self() = 0; \
+public: \
+	static const bool					IsInterface = true; \
+	static const bool					IsObject = false; \
+	static const bool					IsPlaceholder = false; \
+	virtual Entity const*				self() const = 0; \
+	virtual Entity*						self() = 0; \
 	template<class T> inline T*			asKind() { return this && self() ? self()->asKind<T>() : 0; } \
 	template<class T> inline T const*	asKind() const { return this && self() ? self()->asKind<T>() : 0; } \
 	template<class T> inline T*			tryKind() { return this && self() && self()->isKind<T>() ? self()->asKind<T>() : 0; } \
@@ -68,47 +78,42 @@ template<class T, class F> T tryCast(F _f) { return tryCastPrivate::XL<T, F, try
 	template<class T> inline bool		isKind() const { return this && self() ? self()->isKind<T>() : false; } \
 	MARTTA_BASIC
 
-#define MARTTA_COMMON(S, o) \
-	public: \
+#define MARTTA_COMMON(S) \
+private: \
+	virtual int							virtualEndOfNamed() const { return EndOfNamed; } \
+protected: \
+	virtual Entity const*				self() const { return this; } \
+	virtual Entity*						self() { return this; } \
+public: \
 	typedef S Super; \
-	static const int					OffsetForDerivatives = o; \
-	static const int					MyOffset = Super::OffsetForDerivatives + Super::MyOffset; \
+	MARTTA_BASIC
+
+#define MARTTA_OBJECT(S) \
+public: \
 	Entity::asKind; \
 	Entity::tryKind; \
 	Entity::isKind; \
-	virtual Entity const*				self() const { return this; } \
-	virtual Entity*						self() { return this; } \
-	inline QList<Entity*>				locals() const { return localsFor<S>(); } \
-	inline int							localCount() const { return localCountFor<S>(); } \
-	inline Entity*						local(int _i) const { return localFor<S>(_i); } \
-	template<class T> inline QList<T*>	localsOf() const { return localsOfFor<S, T>(); } \
-	template<class T> inline bool		localIs(int _i) const { return localIsFor<S, T>(_i); } \
-	template<class T> inline T*			localAs(int _i) const { return localAsFor<S, T>(_i); } \
-	static inline int					fromLocal(int _i) { return MyOffset + _i; } \
-	static inline int					toLocal(int _i) { return MyOffset - _i; } \
-	inline InsertionPoint				localFront() { return localMiddle(0); } \
-	inline InsertionPoint				localMiddle(int _i) { return middle(_i + MyOffset); } \
-	inline InsertionPoint				localBack() { return back(); } \
-	MARTTA_BASIC
+	static const bool					IsInterface = false; \
+	static const bool					IsObject = true; \
+	static const bool					IsPlaceholder = false; \
+	inline virtual bool					isPlaceholder() const { return false; } \
+	MARTTA_COMMON(S)
 
-#define MARTTA_OBJECT_WITH_OFFSET(S, o) \
-	MARTTA_COMMON(S, o) \
-	public: \
-	static const bool IsInterface = false; \
-	static const bool IsObject = true; \
-	static const bool IsPlaceholder = false; \
-	inline virtual bool					isPlaceholder() const { return false; }
+#define MARTTA_PLACEHOLDER(S) \
+public: \
+	Entity::asKind; \
+	Entity::tryKind; \
+	Entity::isKind; \
+	static const bool					IsInterface = false; \
+	static const bool					IsObject = false; \
+	static const bool					IsPlaceholder = true; \
+	inline virtual bool					isPlaceholder() const { return true; } \
+	MARTTA_COMMON(S)
 
-#define MARTTA_PLACEHOLDER_WITH_OFFSET(S, o) \
-	MARTTA_COMMON(S, o) \
-	public: \
-	static const bool IsInterface = false; \
-	static const bool IsObject = false; \
-	static const bool IsPlaceholder = true; \
-	inline virtual bool					isPlaceholder() const { return true; }
+#define MARTTA_NAMED(X) static const int X;
+#define MARTTA_NAMED_CPP(E, X) const int E::X = registerName(-((int)(((unsigned)&X) / sizeof(X))), #E "::" #X);
 
-#define MARTTA_OBJECT(S) MARTTA_OBJECT_WITH_OFFSET(S, 0)
-#define MARTTA_PLACEHOLDER(S) MARTTA_PLACEHOLDER_WITH_OFFSET(S, 0)
+#define FirstNamed Super::EndOfNamed
 
 #define MARTTA_CPP_BASIC(E) \
 	static AuxilliaryFace const* s_auxilliary_##E = 0; \

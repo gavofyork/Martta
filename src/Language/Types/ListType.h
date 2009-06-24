@@ -36,6 +36,8 @@ class ListType: public ModifyingType
 	friend class SimpleOperator;
 
 public:
+	enum { Length = FirstNamed, EndOfNamed };
+
 	static void							initialiseClass();
 	static void							finaliseClass();
 	inline static bool					keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e) { return simpleInsertionPointKeyPressHandler<ListType>(_p, _e, "[["); }
@@ -47,7 +49,7 @@ protected:
 	virtual QList<ValueDefiner*>		applicableMembers(Entity* _s = 0, bool _isConst = false) const;
 	
 	virtual QString						code(QString const& _middle) const;
-	virtual int							minimumRequired() const { return 1; }
+	virtual int							minRequired(int _i) const { return _i == Original ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual Types						allowedTypes(int _i) const;
 	virtual TypeEntity*					newClone() const { return new ListType; }

@@ -20,25 +20,18 @@
 
 #pragma once
 
-#define POOL_ALLOCATOR 0
-
-#if POOL_ALLOCATOR
-#include <boost/pool/pool.hpp>
-#endif
-
 #include <QDebug>
 #include <QList>
 #include <QHash>
-#include <QPointF>
+
+// Same here - move to interface?
+#include "EntityKeyEvent.h"
+
+#include "SceneLeaver.h"
+#include "ChildValidifier.h"
 
 #include "Meta.h"
-#include "Kind.h"
-#include "AuxilliaryFace.h"
-#include "AuxilliaryFace.h"
-#include "Location.h"
-#include "ModelPtrFace.h"
 #include "InsertionPoint.h"
-#include "EntityKeyEvent.h"
 #include "SafePointer.h"
 
 class QTextStream;
@@ -48,21 +41,16 @@ namespace Martta
 {
 
 class EntityStylist;
+class EditDelegateFace;
+
 class CodeScene;
 class DecorationContext;
-class EditDelegateFace;
-class EntityKeyPress;
-class DeclarationEntity;
-class TypeDefinition;
-class EntityKeyEvent;
 
-extern int s_news;
-extern int s_deletes;
-
+// Would be nice to annex this, too...
 enum ChangeOperation
 {
 	EntityChanged = 0,
-	EntityChildrenAdded,
+	EntityChildrenInitialised,
 	DependencyAdded,
 	DependencyRemoved,
 	DependencyChanged,
@@ -83,138 +71,93 @@ void change(Entity* _s, ChangeOperation _op, Entity* _o = 0);
 inline QList<ChangeEntry> const& changes() { return s_changes; }
 inline void clearChanges() { s_changes.clear(); }
 
-template<class T> class ModelPtr;
-
-class Entity;
-class Nothing { public: static AuxilliaryFace const* staticAuxilliary() { return 0; } };
+class RootEntity;
 
 /**
  * Note regarding rootEntity/null-Context: You can never depend on something which does not share the
  * same RootEntity object as you. Objects yet to be inserted into the program have a nullContext and thus
  * no RootEntity. If you make objects within the scene children of such objects they will be moved
  * out of scene, and thus can have no interactions (i.e. dependencies/references) with objects within the
- * scene. This applies even if the situation is temporary, since the check/changes happen at setContext
+ * scene. This applies even if the situation is temporary, since the check/changes happen at move
  * time.
  */
-class Entity: public SafePointerTarget
+class Entity: public Nothing, public SafePointerTarget, public_interface SceneLeaver, public_interface ChildValidifier
 {
+	MARTTA_COMMON(Nothing)
+	MARTTA_INHERITS(SceneLeaver, 0)
+	MARTTA_INHERITS(ChildValidifier, 1)
+	
 	friend class EntityStylist;
 	friend class EditDelegateFace;
 
+protected:
+	enum { EndOfNamed = INT_MIN, Cardinals = 0 };
+	
 public:
-	static const int OffsetForDerivatives = 0;
-	static const int MyOffset = 0;
+	static const bool					IsInterface = false;
+	static const bool					IsPlaceholder = true;
+	static const bool					IsObject = false;
 	
-	template<class T> void setDependency(ModelPtr<T>& _dependencyVariable, T* _dependency)
-	{
-		if (_dependencyVariable != _dependency)
-		{
-			Entity* old = _dependencyVariable->asKind<Entity>();
-			if (_dependency)
-				M_ASSERT(_dependency->asKind<Entity>()->isInModel());
-			if (old)
-				M_ASSERT(old->asKind<Entity>()->isInModel());
-			if (old)
-				removeDependency(old);
-			_dependencyVariable = _dependency;
-			if (_dependency)
-			{
-				addDependency(_dependency->asKind<Entity>());
-				dependencySwitched(_dependency->asKind<Entity>(), old);
-			}
-			changed();
-		}
-	}
+	inline void*						operator new(size_t _size);
+	inline void							operator delete(void* p);
 	
-	typedef Nothing Super;
-	static const bool IsInterface = false;
-	static const bool IsPlaceholder = true;
-	static const bool IsObject = false;
-	
-#if POOL_ALLOCATOR
-	static QMap<size_t, boost::pool<>* >* s_pools;
-	inline void* operator new(size_t _size)
-	{
-		if (!s_pools)
-			s_pools = new QMap<size_t, boost::pool<>* >;
-		if (!s_pools->contains(_size))
-			s_pools->insert(_size, new boost::pool<>(_size));
-		s_news++;
-		void* ret = s_pools->value(_size)->malloc();
-		return ret;
-	}
-	inline void operator delete(void* p)
-	{
-		s_deletes++;
-		foreach (boost::pool<>* i, s_pools->values())
-			if (i->is_from(p))
-			{
-				i->free(p);
-				return;
-			}
-		M_ASSERT(0);
-	}
-#else
-	inline void* operator new(size_t _size)
-	{
-		s_news++;
-		void* ret = malloc(_size);
-		return ret;
-	}
-	inline void operator delete(void* p)
-	{
-		s_deletes++;
-		free(p);
-	}
-#endif
-	
-	inline Entity(): m_rootEntity(0), m_context(0), m_contextIndex(-1), m_notifiedOfChange(false) {}
+	inline Entity(): m_rootEntity(0), m_parent(0), m_index(UndefinedIndex), m_notifiedOfChange(false) {}
 	
 	static void							initialiseClass() {}
 	static void							finaliseClass() {}
 	
-	void								setContext(Entity* _e);
-	void								setContextTentatively(Entity* _e);
-	void								commitTentativeSetContext(InsertionPoint const& _oldPosition);
-	void								undoTentativeSetContext(InsertionPoint const& _oldPosition);
-	void								moveToPosition(int _index);
-	inline Entity*						context() const { return m_context; }
-	template<class T> inline bool		contextIs() const { return m_context ? m_context->isKind<T>() : false; }
-	template<class T> inline T*			contextAs() const { M_ASSERT(m_context); return m_context->asKind<T>(); }
-	inline int							contextIndex() const { /*M_ASSERT(m_contextIndex == parentsChildren().indexOf(const_cast<Entity*>(this)));*/ return m_contextIndex; }
-	template<class T> inline int		contextIndexExclusive() const { M_ASSERT(isKind<T>()); return parentsChildrenOf<T>().indexOf(static_cast<T*>(const_cast<Entity*>(this))); }
-	virtual QList<DeclarationEntity*>	spacesInScope() const;
-	template<class T> QList<T*>			entitiesHereAndBeforeOf() const { QList<T*> ret = entitiesOf<T>(); return context() ? ret + context()->entitiesHereAndBeforeOf<T>() : ret; }
-	virtual Identifiable*				findEntity(QString const& _key) const;
-	template<class T> inline ModelPtr<T>locateEntity(QString const& _key) const { return ModelPtr<T>(_key, rootEntity()); }
-	template<class T> QList<T*>			findAll() const { QList<T*> ret = entitiesOf<T>(); foreach (Entity* i, m_children) ret << i->findAll<T>(); return ret; }
-	inline QList<Entity*> const&		entities() const { return m_children; }
-	inline int							entityCount() const { return m_children.size(); }
-	inline Entity*						entity(int _i) const { if (_i >= 0 && _i < m_children.size()) { M_ASSERT(m_children[_i]->m_context == this); return m_children[_i]; } else return 0; }
-	template<class T> inline QList<T*>	entitiesOf() const { return filterEntities<T>(m_children); }
-	template<class T> inline int		entityIndexOf() const { for (int r = 0; r < m_children.size(); ++r) if (entityIs<T>(r)) return r; return -1; }
-	template<class T> inline int		entityCountOf() const { int r = 0; foreach (Entity* i, m_children) if (i->isKind<T>()) r++; return r; }
-	template<class T> inline bool		entityIs(int _i) const { return (_i >= 0 && _i < m_children.size() && m_children[_i]) ? m_children[_i]->isKind<T>() : false; }
-	template<class T> inline T*			entityAs(int _i) const { M_ASSERT(_i >= 0 && _i < m_children.size() && m_children[_i]); return m_children[_i]->asKind<T>(); }
-	template<class L> inline QList<Entity*>			localsFor() const { return m_children.mid(L::MyOffset); }
-	template<class L> inline int					localCountFor() const { return m_children.size() - L::MyOffset; }
-	template<class L> inline Entity*				localFor(int _i) const { if (_i >= 0 && _i < m_children.size() - L::MyOffset) { M_ASSERT(m_children[_i + L::MyOffset]->m_context == this); return m_children[L::MyOffset + _i]; } else return 0; }
-	template<class L, class T> inline QList<T*>		localsOfFor() const { return filterEntities<T>(m_children.mid(L::MyOffset)); }
-	template<class L, class T> inline bool			localIsFor(int _i) const { return (_i >= 0 && _i < m_children.size() - L::MyOffset && m_children[_i + L::MyOffset]) ? m_children[_i + L::MyOffset]->isKind<T>() : false; }
-	template<class L, class T> inline T*			localAsFor(int _i) const { M_ASSERT(_i >= 0); M_ASSERT(_i < m_children.size() - L::MyOffset); M_ASSERT(m_children[_i + L::MyOffset]); return m_children[_i + L::MyOffset]->asKind<T>(); }
-	inline QList<Entity*>				parentsChildren() const { if (!m_context) return QList<Entity*>(); return m_context->m_children; }
-	inline int							parentsChildrenCount() const { M_ASSERT(context()); return context()->m_children.size(); }
-	inline Entity*						parentsChild(int _i) const { M_ASSERT(context()); return context()->entity(_i); }
-	template<class T> inline QList<T*>	parentsChildrenOf() const { if (!m_context) return QList<T*>(); return m_context->entitiesOf<T>(); }
-	template<class T> inline bool		parentsChildIs(int _i) const { return parentsChild(_i) ? parentsChild(_i)->isKind<T>() : false; }
-	template<class T> inline T*			parentsChildAs(int _i) const { M_ASSERT(parentsChild(_i)); return parentsChild(_i)->asKind<T>(); }
-	inline QList<Entity*>				siblings() const { if (!m_context) return QList<Entity*>(); QList<Entity*> ret; foreach (Entity* e, m_context->m_children) if (e != this) ret += e; return ret; }
-	inline int							siblingCount() const { M_ASSERT(context()); return context()->m_children.size() - 1; }
-	template<class T> inline QList<T*>	siblingsOf() const { return filterEntities<T>(siblings());  }
+	void								prepareMove(InsertionPoint const& _newPosition);
+	void								commitMove(InsertionPoint const& _oldPosition);
+	void								silentMove(InsertionPoint const& _to) { InsertionPoint from = over(); prepareMove(_to); commitMove(from); }
+	void								silentRemove() { silentMove(Nowhere); }
+	void								move(InsertionPoint const& _newPosition);
+
+	inline int							index() const { return m_index; }
+	inline Entity*						parent() const { return m_parent; }
+	template<class T> inline bool		parentIs() const { return m_parent ? m_parent->isKind<T>() : false; }
+	template<class T> inline T*			parentAs() const { M_ASSERT(m_parent); return m_parent->asKind<T>(); }
+	template<class T> inline T*			tryParentAs() const { M_ASSERT(m_parent); return m_parent ? m_parent->tryKind<T>() : 0; }
 	
+	inline int							childCount() const { return m_namedChildren.size() + m_cardinalChildren.size(); }
+	inline QList<Entity*>				children() const { return m_namedChildren.values() + m_cardinalChildren; }
+	inline Entity*						child(int _i) const { if (_i >= 0 && _i < m_cardinalChildren.size()) { M_ASSERT(m_cardinalChildren[_i]->m_parent == this); return m_cardinalChildren[_i]; } else return _i < 0 ? m_namedChildren.value(_i) : 0; }
+	inline int							childCountAt(int _i) const { if (_i >= 0) return _i < m_cardinalChildren.size() ? 1 : 0; int r = 0; QHash<int, Entity*>::ConstIterator i = m_namedChildren.find(_i); while (i != m_namedChildren.end() && i.key() == _i) ++r, ++i; return r; }
+	inline QList<Entity*>				childrenAt(int _i) const { if(_i < 0) return m_namedChildren.values(_i); if (_i < m_cardinalChildren.size()) return QList<Entity*>() << child(_i); return QList<Entity*>(); }
+	template<class T> inline QList<T*>	childrenOf() const { return filterEntities<T>(children()); }
+	template<class T> inline int		childIndexOf() const { foreach (Entity* e, children()) if (e->isKind<T>()) return e->m_index; return UndefinedIndex; }
+	template<class T> inline int		childCountOf() const { int r = 0; foreach (Entity* i, children()) if (i->isKind<T>()) r++; return r; }
+	template<class T> inline T*			childOf() const { M_ASSERT(childCountOf<T>()); return childAs<T>(childIndexOf<T>()); }
+	template<class T> inline bool		childIs(int _i) const { if (Entity* r = child(_i)) return r->isKind<T>(); return false; }
+	template<class T> inline T*			childAs(int _i) const { Entity* e = child(_i); M_ASSERT(e); return e->asKind<T>(); }
+	template<class T> inline T*			tryChild(int _i) const { if (Entity* e = child(_i)) return e->tryKind<T>(); return 0; }
+	
+	inline QList<Entity*> const&		cardinalChildren() const { return m_cardinalChildren; }
+	inline int							cardinalChildCount() const { return m_cardinalChildren.size(); }
+	template<class T> inline QList<T*>	cardinalChildrenOf() const { return filterEntities<T>(m_cardinalChildren); }
+	template<class T> inline T*			cardinalChildOf() const { M_ASSERT(cardinalChildCountOf<T>()); return childAs<T>(cardinalChildIndexOf<T>()); }
+	template<class T> inline int		cardinalChildIndexOf() const { for (int r = 0; r < m_cardinalChildren.size(); ++r) if (childIs<T>(r)) return r; return UndefinedIndex; }
+	template<class T> inline int		cardinalChildCountOf() const { int r = 0; foreach (Entity* i, m_cardinalChildren) if (i->isKind<T>()) r++; return r; }
+
+	inline Entity*						sibling(int _i) const { return m_parent ? m_parent->child(_i) : 0; }
+	template<class T> inline bool		siblingIs(int _i) const { return m_parent ? m_parent->childIs<T>(_i) : false; }
+	template<class T> inline T*			siblingAs(int _i) const { M_ASSERT(m_parent); return m_parent->childAs<T>(_i); }
+	template<class T> inline T*			trySibling(int _i) const { return m_parent ? m_parent->tryChild<T>(_i) : 0; }
+	inline QList<Entity*>				siblings() const { if (!m_parent) return QList<Entity*>(); QList<Entity*> ret; foreach (Entity* e, m_parent->children()) if (e != this) ret += e; return ret; }
+	template<class T> inline QList<T*>	siblingsOf() const { return filterEntities<T>(siblings()); }
+	inline int							siblingCount() const { return m_parent ? m_parent->childCount() - 1 : 0; }
+	inline QList<Entity*>				cardinalSiblings() const { if (!m_parent) return QList<Entity*>(); QList<Entity*> ret; foreach (Entity* e, m_parent->m_cardinalChildren) if (e != this) ret += e; return ret; }
+	template<class T> inline QList<T*>	cardinalSiblingsOf() const { return filterEntities<T>(cardinalSiblings());  }
+	inline int							cardinalSiblingCount() const { return m_parent ? m_parent->cardinalChildCount() - (m_index < 0 ? 0 : 1) : 0; }
+	inline QList<Entity*>				parentsChildren() const { return m_parent ? m_parent->children() : QList<Entity*>(); }
+	template<class T> inline QList<T*>	parentsChildrenOf() const { return m_parent ? m_parent->childrenOf<T>() : QList<T*>(); }
+	inline int							parentsChildCount() const { return m_parent ? m_parent->childCount() : 0; }
+	inline QList<Entity*>				parentsCardinalChildren() const { return m_parent ? m_parent->cardinalChildren() : QList<Entity*>(); }
+	template<class T> inline QList<T*>	parentsCardinalChildrenOf() const { return m_parent ? m_parent->cardinalChildrenOf<T>() : QList<T*>(); }
+	inline int							parentsCardinalChildCount() const { M_ASSERT(m_parent); return m_parent->m_cardinalChildren.size(); }
+
 	template<class T> bool				hasAncestor() const { return hasAncestor(T::staticKind); }
 	bool								hasAncestor(Kind _k) const;
-	bool								hasAncestor(Entity const* _a) const { return ancestorIndex(_a) != -1; }
+	bool								hasAncestor(Entity const* _a) const { return ancestorIndex(_a) != UndefinedIndex; }
 	template<class T> T*				ancestor() const { Entity* r = ancestor(T::staticKind); return r ? r->asKind<T>() : 0; }
 	Entity*								ancestor(Kind _k) const;
 	template<class T> int				ancestorIndex() const { return ancestorIndex(T::staticKind); }
@@ -227,13 +170,15 @@ public:
 	template<class T> T*				selfAncestor() const { Entity* r = selfAncestor(T::staticKind); return r ? r->asKind<T>() : 0; }
 	Entity*								selfAncestor(Kind _k) const;
 	
-	virtual bool						usurpsChild(Entity const*) const { return false; }
-	bool								isUsurped() const { return m_context->usurpsChild(this); }
+	template<class T> QList<T*>			selfAndAncestorsChildrenOf() const { QList<T*> ret = childrenOf<T>(); return parent() ? ret + parent()->selfAndAncestorsChildrenOf<T>() : ret; }
 	
-	inline int							nonPlaceholderCount() const { int ret = 0; foreach (Entity* i, m_children) if (!i->isPlaceholder()) ret++; return ret; }
-	inline QList<Entity*>				nonPlaceholders() const { QList<Entity*> ret; foreach (Entity* i, m_children) if (!i->isPlaceholder()) ret += i; return ret; }
-	inline Entity*						nonPlaceholder(int _i) const { int c = 0; foreach (Entity* i, m_children) if (c++ == _i) return i; M_ASSERT(false); return 0; }
+	inline int							nonPlaceholderCount() const { int ret = 0; foreach (Entity* i, m_cardinalChildren) if (!i->isPlaceholder()) ret++; return ret; }
+	inline QList<Entity*>				nonPlaceholders() const { QList<Entity*> ret; foreach (Entity* i, m_cardinalChildren) if (!i->isPlaceholder()) ret += i; return ret; }
+	inline Entity*						nonPlaceholder(int _i) const { int c = 0; foreach (Entity* i, m_cardinalChildren) if (c++ == _i) return i; M_ASSERT(false); return 0; }
 
+	virtual bool						usurpsChild(Entity const*) const { return false; }
+	bool								isUsurped() const { return m_parent->usurpsChild(this); }
+	
 	/// Clears all children. This does *not* notify anything of any familial changes.
 	void								clearEntities();
 	/// Brute-force makes the children valid. Deletes invalids, and reprepares the list.
@@ -304,13 +249,23 @@ public:
 	Entity*								replace(Entity* _r);
 	template<class T> inline T*			replace() { T* r = new T; replace(r); return r; }
 	
+	enum { NonePrefered = INT_MAX - 1 };
 	/**
-	 * Moves this to become the first child of _e, and puts _e into our place.
-	 * Never removes placeholders (i.e. everything is inserted).
-	 * Our children are preserved. _e's children are shunted along to allow us to be the first.
+	 * Moves this to become the child of @a _e (at the first allowable place), and puts _e into our place.
+	 * Will assert against failure.
+	 * Order of preference according to firstFor().
+	 * Our children are preserved.
 	 */
-	Entity*								insert(Entity* _e);
-	template<class T> inline T*			insert() { T* r = new T; insert(r); return r; }
+	Entity*								insert(Entity* _e, int _preferedIndex = NonePrefered);
+	template<class T> inline T*			insert(int _preferedIndex = NonePrefered) { T* r = new T; insert(r, _preferedIndex); return r; }
+	
+	/**
+	 * Attempts to make this the child of @a _e (at the first allowable place).
+	 * If no such position is found, it is removed from the model but not deleted.
+	 * @returns true iff we are still in the model (as a child of @a _e).
+	 * Our children are preserved.
+	 */
+	bool								tryInsert(Entity* _e, int _preferedIndex = NonePrefered);
 	
 	/**
 	 * Safe, model-aware deletion operation. It keeps everything in order according to allowedKinds().
@@ -318,43 +273,6 @@ public:
 	void								deleteAndRefill(Entity* _e = 0, bool _moveToGrave = false);
 
 	inline RootEntity*					rootEntity() const { return m_rootEntity; }
-	
-	/// Stuff to do with RTTI. [ Same as MARTTA_BASIC macro ]
-	static AuxilliaryFace const*		staticAuxilliary();
-	static Kind							staticKind;
-	template<int i, int d>						
-	struct AltSuper {
-		typedef Nothing TheType;
-	};
-	
-	template<int m = -1, typename T = void>
-	struct AltSuperCount {
-		static const int count = AltSuperCount<m + 1, typename AltSuper<m + 1, 0>::TheType>::count;
-	};
-	
-	template<int m>						
-	struct AltSuperCount<m, Nothing> {
-		static const int count = m;
-	};
-	
-	template<int m, int d = 0>			
-	struct ASHelper {
-		public: static AuxilliaryFace const** altSupers() {
-			static AuxilliaryFace const* r[m];
-			r[m - 1] = AltSuper<m - 1, 0>::TheType::staticAuxilliary();
-			memcpy(r, ASHelper<m - 1>::altSupers(), (m - 1) * sizeof(AuxilliaryFace const*));
-			return r;
-		}
-	};
-	
-	template<int d>						
-	struct ASHelper<0, d> {
-		public: static AuxilliaryFace const** altSupers() {
-			static AuxilliaryFace const* r[0]; return r;
-		}
-	};
-	
-	inline virtual Kind					kind() const { return this ? staticKind : Kind(Nothing::staticAuxilliary()); }
 	
 	template<class T> inline bool		isKind() const { return this && kind().isKind(T::staticKind); }
 	inline bool							isKind(Kind _k) const { return this && kind().isKind(_k); }
@@ -370,11 +288,13 @@ public:
 	// The following are information for checking and selection mechanisms.
 	// These values could change depending upon elements already in place (e.g. dereference operators), so should be rechecked whenever anything changes.
 
-	/// @returns the minimum number of entities than can be allowed for the object still to be valid.
-	/// A greater amount than this may be allowed, depending on the output of allowedKinds, but never less than this.
-	/// Default returns zero (i.e. no minimum).
 	/// @note Do not call this directly; use isAllowed() on the child entity instead, since that is a more complete test.
-	virtual int							minimumRequired() const { return 0; }
+	/// @returns the minimum number of entities than can be allowed in a entity slot, if @a _i does not equal Cardinals,
+	/// or the required minimum number of cardinals, if @a _i equals Cardinals.
+	/// A greater amount than these may be allowed, but never fewer.
+	/// Default returns zero (i.e. no entity strictly needed).
+	/// @note Do not call this directly; use isAllowed() on the child entity instead, since that is a more complete test.
+	virtual int							minRequired(int = Cardinals) const { return 0; }
 	/// @returns the kind of entities allowed in the given child position.
 	/// Reimplement to allow particular entity kinds.
 	/// Default returns the empty list (i.e. entity may not have any children).
@@ -385,10 +305,6 @@ public:
 	/// Default returns the empty list (i.e. no special restrictions).
 	/// @note Do not call this directly; use isAllowed() on the child entity instead, since that is a more complete test.
 	virtual Kinds						deniedKinds(int) const { return Kinds(); }
-	/// @returns true if the child at i has an allowable state according to this entity.
-	/// @note Derivations should honour the decision of their Super should it be true.
-	/// @note Do not call this directly; use isValid() on the child entity instead, since that is a more complete test.
-	virtual bool						isChildInValidState(int) const { return true; }
 	/// @returns true if we have an allowable state (according to us).
 	/// @note Derivations should honour the decision of their Super should it be true.
 	/// @note Do not call this directly; use isValid() on the child entity instead, since that is a more complete test.
@@ -398,7 +314,7 @@ public:
 	// TODO: Consider moving to somewhere more specialised.
 	virtual bool						doINeedParenthesising(Entity const* _child) const { (void)_child; return false; }
 	/// @returns true if this object isn't actually a real language entity.
-	/// Derivations automatically handled in derivations be MARTTA_OBJECT(_INTERFACE) macros. Do not reimplement.
+	/// Overrides automatically handled in derivations by MARTTA_OBJECT(_INTERFACE) macros. Do not reimplement.
 	virtual bool						isPlaceholder() const { return true; }
 	/// Checked after change; if true is returned, this may be deleted.
 	virtual bool						isSuperfluous() const;
@@ -413,7 +329,7 @@ public:
 	template<class T> inline bool		isAllowed(int _i) const { return isAllowed(_i, Kind::of<T>()); }
 	/// @returns true if this entity would be valid if it were an object of a particular type.
 	/// Takes into account context's allowedKinds(int) and this object's allowedAncestor.
-	inline bool							isAllowed(Kind _o) const { return context() ? context()->isAllowed(contextIndex(), _o) : true; }
+	inline bool							isAllowed(Kind _o) const { return parent() ? parent()->isAllowed(index(), _o) : true; }
 	/// Convenience version of above.
 	/// Takes into account context's allowedKinds(int) and this object's allowedAncestor.
 	template<class T> inline bool		isAllowed() const { return isAllowed(Kind::of<T>()); }
@@ -423,7 +339,7 @@ public:
 	/// @returns true if this entity cannot be killed without costing the validity of its context's children set.
 	bool								isNecessary() const;
 	/// @returns true if all entity positions are filled validly, including all those required. 
-	/// @warning This uses allowedKinds() and minimumRequired, and so is not safe to be called from your reimplementation of
+	/// @warning This uses allowedKinds() and minRequired, and so is not safe to be called from your reimplementation of
 	/// these or anything that they (indirectly) use.
 	bool								isComplete() const;
 	/// @returns true if object is current in heirarchy leading to a RootEntity.
@@ -432,12 +348,24 @@ public:
 	bool								isValid() const;
 
 	// Insertion points
-	inline InsertionPoint				over() const { return InsertionPoint(context(), contextIndex()); }
+	inline InsertionPoint				over() const { return InsertionPoint(parent(), index()); }
 	inline InsertionPoint				front() { return InsertionPoint(this, 0); }
-	inline InsertionPoint				back() { return InsertionPoint(this, -1); }
+	inline InsertionPoint				back() { return InsertionPoint(this, UndefinedIndex); }
 	inline InsertionPoint				middle(int _at) { return InsertionPoint(this, _at); }
+	/**
+	 * Order of preference:
+	 * - A named position that requires us to be there.
+	 * - A placeholder of a cardinal position.
+	 * - The back of the cardinals that requires us to be there.
+	 * - A named position that allows us being there.
+	 * - The back of the cardinals if it allows us being there.
+	 * - Nowhere
+	 */
+	InsertionPoint						firstFor(Kind const& _k);
 	bool								attemptAppend(EntityKeyEvent const* _e);
 	bool								attemptInsert(EntityKeyEvent const* _e);
+	
+	virtual int							definePreferedFor(Kind const&) const { return NonePrefered; }
 
 	// Save/load
 	virtual void						exportDom(QDomElement& _element) const;
@@ -452,6 +380,10 @@ public:
 	virtual bool						onActivated(CodeScene*) { return false; }
 	virtual bool						keyPressed(EntityKeyEvent const*);
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const&, EntityKeyEvent const*) { return false; }
+	
+	QString								indexName(int _i) const;
+	QString								indexName() const { return m_parent ? m_parent->indexName(m_index) : "[Orphan]"; }
+	QList<int>							knownNames() const;
 	
 	/// We become current in all code scenes.
 	void								setCurrent();
@@ -505,15 +437,16 @@ public:
 	QList<Entity*>						dependents() const;
 	QList<Entity*>						dependencies() const;
 	
-	void								childrenAdded();
-	void								childAdded(Entity* _ch) { if (_ch->context() == this) childAdded(_ch->contextIndex()); }
+	void								childrenInitialised();
+	void								childAdded(Entity* _ch) { if (_ch->parent() == this) childAdded(_ch->index()); }
 	void								childAdded(int _index);
-	void								childSwitched(int _index, Entity* _o) { if (_index >= 0 && _index < m_children.size()) childSwitched(entity(_index), _o); }
+	void								childSwitched(int _index, Entity* _o) { if (_index >= 0 && _index < m_cardinalChildren.size()) childSwitched(child(_index), _o); }
 	void								childSwitched(Entity* _ch, Entity* _o);
 	void								childRemoved(Entity* _ch, int _index);
-	void								contextAdded() { contextAdded(context()); }
+	void								childMoved(Entity* _e, int _oI);
+	void								contextAdded() { contextAdded(parent()); }
 	void								contextAdded(Entity* _con);
-	/// Our context has changed object. Will usually end up with dependencySwitched(). dependencyAdded/Removed() are called if _old/m_context is null.
+	/// Our context has changed object. Will usually end up with dependencySwitched(). dependencyAdded/Removed() are called if _old/m_parent is null.
 	void								contextSwitched(Entity* _old);
 	void								contextRemoved(Entity* _old);
 	
@@ -521,13 +454,13 @@ public:
 	/// @important This does *not* notify the new context of the child addition; you must do that yourself! 
 	/// This assumes _old is still valid!
 	void								contextSwitchedWithChildRemoved(Entity* _old, int _ourOldContextIndex) { contextSwitched(_old); if (_old) _old->childRemoved(this, _ourOldContextIndex); }
-	void								contextSwitchedWithChildRemoved(InsertionPoint const& _old) { contextSwitchedWithChildRemoved(_old.context(), _old.index()); }
+	void								contextSwitchedWithChildRemoved(InsertionPoint const& _old) { contextSwitchedWithChildRemoved(_old.parent(), _old.index()); }
 	
 	void								dependencyAdded(Entity* _e) { change(this, DependencyAdded, _e); onDependencyAdded(_e); }
-	void								dependencyRemoved(Entity* _e, int _index = -1) { change(this, DependencyRemoved, _e); onDependencyRemoved(_e, _index); }
+	void								dependencyRemoved(Entity* _e, int _index = UndefinedIndex) { change(this, DependencyRemoved, _e); onDependencyRemoved(_e, _index); }
 	void								dependencyChanged(Entity* _e) { change(this, DependencyChanged, _e); onDependencyChanged(_e); }
 	void								dependencySwitched(Entity* _e, Entity* _o) { change(this, DependencySwitched, _e); onDependencySwitched(_e, _o); }
-	void								childMoved(Entity* _e, int _oI) { change(this, ChildMoved, _e); onChildMoved(_e, _oI); }
+	void								notifyOfChildMove(Entity* _e, int _oI) { change(this, ChildMoved, _e); onChildMoved(_e, _oI); }
 	void								contextIndexChanged(int _oI) { change(this, ContextIndexChanged, 0); onContextIndexChanged(_oI); }
 	
 	/// To be called when something in the object has changed. Calls onChanged() and notifies dependents.
@@ -547,9 +480,6 @@ public:
 protected:
 	virtual ~Entity();
 
-	virtual void const*					toInterface(Kind) const { return 0; }
-	void const*							tryInterface(Kind) const { return 0; }
-
 	enum { DependsOnNothing = 0, DependsOnContext = 1, DependsOnChildren = 2, DependsOnBoth = 3, DependsOnContextIndex = 4, TestOnOrder = 8, DependsOnChildOrder = DependsOnChildren | TestOnOrder };
 	virtual int							familyDependencies() const { return DependsOnNothing; }
 	virtual Kinds						ancestralDependencies() const { return Kinds(); }
@@ -558,6 +488,9 @@ protected:
 	
 	inline bool							botherNotifying() const { return (~notificationRequirements() & BeInModel || isInModel()) && (~notificationRequirements() & BeComplete || isComplete()); }
 	
+	/// Given an Entity/Interface-pointer-style variable and a value, set the variable and call add, change and remove
+	/// dependency as necessary.
+	template<class T, class U> void		setDependency(T& _dependencyVariable, U const& _dependency);
 	/// Adds a dependency. Should only be called from inside registerDependencies().
 	/// Note this will *not* call onDependencyAdded(_e) for you. You must call it yourself if you want it to run.
 	void								addDependency(Entity* _e);
@@ -566,6 +499,7 @@ protected:
 	void								removeDependency(Entity* _e);
 	/// Removes all dependencies.
 	void								removeAllDependencies();
+	bool								haveDependency(Entity* _e) const { return m_dependencies.contains(_e); }
 	
 	/// Called when the state of this object has changed.
 	/// @note This is only called when the object is in the model.
@@ -614,27 +548,61 @@ protected:
 	/// @note By default, it calls onDependencyAdded() for every child entity (whether recently added or not). 
 	/// @note If you intend to use this, you may find it useful to change notificationRequirements() so it doesn't
 	/// include BeInModel.
-	virtual void						onChildrenAdded() { foreach (Entity* e, entities()) onDependencyAdded(e); }
-	
-	/// Called when our rootEntity is changing. This currently just means either going into or out of the program model.
-	virtual void						onLeaveScene(RootEntity* _new, RootEntity* _old) { (void)_new; (void)_old; }
+	virtual void						onChildrenInitialised() { foreach (Entity* e, children()) onDependencyAdded(e); }
 	
 	virtual Entity*						isExpander() const { return 0; }
+
+	/// Rejigs our ancestral dependencies. This should be (TODO: and isn't yet) called whenever any of our ancestors have changed context
+	/// or been switched, or when the ouput of ancestralDependencies() changes.
+	void								updateAncestralDependencies();
 	
 protected:
 	RootEntity*							m_rootEntity;
 
 private:
-	/// Rejigs our ancestral dependencies. This should be (TODO: and isn't yet) called whenever any of our ancestors have changed context
-	/// or been switched.
-	void								updateAncestralDependencies();
+	/** This will insert an entity @a _child into our brood at index @a _childsIndex.
+	 * It will make sure all children have the correct contextIndex but nothing more. In particular
+	 * the new child's context and rootEntity will not be updated.
+	 * 
+	 * This handles the case of negative and positive child indices, and the index may be
+	 * UndefinedIndex, in which case the child is appended.
+	 */
+	void								insertIntoBrood(int _childsIndex, Entity* _child);
+	/** This removes a previously inserted @a _child from our brood.
+	 * It makes sure all children have the correct contextIndex but nothing more. In particular
+	 * the old child's contextIndex, context and rootEntity are not updated.
+	 * 
+	 * This handles the case of negative and position child indices.
+	 */
+	void								removeFromBrood(int _childsIndex, Entity* _child);
+	/** Removes all children at index @a _childsIndex from the brood of children.
+	 * 
+	 * It makes sure all children have the correct contextIndex but nothing more. In particular
+	 * the old children's contextIndex, context and rootEntity are not updated.
+	 * 
+	 * This handles the case of negative and position child indices.
+	 */
+	void								removeAllFromBrood(int _childsIndex);
+	/**
+	 * Just moves the child of index @a _old in the brood to have index @a _new, still within the brood.
+	 * 
+	 * It makes sure all children have the correct contextIndex but nothing more. In particular
+	 * the old children's contextIndex, context and rootEntity are not updated.
+	 * 
+	 * This handles the case of negative and position child indices.
+	 */
+	void								moveWithinBrood(int _old, int _new);
 	
 	/// Just makes sure that the rootEntity is the context's root entity. Should only be called from the context.
 	void								checkRoot();
 
-	Entity*								m_context;
-	int									m_contextIndex;
-	QList<Entity*>						m_children;
+	/// Helper function for validifyChildren()
+	bool								validifyChild(int _i, int* _added);
+
+	Entity*								m_parent;
+	int									m_index;
+	QList<Entity*>						m_cardinalChildren;
+	QHash<int, Entity*>					m_namedChildren;
 	QSet<Entity*>						m_dependencies;
 	QList<Entity*>						m_ancestralDependencies;
 	bool								m_notifiedOfChange;
@@ -654,6 +622,22 @@ public:
 	}
 };
 
+extern int s_news;
+extern int s_deletes;
+
+}
+
+void* Martta::Entity::operator new(size_t _size)
+{
+	s_news++;
+	void* ret = malloc(_size);
+	return ret;
+}
+
+void Martta::Entity::operator delete(void* p)
+{
+	s_deletes++;
+	free(p);
 }
 
 inline QDebug operator<<(QDebug _out, const Martta::Kind& _item)
@@ -672,6 +656,26 @@ inline QDebug operator<<(QDebug _out, const Martta::Entity* _item)
 		return _out << _item->kind() << "*(" << ((void*)_item) << ")";
 	else
 		return _out << "Entity *( 0 )";
+}
+
+template<class T, class U>
+void Martta::Entity::setDependency(T& _dependencyVariable, U const& _dependency)
+{
+	if (_dependencyVariable != _dependency)
+	{
+		Entity* old = _dependencyVariable->asKind<Entity>();
+		M_ASSERT(!_dependency || _dependency->asKind<Entity>()->isInModel());
+		M_ASSERT(!old || old->asKind<Entity>()->isInModel());
+		if (old)
+			removeDependency(old);
+		_dependencyVariable = _dependency;
+		if (_dependency)
+		{
+			addDependency(_dependency->asKind<Entity>());
+			dependencySwitched(_dependency->asKind<Entity>(), old);
+		}
+		changed();
+	}
 }
 
 template<class T>
@@ -693,7 +697,7 @@ bool Martta::Entity::simpleInsertionPointKeyPressHandler(InsertionPoint const& _
 	if (_e->text() == _t && _p.allowedToBeKind<T>())
 	{
 		T* n = new T;
-		if (_p.exists() && !_p->isPlaceholder() && n->back().allowedToBeKind(_p->kind()))
+		if (_p.exists() && !_p->isPlaceholder() && n->firstFor(_p->kind()) != Nowhere)
 		{
 			// insert
 			// when pressed on _p refers to a, changes from x->(a->(d, e), b, c) to x->(N->(a->(d, e)), b, c)

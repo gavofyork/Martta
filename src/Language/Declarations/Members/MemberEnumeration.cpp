@@ -32,33 +32,11 @@ bool MemberEnumeration::keyPressedOnInsertionPoint(InsertionPoint const& _p, Ent
 	return simpleInsertionPointKeyPressHandler<MemberEnumeration>(_p, _e, "E");
 }
 
-void MemberEnumeration::setUnnamed()
+Kinds MemberEnumeration::allowedKinds(int _i) const
 {
-	if (isNamed())
-		entitiesOf<TextLabel>()[0]->killAndDelete();
-	changed();
-}
-
-void MemberEnumeration::setNamed()
-{
-	if (!isNamed())
-		localFront().place(new TextLabel);
-}
-
-Kinds MemberEnumeration::memberAllowedKinds(int _i) const
-{
-	if (_i == 0 && isNamed())
-		return Kind::of<TextLabel>();
-	else
+	if (_i >= 0)
 		return Kind::of<EnumValue>();
-}
-
-int MemberEnumeration::memberMinimumRequired() const
-{
-	if (isNamed())
-		return 2;
-	else
-		return 1;
+	return Super::allowedKinds(_i);
 }
 
 }

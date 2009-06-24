@@ -30,21 +30,22 @@ class UnaryOperation: public Operation
 	MARTTA_PLACEHOLDER(Operation)
 
 public:
-	virtual int							minimumRequired() const { return 1; }
-	virtual Kinds						allowedKinds(int _index) const { if (_index == 0) return Kind::of<Typed>(); else return Kinds(); }
+	virtual int							minRequired(int _i) const { return _i == TheOperand ? 1 : Super::minRequired(_i); }
+	virtual Kinds						allowedKinds(int _i) const { return _i == TheOperand ? Kinds() << Kind::of<Typed>() : Super::allowedKinds(_i); }
 	virtual bool						isPostfix() const { return id().isPostfix(); }
+	virtual bool						isSlidable(int _i) const { return _i != TheOperand; }
 
 protected:
-	inline bool							haveOperand() const { return isTyped(0); }
-	inline Typed*						operand() const { return asTyped(0); }
-	inline Type							operandType() const { return typeOf(0); }
-	inline Type							effectiveOperandType() const { return effectiveType(0); }
+	inline bool							haveOperand() const { return isTyped(TheOperand); }
+	inline Typed*						operand() const { return asTyped(TheOperand); }
+	inline Type							operandType() const { return typeOf(TheOperand); }
+	inline Type							effectiveOperandType() const { return effectiveType(TheOperand); }
 
 	virtual QString						operatorLayout() const { return "ycode;'" + id().code() + "'"; }
 	virtual QString						defineLayout(ViewKeys&) const;
 
 	virtual int							familyDependencies() const { return DependsOnBoth; }
-	virtual void						onDependencySwitched(Entity* _e, Entity* _o) { if (_e == context()) relayoutLater(); else Super::onDependencySwitched(_e, _o); }
+	virtual void						onDependencySwitched(Entity* _e, Entity* _o) { if (_e == parent()) relayoutLater(); else Super::onDependencySwitched(_e, _o); }
 	
 	template<class T> static bool		simpleKeyPressedOnInsertionPointHandler(InsertionPoint const& _p, EntityKeyEvent const* _e, QString const& _t, Precedence _d, Associativity _a, bool _pre = true, bool _confusable = false)
 	{
@@ -66,7 +67,7 @@ protected:
 		
 		Entity* n = new T;
 		_e->noteStrobeCreation(n, &*p);
-		p->insert(n);
+		p->insert(n, TheOperand);
 		n->validifyChildren();
 		if (pre)
 			n->navigateInto(_e->codeScene());

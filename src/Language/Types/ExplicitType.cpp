@@ -21,6 +21,7 @@
 #include <QtXml>
 
 #include "CodeScene.h"
+#include "RootEntity.h"
 #include "Class.h"
 #include "Enumeration.h"
 #include "Const.h"
@@ -143,14 +144,14 @@ bool ExplicitType::defineSimilarityTo(TypeEntity const* _t, Castability _c) cons
 				if (c == ts)
 					return true;
 				// Note Physical attribute should be tested last.
-				QList<Base*> bases = c->entitiesOf<Base>();
+				QList<Base*> bases = c->cardinalChildrenOf<Base>();
 				while (bases.size())
 				{
 					Base* b = bases.takeLast();
 					if (ts && b->classType() == ts)
 						return true;
 					else if (b->classType())
-						bases += b->classType()->entitiesOf<Base>();
+						bases += b->classType()->cardinalChildrenOf<Base>();
 				}
 			}
 		}
@@ -181,7 +182,7 @@ QString ExplicitType::idColour() const
 
 bool ExplicitType::canStandAlone() const
 {
-	return m_subject.isUsable() && m_subject->isKind<Class>() ? !m_subject->self()->entitiesOf<VirtualPure>().size() : true;
+	return m_subject.isUsable() && m_subject->isKind<Class>() ? !m_subject->self()->childCountOf<VirtualPure>() : true;
 }
 
 bool ExplicitType::keyPressed(EntityKeyEvent const* _e)
@@ -210,11 +211,11 @@ QList<TypeDefinition*> ExplicitType::possibilities()
 {
 	QList<TypeDefinition*> ret;
 	TypeDefinition* old = m_subject;
-	foreach (TypeDefinition* i, context()->entitiesHereAndBeforeOf<TypeDefinition>())
+	foreach (TypeDefinition* i, parent()->selfAndAncestorsChildrenOf<TypeDefinition>())
 	{
 		qDebug() << i->name();
 		m_subject = i;
-		if (context()->isChildInValidState(contextIndex()))
+		if (parent()->isChildInValidState(index()))
 			ret << i;
 	}
 	m_subject = old;
@@ -234,7 +235,7 @@ EditDelegateFace* ExplicitType::newDelegate(CodeScene* _s)
 void ExplicitType::importDom(QDomElement const& _element)
 {
 	Super::importDom(_element);
-	m_subject = locateEntity<TypeDefinition>(_element.attribute("subject"));
+	m_subject = rootEntity()->locate<TypeDefinition>(_element.attribute("subject"));
 }
 
 void ExplicitType::exportDom(QDomElement& _element) const

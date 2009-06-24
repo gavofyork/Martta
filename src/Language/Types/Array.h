@@ -30,16 +30,18 @@ class Array: public AddressType
 	MARTTA_OBJECT(AddressType)
 
 public:
+	enum { Length = FirstNamed, EndOfNamed };
+
 	inline static bool					keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e) { return simpleInsertionPointKeyPressHandler<Array>(_p, _e, "["); }
 	
 protected:
 	virtual bool						hasDefaultConstructor() const { return true; }
 	virtual QString						code(QString const& _middle) const;
-	virtual int							minimumRequired() const { return 2; }
+	virtual int							minRequired(int _i) const { return _i == Length ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual Types						allowedTypes(int _i) const;
 	virtual TypeEntity*					newClone() const;
-	virtual QString						defineLayout(ViewKeys&) const { return "ycode;0;^;'[';1;']'"; }
+	virtual QString						defineLayout(ViewKeys&) const { return QString("ycode;%1;^;'[';%2;']'").arg(Original).arg(Length); }
 	virtual QList<DeclarationEntity*>	utilised() const;
 };
 

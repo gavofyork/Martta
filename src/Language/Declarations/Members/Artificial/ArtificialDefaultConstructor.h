@@ -32,7 +32,7 @@ class ArtificialDefaultConstructor: public Constructor, public_interface Artific
 	MARTTA_INHERITS(Artificial, 0)
 	
 protected:
-	virtual int							minimumRequired() const { return 0; }
+	virtual int							minRequired(int) const { return 0; }
 	virtual Kinds						allowedKinds(int) const { return Kinds(); }
 	virtual QString						interfaceCode() const { return ""; }
 	virtual QString						implementationCode() const { return ""; }

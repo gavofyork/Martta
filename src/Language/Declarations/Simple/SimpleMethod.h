@@ -39,7 +39,6 @@ public:
 		T::s_members.append(s);
 		return s;
 	}
-	virtual ~SimpleMethod();
 	virtual QString						name() const { return m_name; }
 	virtual QString						codeName() const { return m_name; }
 	virtual QString						reference() const { return m_name; }

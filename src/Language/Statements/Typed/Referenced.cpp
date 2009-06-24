@@ -64,7 +64,7 @@ enum { LocalVariables = 1<<0, LocalLambdas = 1<<1, SET(Local),
 
 bool Referenced::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
 {
-	if (_p.exists() && _p->isPlaceholder() && QRegExp("[a-z]").exactMatch(_e->text()) && _p->isKind<Typed>() && _p->asKind<Typed>()->allowedTypes().size() && _p->asKind<Typed>()->allowedTypes()[0]->isType<Memberify>())
+	if (_p.exists() && _p->isPlaceholder() && QRegExp("[a-z]").exactMatch(_e->text()) && _p->isKind<Typed>() && _p->asKind<Typed>()->ourAllowedTypes().size() && _p->asKind<Typed>()->ourAllowedTypes()[0]->isType<Memberify>())
 	{
 		_e->reinterpretLater();
 		Referenced* r = new Referenced;
@@ -101,6 +101,7 @@ bool Referenced::onChanged()
 {
 	Super::onChanged();
 	checkForCullingLater();
+	updateAncestralDependencies();
 	return true;
 }
 
@@ -115,7 +116,25 @@ QString Referenced::code() const
 
 Kinds Referenced::ancestralDependencies() const
 {
-	return Kind::of<MemberLambda>();
+	Kinds ret = Kind::of<MemberLambda>();
+	if (!m_subject.isNull() && !parentIs<GenericMemberOperation>() && m_subject->isKind<MemberValue>() && hasAncestor<MemberLambda>() && ancestor<Class>() != m_subject->asKind<MemberValue>()->classType())
+		ret << Kind::of<Class>();
+	return ret;
+}
+
+bool Referenced::isInValidState() const
+{
+	// If we're not referencing anything yet, return null.
+	if (!m_subject.isUsable())
+		return false;
+		
+	if (!parentIs<GenericMemberOperation>() && m_subject->isKind<MemberValue>() && hasAncestor<MemberLambda>())
+	{
+		M_ASSERT(hasAncestor<Class>());
+		if (!ancestor<Class>()->membersOf<MemberValue>(ancestor<MemberLambda>()->isConst()).contains(m_subject->asKind<MemberValue>()))
+			return false;
+	}
+	return Super::isInValidState();
 }
 
 Type Referenced::type() const
@@ -126,17 +145,17 @@ Type Referenced::type() const
 	
 	Type t = m_subject->type();
 	// If we're not in a member operation, check if there's some memberification that we can silently discard; 
-	if (!contextIs<GenericMemberOperation>() && t->isType<Memberify>() && hasAncestor<MemberLambda>())
+	if (!parentIs<GenericMemberOperation>() && t->isType<Memberify>() && hasAncestor<MemberLambda>())
 	{
 		M_ASSERT(hasAncestor<Class>());
 		// There is; check to see if we can remove it (by being in a scoped context and assuming the "this->" precedent).
 		Memberify* m = t->asType<Memberify>();
 		M_ASSERT(m->isKind<Memberify>());
-		if (m->scopeClass() == ancestor<Class>())
+		if (ancestor<Class>()->baseAccess(m->scopeClass()) <= Protected)
 		{
-			bool memberIsCallable = m->child()->isType<FunctionType>();
+			bool memberIsCallable = m->original()->isType<FunctionType>();
 			bool constScope = ancestor<MemberLambda>()->isConst();
-			bool constMember = memberIsCallable ? m->isConst() : m->child()->isType<Const>();
+			bool constMember = memberIsCallable ? m->isConst() : m->original()->isType<Const>();
 			if (constMember || !constMember && !constScope)
 			{
 				// Member Variable/FunctionType inside a method. Either enclosing method is non-const or FunctionType is const.
@@ -147,7 +166,7 @@ Type Referenced::type() const
 			{
 				// Member Variable referenced inside a const method
 				// Allowed but made const.
-				m->child()->knit<Const>();
+				m->original()->knit<Const>();
 				m->unknit();
 			}
 		}
@@ -158,7 +177,7 @@ Type Referenced::type() const
 void Referenced::importDom(QDomElement const& _element)
 {
 	Entity::importDom(_element);
-	m_subject = locateEntity<ValueDefiner>(_element.attribute("subject"));
+	m_subject = rootEntity()->locate<ValueDefiner>(_element.attribute("subject"));
 	m_specific = _element.attribute("specific").toInt();
 	m_lastSet = _element.attribute("lastSet").toInt();
 	// TODO: check if depend system needs reseting here.
@@ -268,18 +287,19 @@ void ReferencedEdit::leavingEditIntact()
 			int x;
 			if ((x = SimpleType::id(m_entityName)) != -1)
 			{
-				e->entity(0)->entity(1)->replace(new SimpleType(x));
-				codeScene()->silentlySetCurrent(e->entity(0)->entity(1));	// set to the place where the user expects the cursor to be (silently, sicne we might (possibly) already be in a setCurrent!).
+				e->childOf<TypeEntity>()->replace(new SimpleType(x));
+				codeScene()->silentlySetCurrent(e->child(Identifiable::Identity));	// set to the place where the user expects the cursor to be (silently, sicne we might (possibly) already be in a setCurrent!).
 			}
 			else if (m_entityName == "string")
 			{
-				e->entity(0)->entity(1)->replace(new StringType);
-				codeScene()->silentlySetCurrent(e->entity(0)->entity(1));	// set to the place where the user expects the cursor to be (silently, sicne we might (possibly) already be in a setCurrent!).
+				e->childOf<TypeEntity>()->replace(new StringType);
+				codeScene()->silentlySetCurrent(e->child(Identifiable::Identity));	// set to the place where the user expects the cursor to be (silently, sicne we might (possibly) already be in a setCurrent!).
 			}
 			else
 			{
-				e->entity(0)->entityAs<TextLabel>(0)->setText(m_entityName);
-				codeScene()->silentlySetCurrent(e->entity(0));				// set to the place where the user expects the cursor to be (silently, sicne we might (possibly) already be in a setCurrent!).
+				M_ASSERT(e->childIs<TextLabel>(Identifiable::Identity));
+				e->childAs<TextLabel>(Identifiable::Identity)->setText(m_entityName);
+				codeScene()->silentlySetCurrent(e->childOf<TypeEntity>());							// set to the place where the user expects the cursor to be (silently, sicne we might (possibly) already be in a setCurrent!).
 			}
 			
 			// set subject to zero so we don't go through this again when the kill()ed subject gets removed from the scene.
@@ -304,14 +324,14 @@ void ReferencedEdit::updateSubset()
 	if (subject()->m_lastSet & ScopedSet)
 		m_valuesInScope << castEntities<ValueDefiner>(subject()->ancestor<DeclarationEntity>()->valuesKnown());
 	if (subject()->m_lastSet & GlobalSet)
-		m_valuesInScope << subject()->rootEntity()->entitiesHereAndBeforeOf<ValueDefiner>();
+		m_valuesInScope << subject()->rootEntity()->selfAndAncestorsChildrenOf<ValueDefiner>();
 	if (subject()->m_lastSet & ArgumentSet && subject()->hasAncestor<LambdaNamer>())
 		for (int i = 0; i < subject()->ancestor<LambdaNamer>()->argumentCount(); i++)
 			m_valuesInScope << subject()->ancestor<LambdaNamer>()->argument(i);
 	if (subject()->m_lastSet & MemberSet)
 	{
 		Type method = Type(FunctionType(false, true)).topWith(Memberify()).topWith(Reference());
-		foreach (Type t, subject()->allowedTypes())
+		foreach (Type t, subject()->ourAllowedTypes())
 		{
 			QList<ValueDefiner*> appMems;
 			if (t->isType<Memberify>() && t->asType<Memberify>()->scope())

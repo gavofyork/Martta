@@ -32,20 +32,20 @@ MARTTA_OBJECT_CPP(EnumValue);
 
 Kinds EnumValue::allowedKinds(int _i) const
 {
-	if (_i == 0)
-		return Kind::of<TextLabel>();
-	else
+	if (_i == Definition)
 		return Kind::of<Typed>();
+	else
+		return Super::allowedKinds(_i);
 }
 
 Type EnumValue::type() const
 {
-	if (contextIs<EnumerationNamer>())
+	if (parentIs<EnumerationNamer>())
 	{
-		if (contextAs<EnumerationNamer>()->isHidden() || contextAs<EnumerationNamer>()->name().isEmpty())
+		if (parentAs<EnumerationNamer>()->isHidden() || parentAs<EnumerationNamer>()->name().isEmpty())
 			return Type(Int);
 		else
-			return Type(contextAs<EnumerationNamer>());
+			return Type(parentAs<EnumerationNamer>());
 	}
 	else
 		return Type();
@@ -54,48 +54,48 @@ Type EnumValue::type() const
 bool EnumValue::isChildInValidState(int _i) const
 {
 	// Nothing to say about it as it's not typed. If it's supposed to be typed, then the allowed kinds system should pick up the error.
-	if (entityIs<Typed>(_i))
+	if (childIs<Typed>(_i))
 	{
 		foreach (Type i, Types() << Type(Int))
-			if (entityAs<Typed>(_i)->type().isSimilarTo(i, TypeEntity::BasicallyConvertible))
+			if (childAs<Typed>(_i)->type().isSimilarTo(i, TypeEntity::BasicallyConvertible))
 				return true;
 		return false;
 	}
-	else if (entityIs<TextLabel>(_i))
+	else if (childIs<TextLabel>(_i))
 	{
-		return entityAs<TextLabel>(_i)->isNamed();
+		return childAs<TextLabel>(_i)->isNamed();
 	}
 	return false;
 }
 
 QString EnumValue::defineLayout(ViewKeys&) const
 {
-	if (entityCount() == 1)
-		return "^;0;";
-	else
-		return "^;0;' := ';1";
+	QString r = QString("^;%1").arg(Identity);
+	if (child(Definition))
+		return (r + ";' := ';%1").arg(Definition);
+	return r;
 }
 
 bool EnumValue::isSuperfluous() const
 {
-	return entityAs<TextLabel>(0)->text().isEmpty();
+	return childAs<TextLabel>(Identity)->text().isEmpty();
 }
 
 QString EnumValue::code() const
 {
-	if (entityCount() == 2 && entityIs<Typed>(1))
-		return codeName() + " = " + entityAs<Typed>(1)->code();
+	if (childIs<Typed>(Definition))
+		return codeName() + " = " + childAs<Typed>(Definition)->code();
 	else
 		return codeName();
 }
 
 bool EnumValue::keyPressed(EntityKeyEvent const* _e)
 {
-	if (_e->text() == "=" && _e->focalIndex() == 0)
+	if (_e->text() == "=" && _e->focalIndex() == Identity)
 	{
-		if (entityCount() == 1)
-			back().spawnPrepared();
-		entity(1)->setCurrent();
+		if (!child(Definition))
+			middle(Definition).spawnPrepared();
+		child(Definition)->setCurrent();
 	}
 	else
 		return Super::keyPressed(_e);

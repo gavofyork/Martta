@@ -30,24 +30,41 @@ MARTTA_OBJECT_CPP(DereferenceOperation);
 	
 QString DereferenceOperation::code() const
 {
-	if (!haveOperand()) return "";
+	if (!haveOperand())
+		return "";
 	return parenthesise("*" + operand()->code());
 }
 
-Types DereferenceOperation::allowedTypes(int) const
+Types DereferenceOperation::allowedTypes(int _i) const
 {
-	Types ret;
-	foreach (Type t, BareTyped::allowedTypes())
-		ret << t.topWith(AddressType());
-	return ret;
+	if (_i == TheOperand)
+	{
+		Types ret;
+		foreach (Type t, ourAllowedTypes())
+		{
+			if (t->isType<Reference>())
+				t = *t->asType<Reference>()->original();
+			ret << t.topWith(AddressType());
+		}
+		return ret;
+	}
+	return Super::allowedTypes(_i);
 }
 
-Types DereferenceOperation::deniedTypes(int) const
+Types DereferenceOperation::deniedTypes(int _i) const
 {
-	Types ret;
-	foreach (Type t, BareTyped::deniedTypes())
-		ret << t.topWith(AddressType());
-	return ret;
+	if (_i == TheOperand)
+	{
+		Types ret;
+		foreach (Type t, BareTyped::ourDeniedTypes())
+		{
+			if (t->isType<Reference>())
+				t = *t->asType<Reference>()->original();
+			ret << t.topWith(AddressType());
+		}
+		return ret;
+	}
+	return Super::deniedTypes(_i);
 }
 
 Type DereferenceOperation::apparentType() const
@@ -60,11 +77,11 @@ Type DereferenceOperation::apparentType() const
 		   
 	// Disguard reference if there is one.
 	if (p->isType<Reference>())
-		p = *p->asType<Reference>()->child();
+		p = *p->asType<Reference>()->original();
 
 	// Disguard pointer.
 	if (p->isKind<AddressType>())
-		p = *p->entityAs<TypeEntity>(0);
+		p = *p->asKind<AddressType>()->original();
 	else
 		p = Type();
 
@@ -81,11 +98,11 @@ Type DereferenceOperation::type() const
 		   
 	// Disguard reference if there is one.
 	if (p->isType<Reference>())
-		p = *p->asType<Reference>()->child();
+		p = *p->asType<Reference>()->original();
 
 	// Disguard pointer.
 	if (p->isKind<AddressType>())
-		p = *p->entityAs<TypeEntity>(0);
+		p = *p->asKind<AddressType>()->original();
 	else
 		p = Type();
 

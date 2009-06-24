@@ -25,6 +25,31 @@ namespace Martta
 
 AuxilliaryRegistrar* AuxilliaryRegistrar::s_this = 0;
 
+int registerName(int _n, char const* _name)
+{
+	AuxilliaryRegistrar::get()->registerName(_n, _name);
+	return _n;
+}
+
+QString const& AuxilliaryRegistrar::nameOfArbitrary(int _n) const
+{
+	M_ASSERT(m_nameMap.contains(_n));
+	return const_cast<AuxilliaryRegistrar*>(this)->m_nameMap[_n];
+}
+
+int AuxilliaryRegistrar::arbitraryOfName(QString const& _name) const
+{
+	M_ASSERT(m_invNameMap.contains(_name));
+	return m_invNameMap[_name];
+}
+
+void AuxilliaryRegistrar::registerName(int _n, char const* _name)
+{
+	m_names << _n;
+	m_nameMap.insert(_n, _name);
+	m_invNameMap.insert(_name, _n);
+}
+
 void AuxilliaryRegistrar::jigCache()
 {
 	m_allInterfaces.clear();

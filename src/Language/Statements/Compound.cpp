@@ -37,10 +37,18 @@ QString Compound::code() const
 	return ret;
 }
 
+void Compound::appendDefinedUptoHere(int _i, QList<ValueDefiner*>* _list) const
+{
+	if (_i >= 0)
+		for(int i = 0; i < _i; ++i)
+			if (childIs<ValueDefiner>(i))
+				*_list += childAs<ValueDefiner>(i);
+}
+
 QString Compound::defineLayout(ViewKeys&) const
 {
-	if (statements().size() > 1 || contextIs<LambdaNamer>())
-		return "ycode;-i;'{';n;" + times(0, entityCount(), ";n;") + ";n;-i;'}'";
+	if (statements().size() > 1 || parentIs<LambdaNamer>())
+		return "ycode;-i;'{';n;" + times(0, cardinalChildCount(), ";n;") + ";n;-i;'}'";
 	else if (statements().size())
 		return "ycode;0";
 	else
@@ -60,13 +68,13 @@ bool Compound::keyPressed(EntityKeyEvent const* _e)
 		p.place(s);
 		s->setCurrent();
 	}
-	else if (_e->key() == Qt::Key_Home && _e->focalIndex() > -1)
+	else if (_e->key() == Qt::Key_Home && _e->focalIndex() != UndefinedIndex)
 	{
-		entity(_e->focalIndex())->setCurrent();
+		child(_e->focalIndex())->setCurrent();
 	}
 	else if (_e->text() == "{")
 	{
-		entity(0)->setCurrent();
+		child(0)->setCurrent();
 	}
 	else
 		return Super::keyPressed(_e);

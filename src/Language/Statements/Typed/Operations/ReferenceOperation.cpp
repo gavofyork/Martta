@@ -30,28 +30,37 @@ MARTTA_OBJECT_CPP(ReferenceOperation);
 	
 QString ReferenceOperation::code() const
 {
-	if (!haveOperand()) return "";
+	if (!haveOperand())
+		return "";
 	return parenthesise("&" + operand()->code());
 }
 
-Types ReferenceOperation::allowedTypes(int) const
+Types ReferenceOperation::allowedTypes(int _i) const
 {
-	Types ret;
-	foreach (Type t, BareTyped::allowedTypes())
-		if (t->isType<AddressType>())
-			ret << Type(*t->asType<AddressType>()->child()).topWith(Reference());
-		else
-			ret << Type(Void).topWith(Const()).topWith(Reference());
-	return ret;
+	if (_i == TheOperand)
+	{
+		Types ret;
+		foreach (Type t, BareTyped::ourAllowedTypes())
+			if (t->isType<AddressType>())
+				ret << Type(*t->asType<AddressType>()->original()).topWith(Reference());
+			else
+				ret << Type(Void).topWith(Const()).topWith(Reference());
+		return ret;
+	}
+	return Super::allowedTypes(_i);
 }
 
-Types ReferenceOperation::deniedTypes(int) const
+Types ReferenceOperation::deniedTypes(int _i) const
 {
-	Types ret;
-	foreach (Type t, BareTyped::deniedTypes())
-		if (t->isType<AddressType>())
-			ret << Type(*t->asType<AddressType>()->child()).topWith(Reference());
-	return ret;
+	if (_i == TheOperand)
+	{
+		Types ret;
+		foreach (Type t, BareTyped::ourDeniedTypes())
+			if (t->isType<AddressType>())
+				ret << Type(*t->asType<AddressType>()->original()).topWith(Reference());
+		return ret;
+	}
+	return Super::deniedTypes(_i);
 }
 
 Type ReferenceOperation::apparentType() const
@@ -64,7 +73,7 @@ Type ReferenceOperation::apparentType() const
 
 	// Disguard reference if there is one.
 	if (p->isType<Reference>())
-		p = *p->asType<Reference>()->child();
+		p = *p->asType<Reference>()->original();
 	else
 		p = Type();
 
@@ -81,7 +90,7 @@ Type ReferenceOperation::type() const
 
 	// Disguard reference if there is one.
 	if (p->isType<Reference>())
-		p = *p->asType<Reference>()->child();
+		p = *p->asType<Reference>()->original();
 	else
 		p = Type();
 

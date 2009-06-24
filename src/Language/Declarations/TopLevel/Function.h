@@ -44,14 +44,14 @@ public:
 	void								setEllipsis(bool _e) { m_ellipsis = _e; changed(); }
 	
 protected:
-	virtual int							minimumRequired() const { return 3; }
+	virtual int							minRequired(int _i) const { return _i == Returned || _i == Body ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
 	
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity*) { changed(); }
 	virtual void						onDependencyRemoved(Entity*, int) { changed(); }
 	
-	virtual Entity*						isExpander() const { return body()->entity(0); }
+	virtual Entity*						isExpander() const { return body()->child(0); }
 	virtual QString						defineLayout(ViewKeys& _v) const { return "^;" + LambdaNamer::defineLayout(_v); }
 	virtual bool						keyPressed(EntityKeyEvent const* _e) { return LambdaNamer::keyPressed(_e) ? true : Super::keyPressed(_e); }
 	virtual void						exportDom(QDomElement& _element) const;

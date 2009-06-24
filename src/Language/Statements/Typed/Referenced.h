@@ -47,6 +47,7 @@ public:
 
 protected:
 	virtual bool						onChanged();
+	virtual bool						isInValidState() const;
 	virtual QString						defineLayout(ViewKeys&) const;
 	virtual void						decorate(DecorationContext const& _c) const;
 	virtual bool						isSuperfluous() const;

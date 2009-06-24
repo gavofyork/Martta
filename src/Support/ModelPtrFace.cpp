@@ -41,7 +41,7 @@ void ModelPtrFace::restore()
 {
 	if (isArchived())
 	{
-		M_ASSERT(!m_cache || !m_cache->self()->context());
+		M_ASSERT(!m_cache || !m_cache->self()->parent());
 		m_cache = m_rootEntity->findEntity(m_key);
 		// Note; m_cache is allowed to be zero, since it just means that the entity we're
 		// pointing at was deleted while we were archived. What we get back is naturally a
@@ -60,7 +60,7 @@ void ModelPtrFace::tryRestore()
 {
 	if (isArchived())
 	{
-		M_ASSERT(!m_cache || !m_cache->self()->context());
+		M_ASSERT(!m_cache || !m_cache->self()->parent());
 		m_cache = m_rootEntity->findEntity(m_key);
 		// Note; m_cache is allowed to be zero, since it just means that the entity we're
 		// pointing at was deleted while we were archived. What we get back is naturally a

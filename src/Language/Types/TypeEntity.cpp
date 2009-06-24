@@ -65,9 +65,9 @@ TypeEntity* TypeEntity::newClone(Type* _o) const
 	TypeEntity* ret;
 	ret = newClone();
 	ret->m_owner = _o;
-	foreach (Entity* e, entities())
+	foreach (Entity* e, children())
 		if (e->isKind<TypeEntity>())
-			ret->back().place(e->asKind<TypeEntity>()->clone(_o));
+			(e->index() < 0 ? ret->middle(e->index()) : ret->back()).place(e->asKind<TypeEntity>()->clone(_o));
 		else
 			break;
 	return ret;
@@ -81,22 +81,22 @@ void TypeEntity::knitIn(ModifyingType* _t)
 		if (&**owner() == this)
 			owner()->m_top = _t;
 	}
-	if (_t->entity(0) && _t->entity(0)->isPlaceholder())
-		_t->entity(0)->killAndDelete();
-	insert(_t);
+	if (_t->child(ModifyingType::Original) && _t->child(ModifyingType::Original)->isPlaceholder())
+		_t->child(ModifyingType::Original)->killAndDelete();
+	insert(_t, ModifyingType::Original);
 }
 
 bool TypeEntity::defineEquivalenceTo(TypeEntity const* _t) const
 {
 	if (_t->kind() != kind()) return false;
 	if (!contentsEquivalentTo(_t)) return false;
-	for (int i = 0; i < entities().size(); i++)
-		if (entityIs<TypeEntity>(i) && _t->entityIs<TypeEntity>(i))
-			if (!entityAs<TypeEntity>(i)->isEquivalentTo(_t->entityAs<TypeEntity>(i)))
+	foreach (Entity* e, children())
+		if (e->isKind<TypeEntity>() && _t->childIs<TypeEntity>(e->index()))
+			if (!e->asKind<TypeEntity>()->isEquivalentTo(_t->childAs<TypeEntity>(e->index())))
 				return false;
 			else {}
 		else
-			if (entityIs<TypeEntity>(i) != _t->entityIs<TypeEntity>(i))
+			if (e->isKind<TypeEntity>() != _t->childIs<TypeEntity>(e->index()))
 				return false;
 	return true;
 }

@@ -27,7 +27,7 @@ MARTTA_OBJECT_CPP(UndefinedArray);
 	
 QString UndefinedArray::code(QString const& _middle) const
 {
-	return entityAs<TypeEntity>(0)->code(_middle + "[]");
+	return childAs<TypeEntity>(Original)->code(_middle + "[]");
 }
 
 }

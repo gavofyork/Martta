@@ -38,7 +38,6 @@ public:
 	Access								baseAccess(Class* _c) const;
 	
 protected:
-	virtual int							minimumRequired() const { return 1; }
 	virtual Kinds						allowedKinds(int) const;
 	virtual QString						interfaceCode() const;
 	virtual QString						implementationCode() const;
@@ -53,7 +52,7 @@ protected:
 	// A child has been added to the class somewhere in the middle, probably. Either way we need to rejig deps to get the new access label tracked.
 	virtual void						onDependencySwitched(Entity* _e, Entity*) { onDependencyAdded(_e); }
 	virtual bool						onChanged();
-	virtual void						onChildrenAdded();
+	virtual void						onChildrenInitialised();
 	virtual bool						hasDefaultConstructor() const;
 	virtual Types						assignableTypes() const;
 	virtual Entity*						isExpander() const;

@@ -32,12 +32,11 @@ bool Destructor::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyE
 	return simpleInsertionPointKeyPressHandler<Destructor>(_p, _e, "~");
 }
 
-Kinds Destructor::memberAllowedKinds(int _i) const
+Kinds Destructor::allowedKinds(int _i) const
 {
-	if (_i == 0)
-		return Kind::of<Compound>();
-	else
+	if (_i >= 0)
 		return Kinds();
+	return Super::allowedKinds(_i);
 }
 
 QString Destructor::name() const

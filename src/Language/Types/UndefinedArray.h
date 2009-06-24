@@ -32,7 +32,7 @@ class UndefinedArray: public AddressType
 protected:
 	virtual QString						code(QString const& _middle) const;
 	virtual TypeEntity*					newClone() const { return new UndefinedArray; }
-	virtual QString						defineLayout(ViewKeys&) const { return "ycode;0;^;'[]'"; }
+	virtual QString						defineLayout(ViewKeys&) const { return QString("ycode;%1;^;'[]'").arg(Original); }
 };
 
 }

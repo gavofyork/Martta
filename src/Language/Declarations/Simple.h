@@ -33,7 +33,7 @@ class Simple: public DeclarationEntity, public_interface ValueDefiner
 	
 public:
 	virtual ~Simple();
-	virtual Type						type() const { return *entityAs<TypeEntity>(0); }
+	virtual Type						type() const { return *childAs<TypeEntity>(0); }
 
 protected:
 	void								construct(TypeEntity const* _scope, int _id, bool _isConst, Type const& _returns, Types const& _args, RootEntity* _root, char const* _key);

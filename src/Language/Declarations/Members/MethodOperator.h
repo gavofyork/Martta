@@ -34,8 +34,8 @@ public:
 	virtual Operator					id() const;
 
 protected:	
-	virtual int							memberMinimumRequired() const { return isBinary() ? 5 : 4; }
-	virtual Kinds						memberAllowedKinds(int _i) const;
+	virtual int							minRequired(int _i) const { return _i == Cardinals ? isBinary() ? 1 : 0 : Super::minRequired(_i); }
+	virtual Kinds						allowedKinds(int _i) const;
 	
 	virtual int							argumentCount() const;
 	virtual Type						argumentType(int _i) const;

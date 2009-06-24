@@ -31,18 +31,15 @@ class Construction: public Invocation
 {
 	MARTTA_OBJECT(Invocation)
 
-	friend class Entity;
-
 public:
 	Construction(Constructor* _c = 0) : m_subject(0) { setDependency(m_subject, _c); }
 
-	virtual int							minimumRequired() const;
+	virtual int							minRequired(int _i) const;
 	virtual Kinds						allowedKinds(int _index) const;
 	virtual Types						allowedTypes(int _index) const;
 
 	virtual Type						type() const;
 	virtual QString						code() const;
-	QString								callList() const { return Invocation::callList(typeds()); }
 
 	virtual void						exportDom(QDomElement& _element) const;
 	virtual void						importDom(QDomElement const& _element);

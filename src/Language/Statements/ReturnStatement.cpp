@@ -28,7 +28,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(ReturnStatement);	
 	
-int ReturnStatement::minimumRequired() const
+int ReturnStatement::minRequired(int _i) const
 {
 	if (!hasAncestor<LambdaNamer>())
 	{
@@ -36,16 +36,20 @@ int ReturnStatement::minimumRequired() const
 		return 0;
 	}
 
-	if (ancestor<LambdaNamer>()->returns().isNull() || ancestor<LambdaNamer>()->returns() == Type(Void))
-		return 0;
+	if (_i == Returned)
+		if (!ancestor<LambdaNamer>()->returns().isNull() && ancestor<LambdaNamer>()->returns() != Type(Void))
+			return 1;
+		else
+			return 0;
 	else
-		return 1;
+		return Super::minRequired(_i);
 }
 
 void ReturnStatement::onDependencyChanged(Entity*)
 {
 	if (validifyChildren())
 		relayoutLater();
+	changed();
 }
 
 Kinds ReturnStatement::allowedKinds(int _i) const
@@ -56,26 +60,31 @@ Kinds ReturnStatement::allowedKinds(int _i) const
 		return Kinds();
 	}
 
-	if (_i == 0 && !ancestor<LambdaNamer>()->returns().isNull() && ancestor<LambdaNamer>()->returns() != Type(Void))
+	if (_i == Returned && (ancestor<LambdaNamer>()->returns().isNull() || ancestor<LambdaNamer>()->returns() != Type(Void)))
 		return Kind::of<Typed>();
-	return Kinds();
+	return Super::allowedKinds(_i);
 }
 
 Types ReturnStatement::allowedTypes(int _i) const
 {
-	if (!hasAncestor<LambdaNamer>())
+	if (_i == Returned)
 	{
-		qCritical("Return statement without lambda ancestor!");
-		return Types();
+		if (!hasAncestor<LambdaNamer>())
+		{
+			qCritical("Return statement without lambda ancestor!");
+			return Types();
+		}
+		if (!ancestor<LambdaNamer>()->returns().isNull() && ancestor<LambdaNamer>()->returns() != Type(Void))
+			return ancestor<LambdaNamer>()->returns();
+		else
+			return Types();
 	}
-	if (_i == 0 && !ancestor<LambdaNamer>()->returns().isNull() && ancestor<LambdaNamer>()->returns() != Type(Void))
-		return ancestor<LambdaNamer>()->returns();
-	return Types();
+	return Super::allowedTypes(_i);
 }
 
 QString ReturnStatement::code() const
 {
-	return entity(0) ? "return " + entityAs<Typed>(0)->codeAsStatement() : "return;";
+	return childIs<Typed>(Returned) ? "return " + childAs<Typed>(Returned)->codeAsStatement() : "return;";
 }
 
 }

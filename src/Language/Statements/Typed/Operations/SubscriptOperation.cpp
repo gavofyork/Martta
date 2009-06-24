@@ -47,56 +47,69 @@ bool SubscriptOperation::isValidState() const
 
 Types SubscriptOperation::allowedTypes(int _index) const
 {
-	if (_index == 0)
+	if (_index == FirstOperand)
 	{
 		Types ret;
-		foreach (Type t, BareTyped::allowedTypes())
-			ret << Type(HashType()).append(t).topWith(Reference()) << Type(HashType()).append(t).topWith(Reference()).topWith(Const())
+		foreach (Type t, BareTyped::ourAllowedTypes())
+			ret << t.toppedWith(HashType()).topWith(Reference()) << t.toppedWith(HashType()).topWith(Reference()).topWith(Const())
 				<< t.toppedWith(ListType()).topWith(Reference()) << t.toppedWith(ListType()).topWith(Reference()).topWith(Const())
 				<< t.toppedWith(AddressType());
 			// TODO: All ExplicitTypes in scope with operator[]
 		ret << Type(StringType()).topWith(Reference());
 		return ret;
 	}
-	else
+	else if (_index == SecondOperand)
 	{
 		if (leftType()->isType<HashType>())
 			return Type(*leftType()->asType<HashType>()->key());
 		return Type(Int);
 	}
-	return Types();
+	return Super::allowedTypes(_index);
 }
 
 Types SubscriptOperation::deniedTypes(int _index) const
 {
-	if (_index == 0)
+	if (_index == FirstOperand)
 	{
 		Types ret;
-		foreach (Type t, BareTyped::deniedTypes())
-			ret << Type(HashType()).append(t) << t.toppedWith(ListType()) << t.toppedWith(AddressType());
+		foreach (Type t, BareTyped::ourDeniedTypes())
+			ret << t.toppedWith(HashType()) << t.toppedWith(ListType()) << t.toppedWith(AddressType());
 			// TODO: All ExplicitTypes in scope with operator[]
 		return ret;
 	}
-	return Types();
+	else if (_index == SecondOperand)
+	{
+		return Types();
+	}
+	return Super::deniedTypes(_index);
 }
 
 Type SubscriptOperation::type() const
 {
 	if (leftType()->isType<StringType>())
 		return Type(Wchar).topWith(Reference());
-	else if (leftType()->isType<Const>() && leftType()->asType<Const>()->child()->isType<StringType>())
+	else if (leftType()->isType<Const>() && leftType()->asType<Const>()->original()->isType<StringType>())
 		return Type(Wchar);
 	else if (leftType()->isType<AddressType>())
-		return Type(*leftType()->asType<AddressType>()->child()).topWith(Reference());
-	else if (leftType()->isType<Const>() && leftType()->asType<Const>()->child()->isType<ListType>())
-		return Type(*leftType()->asType<Const>()->child()->asType<ListType>()->child()).topWith(Const()).topWith(Reference());
+		return Type(*leftType()->asType<AddressType>()->original()).topWith(Reference());
+	else if (leftType()->isType<Const>() && leftType()->asType<Const>()->original()->isType<ListType>())
+		return Type(*leftType()->asType<Const>()->original()->asType<ListType>()->original()).topWith(Const()).topWith(Reference());
 	else if (leftType()->isType<ListType>())
-		return Type(*leftType()->asType<ListType>()->child()).topWith(Reference());
-	else if (leftType()->isType<Const>() && leftType()->asType<Const>()->child()->isType<HashType>())
-		return Type(*leftType()->asType<Const>()->child()->asType<HashType>()->value()).topWith(Const()).topWith(Reference());
+		return Type(*leftType()->asType<ListType>()->original()).topWith(Reference());
+	else if (leftType()->isType<Const>() && leftType()->asType<Const>()->original()->isType<HashType>())
+		return Type(*leftType()->asType<Const>()->original()->asType<HashType>()->value()).topWith(Const()).topWith(Reference());
 	else if (leftType()->isType<HashType>())
 		return Type(*leftType()->asType<HashType>()->value()).topWith(Reference());
 	return Type();
+}
+
+bool SubscriptOperation::keyPressed(EntityKeyEvent const* _e)
+{
+	if (_e->text() == "]")
+		setCurrent();
+	else
+		return Super::keyPressed(_e);
+	return true;
 }
 
 bool SubscriptOperation::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)

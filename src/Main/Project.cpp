@@ -75,7 +75,7 @@ Project::Project(QString const& _load):
 
 	m_classes.setParent(this);
 
-	connect(&m_cDepends, SIGNAL(modelReset()), SLOT(reloadHeaders()));
+	connect(&m_cDepends, SIGNAL(modelReset()), SLOT(reloadHeadersAndUpdateSubject()));
 	connect(&m_declarations, SIGNAL(modelChanged()), SIGNAL(changed()));
 
 	{
@@ -99,10 +99,11 @@ Project::~Project()
 void Project::resetAsNew()
 {
 	clear();
+	m_declarations.debugTree();
 	m_filename = QString();
 	m_namespace = new NamespaceEntity;
+	m_namespace->prepareChildren();
 	m_declarations.back().place(m_namespace);
-	m_namespace->back().place(new TextLabel("Project"));
 
 	IncludeProject* sc = new IncludeProject("Standard C");
 #ifdef Q_WS_WIN
@@ -122,17 +123,18 @@ void Project::resetAsNew()
 	m_namespace->killAndDelete();
 	m_namespace = new NamespaceEntity;
 	m_declarations.back().place(m_namespace);
-	m_namespace->back().place(new TextLabel("Project"));
+	m_namespace->prepareChildren();
+	m_namespace->childAs<TextLabel>(Identifiable::Identity)->setText("Project");
 	Class* c = new Class;
 	m_namespace->back().place(c);
-	c->back().place(new TextLabel("Program"));
-	c->asKind<Entity>()->apresLoad();
+	c->prepareChildren();
+	c->childAs<TextLabel>(Identifiable::Identity)->setText("Program");
 	m_classes << c;
 
 	c->back().place(m_program = new Method);
 	m_program->prepareChildren();
-	m_program->entitiesOf<TextLabel>()[0]->setText("main");
-	m_program->entitiesOf<TypeEntity>()[0]->over().place(new SimpleType(Void));
+	m_program->childAs<TextLabel>(Identifiable::Identity)->setText("main");
+	m_program->childOf<TypeEntity>()->over().place(new SimpleType(Void));
 	
 	emit subjectInvalid();
 	emit nameChanged();
@@ -156,8 +158,8 @@ QString Project::code() const
 		if (ic.isEmpty())
 			return QString();
 		ret += ic + "\n" + m_namespace->implementationCode() + "\n";
-		if (m_program && m_program->contextIs<DeclarationEntity>())
-			ret += "int main(int, char**)\n{\n" + m_program->contextAs<DeclarationEntity>()->reference() + " p;\np." + m_program->entitiesOf<TextLabel>()[0]->code() + "();\n}\n";
+		if (m_program && m_program->parentIs<DeclarationEntity>())
+			ret += "int main(int, char**)\n{\n" + m_program->parentAs<DeclarationEntity>()->reference() + " p;\np." + m_program->codeName() + "();\n}\n";
 	}
 
 	return ret;
@@ -169,6 +171,7 @@ void Project::clear()
 	m_program = 0;
 	m_namespace = 0;
 	m_declarations.clearEntities();
+	M_ASSERT(m_declarations.modelPtrs().size() == 0);
 //	while (m_classes.size()) m_classes.takeLast()->killAndDelete();
 	m_classes.reset();
 	while (m_cDepends.size()) delete m_cDepends.takeLast();
@@ -345,14 +348,18 @@ void Project::deserialise(QDomDocument& _d)
 	TIME_STATEMENT(importDom) m_declarations.importDom(_d.documentElement());
 	TIME_STATEMENT(restorePtrs) m_declarations.restorePtrs();
 
-	m_namespace = m_declarations.entitiesOf<NamespaceEntity>()[0];
+	m_namespace = m_declarations.childOf<NamespaceEntity>();
 	M_ASSERT(m_namespace);
 
-	m_classes << m_namespace->entitiesOf<Class>();
+	m_classes << m_namespace->cardinalChildrenOf<Class>();
 
 	// Load "program"
-	Entity* e = m_namespace->findEntity(_d.documentElement().namedItem("program").toElement().attribute("key"))->self();
-	m_program = e->isKind<Method>() ? e->asKind<Method>() : 0;
+	QString k = _d.documentElement().namedItem("program").toElement().attribute("key");
+	
+	if (Identifiable* e = m_declarations.findEntity(k))
+		m_program = e->self()->tryKind<Method>();
+	else
+		m_program = 0;
 
 	QList<SafePointer<Entity> > uplist;
 	uplist << m_namespace;
@@ -362,14 +369,11 @@ void Project::deserialise(QDomDocument& _d)
 		Entity* e = uplist.takeLast();
 		if (e)
 		{
-			foreach (Entity* i, e->entities())
+			foreach (Entity* i, e->children())
 				uplist << i;
 			e->apresLoad();
 		}
 	}
-	
-	// Overuse?
-	emit subjectInvalid();
 }
 
 void Project::revert()
@@ -444,11 +448,8 @@ void Project::reloadHeaders()
 		Entity* e = es.back();
 		es.pop_back();
 		M_ASSERT(e->rootEntity() == &m_declarations);
-		es << e->entities();
+		es << e->children();
 	}
-	
-	// Overuse?
-	emit subjectInvalid();
 }
 
 ////////////////////

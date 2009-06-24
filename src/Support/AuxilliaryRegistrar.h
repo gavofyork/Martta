@@ -27,12 +27,18 @@
 namespace Martta
 {
 
+int registerName(int _n, char const* _name);
+
 class AuxilliaryRegistrar
 {
 public:
 	AuxilliaryRegistrar(): m_isInitialised(false) {}
 
 	inline static AuxilliaryRegistrar*	get() { if (!s_this) s_this = new AuxilliaryRegistrar; return s_this; }
+	void								registerName(int _n, char const* _name);
+	inline QList<int> const&			names() const { return m_names; }
+	QString const&						nameOfArbitrary(int _n) const;
+	int									arbitraryOfName(QString const& _name) const;
 	
 	inline AuxilliaryFace const*		auxilliary(QString const& _kindName) { return m_auxilliaries[_kindName]; }
 	void								registerAuxilliary(AuxilliaryFace const* _a);
@@ -64,6 +70,9 @@ private:
 
 	static AuxilliaryRegistrar*			s_this;										///< Us.
 	bool								m_isInitialised;							///< We're initialised.
+	QList<int>							m_names;									///< The entity names.
+	QHash<int, QString>					m_nameMap;
+	QHash<QString, int>					m_invNameMap;
 	QHash<QString, AuxilliaryFace const*> m_auxilliaries;							///< All our auxilliaries.
 	QList<AuxilliaryFace const*>		m_allInterfaces;							///< All our interfaces.
 	QMultiMap<AuxilliaryFace const*, AuxilliaryFace const*> m_immediateDerivedsMap;	///< Immediately derived classes (only Entity-derived classes here).

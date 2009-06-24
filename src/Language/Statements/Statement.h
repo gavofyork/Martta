@@ -20,8 +20,9 @@
 
 #pragma once
 
-#include "TypedOwner.h"
 #include "Type.h"
+#include "TypedOwner.h"
+#include "Entity.h"
 
 namespace Martta
 {
@@ -29,9 +30,10 @@ namespace Martta
 class ValueDefiner;
 class Typed;
 
-class Statement: public TypedOwner
+class Statement: public Entity, public_interface TypedOwner
 {
-	MARTTA_PLACEHOLDER(TypedOwner)
+	MARTTA_PLACEHOLDER(Entity)
+	MARTTA_INHERITS(TypedOwner, 0)
 
 public:
 	virtual QString						code() const { return "(void)0;"; }
@@ -39,16 +41,19 @@ public:
 
 	virtual QList<ValueDefiner*>		valuesInLocalScope() const;
 
-	QList<Statement*>					statements() const { return entitiesOf<Statement>(); }
-	bool			 					isStatement(int _i) const { return entityIs<Statement>(_i); }
-	Statement*		 					asStatement(int _i) const { return entityAs<Statement>(_i); }
+	QList<Statement*>					statements() const { return cardinalChildrenOf<Statement>(); }
+	bool			 					isStatement(int _i) const { return childIs<Statement>(_i); }
+	Statement*		 					asStatement(int _i) const { return childAs<Statement>(_i); }
 
-	QList<Typed*>						typeds() const;
 	bool								isTyped(int _i) const;
 	Typed*								asTyped(int _i) const;
 	Type								typeOf(int _i) const;
 	
-	virtual bool						onChanged() { foreach (Entity* i, entities()) i->relayoutLater(); return Super::onChanged(); }
+	virtual bool						onChanged() { foreach (Entity* i, children()) i->relayoutLater(); return Super::onChanged(); }
+
+protected:
+	virtual QList<int> const&			defineDeclarationOrder() const { static const QList<int> r; return r; }
+	virtual void						appendDefinedUptoHere(int, QList<ValueDefiner*>*) const;
 };
 
 }

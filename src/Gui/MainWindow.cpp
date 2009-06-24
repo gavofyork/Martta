@@ -30,12 +30,16 @@
 #include "CodeScene.h"
 #include "MainWindow.h"
 
+#include <msSupport.h>
+using namespace MarttaSupport;
+
 namespace Martta
 {
 
 MainWindow::MainWindow(QWidget* _p, Qt::WindowFlags _f):
 	QMainWindow			(_p, _f),
-	m_program			(0)
+	m_program			(0),
+	m_updateTimer		(0)
 {
 	setupUi(this);
 	m_codeScene = codeView;
@@ -71,7 +75,7 @@ MainWindow::MainWindow(QWidget* _p, Qt::WindowFlags _f):
 #ifdef Q_WS_MAC
 	setUnifiedTitleAndToolBarOnMac(true);
 #endif
-
+	
 	updateLanguage();
 }
 
@@ -109,7 +113,7 @@ void MainWindow::updateLanguage()
 void MainWindow::resetSubject()
 {
 	m_codeScene->setSubject(m_project->ns());
-	M_ASSERT(m_codeScene->current()->rootEntity() == m_project->root());
+	M_ASSERT(!m_codeScene->current() || m_codeScene->current()->rootEntity() == m_project->root());
 	entityFocused(m_codeScene->current());
 }
 
@@ -123,29 +127,70 @@ void MainWindow::on_actAboutQt_triggered()
 	QMessageBox::aboutQt(this);
 }
 
+static void addChild(QTreeWidgetItem* _p, Entity const* _c)
+{
+	QTreeWidgetItem* t = new QTreeWidgetItem(_p, QStringList() << _c->indexName() << _c->kind().name());
+	foreach (Entity* e, _c->children())
+		addChild(t, e);
+}
+
+QString compileTypes(Types const& _t)
+{
+	QString ret;
+	foreach (Type t, _t)
+		ret += t->code() + ", ";
+	if (ret.endsWith(", "))
+		ret.chop(2);
+	return ret;
+}
+
+QString compileKinds(Kinds const& _t)
+{
+	QString ret;
+	foreach (Kind k, _t)
+		ret += k.name() + ", ";
+	if (ret.endsWith(", "))
+		ret.chop(2);
+	return ret;
+}
+
 void MainWindow::entityFocused(Entity* _e)
 {
 	if (m_codeScene->current() != _e)
 		m_codeScene->setCurrent(_e);
 
+	if (!m_updateTimer)
+	{
+		m_updateTimer = new QTimer(this);
+		connect(m_updateTimer, SIGNAL(timeout()), SLOT(delayedUpdate()));
+	}
+	m_updateTimer->setSingleShot(true);
+	m_updateTimer->start(500);
+}
+
+void MainWindow::delayedUpdate()
+{
+	delete m_updateTimer;
+	m_updateTimer = 0;
+	Entity* e = m_codeScene->current();
 	QString t;
-	if (_e && _e->context())
+	if (e && e->parent())
 	{
 		t += "<table><tr>";
-		t += "<td><b>" + _e->kind().name() + "</b>";
-		foreach (Kind k, _e->context()->allowedKinds(_e->contextIndex()))
+		t += "<td><b>" + e->kind().name() + "</b>";
+		foreach (Kind k, e->parent()->allowedKinds(e->index()))
 			t += "<br>" + k.name();
 		t += "<br>";
-		foreach (Kind k, _e->context()->deniedKinds(_e->contextIndex()))
+		foreach (Kind k, e->parent()->deniedKinds(e->index()))
 			t += "<br><i>" + k.name() + "</i>";
 		t += "</td>";
-		if (_e->isKind<BareTyped>())
+		if (e->isKind<BareTyped>())
 		{
-			t += "<td><b><i>" + Qt::escape(_e->asKind<BareTyped>()->type()->code()) + "</i><br/><font size=\"-2\" color=\"#888888\">(" + Qt::escape(_e->asKind<BareTyped>()->apparentType()->code()) + ")</font></b>";
-			foreach (Type i, _e->asKind<BareTyped>()->allowedTypes())
+			t += "<td><b><i>" + Qt::escape(e->asKind<BareTyped>()->type()->code()) + "</i><br/><font size=\"-2\" color=\"#888888\">(" + Qt::escape(e->asKind<BareTyped>()->apparentType()->code()) + ")</font></b>";
+			foreach (Type i, e->asKind<BareTyped>()->ourAllowedTypes())
 				t += "<br>" + Qt::escape(i->code());
 			t += "<br>";
-			foreach (Type i, _e->asKind<BareTyped>()->deniedTypes())
+			foreach (Type i, e->asKind<BareTyped>()->ourDeniedTypes())
 				t += "<br><i>" + Qt::escape(i->code()) + "</i>";
 			t += "</td>";
 		}
@@ -153,31 +198,32 @@ void MainWindow::entityFocused(Entity* _e)
 		
 		int vvalue = typesVisible->verticalScrollBar()->value();
 		typesVisible->clear();
-		if (_e->isKind<Statement>())
+		if (e->isKind<Statement>())
 		{
 			QTreeWidgetItem* l = new QTreeWidgetItem(typesVisible, QStringList() << QString("Local"));
-			foreach (ValueDefiner* v, _e->asKind<Statement>()->valuesInLocalScope())
+			foreach (ValueDefiner* v, e->asKind<Statement>()->valuesInLocalScope())
 				new QTreeWidgetItem(l, QStringList() << QString(v->name()) << QString(v->type()->code()));
 		}
-		if (_e->hasAncestor<Class>())
+		if (e->hasAncestor<Class>())
 		{
 			QTreeWidgetItem* m = new QTreeWidgetItem(typesVisible, QStringList() << QString("Members"));
 			QTreeWidgetItem* h = new QTreeWidgetItem(m, QStringList() << QString("Hidden"));
-			foreach (ValueDefiner* v, castEntities<ValueDefiner>(_e->ancestor<Class>()->membersOf<MemberValue>(_e->hasAncestor<MemberLambda>() ? _e->ancestor<MemberLambda>()->isConst() : false)))
+			foreach (ValueDefiner* v, castEntities<ValueDefiner>(e->ancestor<Class>()->membersOf<MemberValue>(e->hasAncestor<MemberLambda>() ? e->ancestor<MemberLambda>()->isConst() : false)))
 				new QTreeWidgetItem(v->isKind<Artificial>() ? h : m, QStringList() << QString(v->name()) << QString(v->type()->code()));
 		}
 		QTreeWidgetItem* g = new QTreeWidgetItem(typesVisible, QStringList() << QString("General"));
-		foreach (ValueDefiner* v, _e->ancestor<DeclarationEntity>()->valuesKnown())
+		foreach (ValueDefiner* v, e->ancestor<DeclarationEntity>()->valuesKnown())
 			new QTreeWidgetItem(g, QStringList() << QString(v->name()) << QString(v->type()->code()));
-		QTreeWidgetItem* gl = new QTreeWidgetItem(typesVisible, QStringList() << QString("Global"));
-		foreach (ValueDefiner* v, _e->rootEntity()->entitiesHereAndBeforeOf<ValueDefiner>())
-			new QTreeWidgetItem(gl, QStringList() << QString(v->name()) << QString(v->type()->code()));
+/*		QTreeWidgetItem* gl = new QTreeWidgetItem(typesVisible, QStringList() << QString("Global"));
+		foreach (ValueDefiner* v, e->rootEntity()->selfAndAncestorsChildrenOf<ValueDefiner>())
+			new QTreeWidgetItem(gl, QStringList() << QString(v->name()) << QString(v->type()->code()));*/
 		typesVisible->expandAll();
 		typesVisible->verticalScrollBar()->setValue(vvalue);
 		
 		vvalue = entityInfo->verticalScrollBar()->value();
 		entityInfo->clear();
-		if (DeclarationEntity* d = _e->selfAncestor<DeclarationEntity>())
+		
+		if (DeclarationEntity* d = e->selfAncestor<DeclarationEntity>())
 		{
 			QTreeWidgetItem* decl = new QTreeWidgetItem(entityInfo, QStringList() << QString("Declaration Context"));
 			new QTreeWidgetItem(decl, QStringList() << QString(d->name()) << QString(d->kind().name()));
@@ -188,14 +234,45 @@ void MainWindow::entityFocused(Entity* _e)
 			foreach (DeclarationEntity* u, d->utilisedSiblings())
 				new QTreeWidgetItem(us, QStringList() << QString(u ? u->name() : "NULL?") << QString(u ? u->kind().name() : "NULL?"));
 		}
-		new QTreeWidgetItem(entityInfo, QStringList() << QString("Layout") << QString(_e->defineLayout(m_codeScene->viewKeys(_e))));
 		
-		if (BareTyped* td = _e->tryKind<BareTyped>())
+		new QTreeWidgetItem(entityInfo, QStringList() << QString("Layout") << QString(e->defineLayout(m_codeScene->viewKeys(e))));
+		
+		QTreeWidgetItem* rc = new QTreeWidgetItem(entityInfo, QStringList() << "Child restrictions");
+		foreach (int i, e->knownNames())
+			if (e->allowedKinds(i).count())
+				new QTreeWidgetItem(rc, QStringList() << e->indexName(i) << (compileKinds(e->allowedKinds(i)) + " (%1 req'd)").arg(e->minRequired(i)));
+		for (int i = 0; i < e->minRequired(); ++i)
+			new QTreeWidgetItem(rc, QStringList() << QString::number(i) << (compileKinds(e->allowedKinds(i)) + " (req'd)"));
+		if (e->allowedKinds(e->minRequired()).count())
+			new QTreeWidgetItem(rc, QStringList() << "..." << compileKinds(e->allowedKinds(e->minRequired())));
+		
+
+		if (TypeNamer* td = e->tryKind<TypeNamer>())
 		{
-			QTreeWidgetItem* te = new QTreeWidgetItem(entityInfo, QStringList() << QString("Type Information") << td->type()->code());
+			QTreeWidgetItem* te = new QTreeWidgetItem(entityInfo, QStringList() << QString("Type Namer Information") << td->type()->code());
+			new QTreeWidgetItem(te, QStringList() << "Apparent type" << td->apparentType()->code());
+			new QTreeWidgetItem(te, QStringList() << "Type restrictions" << (compileTypes(td->ourAllowedTypes()) + " (%1 types)").arg(td->ourAllowedTypes().size()));
 			foreach (ValueDefiner* v, td->type()->applicableMembers())
 				new QTreeWidgetItem(te, QStringList() << QString(v->name()) << QString(v->type()->code()));
 		}
+		
+		if (TypedOwner* to = e->tryKind<TypedOwner>())
+		{
+			QTreeWidgetItem* te = new QTreeWidgetItem(entityInfo, QStringList() << QString("Typed Owner Information"));
+			
+			foreach (int i, e->knownNames())
+				if (to->allowedTypes(i).count())
+					new QTreeWidgetItem(te, QStringList() << e->indexName(i) + ": " + to->nominalType(i)->code() + " {" + to->effectiveType(i)->code() + "}" << (compileTypes(to->allowedTypes(i)) + " (%1 types)").arg(to->allowedTypes(i).size()) );
+			for (int i = 0; i < max(e->minRequired(), e->cardinalChildCount()); ++i)
+				if (to->allowedTypes(i).count())
+					new QTreeWidgetItem(te, QStringList() << QString::number(i) + ": " + to->nominalType(i)->code() + " {" + to->effectiveType(i)->code() + "}" << (compileTypes(to->allowedTypes(i)) + " (%1 types)").arg(to->allowedTypes(i).size()) );
+			if (to->allowedTypes(max(e->minRequired(), e->cardinalChildCount())).count())
+				new QTreeWidgetItem(te, QStringList() << "..." << (compileTypes(to->allowedTypes(max(e->minRequired(), e->cardinalChildCount()))) + " (%1 types)").arg(to->allowedTypes(max(e->minRequired(), e->cardinalChildCount())).size()) );
+		}
+		
+		QTreeWidgetItem* ac = new QTreeWidgetItem(entityInfo, QStringList() << "Actual children" << e->kind().name());
+		foreach (Entity* e, e->children())
+			addChild(ac, e);
 		
 		entityInfo->expandAll();
 		entityInfo->verticalScrollBar()->setValue(vvalue);

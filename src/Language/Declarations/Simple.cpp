@@ -36,7 +36,7 @@ void Simple::construct(TypeEntity const* _scope, int _id, bool _isConst, Type co
 	m_myId = _id;
 	
 	Type t = FunctionType();
-	t.append(_returns);
+	t.place(_returns, FunctionType::Returned);
 	foreach (Type i, _args)
 		t.append(i);
 	if (_scope)

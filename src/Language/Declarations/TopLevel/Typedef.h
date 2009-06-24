@@ -34,7 +34,9 @@ class Typedef: public TopLevelType
 	friend class TypedefResolver;
 
 public:
-	virtual int							minimumRequired() const { return 2; }
+	enum { Aliased = FirstNamed, EndOfNamed };
+
+	virtual int							minRequired(int _i) const { return _i == Aliased ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int) const;
 };
 

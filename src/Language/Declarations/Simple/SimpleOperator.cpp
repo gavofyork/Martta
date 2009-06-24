@@ -38,9 +38,4 @@ void SimpleOperator::construct(int _id, Operator _o, Type const& _returns, Types
 	Operation::registerOperator(_o, this, _root);
 }
 
-SimpleOperator::~SimpleOperator()
-{
-	rootEntity()->unregisterDeclaration(this);
-}
-
 }

@@ -37,17 +37,18 @@ bool NamespaceEntity::keyPressed(EntityKeyEvent const* _e)
 
 QString NamespaceEntity::defineLayout(ViewKeys&) const
 {
-	QString ret = "ycode;'namespace';Mi;0;n;";
-	for(int i = 1; i < entities().size(); i++)
+	QString ret = QString("ycode;'namespace';Mi;%1;n;").arg(Identity);
+	
+	for(int i = 0; i < cardinalChildCount(); i++)
 		ret += QString("i;%1;v8;").arg(i);
 	return ret;
 }
 
 Kinds NamespaceEntity::allowedKinds(int _i) const
 {
-	if (!_i)
-		return Kind::of<TextLabel>();
-	return Kind::of<TopLevelType>();
+	if (_i >= 0)
+		return Kind::of<TopLevelType>();
+	return Super::allowedKinds(_i);
 }
 
 QString NamespaceEntity::interfaceCode() const
@@ -57,7 +58,7 @@ QString NamespaceEntity::interfaceCode() const
 
 	QList<DeclarationEntity*> q;
 	QMultiMap<DeclarationEntity*, DeclarationEntity*> deps;
-	foreach (DeclarationEntity* i, entitiesOf<DeclarationEntity>())
+	foreach (DeclarationEntity* i, cardinalChildrenOf<DeclarationEntity>())
 	{
 		foreach (DeclarationEntity* j, i->utilisedSiblings())
 			deps.insert(i, j);
@@ -80,7 +81,7 @@ QString NamespaceEntity::implementationCode() const
 {
 	QString ret;
 	QList<DeclarationEntity*> ordered;
-	foreach (DeclarationEntity* i, entitiesOf<DeclarationEntity>())
+	foreach (DeclarationEntity* i, cardinalChildrenOf<DeclarationEntity>())
 		ret += i->implementationCode() + "\n";
 	if (ret.endsWith("\n\n")) ret.chop(1);
 	return ret;

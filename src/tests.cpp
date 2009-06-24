@@ -20,6 +20,17 @@
 
 #include <errno.h>
 
+#include <QDomDocument>
+#include <QDomElement>
+
+#include "msList.h"
+#include "msString.h"
+#include "msHash.h"
+#include "msSupport.h"
+using namespace MarttaSupport;
+
+#include "Meta.h"
+
 #include "Type.h"
 #include "TypeEntity.h"
 #include "Const.h"
@@ -41,22 +52,12 @@
 #include "EnumValue.h"
 #include "Argument.h"
 
-#include <QDomDocument>
-#include <QDomElement>
-
 #include "Method.h"
 #include "Variable.h"
 #include "Referenced.h"
 #include "NamespaceEntity.h"
 #include "Compound.h"
 using namespace Martta;
-
-#include "msList.h"
-#include "msString.h"
-#include "msHash.h"
-#include "msSupport.h"
-using namespace MarttaSupport;
-
 
 template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Box returnMeBox(GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey> const& _me)
@@ -123,13 +124,17 @@ private:
 
 class SPT: public SafePointerTarget { public: SafePointerTarget::rewirePointer; };
 
+using namespace Martta;
 class TagA
 {
 	MARTTA_INTERFACE
-	public: void killAndDelete() { delete this; }
+public:
+	void killAndDelete() { delete this; }
 	virtual char tagAVirtual() { return 'A'; }
 	virtual ~TagA() {}
 };
+MARTTA_INTERFACE_CPP(TagA);
+
 
 class Another
 {
@@ -141,61 +146,89 @@ public:
 class TagB
 {
 	MARTTA_INTERFACE
-	public: void killAndDelete() { delete this; }
+public:
+	void killAndDelete() { delete this; }
 	virtual char tagBVirtual() { return 'B'; }
 	virtual ~TagB() {}
 };
+MARTTA_INTERFACE_CPP(TagB);
 
 class TagC
 {
 	MARTTA_INTERFACE
-	public: void killAndDelete() { delete this; }
+public:
+	void killAndDelete() { delete this; }
 	virtual char tagCVirtual() { return 'C'; }
 	virtual ~TagC() {}
 };
+MARTTA_INTERFACE_CPP(TagC);
 
 class TagD: public Another, public TagB
 {
 	MARTTA_INTERFACE
 	MARTTA_INHERITS(TagB, 0)
-	public: void killAndDelete() { delete this; }
+public:
+	void killAndDelete() { delete this; }
 	virtual char tagDVirtual() { return 'D'; }
 	virtual ~TagD() {}
 };
+MARTTA_INTERFACE_CPP(TagD);
 
 class TagE
 {
 	MARTTA_INTERFACE
-	public: void killAndDelete() { delete this; }
+public:
+	void killAndDelete() { delete this; }
 	virtual char tagEVirtual() { return 'E'; }
 	virtual ~TagE() {}
 };
+MARTTA_INTERFACE_CPP(TagE);
 
 class TestEntity: public Entity, public TagA, public TagE
 {
 	MARTTA_OBJECT(Entity)
 	MARTTA_INHERITS(TagA, 0)
 	MARTTA_INHERITS(TagE, 1)
+public:
 	virtual void oneVirtual() {};
 	void killAndDelete() { Entity::killAndDelete(); }
 };
+MARTTA_OBJECT_CPP(TestEntity);
 
 class TestEntityB: public TestEntity, public TagC, public TagD
 {
 	MARTTA_OBJECT(TestEntity)
 	MARTTA_INHERITS(TagC, 0)
 	MARTTA_INHERITS(TagD, 1)
+public:
 	virtual void anotherVirtual() {};
 	void killAndDelete() { Entity::killAndDelete(); }
 };
-
-MARTTA_INTERFACE_CPP(TagA);
-MARTTA_OBJECT_CPP(TestEntity);
-MARTTA_INTERFACE_CPP(TagB);
-MARTTA_INTERFACE_CPP(TagC);
-MARTTA_INTERFACE_CPP(TagD);
-MARTTA_INTERFACE_CPP(TagE);
 MARTTA_OBJECT_CPP(TestEntityB);
+
+class TestNegatives: public Entity
+{
+	MARTTA_OBJECT(Entity)
+public:
+	MARTTA_NAMED(NamedChildB)
+	
+	enum { NamedChildA = FirstNamed, EndOfNamed };
+};
+MARTTA_OBJECT_CPP(TestNegatives);
+MARTTA_NAMED_CPP(TestNegatives, NamedChildB);
+
+class TestNegativesB: public TestNegatives
+{
+	MARTTA_OBJECT(TestNegatives)
+	
+public:
+	enum { NamedChildC = FirstNamed, EndOfNamed };
+	int minRequired(int _i) const { return _i != NamedChildA ? _i != NamedChildB ? _i != NamedChildC ? Super::minRequired(_i) : 2 : 1 : 0; }
+	Kinds allowedKinds(int) const { return Kind::of<TestNegatives>(); }
+};
+MARTTA_OBJECT_CPP(TestNegativesB);
+
+
 
 int test()
 {
@@ -372,32 +405,32 @@ int test()
 		NamespaceEntity* n = new NamespaceEntity;
 		n->prepareChildren();
 		r->back().place(n);
-		n->entitiesOf<TextLabel>()[0]->setText("n");
+		n->childAs<TextLabel>(Identifiable::Identity)->setText("n");
 
 		Class* X = new Class;
 		X->prepareChildren();
 		n->back().place(X);
-		X->entitiesOf<TextLabel>()[0]->setText("X");
+		X->childAs<TextLabel>(Identifiable::Identity)->setText("X");
 
 		Class* Y = new Class;
 		Y->prepareChildren();
 		n->back().place(Y);
-		Y->entitiesOf<TextLabel>()[0]->setText("Y");
+		Y->childAs<TextLabel>(Identifiable::Identity)->setText("Y");
 
 		Method* M = new Method;
 		M->prepareChildren();
 		X->back().place(M);
-		M->entitiesOf<TextLabel>()[0]->setText("foo");
-		M->entitiesOf<TypeEntity>()[0]->over()->replace(new SimpleType(Void));
+		M->childAs<TextLabel>(Identifiable::Identity)->setText("foo");
+		M->child(LambdaNamer::Returned)->replace(new SimpleType(Void));
 		
 		Argument* v = new Argument;
-		v->back().place(new TextLabel("a"));
-		v->back().place(new ExplicitType(Y));
+		v->middle(Identifiable::Identity).place(new TextLabel("a"));
+		v->middle(VariableNamer::OurType).place(new ExplicitType(Y));
 		M->back().place(v);
 		
 		Referenced* f = new Referenced(v); 
 		f->prepareChildren();
-		M->entitiesOf<Compound>()[0]->back().place(f);
+		M->childOf<Compound>()->back().place(f);
 		
 		r->archivePtrs(true);
 		r->restorePtrs();
@@ -413,13 +446,90 @@ int test()
 		n->killAndDelete();
 		r->importDom(doc.documentElement());
 		r->restorePtrs();
-		r->debugTree();
 	
-		FAILED_IF(!r->entity(0)->entitiesOf<Class>()[0]->entitiesOf<Method>()[0]->entitiesOf<Compound>()[0]->entityIs<Referenced>(1));
-		qDebug() << &*r->entity(0)->entitiesOf<Class>()[0]->entitiesOf<Method>()[0]->entitiesOf<Compound>()[0]->entityAs<Referenced>(1)->subject();
-		FAILED_IF(!r->entity(0)->entitiesOf<Class>()[0]->entitiesOf<Method>()[0]->entitiesOf<Compound>()[0]->entityAs<Referenced>(1)->subject());
+		FAILED_IF(!r->child(0)->childOf<Class>()->childOf<Method>()->childOf<Compound>()->childIs<Referenced>(1));
+		qDebug() << &*r->child(0)->childOf<Class>()->childOf<Method>()->childOf<Compound>()->childAs<Referenced>(1)->subject();
+		FAILED_IF(!r->child(0)->childOf<Class>()->childOf<Method>()->childOf<Compound>()->childAs<Referenced>(1)->subject());
 		
 		r->killAndDelete();
+	}
+	TEST("Pre-test")
+	{
+		RootEntity* r = new RootEntity;
+		SafePointer<TestNegatives> a = new TestNegatives;
+		SafePointer<TestNegatives> b = new TestNegatives;
+		a->silentMove(r->back());
+		b->silentMove(a->middle(0));
+		r->killAndDelete();
+		FAILED_IF(a);
+		FAILED_IF(b);
+	}
+#define CLEAR_TEST(pos) \
+	{ \
+		RootEntity* r = new RootEntity; \
+		SafePointer<TestNegatives> a = new TestNegatives; \
+		SafePointer<TestNegatives> b = new TestNegatives; \
+		a->silentMove(r->back()); \
+		b->silentMove(pos ? a->middle(pos) : a->back()); \
+		TEST("Clearing entities (children: " #pos ")") FAILED_IF(!a->children().contains(b)); \
+		TEST("Clearing entities (cardinalChildren(): " #pos ")") FAILED_IF(bool(pos) == a->cardinalChildren().contains(b)); \
+		TEST("Clearing entities (childrenAt(int): " #pos ")") FAILED_IF(!a->childrenAt(pos).contains(b)); \
+		r->killAndDelete(); \
+		TEST("Clearing entities (a pointer: " #pos ")") FAILED_IF(a); \
+		TEST("Clearing entities (b pointer: " #pos ")") FAILED_IF(b); \
+	}
+	CLEAR_TEST(0)
+	CLEAR_TEST(TestNegatives::NamedChildA)
+	CLEAR_TEST(TestNegatives::NamedChildB)
+#undef CLEAR_TEST
+#define TEST_FOR(T, X) TEST(T) FAILED_IF(!(X))
+	{
+		RootEntity* r = new RootEntity;
+		SafePointer<TestNegativesB> a = new TestNegativesB;
+		a->silentMove(r->back());
+		TEST_FOR("Negatives: start incomplete", !a->isComplete());
+		a->prepareChildren();
+		TEST_FOR("Negatives: prepareChildren() makes complete", a->isComplete());
+		TEST_FOR("Negatives: no entities", a->cardinalChildCount() == 0);
+		TEST_FOR("Negatives: no As", a->childCountAt(TestNegativesB::NamedChildA) == 0);
+		TEST_FOR("Negatives: one B", a->childCountAt(TestNegativesB::NamedChildB) == 1);
+		TEST_FOR("Negatives: two Cs", a->childCountAt(TestNegativesB::NamedChildC) == 2);
+		TEST_FOR("Negatives: no 'D's", a->childCountAt(TestNegativesB::NamedChildC + 1) == 0);
+		a->child(TestNegativesB::NamedChildC)->replace(new Label);
+		TEST_FOR("Negatives: bad replacement makes incomplete", !a->isComplete());
+		a->validifyChildren();
+		TEST_FOR("Negatives: validifyChildren() makes complete", a->isComplete());
+		a->validifyChildren();
+		TEST_FOR("Negatives: 2nd validifyChildren() and still complete", a->isComplete());
+		r->clearEntities();
+	}
+	TEST("Negatives save/load")
+	{
+		RootEntity* r = new RootEntity;
+		SafePointer<TestNegativesB> a = new TestNegativesB;
+		a->silentMove(r->back());
+		a->prepareChildren();
+
+		QDomDocument doc;
+		QDomElement prj = doc.createElement("project");
+		doc.appendChild(prj);
+		QDomElement ele = doc.createElement("entity");
+		ele.setAttribute("kind", a->kind().name());
+		prj.appendChild(ele);
+		
+		r->archivePtrs();
+		a->exportDom(ele);
+		a->killAndDelete();
+		r->importDom(doc.documentElement());
+		r->restorePtrs();
+		a = r->childAs<TestNegativesB>(0);
+		
+		FAILED_IF(a->cardinalChildCount() != 0);
+		FAILED_IF(a->childCountAt(TestNegativesB::NamedChildA) != 0);
+		FAILED_IF(a->childCountAt(TestNegativesB::NamedChildB) != 1);
+		FAILED_IF(a->childCountAt(TestNegativesB::NamedChildC) != 2);
+		FAILED_IF(a->childCountAt(TestNegativesB::NamedChildC + 1) != 0);
+		r->clearEntities();
 	}
 	TEST("Type construction adoption")
 	{
@@ -496,7 +606,7 @@ int test()
 		r->back().place(X);
 		X->changed();
 		FAILED_IF(!X->isValid());
-		foreach (Entity* e, X->entities())
+		foreach (Entity* e, X->children())
 			FAILED_IF(!e->isValid());
 	}
 #define TEST_THIS_CAST(F, T, R) \
@@ -514,9 +624,9 @@ int test()
 		// ? (t1)(?)
 		Type f = Type(FunctionType(false, true));
 		// void (t2)()
-		Type fv = Type(FunctionType()).append(SimpleType(Void));
+		Type fv = Type(FunctionType()).place(SimpleType(Void), FunctionType::Returned);
 		// int (t3)()
-		Type fi = Type(FunctionType()).append(SimpleType(Int));
+		Type fi = Type(FunctionType()).place(SimpleType(Int), FunctionType::Returned);
 		CAST_TEST(f, f, Logical);
 		CAST_TEST(f, fv, Unrelated);
 		CAST_TEST(f, fi, Unrelated);
@@ -564,7 +674,8 @@ int test()
 		X->back().place(Xv);
 		Enumeration* Y = new Enumeration;
 		Y->prepareChildren();
-		Y->entitiesOf<TextLabel>()[0]->setText("Y");
+		Y->setNamed();
+		Y->childAs<TextLabel>(Identifiable::Identity)->setText("Y");
 		r->back().place(Y);
 		EnumValue* Yv = new EnumValue;
 		Yv->prepareChildren();
@@ -620,6 +731,14 @@ int test()
 		CAST_TEST(vr, vr, Logical);
 #undef CAST_TEST
 	}
+	TEST("Class construction testing.")
+	{
+		RootEntity* r = new RootEntity;
+		Class* X = new Class;
+		X->prepareChildren();
+		r->back().place(X);
+		delete r;
+	}
 	{
 #define CAST_TEST(F, T, R) TEST("Reference casting... " #F "->" #T) TEST_THIS_CAST(F, T, R)
 		RootEntity* r = new RootEntity;
@@ -650,24 +769,24 @@ int test()
 		Class* B = new Class;
 		Class* D = new Class;
 		B->prepareChildren();
-		B->entitiesOf<TextLabel>()[0]->replace(new TextLabel("B"));
+		B->childAs<TextLabel>(Identifiable::Identity)->setText("B");
 		D->prepareChildren();
-		D->entitiesOf<TextLabel>()[0]->replace(new TextLabel("D"));
+		D->childAs<TextLabel>(Identifiable::Identity)->setText("D");
 		r->back().place(B);
 		r->back().place(D);
 		Base* b = new Base;
-		b->back().place(new AccessLabel(Public));
-		b->back().place(new ExplicitType(B));
+		b->middle(Base::Accessibility).place(new AccessLabel(Public));
+		b->middle(Base::Superclass).place(new ExplicitType(B));
 		D->back().place(b);
 		{
 		// void (B:: b)()
-		Type b = Type(FunctionType()).append(SimpleType(Void)).topWith(Memberify(Type(B)));
+		Type b = Type(FunctionType()).place(SimpleType(Void), FunctionType::Returned).topWith(Memberify(Type(B)));
 		// void (B:: bc)() const
-		Type bc = Type(FunctionType()).append(SimpleType(Void)).topWith(Memberify(Type(B).topWith(Const())));
+		Type bc = Type(FunctionType()).place(SimpleType(Void), FunctionType::Returned).topWith(Memberify(Type(B).topWith(Const())));
 		// void (D:: d)()
-		Type d = Type(FunctionType()).append(SimpleType(Void)).topWith(Memberify(Type(D)));
+		Type d = Type(FunctionType()).place(SimpleType(Void), FunctionType::Returned).topWith(Memberify(Type(D)));
 		// void (D:: dc)() const
-		Type dc = Type(FunctionType()).append(SimpleType(Void)).topWith(Memberify(Type(D).topWith(Const())));
+		Type dc = Type(FunctionType()).place(SimpleType(Void), FunctionType::Returned).topWith(Memberify(Type(D).topWith(Const())));
 		CAST_TEST(b, b, Logical);
 		CAST_TEST(b, bc, Unrelated);
 		CAST_TEST(b, d, Logical);

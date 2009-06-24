@@ -20,25 +20,30 @@
 
 #pragma once
 
+#include "Corporal.h"
+#include "Conditional.h"
 #include "Untyped.h"
 
 namespace Martta
 {
 
-class IfStatement: public Untyped
+class IfStatement: public Untyped, public_interface Corporal, public_interface Conditional
 {
 	MARTTA_OBJECT(Untyped)
 
 public:
+	enum { AltBody = FirstNamed, EndOfNamed };
+
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
 	
 protected:
 	virtual QString						code() const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
 	virtual QString						defineLayout(ViewKeys&) const;
-	virtual int							minimumRequired() const { return 2; }
+	virtual int							minRequired(int _i) const { return _i == Condition || _i == Body ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _index) const;
 	virtual Types						allowedTypes(int _index) const;
+	virtual QList<int> const&			defineDeclarationOrder() const { static const QList<int> r = QList<int>() << Condition << Body; return r; }
 };
 
 }

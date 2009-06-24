@@ -38,7 +38,7 @@ namespace MarttaSupport
 
 
 template<typename T>
-inline T max(T _a, T _b) { return (_a < _b) ? _b : _a; }
+inline T max(T const& _a, T const& _b) { return (_a < _b) ? _b : _a; }
 
 typedef unsigned char uchar;
 typedef unsigned short ushort;
@@ -49,8 +49,10 @@ typedef unsigned int uint;
 typedef unsigned long ulong;
 
 template<typename T>
-inline T min(T _a, T _b) { return (_a > _b) ? _b : _a; }
+inline T min(T const& _a, T const& _b) { return (_b < _a) ? _b : _a; }
 
+template<typename T>
+inline T sign(T const& _x) { return _x < 0 ? -1 : _x > 0 ? 1 : 0; }
 
 //#define inline MS_EXPORT inline
 template<typename T>

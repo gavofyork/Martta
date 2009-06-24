@@ -20,19 +20,23 @@
 
 #pragma once
 
+#include "Corporal.h"
+#include "Conditional.h"
 #include "Untyped.h"
 
 namespace Martta
 {
 
-class ForLoop: public Untyped
+class ForLoop: public Untyped, public_interface Corporal, public_interface Conditional
 {
 	MARTTA_OBJECT(Untyped)
-
-	friend class Entity;
+	MARTTA_INHERITS(Corporal, 0)
+	MARTTA_INHERITS(Conditional, 1)
 
 public:
-	virtual int							minimumRequired() const { return 4; }
+	enum { Initialiser = FirstNamed, Ticker, EndOfNamed };
+	
+	virtual int							minRequired(int _i) const { return _i == Body || _i == Initialiser || _i == Condition || _i == Ticker ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _index) const;
 	virtual Types						allowedTypes(int _index) const;
 
@@ -41,6 +45,7 @@ public:
 	virtual QString						code() const;
 
 private:
+	virtual QList<int> const&			defineDeclarationOrder() const { static const QList<int> r = QList<int>() << Initialiser << Condition << Ticker << Body; return r; }
 	virtual void						decorate(DecorationContext const& _c) const;
 	virtual QString						defineLayout(ViewKeys&) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);

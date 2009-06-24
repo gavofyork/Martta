@@ -77,7 +77,7 @@ Type Type::strippedTo(Type const& _t) const
 	while (ret.m_top)
 	{
 		ModifyingType* j = _t.m_top->tryKind<ModifyingType>();
-		for (ModifyingType* i = ret.m_top->tryKind<ModifyingType>(); i && j; i = i->child()->tryKind<ModifyingType>(), j = j->child()->tryKind<ModifyingType>())
+		for (ModifyingType* i = ret.m_top->tryKind<ModifyingType>(); i && j; i = i->original()->tryKind<ModifyingType>(), j = j->original()->tryKind<ModifyingType>())
 			if (i->kind() != j->kind())
 				goto BAD;
 		if (!j)
@@ -96,7 +96,7 @@ bool Type::isUltimatelyNull() const
 	M_ASSERT(m_top);
 	TypeEntity* t = m_top;
 	while (t->isKind<ModifyingType>())
-		t = t->asKind<ModifyingType>()->child();
+		t = t->asKind<ModifyingType>()->original();
 	return t->isPlaceholder();
 }
 
