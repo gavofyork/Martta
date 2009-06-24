@@ -1,0 +1,123 @@
+"Exactly equals" for scoped pure function definitions, e.g.:
+- No type necessary, but right-side can be cast in case of ambiguity.
+- Implementation either recomputes every time or updates when params change (default).
+void foo()
+{
+	int total = 12, filled = 0;
+	left === total - filled;
+	printf("%d\n", left);	// 12
+	filled += 5;
+	printf("%d\n", left);	// 7
+	left = 7;		// ERROR: cannot assign dependent value.
+}
+
+// expands to:
+
+void foo()
+{
+	int total = 12, filled = 0;
+	const int left = total - filled;	// type declaration determined from type of (total - filled) at this point.
+	printf("%d\n", left);	// 12
+	filled += 5; *const_cast<int*>(&left) = total - filled;	
+	printf("%d\n", left);	// 7
+	left = 7;		// error (can't assign const value).
+}
+
+
+distribution of os (from single hardware vendors -> software houses -> community developed)
+
+distribution of software (from single hardware vendors -> software houses -> community developed)
+
+distribution of apis (from single hardware vendors -> software houses -> community developed)
+
+"api" is effectively vocabulary.
+
+"language" is effectively grammar.
+
+so we should see similar social changes in the languages used.
+
+multitude of languages, developed in community.
+
+getting there, but still not many.
+
+martta fixes that.
+
+name: El? Extensible-Language.
+
+Pointer types:
+
+- New (as returned from malloc & new)
+  - Guaranteed unique.
+  - Cannot be assigned/copied.
+  - Cannot be cast.
+
+- Basic (*)
+  - Deletable.
+  - Can be invalid.
+  - Assigned from Creation.
+
+- Slave (may be arbitrarily set to zero) ($)
+  - Need syntax for defining static implementations/definitions of members for when pointer is zero (defaults to default constructed return type).
+  - Need syntax for alternative in case pointer is zero.
+  - Need syntax for greater-than-statement lock.
+  - Not deletable.
+  - Assigned from Safe, Slave, Master.
+
+e.g.
+int# m = new int;
+int$ s = m;
+/* ... */
+(*s = 6)'0;
+int d;
+*(s'&d) = 6;
+printf("%d\n", s->propertyOrVariable'0);
+s->returnVoid(7)';
+printf("%d\n", s->returnInt()'0)
+
+// translates to:
+(s.isNull() ? 0 : (*s = 6))
+int d;
+*(s.isNull() ? &d : s) = 6;
+printf("%d\n", (s.isNull() ? 0 : s->propertyOfVariable));
+(s.isNull() ? s->returnVoid(7) : (void)0);
+printf("%d\n", (s.isNull() ? 0 : s->returnInt()));
+
+// (a'b) evaluates to (b) if (a) is composed of a null Slave pointer not including any ' structures internal to it.
+// e.g. (((a'b)+c)'d) evaluates to (d) if (c) or (b) involves a null Slave pointer, otherwise (a+c) if (a) doesn't invlove a null Slave pointer and (b+c) if (a) does.
+
+class Foo
+{
+public:
+	int bar() const { return 42; } ' { return 69; }
+	int baz() const { return 1; }	// defaults to { int t; return t; }
+};
+
+Foo# m = new Foo;
+Foo$ s = m;
+s->bar();	// == 42
+s->baz();	// == 1
+s->bar()'666;	// == 42
+s->baz()'999;	// == 1
+m = 0;
+s->bar();	// == 69
+s->baz();	// undefined (== { int t; return t; }).
+s->bar()'666;	// == 666
+s->baz()'999;	// == 999
+
+- Master (unique Master/address) (#)
+  - Assigned from New.
+  - Delete always works.
+  - Retains list of Slaves.
+
+- Shared (reference-counted) (@)
+  - Valid for lifetime.
+  - Retains shared reference count.
+  - Delete fails if reference-count > 1.
+  - Assigned from Shared, New.
+
+- Safe (reference-counted with slaves) (^)
+  - Valid for lifetime.
+  - Retains shared slave list & reference count.
+  - Assigned from Safe, New.
+  - Delete fails if reference-count > 1.
+

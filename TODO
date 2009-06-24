@@ -1,10 +1,6 @@
 TODO Get rid of DE/Id deps.
-TODO Cache includes, so don't take so long to load.
 TODO Statements to reject placeholders.
 TODO inherited methods don't work.
-TODO Profile QWebView 
-TODO Code metrics and distribution etc.
-
 TODO optimise Class.
 TODO special EntryMethod
 TODO virtual interface
@@ -20,6 +16,7 @@ TODO move crap from ExplicitType to TypeDefinition.
 TODO page up & down broken.
 TODO join statements or tree insert.
 TODO insertion of entities in, e.g. argument lists for function calls.
+TODO Code metrics and distribution etc.
 
 Dynamic code-loading (plugins).
 - Move everything over so that plugins use Martta-specific data types.
@@ -33,6 +30,9 @@ Dynamic code-loading (plugins).
 RELEASE M1 (TBD)
 
 ================================================================================
+
+TODO Cache includes, so don't take so long to load.
+TODO Profile QWebView 
 
 Allow "usurption" for stuff like DefaultConstructedVariable to usurp Variable.
 - All good.
