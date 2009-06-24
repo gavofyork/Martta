@@ -21,6 +21,7 @@
 #pragma once
 
 #include "TypedOwner.h"
+#include "Entity.h"
 
 namespace Martta
 {
@@ -32,9 +33,10 @@ class DeclarationEntity;
 class ModifyingType;
 class ValueDefiner;
 
-class TypeEntity: public TypedOwner
+class TypeEntity: public Entity, public_interface TypedOwner
 {
-	MARTTA_PLACEHOLDER(TypedOwner)
+	MARTTA_PLACEHOLDER(Entity)
+	MARTTA_INHERITS(TypedOwner, 0)
 
 	friend class Type;
 	friend class ModifyingType;
@@ -43,7 +45,7 @@ public:
 	enum { Default = FirstNamed, EndOfNamed };
 
 	TypeEntity(): m_owner(0) { g_typeCount++; }
-	TypeEntity(TypeEntity const&): SceneLeaver(), TypedOwner() { M_ASSERT(false); }
+	TypeEntity(TypeEntity const&): SceneLeaver(), ChildValidifier(), TypedOwner(), Entity() { M_ASSERT(false); }
 	~TypeEntity() { g_typeCount--; }
 	
 	virtual QString						idColour() const { return "#777"; }

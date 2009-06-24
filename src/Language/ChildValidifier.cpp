@@ -18,33 +18,11 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#pragma once
-
-#include <QList>
-
 #include "ChildValidifier.h"
 
 namespace Martta
 {
 
-class Type;
-typedef QList<Type> Types;
-
-class TypedOwner: public_interface ChildValidifier
-{
-	MARTTA_INTERFACE
-	MARTTA_INHERITS(ChildValidifier, 0)
-
-public:
-	virtual Types						allowedTypes(int) const;
-	virtual Types						deniedTypes(int) const;
-	
-	// @returns the type that entity _i effectively has in this place. This takes into effect implicit conversion.
-	Type								effectiveType(int _i) const;
-	Type								nominalType(int _i) const;
-	
-protected:
-	virtual bool						isChildInValidState(int _i) const;
-};
+MARTTA_INTERFACE_CPP(ChildValidifier);
 
 }

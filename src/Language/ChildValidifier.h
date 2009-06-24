@@ -20,31 +20,21 @@
 
 #pragma once
 
-#include <QList>
-
-#include "ChildValidifier.h"
+#include "Meta.h"
 
 namespace Martta
 {
 
-class Type;
-typedef QList<Type> Types;
-
-class TypedOwner: public_interface ChildValidifier
+class ChildValidifier
 {
 	MARTTA_INTERFACE
-	MARTTA_INHERITS(ChildValidifier, 0)
-
+	
 public:
-	virtual Types						allowedTypes(int) const;
-	virtual Types						deniedTypes(int) const;
-	
-	// @returns the type that entity _i effectively has in this place. This takes into effect implicit conversion.
-	Type								effectiveType(int _i) const;
-	Type								nominalType(int _i) const;
-	
-protected:
-	virtual bool						isChildInValidState(int _i) const;
+	/// @returns true if the child at i has an allowable state according to this entity.
+	/// @note Derivations should honour the decision of their Super should it be true.
+	/// @note Do not call this directly; use isValid() on the child entity instead, since that is a more complete test.
+	virtual bool						isChildInValidState(int) const { return true; }
+	virtual ~ChildValidifier() {}
 };
 
 }

@@ -20,8 +20,9 @@
 
 #pragma once
 
-#include "TypedOwner.h"
 #include "Type.h"
+#include "TypedOwner.h"
+#include "Entity.h"
 
 namespace Martta
 {
@@ -29,9 +30,10 @@ namespace Martta
 class ValueDefiner;
 class Typed;
 
-class Statement: public TypedOwner
+class Statement: public Entity, public_interface TypedOwner
 {
-	MARTTA_PLACEHOLDER(TypedOwner)
+	MARTTA_PLACEHOLDER(Entity)
+	MARTTA_INHERITS(TypedOwner, 0)
 
 public:
 	virtual QString						code() const { return "(void)0;"; }

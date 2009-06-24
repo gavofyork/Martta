@@ -26,8 +26,9 @@
 
 // Same here - move to interface?
 #include "EntityKeyEvent.h"
-// And this?
+
 #include "SceneLeaver.h"
+#include "ChildValidifier.h"
 
 #include "Meta.h"
 #include "InsertionPoint.h"
@@ -80,10 +81,11 @@ class RootEntity;
  * scene. This applies even if the situation is temporary, since the check/changes happen at move
  * time.
  */
-class Entity: public Nothing, public SafePointerTarget, public_interface SceneLeaver
+class Entity: public Nothing, public SafePointerTarget, public_interface SceneLeaver, public_interface ChildValidifier
 {
 	MARTTA_COMMON(Nothing)
 	MARTTA_INHERITS(SceneLeaver, 0)
+	MARTTA_INHERITS(ChildValidifier, 1)
 	
 	friend class EntityStylist;
 	friend class EditDelegateFace;
@@ -303,10 +305,6 @@ public:
 	/// Default returns the empty list (i.e. no special restrictions).
 	/// @note Do not call this directly; use isAllowed() on the child entity instead, since that is a more complete test.
 	virtual Kinds						deniedKinds(int) const { return Kinds(); }
-	/// @returns true if the child at i has an allowable state according to this entity.
-	/// @note Derivations should honour the decision of their Super should it be true.
-	/// @note Do not call this directly; use isValid() on the child entity instead, since that is a more complete test.
-	virtual bool						isChildInValidState(int) const { return true; }
 	/// @returns true if we have an allowable state (according to us).
 	/// @note Derivations should honour the decision of their Super should it be true.
 	/// @note Do not call this directly; use isValid() on the child entity instead, since that is a more complete test.
@@ -316,7 +314,7 @@ public:
 	// TODO: Consider moving to somewhere more specialised.
 	virtual bool						doINeedParenthesising(Entity const* _child) const { (void)_child; return false; }
 	/// @returns true if this object isn't actually a real language entity.
-	/// Derivations automatically handled in derivations be MARTTA_OBJECT(_INTERFACE) macros. Do not reimplement.
+	/// Overrides automatically handled in derivations by MARTTA_OBJECT(_INTERFACE) macros. Do not reimplement.
 	virtual bool						isPlaceholder() const { return true; }
 	/// Checked after change; if true is returned, this may be deleted.
 	virtual bool						isSuperfluous() const;
