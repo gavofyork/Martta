@@ -64,7 +64,7 @@ public:
 	inline bool							isValid() const { return m_parent; }
 	
 	/**
-	 * Inserts @a _e into the context's entity list, so it becomes at the position
+	 * Inserts @a _e into the parent's entity list, so it becomes at the position
 	 * required.
 	 *
 	 * @returns @a _e.
@@ -74,7 +74,7 @@ public:
 	Entity*								place(Entity* _e) const;
 	
 	/**
-	 * Inserts @a _e into the context's entity list, so it becomes at the position
+	 * Inserts @a _e into the parent's entity list, so it becomes at the position
 	 * required.
 	 *
 	 * Ignores the placeholders (if any) that might exist already at that position.

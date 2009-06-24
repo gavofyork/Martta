@@ -34,10 +34,10 @@ public:
 	virtual ~TypeNamer() {}
 
 	// Accessor methods.
-	/// The effective type of this entity. This takes into account the context of the entity,
+	/// The effective type of this entity. This takes into account the parent of the entity,
 	/// and thus implicit casting may occur.
 	virtual Type						apparentType() const { return type(); }
-	/// The actual type it thinks it is. This is (typically) independent of the context and
+	/// The actual type it thinks it is. This is (typically) independent of the parent and
 	/// the type has not been implicitly casted according to the "hole" it is trying to fit.
 	virtual Type						type() const { return Type(); }
 

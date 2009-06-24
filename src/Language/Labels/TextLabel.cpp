@@ -38,26 +38,31 @@ MARTTA_OBJECT_CPP(TextLabel);
 
 QString TextLabel::code() const
 {
-	if (name().isEmpty())
-		return QString::null;
-		
-	QString prefix = "";
-	if (parent()->hasAncestor<NamespaceEntity>())
+	if (m_text.isEmpty())
+		if (isValid())
+			return QString("@ANON[%1]").arg((int)this);
+		else
+			return QString::null;
+	else
 	{
-		if (parentIs<Argument>())
-			prefix = "a_";
-		else if (parentIs<MemberVariable>())
-			prefix = "m_";
-		else if (parentIs<VariableNamer>())
-			prefix = "l_";
+		QString prefix = "";
+		if (parent()->hasAncestor<NamespaceEntity>())
+		{
+			if (parentIs<Argument>())
+				prefix = "a_";
+			else if (parentIs<MemberVariable>())
+				prefix = "m_";
+			else if (parentIs<VariableNamer>())
+				prefix = "l_";
+			else
+				prefix = "";
+		}
+		else if (parent()->isKind<NamespaceEntity>() && name().size() && name()[0].isNumber())
+			prefix = "_";
 		else
 			prefix = "";
+		return prefix + name();
 	}
-	else if (parent()->isKind<NamespaceEntity>() && name().size() && name()[0].isNumber())
-		prefix = "_";
-	else
-		prefix = "";
-	return prefix + name();
 }
 	
 void TextLabel::importDom(QDomElement const& _element)
@@ -69,13 +74,19 @@ void TextLabel::importDom(QDomElement const& _element)
 void TextLabel::exportDom(QDomElement& _element) const
 {
 	Super::exportDom(_element);
-	_element.setAttribute("text", m_text);
+	_element.setAttribute("text", m_text.isEmpty() ? code() : m_text);
+}
+
+void TextLabel::apresLoad()
+{
+	if (m_text.startsWith("@ANON"))
+		m_text = QString::null;
 }
 
 QString TextLabel::name() const
 {
 	if (m_text.isEmpty() && isValid())
-		return "foo";	// TODO: make it proper.
+		return QString("@ANON%1").arg((int)this);//return "foo";	// TODO: make it proper.
 	else if (m_text.isEmpty())
 		return QString::null;
 	else if (parentIs<TypeDefinition>() || parentIs<NamespaceEntity>())
@@ -126,7 +137,7 @@ void TextLabel::decorate(DecorationContext const& _c) const
 class Delegate: public EditDelegate<TextLabel>
 {
 public:
-	Delegate(TextLabel* _e, CodeScene* _s): EditDelegate<TextLabel>(_e, _s), m_text(subject()->name()) {}
+	Delegate(TextLabel* _e, CodeScene* _s): EditDelegate<TextLabel>(_e, _s), m_text(subject()->isNamed() ? subject()->text() : QString::null) {}
 	void setText(QString const& _t) { m_text = _t; }
 	virtual bool keyPressed(EntityKeyEvent const* _e)
 	{

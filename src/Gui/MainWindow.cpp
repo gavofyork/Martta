@@ -384,7 +384,7 @@ void MainWindow::on_actOpen_triggered()
 {
 	if (!confirmLose()) return;
 
-	QString f = QFileDialog::getOpenFileName(this, "Open Project", "/home/gav", "*.project");
+	QString f = QFileDialog::getOpenFileName(this, "Open Project", "/home/gav", "*.xml");
 	if (f.isEmpty()) return;
 
 	m_codeScene->setSubject(0);
@@ -397,7 +397,7 @@ void MainWindow::on_actSave_triggered()
 {
 	saveCode();
 	if (m_project->filename().isEmpty())
-		m_project->rename(QFileDialog::getSaveFileName(this, "Save Project", "/home/gav", "*.project"));
+		m_project->rename(QFileDialog::getSaveFileName(this, "Save Project", "/home/gav", "*.xml"));
 	m_project->save();
 }
 

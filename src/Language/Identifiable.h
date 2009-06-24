@@ -56,7 +56,7 @@ public:
 	
 	/// @returns the entity from which this may be addressed. Typically it is the parent, though some entities
 	/// (e.g. EnumValue) skip this immediate parent and use their parent's addressableContext. 
-	/// Default value to returns the context is addressable or zero if not (e.g. Statement-derived context).
+	/// Default value to returns the parent is addressable or zero if not (e.g. Statement-derived parent).
 	virtual Identifiable*				addressableContext() const;
 
 	/// @returns true if the entity cannot be explicitly referenced in the CPP code. This is the case in code

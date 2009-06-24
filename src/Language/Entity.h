@@ -209,7 +209,7 @@ public:
 	inline static Entity*				spawn(QString const& _kind) { AuxilliaryFace const* f = AuxilliaryRegistrar::get()->auxilliary(_kind); M_ASSERT(f); return f->create(); }
 
 	/**
-	 * Destructs the object. Use this before delete. It sets the context to zero while the object is still
+	 * Destructs the object. Use this before delete. It sets the parent to zero while the object is still
 	 * properly defined, and issues a few bits of pre-delete cleanup.
 	 *
 	 * Obviously, after this is called you should no longer use the object, since it'll be dead.
@@ -322,21 +322,21 @@ public:
 	// Tests; these use the above information in order to determine the answer.
 	
 	/// @returns true if kind _o is allowed at entity position _i.
-	/// Takes into account context's allowedKinds(int) and this object's allowedAncestor.
+	/// Takes into account parent's allowedKinds(int) and this object's allowedAncestor.
 	bool								isAllowed(int _i, Kind _o) const;
 	/// Convenience version of above.
-	/// Takes into account context's allowedKinds(int) and this object's allowedAncestor.
+	/// Takes into account parent's allowedKinds(int) and this object's allowedAncestor.
 	template<class T> inline bool		isAllowed(int _i) const { return isAllowed(_i, Kind::of<T>()); }
 	/// @returns true if this entity would be valid if it were an object of a particular type.
-	/// Takes into account context's allowedKinds(int) and this object's allowedAncestor.
+	/// Takes into account parent's allowedKinds(int) and this object's allowedAncestor.
 	inline bool							isAllowed(Kind _o) const { return parent() ? parent()->isAllowed(index(), _o) : true; }
 	/// Convenience version of above.
-	/// Takes into account context's allowedKinds(int) and this object's allowedAncestor.
+	/// Takes into account parent's allowedKinds(int) and this object's allowedAncestor.
 	template<class T> inline bool		isAllowed() const { return isAllowed(Kind::of<T>()); }
 	/// @returns true if this entity, in its current position, is valid.
-	/// Takes into account context's allowedKinds(int) and this object's allowedAncestor.
+	/// Takes into account parent's allowedKinds(int) and this object's allowedAncestor.
 	inline bool							isAllowed() const { return isAllowed(kind()); }
-	/// @returns true if this entity cannot be killed without costing the validity of its context's children set.
+	/// @returns true if this entity cannot be killed without costing the validity of its parent's children set.
 	bool								isNecessary() const;
 	/// @returns true if all entity positions are filled validly, including all those required. 
 	/// @warning This uses allowedKinds() and minRequired, and so is not safe to be called from your reimplementation of
@@ -444,30 +444,30 @@ public:
 	void								childSwitched(Entity* _ch, Entity* _o);
 	void								childRemoved(Entity* _ch, int _index);
 	void								childMoved(Entity* _e, int _oI);
-	void								contextAdded() { contextAdded(parent()); }
-	void								contextAdded(Entity* _con);
-	/// Our context has changed object. Will usually end up with dependencySwitched(). dependencyAdded/Removed() are called if _old/m_parent is null.
-	void								contextSwitched(Entity* _old);
-	void								contextRemoved(Entity* _old);
+	void								parentAdded() { parentAdded(parent()); }
+	void								parentAdded(Entity* _con);
+	/// Our parent has changed object. Will usually end up with dependencySwitched(). dependencyAdded/Removed() are called if _old/m_parent is null.
+	void								parentSwitched(Entity* _old);
+	void								parentRemoved(Entity* _old);
 	
-	/// Notes contextSwitched to child, and child removal to old context.
-	/// @important This does *not* notify the new context of the child addition; you must do that yourself! 
+	/// Notes parentSwitched to child, and child removal to old parent.
+	/// @important This does *not* notify the new parent of the child addition; you must do that yourself! 
 	/// This assumes _old is still valid!
-	void								contextSwitchedWithChildRemoved(Entity* _old, int _ourOldContextIndex) { contextSwitched(_old); if (_old) _old->childRemoved(this, _ourOldContextIndex); }
-	void								contextSwitchedWithChildRemoved(InsertionPoint const& _old) { contextSwitchedWithChildRemoved(_old.parent(), _old.index()); }
+	void								parentSwitchedWithChildRemoved(Entity* _old, int _ourOldContextIndex) { parentSwitched(_old); if (_old) _old->childRemoved(this, _ourOldContextIndex); }
+	void								parentSwitchedWithChildRemoved(InsertionPoint const& _old) { parentSwitchedWithChildRemoved(_old.parent(), _old.index()); }
 	
 	void								dependencyAdded(Entity* _e) { change(this, DependencyAdded, _e); onDependencyAdded(_e); }
 	void								dependencyRemoved(Entity* _e, int _index = UndefinedIndex) { change(this, DependencyRemoved, _e); onDependencyRemoved(_e, _index); }
 	void								dependencyChanged(Entity* _e) { change(this, DependencyChanged, _e); onDependencyChanged(_e); }
 	void								dependencySwitched(Entity* _e, Entity* _o) { change(this, DependencySwitched, _e); onDependencySwitched(_e, _o); }
 	void								notifyOfChildMove(Entity* _e, int _oI) { change(this, ChildMoved, _e); onChildMoved(_e, _oI); }
-	void								contextIndexChanged(int _oI) { change(this, ContextIndexChanged, 0); onContextIndexChanged(_oI); }
+	void								indexChanged(int _oI) { change(this, ContextIndexChanged, 0); onIndexChanged(_oI); }
 	
 	/// To be called when something in the object has changed. Calls onChanged() and notifies dependents.
 	void								changed();
 	/// This notifies only a single dependent of a change in us.
 	/// This is appropriate when this object's state hasn't changed, but some joint aspect of the two objects has
-	/// (e.g. the @a _dependent's contextIndex).
+	/// (e.g. the @a _dependent's index).
 	/// If they are not dependent on us, we are not in the model or in an invalid position then nothing will happen.
 	void								notifyOfChange(Entity* _dependent);
 	
@@ -480,7 +480,7 @@ public:
 protected:
 	virtual ~Entity();
 
-	enum { DependsOnNothing = 0, DependsOnContext = 1, DependsOnChildren = 2, DependsOnBoth = 3, DependsOnContextIndex = 4, TestOnOrder = 8, DependsOnChildOrder = DependsOnChildren | TestOnOrder };
+	enum { DependsOnNothing = 0, DependsOnParent = 1, DependsOnChildren = 2, DependsOnBoth = 3, DependsOnIndex = 4, TestOnOrder = 8, DependsOnChildOrder = DependsOnChildren | TestOnOrder };
 	virtual int							familyDependencies() const { return DependsOnNothing; }
 	virtual Kinds						ancestralDependencies() const { return Kinds(); }
 	enum { NoRequirements = 0, BeComplete = 1, BeInModel = 2 };
@@ -506,9 +506,9 @@ protected:
 	/// @returns true to notify dependents that we have changed.
 	virtual bool						onChanged() { relayoutLater(); return true; }
 	/// Called when:
-	/// - Our contextIndex changes and familyDependencies includes DependsOnContextIndex, but the context remains the same.
+	/// - Our index changes and familyDependencies includes DependsOnIndex, but the parent remains the same.
 	/// @note By default, it does nothing.
-	virtual void						onContextIndexChanged(int /*_oldIndex*/) {}
+	virtual void						onIndexChanged(int /*_oldIndex*/) {}
 	/// Called when:
 	/// - A registered or family dependency's state changes (_e is the dependency) and its onChanged() returned true.
 	/// - A child changes position, and children are a family dependency (_e is the child).
@@ -521,18 +521,18 @@ protected:
 	/// @note By default, it just called the onDependencyChanged() method. 
 	virtual void						onDependencySwitched(Entity* _e, Entity* /*_old*/) { onDependencyChanged(_e); }
 	/// Called when familyDependencies includes DependsOnChildOrder and:
-	/// - A child entity has had its contextIndex changed (usually through the insertion of another child at an earlier
+	/// - A child entity has had its index changed (usually through the insertion of another child at an earlier
 	/// position).
 	/// @note By default, it just called the onDependencyChanged() method. 
 	virtual void						onChildMoved(Entity* _e, int /*_oldIndex*/) { onDependencyChanged(_e); }
 	/// Called when:
-	/// - A new context is set where before it was null and context is a family dependency (_e is the new context).
+	/// - A new parent is set where before it was null and parent is a family dependency (_e is the new parent).
 	/// - A new dependent ancestor is set where before it was null (_e is the new ancestor).
 	/// - A new child is added and children are a family dependency (_e is the child).
 	/// @note By default, it just called the onDependencyChanged() method. 
 	virtual void						onDependencyAdded(Entity* _e) { onDependencyChanged(_e); }
 	/// Called when:
-	/// - The null context is set where there was one before and context is a family dependency (_e is the old context).
+	/// - The null parent is set where there was one before and parent is a family dependency (_e is the old parent).
 	/// - A child is removed and children are a family dependency (_e is the old child).
 	/// - What was a dependent ancestor is removed (_e is the old ancestor).
 	/// - A registered dependency has removed itself (_e is the old dependency).
@@ -552,7 +552,7 @@ protected:
 	
 	virtual Entity*						isExpander() const { return 0; }
 
-	/// Rejigs our ancestral dependencies. This should be (TODO: and isn't yet) called whenever any of our ancestors have changed context
+	/// Rejigs our ancestral dependencies. This should be (TODO: and isn't yet) called whenever any of our ancestors have changed parent
 	/// or been switched, or when the ouput of ancestralDependencies() changes.
 	void								updateAncestralDependencies();
 	
@@ -561,24 +561,24 @@ protected:
 
 private:
 	/** This will insert an entity @a _child into our brood at index @a _childsIndex.
-	 * It will make sure all children have the correct contextIndex but nothing more. In particular
-	 * the new child's context and rootEntity will not be updated.
+	 * It will make sure all children have the correct index but nothing more. In particular
+	 * the new child's parent and rootEntity will not be updated.
 	 * 
 	 * This handles the case of negative and positive child indices, and the index may be
 	 * UndefinedIndex, in which case the child is appended.
 	 */
 	void								insertIntoBrood(int _childsIndex, Entity* _child);
 	/** This removes a previously inserted @a _child from our brood.
-	 * It makes sure all children have the correct contextIndex but nothing more. In particular
-	 * the old child's contextIndex, context and rootEntity are not updated.
+	 * It makes sure all children have the correct index but nothing more. In particular
+	 * the old child's index, parent and rootEntity are not updated.
 	 * 
 	 * This handles the case of negative and position child indices.
 	 */
 	void								removeFromBrood(int _childsIndex, Entity* _child);
 	/** Removes all children at index @a _childsIndex from the brood of children.
 	 * 
-	 * It makes sure all children have the correct contextIndex but nothing more. In particular
-	 * the old children's contextIndex, context and rootEntity are not updated.
+	 * It makes sure all children have the correct index but nothing more. In particular
+	 * the old children's index, parent and rootEntity are not updated.
 	 * 
 	 * This handles the case of negative and position child indices.
 	 */
@@ -586,14 +586,14 @@ private:
 	/**
 	 * Just moves the child of index @a _old in the brood to have index @a _new, still within the brood.
 	 * 
-	 * It makes sure all children have the correct contextIndex but nothing more. In particular
-	 * the old children's contextIndex, context and rootEntity are not updated.
+	 * It makes sure all children have the correct index but nothing more. In particular
+	 * the old children's index, parent and rootEntity are not updated.
 	 * 
 	 * This handles the case of negative and position child indices.
 	 */
 	void								moveWithinBrood(int _old, int _new);
 	
-	/// Just makes sure that the rootEntity is the context's root entity. Should only be called from the context.
+	/// Just makes sure that the rootEntity is the parent's root entity. Should only be called from the parent.
 	void								checkRoot();
 
 	/// Helper function for validifyChildren()

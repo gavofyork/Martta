@@ -73,7 +73,7 @@ public:
 	void						navigateOnto(Entity* _shell);									/// Selects _shell's leftmost focusable child. e.g. ++X on ()s: (++X + 4)
 	enum NavigationDirection { Forwards, Backwards };
 	void						navigateAway(Entity* _from, NavigationDirection _d = Forwards);	/// Selects closest focusable entity visually _d from _from. e.g. 4 on ()s: (++X + 4)
-	void						navigateToNew(Entity* _from);									/// Selects closest focusable sibling-owned entity visually forwards from _from, or context if none.
+	void						navigateToNew(Entity* _from);									/// Selects closest focusable sibling-owned entity visually forwards from _from, or parent if none.
 
 	template<typename T> void	setViewKey(Entity* _e, QString const& _key, T const& _v) { m_viewKeys[_e][_key] = _v; }
 	QHash<QString, QVariant>&	viewKeys(Entity* _e) { return m_viewKeys[_e]; }

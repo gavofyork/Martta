@@ -30,9 +30,9 @@ class Typed: public BareTyped
 	MARTTA_PLACEHOLDER(BareTyped)
 	
 public:
-	virtual int							familyDependencies() const { return DependsOnContext | DependsOnContextIndex; }
+	virtual int							familyDependencies() const { return DependsOnParent | DependsOnIndex; }
 	virtual void						onDependencyChanged(Entity* _e);
-	virtual void						onContextIndexChanged(int _oldIndex);
+	virtual void						onIndexChanged(int _oldIndex);
 };
 
 }

@@ -48,7 +48,7 @@ void ModifyingType::unknit()
 	
 	if (p.parent())
 		p.parent()->childSwitched(ch, this);
-	ch->contextSwitched(this);
+	ch->parentSwitched(this);
 	
 	delete this;
 }

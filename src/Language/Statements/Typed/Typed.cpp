@@ -30,12 +30,12 @@ void Typed::onDependencyChanged(Entity* _e)
 {
 	if (_e == parent())
 	{
-		// If our context has changed, it might mean our validity has changed. Update.
+		// If our parent has changed, it might mean our validity has changed. Update.
 		relayoutLater();
 	}
 }
 
-void Typed::onContextIndexChanged(int _oldIndex)
+void Typed::onIndexChanged(int _oldIndex)
 {
 	if (!parentIs<TypedOwner>())
 		return;

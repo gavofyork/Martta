@@ -148,7 +148,7 @@ Type Referenced::type() const
 	if (!parentIs<GenericMemberOperation>() && t->isType<Memberify>() && hasAncestor<MemberLambda>())
 	{
 		M_ASSERT(hasAncestor<Class>());
-		// There is; check to see if we can remove it (by being in a scoped context and assuming the "this->" precedent).
+		// There is; check to see if we can remove it (by being in a scoped parent and assuming the "this->" precedent).
 		Memberify* m = t->asType<Memberify>();
 		M_ASSERT(m->isKind<Memberify>());
 		if (ancestor<Class>()->baseAccess(m->scopeClass()) <= Protected)

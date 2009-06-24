@@ -45,6 +45,7 @@ public:
 protected:
 	virtual void						exportDom(QDomElement& _element) const;
 	virtual void						importDom(QDomElement const& _element);
+	virtual void						apresLoad();
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 	virtual QString						defineLayout(ViewKeys&) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);

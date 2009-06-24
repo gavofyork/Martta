@@ -172,7 +172,7 @@ bool Entity::isValid() const
 	
 	if (!isAllowed())
 	{
-		qInformation() << this << "invalid because it's not allowed here by context." << parent();
+		qInformation() << this << "invalid because it's not allowed here by parent." << parent();
 		return false;
 	}
 	if (!isInValidState())
@@ -752,7 +752,7 @@ QList<Entity*> Entity::dependencies() const
 	foreach (Entity* e, children())
 		if (familyDependencies() & DependsOnChildren)
 			ret << e;
-	if (familyDependencies() & DependsOnContext)
+	if (familyDependencies() & DependsOnParent)
 		ret << parent();
 	return ret.values();
 }
@@ -762,7 +762,7 @@ QList<Entity*> Entity::dependents() const
 		return QList<Entity*>();
 	QList<Entity*> ret = m_dependents;
 	foreach (Entity* e, children())
-		if (e->familyDependencies() & DependsOnContext)
+		if (e->familyDependencies() & DependsOnParent)
 			ret << e;
 	if (parent() && (parent()->familyDependencies() & DependsOnChildren))
 		ret << parent();
@@ -910,7 +910,7 @@ bool Entity::validifyChild(int _i, int* _added)
 			++j;
 	while (childCountAt(_i) < minRequired(_i))
 	{
-		middle(_i).spawnPreparedSilent()->contextAdded();
+		middle(_i).spawnPreparedSilent()->parentAdded();
 		*_added = (*_added == INT_MAX - 1) ? _i : INT_MAX;
 		ret = true;
 	}
@@ -924,7 +924,7 @@ bool Entity::validifyChildren()
 	{
 		if (i >= m_cardinalChildren.size())
 		{
-			back().spawnPreparedSilent()->contextAdded();
+			back().spawnPreparedSilent()->parentAdded();
 			added = (added == INT_MAX - 1) ? i : INT_MAX;
 		}
 		else if (!m_cardinalChildren[i]->isAllowed() && i < minRequired(Cardinals))
@@ -950,12 +950,12 @@ Entity* Entity::prepareChildren()
 {
 	for (int i = INT_MIN; i < virtualEndOfNamed(); i++)
 		while (childCountAt(i) < minRequired(i))
-			middle(i).spawnPreparedSilent()->contextAdded();
+			middle(i).spawnPreparedSilent()->parentAdded();
 	foreach (int i, AuxilliaryRegistrar::get()->names())
 		while (childCountAt(i) < minRequired(i))
-			middle(i).spawnPreparedSilent()->contextAdded();
+			middle(i).spawnPreparedSilent()->parentAdded();
 	for (int i = m_cardinalChildren.size(); i < minRequired(Cardinals); ++i)
-		back().spawnPreparedSilent()->contextAdded();
+		back().spawnPreparedSilent()->parentAdded();
 	childrenInitialised();
 	return this;
 }
@@ -979,8 +979,8 @@ bool Entity::removeInvalidChildren()
 
 void Entity::childMoved(Entity* _e, int _oI)
 {
-	if (_e->botherNotifying() && _e->familyDependencies() & DependsOnContextIndex)
-		_e->contextIndexChanged(_oI);
+	if (_e->botherNotifying() && _e->familyDependencies() & DependsOnIndex)
+		_e->indexChanged(_oI);
 	if (botherNotifying() && familyDependencies() & TestOnOrder)
 		notifyOfChildMove(_e, _oI);
 }
@@ -1016,7 +1016,7 @@ void Entity::move(InsertionPoint const& _newPosition)
 		}
 		else
 		{
-			contextSwitchedWithChildRemoved(oc, oci);
+			parentSwitchedWithChildRemoved(oc, oci);
 			if (m_parent)
 				m_parent->childAdded(m_index);
 		}
@@ -1039,11 +1039,11 @@ Entity* Entity::usurp(Entity* _u)
 	kill();
 	
 	// Tell _r's old context (if it has one) that it has gone, and tell _r that it has a new context.
-	_u->contextSwitchedWithChildRemoved(you);
+	_u->parentSwitchedWithChildRemoved(you);
 	
 	// Notify about the children having been moved.
 	foreach (Entity* i, es)
-		i->contextSwitched(this);
+		i->parentSwitched(this);
 	_u->childrenInitialised();
 	
 	// Tell _r's new context that it's here instead of us.
@@ -1061,7 +1061,7 @@ Entity* Entity::replace(Entity* _r)
 	kill(_r);
 	
 	// Tell _r's old context (if it has one) that it has gone, and tell _r that it has a new context.
-	_r->contextSwitchedWithChildRemoved(you);
+	_r->parentSwitchedWithChildRemoved(you);
 	// Tell _r's new context that it's here.
 	if (_r->m_parent)
 		_r->m_parent->childSwitched(_r, this);
@@ -1083,8 +1083,8 @@ Entity* Entity::insert(Entity* _e, int _preferedIndex)
 		_e->childAdded(m_index);
 		if (_e->parent())
 			_e->parent()->childSwitched(_e, this);
-		_e->contextSwitchedWithChildRemoved(you);
-		contextSwitched(_e->parent());
+		_e->parentSwitchedWithChildRemoved(you);
+		parentSwitched(_e->parent());
 	}
 	else
 	{
@@ -1099,8 +1099,8 @@ Entity* Entity::insert(Entity* _e, int _preferedIndex)
 		int x; _e->validifyChild(_preferedIndex, &x);
 		if (_e->parent())
 			_e->parent()->childSwitched(_e, this);
-		_e->contextSwitchedWithChildRemoved(you);
-		contextSwitched(_e->parent());
+		_e->parentSwitchedWithChildRemoved(you);
+		parentSwitched(_e->parent());
 		killAndDelete(_e->child(_preferedIndex));
 	}
 	return _e;
@@ -1115,8 +1115,8 @@ bool Entity::tryInsert(Entity* _e, int _preferedIndex)
 		ip = Nowhere;
 	ip.insertSilent(this);
 	
-	_e->contextSwitchedWithChildRemoved(you);
-	contextSwitched(_e->parent());
+	_e->parentSwitchedWithChildRemoved(you);
+	parentSwitched(_e->parent());
 	if (ip != Nowhere)
 		_e->childAdded(m_index);
 	if (_e->parent())
@@ -1136,7 +1136,7 @@ void Entity::deleteAndRefill(Entity* _e, bool _moveToGrave)
 	{
 		p.spawnPreparedSilent();
 		kill(p.entity());
-		p->contextAdded(c);
+		p->parentAdded(c);
 		c->childSwitched(p.entity(), this);
 		delete this;
 	}
@@ -1211,31 +1211,31 @@ void Entity::childRemoved(Entity* _ch, int _index)
 	if (isInModel())
 		relayoutLater();
 }
-void Entity::contextAdded(Entity* _con)
+void Entity::parentAdded(Entity* _con)
 {
-	if (botherNotifying() && _con && familyDependencies() & DependsOnContext)
+	if (botherNotifying() && _con && familyDependencies() & DependsOnParent)
 		dependencyAdded(_con);
 	updateAncestralDependencies();
 	if (isInModel())
 		relayoutLater();
 }
-void Entity::contextSwitched(Entity* _old)
+void Entity::parentSwitched(Entity* _old)
 {
 	if (m_parent && !_old)
-		contextAdded();
+		parentAdded();
 	else if (!m_parent && _old)
-		contextRemoved(_old);
+		parentRemoved(_old);
 	else if (_old != m_parent)
 	{
-		if (botherNotifying() && familyDependencies() & DependsOnContext)
+		if (botherNotifying() && familyDependencies() & DependsOnParent)
 			dependencySwitched(m_parent, _old);
 		updateAncestralDependencies();
 		relayoutLater();
 	}
 }
-void Entity::contextRemoved(Entity* _old)
+void Entity::parentRemoved(Entity* _old)
 {
-	if (botherNotifying() && _old && familyDependencies() & DependsOnContext)
+	if (botherNotifying() && _old && familyDependencies() & DependsOnParent)
 		dependencyRemoved(_old);
 	updateAncestralDependencies();
 }
