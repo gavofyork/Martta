@@ -830,23 +830,25 @@ void Entity::updateAncestralDependencies()
 		i++;
 	}
 }
-void Entity::changed()
+void Entity::changed(int _aspects)
 {
-	if (!isInModel() || m_notifiedOfChange)
+	if (!isInModel() || m_notifiedOfChange&_aspects == _aspects)
 		return;
-	m_notifiedOfChange = true;
+	int oldNOC = m_notifiedOfChange;
+	m_notifiedOfChange |= _aspects;
 	m_rootEntity->setChanged();
 	if (!isEditing())
 		checkForCullingLater();
 	
+	if (_aspects & Visually)
+		relayoutLater();
 	change(this, EntityChanged);
-	if (onChanged())
-		foreach (Entity* e, dependents())
-		{
-			change(e, DependencyChanged, this);
-			e->onDependencyChanged(this);
-		}
-	m_notifiedOfChange = false;
+	foreach (Entity* e, dependents())
+	{
+		change(e, DependencyChanged, this);
+		e->onDependencyChanged(this);
+	}
+	m_notifiedOfChange = oldNOC;
 }
 
 InsertionPoint Entity::firstFor(Kind const& _k)

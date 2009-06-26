@@ -129,16 +129,11 @@ bool Class::checkImplicitConstructors()
 	return ret;
 }
 
-bool Class::onChanged()
-{
-	return isInModel() && checkImplicitConstructors() || Super::onChanged();
-}
-
 void Class::onChildrenInitialised()
 {
 	rejigDeps();
-	checkImplicitConstructors();
-	changed();
+	if (checkImplicitConstructors())
+		changed();
 	relayoutLater();
 }
 
@@ -146,7 +141,8 @@ void Class::onDependencyAdded(Entity* _e)
 {
 	if (_e->isKind<Member>())
 		rejigDeps();
-	if (_e->isKind<ConversionOperator>() || (_e->isKind<MethodOperator>() && !_e->isKind<ArtificialAssignmentOperator>()) || (_e->isKind<Constructor>() && !_e->isKind<ArtificialDefaultConstructor>() && !_e->isKind<ArtificialCopyConstructor>()))
+	if ((_e->isKind<ConversionOperator>() || (_e->isKind<MethodOperator>() && !_e->isKind<ArtificialAssignmentOperator>()) || (_e->isKind<Constructor>() && !_e->isKind<ArtificialDefaultConstructor>() && !_e->isKind<ArtificialCopyConstructor>())) &&
+		isInModel() && checkImplicitConstructors())
 		changed();
 }
 
@@ -155,13 +151,15 @@ void Class::onDependencyRemoved(Entity* _e, int)
 	if (_e->isKind<Member>())
 		rejigDeps();
 	// TODO: Will it remove the Access label dep? Even if the member is only moved to another class?
-	if (_e->isKind<ConversionOperator>() || (_e->isKind<MethodOperator>() && !_e->isKind<ArtificialAssignmentOperator>()) || (_e->isKind<Constructor>() && !_e->isKind<ArtificialDefaultConstructor>() && !_e->isKind<ArtificialCopyConstructor>()))
+	if ((_e->isKind<ConversionOperator>() || (_e->isKind<MethodOperator>() && !_e->isKind<ArtificialAssignmentOperator>()) || (_e->isKind<Constructor>() && !_e->isKind<ArtificialDefaultConstructor>() && !_e->isKind<ArtificialCopyConstructor>())) &&
+		isInModel() && checkImplicitConstructors())
 		changed();
 }
 
 void Class::onDependencyChanged(Entity* _e)
 {
-	if (_e->isKind<Base>() || _e->isKind<ConversionOperator>() || (_e->isKind<MethodOperator>() && !_e->isKind<ArtificialAssignmentOperator>()) || (_e->isKind<Constructor>() && !_e->isKind<ArtificialDefaultConstructor>() && !_e->isKind<ArtificialCopyConstructor>()))
+	if ((_e->isKind<Base>() || _e->isKind<ConversionOperator>() || (_e->isKind<MethodOperator>() && !_e->isKind<ArtificialAssignmentOperator>()) || (_e->isKind<Constructor>() && !_e->isKind<ArtificialDefaultConstructor>() && !_e->isKind<ArtificialCopyConstructor>())) &&
+		isInModel() && checkImplicitConstructors())
 		changed();
 	if (_e->isKind<TextLabel>())
 		changed();

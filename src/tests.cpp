@@ -737,6 +737,7 @@ int test()
 		Class* X = new Class;
 		X->prepareChildren();
 		r->back().place(X);
+		Type x = Type(X);
 		delete r;
 	}
 	{

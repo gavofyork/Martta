@@ -97,14 +97,6 @@ bool Referenced::isSuperfluous() const
 	return m_subject.isNull() || Super::isSuperfluous();
 }
 
-bool Referenced::onChanged()
-{
-	Super::onChanged();
-	checkForCullingLater();
-	updateAncestralDependencies();
-	return true;
-}
-
 QString Referenced::code() const
 {
 	if (!m_subject.isNull() && !m_specific && m_subject->isKind<Member>())

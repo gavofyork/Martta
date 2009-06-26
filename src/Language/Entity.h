@@ -107,7 +107,7 @@ public:
 	inline void							operator delete(void* p);
 	
 	/// Copy constructor which doesn't do anything. Have to have it so a derived class can use it.
-	inline Entity(): SceneLeaver(), ChildValidifier(), Changer(), Depender(), SafePointerTarget(), m_rootEntity(0), m_parent(0), m_index(UndefinedIndex), m_notifiedOfChange(false) {}
+	inline Entity(): SceneLeaver(), ChildValidifier(), Changer(), Depender(), SafePointerTarget(), m_rootEntity(0), m_parent(0), m_index(UndefinedIndex), m_notifiedOfChange(0) {}
 	inline Entity(Entity const&): SceneLeaver(), ChildValidifier(), Changer(), Depender(), SafePointerTarget() { M_ASSERT(false); }
 	
 	static void							initialiseClass() {}
@@ -279,8 +279,6 @@ public:
 	 */
 	void								deleteAndRefill(Entity* _e = 0, bool _moveToGrave = false);
 
-	inline BasicRoot*					rootEntity() const { return m_rootEntity; }
-	
 	template<class T> inline bool		isKind() const { return this && kind().isKind(T::staticKind); }
 	inline bool							isKind(Kind _k) const { return this && kind().isKind(_k); }
 	inline bool							isKind(Kinds _k) const { return this && kind().isKind(_k); }
@@ -458,7 +456,7 @@ public:
 	virtual void						parentSwitched(Entity* _exParent);
 	virtual void						parentRemoved(Entity* _exParent);
 	
-	// CHANGE This lot moves to Changer (or Dependee). 
+	// CHANGE This lot's logic moves to ChangeMan
 	void								dependencyAdded(Entity* _e) { change(this, DependencyAdded, _e); onDependencyAdded(_e); }
 	void								dependencyRemoved(Entity* _e, int _index = UndefinedIndex) { change(this, DependencyRemoved, _e); onDependencyRemoved(_e, _index); }
 	void								dependencyChanged(Entity* _e) { change(this, DependencyChanged, _e); onDependencyChanged(_e); }
@@ -466,28 +464,25 @@ public:
 	void								notifyOfChildMove(Entity* _e, int _oI) { change(this, ChildMoved, _e); onChildMoved(_e, _oI); }
 	void								indexChanged(int _oI) { change(this, ContextIndexChanged, 0); onIndexChanged(_oI); }
 	
-	/// To be called when something about the object has changed. Calls onChanged() and notifies dependents.
-	void								changed();
-	
+	// CHANGE: Moves to Changer.
+	/// To be called when something about the object has changed. Notifies dependents.
+	/// If _aspect & Visually then it calls a relayoutLater().
+	enum { Visually = 0x0001, LastAspect = 0x0001, AllAspects = 0xffff };
+	void								changed(int _aspect = AllAspects);
 	/// Remove all backlinks (i.e. all those dependencies that target us).
 	/// Calls onDependencyRemoved() on each of the registered dependents.
 	void								clearDependents();
 	
+	inline BasicRoot*					rootEntity() const { return m_rootEntity; }
+	
 protected:
 	virtual ~Entity();
 
-	// CHANGE: Not sure about what to do about this.
-	
-	/// Called when the state of this object has changed.
-	/// @note This is only called when the object is in the model.
-	/// @returns true to notify dependents that we have changed.
-	virtual bool						onChanged() { relayoutLater(); return true; }
-
-	// CHANGE: This lot moves to Depender, and erhaps the logic into ChangeMan.
+	// CHANGE: This lot moves to Depender, and perhaps the logic into ChangeMan.
 	/// Given an Entity/Interface-pointer-style variable and a value, set the variable and call add, change and remove
 	/// dependency as necessary.
 	template<class T, class U> void		setDependency(T& _dependencyVariable, U const& _dependency);
-	/// Adds a dependency. Should only be called from inside registerDependencies().
+	/// Adds a dependency.
 	/// Note this will *not* call onDependencyAdded(_e) for you. You must call it yourself if you want it to run.
 	void								addDependency(Entity* _e);
 	/// Removes a dependency.
@@ -498,14 +493,13 @@ protected:
 	bool								haveDependency(Entity* _e) const { return m_dependencies.contains(_e); }
 	virtual bool						botherNotifying() const { return isComplete(); }
 
-	// CHANGE This moves to ChangeMan (in another form)
-
+	// CHANGE: This moves to ChangeMan (in another form)
 	/// Rejigs our ancestral dependencies. This should be (TODO: and isn't yet) called whenever any of our ancestors have changed parent
 	/// or been switched, or when the ouput of ancestralDependencies() changes.
 	void								updateAncestralDependencies();
 
 
-	/// Convenience method. Just calls the above methods. 
+	/// Convenience method.
 	/// Notes parentSwitched to child, and child removal to old parent.
 	/// @important This does *not* notify the new parent of the child addition; you must do that yourself! 
 	/// This assumes _old is still valid!
@@ -560,7 +554,7 @@ private:
 	QHash<int, Entity*>					m_namedChildren;
 	QSet<Entity*>						m_dependencies;
 	QList<Entity*>						m_ancestralDependencies;
-	bool								m_notifiedOfChange;
+	int									m_notifiedOfChange;
 	
 	/// The cache
 	QList<Entity*>						m_dependents;

@@ -51,7 +51,6 @@ protected:
 	virtual void						onDependencyRemoved(Entity* _e, int);
 	// A child has been added to the class somewhere in the middle, probably. Either way we need to rejig deps to get the new access label tracked.
 	virtual void						onDependencySwitched(Entity* _e, Entity*) { onDependencyAdded(_e); }
-	virtual bool						onChanged();
 	virtual void						onChildrenInitialised();
 	virtual bool						hasDefaultConstructor() const;
 	virtual Types						assignableTypes() const;
