@@ -40,7 +40,7 @@ QString TextLabel::code() const
 {
 	if (m_text.isEmpty())
 		if (isValid())
-			return QString("@ANON[%1]").arg((int)this);
+			return QString("_ANON%1").arg((int)this);
 		else
 			return QString::null;
 	else
@@ -79,14 +79,14 @@ void TextLabel::exportDom(QDomElement& _element) const
 
 void TextLabel::apresLoad()
 {
-	if (m_text.startsWith("@ANON"))
+	if (m_text.startsWith("_ANON"))
 		m_text = QString::null;
 }
 
 QString TextLabel::name() const
 {
 	if (m_text.isEmpty() && isValid())
-		return QString("@ANON%1").arg((int)this);//return "foo";	// TODO: make it proper.
+		return QString("_ANON%1").arg((int)this);//return "foo";	// TODO: make it proper.
 	else if (m_text.isEmpty())
 		return QString::null;
 	else if (parentIs<TypeDefinition>() || parentIs<NamespaceEntity>())
