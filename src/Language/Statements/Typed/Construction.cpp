@@ -21,7 +21,7 @@
 #include <QtXml>
 
 #include "Argument.h"
-#include "RootEntity.h"
+#include "BasicRoot.h"
 #include "Class.h"
 #include "Constructor.h"
 #include "ExplicitType.h"

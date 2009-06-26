@@ -19,29 +19,29 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "TopLevelType.h"
-#include "RootEntity.h"
+#include "BasicRoot.h"
 
 namespace Martta
 {
 
-RootEntity* RootEntity::s_this = 0;
+BasicRoot* BasicRoot::s_this = 0;
 
-MARTTA_OBJECT_CPP(RootEntity);	
+MARTTA_OBJECT_CPP(BasicRoot);
 	
-RootEntity::RootEntity():
+BasicRoot::BasicRoot():
 	m_archivalState	(Restored)
 {
 	m_rootEntity = this;
 	s_this = this;
 }
 
-RootEntity::~RootEntity()
+BasicRoot::~BasicRoot()
 {
 	clearEntities();
 }
 
 // Identification, search & location.
-Identifiable* RootEntity::findEntity(QString const& _key) const
+Identifiable* BasicRoot::findEntity(QString const& _key) const
 {
 //	qDebug() << *this << "Seaching for" << _key;
 	if (_key.startsWith("::"))
@@ -61,51 +61,51 @@ Identifiable* RootEntity::findEntity(QString const& _key) const
 		return findDeclaration(_key);
 }
 
-Kinds RootEntity::allowedKinds(int _i) const
+Kinds BasicRoot::allowedKinds(int _i) const
 {
 	if (_i >= 0)
 		return Kind::of<TopLevel>();
 	return Super::allowedKinds(_i);
 }
 
-void RootEntity::doCulling()
+void BasicRoot::doCulling()
 {
 	while (m_cullList.size())
 		if (Entity* e = m_cullList.takeLast())
 			e->cull();
 }
 
-void RootEntity::setChanged()
+void BasicRoot::setChanged()
 {
 	if (!m_changed)
 		QTimer::singleShot(0, this, SLOT(ensureSyncedModel()));
 	m_changed = true;
 }
 
-void RootEntity::ensureSyncedModel()
+void BasicRoot::ensureSyncedModel()
 {
 	emit modelChanged();
 	m_changed = false;
 }
 
-void RootEntity::noteDeletion(Identifiable* _e)
+void BasicRoot::noteDeletion(Identifiable* _e)
 {
 	foreach (ModelPtrFace* i, m_modelPtrs)
 		i->gone(_e);
 	setChanged();
 }
 
-void RootEntity::addModelPtr(ModelPtrFace* _p)
+void BasicRoot::addModelPtr(ModelPtrFace* _p)
 {
 	m_modelPtrs << _p;
 }
 
-void RootEntity::removeModelPtr(ModelPtrFace* _p)
+void BasicRoot::removeModelPtr(ModelPtrFace* _p)
 {
 	m_modelPtrs.removeAll(_p);
 }
 
-void RootEntity::archivePtrs(bool _clear) const
+void BasicRoot::archivePtrs(bool _clear) const
 {
 	m_archivalState = Archiving;
 	qInformation() << "Archiving" << m_modelPtrs.size() << "pointers";
@@ -117,7 +117,7 @@ void RootEntity::archivePtrs(bool _clear) const
 	m_archivalState = Archived;
 }
 
-void RootEntity::restorePtrs() const
+void BasicRoot::restorePtrs() const
 {
 	m_archivalState = Restoring;
 	qInformation() << "Restoring" << m_modelPtrs.size() << "pointers";

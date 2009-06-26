@@ -40,16 +40,16 @@ class ModelPtrFace;
  *
  * Aside from that it should also encompass all the implementation of the project in question.
  */
-class RootEntity: public QObject, public DeclarationEntity
+class BasicRoot: public QObject, public DeclarationEntity
 {
 	Q_OBJECT
 	MARTTA_OBJECT(DeclarationEntity)
 
 public:
-	RootEntity();
-	~RootEntity();
+	BasicRoot();
+	~BasicRoot();
 
-	static RootEntity*					get() { return s_this; }
+	static BasicRoot*					get() { return s_this; }
 
 	virtual QString						name() const { return QString(); }
 	virtual Entity*						parent() const { return 0; }
@@ -98,7 +98,7 @@ private:
 	// List of entities to check and possibly delete at next opportunity when nothing else happening.
 	QList<SafePointer<Entity> >			m_cullList;
 
-	static RootEntity*					s_this;
+	static BasicRoot*					s_this;
 };
 
 }

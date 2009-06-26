@@ -1,4 +1,5 @@
 TODO Get rid of DE/Id deps.
+TODO Get rid of Root::get() static singleton crap.
 TODO Statements to reject placeholders.
 TODO inherited methods don't work.
 TODO optimise Class.

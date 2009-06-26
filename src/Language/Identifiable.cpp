@@ -20,7 +20,7 @@
 
 #include <QtXml>
 
-#include "RootEntity.h"
+#include "BasicRoot.h"
 #include "IdLabel.h"
 #include "TextLabel.h"
 #include "Entity.h"
@@ -58,7 +58,7 @@ Identifiable* Identifiable::addressableContext() const
 	return self()->parentIs<Identifiable>() ? self()->parentAs<Identifiable>() : 0;
 }
 
-void Identifiable::onLeaveScene(RootEntity* _new, RootEntity* _old)
+void Identifiable::onLeaveScene(BasicRoot* _new, BasicRoot* _old)
 {
 	if (_old && _old != _new)
 		_old->noteDeletion(this);

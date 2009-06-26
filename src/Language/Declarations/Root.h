@@ -18,12 +18,18 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#pragma once
+
+#include "ChangeMan.h"
 #include "BasicRoot.h"
-#include "SimpleMethod.h"
 
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(SimpleMethod);
+class Root: public BasicRoot, public_interface ChangeMan
+{
+	MARTTA_OBJECT(BasicRoot)
+	MARTTA_INHERITS(ChangeMan, 0)
+};
 
 }

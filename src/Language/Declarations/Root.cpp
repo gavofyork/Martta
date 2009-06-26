@@ -18,9 +18,11 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "ChangeMan.h"
+#include "Root.h"
 
 namespace Martta
 {
+
+MARTTA_OBJECT_CPP(Root);
 
 }

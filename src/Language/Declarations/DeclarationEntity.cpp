@@ -26,7 +26,7 @@
 #include "Class.h"
 
 #include "Common.h"
-#include "RootEntity.h"
+#include "BasicRoot.h"
 #include "TextLabel.h"
 #include "OperatorLabel.h"
 #include "ValueDefiner.h"

@@ -36,7 +36,7 @@ public:
 	virtual Type						type() const { return *childAs<TypeEntity>(0); }
 
 protected:
-	void								construct(TypeEntity const* _scope, int _id, bool _isConst, Type const& _returns, Types const& _args, RootEntity* _root, char const* _key);
+	void								construct(TypeEntity const* _scope, int _id, bool _isConst, Type const& _returns, Types const& _args, BasicRoot* _root, char const* _key);
 	
 	QString								m_key;
 	int									m_myId;

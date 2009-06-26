@@ -20,7 +20,7 @@
 
 #include <QtXml>
 
-#include "RootEntity.h"	// Might be able to get rid of this later.
+#include "BasicRoot.h"	// Might be able to get rid of this later.
 
 #include "CommonGraphics.h"
 #include "DecorationContext.h"
@@ -627,8 +627,8 @@ void Entity::commitMove(InsertionPoint const& _oldPosition)
 	if (_oldPosition.parent() == m_parent)
 		return;
 
-	RootEntity* oldRoot = m_rootEntity;
-	RootEntity* newRoot = m_parent ? m_parent->m_rootEntity : 0;
+	BasicRoot* oldRoot = m_rootEntity;
+	BasicRoot* newRoot = m_parent ? m_parent->m_rootEntity : 0;
 	
 	// Tell scene we're leaving if we had a non-null root entity and it's different.
 	if (oldRoot && newRoot != oldRoot)

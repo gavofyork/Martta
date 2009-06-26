@@ -24,7 +24,7 @@
 #include "Reference.h"
 #include "Const.h"
 #include "Pointer.h"
-#include "RootEntity.h"
+#include "BasicRoot.h"
 #include "Memberify.h"
 #include "SimpleMethod.h"
 #include "SimpleOperator.h"
@@ -41,7 +41,7 @@ QList<ValueDefiner*> StringType::s_nonMembers;
 
 void StringType::initialiseClass()
 {
-	RootEntity* root = RootEntity::get();
+	BasicRoot* root = BasicRoot::get();
 	
 	Type s = Type(StringType());
 	Type sr = Type(s).topWith(Reference());

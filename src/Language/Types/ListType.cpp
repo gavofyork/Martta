@@ -23,7 +23,7 @@
 #include "FunctionType.h"
 #include "Reference.h"
 #include "Const.h"
-#include "RootEntity.h"
+#include "BasicRoot.h"
 #include "Memberify.h"
 #include "MemberTemplateType.h"
 #include "SimpleMethod.h"
@@ -48,7 +48,7 @@ void ListType::initialiseClass()
 	Type ltcr = Type(ListType()).place(MemberTemplateType(Original)).topWith(Const()).topWith(Reference());
 	Type it = Type(Void);	// should be Iterator.
 	Type b = Type(Bool);
-	RootEntity* root = RootEntity::get();
+	BasicRoot* root = BasicRoot::get();
 	// TODO: Give parameters some names!
 	SimpleMethod::create<ListType>("append", false, Type(Void), tcr, root);
 	SimpleMethod::create<ListType>("at", false, tcr, Type(Int), root);

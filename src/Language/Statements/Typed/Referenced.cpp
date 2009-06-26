@@ -34,7 +34,7 @@
 #include "StringType.h"
 #include "Memberify.h"
 #include "Const.h"
-#include "RootEntity.h"
+#include "BasicRoot.h"
 #include "EditDelegate.h"
 #include "Reference.h"
 #include "CodeScene.h"

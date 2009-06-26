@@ -20,7 +20,7 @@
 
 #include <QtXml>
 
-#include "RootEntity.h"
+#include "BasicRoot.h"
 #include "Type.h"
 #include "SimpleOperator.h"
 #include "Const.h"
@@ -175,7 +175,7 @@ void SimpleType::initialiseClass()
 	QList<int> numeric;
 	numeric << scalar << (Complex|Float) << (Complex|Double) << (Complex|Long|Double);
 	
-	RootEntity* root = RootEntity::get();
+	BasicRoot* root = BasicRoot::get();
 	
 	// integral types
 	foreach (int d, integral)

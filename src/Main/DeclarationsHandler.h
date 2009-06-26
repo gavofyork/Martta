@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-class RootEntity;
+class BasicRoot;
 class Enumeration;
 class FunctionResolver;
 class IncomingFunctionType;
@@ -47,7 +47,7 @@ class Resolver;
 class DeclarationsHandler: public QXmlContentHandler
 {
 public:
-	DeclarationsHandler(RootEntity* _d, QList<DeclarationFile*>* _l): m_d(_d), m_l(_l) {}
+	DeclarationsHandler(BasicRoot* _d, QList<DeclarationFile*>* _l): m_d(_d), m_l(_l) {}
 	~DeclarationsHandler() { }
 
 	TypeEntity* resolveType(QString const& _typeId);
@@ -71,7 +71,7 @@ private:
 	virtual bool skippedEntity(QString const&) { return true; }
 	virtual bool startPrefixMapping(QString const&, QString const&) { return true; }
 
-	RootEntity*						m_d;
+	BasicRoot*						m_d;
 	QList<DeclarationFile*>* 		m_l;
 
 	Enumeration*					m_lastEnum;

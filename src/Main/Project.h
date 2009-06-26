@@ -25,7 +25,7 @@
 #include <QAbstractItemModel>
 
 #include "NamespaceEntity.h"
-#include "RootEntity.h"
+#include "Root.h"
 #include "Method.h"
 #include "Class.h"
 
@@ -71,8 +71,8 @@ public:
 	Class*						programClass() const { return m_program->parent()->asKind<Class>(); }
 	QString						executable();
 	QString						lastCompileError() const { return m_lastCompileError; }
-	RootEntity const*			root() const { return &m_declarations; }
-	RootEntity*					root() { return &m_declarations; }
+	Root const*			root() const { return &m_declarations; }
+	Root*					root() { return &m_declarations; }
 
 	void						serialise(QDomDocument& _d) const;
 	void						deserialise(QDomDocument& _d);
@@ -154,7 +154,7 @@ public:
 	Method*						m_program;			///< Ptr to the program class.
 
 	// State
-	RootEntity					m_declarations;		///< Our full program model. Merged with all other include/projects.
+	Root					m_declarations;		///< Our full program model. Merged with all other include/projects.
 
 	NamespaceEntity*			m_namespace;		///< Our namespace. All the project's stuff goes under here. Probably a better alternative to m_classes.
 

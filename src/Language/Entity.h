@@ -74,12 +74,12 @@ void change(Entity* _s, ChangeOperation _op, Entity* _o = 0);
 inline QList<ChangeEntry> const& changes() { return s_changes; }
 inline void clearChanges() { s_changes.clear(); }
 
-class RootEntity;
+class BasicRoot;
 
 /**
  * Note regarding rootEntity/null-Context: You can never depend on something which does not share the
- * same RootEntity object as you. Objects yet to be inserted into the program have a nullContext and thus
- * no RootEntity. If you make objects within the scene children of such objects they will be moved
+ * same BasicRoot object as you. Objects yet to be inserted into the program have a nullContext and thus
+ * no BasicRoot. If you make objects within the scene children of such objects they will be moved
  * out of scene, and thus can have no interactions (i.e. dependencies/references) with objects within the
  * scene. This applies even if the situation is temporary, since the check/changes happen at move
  * time.
@@ -279,7 +279,7 @@ public:
 	 */
 	void								deleteAndRefill(Entity* _e = 0, bool _moveToGrave = false);
 
-	inline RootEntity*					rootEntity() const { return m_rootEntity; }
+	inline BasicRoot*					rootEntity() const { return m_rootEntity; }
 	
 	template<class T> inline bool		isKind() const { return this && kind().isKind(T::staticKind); }
 	inline bool							isKind(Kind _k) const { return this && kind().isKind(_k); }
@@ -349,7 +349,7 @@ public:
 	/// @warning This uses allowedKinds() and minRequired, and so is not safe to be called from your reimplementation of
 	/// these or anything that they (indirectly) use.
 	bool								isComplete() const;
-	/// @returns true if object is current in heirarchy leading to a RootEntity.
+	/// @returns true if object is current in heirarchy leading to a BasicRoot.
 	inline bool							isInModel() const { return m_rootEntity; }
 	/// @returns true if everything is absolutely, 100%, fine.
 	bool								isValid() const;
@@ -512,7 +512,7 @@ protected:
 	inline void							parentSwitchedWithChildRemoved(InsertionPoint const& _old) { parentSwitched(_old.parent()); if (_old.parent()) _old.parent()->childRemoved(this, _old.index()); }
 	
 protected:
-	RootEntity*							m_rootEntity;
+	BasicRoot*							m_rootEntity;
 
 private:
 	/** This will insert an entity @a _child into our brood at index @a _childsIndex.

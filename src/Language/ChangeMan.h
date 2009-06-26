@@ -18,12 +18,20 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "BasicRoot.h"
-#include "SimpleMethod.h"
+#pragma once
+
+#include "Meta.h"
 
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(SimpleMethod);
+class ChangeMan
+{
+	MARTTA_INTERFACE
+
+public:
+
+	virtual ~ChangeMan() {}
+};
 
 }

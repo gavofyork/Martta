@@ -46,7 +46,7 @@ using namespace MarttaSupport;
 #include "AccessLabel.h"
 #include "ListType.h"
 #include "StringType.h"
-#include "RootEntity.h"
+#include "BasicRoot.h"
 #include "Pointer.h"
 #include "Enumeration.h"
 #include "EnumValue.h"
@@ -401,7 +401,7 @@ int test()
 	}
 	TEST("Pointer archival/restoration")
 	{
-		RootEntity* r = new RootEntity;
+		BasicRoot* r = new BasicRoot;
 		NamespaceEntity* n = new NamespaceEntity;
 		n->prepareChildren();
 		r->back().place(n);
@@ -455,7 +455,7 @@ int test()
 	}
 	TEST("Pre-test")
 	{
-		RootEntity* r = new RootEntity;
+		BasicRoot* r = new BasicRoot;
 		SafePointer<TestNegatives> a = new TestNegatives;
 		SafePointer<TestNegatives> b = new TestNegatives;
 		a->silentMove(r->back());
@@ -466,7 +466,7 @@ int test()
 	}
 #define CLEAR_TEST(pos) \
 	{ \
-		RootEntity* r = new RootEntity; \
+		BasicRoot* r = new BasicRoot; \
 		SafePointer<TestNegatives> a = new TestNegatives; \
 		SafePointer<TestNegatives> b = new TestNegatives; \
 		a->silentMove(r->back()); \
@@ -484,7 +484,7 @@ int test()
 #undef CLEAR_TEST
 #define TEST_FOR(T, X) TEST(T) FAILED_IF(!(X))
 	{
-		RootEntity* r = new RootEntity;
+		BasicRoot* r = new BasicRoot;
 		SafePointer<TestNegativesB> a = new TestNegativesB;
 		a->silentMove(r->back());
 		TEST_FOR("Negatives: start incomplete", !a->isComplete());
@@ -505,7 +505,7 @@ int test()
 	}
 	TEST("Negatives save/load")
 	{
-		RootEntity* r = new RootEntity;
+		BasicRoot* r = new BasicRoot;
 		SafePointer<TestNegativesB> a = new TestNegativesB;
 		a->silentMove(r->back());
 		a->prepareChildren();
@@ -600,7 +600,7 @@ int test()
 	
 	TEST("Class creation...")
 	{
-		RootEntity* r = new RootEntity;
+		BasicRoot* r = new BasicRoot;
 		Class* X = new Class;
 		X->prepareChildren();
 		r->back().place(X);
@@ -664,7 +664,7 @@ int test()
 	}
 	{
 #define CAST_TEST(F, T, R) TEST("EnumValue Conversion casting... " #F "->" #T) TEST_THIS_CAST(F, T, R)
-		RootEntity* r = new RootEntity;
+		BasicRoot* r = new BasicRoot;
 		Enumeration* X = new Enumeration;
 		X->prepareChildren();
 		X->setUnnamed();
@@ -733,7 +733,7 @@ int test()
 	}
 	TEST("Class construction testing.")
 	{
-		RootEntity* r = new RootEntity;
+		BasicRoot* r = new BasicRoot;
 		Class* X = new Class;
 		X->prepareChildren();
 		r->back().place(X);
@@ -741,7 +741,7 @@ int test()
 	}
 	{
 #define CAST_TEST(F, T, R) TEST("Reference casting... " #F "->" #T) TEST_THIS_CAST(F, T, R)
-		RootEntity* r = new RootEntity;
+		BasicRoot* r = new BasicRoot;
 		Class* X = new Class;
 		X->prepareChildren();
 		r->back().place(X);
@@ -765,7 +765,7 @@ int test()
 	}
 	{
 #define CAST_TEST(F, T, R) TEST("Memberify casting... " #F "->" #T) TEST_THIS_CAST(F, T, R)
-		RootEntity* r = new RootEntity;
+		BasicRoot* r = new BasicRoot;
 		Class* B = new Class;
 		Class* D = new Class;
 		B->prepareChildren();

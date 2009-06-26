@@ -25,14 +25,14 @@
 namespace Martta
 {
 
-class RootEntity;
+class BasicRoot;
 
 class SceneLeaver
 {
 	MARTTA_INTERFACE
 	
 public:	
-	virtual void						onLeaveScene(RootEntity* /*_new*/, RootEntity* /*_old*/) {}
+	virtual void						onLeaveScene(BasicRoot* /*_new*/, BasicRoot* /*_old*/) {}
 
 	virtual ~SceneLeaver() {}
 };

@@ -22,7 +22,7 @@
 
 #include "Common.h"
 #include "DeclarationEntity.h"
-#include "RootEntity.h"
+#include "BasicRoot.h"
 #include "ModelPtr.h"
 
 namespace Martta
@@ -91,12 +91,13 @@ QString ModelPtrFace::key() const
 	return QString();
 }
 
-void ModelPtrFace::set(Identifiable* _e, QString const& _k, RootEntity* _r)
+void ModelPtrFace::set(Identifiable* _e, QString const& _k, BasicRoot* _r)
 {
 	if (m_cache)
 	{
 		M_ASSERT(m_cache->self()->isInModel());
-		m_cache->self()->rootEntity()->removeModelPtr(this);
+		if (m_cache->self()->isInModel())
+			m_cache->self()->rootEntity()->removeModelPtr(this);
 	}
 	else if (m_rootEntity)
 		m_rootEntity->removeModelPtr(this);
@@ -118,7 +119,8 @@ void ModelPtrFace::set(Identifiable* _e, QString const& _k, RootEntity* _r)
 	if (m_cache)
 	{
 		M_ASSERT(m_cache->self()->isInModel());
-		m_cache->self()->rootEntity()->addModelPtr(this);
+		if (m_cache->self()->isInModel())
+			m_cache->self()->rootEntity()->addModelPtr(this);
 	}
 	else if (m_rootEntity)
 	{
