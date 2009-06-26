@@ -29,6 +29,9 @@
 
 #include "SceneLeaver.h"
 #include "ChildValidifier.h"
+#include "Changer.h"
+#include "Dependee.h"
+#include "Depender.h"
 
 #include "Meta.h"
 #include "InsertionPoint.h"
@@ -46,7 +49,7 @@ class EditDelegateFace;
 class CodeScene;
 class DecorationContext;
 
-// Would be nice to annex this, too...
+// CHANGE: Moves to ChangeMan
 enum ChangeOperation
 {
 	EntityChanged = 0,
@@ -81,11 +84,13 @@ class RootEntity;
  * scene. This applies even if the situation is temporary, since the check/changes happen at move
  * time.
  */
-class Entity: public Nothing, public SafePointerTarget, public_interface SceneLeaver, public_interface ChildValidifier
+class Entity: public Nothing, public SafePointerTarget, public_interface SceneLeaver, public_interface ChildValidifier, public_interface Changer, public_interface Depender
 {
 	MARTTA_COMMON(Nothing)
 	MARTTA_INHERITS(SceneLeaver, 0)
 	MARTTA_INHERITS(ChildValidifier, 1)
+	MARTTA_INHERITS(Changer, 2)
+	MARTTA_INHERITS(Depender, 3)
 	
 	friend class EntityStylist;
 	friend class EditDelegateFace;
@@ -101,7 +106,9 @@ public:
 	inline void*						operator new(size_t _size);
 	inline void							operator delete(void* p);
 	
-	inline Entity(): m_rootEntity(0), m_parent(0), m_index(UndefinedIndex), m_notifiedOfChange(false) {}
+	/// Copy constructor which doesn't do anything. Have to have it so a derived class can use it.
+	inline Entity(): SceneLeaver(), ChildValidifier(), Changer(), Depender(), SafePointerTarget(), m_rootEntity(0), m_parent(0), m_index(UndefinedIndex), m_notifiedOfChange(false) {}
+	inline Entity(Entity const&): SceneLeaver(), ChildValidifier(), Changer(), Depender(), SafePointerTarget() { M_ASSERT(false); }
 	
 	static void							initialiseClass() {}
 	static void							finaliseClass() {}
@@ -385,6 +392,9 @@ public:
 	QString								indexName() const { return m_parent ? m_parent->indexName(m_index) : "[Orphan]"; }
 	QList<int>							knownNames() const;
 	
+	virtual QString						defineLayout(ViewKeys&) const;
+	virtual Entity*						isExpander() const { return 0; }
+	
 	/// We become current in all code scenes.
 	void								setCurrent();
 	void								setEditing(CodeScene* _s);
@@ -434,28 +444,21 @@ public:
 	/// directly following a load.
 	virtual void						apresLoad() { updateAncestralDependencies(); }
 	
+	// CHANGE This lot moves to ChangeMan (probably in a different form).
 	QList<Entity*>						dependents() const;
 	QList<Entity*>						dependencies() const;
 	
-	void								childrenInitialised();
-	void								childAdded(Entity* _ch) { if (_ch->parent() == this) childAdded(_ch->index()); }
-	void								childAdded(int _index);
-	void								childSwitched(int _index, Entity* _o) { if (_index >= 0 && _index < m_cardinalChildren.size()) childSwitched(child(_index), _o); }
-	void								childSwitched(Entity* _ch, Entity* _o);
-	void								childRemoved(Entity* _ch, int _index);
-	void								childMoved(Entity* _e, int _oI);
-	void								parentAdded() { parentAdded(parent()); }
-	void								parentAdded(Entity* _con);
-	/// Our parent has changed object. Will usually end up with dependencySwitched(). dependencyAdded/Removed() are called if _old/m_parent is null.
-	void								parentSwitched(Entity* _old);
-	void								parentRemoved(Entity* _old);
+	virtual void						childrenInitialised();
+	virtual void						childAdded(int _newChildsIndex);
+	virtual void						childSwitched(Entity* _currentChild, Entity* _exChild);
+	virtual void						childRemoved(Entity* _exChild, int _deadChildsIndex);
+	virtual void						childMoved(Entity* _child, int _oldIndex);
+	virtual void						parentAdded();
+	/// We have a different parent entity. Will usually end up with dependencySwitched(). dependencyAdded/Removed() are called if _old/m_parent is null.
+	virtual void						parentSwitched(Entity* _exParent);
+	virtual void						parentRemoved(Entity* _exParent);
 	
-	/// Notes parentSwitched to child, and child removal to old parent.
-	/// @important This does *not* notify the new parent of the child addition; you must do that yourself! 
-	/// This assumes _old is still valid!
-	void								parentSwitchedWithChildRemoved(Entity* _old, int _ourOldContextIndex) { parentSwitched(_old); if (_old) _old->childRemoved(this, _ourOldContextIndex); }
-	void								parentSwitchedWithChildRemoved(InsertionPoint const& _old) { parentSwitchedWithChildRemoved(_old.parent(), _old.index()); }
-	
+	// CHANGE This lot moves to Changer (or Dependee). 
 	void								dependencyAdded(Entity* _e) { change(this, DependencyAdded, _e); onDependencyAdded(_e); }
 	void								dependencyRemoved(Entity* _e, int _index = UndefinedIndex) { change(this, DependencyRemoved, _e); onDependencyRemoved(_e, _index); }
 	void								dependencyChanged(Entity* _e) { change(this, DependencyChanged, _e); onDependencyChanged(_e); }
@@ -463,31 +466,24 @@ public:
 	void								notifyOfChildMove(Entity* _e, int _oI) { change(this, ChildMoved, _e); onChildMoved(_e, _oI); }
 	void								indexChanged(int _oI) { change(this, ContextIndexChanged, 0); onIndexChanged(_oI); }
 	
-	/// To be called when something in the object has changed. Calls onChanged() and notifies dependents.
+	/// To be called when something about the object has changed. Calls onChanged() and notifies dependents.
 	void								changed();
-	/// This notifies only a single dependent of a change in us.
-	/// This is appropriate when this object's state hasn't changed, but some joint aspect of the two objects has
-	/// (e.g. the @a _dependent's index).
-	/// If they are not dependent on us, we are not in the model or in an invalid position then nothing will happen.
-	void								notifyOfChange(Entity* _dependent);
 	
 	/// Remove all backlinks (i.e. all those dependencies that target us).
 	/// Calls onDependencyRemoved() on each of the registered dependents.
 	void								clearDependents();
 	
-	virtual QString						defineLayout(ViewKeys&) const;
-	
 protected:
 	virtual ~Entity();
 
-	enum { DependsOnNothing = 0, DependsOnParent = 1, DependsOnChildren = 2, DependsOnBoth = 3, DependsOnIndex = 4, TestOnOrder = 8, DependsOnChildOrder = DependsOnChildren | TestOnOrder };
-	virtual int							familyDependencies() const { return DependsOnNothing; }
-	virtual Kinds						ancestralDependencies() const { return Kinds(); }
-	enum { NoRequirements = 0, BeComplete = 1, BeInModel = 2 };
-	virtual int							notificationRequirements() const { return BeComplete | BeInModel; }
+	// CHANGE: Not sure about what to do about this.
 	
-	inline bool							botherNotifying() const { return (~notificationRequirements() & BeInModel || isInModel()) && (~notificationRequirements() & BeComplete || isComplete()); }
-	
+	/// Called when the state of this object has changed.
+	/// @note This is only called when the object is in the model.
+	/// @returns true to notify dependents that we have changed.
+	virtual bool						onChanged() { relayoutLater(); return true; }
+
+	// CHANGE: This lot moves to Depender, and erhaps the logic into ChangeMan.
 	/// Given an Entity/Interface-pointer-style variable and a value, set the variable and call add, change and remove
 	/// dependency as necessary.
 	template<class T, class U> void		setDependency(T& _dependencyVariable, U const& _dependency);
@@ -500,61 +496,20 @@ protected:
 	/// Removes all dependencies.
 	void								removeAllDependencies();
 	bool								haveDependency(Entity* _e) const { return m_dependencies.contains(_e); }
-	
-	/// Called when the state of this object has changed.
-	/// @note This is only called when the object is in the model.
-	/// @returns true to notify dependents that we have changed.
-	virtual bool						onChanged() { relayoutLater(); return true; }
-	/// Called when:
-	/// - Our index changes and familyDependencies includes DependsOnIndex, but the parent remains the same.
-	/// @note By default, it does nothing.
-	virtual void						onIndexChanged(int /*_oldIndex*/) {}
-	/// Called when:
-	/// - A registered or family dependency's state changes (_e is the dependency) and its onChanged() returned true.
-	/// - A child changes position, and children are a family dependency (_e is the child).
-	/// @note By default, it does nothing. 
-	virtual void						onDependencyChanged(Entity* /*_e*/) {}
-	/// Called when:
-	/// - A registered dependency is removed and another is immediately added (_e is the new dependency).
-	/// - The object fulfilling an ancestral dependency has changed, though both are non-null (_e is the old ancestor).
-	/// - A family member is replaced, and there is a family dependency (_e is the new family member).
-	/// @note By default, it just called the onDependencyChanged() method. 
-	virtual void						onDependencySwitched(Entity* _e, Entity* /*_old*/) { onDependencyChanged(_e); }
-	/// Called when familyDependencies includes DependsOnChildOrder and:
-	/// - A child entity has had its index changed (usually through the insertion of another child at an earlier
-	/// position).
-	/// @note By default, it just called the onDependencyChanged() method. 
-	virtual void						onChildMoved(Entity* _e, int /*_oldIndex*/) { onDependencyChanged(_e); }
-	/// Called when:
-	/// - A new parent is set where before it was null and parent is a family dependency (_e is the new parent).
-	/// - A new dependent ancestor is set where before it was null (_e is the new ancestor).
-	/// - A new child is added and children are a family dependency (_e is the child).
-	/// @note By default, it just called the onDependencyChanged() method. 
-	virtual void						onDependencyAdded(Entity* _e) { onDependencyChanged(_e); }
-	/// Called when:
-	/// - The null parent is set where there was one before and parent is a family dependency (_e is the old parent).
-	/// - A child is removed and children are a family dependency (_e is the old child).
-	/// - What was a dependent ancestor is removed (_e is the old ancestor).
-	/// - A registered dependency has removed itself (_e is the old dependency).
-	/// @note By default, it does nothing. 
-	virtual void						onDependencyRemoved(Entity*, int /*_index*/) {}
-	/// Called when we depend on children and:
-	/// - This entity has been created with prepareChildren called on it.
-	/// - This entity has usurped all of another entity's children.
-	/// - This entity has had its children "validified", whereby invalid ones are removed and new ones added
-	///   as necessary. This is only called if > 1 child was added during the operation.
-	/// This is called instead of a number of onDependencyAdded()s, and removed confusion about the state of the object
-	/// as each dependency is added.
-	/// @note By default, it calls onDependencyAdded() for every child entity (whether recently added or not). 
-	/// @note If you intend to use this, you may find it useful to change notificationRequirements() so it doesn't
-	/// include BeInModel.
-	virtual void						onChildrenInitialised() { foreach (Entity* e, children()) onDependencyAdded(e); }
-	
-	virtual Entity*						isExpander() const { return 0; }
+	virtual bool						botherNotifying() const { return isComplete(); }
+
+	// CHANGE This moves to ChangeMan (in another form)
 
 	/// Rejigs our ancestral dependencies. This should be (TODO: and isn't yet) called whenever any of our ancestors have changed parent
 	/// or been switched, or when the ouput of ancestralDependencies() changes.
 	void								updateAncestralDependencies();
+
+
+	/// Convenience method. Just calls the above methods. 
+	/// Notes parentSwitched to child, and child removal to old parent.
+	/// @important This does *not* notify the new parent of the child addition; you must do that yourself! 
+	/// This assumes _old is still valid!
+	inline void							parentSwitchedWithChildRemoved(InsertionPoint const& _old) { parentSwitched(_old.parent()); if (_old.parent()) _old.parent()->childRemoved(this, _old.index()); }
 	
 protected:
 	RootEntity*							m_rootEntity;

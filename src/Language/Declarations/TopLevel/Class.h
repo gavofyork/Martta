@@ -44,7 +44,7 @@ protected:
 	virtual QString						defineLayout(ViewKeys&) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
 	virtual QList<DeclarationEntity*>	utilised() const;
-	virtual int							notificationRequirements() const { return BeComplete; }
+//	virtual int							notificationRequirements() const { return BeComplete; }
 	virtual void						onDependencyChanged(Entity* _e);
 	virtual void						apresLoad() { rejigDeps(); checkImplicitConstructors(); }
 	virtual void						onDependencyAdded(Entity* _e);

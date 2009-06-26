@@ -848,14 +848,6 @@ void Entity::changed()
 		}
 	m_notifiedOfChange = false;
 }
-void Entity::notifyOfChange(Entity* _dependent)
-{
-	if (!isInModel() || !isAllowed())
-		return;
-		
-	change(_dependent, DependencyChanged, this);
-	_dependent->onDependencyChanged(this);
-}
 
 InsertionPoint Entity::firstFor(Kind const& _k)
 {
@@ -988,15 +980,14 @@ void Entity::childMoved(Entity* _e, int _oI)
 void Entity::move(InsertionPoint const& _newPosition)
 {
 	M_ASSERT(this);
-	Entity* oc = m_parent;
-	int oci = m_index;
+	InsertionPoint old = over();
 	
 	if (_newPosition.exists() && _newPosition->isPlaceholder())
 		_newPosition->replace(this);	// TODO: handle brood-move/replace.
 	else
 	{
 		silentMove(_newPosition);
-		if (oc == m_parent)
+		if (old.parent() == m_parent)
 		{
 			//-2-1 0 1 2 3 4 5 6
 			//   x A B C D E F      Start
@@ -1007,16 +998,16 @@ void Entity::move(InsertionPoint const& _newPosition)
 
 			// Move children between home & end, when i's index has changed from i+sign(end - home) to i.
 			// except for us; we handle that specially below.
-			int home = oci < 0 ? m_parent->m_cardinalChildren.size() - 1 : oci;
+			int home = old.index() < 0 ? m_parent->m_cardinalChildren.size() - 1 : old.index();
 			int end = m_index < 0 ? m_parent->m_cardinalChildren.size() : m_index;
 			if (int s = sign(end - home))
 				for (int i = home; i != end; i += s)
 					childMoved(child(i), i + s);
-			childMoved(this, oci);
+			childMoved(this, old.index());
 		}
 		else
 		{
-			parentSwitchedWithChildRemoved(oc, oci);
+			parentSwitchedWithChildRemoved(old);
 			if (m_parent)
 				m_parent->childAdded(m_index);
 		}
@@ -1136,7 +1127,7 @@ void Entity::deleteAndRefill(Entity* _e, bool _moveToGrave)
 	{
 		p.spawnPreparedSilent();
 		kill(p.entity());
-		p->parentAdded(c);
+		p->parentAdded();
 		c->childSwitched(p.entity(), this);
 		delete this;
 	}
@@ -1211,10 +1202,10 @@ void Entity::childRemoved(Entity* _ch, int _index)
 	if (isInModel())
 		relayoutLater();
 }
-void Entity::parentAdded(Entity* _con)
+void Entity::parentAdded()
 {
-	if (botherNotifying() && _con && familyDependencies() & DependsOnParent)
-		dependencyAdded(_con);
+	if (botherNotifying() && m_parent && familyDependencies() & DependsOnParent)
+		dependencyAdded(m_parent);
 	updateAncestralDependencies();
 	if (isInModel())
 		relayoutLater();
