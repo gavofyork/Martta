@@ -928,7 +928,7 @@ bool Entity::validifyChildren()
 		else if (!m_cardinalChildren[i]->isAllowed() && i < minRequired(Cardinals))
 			m_cardinalChildren[i]->deleteAndRefill();
 		else if (!m_cardinalChildren[i]->isAllowed())
-			m_cardinalChildren[i]->killAndDelete();
+			m_cardinalChildren[i]->killAndDeleteWithNotification();
 		else
 			continue;
 		ret = true;
@@ -1038,8 +1038,11 @@ Entity* Entity::usurp(Entity* _u)
 	foreach (Entity* e, m_namedChildren.values())
 		if (_u->isAllowed(e->m_index, e->kind()))
 			e->silentMove(_u->middle(e->m_index));
-		
+			
 	kill();
+	
+	// Signal we're off.
+	oneFootInTheGrave();
 	
 	// Tell _r's old context (if it has one) that it has gone, and tell _r that it has a new context.
 	_u->parentSwitchedWithChildRemoved(you);
@@ -1063,7 +1066,9 @@ Entity* Entity::replace(Entity* _r)
 	
 	over().insertSilent(_r);
 	kill(_r);
-	
+
+	// Signal we're off.
+	oneFootInTheGrave();
 	// Tell _r's old context (if it has one) that it has gone, and tell _r that it has a new context.
 	_r->parentSwitchedWithChildRemoved(you);
 	// Tell _r's new context that it's here.
@@ -1108,6 +1113,7 @@ Entity* Entity::insert(Entity* _e, int _preferedIndex)
 			_e->parent()->childSwitched(_e, this);
 		_e->parentSwitchedWithChildRemoved(you);
 		parentRemoved(_e->parent());
+		oneFootInTheGrave();
 		killAndDelete(_e->child(_preferedIndex));
 	}
 	_e->resetLayoutCache();
@@ -1155,6 +1161,7 @@ void Entity::deleteAndRefill(Entity* _e, bool _moveToGrave)
 	{
 		p.spawnPreparedSilent();
 		kill(p.entity());
+		oneFootInTheGrave();
 		p->parentAdded();
 		c->childSwitched(p.entity(), this);
 		delete this;
@@ -1163,6 +1170,7 @@ void Entity::deleteAndRefill(Entity* _e, bool _moveToGrave)
 	{
 		int ci = m_index;
 		kill();
+		oneFootInTheGrave();
 		c->childRemoved(this, ci);
 		c->relayoutLater();
 		delete this;

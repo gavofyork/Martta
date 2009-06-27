@@ -239,6 +239,12 @@ public:
 	 * Convenience function for "kill(); delete this;".
 	 */
 	inline void							killAndDelete(Entity* _substitute = 0) { kill(_substitute); delete this; }
+	/**
+	 * kill()s the deletes the object but informs any dependent it is dieing first.
+	 */
+	inline void							killAndDeleteWithNotification() { move(Nowhere); oneFootInTheGrave(); killAndDelete(); }
+
+	virtual void						oneFootInTheGrave() {}
 
 	/**
 	 * Kills this object and replaces it with _u.

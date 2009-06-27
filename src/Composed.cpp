@@ -1,5 +1,8 @@
+#include "coreTests.cpp"
 #include "main.cpp"
+#include "supportTests.cpp"
 #include "tests.cpp"
+#include "typeTests.cpp"
 #include "Gui/CodeScene.cpp"
 #include "Gui/MainWindow.cpp"
 #include "Language/Base.cpp"

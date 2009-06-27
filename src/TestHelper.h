@@ -18,51 +18,46 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "AddressType.h"
-#include "ExplicitType.h"
-#include "SimpleType.h"
-#include "FunctionType.h"
-#include "Memberify.h"
-#include "ModifyingType.h"
+#pragma once
 
-namespace Martta
+#include <QDebug>
+
+#include "Common.h"
+using namespace Martta;
+
+class TestHelper
 {
-
-MARTTA_OBJECT_CPP(ModifyingType);
-
-void ModifyingType::unknit()
-{
-	if (owner() && &**owner() == this)
+public:
+	TestHelper(char const* _n, int* _c):
+		m_name			(_n),
+		m_failed		(false),
+		m_done			(false),
+		m_oldAsserted	(s_asserted),
+		m_failedCounter	(_c)
 	{
-		M_ASSERT(original()->owner() == owner());
-		M_ASSERT(!parent());
-		owner()->m_top = original();
+		s_asserted = false;
+		qInformation() << "Testing" << m_name;
 	}
-	InsertionPoint p = over();
-	TypeEntity* ch = original();
+	~TestHelper()
+	{
+		if (m_failed || s_asserted)
+		{
+			qInformation() << "FAILED! " << s_asserted;
+			exit(1);
+			(*m_failedCounter)++;
+		}
+		s_asserted = m_oldAsserted;
+	}
+	void failed() { m_failed = true; }
+	bool isDone() const { return m_done; }
+	void done() { m_done = true; }
 	
-	//	P -p-> this -0-> ch    BECOMES    P -p-> ch
-	
-	p.insertSilent(ch);
-	kill();
-	
-	oneFootInTheGrave();
-	if (p.parent())
-		p.parent()->childSwitched(ch, this);
-		
-	if (ch->parent())
-		ch->parentSwitched(this);
-	else
-		ch->parentRemoved(this);
-	
-	delete this;
-}
-
-Kinds ModifyingType::allowedKinds(int _index) const
-{
-	if (_index == Original)
-		return Kind::of<TypeEntity>();
-	return Super::allowedKinds(_index);
-}
-
-}
+private:
+	char const* m_name;
+	bool m_failed;
+	bool m_done;
+	char const* m_oldAsserted;
+	int* m_failedCounter;
+};
+#define TEST(S) for (TestHelper _h(S, &failed); !_h.isDone(); _h.done()) 
+#define FAILED_IF(X) if (X) _h.failed(); else (void)0

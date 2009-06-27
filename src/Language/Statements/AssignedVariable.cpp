@@ -74,7 +74,7 @@ void AssignedVariable::onDependencySwitched(Entity* _e, Entity*)
 	if (_e == child(AssignedValue) && _e->kind() == Kind::of<Typed>())
 	{
 		Entity* o = usurp(new DefaultConstructedVariable);
-		_e->kill();
+		_e->killAndDelete();
 		o->setCurrent();
 	}
 }

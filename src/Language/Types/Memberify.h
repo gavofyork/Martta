@@ -37,7 +37,6 @@ public:
 
 	Memberify(Class* _scope = 0, bool _isConst = true) { if (_scope) setScopeClass(_scope, _isConst); }
 	Memberify(Type const& _object);
-//	~Memberify() { if (child(1)) child(1)->killAndDelete(); }
 	
 	bool								isConst() const;
 	void								setConst(bool _c);

@@ -110,7 +110,6 @@ protected:
 	/// @returns true if this object already has a freeform dependency on another
 	inline bool							haveDependency(Dependee* _e) const { return ChangeMan::get()->haveDependency(this, _e); }
 	
-private:
 	virtual void						childrenInitialised() { ChangeMan::get()->childrenInitialised(this); }
 	virtual void						childAdded(int _newChildsIndex) { ChangeMan::get()->childAdded(this, _newChildsIndex); }
 	virtual void						childSwitched(Entity* _currentChild, Entity* _exChild) { ChangeMan::get()->childSwitched(this, _currentChild, _exChild); }

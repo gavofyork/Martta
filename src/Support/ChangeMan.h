@@ -73,6 +73,7 @@ public:
 	
 	/// returns false if already inside an equivalent changed() call.
 	bool								changed(Dependee* _changer, int _aspect);
+	void								oneFootInTheGrave(Dependee* _going);
 	
 	void								dead(Dependee* _gone);
 	void								dead(Depender* _gone);

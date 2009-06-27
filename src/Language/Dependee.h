@@ -32,8 +32,10 @@ class Dependee
 protected:
 	/// To be called when something about the object has changed. Notifies dependents.
 	/// If _aspect & Visually then it calls a relayoutLater().
-	void								changed(int _aspect = ChangeMan::AllAspects) { ChangeMan::get()->changed(this, _aspect); }
+	bool								changed(int _aspect = ChangeMan::AllAspects) { return ChangeMan::get()->changed(this, _aspect); }
 
+	virtual void						oneFootInTheGrave() { ChangeMan::get()->oneFootInTheGrave(this); }
+	
 	virtual ~Dependee() { ChangeMan::get()->dead(this); }
 };
 

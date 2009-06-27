@@ -27,6 +27,19 @@ namespace Martta
 
 ChangeMan* ChangeMan::s_this = 0;
 
+void ChangeMan::oneFootInTheGrave(Dependee* _going)
+{
+	for (QMultiHash<Dependee*, Depender*>::Iterator i = m_dependers.find(_going); i != m_dependers.end() && i.key() == _going; i = m_dependers.erase(i))
+	{
+		QMultiHash<Depender*, Dependee*>::Iterator j = m_dependees.find(i.value(), i.key());
+		M_ASSERT (j != m_dependees.end());
+		m_dependees.erase(j);
+		if (i.value()->botherNotifying())
+			m_changeQueue << Entry(i.value(), DependencyRemoved, _going->self());
+	}
+	processQueue();
+}
+
 bool ChangeMan::changed(Dependee* _changer, int _aspect)
 {
 	// if (already in changed() call for this object with subseteq of _aspect) return false;
@@ -227,13 +240,16 @@ void ChangeMan::parentSwitched(Depender* _this, Entity* _old)
 			foreach (Kind k, d->ancestralDependencies())
 			{
 				Entity* a = e->ancestor(k);
-				Entity* oldAnc = _old->selfAncestor(k);
-				if (a && !oldAnc)
-					m_changeQueue << Entry(d, DependencyAdded, a);
-				else if (oldAnc && !a)
-					m_changeQueue << Entry(d, DependencyRemoved, oldAnc);
-				else if (oldAnc != a)
-					m_changeQueue << Entry(d, DependencySwitched, a, oldAnc);
+				if (!a->hasAncestor(p))	// If the "new" ancestor itself has an ancestor that is the new parent, then it cannot have changed. Otherwise...
+				{
+					Entity* oldAnc = _old->selfAncestor(k);
+					if (a && !oldAnc)											// Had no old ancestor but do have a new one. Added...
+						m_changeQueue << Entry(d, DependencyAdded, a);
+					else if (oldAnc && !a)										// Had old ancestor but no new one. Removed...
+						m_changeQueue << Entry(d, DependencyRemoved, oldAnc);
+					else if (oldAnc != a)										// Have both, but they're different. Changed...
+						m_changeQueue << Entry(d, DependencySwitched, a, oldAnc);
+				}
 			}
 		es << e->children();
 	}

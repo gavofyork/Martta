@@ -89,6 +89,7 @@ bool Class::checkImplicitConstructors()
 	}
 	else if (nonImplicits && membersOf<ArtificialDefaultConstructor>().size())
 	{
+		// TODO: Notifications?
 		membersOf<ArtificialDefaultConstructor>()[0]->killAndDelete();
 		ret = true;
 	}
@@ -106,6 +107,7 @@ bool Class::checkImplicitConstructors()
 	}
 	else if (copyConstructors > 1 && membersOf<ArtificialCopyConstructor>().size())
 	{
+		// TODO: Notifications?
 		membersOf<ArtificialCopyConstructor>()[0]->killAndDelete();
 		ret = true;
 	}
@@ -123,6 +125,7 @@ bool Class::checkImplicitConstructors()
 	}
 	else if (assignmentOperators > 1 && membersOf<ArtificialAssignmentOperator>().size())
 	{
+		// TODO: Notifications?
 		membersOf<ArtificialAssignmentOperator>()[0]->killAndDelete();
 		ret = true;
 	}
