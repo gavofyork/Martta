@@ -21,16 +21,27 @@
 #pragma once
 
 #include "Kind.h"
-#include "Meta.h"
+#include "Familial.h"
+#include "ChangeMan.h"
 
 namespace Martta
 {
 
-class Depender
+class Depender: public_interface Familial
 {
 	MARTTA_INTERFACE
+	MARTTA_INHERITS(Familial, 0)
 
 protected:
+	virtual void						childrenInitialised() {}
+	virtual void						childAdded(int _newChildsIndex) { (void)(_newChildsIndex); }
+	virtual void						childSwitched(Entity* _currentChild, Entity* _exChild) { (void)(_currentChild); (void)(_exChild); }
+	virtual void						childRemoved(Entity* _exChild, int _exChildsIndex) { (void)(_exChild); (void)(_exChildsIndex); }
+	virtual void						childMoved(Entity* _child, int _originalIndex) { (void)(_child); (void)(_originalIndex); }
+	virtual void						parentAdded() {}
+	virtual void						parentSwitched(Entity* _exParent) { (void)(_exParent); }
+	virtual void						parentRemoved(Entity* _exParent) { (void)(_exParent); }
+
 	enum { DependsOnNothing = 0, DependsOnParent = 1, DependsOnChildren = 2, DependsOnBoth = 3, DependsOnIndex = 4, TestOnOrder = 8, DependsOnChildOrder = DependsOnChildren | TestOnOrder };
 	virtual int							familyDependencies() const { return DependsOnNothing; }
 	virtual Kinds						ancestralDependencies() const { return Kinds(); }
@@ -79,7 +90,7 @@ protected:
 	/// include BeInModel.
 	virtual void						onChildrenInitialised();
 
-	virtual ~Depender() {}
+	virtual ~Depender() { ChangeMan::get()->dead(this); }
 };
 
 }

@@ -20,16 +20,14 @@
 
 #pragma once
 
-#include "ChangeMan.h"
 #include "BasicRoot.h"
 
 namespace Martta
 {
 
-class Root: public BasicRoot, public_interface ChangeMan
+class Root: public BasicRoot
 {
 	MARTTA_OBJECT(BasicRoot)
-	MARTTA_INHERITS(ChangeMan, 0)
 };
 
 }

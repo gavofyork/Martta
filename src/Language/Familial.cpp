@@ -18,11 +18,11 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "ChangeMan.h"
+#include "Familial.h"
 
 namespace Martta
 {
 
-MARTTA_INTERFACE_CPP(ChangeMan);
+MARTTA_INTERFACE_CPP(Familial);
 
 }

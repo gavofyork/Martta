@@ -25,13 +25,21 @@
 namespace Martta
 {
 
-class ChangeMan
+class Familial
 {
 	MARTTA_INTERFACE
 
 public:
+	virtual void						childrenInitialised() {}
+	virtual void						childAdded(int _newChildsIndex) { (void)(_newChildsIndex); }
+	virtual void						childSwitched(Entity* _currentChild, Entity* _exChild) { (void)(_currentChild); (void)(_exChild); }
+	virtual void						childRemoved(Entity* _exChild, int _exChildsIndex) { (void)(_exChild); (void)(_exChildsIndex); }
+	virtual void						childMoved(Entity* _child, int _originalIndex) { (void)(_child); (void)(_originalIndex); }
+	virtual void						parentAdded() {}
+	virtual void						parentSwitched(Entity* _exParent) { (void)(_exParent); }
+	virtual void						parentRemoved(Entity* _exParent) { (void)(_exParent); }
 
-	virtual ~ChangeMan() {}
+	virtual ~Familial() {}
 };
 
 }

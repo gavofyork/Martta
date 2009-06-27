@@ -20,18 +20,23 @@
 
 #pragma once
 
+#include "ChangeMan.h"
 #include "Changer.h"
 
 namespace Martta
 {
 
-class Dependee: public_interface Changer
+class Dependee
 {
 	MARTTA_INTERFACE
-	MARTTA_INHERITS(Changer, 0)
 
-public:
-	virtual ~Dependee() {}
+protected:
+	/// To be called when something about the object has changed. Notifies dependents.
+	/// If _aspect & Visually then it calls a relayoutLater().
+	enum { Logically = 0x0001, Visually = 0x0002, LastAspect = Visually, AllAspects = 0xffff };
+	void								changed(int _aspect = AllAspects) { ChangeMan::get()->changed(this, _aspect); }
+
+	virtual ~Dependee() { ChangeMan::get()->dead(this); }
 };
 
 }

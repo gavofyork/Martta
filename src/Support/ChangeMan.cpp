@@ -18,11 +18,11 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "Changer.h"
+#include "ChangeMan.h"
 
 namespace Martta
 {
 
-MARTTA_INTERFACE_CPP(Changer);
+ChangeMan* ChangeMan::s_this = 0;
 
 }

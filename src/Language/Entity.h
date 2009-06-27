@@ -29,7 +29,6 @@
 
 #include "SceneLeaver.h"
 #include "ChildValidifier.h"
-#include "Changer.h"
 #include "Dependee.h"
 #include "Depender.h"
 
@@ -84,7 +83,7 @@ class BasicRoot;
  * scene. This applies even if the situation is temporary, since the check/changes happen at move
  * time.
  */
-class Entity: public Nothing, public SafePointerTarget, public_interface SceneLeaver, public_interface ChildValidifier, public_interface Changer, public_interface Depender
+class Entity: public Nothing, public SafePointerTarget, public_interface SceneLeaver, public_interface ChildValidifier, public_interface Dependee, public_interface Depender
 {
 	MARTTA_COMMON(Nothing)
 	MARTTA_INHERITS(SceneLeaver, 0)
@@ -107,8 +106,8 @@ public:
 	inline void							operator delete(void* p);
 	
 	/// Copy constructor which doesn't do anything. Have to have it so a derived class can use it.
-	inline Entity(): SceneLeaver(), ChildValidifier(), Changer(), Depender(), SafePointerTarget(), m_rootEntity(0), m_parent(0), m_index(UndefinedIndex), m_notifiedOfChange(0) {}
-	inline Entity(Entity const&): SceneLeaver(), ChildValidifier(), Changer(), Depender(), SafePointerTarget() { M_ASSERT(false); }
+	inline Entity(): SceneLeaver(), ChildValidifier(), Dependee(), Depender(), SafePointerTarget(), m_rootEntity(0), m_parent(0), m_index(UndefinedIndex), m_notifiedOfChange(0) {}
+	inline Entity(Entity const&): SceneLeaver(), ChildValidifier(), Dependee(), Familial(), Depender(), SafePointerTarget() { M_ASSERT(false); }
 	
 	static void							initialiseClass() {}
 	static void							finaliseClass() {}
@@ -467,11 +466,8 @@ public:
 	// CHANGE: Moves to Changer.
 	/// To be called when something about the object has changed. Notifies dependents.
 	/// If _aspect & Visually then it calls a relayoutLater().
-	enum { Visually = 0x0001, LastAspect = 0x0001, AllAspects = 0xffff };
+	enum { Logically = 0x0001, Visually = 0x0002, LastAspect = Visually, AllAspects = 0xffff };
 	void								changed(int _aspect = AllAspects);
-	/// Remove all backlinks (i.e. all those dependencies that target us).
-	/// Calls onDependencyRemoved() on each of the registered dependents.
-	void								clearDependents();
 	
 	inline BasicRoot*					rootEntity() const { return m_rootEntity; }
 	
@@ -479,9 +475,6 @@ protected:
 	virtual ~Entity();
 
 	// CHANGE: This lot moves to Depender, and perhaps the logic into ChangeMan.
-	/// Given an Entity/Interface-pointer-style variable and a value, set the variable and call add, change and remove
-	/// dependency as necessary.
-	template<class T, class U> void		setDependency(T& _dependencyVariable, U const& _dependency);
 	/// Adds a dependency.
 	/// Note this will *not* call onDependencyAdded(_e) for you. You must call it yourself if you want it to run.
 	void								addDependency(Entity* _e);
@@ -499,11 +492,14 @@ protected:
 	void								updateAncestralDependencies();
 
 
-	/// Convenience method.
+	/// Convenience methods.
 	/// Notes parentSwitched to child, and child removal to old parent.
 	/// @important This does *not* notify the new parent of the child addition; you must do that yourself! 
 	/// This assumes _old is still valid!
 	inline void							parentSwitchedWithChildRemoved(InsertionPoint const& _old) { parentSwitched(_old.parent()); if (_old.parent()) _old.parent()->childRemoved(this, _old.index()); }
+	/// Given an Entity/Interface-pointer-style variable and a value, set the variable and call add, change and remove
+	/// dependency as necessary.
+	template<class T, class U> void		setDependency(T& _dependencyVariable, U const& _dependency);
 	
 protected:
 	BasicRoot*							m_rootEntity;
@@ -547,6 +543,10 @@ private:
 
 	/// Helper function for validifyChildren()
 	bool								validifyChild(int _i, int* _added);
+
+	/// Remove all backlinks (i.e. all those dependencies that target us).
+	/// Calls onDependencyRemoved() on each of the registered dependents.
+	void								clearDependents();
 
 	Entity*								m_parent;
 	int									m_index;
