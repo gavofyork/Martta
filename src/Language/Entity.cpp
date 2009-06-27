@@ -396,8 +396,9 @@ EditDelegateFace* Entity::editDelegate(CodeScene* _s)
 // Drawing
 void Entity::resetLayoutCache()
 {
-	foreach (CodeScene* i, CodeScene::all())
-		i->resetLayoutCache(this);
+	if (isInModel())
+		foreach (CodeScene* i, CodeScene::all())
+			i->resetLayoutCache(this);
 }
 void Entity::relayout()
 {
@@ -410,8 +411,9 @@ void Entity::relayout(CodeScene* _s)
 }
 void Entity::relayoutLater()
 {
-	foreach (CodeScene* i, CodeScene::all())
-		relayoutLater(i);
+	if (isInModel())
+		foreach (CodeScene* i, CodeScene::all())
+			relayoutLater(i);
 }
 void Entity::relayoutLater(CodeScene* _s)
 {
@@ -908,6 +910,8 @@ bool Entity::validifyChild(int _i, int* _added)
 		*_added = (*_added == INT_MAX - 1) ? _i : INT_MAX;
 		ret = true;
 	}
+	if (ret)
+		resetLayoutCache();
 	return ret;
 }
 bool Entity::validifyChildren()
@@ -938,6 +942,8 @@ bool Entity::validifyChildren()
 		childrenInitialised();
 	else if (added < INT_MAX - 1)
 		childAdded(added);
+	
+	resetLayoutCache();
 	return ret;
 }
 Entity* Entity::prepareChildren()
@@ -951,6 +957,7 @@ Entity* Entity::prepareChildren()
 	for (int i = m_cardinalChildren.size(); i < minRequired(Cardinals); ++i)
 		back().spawnPreparedSilent()->parentAdded();
 	childrenInitialised();
+	resetLayoutCache();
 	return this;
 }
 bool Entity::removeInvalidChildren()
@@ -1011,7 +1018,10 @@ void Entity::move(InsertionPoint const& _newPosition)
 		{
 			parentSwitchedWithChildRemoved(old);
 			if (m_parent)
+			{
 				m_parent->childAdded(m_index);
+				m_parent->resetLayoutCache();
+			}
 		}
 	}
 }
@@ -1044,6 +1054,7 @@ Entity* Entity::usurp(Entity* _u)
 		_u->m_parent->childSwitched(_u, this);
 		
 	delete this;
+	_u->resetLayoutCache();
 	return _u;
 }
 Entity* Entity::replace(Entity* _r)
@@ -1077,7 +1088,10 @@ Entity* Entity::insert(Entity* _e, int _preferedIndex)
 		if (_e->parent())
 			_e->parent()->childSwitched(_e, this);
 		_e->parentSwitchedWithChildRemoved(you);
-		parentSwitched(_e->parent());
+		if (_e->parent())
+			parentSwitched(_e->parent());
+		else
+			parentAdded();
 	}
 	else
 	{
@@ -1093,9 +1107,10 @@ Entity* Entity::insert(Entity* _e, int _preferedIndex)
 		if (_e->parent())
 			_e->parent()->childSwitched(_e, this);
 		_e->parentSwitchedWithChildRemoved(you);
-		parentSwitched(_e->parent());
+		parentRemoved(_e->parent());
 		killAndDelete(_e->child(_preferedIndex));
 	}
+	_e->resetLayoutCache();
 	return _e;
 } 
 bool Entity::tryInsert(Entity* _e, int _preferedIndex)
@@ -1109,11 +1124,22 @@ bool Entity::tryInsert(Entity* _e, int _preferedIndex)
 	ip.insertSilent(this);
 	
 	_e->parentSwitchedWithChildRemoved(you);
-	parentSwitched(_e->parent());
+	
+	if (_e->parent() && parent())
+		parentSwitched(_e->parent());
+	else if (_e->parent())
+		parentRemoved(_e->parent());
+	else if (parent())
+		parentAdded();
+		
 	if (ip != Nowhere)
+	{
 		_e->childAdded(m_index);
+	}
 	if (_e->parent())
 		_e->parent()->childSwitched(_e, this);
+		
+	_e->resetLayoutCache();
 	return ip != Nowhere;
 } 
 void Entity::deleteAndRefill(Entity* _e, bool _moveToGrave)
@@ -1138,12 +1164,18 @@ void Entity::deleteAndRefill(Entity* _e, bool _moveToGrave)
 		int ci = m_index;
 		kill();
 		c->childRemoved(this, ci);
+		c->relayoutLater();
 		delete this;
 	}
 	if (_moveToGrave)
 		p.nearestEntity()->setCurrent();
 }
 
+void Entity::onChildrenInitialised()
+{
+	foreach (Entity* c, children())
+		onDependencyAdded(c);
+}
 //****************************************************************
 //****************************************************************
 //****************************************************************
@@ -1155,7 +1187,6 @@ void Entity::deleteAndRefill(Entity* _e, bool _moveToGrave)
 //****************************************************************
 //****************************************************************
 //****************************************************************
-
 void Entity::childAdded(int _index)
 {
 	if (_index >= 0 && _index < m_cardinalChildren.size() && familyDependencies() & DependsOnChildren)
@@ -1214,17 +1245,10 @@ void Entity::parentAdded()
 }
 void Entity::parentSwitched(Entity* _old)
 {
-	if (m_parent && !_old)
-		parentAdded();
-	else if (!m_parent && _old)
-		parentRemoved(_old);
-	else if (_old != m_parent)
-	{
-		if (botherNotifying() && familyDependencies() & DependsOnParent)
-			dependencySwitched(m_parent, _old);
-		updateAncestralDependencies();
-		relayoutLater();
-	}
+	if (botherNotifying() && familyDependencies() & DependsOnParent)
+		dependencySwitched(m_parent, _old);
+	updateAncestralDependencies();
+	relayoutLater();
 }
 void Entity::parentRemoved(Entity* _old)
 {

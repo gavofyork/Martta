@@ -3,7 +3,6 @@
 #include "Gui/CodeScene.cpp"
 #include "Gui/MainWindow.cpp"
 #include "Language/Base.cpp"
-#include "Language/Changer.cpp"
 #include "Language/ChildValidifier.cpp"
 #include "Language/Conditional.cpp"
 #include "Language/Corporal.cpp"

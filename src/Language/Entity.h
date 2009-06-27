@@ -29,8 +29,7 @@
 
 #include "SceneLeaver.h"
 #include "ChildValidifier.h"
-#include "Dependee.h"
-#include "Depender.h"
+#include "Familial.h"
 
 #include "Meta.h"
 #include "InsertionPoint.h"
@@ -83,13 +82,14 @@ class BasicRoot;
  * scene. This applies even if the situation is temporary, since the check/changes happen at move
  * time.
  */
-class Entity: public Nothing, public SafePointerTarget, public_interface SceneLeaver, public_interface ChildValidifier, public_interface Dependee, public_interface Depender
+class Entity: public Nothing, public SafePointerTarget, public_interface SceneLeaver, public_interface ChildValidifier, public_interface Familial
 {
 	MARTTA_COMMON(Nothing)
 	MARTTA_INHERITS(SceneLeaver, 0)
 	MARTTA_INHERITS(ChildValidifier, 1)
-	MARTTA_INHERITS(Changer, 2)
-	MARTTA_INHERITS(Depender, 3)
+	MARTTA_INHERITS(Familial, 2)
+//	MARTTA_INHERITS(Dependee, 2)
+//	MARTTA_INHERITS(Depender, 3)
 	
 	friend class EntityStylist;
 	friend class EditDelegateFace;
@@ -106,8 +106,8 @@ public:
 	inline void							operator delete(void* p);
 	
 	/// Copy constructor which doesn't do anything. Have to have it so a derived class can use it.
-	inline Entity(): SceneLeaver(), ChildValidifier(), Dependee(), Depender(), SafePointerTarget(), m_rootEntity(0), m_parent(0), m_index(UndefinedIndex), m_notifiedOfChange(0) {}
-	inline Entity(Entity const&): SceneLeaver(), ChildValidifier(), Dependee(), Familial(), Depender(), SafePointerTarget() { M_ASSERT(false); }
+	inline Entity(): SceneLeaver(), ChildValidifier(), Familial(), SafePointerTarget(), m_rootEntity(0), m_parent(0), m_index(UndefinedIndex), m_notifiedOfChange(0) {}
+	inline Entity(Entity const&): SceneLeaver(), ChildValidifier(), Familial(), SafePointerTarget() { M_ASSERT(false); }
 	
 	static void							initialiseClass() {}
 	static void							finaliseClass() {}
@@ -492,11 +492,91 @@ protected:
 	void								updateAncestralDependencies();
 
 
+
+
+
+
+
+	/// Called when:
+	/// - Our index changes and familyDependencies includes DependsOnIndex, but the parent remains the same.
+	/// @note By default, it does nothing.
+	virtual void						onIndexChanged(int /*_oldIndex*/) {}
+	/// Called when:
+	/// - A registered or family dependency's state changes (_e is the dependency) and its onChanged() returned true.
+	/// - A child changes position, and children are a family dependency (_e is the child).
+	/// @note By default, it does nothing. 
+	virtual void						onDependencyChanged(Entity* /*_e*/) {}
+	/// Called when:
+	/// - A registered dependency is removed and another is immediately added (_e is the new dependency).
+	/// - The object fulfilling an ancestral dependency has changed, though both are non-null (_e is the old ancestor).
+	/// - A family member is replaced, and there is a family dependency (_e is the new family member).
+	/// @note By default, it just called the onDependencyChanged() method. 
+	virtual void						onDependencySwitched(Entity* _e, Entity* /*_old*/) { onDependencyChanged(_e); }
+	/// Called when familyDependencies includes DependsOnChildOrder and:
+	/// - A child entity has had its index changed (usually through the insertion of another child at an earlier
+	/// position).
+	/// @note By default, it just called the onDependencyChanged() method. 
+	virtual void						onChildMoved(Entity* _e, int /*_oldIndex*/) { onDependencyChanged(_e); }
+	/// Called when:
+	/// - A new parent is set where before it was null and parent is a family dependency (_e is the new parent).
+	/// - A new dependent ancestor is set where before it was null (_e is the new ancestor).
+	/// - A new child is added and children are a family dependency (_e is the child).
+	/// @note By default, it just called the onDependencyChanged() method. 
+	virtual void						onDependencyAdded(Entity* _e) { onDependencyChanged(_e); }
+	/// Called when:
+	/// - The null parent is set where there was one before and parent is a family dependency (_e is the old parent).
+	/// - A child is removed and children are a family dependency (_e is the old child).
+	/// - What was a dependent ancestor is removed (_e is the old ancestor).
+	/// - A registered dependency has removed itself (_e is the old dependency).
+	/// @note By default, it does nothing. 
+	virtual void						onDependencyRemoved(Entity*, int /*_index*/) {}
+	/// Called when we depend on children and:
+	/// - This entity has been created with prepareChildren called on it.
+	/// - This entity has usurped all of another entity's children.
+	/// - This entity has had its children "validified", whereby invalid ones are removed and new ones added
+	///   as necessary. This is only called if > 1 child was added during the operation.
+	/// This is called instead of a number of onDependencyAdded()s, and removed confusion about the state of the object
+	/// as each dependency is added.
+	/// @note By default, it calls onDependencyAdded() for every child entity (whether recently added or not). 
+	/// @note If you intend to use this, you may find it useful to change notificationRequirements() so it doesn't
+	/// include BeInModel.
+	virtual void						onChildrenInitialised();
+
+	enum { DependsOnNothing = 0, DependsOnParent = 1, DependsOnChildren = 2, DependsOnBoth = 3, DependsOnIndex = 4, TestOnOrder = 8, DependsOnChildOrder = DependsOnChildren | TestOnOrder };
+	virtual int							familyDependencies() const { return DependsOnNothing; }
+	
+	virtual Kinds						ancestralDependencies() const { return Kinds(); }
+
+
+
+
+
+
+
 	/// Convenience methods.
 	/// Notes parentSwitched to child, and child removal to old parent.
 	/// @important This does *not* notify the new parent of the child addition; you must do that yourself! 
 	/// This assumes _old is still valid!
-	inline void							parentSwitchedWithChildRemoved(InsertionPoint const& _old) { parentSwitched(_old.parent()); if (_old.parent()) _old.parent()->childRemoved(this, _old.index()); }
+	inline void							parentSwitchedWithChildRemoved(InsertionPoint const& _old)
+	{
+		if (m_parent && _old.parent())
+		{
+			parentSwitched(_old.parent());
+			m_parent->resetLayoutCache();
+		}
+		else if (_old.parent())
+			parentRemoved(_old.parent());
+		else if (m_parent)
+		{
+			parentAdded();
+			m_parent->resetLayoutCache();
+		}
+		if (_old.parent())
+		{
+			_old.parent()->childRemoved(this, _old.index());
+			_old.parent()->resetLayoutCache();
+		}
+	}
 	/// Given an Entity/Interface-pointer-style variable and a value, set the variable and call add, change and remove
 	/// dependency as necessary.
 	template<class T, class U> void		setDependency(T& _dependencyVariable, U const& _dependency);

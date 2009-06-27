@@ -48,7 +48,7 @@ Entity* InsertionPoint::spawnPrepared() const
 {
 	Entity* ret = spawnPreparedSilent();
 	if (m_parent)
-		m_parent->childAdded(m_index);
+		m_parent->childAdded(ret->index());
 	ret->parentAdded();
 	return ret;
 }

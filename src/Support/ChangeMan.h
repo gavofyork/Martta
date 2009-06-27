@@ -31,49 +31,86 @@ class Dependee;
 class ChangeMan
 {
 public:
+	enum { Logically = 0x0001, Visually = 0x0002, UserAspect = Visually << 1, AllAspects = 0xffff };
+	
+	enum Operation
+	{
+		DependencyChanged,
+		EntityChildrenInitialised,
+		DependencyAdded,
+		DependencyRemoved,
+		DependencySwitched,
+		ChildMoved,
+		IndexChanged
+	};
+	
+	// TODO Maybe change _exo & _o to Dependees. Only do this if we filter added/removed/switched stuff at Depender level to involve only Dependees.
+	// If this were all done it would allow non-immediate change processing (which may or may not be a good thing), by cleaning up the queue through 
+	// Dependee/Depender dead notifications.
+	struct Entry
+	{
+		Entry(Depender* _depender, Operation _op, Entity* _o1 = 0, Entity* _o2 = 0, int _index = UndefinedIndex): m_depender(_depender), m_object1(_o1), m_object2(_o2), m_index(_index), m_op(_op) {}
+		Entry(Depender* _depender, int _aspect, Entity* _changer): m_depender(_depender), m_object1(_changer), m_object2(0), m_index(_aspect), m_op(DependencyChanged) {}
+		Depender* m_depender;
+		Entity* m_object1;
+		Entity* m_object2;
+		union
+		{
+			int m_index;
+			int m_aspect;
+		};
+		Operation m_op;
+	};
+	
+	struct Changing
+	{
+		Changing(Dependee* _changer, int _aspect): m_changer(_changer), m_aspect(_aspect) {}
+		Dependee* m_changer;
+		int m_aspect;
+	};
+
 	static ChangeMan*					get() { return s_this ? s_this : (s_this = new ChangeMan); }
 	
-	void								changed(Dependee* _changer, int _aspect) { (void)(_changer); (void)(_aspect); }
+	/// returns false if already inside an equivalent changed() call.
+	bool								changed(Dependee* _changer, int _aspect);
 	
-	void								dead(Dependee* _gone) { (void)(_gone); }
-	void								dead(Depender* _gone) { (void)(_gone); }
+	void								dead(Dependee* _gone);
+	void								dead(Depender* _gone);
 	
-/*	void								childrenInitialised(Dependee* _this);
-	void								childAdded(Dependee* _this, int _newChildsIndex);
-	void								childSwitched(Dependee* _this, Entity* _currentChild, Entity* _exChild);
-	void								childRemoved(Dependee* _this, Entity* _exChild, int _deadChildsIndex);
-	void								childMoved(Dependee* _this, Entity* _child, int _oldIndex);
-	void								parentAdded(Dependee* _this);
-	void								parentSwitched(Dependee* _this, Entity* _exParent);
-	void								parentRemoved(Dependee* _this, Entity* _exParent);
-
-	void								dependencyAdded(Depender* _this, Entity* _e) { change(_this, DependencyAdded, _e); _this->onDependencyAdded(_e); }
-	void								dependencyRemoved(Depender* _this, Entity* _e, int _index = UndefinedIndex) { change(_this, DependencyRemoved, _e); _this->onDependencyRemoved(_e, _index); }
-	void								dependencyChanged(Depender* _this, Entity* _e) { change(_this, DependencyChanged, _e); _this->onDependencyChanged(_e); }
-	void								dependencySwitched(Depender* _this, Entity* _e, Entity* _o) { change(_this, DependencySwitched, _e); _this->onDependencySwitched(_e, _o); }
-	void								notifyOfChildMove(Depender* _this, Entity* _e, int _oI) { change(_this, ChildMoved, _e); _this->onChildMoved(_e, _oI); }
-	void								indexChanged(Depender* _this, int _oI) { change(_this, ContextIndexChanged, 0); _this->onIndexChanged(_oI); }
+	virtual void						childrenInitialised(Depender* _this);
+	virtual void						childAdded(Depender* _this, int _newChildsIndex);
+	virtual void						childSwitched(Depender* _this, Entity* _currentChild, Entity* _exChild);
+	virtual void						childRemoved(Depender* _this, Entity* _exChild, int _deadChildsIndex);
+	virtual void						childMoved(Depender* _this, Entity* _child, int _oldIndex);
+	virtual void						parentAdded(Depender* _this);
+	virtual void						parentSwitched(Depender* _this, Entity* _exParent);
+	virtual void						parentRemoved(Depender* _this, Entity* _exParent);
 
 	/// Adds a dependency.
 	/// Note this will *not* call onDependencyAdded(_e) for you. You must call it yourself if you want it to run.
-	void								addDependency(Entity* _e);
+	void								addDependency(Depender* _der, Dependee* _dee) { m_dependees.insert(_der, _dee); m_dependers.insert(_dee, _der); }
 	/// Removes a dependency.
 	/// Note this will *not* call onDependencyRemoved(_e) for you. You must call it yourself if you want it to run.
-	void								removeDependency(Entity* _e);
+	void								removeDependency(Depender* _der, Dependee* _dee) { m_dependees.erase(m_dependees.find(_der, _dee)); m_dependers.erase(m_dependers.find(_dee, _der)); }
 	/// Removes all dependencies.
-	void								removeAllDependencies();
-	bool								haveDependency(Entity* _e) const { return m_dependencies.contains(_e); }
-
-	/// Rejigs our ancestral dependencies. This should be (TODO: and isn't yet) called whenever any of our ancestors have changed parent
-	/// or been switched, or when the ouput of ancestralDependencies() changes.
-	void								updateAncestralDependencies();
-*/
-	virtual ~ChangeMan() {}
+	void								removeAllDependencies(Depender* _der);
+	bool								haveDependency(Depender const* _der, Dependee const* _dee) const { return m_dependees.constFind(const_cast<Depender*>(_der), const_cast<Dependee*>(_dee)) != m_dependees.end(); }
 
 private:
-	// These two are symmetrical.
-	QHash<Dependee*, Depender*>			m_dependers;
-	QHash<Depender*, Dependee*>			m_dependees;
+	ChangeMan() {}
+	virtual ~ChangeMan() {}
+
+	void								processQueue();
+	void								processEntry(Entry const& _e);
+
+	// These two are symmetrical and used for storing the freeform dependencies.
+	QMultiHash<Dependee*, Depender*>	m_dependers;
+	QMultiHash<Depender*, Dependee*>	m_dependees;
+	
+	QList<Changing>						m_changing;
+	
+	QList<Entry>						m_changeQueue;
+	QList<Entry>						m_changesDone;
 	
 	static ChangeMan*					s_this;
 };

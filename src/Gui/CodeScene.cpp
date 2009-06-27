@@ -431,8 +431,23 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 			if (m_strobeChild == originalStrobeChild && sChPoint)	// && c because we only need to move the strobeChild if there was a strobe creation (before, anyways).
 			{
 				m_strobeChild->commitMove(sChPoint);
-				m_strobeChild->parentSwitched(m_strobeCreation);
-				m_strobeChild->parent()->childSwitched(m_strobeChild, m_strobeCreation);
+				if (m_strobeCreation && m_strobeChild->parent())
+				{
+					m_strobeChild->parentSwitched(m_strobeCreation);
+					m_strobeChild->relayoutLater();
+				}
+				else if (m_strobeCreation)
+					m_strobeChild->parentRemoved(m_strobeCreation);
+				else if (m_strobeChild->parent())
+					m_strobeChild->parentAdded();
+				if (m_strobeChild->parent())	// CHECK!!!
+				{
+					if (m_strobeCreation)
+						m_strobeChild->parent()->childSwitched(m_strobeChild, m_strobeCreation);
+					else
+						m_strobeChild->parent()->childAdded(m_strobeChild->index());
+					m_strobeChild->parent()->resetLayoutCache();
+				}
 			}
 			if (m_strobeCreation)
 				m_strobeCreation->killAndDelete();

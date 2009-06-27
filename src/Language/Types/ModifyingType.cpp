@@ -48,7 +48,11 @@ void ModifyingType::unknit()
 	
 	if (p.parent())
 		p.parent()->childSwitched(ch, this);
-	ch->parentSwitched(this);
+		
+	if (ch->parent())
+		ch->parentSwitched(this);
+	else
+		ch->parentRemoved(this);
 	
 	delete this;
 }
