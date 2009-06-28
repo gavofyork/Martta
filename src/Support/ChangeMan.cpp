@@ -194,7 +194,7 @@ void ChangeMan::childMoved(Depender* _this, Entity* _ch, int _oI)
 	M_ASSERT(_ch);
 	if (_this->botherNotifying() && _this->familyDependencies() & Depender::TestOnOrder)
 		m_changeQueue << Entry(_this, ChildMoved, _ch, 0, _oI);
-	if (Depender* d = _ch->asKind<Depender>())
+	if (Depender* d = _ch->tryKind<Depender>())
 		if (d->botherNotifying() && d->familyDependencies() & Depender::DependsOnIndex)
 			m_changeQueue << Entry(d, IndexChanged, 0, 0, _oI);
 	processQueue();

@@ -47,14 +47,19 @@ public:
 	virtual Kinds						ancestralDependencies() const { return m_ancestralDependencies; }
 
 	virtual void						onIndexChanged(int _oldIndex) { activity += (m_id + "X%1 ").arg(_oldIndex); }
+	virtual void						onChildMoved(Entity* _e, int _oldIndex) { activity += (m_id + "M%1%2 ").arg(_oldIndex).arg(_e->asKind<NewEntity>()->m_id); }
+	virtual void						onChildrenInitialised() { activity += (m_id + "I "); }
 	virtual void						onDependencyChanged(int _aspect, Entity* _e) { activity += (m_id + "C%1%2 ").arg(_aspect).arg(_e->asKind<NewEntity>()->m_id); }
 	virtual void						onDependencySwitched(Entity* _e, Entity* _old) { activity += (m_id + "S%1%2 ").arg(_e->asKind<NewEntity>()->m_id).arg(_old->asKind<NewEntity>()->m_id); }
-	virtual void						onChildMoved(Entity* _e, int _oldIndex) { activity += (m_id + "M%1%2 ").arg(_e->asKind<NewEntity>()->m_id).arg(_oldIndex); }
 	virtual void						onDependencyAdded(Entity* _e) { activity += (m_id + "+%1 ").arg(_e->asKind<NewEntity>()->m_id); }
 	virtual void						onDependencyRemoved(Entity* _e, int _index) { activity += (m_id + "-%1%2 ").arg(_index == UndefinedIndex ? QString::null : QString::number(_index)).arg(_e->asKind<NewEntity>()->m_id); }
-	virtual void						onChildrenInitialised() { activity += (m_id + "I "); }
 	
 	bool								changed(int _aspect = AllAspects) { return Dependee::changed(_aspect); }
+	
+	inline void							addDependency(Dependee* _e) { Depender::addDependency(_e); }
+	inline void							removeDependency(Dependee* _e) { Depender::removeDependency(_e);}
+	inline void							removeAllDependencies() { Depender::removeAllDependencies();}
+	inline bool							haveDependency(Dependee* _e) const { return Depender::haveDependency(_e);}
 	
 protected:
 	virtual Kinds						allowedKinds(int) const { return Kind::of<Entity>(); }
@@ -68,8 +73,8 @@ protected:
 	virtual void						parentSwitched(Entity* _exParent) { Depender::parentSwitched(_exParent); }
 	virtual void						parentRemoved(Entity* _exParent) { Depender::parentRemoved(_exParent); }
 	
-private:
 	QString m_id;
+private:
 	int m_familyDependencies;
 	Kinds m_ancestralDependencies;
 };
@@ -83,6 +88,17 @@ public:
 	NewEntity2(QString _id = QString::null, int _fd = Depender::DependsOnNothing, Kinds const& _ad = Kinds()): NewEntity(_id, _fd, _ad) {}
 };
 MARTTA_OBJECT_CPP(NewEntity2);
+
+class NewEntitySilly: public NewEntity
+{
+	MARTTA_OBJECT(NewEntity)
+	
+public:
+	NewEntitySilly(QString _id = QString::null, int _fd = Depender::DependsOnNothing, Kinds const& _ad = Kinds()): NewEntity(_id, _fd, _ad) {}
+	
+	virtual void						onDependencyChanged(int _aspect, Entity* _e) { Super::onDependencyChanged(_aspect, _e); if (changed(1)) activity += m_id + "*1 "; }
+};
+MARTTA_OBJECT_CPP(NewEntitySilly);
 
 int test()
 {
@@ -118,6 +134,7 @@ int test()
 		n1->killAndDelete();
 		FAILED_IF(activity != "");
 	}
+	
 	TEST("Change system: Family dependencies changing, active")
 	{
 		activity.clear();
@@ -146,9 +163,46 @@ int test()
 	
 	TEST("Change system: Family dependencies moving")
 	{
+		BasicRoot r;
+		NewEntity* n1 = new NewEntity("n1", DependsOnChildOrder);
+		r.back().place(n1);
+		NewEntity* n2 = new NewEntity("n2", DependsOnParent);
+		activity.clear();
+		n1->back().place(n2);
+		FAILED_IF(activity != "n2+n1 n1+n2 " && activity != "n1+n2 n2+n1 ");
+		
+		activity.clear();
+		NewEntity* n3 = new NewEntity("n3", DependsOnIndex);
+		n1->back().place(n3);
+		FAILED_IF(activity != "n1+n3 ");
+		
+		activity.clear();
+		n2->move(n1->back());
+		qDebug() << activity;
+		FAILED_IF(!activity.contains("n1M1n3 ") || !activity.contains("n3X1 ") || !activity.contains("n1M0n2 ") || activity.size() != QString("n1M1n3 n1M0n2 n3X1 ").size());
 	}
 
 	TEST("Change system: Aspects & recursive changing")
+	{
+		BasicRoot r;
+		NewEntity* n1 = new NewEntity("n1");
+		r.back().place(n1);
+		NewEntity* n2 = new NewEntitySilly("n2", DependsOnChildren);
+		n1->back().place(n2);
+		NewEntity* n3 = new NewEntitySilly("n3", DependsOnParent);
+		n2->back().place(n3);
+		activity.clear();
+		n2->changed(2);
+		qDebug() << activity;
+		FAILED_IF(activity != "n3C2n2 n2C1n3 n3C1n2 n2*1 n3*1 ");
+		activity.clear();
+		n2->changed(3);
+		qDebug() << activity;
+		FAILED_IF(activity != "n3C3n2 n2C1n3 n3*1 ");
+	}
+	
+	
+	TEST("Change system: Ancestral dependencies moving")
 	{
 		// n1[NE2] ---> n2[NE2] ---> n3[NE] ---> n4[NE]
 		//               ^ - - - - - - - - - - - /
@@ -160,53 +214,46 @@ int test()
 		n1->back().place(n2);
 		NewEntity* n3 = new NewEntity("n3", DependsOnNothing);
 		n2->back().place(n3);
-		NewEntity* n4 = new NewEntity("n4", DependsOnNothing, Kinds() << Kind::of<NewEntity2>());
+		NewEntity* n4 = new NewEntity("n4", DependsOnNothing, Kind::of<NewEntity2>());
 		n3->back().place(n4);
-		r.debugTree();
-		qDebug() << activity;
 		FAILED_IF(activity != "n4+n2 ");
 		
 		activity.clear();
 		n2->changed(16);
-		qDebug() << activity;
 		FAILED_IF(activity != "n4C16n2 ");
 		
 		activity.clear();
 		n2->move(r.back());
-		r.debugTree();
-		qDebug() << activity;
 		FAILED_IF(activity != "");
 		
 		activity.clear();
 		n3->move(n1->back());
-		r.debugTree();
-		qDebug() << activity;
 		FAILED_IF(activity != "n4Sn1n2 ");
 
 		activity.clear();
 		n3->move(n2->back());
-		r.debugTree();
-		qDebug() << activity;
 		FAILED_IF(activity != "n4Sn2n1 ");
+		n1->killAndDeleteWithNotification();
+
+		activity.clear();
+		n2->changed(1);
+		FAILED_IF(activity != "n4C1n2 ");
+
+		activity.clear();
+		n3->move(n2->over());
+		FAILED_IF(activity != "n4-n2 ");
+		n2->killAndDeleteWithNotification();
 
 		n4->killAndDeleteWithNotification();
 		n3->killAndDeleteWithNotification();
-		n2->killAndDeleteWithNotification();
-		n1->killAndDeleteWithNotification();
-	}
-
-	TEST("Change system: Ancestral dependencies changing")
-	{
-	}
-
-	TEST("Change system: Ancestral dependencies moving")
-	{
 	}
 
 	TEST("Change system: Freefrom dependencies")
 	{
 	}
 
+	qInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
+	
 	s_testing = false;
 	qInformation() << "PASSED :-)";
 	

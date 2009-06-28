@@ -1011,8 +1011,8 @@ void Entity::move(InsertionPoint const& _newPosition)
 			int end = m_index < 0 ? m_parent->m_cardinalChildren.size() : m_index;
 			if (int s = sign(end - home))
 				for (int i = home; i != end; i += s)
-					childMoved(child(i), i + s);
-			childMoved(this, old.index());
+					m_parent->childMoved(m_parent->m_cardinalChildren[i], i + s);
+			m_parent->childMoved(this, old.index());
 		}
 		else
 		{
