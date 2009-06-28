@@ -31,6 +31,7 @@
 #include "ChildValidifier.h"
 #include "Familial.h"
 
+#include "Dier.h"
 #include "Meta.h"
 #include "InsertionPoint.h"
 #include "SafePointer.h"
@@ -82,7 +83,7 @@ class BasicRoot;
  * scene. This applies even if the situation is temporary, since the check/changes happen at move
  * time.
  */
-class Entity: public Nothing, public SafePointerTarget, public_interface SceneLeaver, public_interface ChildValidifier, public_interface Familial
+class Entity: public Nothing, public SafePointerTarget, virtual public Dier, public_interface SceneLeaver, public_interface ChildValidifier, public_interface Familial
 {
 	MARTTA_COMMON(Nothing)
 	MARTTA_INHERITS(SceneLeaver, 0)
@@ -106,8 +107,8 @@ public:
 	inline void							operator delete(void* p);
 	
 	/// Copy constructor which doesn't do anything. Have to have it so a derived class can use it.
-	inline Entity(): SceneLeaver(), ChildValidifier(), Familial(), SafePointerTarget(), m_rootEntity(0), m_parent(0), m_index(UndefinedIndex), m_notifiedOfChange(0) {}
-	inline Entity(Entity const&): SceneLeaver(), ChildValidifier(), Familial(), SafePointerTarget() { M_ASSERT(false); }
+	inline Entity(): SceneLeaver(), ChildValidifier(), Familial(), Dier(), SafePointerTarget(), m_rootEntity(0), m_parent(0), m_index(UndefinedIndex), m_notifiedOfChange(0) {}
+	inline Entity(Entity const&): SceneLeaver(), ChildValidifier(), Familial(), Dier(), SafePointerTarget() { M_ASSERT(false); }
 	
 	static void							initialiseClass() {}
 	static void							finaliseClass() {}
@@ -122,7 +123,7 @@ public:
 	inline Entity*						parent() const { return m_parent; }
 	template<class T> inline bool		parentIs() const { return m_parent ? m_parent->isKind<T>() : false; }
 	template<class T> inline T*			parentAs() const { M_ASSERT(m_parent); return m_parent->asKind<T>(); }
-	template<class T> inline T*			tryParentAs() const { M_ASSERT(m_parent); return m_parent ? m_parent->tryKind<T>() : 0; }
+	template<class T> inline T*			tryParent() const { return m_parent ? m_parent->tryKind<T>() : 0; }
 	
 	inline int							childCount() const { return m_namedChildren.size() + m_cardinalChildren.size(); }
 	inline QList<Entity*>				children() const { return m_namedChildren.values() + m_cardinalChildren; }
@@ -243,8 +244,6 @@ public:
 	 * kill()s the deletes the object but informs any dependent it is dieing first.
 	 */
 	inline void							killAndDeleteWithNotification() { move(Nowhere); oneFootInTheGrave(); killAndDelete(); }
-
-	virtual void						oneFootInTheGrave() {}
 
 	/**
 	 * Kills this object and replaces it with _u.

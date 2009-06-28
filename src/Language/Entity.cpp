@@ -996,7 +996,7 @@ void Entity::move(InsertionPoint const& _newPosition)
 	else
 	{
 		silentMove(_newPosition);
-		if (old.parent() == m_parent)
+		if (old.parent() == m_parent && m_parent)
 		{
 			//-2-1 0 1 2 3 4 5 6
 			//   x A B C D E F      Start

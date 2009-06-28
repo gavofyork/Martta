@@ -248,8 +248,54 @@ int test()
 		n3->killAndDeleteWithNotification();
 	}
 
-	TEST("Change system: Freefrom dependencies")
+	TEST("Change system: Freeform dependencies")
 	{
+		activity.clear();
+		BasicRoot r;
+		NewEntity* n1 = new NewEntity("n1", DependsOnNothing);
+		r.back().place(n1);
+		NewEntity* n2 = new NewEntity("n2", DependsOnNothing);
+		n1->back().place(n2);
+		NewEntity* n3 = new NewEntity("n3", DependsOnNothing);
+		n2->back().place(n3);
+		NewEntity* n4 = new NewEntity("n4", DependsOnNothing);
+		n3->back().place(n4);
+		qDebug() << activity;
+		FAILED_IF(activity != "");
+		
+		n1->addDependency(n4);
+		n1->addDependency(n3);
+		qDebug() << activity;
+		FAILED_IF(activity != "");
+		FAILED_IF(!n1->haveDependency(n4));
+		FAILED_IF(!n1->haveDependency(n3));
+		
+		activity.clear();
+		n4->changed(8);
+		qDebug() << activity;
+		FAILED_IF(activity != "n1C8n4 ");
+		
+		activity.clear();
+		n3->changed(7);
+		qDebug() << activity;
+		FAILED_IF(activity != "n1C7n3 ");
+		
+		activity.clear();
+		n4->move(Nowhere);
+		n4->changed(8);
+		qDebug() << activity;
+		FAILED_IF(activity != "n1C8n4 ");
+		
+		activity.clear();
+		n3->changed(7);
+		qDebug() << activity;
+		FAILED_IF(activity != "n1C7n3 ");
+		
+		activity.clear();
+		n4->killAndDeleteWithNotification();
+		qDebug() << activity;
+		FAILED_IF(activity != "n1-n4 ");
+		FAILED_IF(n1->haveDependency(n4));
 	}
 
 	qInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);

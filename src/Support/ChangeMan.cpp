@@ -55,7 +55,7 @@ bool ChangeMan::changed(Dependee* _changer, int _aspect)
 	foreach (Depender* d, e->childrenOf<Depender>())
 		if (d->botherNotifying() && d->familyDependencies() & Depender::DependsOnParent)
 			m_changeQueue << Entry(d, _aspect, e);
-	if (Depender* d = e->tryParentAs<Depender>())
+	if (Depender* d = e->tryParent<Depender>())
 		if (d->botherNotifying() && d->familyDependencies() & Depender::DependsOnChildren)
 			m_changeQueue << Entry(d, _aspect, e);
 	QList<Entity*> es;

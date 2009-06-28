@@ -451,8 +451,7 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 			}
 			if (m_strobeCreation)
 			{
-				m_strobeCreation->oneFootInTheGrave();
-				// Other notifications?
+				// Notifications?
 				m_strobeCreation->killAndDelete();
 			}
 			

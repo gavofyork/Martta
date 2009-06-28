@@ -20,24 +20,17 @@
 
 #pragma once
 
-#include "Dier.h"
-#include "ChangeMan.h"
+#include "Meta.h"
 
 namespace Martta
 {
 
-class Dependee: virtual public Dier
+class Dier
 {
-	MARTTA_INTERFACE
-
 protected:
-	/// To be called when something about the object has changed. Notifies dependents.
-	/// If _aspect & Visually then it calls a relayoutLater().
-	bool								changed(int _aspect = ChangeMan::AllAspects) { return ChangeMan::get()->changed(this, _aspect); }
-
-	virtual void						oneFootInTheGrave() { ChangeMan::get()->oneFootInTheGrave(this); }
+	virtual void						oneFootInTheGrave() {}
 	
-	virtual ~Dependee() { ChangeMan::get()->dead(this); }
+	virtual ~Dier() {}
 };
 
 }
