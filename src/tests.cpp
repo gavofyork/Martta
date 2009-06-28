@@ -112,11 +112,11 @@ int test()
 		s_asserted = 0;
 	}
 	
-//	failed += supportTests();
+	failed += supportTests();
 	TEST("Auxilliaries Initialisation")
 		AuxilliaryRegistrar::get()->jigCache();
-//	failed += coreTests();
-//	failed += typeTests();
+	failed += coreTests();
+	failed += typeTests();
 	
 	enum { DependsOnNothing = 0, DependsOnParent = 1, DependsOnChildren = 2, DependsOnBoth = 3, DependsOnIndex = 4, TestOnOrder = 8, DependsOnChildOrder = DependsOnChildren | TestOnOrder };
 	TEST("Change system: Family dependencies changing, inert")
@@ -303,7 +303,7 @@ int test()
 	s_testing = false;
 	qInformation() << "PASSED :-)";
 	
-	exit(failed);
+//	exit(failed);
 	return failed;
 }
 

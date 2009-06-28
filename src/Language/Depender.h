@@ -21,11 +21,16 @@
 #pragma once
 
 #include "Kind.h"
+#include "Dependee.h"
 #include "Familial.h"
 #include "ChangeMan.h"
 
 namespace Martta
 {
+
+class CodeScene;
+class ModifyingType;
+class InsertionPoint;
 
 class Depender: public_interface Familial
 {
@@ -33,7 +38,9 @@ class Depender: public_interface Familial
 	MARTTA_INHERITS(Familial, 0)
 
 	friend class ChangeMan;
-
+	friend class CodeScene; //TODO Remove this and move broken code into Entity.
+	friend class ModifyingType; //TODO Remove this and move broken code into Entity.
+	friend class InsertionPoint; //TODO Remove this and move broken code into Entity.
 protected:
 	// How we react to changes.
 
@@ -55,18 +62,18 @@ protected:
 	/// - The object fulfilling an ancestral dependency has changed, though both are non-null (_e is the old ancestor).
 	/// - A family member is replaced, and there is a family dependency (_e is the new family member).
 	/// @note By default, it just called the onDependencyChanged() method. 
-	virtual void						onDependencySwitched(Entity* _e, Entity* /*_old*/) { onDependencyChanged(ChangeMan::AllAspects, _e); }
+	virtual void						onDependencySwitched(Entity* _e, Entity* /*_old*/) { onDependencyChanged(Dependee::AllAspects, _e); }
 	/// Called when familyDependencies includes DependsOnChildOrder and:
 	/// - A child entity has had its index changed (usually through the insertion of another child at an earlier
 	/// position).
 	/// @note By default, it just called the onDependencyChanged() method. 
-	virtual void						onChildMoved(Entity* _e, int /*_oldIndex*/) { onDependencyChanged(ChangeMan::AllAspects, _e); }
+	virtual void						onChildMoved(Entity* _e, int /*_oldIndex*/) { onDependencyChanged(Dependee::AllAspects, _e); }
 	/// Called when:
 	/// - A new parent is set where before it was null and parent is a family dependency (_e is the new parent).
 	/// - A new dependent ancestor is set where before it was null (_e is the new ancestor).
 	/// - A new child is added and children are a family dependency (_e is the child).
 	/// @note By default, it just called the onDependencyChanged() method. 
-	virtual void						onDependencyAdded(Entity* _e) { onDependencyChanged(ChangeMan::AllAspects, _e); }
+	virtual void						onDependencyAdded(Entity* _e) { onDependencyChanged(Dependee::AllAspects, _e); }
 	/// Called when:
 	/// - The null parent is set where there was one before and parent is a family dependency (_e is the old parent).
 	/// - A child is removed and children are a family dependency (_e is the old child).
@@ -118,6 +125,7 @@ protected:
 	virtual void						parentAdded() { ChangeMan::get()->parentAdded(this); }
 	virtual void						parentSwitched(Entity* _exParent) { ChangeMan::get()->parentSwitched(this, _exParent); }
 	virtual void						parentRemoved(Entity* _exParent) { ChangeMan::get()->parentRemoved(this, _exParent); }
+	virtual void						dependencySwitched(Entity* _currentDependency, Entity* _exDependency) { ChangeMan::get()->dependencySwitched(this, _currentDependency, _exDependency); }
 };
 
 }

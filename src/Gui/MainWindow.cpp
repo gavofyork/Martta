@@ -355,15 +355,15 @@ void MainWindow::on_actShowFirstChange_triggered()
 
 void MainWindow::on_actRemoveFirstChange_triggered()
 {
-	if (s_changes.size())
-		s_changes.removeFirst();
-	codeView->update();
+//	if (s_changes.size())
+//		s_changes.removeFirst();
+//	codeView->update();
 }
 
 void MainWindow::on_actClearChanges_triggered()
 {
-	clearChanges();
-	codeView->update();
+//	clearChanges();
+//	codeView->update();
 }
 
 void MainWindow::on_actNewCProject_triggered()

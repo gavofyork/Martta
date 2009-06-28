@@ -40,13 +40,6 @@ int s_deletes = 0;
 	
 MARTTA_PLACEHOLDER_CPP(Entity);
 
-QList<ChangeEntry> s_changes;
-void change(Entity* _s, ChangeOperation _op, Entity* _o)
-{
-	static const QStringList ops = QStringList() << "EntityChanged" << "ChildrenInitialised" << "DependencyAdded" << "DependencyRemoved" << "DependencyChanged" << "DependencySwitched" << "ChildMoved" << "ContextIndexChanged";
-	s_changes << ChangeEntry(_s, _op, _o);
-}
-
 QString Entity::indexName(int _i) const
 {
 	if (_i == UndefinedIndex)
@@ -227,9 +220,6 @@ void Entity::kill(Entity* _substitute)
 	if (_substitute)
 		rewirePointer(_substitute);
 	silentRemove();
-	foreach (Entity* i, m_dependencies)
-		removeDependency(i);
-	clearDependents();
 }
 void Entity::clearEntities()
 {
@@ -745,112 +735,18 @@ void Entity::checkRoot()
 		e->checkRoot();
 }
 
-// Freeform dependency management.
-QList<Entity*> Entity::dependencies() const
-{
-	if (!isInModel())
-		return QList<Entity*>();
-	QSet<Entity*> ret = m_dependencies;
-	foreach (Entity* e, children())
-		if (familyDependencies() & DependsOnChildren)
-			ret << e;
-	if (familyDependencies() & DependsOnParent)
-		ret << parent();
-	return ret.values();
-}
-QList<Entity*> Entity::dependents() const
-{
-	if (!isInModel())
-		return QList<Entity*>();
-	QList<Entity*> ret = m_dependents;
-	foreach (Entity* e, children())
-		if (e->familyDependencies() & DependsOnParent)
-			ret << e;
-	if (parent() && (parent()->familyDependencies() & DependsOnChildren))
-		ret << parent();
-	return ret;
-}
-void Entity::clearDependents()
-{
-	foreach (Entity* i, m_dependents)
-	{
-		i->removeDependency(this);
-		i->dependencyRemoved(this);
-	}
-}
-void Entity::addDependency(Entity* _e)
-{
-	if (_e && !m_dependencies.contains(_e))
-	{
-		m_dependencies << _e;
-		_e->m_dependents << this;
-	}
-}
-void Entity::removeDependency(Entity* _e)
-{
-	if (_e && m_dependencies.contains(_e))
-	{
-		m_dependencies.remove(_e);
-		_e->m_dependents.removeAt(_e->m_dependents.indexOf(this));
-	}
-}
-void Entity::removeAllDependencies()
-{
-	foreach (Entity* i, m_dependencies)
-	{
-		m_dependencies.remove(i);
-		i->m_dependents.removeAt(i->m_dependents.indexOf(this));
-	}
-}
-void Entity::updateAncestralDependencies()
-{
-	int i = 0;
-	foreach (Kind k, ancestralDependencies())
-	{
-		Entity* oa = (i < m_ancestralDependencies.size()) ? m_ancestralDependencies[i] : 0;
-		Entity* na = ancestor(k);
-		if (oa != na)
-		{
-			// Ancestor changed...
-			removeDependency(oa);
-			addDependency(na);
-			
-			if (na && !oa)
-				dependencyAdded(na);
-			else if (!na && oa)
-				dependencyRemoved(oa);
-			else
-				dependencySwitched(na, oa);
-			
-			if (i == m_ancestralDependencies.size())
-				m_ancestralDependencies << na;
-			else if (i < m_ancestralDependencies.size())
-				m_ancestralDependencies[i] = na;
-			else
-				M_ASSERT(0);
-		}
-		i++;
-	}
-}
 void Entity::changed(int _aspects)
 {
-	if (!isInModel() || m_notifiedOfChange&_aspects == _aspects)
+	if (!isInModel())
 		return;
-	int oldNOC = m_notifiedOfChange;
-	m_notifiedOfChange |= _aspects;
-	m_rootEntity->setChanged();
-	if (!isEditing())
-		checkForCullingLater();
-	
-	if (_aspects & Visually)
-		relayoutLater();
-	change(this, EntityChanged);
-	foreach (Entity* e, dependents())
+	if (Dependee::changed(_aspects))
 	{
-		change(e, DependencyChanged, this);
-		e->onDependencyChanged(this);
+		m_rootEntity->setChanged();
+		if (!isEditing())
+			checkForCullingLater();
+		if (_aspects & Visually)
+			relayoutLater();
 	}
-	m_notifiedOfChange = oldNOC;
 }
 
 InsertionPoint Entity::firstFor(Kind const& _k)
@@ -976,14 +872,6 @@ bool Entity::removeInvalidChildren()
 			m_cardinalChildren[i]->deleteAndRefill();
 		}
 	return ret;
-}
-
-void Entity::childMoved(Entity* _e, int _oI)
-{
-	if (_e->botherNotifying() && _e->familyDependencies() & DependsOnIndex)
-		_e->indexChanged(_oI);
-	if (botherNotifying() && familyDependencies() & TestOnOrder)
-		notifyOfChildMove(_e, _oI);
 }
 
 void Entity::move(InsertionPoint const& _newPosition)
@@ -1177,92 +1065,6 @@ void Entity::deleteAndRefill(Entity* _e, bool _moveToGrave)
 	}
 	if (_moveToGrave)
 		p.nearestEntity()->setCurrent();
-}
-
-void Entity::onChildrenInitialised()
-{
-	foreach (Entity* c, children())
-		onDependencyAdded(c);
-}
-//****************************************************************
-//****************************************************************
-//****************************************************************
-//****************************************************************
-//
-// The actual notification code.
-//
-//****************************************************************
-//****************************************************************
-//****************************************************************
-//****************************************************************
-void Entity::childAdded(int _index)
-{
-	if (_index >= 0 && _index < m_cardinalChildren.size() && familyDependencies() & DependsOnChildren)
-	{
-		if (botherNotifying())
-			dependencyAdded(m_cardinalChildren[_index]);
-		if (_index >= 0)
-			for (int i = _index + 1; i < cardinalChildCount(); i++)
-				childMoved(child(i), i - 1);
-	}
-	else if (botherNotifying() && m_cardinalChildren.size() && familyDependencies() & DependsOnChildren)
-	{
-		dependencyAdded(m_cardinalChildren.last());
-	}
-	if (isInModel())
-		// This would be a relayoutLater() call, except we know the child will call that, so we can optimise thus:
-		resetLayoutCache();
-}
-void Entity::childrenInitialised()
-{
-	if (botherNotifying() && familyDependencies() & DependsOnChildren)
-	{
-		change(this, EntityChildrenInitialised, 0);
-		onChildrenInitialised();
-	}
-/*	else
-		qDebug() << "Not bothering to notify (" << botherNotifying() << " - " << isComplete() << ")";
-*/	if (isInModel())
-		resetLayoutCache();
-}
-void Entity::childSwitched(Entity* _ch, Entity* _old)
-{
-	if (botherNotifying() && _ch && familyDependencies() & DependsOnChildren)
-		dependencySwitched(_ch, _old);
-}
-void Entity::childRemoved(Entity* _ch, int _index)
-{
-	if (_ch && familyDependencies() & DependsOnChildren)
-	{
-		if (botherNotifying())
-			dependencyRemoved(_ch, _index);
-		if (_index >= 0)
-			for (int i = _index; i < cardinalChildCount(); i++)
-				childMoved(child(i), i + 1);
-	}
-	if (isInModel())
-		relayoutLater();
-}
-void Entity::parentAdded()
-{
-	if (botherNotifying() && m_parent && familyDependencies() & DependsOnParent)
-		dependencyAdded(m_parent);
-	updateAncestralDependencies();
-	if (isInModel())
-		relayoutLater();
-}
-void Entity::parentSwitched(Entity* _old)
-{
-	if (botherNotifying() && familyDependencies() & DependsOnParent)
-		dependencySwitched(m_parent, _old);
-	updateAncestralDependencies();
-	relayoutLater();
-}
-void Entity::parentRemoved(Entity* _old)
-{
-	if (botherNotifying() && _old && familyDependencies() & DependsOnParent)
-		dependencyRemoved(_old);
-	updateAncestralDependencies();
 }
 
 }

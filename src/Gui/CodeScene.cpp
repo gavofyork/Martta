@@ -322,7 +322,7 @@ void CodeScene::paintEvent(QPaintEvent*)
 			p.setPen(QColor(160, 160, 160, 64));
 			p.drawRect(br);
 		}
-		if (m_hover && m_showDependencyInfo)
+/*		if (m_hover && m_showDependencyInfo)
 		{
 			p.setBrush(Qt::NoBrush);
 			p.setPen(QColor(0, 255, 0, 128));
@@ -341,7 +341,7 @@ void CodeScene::paintEvent(QPaintEvent*)
 					QRectF br = bounds(i);
 					p.drawRect(br);
 				}
-		}
+		}*/
 	}
 	
 	p.drawPicture(0, 0, m_pictures[m_subject]);
@@ -355,7 +355,7 @@ void CodeScene::paintEvent(QPaintEvent*)
 	p.drawRect(br + 2.f);
 	p.setPen(QColor(0, 0, 0, 8));
 	p.drawRect(br + 3.f);
-
+/*
 	if (m_showChanges || m_showOneChange)
 		foreach (ChangeEntry i, m_showOneChange ? changes().mid(0, 1) : changes())
 			if (isInScene(i.m_subject))
@@ -384,7 +384,7 @@ void CodeScene::paintEvent(QPaintEvent*)
 					p.setPen(QPen(QColor(255, 255, 255, 128), 2.f));
 					p.drawRect(obr);
 				}
-			}
+			}*/
 }
 
 Entity* CodeScene::editEntity() const

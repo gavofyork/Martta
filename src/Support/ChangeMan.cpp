@@ -175,6 +175,17 @@ void ChangeMan::childSwitched(Depender* _this, Entity* _ch, Entity* _old)
 	processQueue();
 }
 
+void ChangeMan::dependencySwitched(Depender* _this, Entity* _currentDependency, Entity* _exDependency)
+{
+	Dependee* dee = _currentDependency->asKind<Dependee>();
+	M_ASSERT(dee);
+	M_ASSERT(_exDependency);
+	M_ASSERT(m_dependees.contains(_this, dee));
+	if (_this->botherNotifying())
+		m_changeQueue << Entry(_this, DependencySwitched, _currentDependency, _exDependency);
+	processQueue();
+}
+
 void ChangeMan::childRemoved(Depender* _this, Entity* _old, int _index)
 {
 	M_ASSERT(_old);

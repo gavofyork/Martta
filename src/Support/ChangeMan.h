@@ -31,8 +31,6 @@ class Dependee;
 class ChangeMan
 {
 public:
-	enum { Logically = 0x0001, Visually = 0x0002, UserAspect = Visually << 1, AllAspects = 0xffff };
-	
 	enum Operation
 	{
 		DependencyChanged,
@@ -86,6 +84,7 @@ public:
 	virtual void						parentAdded(Depender* _this);
 	virtual void						parentSwitched(Depender* _this, Entity* _exParent);
 	virtual void						parentRemoved(Depender* _this, Entity* _exParent);
+	virtual void						dependencySwitched(Depender* _this, Entity* _currentDependency, Entity* _exDependency);
 
 	/// Adds a dependency.
 	/// Note this will *not* call onDependencyAdded(_e) for you. You must call it yourself if you want it to run.

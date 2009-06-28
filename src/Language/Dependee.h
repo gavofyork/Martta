@@ -30,10 +30,13 @@ class Dependee: virtual public Dier
 {
 	MARTTA_INTERFACE
 
+public:
+	enum { Logically = 0x0001, Visually = 0x0002, UserAspect = Visually << 1, AllAspects = 0xffff };
+	
 protected:
 	/// To be called when something about the object has changed. Notifies dependents.
 	/// If _aspect & Visually then it calls a relayoutLater().
-	bool								changed(int _aspect = ChangeMan::AllAspects) { return ChangeMan::get()->changed(this, _aspect); }
+	bool								changed(int _aspect = Dependee::AllAspects) { return ChangeMan::get()->changed(this, _aspect); }
 
 	virtual void						oneFootInTheGrave() { ChangeMan::get()->oneFootInTheGrave(this); }
 	
