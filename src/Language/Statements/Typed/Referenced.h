@@ -46,7 +46,6 @@ public:
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
 
 protected:
-	virtual bool						onChanged();
 	virtual bool						isInValidState() const;
 	virtual QString						defineLayout(ViewKeys&) const;
 	virtual void						decorate(DecorationContext const& _c) const;
@@ -56,7 +55,7 @@ protected:
 	virtual void						importDom(QDomElement const& _element);
 	virtual void						apresLoad() { addDependency(m_subject->self()); Super::apresLoad(); }
 	virtual Kinds						ancestralDependencies() const;
-	virtual void						onDependencyChanged(Entity*) { changed(); }
+	virtual void						onDependencyChanged(Entity*) { if (m_subject) changed(); }
 	
 	ModelPtr<ValueDefiner>				m_subject;
 	bool								m_specific;

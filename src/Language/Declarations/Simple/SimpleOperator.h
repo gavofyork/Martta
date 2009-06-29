@@ -31,7 +31,7 @@ class SimpleOperator: public Simple
 	MARTTA_OBJECT(Simple)
 	
 public:
-	template<class T> static SimpleOperator* create(Operator _o, Type const& _returns, Types const& _args, RootEntity* _root)
+	template<class T> static SimpleOperator* create(Operator _o, Type const& _returns, Types const& _args, BasicRoot* _root)
 	{
 		SimpleOperator* s = new SimpleOperator;
 		s->construct(T::s_nonMembers.count(), _o, _returns, _args, _root, T::staticAuxilliary()->name());
@@ -40,9 +40,11 @@ public:
 	}
 	virtual Operator					id() const { return m_operator; }
 	virtual QString						key() const { return "@" + m_key + "@N" + QString::number(m_myId); }
+	
+	virtual void						destruct();
 
 private:
-	void								construct(int _id, Operator _o, Type const& _returns, Types const& _args, RootEntity* _root, char const* _key);
+	void								construct(int _id, Operator _o, Type const& _returns, Types const& _args, BasicRoot* _root, char const* _key);
 	
 	Operator							m_operator;
 };

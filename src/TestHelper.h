@@ -20,28 +20,44 @@
 
 #pragma once
 
-#include "ValueDefiner.h"
-#include "DeclarationEntity.h"
+#include <QDebug>
 
-namespace Martta
-{
+#include "Common.h"
+using namespace Martta;
 
-class Simple: public DeclarationEntity, public_interface ValueDefiner
+class TestHelper
 {
-	MARTTA_OBJECT(DeclarationEntity)
-	MARTTA_INHERITS(ValueDefiner, 0)
-	
 public:
-	virtual Type						type() const { return *childAs<TypeEntity>(0); }
-
-	// Use this instead of deleting it or you'll have to unregister them explicitly.
-	virtual void						destruct();
-
-protected:
-	void								construct(TypeEntity const* _scope, int _id, bool _isConst, Type const& _returns, Types const& _args, BasicRoot* _root, char const* _key);
+	TestHelper(char const* _n, int* _c):
+		m_name			(_n),
+		m_failed		(false),
+		m_done			(false),
+		m_oldAsserted	(s_asserted),
+		m_failedCounter	(_c)
+	{
+		s_asserted = false;
+		qInformation() << "Testing" << m_name;
+	}
+	~TestHelper()
+	{
+		if (m_failed || s_asserted)
+		{
+			qInformation() << "FAILED! " << s_asserted;
+			exit(1);
+			(*m_failedCounter)++;
+		}
+		s_asserted = m_oldAsserted;
+	}
+	void failed() { m_failed = true; }
+	bool isDone() const { return m_done; }
+	void done() { m_done = true; }
 	
-	QString								m_key;
-	int									m_myId;
+private:
+	char const* m_name;
+	bool m_failed;
+	bool m_done;
+	char const* m_oldAsserted;
+	int* m_failedCounter;
 };
-
-}
+#define TEST(S) for (TestHelper _h(S, &failed); !_h.isDone(); _h.done()) 
+#define FAILED_IF(X) if (X) _h.failed(); else (void)0

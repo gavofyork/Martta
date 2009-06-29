@@ -94,6 +94,11 @@ private:
 
 }
 
+inline uint qHash(Martta::Kind const& _k)
+{
+	return qHash(_k.auxilliary());
+}
+
 inline bool Martta::Kind::isKind(Kinds const& _bases) const
 {
 	return _bases.containsBaseOf(*this);

@@ -41,7 +41,7 @@
 #include "FunctionType.h"
 #include "Memberify.h"
 #include "Reference.h"
-#include "RootEntity.h"
+#include "BasicRoot.h"
 #include "TextLabel.h"
 #include "DeclarationsHandler.h"
 

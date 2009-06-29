@@ -20,28 +20,27 @@
 
 #pragma once
 
-#include "ValueDefiner.h"
-#include "DeclarationEntity.h"
+#include "Dier.h"
+#include "ChangeMan.h"
 
 namespace Martta
 {
 
-class Simple: public DeclarationEntity, public_interface ValueDefiner
+class Dependee: virtual public Dier
 {
-	MARTTA_OBJECT(DeclarationEntity)
-	MARTTA_INHERITS(ValueDefiner, 0)
-	
+	MARTTA_INTERFACE
+
 public:
-	virtual Type						type() const { return *childAs<TypeEntity>(0); }
-
-	// Use this instead of deleting it or you'll have to unregister them explicitly.
-	virtual void						destruct();
-
-protected:
-	void								construct(TypeEntity const* _scope, int _id, bool _isConst, Type const& _returns, Types const& _args, BasicRoot* _root, char const* _key);
+	enum { Logically = 0x0001, Visually = 0x0002, UserAspect = Visually << 1, AllAspects = 0xffff };
 	
-	QString								m_key;
-	int									m_myId;
+protected:
+	/// To be called when something about the object has changed. Notifies dependents.
+	/// If _aspect & Visually then it calls a relayoutLater().
+	bool								changed(int _aspect = Dependee::AllAspects) { return ChangeMan::get()->changed(this, _aspect); }
+
+	virtual void						oneFootInTheGrave() { ChangeMan::get()->oneFootInTheGrave(this); }
+	
+	virtual ~Dependee() { ChangeMan::get()->dead(this); }
 };
 
 }

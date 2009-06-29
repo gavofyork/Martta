@@ -34,7 +34,7 @@
 #include "StringType.h"
 #include "Memberify.h"
 #include "Const.h"
-#include "RootEntity.h"
+#include "BasicRoot.h"
 #include "EditDelegate.h"
 #include "Reference.h"
 #include "CodeScene.h"
@@ -95,14 +95,6 @@ Referenced::Referenced(ValueDefiner* _v, bool _specific):
 bool Referenced::isSuperfluous() const
 {
 	return m_subject.isNull() || Super::isSuperfluous();
-}
-
-bool Referenced::onChanged()
-{
-	Super::onChanged();
-	checkForCullingLater();
-	updateAncestralDependencies();
-	return true;
 }
 
 QString Referenced::code() const

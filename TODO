@@ -1,4 +1,7 @@
+BUG - for a double?
+BUG long double?
 TODO Get rid of DE/Id deps.
+TODO Get rid of Root::get() static singleton crap.
 TODO Statements to reject placeholders.
 TODO inherited methods don't work.
 TODO optimise Class.
@@ -6,6 +9,9 @@ TODO special EntryMethod
 TODO virtual interface
 TODO virtual overload
 TODO anonymous -> metasyntactic variable
+TODO InsertionPoint -> Position
+
+TODO Look into Dynagraph/Boost or GraphViz for graphing the code.
 
 TODO references leave hopeful names behind when invalid
 TODO same with invocations when function arg is deleted, return when return type is removed.

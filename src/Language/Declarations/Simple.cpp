@@ -22,7 +22,7 @@
 #include "Memberify.h"
 #include "Type.h"
 #include "Reference.h"
-#include "RootEntity.h"
+#include "BasicRoot.h"
 #include "Simple.h"
 
 namespace Martta
@@ -30,7 +30,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(Simple);
 
-void Simple::construct(TypeEntity const* _scope, int _id, bool _isConst, Type const& _returns, Types const& _args, RootEntity* _root, char const* _key)
+void Simple::construct(TypeEntity const* _scope, int _id, bool _isConst, Type const& _returns, Types const& _args, BasicRoot* _root, char const* _key)
 {
 	m_key = _key;
 	m_myId = _id;
@@ -53,9 +53,10 @@ void Simple::construct(TypeEntity const* _scope, int _id, bool _isConst, Type co
 	rootEntity()->registerDeclaration(this);
 }
 
-Simple::~Simple()
+void Simple::destruct()
 {
 	rootEntity()->unregisterDeclaration(this);
+	delete this;
 }
 
 }

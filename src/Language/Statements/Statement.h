@@ -49,8 +49,13 @@ public:
 	Typed*								asTyped(int _i) const;
 	Type								typeOf(int _i) const;
 	
-	virtual bool						onChanged() { foreach (Entity* i, children()) i->relayoutLater(); return Super::onChanged(); }
-
+	void								changed(int _aspect = AllAspects)
+	{
+		foreach (Entity* i, children())
+			i->relayoutLater(); 
+		Super::changed(_aspect);
+	}
+	
 protected:
 	virtual QList<int> const&			defineDeclarationOrder() const { static const QList<int> r; return r; }
 	virtual void						appendDefinedUptoHere(int, QList<ValueDefiner*>*) const;

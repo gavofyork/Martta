@@ -23,6 +23,10 @@
 
 #include "tests.h"
 #include "MainWindow.h"
+namespace Martta
+{
+extern int g_typeCount;
+}
 using namespace Martta;
 
 int main(int argc, char *argv[])

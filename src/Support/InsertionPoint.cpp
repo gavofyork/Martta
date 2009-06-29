@@ -46,14 +46,20 @@ Entity* InsertionPoint::spawnPreparedSilent() const
 
 Entity* InsertionPoint::spawnPrepared() const
 {
-	Entity* ret = spawnPreparedSilent();
-	if (m_parent)
-		m_parent->childAdded(ret);
-	ret->parentAdded();
+	Entity* ret = Entity::spawn(allowedKinds().commonBase().name());
+	ret->prepareChildren();
+	insert(ret);
 	return ret;
 }
 
 Entity* InsertionPoint::place(Entity* _e) const
+{
+	M_ASSERT(_e);
+	_e->put(*this);
+	return _e;
+}
+
+Entity* InsertionPoint::insert(Entity* _e) const
 {
 	M_ASSERT(_e);
 	_e->move(*this);

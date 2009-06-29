@@ -23,7 +23,7 @@
 #include "FunctionType.h"
 #include "Reference.h"
 #include "Const.h"
-#include "RootEntity.h"
+#include "BasicRoot.h"
 #include "Memberify.h"
 #include "MemberTemplateType.h"
 #include "SimpleMethod.h"
@@ -46,7 +46,7 @@ bool HashType::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEve
 
 void HashType::initialiseClass()
 {
-	RootEntity* root = RootEntity::get();
+	BasicRoot* root = BasicRoot::get();
 	
 	Type k = Type(MemberTemplateType(KeyType));
 	Type kr = Type(k).topWith(Reference());
@@ -110,9 +110,9 @@ void HashType::initialiseClass()
 void HashType::finaliseClass()
 {
 	while (s_members.size())
-		delete s_members.takeLast();
+		s_members.takeLast()->destruct();
 	while (s_nonMembers.size())
-		delete s_nonMembers.takeLast();
+		s_nonMembers.takeLast()->destruct();
 }
 
 Types HashType::assignableTypes() const

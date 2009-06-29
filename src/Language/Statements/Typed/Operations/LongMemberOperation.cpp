@@ -23,7 +23,7 @@
 #include "Reference.h"
 #include "Const.h"
 #include "Pointer.h"
-#include "RootEntity.h"
+#include "BasicRoot.h"
 #include "ExplicitType.h"
 #include "FunctionType.h"
 #include "Memberify.h"

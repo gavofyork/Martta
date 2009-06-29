@@ -44,7 +44,6 @@ protected:
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
 	virtual QString						defineLayout(ViewKeys&) const;
 	QString								callList(QList<Typed*> _parameters) const;
-	virtual bool						onChanged() { Super::onChanged(); validifyChildren(); return true; }
 	virtual int							familyDependencies() const { return Super::familyDependencies() | DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity* _e);
 };

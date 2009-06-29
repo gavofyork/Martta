@@ -322,7 +322,7 @@ void CodeScene::paintEvent(QPaintEvent*)
 			p.setPen(QColor(160, 160, 160, 64));
 			p.drawRect(br);
 		}
-		if (m_hover && m_showDependencyInfo)
+/*		if (m_hover && m_showDependencyInfo)
 		{
 			p.setBrush(Qt::NoBrush);
 			p.setPen(QColor(0, 255, 0, 128));
@@ -341,7 +341,7 @@ void CodeScene::paintEvent(QPaintEvent*)
 					QRectF br = bounds(i);
 					p.drawRect(br);
 				}
-		}
+		}*/
 	}
 	
 	p.drawPicture(0, 0, m_pictures[m_subject]);
@@ -355,7 +355,7 @@ void CodeScene::paintEvent(QPaintEvent*)
 	p.drawRect(br + 2.f);
 	p.setPen(QColor(0, 0, 0, 8));
 	p.drawRect(br + 3.f);
-
+/*
 	if (m_showChanges || m_showOneChange)
 		foreach (ChangeEntry i, m_showOneChange ? changes().mid(0, 1) : changes())
 			if (isInScene(i.m_subject))
@@ -384,7 +384,7 @@ void CodeScene::paintEvent(QPaintEvent*)
 					p.setPen(QPen(QColor(255, 255, 255, 128), 2.f));
 					p.drawRect(obr);
 				}
-			}
+			}*/
 }
 
 Entity* CodeScene::editEntity() const
@@ -426,16 +426,19 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 		{
 			// TODO: Move this stuff to the EKE's notifyStrobeCreation... This will avoid having to test the child for originality.
 			if (sCrPoint)
-				m_strobeCreation->commitMove(sCrPoint);
+				m_strobeCreation->commitMove(sCrPoint);	// Commit the move out of the model if there was a prior-creation to move away.
+				
 			// If the child wasn't replaced by something else.
 			if (m_strobeChild == originalStrobeChild && sChPoint)	// && c because we only need to move the strobeChild if there was a strobe creation (before, anyways).
 			{
-				m_strobeChild->commitMove(sChPoint);
-				m_strobeChild->parentSwitched(m_strobeCreation);
-				m_strobeChild->parent()->childSwitched(m_strobeChild, m_strobeCreation);
+//				m_strobeChild->commitMove(sChPoint);	// BROKEN: m_strobeChild has already been moved to become the next creation's child - we should have commited it prior to that happening.
+				m_strobeChild->notifyOfStrobe(m_strobeCreation);
 			}
 			if (m_strobeCreation)
+			{
+				// Notifications?
 				m_strobeCreation->killAndDelete();
+			}
 			
 			if (e.strobeChild())
 			{

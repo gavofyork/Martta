@@ -24,7 +24,7 @@
 #include "Reference.h"
 #include "Const.h"
 #include "Pointer.h"
-#include "RootEntity.h"
+#include "BasicRoot.h"
 #include "Memberify.h"
 #include "SimpleMethod.h"
 #include "SimpleOperator.h"
@@ -37,11 +37,11 @@ namespace Martta
 MARTTA_OBJECT_CPP(StringType);
 
 QList<SimpleMethod*> StringType::s_members;
-QList<ValueDefiner*> StringType::s_nonMembers;
+QList<SimpleOperator*> StringType::s_nonMembers;
 
 void StringType::initialiseClass()
 {
-	RootEntity* root = RootEntity::get();
+	BasicRoot* root = BasicRoot::get();
 	
 	Type s = Type(StringType());
 	Type sr = Type(s).topWith(Reference());
@@ -186,9 +186,9 @@ void StringType::initialiseClass()
 void StringType::finaliseClass()
 {
 	while (s_members.size())
-		delete s_members.takeLast();
+		s_members.takeLast()->destruct();
 	while (s_nonMembers.size())
-		delete s_nonMembers.takeLast();
+		s_nonMembers.takeLast()->destruct();
 }
 
 Types StringType::assignableTypes() const

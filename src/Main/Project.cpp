@@ -65,7 +65,8 @@ Project::Project(QString const& _load):
 #ifdef Q_WS_X11
 	m_supportPath = QCoreApplication::applicationDirPath() + "/../support/";
 #endif
-
+	AuxilliaryRegistrar::get()->initialiseClasses();
+	AuxilliaryRegistrar::get()->finaliseClasses();
 	AuxilliaryRegistrar::get()->initialiseClasses();
 		
 	if (QFile::exists(m_filename))
@@ -94,6 +95,8 @@ Project::~Project()
 	foreach (QFileInfo i, dir.entryInfoList())
 		QFile::remove(i.fileName());
 	QDir().rmdir(m_tempPath);
+	clear();
+	AuxilliaryRegistrar::get()->finaliseClasses();
 }
 
 void Project::resetAsNew()
@@ -105,7 +108,7 @@ void Project::resetAsNew()
 	m_namespace->prepareChildren();
 	m_declarations.back().place(m_namespace);
 
-	IncludeProject* sc = new IncludeProject("Standard C");
+/*	IncludeProject* sc = new IncludeProject("Standard C");
 #ifdef Q_WS_WIN
 	// TODO: Use .bat file to output & read proper paths for chosen compiler.
 //	sc->addInclude("C:/Program Files/Microsoft Visual Studio .NET 2003/Vc7/include/stdlib.h");
@@ -119,7 +122,7 @@ void Project::resetAsNew()
 
 	m_cDepends.append(sc);
 	reloadHeaders();
-
+*/
 	m_namespace->killAndDelete();
 	m_namespace = new NamespaceEntity;
 	m_declarations.back().place(m_namespace);

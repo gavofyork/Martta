@@ -20,28 +20,26 @@
 
 #pragma once
 
-#include "ValueDefiner.h"
-#include "DeclarationEntity.h"
+#include "Meta.h"
 
 namespace Martta
 {
 
-class Simple: public DeclarationEntity, public_interface ValueDefiner
+class Familial
 {
-	MARTTA_OBJECT(DeclarationEntity)
-	MARTTA_INHERITS(ValueDefiner, 0)
-	
+	MARTTA_INTERFACE
+
 public:
-	virtual Type						type() const { return *childAs<TypeEntity>(0); }
+	virtual void						childrenInitialised() {}
+	virtual void						childAdded(int _newChildsIndex) { (void)(_newChildsIndex); }
+	virtual void						childSwitched(Entity* _currentChild, Entity* _exChild) { (void)(_currentChild); (void)(_exChild); }
+	virtual void						childRemoved(Entity* _exChild, int _exChildsIndex) { (void)(_exChild); (void)(_exChildsIndex); }
+	virtual void						childMoved(Entity* _child, int _originalIndex) { (void)(_child); (void)(_originalIndex); }
+	virtual void						parentAdded() {}
+	virtual void						parentSwitched(Entity* _exParent) { (void)(_exParent); }
+	virtual void						parentRemoved(Entity* _exParent) { (void)(_exParent); }
 
-	// Use this instead of deleting it or you'll have to unregister them explicitly.
-	virtual void						destruct();
-
-protected:
-	void								construct(TypeEntity const* _scope, int _id, bool _isConst, Type const& _returns, Types const& _args, BasicRoot* _root, char const* _key);
-	
-	QString								m_key;
-	int									m_myId;
+	virtual ~Familial() {}
 };
 
 }

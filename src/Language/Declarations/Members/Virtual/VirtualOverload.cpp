@@ -20,7 +20,7 @@
 
 #include <QtXml>
 
-#include "RootEntity.h"
+#include "BasicRoot.h"
 #include "Class.h"
 #include "Compound.h"
 #include "LambdaNamer.h"

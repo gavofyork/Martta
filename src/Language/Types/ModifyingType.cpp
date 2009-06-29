@@ -32,25 +32,15 @@ MARTTA_OBJECT_CPP(ModifyingType);
 
 void ModifyingType::unknit()
 {
+	M_ASSERT(original());
 	if (owner() && &**owner() == this)
 	{
 		M_ASSERT(original()->owner() == owner());
 		M_ASSERT(!parent());
 		owner()->m_top = original();
 	}
-	InsertionPoint p = over();
-	TypeEntity* ch = original();
-	
-	//	P -p-> this -0-> ch    BECOMES    P -p-> ch
-	
-	p.insertSilent(ch);
-	kill();
-	
-	if (p.parent())
-		p.parent()->childSwitched(ch, this);
-	ch->parentSwitched(this);
-	
-	delete this;
+	//	P -i-> this -0-> original    BECOMES    P -i-> original
+	replace(original());
 }
 
 Kinds ModifyingType::allowedKinds(int _index) const

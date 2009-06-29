@@ -65,7 +65,7 @@ public:
 
 	virtual Identifiable*				lookupChild(QString const& _key) const;
 	
-	virtual void						onLeaveScene(RootEntity* _new, RootEntity* _old);
+	virtual void						onLeaveScene(BasicRoot* _new, BasicRoot* _old);
 	
 protected:
 	// These *MUST* be used by any final class in its export/import functions.

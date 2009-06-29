@@ -78,9 +78,19 @@ public:
 	 * required.
 	 *
 	 * Ignores the placeholders (if any) that might exist already at that position.
+	 */
+	Entity*								insert(Entity* _e) const;
+	
+	/**
+	 * Inserts @a _e into the parent's entity list, so it becomes at the position
+	 * required.
+	 *
+	 * Ignores the placeholders (if any) that might exist already at that position.
 	 * 
-	 * Unlike place(), this doesn't call changed(). Make sure you call changed() afterwards
-	 * on all affected entities.
+	 * Unlike place() and insert(), this doesn't issue any notifications. Make sure
+	 * you call any required notifications afterwards on all affected entities.
+	 *
+	 * You'll probably want to use insert/place rather than this generally.
 	 */
 	void								insertSilent(Entity* _e) const;
 

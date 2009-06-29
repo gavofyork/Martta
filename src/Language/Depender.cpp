@@ -18,30 +18,18 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#pragma once
-
-#include "ValueDefiner.h"
-#include "DeclarationEntity.h"
+#include "Entity.h"
+#include "Depender.h"
 
 namespace Martta
 {
 
-class Simple: public DeclarationEntity, public_interface ValueDefiner
+MARTTA_INTERFACE_CPP(Depender);
+
+void Depender::onChildrenInitialised()
 {
-	MARTTA_OBJECT(DeclarationEntity)
-	MARTTA_INHERITS(ValueDefiner, 0)
-	
-public:
-	virtual Type						type() const { return *childAs<TypeEntity>(0); }
-
-	// Use this instead of deleting it or you'll have to unregister them explicitly.
-	virtual void						destruct();
-
-protected:
-	void								construct(TypeEntity const* _scope, int _id, bool _isConst, Type const& _returns, Types const& _args, BasicRoot* _root, char const* _key);
-	
-	QString								m_key;
-	int									m_myId;
-};
+	foreach (Entity* e, self()->children())
+		onDependencyAdded(e);
+}
 
 }

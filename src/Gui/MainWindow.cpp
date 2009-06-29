@@ -75,7 +75,7 @@ MainWindow::MainWindow(QWidget* _p, Qt::WindowFlags _f):
 #ifdef Q_WS_MAC
 	setUnifiedTitleAndToolBarOnMac(true);
 #endif
-	
+
 	updateLanguage();
 }
 
@@ -86,6 +86,14 @@ MainWindow::~MainWindow()
 	s.setValue("mainwindow/state", saveState());
 	s.setValue("mainwindow/geometry", saveGeometry());
 	s.setValue("mainwindow/lastproject", m_project->filename());
+	
+	m_codeScene->setSubject(0);
+	delete m_project;
+	m_project = 0;
+	delete m_program;
+	m_program = 0;
+	delete m_updateTimer;
+	m_updateTimer = 0;
 }
 
 template<class T> void addToLanguage(Kind const& _k, T* _p)
@@ -355,15 +363,15 @@ void MainWindow::on_actShowFirstChange_triggered()
 
 void MainWindow::on_actRemoveFirstChange_triggered()
 {
-	if (s_changes.size())
-		s_changes.removeFirst();
-	codeView->update();
+//	if (s_changes.size())
+//		s_changes.removeFirst();
+//	codeView->update();
 }
 
 void MainWindow::on_actClearChanges_triggered()
 {
-	clearChanges();
-	codeView->update();
+//	clearChanges();
+//	codeView->update();
 }
 
 void MainWindow::on_actNewCProject_triggered()

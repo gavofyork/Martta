@@ -45,7 +45,6 @@ public:
 	enum { Default = FirstNamed, EndOfNamed };
 
 	TypeEntity(): m_owner(0) { g_typeCount++; }
-	TypeEntity(TypeEntity const&): SceneLeaver(), ChildValidifier(), TypedOwner(), Entity() { M_ASSERT(false); }
 	~TypeEntity() { g_typeCount--; }
 	
 	virtual QString						idColour() const { return "#777"; }

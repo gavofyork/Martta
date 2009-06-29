@@ -44,14 +44,13 @@ protected:
 	virtual QString						defineLayout(ViewKeys&) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
 	virtual QList<DeclarationEntity*>	utilised() const;
-	virtual int							notificationRequirements() const { return BeComplete; }
+//	virtual int							notificationRequirements() const { return BeComplete; }
 	virtual void						onDependencyChanged(Entity* _e);
 	virtual void						apresLoad() { rejigDeps(); checkImplicitConstructors(); }
 	virtual void						onDependencyAdded(Entity* _e);
 	virtual void						onDependencyRemoved(Entity* _e, int);
 	// A child has been added to the class somewhere in the middle, probably. Either way we need to rejig deps to get the new access label tracked.
 	virtual void						onDependencySwitched(Entity* _e, Entity*) { onDependencyAdded(_e); }
-	virtual bool						onChanged();
 	virtual void						onChildrenInitialised();
 	virtual bool						hasDefaultConstructor() const;
 	virtual Types						assignableTypes() const;

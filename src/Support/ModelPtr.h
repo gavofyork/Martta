@@ -31,7 +31,7 @@ class ModelPtr: public ModelPtrFace
 {
 public:
 	inline ModelPtr(T* _t = 0): ModelPtrFace(_t) {}
-	inline ModelPtr(QString const& _k, RootEntity* _r): ModelPtrFace(_k, _r) {}
+	inline ModelPtr(QString const& _k, BasicRoot* _r): ModelPtrFace(_k, _r) {}
 	inline ModelPtr(ModelPtr const& _c): ModelPtrFace(_c) {}
 
 	inline ModelPtr& operator=(ModelPtr const& _c) { ModelPtrFace::operator=(_c); return *this; }
