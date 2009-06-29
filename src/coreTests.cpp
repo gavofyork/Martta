@@ -198,6 +198,7 @@ int coreTests()
 	FAILED_IF(Kind::of<BASE>().isKind(Kind::of<DERIVED>())); \
 	FAILED_IF(Kind::of<DERIVED>().isKind(Kind::of<BASE>())); \
 
+	qInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
 	TEST("Entity derivation")
 	{
 		DERIVES_OO(Entity, TestEntity);
@@ -207,6 +208,7 @@ int coreTests()
 		UNRELATED(Entity, TagC);
 		UNRELATED(Entity, TagD);
 	}
+	qInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
 	TEST("Tag derivation")
 	{
 		DERIVES_TO(TagA, TestEntity);
@@ -215,6 +217,7 @@ int coreTests()
 		UNRELATED(TagA, TagC);
 		UNRELATED(TagA, TagD);
 	}
+	qInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
 	TEST("TestEntity derivation")
 	{
 		DERIVES_OO(TestEntity, TestEntityB);
@@ -222,21 +225,25 @@ int coreTests()
 		UNRELATED(TestEntity, TagC);
 		UNRELATED(TestEntity, TagD);
 	}
+	qInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
 	TEST("TagB derivation")
 	{
 		DERIVES_TO(TagB, TestEntityB);
 		UNRELATED(TagB, TagC);
 		DERIVES_TT(TagB, TagD);
 	}
+	qInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
 	TEST("TagC derivation")
 	{
 		DERIVES_TO(TagC, TestEntityB);
 		UNRELATED(TagC, TagD);
 	}
+	qInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
 	TEST("TagD derivation")
 	{
 		DERIVES_TO(TagD, TestEntityB);
 	}
+	qInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
 	TEST("Tag with asKind")
 	{
 		Entity* t = new TestEntity;
@@ -277,6 +284,7 @@ int coreTests()
 		b->killAndDelete();
 		t->killAndDelete();
 	}
+	qInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
 	TEST("Safe pointer assignment")
 	{
 		SafePointer<SPT> p;
@@ -286,6 +294,7 @@ int coreTests()
 		}
 		FAILED_IF(p);
 	}
+	qInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
 	TEST("Safe pointer copying")
 	{
 		SafePointer<SPT> q;
@@ -297,6 +306,7 @@ int coreTests()
 		}
 		FAILED_IF(q);
 	}
+	qInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
 	TEST("Safe pointer construction")
 	{
 		SafePointer<SPT> q;
@@ -307,6 +317,7 @@ int coreTests()
 		}
 		FAILED_IF(q);
 	}
+	qInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
 	TEST("Safe pointer rewiring")
 	{
 		SPT a;
@@ -317,6 +328,7 @@ int coreTests()
 		}
 		FAILED_IF(p);
 	}
+	qInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
 	TEST("Pointer archival/restoration")
 	{
 		BasicRoot* r = new BasicRoot;
@@ -371,6 +383,7 @@ int coreTests()
 		
 		r->killAndDelete();
 	}
+	qInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
 	TEST("Pre-test")
 	{
 		BasicRoot* r = new BasicRoot;
@@ -396,15 +409,19 @@ int coreTests()
 		TEST("Clearing entities (a pointer: " #pos ")") FAILED_IF(a); \
 		TEST("Clearing entities (b pointer: " #pos ")") FAILED_IF(b); \
 	}
+	qInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
 	CLEAR_TEST(0)
+	qInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
 	CLEAR_TEST(TestNegatives::NamedChildA)
+	qInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
 	CLEAR_TEST(TestNegatives::NamedChildB)
+	qInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
 #undef CLEAR_TEST
 #define TEST_FOR(T, X) TEST(T) FAILED_IF(!(X))
 	{
-		BasicRoot* r = new BasicRoot;
+		BasicRoot r;
 		SafePointer<TestNegativesB> a = new TestNegativesB;
-		a->silentMove(r->back());
+		a->silentMove(r.back());
 		TEST_FOR("Negatives: start incomplete", !a->isComplete());
 		a->prepareChildren();
 		TEST_FOR("Negatives: prepareChildren() makes complete", a->isComplete());
@@ -413,19 +430,22 @@ int coreTests()
 		TEST_FOR("Negatives: one B", a->childCountAt(TestNegativesB::NamedChildB) == 1);
 		TEST_FOR("Negatives: two Cs", a->childCountAt(TestNegativesB::NamedChildC) == 2);
 		TEST_FOR("Negatives: no 'D's", a->childCountAt(TestNegativesB::NamedChildC + 1) == 0);
+	qInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
 		a->child(TestNegativesB::NamedChildC)->replace(new Label);
 		TEST_FOR("Negatives: bad replacement makes incomplete", !a->isComplete());
+	qInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
 		a->validifyChildren();
 		TEST_FOR("Negatives: validifyChildren() makes complete", a->isComplete());
+	qInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
 		a->validifyChildren();
 		TEST_FOR("Negatives: 2nd validifyChildren() and still complete", a->isComplete());
-		r->clearEntities();
 	}
+	qInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
 	TEST("Negatives save/load")
 	{
-		BasicRoot* r = new BasicRoot;
+		BasicRoot r;
 		SafePointer<TestNegativesB> a = new TestNegativesB;
-		a->silentMove(r->back());
+		a->silentMove(r.back());
 		a->prepareChildren();
 
 		QDomDocument doc;
@@ -435,20 +455,20 @@ int coreTests()
 		ele.setAttribute("kind", a->kind().name());
 		prj.appendChild(ele);
 		
-		r->archivePtrs();
+		r.archivePtrs();
 		a->exportDom(ele);
 		a->killAndDelete();
-		r->importDom(doc.documentElement());
-		r->restorePtrs();
-		a = r->childAs<TestNegativesB>(0);
+		r.importDom(doc.documentElement());
+		r.restorePtrs();
+		a = r.childAs<TestNegativesB>(0);
 		
 		FAILED_IF(a->cardinalChildCount() != 0);
 		FAILED_IF(a->childCountAt(TestNegativesB::NamedChildA) != 0);
 		FAILED_IF(a->childCountAt(TestNegativesB::NamedChildB) != 1);
 		FAILED_IF(a->childCountAt(TestNegativesB::NamedChildC) != 2);
 		FAILED_IF(a->childCountAt(TestNegativesB::NamedChildC + 1) != 0);
-		r->clearEntities();
 	}
+	qInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
 	
 	return failed;
 }

@@ -120,10 +120,10 @@ int typeTests()
 	
 	TEST("Class creation...")
 	{
-		BasicRoot* r = new BasicRoot;
+		BasicRoot r;
 		Class* X = new Class;
 		X->prepareChildren();
-		r->back().place(X);
+		r.back().place(X);
 		X->changed();
 		FAILED_IF(!X->isValid());
 		foreach (Entity* e, X->children())
@@ -184,11 +184,11 @@ int typeTests()
 	}
 	{
 #define CAST_TEST(F, T, R) TEST("EnumValue Conversion casting... " #F "->" #T) TEST_THIS_CAST(F, T, R)
-		BasicRoot* r = new BasicRoot;
+		BasicRoot r;
 		Enumeration* X = new Enumeration;
 		X->prepareChildren();
 		X->setUnnamed();
-		r->back().place(X);
+		r.back().place(X);
 		EnumValue* Xv = new EnumValue;
 		Xv->prepareChildren();
 		X->back().place(Xv);
@@ -196,7 +196,7 @@ int typeTests()
 		Y->prepareChildren();
 		Y->setNamed();
 		Y->childAs<TextLabel>(Identifiable::Identity)->setText("Y");
-		r->back().place(Y);
+		r.back().place(Y);
 		EnumValue* Yv = new EnumValue;
 		Yv->prepareChildren();
 		Y->back().place(Yv);
@@ -253,19 +253,18 @@ int typeTests()
 	}
 	TEST("Class construction testing.")
 	{
-		BasicRoot* r = new BasicRoot;
+		BasicRoot r;
 		Class* X = new Class;
 		X->prepareChildren();
-		r->back().place(X);
+		r.back().place(X);
 		Type x = Type(X);
-		delete r;
 	}
 	{
 #define CAST_TEST(F, T, R) TEST("Reference casting... " #F "->" #T) TEST_THIS_CAST(F, T, R)
-		BasicRoot* r = new BasicRoot;
+		BasicRoot r;
 		Class* X = new Class;
 		X->prepareChildren();
-		r->back().place(X);
+		r.back().place(X);
 		{
 		Type x = Type(X);
 		Type xr = Type(X).topWith(Reference());
@@ -280,21 +279,19 @@ int typeTests()
 		CAST_TEST(xcr, xr, Unrelated);
 		CAST_TEST(xcr, xcr, Logical);
 		}
-		X->killAndDelete();
-		delete r;
 #undef CAST_TEST
 	}
 	{
 #define CAST_TEST(F, T, R) TEST("Memberify casting... " #F "->" #T) TEST_THIS_CAST(F, T, R)
-		BasicRoot* r = new BasicRoot;
+		BasicRoot r;
 		Class* B = new Class;
 		Class* D = new Class;
 		B->prepareChildren();
 		B->childAs<TextLabel>(Identifiable::Identity)->setText("B");
 		D->prepareChildren();
 		D->childAs<TextLabel>(Identifiable::Identity)->setText("D");
-		r->back().place(B);
-		r->back().place(D);
+		r.back().place(B);
+		r.back().place(D);
 		Base* b = new Base;
 		b->middle(Base::Accessibility).place(new AccessLabel(Public));
 		b->middle(Base::Superclass).place(new ExplicitType(B));
@@ -325,9 +322,6 @@ int typeTests()
 		CAST_TEST(dc, d, Logical);
 		CAST_TEST(dc, dc, Logical);
 		}
-		D->killAndDelete();
-		B->killAndDelete();
-		delete r;
 #undef CAST_TEST
 	}
 	{

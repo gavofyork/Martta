@@ -115,8 +115,11 @@ int test()
 	failed += supportTests();
 	TEST("Auxilliaries Initialisation")
 		AuxilliaryRegistrar::get()->jigCache();
+	qInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
 	failed += coreTests();
+	qInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
 	failed += typeTests();
+	qInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
 	
 	enum { DependsOnNothing = 0, DependsOnParent = 1, DependsOnChildren = 2, DependsOnBoth = 3, DependsOnIndex = 4, TestOnOrder = 8, DependsOnChildOrder = DependsOnChildren | TestOnOrder };
 	TEST("Change system: Family dependencies changing, inert")

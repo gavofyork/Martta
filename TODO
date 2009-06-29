@@ -1,7 +1,6 @@
 BUG - for a double?
 BUG long double?
-BUG 'M' doesn't make class change.
-TODO Check memory leak in tests.
+BUG Check memory leak in tests.
 TODO Get rid of DE/Id deps.
 TODO Get rid of Root::get() static singleton crap.
 TODO Statements to reject placeholders.

@@ -792,14 +792,13 @@ InsertionPoint Entity::firstFor(Kind const& _k)
 bool Entity::validifyChild(int _i, int* _added)
 {
 	bool ret = false;
-	for (QHash<int, Entity*>::Iterator j = m_namedChildren.find(_i); j != m_namedChildren.end() && j.key() == _i;)
-		if (!j.value()->isAllowed())
+	
+	foreach (Entity* e, m_namedChildren.values(_i))
+		if (!e->isAllowed())
 		{
-			j = m_namedChildren.erase(j);
-			ret = true;
+			e->oneFootInTheGrave();
+			e->killAndDelete();
 		}
-		else
-			++j;
 	while (childCountAt(_i) < minRequired(_i))
 	{
 		middle(_i).spawnPreparedSilent()->parentAdded();
@@ -839,7 +838,8 @@ bool Entity::validifyChildren()
 	else if (added < INT_MAX - 1)
 		childAdded(added);
 	
-	resetLayoutCache();
+	if (added != INT_MAX - 1)
+		resetLayoutCache();
 	return ret;
 }
 Entity* Entity::prepareChildren()
