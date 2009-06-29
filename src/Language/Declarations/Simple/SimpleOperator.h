@@ -40,6 +40,8 @@ public:
 	}
 	virtual Operator					id() const { return m_operator; }
 	virtual QString						key() const { return "@" + m_key + "@N" + QString::number(m_myId); }
+	
+	virtual void						destruct();
 
 private:
 	void								construct(int _id, Operator _o, Type const& _returns, Types const& _args, BasicRoot* _root, char const* _key);

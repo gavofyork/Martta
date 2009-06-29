@@ -26,6 +26,7 @@ namespace Martta
 {
 
 class SimpleMethod;
+class Simple;
 class SimpleOperator;
 
 class StringType: public TypeEntity
@@ -55,7 +56,7 @@ protected:
 	virtual TypeEntity*					newClone() const { return new StringType; }
 	
 	static QList<SimpleMethod*>			s_members;	
-	static QList<ValueDefiner*>			s_nonMembers;	
+	static QList<SimpleOperator*>		s_nonMembers;	
 };
 
 }

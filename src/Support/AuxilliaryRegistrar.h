@@ -63,6 +63,7 @@ public:
 	
 	void								recurseAux(AuxilliaryFace const* _face, QString const& _indent) const;
 	void								initialiseClasses();
+	void								finaliseClasses();
 	void								jigCache();
 	
 private:

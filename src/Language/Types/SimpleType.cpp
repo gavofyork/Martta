@@ -246,7 +246,7 @@ void SimpleType::initialiseClass()
 void SimpleType::finaliseClass()
 {
 	while (s_nonMembers.size())
-		delete s_nonMembers.takeLast();
+		s_nonMembers.takeLast()->destruct();
 }
 
 }

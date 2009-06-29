@@ -53,9 +53,10 @@ void Simple::construct(TypeEntity const* _scope, int _id, bool _isConst, Type co
 	rootEntity()->registerDeclaration(this);
 }
 
-Simple::~Simple()
+void Simple::destruct()
 {
 	rootEntity()->unregisterDeclaration(this);
+	delete this;
 }
 
 }

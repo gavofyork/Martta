@@ -97,9 +97,9 @@ void ListType::initialiseClass()
 void ListType::finaliseClass()
 {
 	while (s_members.size())
-		delete s_members.takeLast();
+		s_members.takeLast()->destruct();
 	while (s_nonMembers.size())
-		delete s_nonMembers.takeLast();
+		s_nonMembers.takeLast()->destruct();
 }
 
 Types ListType::assignableTypes() const

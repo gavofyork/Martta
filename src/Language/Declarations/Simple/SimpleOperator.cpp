@@ -38,4 +38,10 @@ void SimpleOperator::construct(int _id, Operator _o, Type const& _returns, Types
 	Operation::registerOperator(_o, this, _root);
 }
 
+void SimpleOperator::destruct()
+{
+	Operation::unregisterOperator(m_operator, this, rootEntity());
+	Super::destruct();
+}
+
 }

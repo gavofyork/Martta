@@ -76,7 +76,7 @@ public:
 	ArchivalState 						archivalState() const { return m_archivalState; }
 	
 	void								registerDeclaration(DeclarationEntity* _e) { M_ASSERT(!m_registered.contains(_e->key())); m_registered[_e->key()] = _e; }
-	void								unregisterDeclaration(DeclarationEntity* _e) { M_ASSERT(m_registered.contains(_e->key())); m_registered.remove(_e->key()); }
+	void								unregisterDeclaration(DeclarationEntity* _e) { M_ASSERT(m_registered.values().contains(_e)); m_registered.remove(m_registered.key(_e)); }
 	DeclarationEntity*					findDeclaration(QString const& _key) const { if (m_registered.contains(_key)) return m_registered[_key]; return 0; }
 	
 public slots:	

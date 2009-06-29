@@ -20,11 +20,17 @@
 
 #include <QDebug>
 
+#include "TypeEntity.h"
+
 #include "BasicRoot.h"
 #include "Entity.h"
 #include "Depender.h"
 #include "Dependee.h"
 #include "TestHelper.h"
+namespace Martta
+{
+extern int g_typeCount;
+}
 using namespace Martta;
 
 int supportTests();
@@ -115,11 +121,8 @@ int test()
 	failed += supportTests();
 	TEST("Auxilliaries Initialisation")
 		AuxilliaryRegistrar::get()->jigCache();
-	qInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
 	failed += coreTests();
-	qInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
 	failed += typeTests();
-	qInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
 	
 	enum { DependsOnNothing = 0, DependsOnParent = 1, DependsOnChildren = 2, DependsOnBoth = 3, DependsOnIndex = 4, TestOnOrder = 8, DependsOnChildOrder = DependsOnChildren | TestOnOrder };
 	TEST("Change system: Family dependencies changing, inert")
@@ -150,12 +153,10 @@ int test()
 		
 		activity.clear();
 		n1->changed(4);
-		qDebug() << activity;
 		FAILED_IF(activity != "n2C4n1 ");
 		
 		activity.clear();
 		n2->changed(1);
-		qDebug() << activity;
 		FAILED_IF(activity != "n1C1n2 ");
 		
 		activity.clear();
@@ -181,7 +182,6 @@ int test()
 		
 		activity.clear();
 		n2->move(n1->back());
-		qDebug() << activity;
 		FAILED_IF(!activity.contains("n1M1n3 ") || !activity.contains("n3X1 ") || !activity.contains("n1M0n2 ") || activity.size() != QString("n1M1n3 n1M0n2 n3X1 ").size());
 	}
 
@@ -196,11 +196,9 @@ int test()
 		n2->back().place(n3);
 		activity.clear();
 		n2->changed(2);
-		qDebug() << activity;
 		FAILED_IF(activity != "n3C2n2 n2C1n3 n3C1n2 n2*1 n3*1 ");
 		activity.clear();
 		n2->changed(3);
-		qDebug() << activity;
 		FAILED_IF(activity != "n3C3n2 n2C1n3 n3*1 ");
 	}
 	
@@ -263,7 +261,6 @@ int test()
 		n2->back().place(n3);
 		NewEntity* n4 = new NewEntity("n4", DependsOnNothing);
 		n3->back().place(n4);
-		qDebug() << activity;
 		FAILED_IF(activity != "");
 		
 		n1->addDependency(n4);
@@ -294,8 +291,13 @@ int test()
 		FAILED_IF(activity != "n1-n4 ");
 		FAILED_IF(n1->haveDependency(n4));
 	}
-
-	qInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
+	
+	TEST("Memory leaking")
+	{
+		qInformation() << "News/Deletes/Remaining/Types = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes) << "/" << g_typeCount;
+		FAILED_IF(s_news - s_deletes != 1);
+		FAILED_IF(g_typeCount != 1);
+	}
 	
 	s_testing = false;
 	qInformation() << "PASSED :-)";

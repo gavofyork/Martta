@@ -81,6 +81,19 @@ void AuxilliaryRegistrar::initialiseClasses()
 		
 	foreach (AuxilliaryFace const* i, m_auxilliaries.values())
 		i->initialise();
+		
+	m_isInitialised = true;
+}
+
+void AuxilliaryRegistrar::finaliseClasses()
+{
+	if (!m_isInitialised)
+		return;
+		
+	foreach (AuxilliaryFace const* i, m_auxilliaries.values())
+		i->finalise();
+		
+	m_isInitialised = false;
 }
 
 QList<AuxilliaryFace const*> AuxilliaryRegistrar::calculateInterfaces(AuxilliaryFace const* _a) const

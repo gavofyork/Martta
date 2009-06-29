@@ -31,8 +31,6 @@ class QProcess;
 namespace Martta
 {
 
-extern int g_typeCount;
-
 class CodeScene;
 class Project;
 class Function;

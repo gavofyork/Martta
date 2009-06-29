@@ -32,8 +32,10 @@ class Simple: public DeclarationEntity, public_interface ValueDefiner
 	MARTTA_INHERITS(ValueDefiner, 0)
 	
 public:
-	virtual ~Simple();
 	virtual Type						type() const { return *childAs<TypeEntity>(0); }
+
+	// Use this instead of deleting it or you'll have to unregister them explicitly.
+	virtual void						destruct();
 
 protected:
 	void								construct(TypeEntity const* _scope, int _id, bool _isConst, Type const& _returns, Types const& _args, BasicRoot* _root, char const* _key);
