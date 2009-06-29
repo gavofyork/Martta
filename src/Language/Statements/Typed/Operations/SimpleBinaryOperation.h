@@ -51,7 +51,7 @@ protected:
 	virtual Precedence					precedence() const { return id().precedence(); }
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity* _e);
-	virtual void						apresLoad() { setOperation(m_operator); }
+	virtual void						apresLoad() { refreshOperation(); }
 	
 private:
 	/// The Type of the argument _index according to the symbol.

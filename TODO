@@ -1,5 +1,3 @@
-BUG - for a double?
-BUG long double?
 TODO Get rid of DE/Id deps.
 TODO Get rid of Root::get() static singleton crap.
 TODO Statements to reject placeholders.
@@ -10,6 +8,7 @@ TODO virtual interface
 TODO virtual overload
 TODO anonymous -> metasyntactic variable
 TODO InsertionPoint -> Position
+MINOR double - int gets -(int, int) not -(double, double)
 
 TODO Look into Dynagraph/Boost or GraphViz for graphing the code.
 
