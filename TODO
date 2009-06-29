@@ -1,6 +1,5 @@
 BUG - for a double?
 BUG long double?
-BUG Check memory leak in tests.
 TODO Get rid of DE/Id deps.
 TODO Get rid of Root::get() static singleton crap.
 TODO Statements to reject placeholders.
