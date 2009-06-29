@@ -874,42 +874,48 @@ bool Entity::removeInvalidChildren()
 	return ret;
 }
 
+void Entity::put(InsertionPoint const& _newPosition)
+{
+	M_ASSERT(this);
+	if (_newPosition.exists() && _newPosition->isPlaceholder())
+		_newPosition->replace(this);	// TODO: handle brood-move/replace.
+	else
+		move(_newPosition);
+}
+
 void Entity::move(InsertionPoint const& _newPosition)
 {
 	M_ASSERT(this);
 	InsertionPoint old = over();
 	
-	if (_newPosition.exists() && _newPosition->isPlaceholder())
-		_newPosition->replace(this);	// TODO: handle brood-move/replace.
+	silentMove(_newPosition);
+	if (old.parent() == m_parent && m_parent)
+	{
+		//-2-1 0 1 2 3 4 5 6
+		//   x A B C D E F      Start
+		// B x A C D E F        (home = 1, end = 5, s = +1) -2(1)		1(2) 2(3) 3(4) 4(5)	i(i+s)
+		//     A B C D x E F	(home = 6, end = 4, s = -1) 4(-2)		6(5) 5(4)			i(i+s)
+		//     A C D E B F		(home = 1, end = 4, s = +1)  4(1)		1(2) 2(3) 3(4)		i(i+s)
+		//     A E B C D F		(home = 4, end = 1, s = -1)  1(4)		4(3) 3(2) 2(1)		i(i+s)
+
+		// Move children between home & end, when i's index has changed from i+sign(end - home) to i.
+		// except for us; we handle that specially below.
+		int home = old.index() < 0 ? m_parent->m_cardinalChildren.size() - 1 : old.index();
+		int end = m_index < 0 ? m_parent->m_cardinalChildren.size() : m_index;
+		if (int s = sign(end - home))
+			for (int i = home; i != end; i += s)
+				m_parent->childMoved(m_parent->m_cardinalChildren[i], i + s);
+		m_parent->childMoved(this, old.index());
+		m_parent->relayoutLater();
+	}
 	else
 	{
-		silentMove(_newPosition);
-		if (old.parent() == m_parent && m_parent)
+		parentSwitchedWithChildRemoved(old);
+		if (m_parent)
 		{
-			//-2-1 0 1 2 3 4 5 6
-			//   x A B C D E F      Start
-			// B x A C D E F        (home = 1, end = 5, s = +1) -2(1)		1(2) 2(3) 3(4) 4(5)	i(i+s)
-			//     A B C D x E F	(home = 6, end = 4, s = -1) 4(-2)		6(5) 5(4)			i(i+s)
-			//     A C D E B F		(home = 1, end = 4, s = +1)  4(1)		1(2) 2(3) 3(4)		i(i+s)
-			//     A E B C D F		(home = 4, end = 1, s = -1)  1(4)		4(3) 3(2) 2(1)		i(i+s)
-
-			// Move children between home & end, when i's index has changed from i+sign(end - home) to i.
-			// except for us; we handle that specially below.
-			int home = old.index() < 0 ? m_parent->m_cardinalChildren.size() - 1 : old.index();
-			int end = m_index < 0 ? m_parent->m_cardinalChildren.size() : m_index;
-			if (int s = sign(end - home))
-				for (int i = home; i != end; i += s)
-					m_parent->childMoved(m_parent->m_cardinalChildren[i], i + s);
-			m_parent->childMoved(this, old.index());
-		}
-		else
-		{
-			parentSwitchedWithChildRemoved(old);
-			if (m_parent)
-			{
-				m_parent->childAdded(m_index);
-				m_parent->resetLayoutCache();
-			}
+			m_parent->childAdded(m_index);
+			m_parent->resetLayoutCache();
+			m_parent->relayoutLater();
 		}
 	}
 }
@@ -961,7 +967,10 @@ Entity* Entity::replace(Entity* _r)
 	_r->parentSwitchedWithChildRemoved(you);
 	// Tell _r's new context that it's here.
 	if (_r->m_parent)
+	{
 		_r->m_parent->childSwitched(_r, this);
+		_r->m_parent->relayoutLater();
+	}
 	delete this;
 	return _r;
 }
@@ -1004,7 +1013,7 @@ Entity* Entity::insert(Entity* _e, int _preferedIndex)
 		oneFootInTheGrave();
 		killAndDelete(_e->child(_preferedIndex));
 	}
-	_e->resetLayoutCache();
+	(_e->parent() ? _e->parent() : _e)->relayoutLater();
 	return _e;
 } 
 bool Entity::tryInsert(Entity* _e, int _preferedIndex)
@@ -1052,6 +1061,7 @@ void Entity::deleteAndRefill(Entity* _e, bool _moveToGrave)
 		oneFootInTheGrave();
 		p->parentAdded();
 		c->childSwitched(p.entity(), this);
+		c->relayoutLater();
 		delete this;
 	}
 	else
@@ -1065,6 +1075,28 @@ void Entity::deleteAndRefill(Entity* _e, bool _moveToGrave)
 	}
 	if (_moveToGrave)
 		p.nearestEntity()->setCurrent();
+}
+
+void Entity::notifyOfStrobe(Entity* _strobeCreation)
+{
+	if (_strobeCreation && m_parent)
+	{
+		parentSwitched(_strobeCreation);
+		relayoutLater();
+	}
+	else if (_strobeCreation)
+		parentRemoved(_strobeCreation);
+	else if (m_parent)
+		parentAdded();
+	
+	if (m_parent)
+	{
+		if (_strobeCreation)
+			m_parent->childSwitched(this, _strobeCreation);
+		else
+			m_parent->childAdded(m_index);
+		m_parent->resetLayoutCache();
+	}
 }
 
 }

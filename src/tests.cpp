@@ -265,35 +265,29 @@ int test()
 		
 		n1->addDependency(n4);
 		n1->addDependency(n3);
-		qDebug() << activity;
 		FAILED_IF(activity != "");
 		FAILED_IF(!n1->haveDependency(n4));
 		FAILED_IF(!n1->haveDependency(n3));
 		
 		activity.clear();
 		n4->changed(8);
-		qDebug() << activity;
 		FAILED_IF(activity != "n1C8n4 ");
 		
 		activity.clear();
 		n3->changed(7);
-		qDebug() << activity;
 		FAILED_IF(activity != "n1C7n3 ");
 		
 		activity.clear();
 		n4->move(Nowhere);
 		n4->changed(8);
-		qDebug() << activity;
 		FAILED_IF(activity != "n1C8n4 ");
 		
 		activity.clear();
 		n3->changed(7);
-		qDebug() << activity;
 		FAILED_IF(activity != "n1C7n3 ");
 		
 		activity.clear();
 		n4->killAndDeleteWithNotification();
-		qDebug() << activity;
 		FAILED_IF(activity != "n1-n4 ");
 		FAILED_IF(n1->haveDependency(n4));
 	}

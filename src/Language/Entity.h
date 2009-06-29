@@ -68,6 +68,7 @@ class Entity: public Nothing, public SafePointerTarget, virtual public Dier, pub
 	
 	friend class EntityStylist;
 	friend class EditDelegateFace;
+	friend class CodeScene;
 
 protected:
 	enum { EndOfNamed = INT_MIN, Cardinals = 0 };
@@ -92,6 +93,8 @@ public:
 	void								silentMove(InsertionPoint const& _to) { InsertionPoint from = over(); prepareMove(_to); commitMove(from); }
 	void								silentRemove() { silentMove(Nowhere); }
 	void								move(InsertionPoint const& _newPosition);
+	/// Same as move() except that if the destination is a placeholder we replace it, 
+	void								put(InsertionPoint const& _newPosition);
 
 	inline int							index() const { return m_index; }
 	inline Entity*						parent() const { return m_parent; }
@@ -495,6 +498,8 @@ private:
 
 	/// Helper function for validifyChildren()
 	bool								validifyChild(int _i, int* _added);
+	
+	void								notifyOfStrobe(Entity* _strobeCreation);
 
 	Entity*								m_parent;
 	int									m_index;
@@ -594,8 +599,8 @@ bool Martta::Entity::simpleInsertionPointKeyPressHandler(InsertionPoint const& _
 			// insert
 			// when pressed on _p refers to a, changes from x->(a->(d, e), b, c) to x->(N->(a->(d, e)), b, c)
 			Entity* e = _p.entity();
-			e->insert(n);
 			_e->noteStrobeCreation(e, n);
+			e->insert(n);
 			n->prepareChildren();
 			if (_ontoNew)
 				n->navigateToNew(_e->codeScene());

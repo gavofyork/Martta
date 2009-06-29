@@ -426,28 +426,13 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 		{
 			// TODO: Move this stuff to the EKE's notifyStrobeCreation... This will avoid having to test the child for originality.
 			if (sCrPoint)
-				m_strobeCreation->commitMove(sCrPoint);
+				m_strobeCreation->commitMove(sCrPoint);	// Commit the move out of the model if there was a prior-creation to move away.
+				
 			// If the child wasn't replaced by something else.
 			if (m_strobeChild == originalStrobeChild && sChPoint)	// && c because we only need to move the strobeChild if there was a strobe creation (before, anyways).
 			{
-				m_strobeChild->commitMove(sChPoint);
-				if (m_strobeCreation && m_strobeChild->parent())
-				{
-					m_strobeChild->parentSwitched(m_strobeCreation);
-					m_strobeChild->relayoutLater();
-				}
-				else if (m_strobeCreation)
-					m_strobeChild->parentRemoved(m_strobeCreation);
-				else if (m_strobeChild->parent())
-					m_strobeChild->parentAdded();
-				if (m_strobeChild->parent())	// CHECK!!!
-				{
-					if (m_strobeCreation)
-						m_strobeChild->parent()->childSwitched(m_strobeChild, m_strobeCreation);
-					else
-						m_strobeChild->parent()->childAdded(m_strobeChild->index());
-					m_strobeChild->parent()->resetLayoutCache();
-				}
+//				m_strobeChild->commitMove(sChPoint);	// BROKEN: m_strobeChild has already been moved to become the next creation's child - we should have commited it prior to that happening.
+				m_strobeChild->notifyOfStrobe(m_strobeCreation);
 			}
 			if (m_strobeCreation)
 			{

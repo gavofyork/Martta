@@ -28,19 +28,12 @@
 namespace Martta
 {
 
-class CodeScene;
-class ModifyingType;
-class InsertionPoint;
-
 class Depender: public_interface Familial
 {
 	MARTTA_INTERFACE
 	MARTTA_INHERITS(Familial, 0)
 
 	friend class ChangeMan;
-	friend class CodeScene; //TODO Remove this and move broken code into Entity.
-	friend class ModifyingType; //TODO Remove this and move broken code into Entity.
-	friend class InsertionPoint; //TODO Remove this and move broken code into Entity.
 protected:
 	// How we react to changes.
 
