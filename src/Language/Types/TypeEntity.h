@@ -51,9 +51,11 @@ public:
 	virtual QString						code(QString const& _middle = "") const { return _middle; }
 	virtual TypeEntity*					bottom() { return this; }
 	
+	inline bool							isOwned() const { if (m_owner) return true; if (!parent()) return false; if (TypeEntity* t = tryParent<TypeEntity>()) return t->isOwned(); return true; }
 	virtual bool						isNull() const { return isPlaceholder(); }
 	virtual bool						isUltimatelyNull() const { return isNull(); }
 	virtual bool						isWellDefined() const { return !isNull(); }
+	virtual bool						botherNotifying() const { return !isOwned(); }
 	
 	typedef int Castability;
 	enum { Unrelated = 0, Physical = 1, Convertible = 2, FairlyConvertible = 6, BasicallyConvertible = 14, VeryConvertible = 30, ConstPerfectConvertible = 62, MostConvertible = 62, Logical = Physical | Convertible };

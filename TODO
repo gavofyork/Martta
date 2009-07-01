@@ -28,7 +28,6 @@ Dynamic code-loading (plugins).
   - Will need QRgb-like type & QHashSet type.
   - Get rid of XML dependencies.
   - Will need to move all decoration code into layout system and invent markup for it.
-- Include language-addition project type.
 
 --------------------------------------------------------------------------------
 
@@ -39,10 +38,6 @@ RELEASE M1 (TBD)
 TODO Cache includes, so don't take so long to load.
 TODO Profile QWebView 
 
-Allow "usurption" for stuff like DefaultConstructedVariable to usurp Variable.
-- All good.
-- key presses automatically rerouted to child (only at source to prevent recursion).
-- CHECK should handle situation of usurper usurped.
 Utilised
 - utilised/utilisable interface.
 - BUG enums don't behave well regarding order of declaration & use.
@@ -58,6 +53,7 @@ Multiple projects in a solution
   - pickup if entry point is private
 - Add other libraries (SDL, openGL)
 - Use other binary-only libraries.
+- Include language-addition project type.
 
 --------------------------------------------------------------------------------
 
@@ -230,6 +226,20 @@ Remove (or make useful) m_location?
 ================================================================================
 
 === WISH LIST ===
+
+Automatic caching support.
+e.g.
+attribute P* parent;
+virtual int bar() cached (parent) { return foo() + parent->bar(); }
+becomes
+volatile int a_bar;
+volatile bool h_bar;
+P* m_parent;
+P* parent() const { return m_parent; }
+void setParent(P* _p) { if (m_parent != _p) { NO_DEPEND_ON_BAR_OF(_p); m_parent = _p; DEPENDS_ON_BAR_OF(_p); h_bar = false; } }
+int u_bar() { h_bar = true; return foo() + m_parent->bar(); }
+virtual int bar() { if (!h_bar) return a_bar = u_bar(); return a_bar; }
+
 
 TODO support:
 [Base]
