@@ -23,7 +23,7 @@
 #include "DecorationContext.h"
 #include "CommonGraphics.h"
 #include "MemberLambda.h"
-#include "NamespaceEntity.h"
+#include "Namespace.h"
 #include "Invocation.h"
 #include "MemberVariable.h"
 #include "MemberOperation.h"
@@ -169,7 +169,8 @@ Type Referenced::type() const
 void Referenced::importDom(QDomElement const& _element)
 {
 	Entity::importDom(_element);
-	m_subject = rootEntity()->locate<ValueDefiner>(_element.attribute("subject"));
+//	m_subject = rootEntity()->locate<ValueDefiner>(_element.attribute("subject"));
+	m_subject.restoreFrom(_element.attribute("subject"));
 	m_specific = _element.attribute("specific").toInt();
 	m_lastSet = _element.attribute("lastSet").toInt();
 	// TODO: check if depend system needs reseting here.
@@ -178,7 +179,7 @@ void Referenced::importDom(QDomElement const& _element)
 void Referenced::exportDom(QDomElement& _element) const
 {
 	Entity::exportDom(_element);
-	_element.setAttribute("subject", m_subject->key());
+	_element.setAttribute("subject", m_subject.key());
 	_element.setAttribute("specific", m_specific);
 	_element.setAttribute("lastSet", m_lastSet);
 }
@@ -189,7 +190,7 @@ void Referenced::decorate(DecorationContext const& _c) const
 	if (Entity* e = m_subject ? m_subject->self() : 0)
 	{
 		bool dec = false;
-		if (e->hasAncestor<NamespaceEntity>())
+		if (e->hasAncestor<Namespace>())
 		{
 			if (e->isKind<MemberVariable>())
 				dec = true;
@@ -314,7 +315,7 @@ void ReferencedEdit::updateSubset()
 	if (subject()->m_lastSet & LocalSet)
 		m_valuesInScope << castEntities<ValueDefiner>(subject()->valuesInLocalScope());	// TODO: Change over
 	if (subject()->m_lastSet & ScopedSet)
-		m_valuesInScope << castEntities<ValueDefiner>(subject()->ancestor<DeclarationEntity>()->valuesKnown());
+		m_valuesInScope << castEntities<ValueDefiner>(subject()->ancestor<Declaration>()->valuesKnown());
 	if (subject()->m_lastSet & GlobalSet)
 		m_valuesInScope << subject()->rootEntity()->selfAndAncestorsChildrenOf<ValueDefiner>();
 	if (subject()->m_lastSet & ArgumentSet && subject()->hasAncestor<LambdaNamer>())

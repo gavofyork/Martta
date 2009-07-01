@@ -41,7 +41,7 @@ public:
 	
 protected:
 	virtual QString						defineLayout(ViewKeys& _k) const { return "^;" + VariableNamer::defineLayout(_k); }
-	virtual QList<DeclarationEntity*>	utilised() const { return actualType()->utilised(); }
+	virtual QList<Declaration*>	utilised() const { return actualType()->utilised(); }
 	
 	virtual bool						keyPressed(EntityKeyEvent const* _e) { return VariableNamer::keyPressed(_e) ? true : Super::keyPressed(_e); }
 	virtual int							minRequired(int _i) const { return _i == OurType ? 1 : Super::minRequired(_i); }

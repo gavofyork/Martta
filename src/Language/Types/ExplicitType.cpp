@@ -197,7 +197,7 @@ bool ExplicitType::keyPressed(EntityKeyEvent const* _e)
 	return true;
 }
 
-QList<DeclarationEntity*> ExplicitType::utilised() const
+QList<Declaration*> ExplicitType::utilised() const
 {
 	return m_subject.isUsable() ? subject()->utilisedInUse() : Super::utilised();	// TODO: define for other types.
 }
@@ -235,13 +235,13 @@ EditDelegateFace* ExplicitType::newDelegate(CodeScene* _s)
 void ExplicitType::importDom(QDomElement const& _element)
 {
 	Super::importDom(_element);
-	m_subject = rootEntity()->locate<TypeDefinition>(_element.attribute("subject"));
+	m_subject.restoreFrom(_element.attribute("subject"));
 }
 
 void ExplicitType::exportDom(QDomElement& _element) const
 {
 	Super::exportDom(_element);
-	_element.setAttribute("subject", m_subject->key());
+	_element.setAttribute("subject", m_subject.key());
 }
 
 }

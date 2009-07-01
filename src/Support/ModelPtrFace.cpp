@@ -21,111 +21,48 @@
 #include <QtCore>
 
 #include "Common.h"
-#include "DeclarationEntity.h"
+#include "Declaration.h"
 #include "BasicRoot.h"
+#include "ModelPtrRegistrar.h"
 #include "ModelPtr.h"
 
 namespace Martta
 {
 
-void ModelPtrFace::archive()
-{
-	if (!isArchived() && m_cache)
-	{
-		m_key = m_cache->key();
-		m_rootEntity = m_cache->self()->rootEntity();
-	}
-}
-
-void ModelPtrFace::restore()
+void ModelPtrFace::tryRestore(Declaration const* _root)
 {
 	if (isArchived())
 	{
-		M_ASSERT(!m_cache || !m_cache->self()->parent());
-		m_cache = m_rootEntity->findEntity(m_key);
-		// Note; m_cache is allowed to be zero, since it just means that the entity we're
-		// pointing at was deleted while we were archived. What we get back is naturally a
-		// null pointer.
-		if (!m_cache)
-		{
-			qCritical() << "Couldn't restore model pointer with key: " << m_key;
-			M_ASSERT(0);
-		}
-		m_rootEntity = 0;
-		m_key = QString();
-	}
-}
-
-void ModelPtrFace::tryRestore()
-{
-	if (isArchived())
-	{
-		M_ASSERT(!m_cache || !m_cache->self()->parent());
-		m_cache = m_rootEntity->findEntity(m_key);
+		m_cache = _root->findEntity(m_key);
 		// Note; m_cache is allowed to be zero, since it just means that the entity we're
 		// pointing at was deleted while we were archived. What we get back is naturally a
 		// null pointer.
 		if (m_cache)
-		{
-			m_rootEntity = 0;
-			m_key = QString();
-		}
+			m_key = QString::null;
 	}
-}
-
-void ModelPtrFace::gone(Identifiable* _e)
-{
-	if (m_cache == _e)
-		set(0);
-}
-
-Identifiable* ModelPtrFace::get()
-{
-	return m_cache;
 }
 
 QString ModelPtrFace::key() const
 {
-	if (m_rootEntity) return m_key;
-	if (m_cache) return m_cache->key();
-	return QString();
+	if (!m_key.isEmpty())
+		return m_key;
+	if (m_cache)
+		return m_cache->key();
+	return QString::null;
 }
 
-void ModelPtrFace::set(Identifiable* _e, QString const& _k, BasicRoot* _r)
+void ModelPtrFace::set(Identifiable* _e)
 {
-	if (m_cache)
-	{
-		M_ASSERT(m_cache->self()->isInModel());
-		if (m_cache->self()->isInModel())
-			m_cache->self()->rootEntity()->removeModelPtr(this);
-	}
-	else if (m_rootEntity)
-		m_rootEntity->removeModelPtr(this);
-
 	m_cache = _e;
-	m_rootEntity = _r;
+	m_key = QString::null;
+}
+
+void ModelPtrFace::set(QString const& _k)
+{
+	m_cache = 0;
 	m_key = _k;
-
-	if (!m_cache && m_rootEntity)
-	{
-		m_cache = m_rootEntity->findEntity(m_key);
-		if (m_cache)
-		{
-			m_rootEntity = 0;
-			m_key = QString();
-		}
-	}
-
-	if (m_cache)
-	{
-		M_ASSERT(m_cache->self()->isInModel());
-		if (m_cache->self()->isInModel())
-			m_cache->self()->rootEntity()->addModelPtr(this);
-	}
-	else if (m_rootEntity)
-	{
-		m_rootEntity->addModelPtr(this);
-	}
+	if (!_k.isEmpty())
+		ModelPtrRegistrar::get()->toBeRestored(this);
 }
 
 }

@@ -21,19 +21,19 @@
 #pragma once
 
 #include "VariableNamer.h"
-#include "DeclarationEntity.h"
+#include "Declaration.h"
 
 namespace Martta
 {
 
-class Argument: public DeclarationEntity, public_interface VariableNamer
+class Argument: public Declaration, public_interface VariableNamer
 {
-	MARTTA_OBJECT(DeclarationEntity)
+	MARTTA_OBJECT(Declaration)
 	MARTTA_INHERITS(VariableNamer, 0)
 	
 protected:
 	virtual QString						defineLayout(ViewKeys& _k) const { return VariableNamer::defineLayout(_k); }
-	virtual QList<DeclarationEntity*>	utilised() const { return actualType()->utilised(); }
+	virtual QList<Declaration*>	utilised() const { return actualType()->utilised(); }
 
 	virtual Identifiable*				addressableContext() const { return 0; }
 	virtual bool						keyPressed(EntityKeyEvent const* _e) { return VariableNamer::keyPressed(_e) ? true : Super::keyPressed(_e); }

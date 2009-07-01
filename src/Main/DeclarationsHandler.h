@@ -34,7 +34,7 @@ class Enumeration;
 class FunctionResolver;
 class IncomingFunctionType;
 
-class DeclarationEntity;
+class Declaration;
 class Function;
 class Variable;
 class TopLevelType;
@@ -78,7 +78,7 @@ private:
 	FunctionResolver*				m_lastFunction;
 	IncomingFunctionType*			m_lastIncomingFunctionType;
 
-	QMap<QString, DeclarationEntity*>	m_contexts;
+	QMap<QString, Declaration*>	m_contexts;
 	QMap<QString, Function*>		m_functions;
 	QMap<QString, Variable*>		m_variables;
 	QMap<QString, TopLevelType*>		m_types;

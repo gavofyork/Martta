@@ -29,7 +29,7 @@ namespace Martta
 extern int g_typeCount;
 extern bool g_debugCastability;
 
-class DeclarationEntity;
+class Declaration;
 class ModifyingType;
 class ValueDefiner;
 
@@ -97,7 +97,7 @@ public:
 	/// Just a tunnel into other TypeEntity's newClone methods.
 	static TypeEntity*					cloneOf(TypeEntity const* _t, Type* _owner) { return _t->newClone(_owner); }
 	
-	virtual QList<DeclarationEntity*>	utilised() const { return QList<DeclarationEntity*>(); }
+	virtual QList<Declaration*>	utilised() const { return QList<Declaration*>(); }
 	
 protected:
 	/// This newClone is the simple one; it doesn't have to change the ownership or duplicate the children.

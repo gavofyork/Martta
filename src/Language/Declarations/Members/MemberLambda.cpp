@@ -84,9 +84,9 @@ QString MemberLambda::basicCode(FunctionCodeScope _ref) const
 	return Martta::code(qualifiers() & MethodMask) + returns()->code(" " + callingCode(_ref)) + (isConst() ? " const" : "");
 }
 
-QList<DeclarationEntity*> MemberLambda::utilised() const
+QList<Declaration*> MemberLambda::utilised() const
 {
-	QList<DeclarationEntity*> l = Super::utilised();
+	QList<Declaration*> l = Super::utilised();
 	l.removeAll(ancestor<Class>());
 	return l;
 }

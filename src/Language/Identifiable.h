@@ -65,14 +65,14 @@ public:
 
 	virtual Identifiable*				lookupChild(QString const& _key) const;
 	
-	virtual void						onLeaveScene(BasicRoot* _new, BasicRoot* _old);
+//	virtual void						onLeaveScene(BasicRoot* _new, BasicRoot* _old);
 	
 protected:
 	// These *MUST* be used by any final class in its export/import functions.
 	void								exportDom(QDomElement& _element) const;
 	void								importDom(QDomElement const& _element);
 	
-	virtual ~Identifiable() {}
+	virtual ~Identifiable();
 };
 
 }

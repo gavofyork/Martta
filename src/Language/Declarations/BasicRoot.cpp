@@ -28,18 +28,14 @@ BasicRoot* BasicRoot::s_this = 0;
 
 MARTTA_OBJECT_CPP(BasicRoot);
 	
-BasicRoot::BasicRoot():
-	m_archivalState	(Restored)
+BasicRoot::BasicRoot()//:
+//	m_archivalState	(Restored)
 {
 	m_rootEntity = this;
 	s_this = this;
 }
 
-BasicRoot::~BasicRoot()
-{
-	clearEntities();
-}
-
+/*
 // Identification, search & location.
 Identifiable* BasicRoot::findEntity(QString const& _key) const
 {
@@ -60,7 +56,7 @@ Identifiable* BasicRoot::findEntity(QString const& _key) const
 	else
 		return findDeclaration(_key);
 }
-
+*/
 Kinds BasicRoot::allowedKinds(int _i) const
 {
 	if (_i >= 0)
@@ -87,7 +83,7 @@ void BasicRoot::ensureSyncedModel()
 	emit modelChanged();
 	m_changed = false;
 }
-
+/*
 void BasicRoot::noteDeletion(Identifiable* _e)
 {
 	foreach (ModelPtrFace* i, m_modelPtrs)
@@ -149,5 +145,5 @@ void BasicRoot::restorePtrs() const
 		}
 	m_archivalState = Restored;
 }
-
+*/
 }

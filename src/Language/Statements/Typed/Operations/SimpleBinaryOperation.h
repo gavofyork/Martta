@@ -55,8 +55,8 @@ protected:
 	
 private:
 	/// The Type of the argument _index according to the symbol.
-	Type								prototypeOf(int _index) const { if (!m_symbolCache.isUsable()) return Type(); return Operation::prototypeOf(m_symbolCache->type(), _index); }
-	Type								protoReturn() const { if (!m_symbolCache.isUsable()) return Type(); return Operation::prototypeOf(m_symbolCache->type()); }
+	Type								prototypeOf(int _index) const { if (!m_symbolCache) return Type(); return Operation::prototypeOf(m_symbolCache->type(), _index); }
+	Type								protoReturn() const { if (!m_symbolCache) return Type(); return Operation::prototypeOf(m_symbolCache->type()); }
 	void								setOperation(Operator _o, Type const& _left = Type(), Type const& _right = Type());
 	void								refreshOperation() { setOperation(m_operator, leftType(), rightType()); }
 	
@@ -64,7 +64,7 @@ private:
 	
 	// Change to OperatorLabel?
 	Operator							m_operator;
-	ModelPtr<ValueDefiner>				m_symbolCache;
+	ValueDefiner*						m_symbolCache;
 };
 
 }

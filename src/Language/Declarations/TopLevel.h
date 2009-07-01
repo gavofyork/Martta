@@ -20,14 +20,14 @@
 
 #pragma once
 
-#include "DeclarationEntity.h"
+#include "Declaration.h"
 
 namespace Martta
 {
 
-class TopLevel: public DeclarationEntity
+class TopLevel: public Declaration
 {
-	MARTTA_PLACEHOLDER(DeclarationEntity)
+	MARTTA_PLACEHOLDER(Declaration)
 };
 
 }

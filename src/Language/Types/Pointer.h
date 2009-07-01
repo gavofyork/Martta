@@ -41,7 +41,7 @@ protected:
 	virtual QString						modifierLayout() const { return "ycode;'*'"; }
 	virtual QString						idColour() const { return QColor(original() ? original()->idColour() : TypeEntity::null->idColour()).darker(120).name(); }
 	virtual TypeEntity*					newClone() const { return new Pointer; }
-	virtual QList<DeclarationEntity*>	utilised() const { return QList<DeclarationEntity*>(); }
+	virtual QList<Declaration*>	utilised() const { return QList<Declaration*>(); }
 };
 
 }

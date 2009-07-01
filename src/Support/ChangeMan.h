@@ -76,6 +76,9 @@ public:
 	void								dead(Dependee* _gone);
 	void								dead(Depender* _gone);
 	
+	void								sleep() { m_asleep = true; }
+	void								wake() { m_asleep = false; }
+	
 	virtual void						childrenInitialised(Depender* _this);
 	virtual void						childAdded(Depender* _this, int _newChildsIndex);
 	virtual void						childSwitched(Depender* _this, Entity* _currentChild, Entity* _exChild);
@@ -97,7 +100,7 @@ public:
 	bool								haveDependency(Depender const* _der, Dependee const* _dee) const { return m_dependees.constFind(const_cast<Depender*>(_der), const_cast<Dependee*>(_dee)) != m_dependees.end(); }
 
 private:
-	ChangeMan() {}
+	ChangeMan(): m_asleep(false) {}
 	virtual ~ChangeMan() {}
 
 	void								processQueue();
@@ -111,6 +114,8 @@ private:
 	
 	QList<Entry>						m_changeQueue;
 	QList<Entry>						m_changesDone;
+	
+	bool								m_asleep;
 	
 	static ChangeMan*					s_this;
 };

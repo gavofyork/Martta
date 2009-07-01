@@ -29,47 +29,47 @@ namespace Martta
 
 class BasicRoot;
 class Identifiable;
+class Declaration;
+class ModelPtrRegistrar;
 
 class ModelPtrFace
 {
+	friend class ModelPtrRegistrar;
+	
 public:
-	inline ModelPtrFace(Identifiable* _e): m_cache(0), m_rootEntity(0) { set(_e); }
-	inline ModelPtrFace(QString const& _k, BasicRoot* _r): m_cache(0), m_rootEntity(0) { set(0, _k, _r); }
-	inline ModelPtrFace(ModelPtrFace const& _c): m_cache(0), m_rootEntity(0) { set(_c.m_cache, _c.m_key, _c.m_rootEntity); }
+	inline ModelPtrFace(Identifiable* _e): m_cache(0) { set(_e); }
+	inline ModelPtrFace(ModelPtrFace const& _c): m_cache(0) { M_ASSERT(!_c.isArchived()); set(_c.m_cache); }
 	inline ~ModelPtrFace() { set(0); }
 
-	inline ModelPtrFace& operator=(ModelPtrFace const& _c) { set(_c.m_cache, _c.m_key, _c.m_rootEntity); return *this; }
+	inline ModelPtrFace& operator=(ModelPtrFace const& _c) { if (_c.m_cache) set(_c.m_cache); else set(_c.m_key); return *this; }
 
-	inline operator bool() const { return m_cache || m_rootEntity; }
+	inline operator bool() const { return !isNull(); }
 
-	inline bool operator==(ModelPtrFace const& _c) const { return m_cache == _c.m_cache && m_key == _c.m_key && m_rootEntity == _c.m_rootEntity; }
+	inline bool operator==(ModelPtrFace const& _c) const { return m_cache == _c.m_cache && m_key == _c.m_key; }
 	inline bool operator!=(ModelPtrFace const& _c) const { return !operator==(_c); }
 
 	/// Nullity is where the pointer fundamentally doesn't address anything.
-	inline bool isNull() const { return !m_cache && !m_rootEntity; }
+	inline bool isNull() const { return !m_cache && m_key.isEmpty(); }
 	/// Usability is whether get() will work.
 	inline bool isUsable() const { return m_cache; }
 	/// Archived is whether, should the object pointed to by get() be deleted, the position in the language tree it
 	/// took is recorded for later restoration.
-	inline bool isArchived() const { return m_rootEntity; }
+	inline bool isArchived() const { return !m_key.isEmpty(); }
 
 	inline QString identity() const { return key().section("::", -1); }
 	QString key() const;
 
-	void archive();
-	void restore();
-	void tryRestore();
-	void clearCache() { if (isArchived()) m_cache = 0; }
-	void gone(Identifiable* _e);
+	void restoreFrom(QString const& _key) { set(_key); }
+	void tryRestore(Declaration const* _root);
 
 protected:
-	void set(Identifiable* _e, QString const& _k = QString(), BasicRoot* _r = 0);
-	Identifiable* get();
+	void set(Identifiable* _e);
+	void set(QString const& _k = QString::null);
+	inline Identifiable* get() { return m_cache; }
 
 private:
 	Identifiable*		m_cache;
 	QString				m_key;
-	BasicRoot*			m_rootEntity;
 };
 
 }

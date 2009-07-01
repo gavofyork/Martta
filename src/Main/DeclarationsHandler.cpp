@@ -31,7 +31,7 @@
 #include "Variable.h"
 #include "Argument.h"
 #include "Function.h"
-#include "NamespaceEntity.h"
+#include "Namespace.h"
 #include "Type.h"
 #include "Array.h"
 #include "Const.h"
@@ -456,7 +456,7 @@ bool DeclarationsHandler::startElement(QString const&, QString const& _n, QStrin
 {
 	QString conId = _a.value("context");
 	M_ASSERT(conId.isEmpty() || m_contexts.contains(conId));
-	DeclarationEntity* con = m_contexts[conId];
+	Declaration* con = m_contexts[conId];
 
 	if (false) {}
 	else if (_n == "PointerType")

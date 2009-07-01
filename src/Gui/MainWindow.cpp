@@ -220,7 +220,7 @@ void MainWindow::delayedUpdate()
 				new QTreeWidgetItem(v->isKind<Artificial>() ? h : m, QStringList() << QString(v->name()) << QString(v->type()->code()));
 		}
 		QTreeWidgetItem* g = new QTreeWidgetItem(typesVisible, QStringList() << QString("General"));
-		foreach (ValueDefiner* v, e->ancestor<DeclarationEntity>()->valuesKnown())
+		foreach (ValueDefiner* v, e->ancestor<Declaration>()->valuesKnown())
 			new QTreeWidgetItem(g, QStringList() << QString(v->name()) << QString(v->type()->code()));
 /*		QTreeWidgetItem* gl = new QTreeWidgetItem(typesVisible, QStringList() << QString("Global"));
 		foreach (ValueDefiner* v, e->rootEntity()->selfAndAncestorsChildrenOf<ValueDefiner>())
@@ -231,15 +231,15 @@ void MainWindow::delayedUpdate()
 		vvalue = entityInfo->verticalScrollBar()->value();
 		entityInfo->clear();
 		
-		if (DeclarationEntity* d = e->selfAncestor<DeclarationEntity>())
+		if (Declaration* d = e->selfAncestor<Declaration>())
 		{
 			QTreeWidgetItem* decl = new QTreeWidgetItem(entityInfo, QStringList() << QString("Declaration Context"));
 			new QTreeWidgetItem(decl, QStringList() << QString(d->name()) << QString(d->kind().name()));
 			QTreeWidgetItem* ul = new QTreeWidgetItem(decl, QStringList() << QString("Utilised"));
-			foreach (DeclarationEntity* u, d->utilised())
+			foreach (Declaration* u, d->utilised())
 				new QTreeWidgetItem(ul, QStringList() << QString(u ? u->name() : "NULL?") << QString(u ? u->kind().name() : "NULL?"));
 			QTreeWidgetItem* us = new QTreeWidgetItem(decl, QStringList() << QString("Utilised Siblings"));
-			foreach (DeclarationEntity* u, d->utilisedSiblings())
+			foreach (Declaration* u, d->utilisedSiblings())
 				new QTreeWidgetItem(us, QStringList() << QString(u ? u->name() : "NULL?") << QString(u ? u->kind().name() : "NULL?"));
 		}
 		

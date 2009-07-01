@@ -78,7 +78,7 @@ void SimpleUnaryOperation::setOperation(Operator _o, Type const& _type)
 
 Type SimpleUnaryOperation::type() const
 {
-	if (!m_symbolCache.isUsable())
+	if (!m_symbolCache)
 		return Type();
 	if (protoReturn().isUltimatelyNull() && !typeOf(TheOperand).isNull())
 	{
@@ -95,7 +95,7 @@ Type SimpleUnaryOperation::type() const
 
 QString SimpleUnaryOperation::code() const
 {
-	if (!haveOperand() || !m_symbolCache.isUsable())
+	if (!haveOperand() || !m_symbolCache)
 		return QString();
 	if (isPostfix())
 		return parenthesise(operand()->code() + id().code());

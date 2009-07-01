@@ -79,13 +79,13 @@ QString Construction::code() const
 void Construction::importDom(QDomElement const& _element)
 {
 	Entity::importDom(_element);
-	m_subject = rootEntity()->locate<Constructor>(_element.attribute("subject"));
+	m_subject.restoreFrom(_element.attribute("subject"));
 }
 
 void Construction::exportDom(QDomElement& _element) const
 {
 	Entity::exportDom(_element);
-	_element.setAttribute("subject", m_subject->key());
+	_element.setAttribute("subject", m_subject.key());
 }
 
 }

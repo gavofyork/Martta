@@ -44,9 +44,9 @@ protected:
 	virtual bool						hasDefaultConstructor() const { return EnumerationNamer::hasDefaultConstructor(); }
 	virtual Types						assignableTypes() const { return Type(const_cast<MemberEnumeration*>(this)); }
 	virtual QString						code() const { return codeName(); }
-	virtual QList<DeclarationEntity*>	utilisedInUse() const { return QList<DeclarationEntity*>() << const_cast<MemberEnumeration*>(this); }
+	virtual QList<Declaration*>	utilisedInUse() const { return QList<Declaration*>() << const_cast<MemberEnumeration*>(this); }
 	
-	// From DeclarationEntity
+	// From Declaration
 	virtual QList<ValueDefiner*>		valuesAdded() const { return EnumerationNamer::valuesAdded(); }
 
 	// From Entity

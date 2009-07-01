@@ -227,6 +227,29 @@ Remove (or make useful) m_location?
 
 === WISH LIST ===
 
+Singleton support:
+singleton Foo	// No non-default constructors allowed
+{
+public:
+	void setX() { x = true; }
+	bool x() const { return m_x; }
+private:
+	bool m_x;
+};
+becomes
+class Foo
+{
+public:
+	static void setX() { get()->ns_setX(); }
+	static bool x() const { return ns_x(); }
+private:
+	static Foo* get() { return s_this ? s_this : s_this = new Foo; }
+	static Foo* s_this = 0;
+	void ns_setX() { x = true; }
+	bool ns_x() const { return m_x; }
+	bool m_x;
+}
+
 Automatic caching support.
 e.g.
 attribute P* parent;

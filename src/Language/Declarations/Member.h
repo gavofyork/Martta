@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include "DeclarationEntity.h"
+#include "Declaration.h"
 
 namespace Martta
 {
@@ -30,9 +30,9 @@ class Class;
 /**
  * Class for any entity that can be found inside a class (i.e. with an access attribute).
  */
-class Member: public DeclarationEntity
+class Member: public Declaration
 {
-	MARTTA_PLACEHOLDER(DeclarationEntity)
+	MARTTA_PLACEHOLDER(Declaration)
 	
 public:
 	enum { Accessibility = FirstNamed, EndOfNamed };

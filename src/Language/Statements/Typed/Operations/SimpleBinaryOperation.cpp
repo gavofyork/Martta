@@ -119,7 +119,7 @@ void SimpleBinaryOperation::onDependencyChanged(Entity*)
 
 QString SimpleBinaryOperation::code() const
 {
-	if (!haveLeft() || !haveRight() || !m_symbolCache.isUsable())
+	if (!haveLeft() || !haveRight() || !m_symbolCache)
 		return QString();
 	return parenthesise(left()->code() + " " + id().code() + " " + right()->code());
 }
@@ -128,7 +128,7 @@ Types SimpleBinaryOperation::allowedTypes(int _index) const
 {
 	if (_index == FirstOperand || _index == SecondOperand)
 	{
-		if (!m_symbolCache.isUsable())
+		if (!m_symbolCache)
 			return Types();
 		qDebug() << prototypeOf(FirstOperand)->code() << prototypeOf(SecondOperand)->code() << " " << _index << " " << typeOf(FirstOperand)->code();
 		if (_index == SecondOperand && prototypeOf(SecondOperand).isUltimatelyNull() && !typeOf(FirstOperand).isNull())
@@ -143,7 +143,7 @@ Types SimpleBinaryOperation::allowedTypes(int _index) const
 
 Type SimpleBinaryOperation::type() const
 {
-	if (!m_symbolCache.isUsable())
+	if (!m_symbolCache)
 		return Type();
 	if (protoReturn().isUltimatelyNull() && !typeOf(FirstOperand).isNull())
 		return typeOf(FirstOperand).strippedTo(protoReturn());

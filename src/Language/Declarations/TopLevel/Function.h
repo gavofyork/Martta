@@ -23,7 +23,7 @@
 #include "Compound.h"
 #include "Variable.h"
 #include "LambdaNamer.h"
-#include "DeclarationEntity.h"
+#include "Declaration.h"
 
 namespace Martta
 {

@@ -32,7 +32,7 @@ class Class: public TopLevelType
 public:
 	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
 
-	QList<DeclarationEntity*>			members(bool _isConst = false, Access _access = Private) const;
+	QList<Declaration*>			members(bool _isConst = false, Access _access = Private) const;
 	template<class T> inline QList<T*>	membersOf(bool _isConst = false, Access _access = Private) const { return filterEntities<T>(members(_isConst, _access)); }
 	
 	Access								baseAccess(Class* _c) const;
@@ -43,7 +43,7 @@ protected:
 	virtual QString						implementationCode() const;
 	virtual QString						defineLayout(ViewKeys&) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
-	virtual QList<DeclarationEntity*>	utilised() const;
+	virtual QList<Declaration*>	utilised() const;
 //	virtual int							notificationRequirements() const { return BeComplete; }
 	virtual void						onDependencyChanged(Entity* _e);
 	virtual void						apresLoad() { rejigDeps(); checkImplicitConstructors(); }

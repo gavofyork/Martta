@@ -46,7 +46,7 @@ protected:
 	virtual QString						code() const { return codeName(); }
 	virtual bool						hasDefaultConstructor() const { return false; }
 	virtual Types						assignableTypes() const;
-	virtual QList<DeclarationEntity*>	utilisedInUse() const { return QList<DeclarationEntity*>() << const_cast<TopLevelType*>(this); }
+	virtual QList<Declaration*>	utilisedInUse() const { return QList<Declaration*>() << const_cast<TopLevelType*>(this); }
 	
 	Location							m_location;
 };

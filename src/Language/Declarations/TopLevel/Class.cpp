@@ -178,7 +178,7 @@ Kinds Class::allowedKinds(int _i) const
 QString Class::implementationCode() const
 {
 	QString ret;
-	foreach (DeclarationEntity* f, cardinalChildrenOf<DeclarationEntity>())
+	foreach (Declaration* f, cardinalChildrenOf<Declaration>())
 		ret += f->implementationCode() + "\n";
 	if (ret.endsWith("\n\n")) ret.chop(1);
 	return ret;
@@ -202,18 +202,18 @@ QString Class::interfaceCode() const
 	return ret;
 }
 
-QList<DeclarationEntity*> Class::utilised() const
+QList<Declaration*> Class::utilised() const
 {
-	QList<DeclarationEntity*> ret;
+	QList<Declaration*> ret;
 	foreach (Base* i, cardinalChildrenOf<Base>())
 		ret << i->classType();
 	ret += Super::utilised();
 	return ret;
 }
 
-QList<DeclarationEntity*> Class::members(bool _isConst, Access _access) const
+QList<Declaration*> Class::members(bool _isConst, Access _access) const
 {
-	QList<DeclarationEntity*> ret;
+	QList<Declaration*> ret;
 	foreach (MemberValue* i, cardinalChildrenOf<MemberValue>())
 		if ((i->isConst() || !_isConst) && i->access() <= _access)
 			ret += i;

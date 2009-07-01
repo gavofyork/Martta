@@ -32,23 +32,26 @@ class ValueDefiner;
  * Class for anything individually referencable in the language.
  * Currently this includes only functions, variables, types and enumeration values.
  */
-class DeclarationEntity: public Entity, public_interface Identifiable
+class Declaration: public Entity, public_interface Identifiable
 {
 	MARTTA_PLACEHOLDER(Entity)
 	MARTTA_INHERITS(Identifiable, 0)
 
 public:
-	virtual ~DeclarationEntity();
+	virtual ~Declaration();
 
 	/// From Identifiable (default implementations).
 	virtual QString						key() const;
 	virtual Identifiable*				lookupChild(QString const& _key) const;
+	Identifiable*						findEntity(QString const& _key) const;	// Treats this entity as root scope and looks for (scoped) _key in it. 
+	void								archivePtrs(bool _clear = false) const;
+	void								restorePtrs() const;
 	
 	int									registerAnonymous(Identifiable const* _e) const { if (m_anonyma.contains(_e)) return m_anonyma.indexOf(_e); m_anonyma << _e; return m_anonyma.size() - 1; }
 	void								registerAnonymous(Identifiable const* _e, int _k) { while (m_anonyma.size() <= _k) m_anonyma << 0; m_anonyma[_k] = _e; }
 
-	QList<DeclarationEntity*>			utilisedSiblings() const;
-	virtual QList<DeclarationEntity*>	utilised() const;
+	QList<Declaration*>					utilisedSiblings() const;
+	virtual QList<Declaration*>			utilised() const;
 
 	QList<ValueDefiner*>				valuesKnown() const;
 	virtual QList<ValueDefiner*>		valuesAdded() const { return QList<ValueDefiner*>(); }

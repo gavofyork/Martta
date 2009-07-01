@@ -50,7 +50,7 @@
 #include "Method.h"
 #include "Variable.h"
 #include "Referenced.h"
-#include "NamespaceEntity.h"
+#include "Namespace.h"
 #include "Compound.h"
 using namespace Martta;
 
@@ -320,7 +320,7 @@ int coreTests()
 	TEST("Pointer archival/restoration")
 	{
 		BasicRoot* r = new BasicRoot;
-		NamespaceEntity* n = new NamespaceEntity;
+		Namespace* n = new Namespace;
 		n->prepareChildren();
 		r->back().place(n);
 		n->childAs<TextLabel>(Identifiable::Identity)->setText("n");
@@ -350,7 +350,6 @@ int coreTests()
 		f->prepareChildren();
 		M->childOf<Compound>()->back().place(f);
 		
-		r->archivePtrs(true);
 		r->restorePtrs();
 		QDomDocument doc;
 		QDomElement prj = doc.createElement("project");

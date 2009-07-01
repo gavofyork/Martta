@@ -20,24 +20,35 @@
 
 #pragma once
 
-#include "TopLevel.h"
+#include <QHash>
+
+#include "Declaration.h"
 
 namespace Martta
 {
 
-class NamespaceEntity: public TopLevel
+class ModelPtrFace;
+class Identifiable;
+
+class ModelPtrRegistrar
 {
-	MARTTA_OBJECT(TopLevel)
-
 public:
-	virtual bool						isGloballyIdentifiable() const { return true; }
-	virtual Kinds						allowedKinds(int _i) const;
-	virtual QString						defineLayout(ViewKeys&) const;
-	
-	QString								interfaceCode() const;
-	QString								implementationCode() const;
+	ModelPtrRegistrar() { s_this = this; }
 
-	virtual bool						keyPressed(EntityKeyEvent const* _e);
+	static ModelPtrRegistrar*			get() { return s_this ? s_this : new ModelPtrRegistrar; }
+
+	void								toBeRestored(ModelPtrFace* _p);
+	void								restorePtrs(Declaration const* _root) const;
+	
+	void								registerDeclaration(Declaration* _e) { M_ASSERT(!m_registered.contains(_e->key())); m_registered[_e->key()] = _e; }
+	void								unregisterDeclaration(Declaration* _e) { M_ASSERT(m_registered.values().contains(_e)); m_registered.remove(m_registered.key(_e)); }
+	Declaration*						findDeclaration(QString const& _key) const { if (m_registered.contains(_key)) return m_registered[_key]; return 0; }
+	
+private:
+	QHash<QString, Declaration*>		m_registered;
+	mutable QList<ModelPtrFace*>		m_modelPtrs;
+
+	static ModelPtrRegistrar*			s_this;
 };
 
 }

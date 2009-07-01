@@ -54,15 +54,15 @@ protected:
 	virtual void						apresLoad() { refreshOperation(); }
 	
 private:
-	Type								prototypeOf(int _index) const { if (!m_symbolCache.isUsable()) return Type(); return Operation::prototypeOf(m_symbolCache->type(), _index); }
-	Type								protoReturn() const { if (!m_symbolCache.isUsable()) return Type(); return Operation::prototypeOf(m_symbolCache->type()); }
+	Type								prototypeOf(int _index) const { if (!m_symbolCache) return Type(); return Operation::prototypeOf(m_symbolCache->type(), _index); }
+	Type								protoReturn() const { if (!m_symbolCache) return Type(); return Operation::prototypeOf(m_symbolCache->type()); }
 	// Note these don't call changed().
 	void								refreshOperation() { setOperation(m_operator, operandType()); }
 	void								setOperation(Operator _o, Type const& _type = Type());
 	static QList<ValueDefiner*>			findOperators(Operator _o, Type const& _type = Type());
 	
 	Operator							m_operator;
-	ModelPtr<ValueDefiner>				m_symbolCache;
+	ValueDefiner*						m_symbolCache;
 };
 
 }

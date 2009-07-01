@@ -23,7 +23,7 @@
 #include "CommonGraphics.h"
 #include "Variable.h"
 #include "Argument.h"
-#include "NamespaceEntity.h"
+#include "Namespace.h"
 #include "TypeDefinition.h"
 #include "MemberVariable.h"
 #include "LambdaNamer.h"
@@ -46,7 +46,7 @@ QString TextLabel::code() const
 	else
 	{
 		QString prefix = "";
-		if (parent()->hasAncestor<NamespaceEntity>())
+		if (parent()->hasAncestor<Namespace>())
 		{
 			if (parentIs<Argument>())
 				prefix = "a_";
@@ -57,7 +57,7 @@ QString TextLabel::code() const
 			else
 				prefix = "";
 		}
-		else if (parent()->isKind<NamespaceEntity>() && name().size() && name()[0].isNumber())
+		else if (parent()->isKind<Namespace>() && name().size() && name()[0].isNumber())
 			prefix = "_";
 		else
 			prefix = "";
@@ -89,7 +89,7 @@ QString TextLabel::name() const
 		return QString("_ANON%1").arg((int)this);//return "foo";	// TODO: make it proper.
 	else if (m_text.isEmpty())
 		return QString::null;
-	else if (parentIs<TypeDefinition>() || parentIs<NamespaceEntity>())
+	else if (parentIs<TypeDefinition>() || parentIs<Namespace>())
 		return m_text.left(1).toUpper() + camelCase(m_text.mid(1));
 	else
 		return camelCase(m_text);
@@ -98,7 +98,7 @@ QString TextLabel::name() const
 QString TextLabel::defineLayout(ViewKeys&) const
 {
 	QString key = "";
-	if (parent()->hasAncestor<NamespaceEntity>())
+	if (parent()->hasAncestor<Namespace>())
 	{
 		if (parentIs<Argument>())
 			key = "(;M4;[[[;fs-2;fb;c#777;e#fff;'_';]]];);";
@@ -111,7 +111,7 @@ QString TextLabel::defineLayout(ViewKeys&) const
 void TextLabel::decorate(DecorationContext const& _c) const
 {
 	bool dec= false;
-	if (parent()->hasAncestor<NamespaceEntity>())
+	if (parent()->hasAncestor<Namespace>())
 	{
 		if (parentIs<Variable>() && parent()->parentIs<Member>())
 			dec = true;
@@ -188,7 +188,7 @@ public:
 	virtual QString defineLayout(ViewKeys&) const
 	{
 		QString key = "";
-		if (subject()->parent()->hasAncestor<NamespaceEntity>())
+		if (subject()->parent()->hasAncestor<Namespace>())
 		{
 			if (subject()->parentIs<Argument>())
 				key = "(;M4;[[[;fs-2;fb;c#777;e#fff;'_';]]];)";

@@ -29,7 +29,7 @@ MARTTA_OBJECT_CPP(Union);
 Kinds Union::allowedKinds(int _i) const
 {
 	if (_i >= 0)
-		return Kind::of<DeclarationEntity>();
+		return Kind::of<Declaration>();
 	return Super::allowedKinds(_i);
 }
 	

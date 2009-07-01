@@ -25,7 +25,7 @@
 #include "Operator.h"
 #include "Identifiable.h"
 #include "ModelPtr.h"
-#include "DeclarationEntity.h"
+#include "Declaration.h"
 
 namespace Martta
 {
@@ -40,14 +40,13 @@ class ModelPtrFace;
  *
  * Aside from that it should also encompass all the implementation of the project in question.
  */
-class BasicRoot: public QObject, public DeclarationEntity
+class BasicRoot: public QObject, public Declaration
 {
 	Q_OBJECT
-	MARTTA_OBJECT(DeclarationEntity)
+	MARTTA_OBJECT(Declaration)
 
 public:
 	BasicRoot();
-	~BasicRoot();
 
 	static BasicRoot*					get() { return s_this; }
 
@@ -61,24 +60,8 @@ public:
 
 	virtual void						exportDom(QDomElement&) const { M_ASSERT(0); }
 
-	void								archivePtrs(bool _clear = false) const;
-	void								restorePtrs() const;
-	void								addModelPtr(ModelPtrFace* _p);
-	void								removeModelPtr(ModelPtrFace* _p);
-	void								noteDeletion(Identifiable* _e);
-	QList<ModelPtrFace*> const&			modelPtrs() const { return m_modelPtrs; }
-	virtual Identifiable*				findEntity(QString const& _key) const;
-	template<class T> ModelPtr<T>		locate(QString const& _key) { return ModelPtr<T>(_key, this); }
-
 	void								setChanged();
-	
-	enum ArchivalState { Restored, Archiving, Archived, Restoring };
-	ArchivalState 						archivalState() const { return m_archivalState; }
-	
-	void								registerDeclaration(DeclarationEntity* _e) { M_ASSERT(!m_registered.contains(_e->key())); m_registered[_e->key()] = _e; }
-	void								unregisterDeclaration(DeclarationEntity* _e) { M_ASSERT(m_registered.values().contains(_e)); m_registered.remove(m_registered.key(_e)); }
-	DeclarationEntity*					findDeclaration(QString const& _key) const { if (m_registered.contains(_key)) return m_registered[_key]; return 0; }
-	
+
 public slots:	
 	void								ensureSyncedModel();
 
@@ -91,9 +74,6 @@ signals:
 
 private:
 	bool								m_changed;
-	QHash<QString, DeclarationEntity*>	m_registered;
-	QList<ModelPtrFace*>				m_modelPtrs;
-	mutable ArchivalState				m_archivalState;
 
 	// List of entities to check and possibly delete at next opportunity when nothing else happening.
 	QList<SafePointer<Entity> >			m_cullList;

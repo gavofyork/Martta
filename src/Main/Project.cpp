@@ -30,7 +30,7 @@
 #include "ConstLabel.h"
 #include "Typed.h"
 #include "Method.h"
-#include "NamespaceEntity.h"
+#include "Namespace.h"
 #include "Literal.h"
 #include "Referenced.h"
 #include "SimpleUnaryOperation.h"
@@ -104,7 +104,7 @@ void Project::resetAsNew()
 	clear();
 	m_declarations.debugTree();
 	m_filename = QString();
-	m_namespace = new NamespaceEntity;
+	m_namespace = new Namespace;
 	m_namespace->prepareChildren();
 	m_declarations.back().place(m_namespace);
 
@@ -124,7 +124,7 @@ void Project::resetAsNew()
 	reloadHeaders();
 */
 	m_namespace->killAndDelete();
-	m_namespace = new NamespaceEntity;
+	m_namespace = new Namespace;
 	m_declarations.back().place(m_namespace);
 	m_namespace->prepareChildren();
 	m_namespace->childAs<TextLabel>(Identifiable::Identity)->setText("Project");
@@ -161,8 +161,8 @@ QString Project::code() const
 		if (ic.isEmpty())
 			return QString();
 		ret += ic + "\n" + m_namespace->implementationCode() + "\n";
-		if (m_program && m_program->parentIs<DeclarationEntity>())
-			ret += "int main(int, char**)\n{\n" + m_program->parentAs<DeclarationEntity>()->reference() + " p;\np." + m_program->codeName() + "();\n}\n";
+		if (m_program && m_program->parentIs<Declaration>())
+			ret += "int main(int, char**)\n{\n" + m_program->parentAs<Declaration>()->reference() + " p;\np." + m_program->codeName() + "();\n}\n";
 	}
 
 	return ret;
@@ -174,7 +174,7 @@ void Project::clear()
 	m_program = 0;
 	m_namespace = 0;
 	m_declarations.clearEntities();
-	M_ASSERT(m_declarations.modelPtrs().size() == 0);
+//	M_ASSERT(m_declarations.modelPtrs().size() == 0);
 //	while (m_classes.size()) m_classes.takeLast()->killAndDelete();
 	m_classes.reset();
 	while (m_cDepends.size()) delete m_cDepends.takeLast();
@@ -348,10 +348,12 @@ void Project::deserialise(QDomDocument& _d)
 	while (files.size()) delete files.takeLast();
 //	M_ASSERT(orphans.isEmpty());
 
+	ChangeMan::get()->sleep();
 	TIME_STATEMENT(importDom) m_declarations.importDom(_d.documentElement());
 	TIME_STATEMENT(restorePtrs) m_declarations.restorePtrs();
-
-	m_namespace = m_declarations.childOf<NamespaceEntity>();
+	ChangeMan::get()->wake();
+	
+	m_namespace = m_declarations.childOf<Namespace>();
 	M_ASSERT(m_namespace);
 
 	m_classes << m_namespace->cardinalChildrenOf<Class>();
@@ -397,8 +399,6 @@ void Project::revert()
 void Project::serialise(QDomDocument& _d) const
 {
 	TIME_FUNCTION;
-
-	TIME_STATEMENT(archivePtrs) m_declarations.archivePtrs();
 
 	QDomElement root = _d.createElement("project");
 	_d.appendChild(root);

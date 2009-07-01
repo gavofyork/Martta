@@ -20,33 +20,24 @@
 
 #pragma once
 
-#include "Identifiable.h"
+#include "TopLevel.h"
 
 namespace Martta
 {
 
-class Declaration;
-class Type;
-typedef QList<Type> Types;
-
-/**
- * Class for permanent types.
- * Types may be named or anonymous.
- * This includes typedefs, unions, structs and enums.
- */
-class TypeDefinition: public_interface Identifiable
+class Namespace: public TopLevel
 {
-	MARTTA_INTERFACE
-	MARTTA_INHERITS(Identifiable, 0)
+	MARTTA_OBJECT(TopLevel)
 
 public:
-	virtual QString						code() const = 0;
-	virtual bool						hasDefaultConstructor() const = 0;
-	virtual Types						assignableTypes() const = 0;
-	virtual QList<Declaration*>	utilisedInUse() const = 0;
+	virtual bool						isGloballyIdentifiable() const { return true; }
+	virtual Kinds						allowedKinds(int _i) const;
+	virtual QString						defineLayout(ViewKeys&) const;
 	
-	virtual ~TypeDefinition() {}
-	// TODO: implicit-cast/conversion information
+	QString								interfaceCode() const;
+	QString								implementationCode() const;
+
+	virtual bool						keyPressed(EntityKeyEvent const* _e);
 };
 
 }

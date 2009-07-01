@@ -20,14 +20,14 @@
 
 #include "TextLabel.h"
 #include "TopLevelType.h"
-#include "NamespaceEntity.h"
+#include "Namespace.h"
 
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(NamespaceEntity);	
+MARTTA_OBJECT_CPP(Namespace);	
 
-bool NamespaceEntity::keyPressed(EntityKeyEvent const* _e)
+bool Namespace::keyPressed(EntityKeyEvent const* _e)
 {
 	if (attemptAppend(_e))
 		return true;
@@ -35,7 +35,7 @@ bool NamespaceEntity::keyPressed(EntityKeyEvent const* _e)
 		return Super::keyPressed(_e);
 }
 
-QString NamespaceEntity::defineLayout(ViewKeys&) const
+QString Namespace::defineLayout(ViewKeys&) const
 {
 	QString ret = QString("ycode;'namespace';Mi;%1;n;").arg(Identity);
 	
@@ -44,32 +44,32 @@ QString NamespaceEntity::defineLayout(ViewKeys&) const
 	return ret;
 }
 
-Kinds NamespaceEntity::allowedKinds(int _i) const
+Kinds Namespace::allowedKinds(int _i) const
 {
 	if (_i >= 0)
 		return Kind::of<TopLevelType>();
 	return Super::allowedKinds(_i);
 }
 
-QString NamespaceEntity::interfaceCode() const
+QString Namespace::interfaceCode() const
 {
 	QString ret;
 	ret += "namespace " + codeName() + "\n{\n";
 
-	QList<DeclarationEntity*> q;
-	QMultiMap<DeclarationEntity*, DeclarationEntity*> deps;
-	foreach (DeclarationEntity* i, cardinalChildrenOf<DeclarationEntity>())
+	QList<Declaration*> q;
+	QMultiMap<Declaration*, Declaration*> deps;
+	foreach (Declaration* i, cardinalChildrenOf<Declaration>())
 	{
-		foreach (DeclarationEntity* j, i->utilisedSiblings())
+		foreach (Declaration* j, i->utilisedSiblings())
 			deps.insert(i, j);
 		if (!deps.count(i))
 			q << i;
 	}
 
-	QList<DeclarationEntity*> ds = solve(q, deps);
+	QList<Declaration*> ds = solve(q, deps);
 	if (!ds.size())
 		return QString();
-	foreach (DeclarationEntity* i, ds)
+	foreach (Declaration* i, ds)
 		ret += i->interfaceCode() + "\n";
 	
 	if (ret.endsWith("\n\n")) ret.chop(1);
@@ -77,11 +77,11 @@ QString NamespaceEntity::interfaceCode() const
 	return ret;
 }
 
-QString NamespaceEntity::implementationCode() const
+QString Namespace::implementationCode() const
 {
 	QString ret;
-	QList<DeclarationEntity*> ordered;
-	foreach (DeclarationEntity* i, cardinalChildrenOf<DeclarationEntity>())
+	QList<Declaration*> ordered;
+	foreach (Declaration* i, cardinalChildrenOf<Declaration>())
 		ret += i->implementationCode() + "\n";
 	if (ret.endsWith("\n\n")) ret.chop(1);
 	return ret;

@@ -52,7 +52,7 @@ protected:
 	virtual TypeEntity*					newClone() const { return new ModifyingType; }
 	virtual TypeEntity*					bottom() { return childIs<TypeEntity>(Original) ? childAs<TypeEntity>(Original) : this; }
 	virtual bool						canStandAlone() const { return original() ? original()->canStandAlone() : false; }
-	virtual QList<DeclarationEntity*>	utilisedX() const { return original() ? original()->utilised() : Super::utilised(); }
+	virtual QList<Declaration*>	utilisedX() const { return original() ? original()->utilised() : Super::utilised(); }
 };
 
 }

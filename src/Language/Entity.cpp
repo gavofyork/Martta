@@ -62,8 +62,7 @@ QList<int> Entity::knownNames() const
 Entity::~Entity()
 {
 	M_ASSERT(!m_parent);
-	foreach (Entity* i, children())
-		i->killAndDelete();
+	clearEntities();
 	M_ASSERT(!m_cardinalChildren.size());
 	M_ASSERT(!m_namedChildren.size());
 }
@@ -286,6 +285,7 @@ void Entity::importDom(QDomElement const& _element)
 	for (QDomNode i = _element.firstChild(); !i.isNull(); i = i.nextSibling())
 		if (i.isElement() && i.toElement().tagName() == "entity")
 		{
+			qDebug() << i.toElement().attribute("kind");
 			Entity* e = spawn(i.toElement().attribute("kind"));
 			if (i.toElement().hasAttribute("contextindex"))
 				e->silentMove(middle(i.toElement().attribute("contextindex").toInt()));

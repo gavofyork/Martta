@@ -43,7 +43,7 @@
 #include "Method.h"
 #include "Variable.h"
 #include "Referenced.h"
-#include "NamespaceEntity.h"
+#include "Namespace.h"
 #include "Compound.h"
 using namespace Martta;
 

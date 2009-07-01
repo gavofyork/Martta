@@ -42,6 +42,9 @@ void ChangeMan::oneFootInTheGrave(Dependee* _going)
 
 bool ChangeMan::changed(Dependee* _changer, int _aspect)
 {
+	if (m_asleep)
+		return false;
+
 	// if (already in changed() call for this object with subseteq of _aspect) return false;
 	foreach (Changing e, m_changing)
 		if (e.m_changer == _changer && e.m_aspect & _aspect == _aspect)
@@ -146,6 +149,8 @@ void ChangeMan::processQueue()
 
 void ChangeMan::childrenInitialised(Depender* _this)
 {
+	if (m_asleep)
+		return;
 	if (_this->botherNotifying() && _this->familyDependencies() & Depender::DependsOnChildren)
 		m_changeQueue << Entry(_this, EntityChildrenInitialised);
 	processQueue();
@@ -154,6 +159,8 @@ void ChangeMan::childrenInitialised(Depender* _this)
 void ChangeMan::childAdded(Depender* _this, int _index)
 {
 	M_ASSERT(_this->self()->child(_index));
+	if (m_asleep)
+		return;
 	if (_this->botherNotifying() && _this->familyDependencies() & Depender::DependsOnChildren)
 	{
 		m_changeQueue << Entry(_this, DependencyAdded, _this->self()->child(_index));
@@ -170,6 +177,8 @@ void ChangeMan::childSwitched(Depender* _this, Entity* _ch, Entity* _old)
 	M_ASSERT(_ch->parent() == _this->self());
 	M_ASSERT(_old);
 	M_ASSERT(_old->parent() != _this->self());
+	if (m_asleep)
+		return;
 	if (_this->botherNotifying() && _this->familyDependencies() & Depender::DependsOnChildren)
 		m_changeQueue << Entry(_this, DependencySwitched, _ch, _old);
 	processQueue();
@@ -181,6 +190,8 @@ void ChangeMan::dependencySwitched(Depender* _this, Entity* _currentDependency, 
 	M_ASSERT(dee);
 	M_ASSERT(_exDependency);
 	M_ASSERT(m_dependees.contains(_this, dee));
+	if (m_asleep)
+		return;
 	if (_this->botherNotifying())
 		m_changeQueue << Entry(_this, DependencySwitched, _currentDependency, _exDependency);
 	processQueue();
@@ -190,6 +201,8 @@ void ChangeMan::childRemoved(Depender* _this, Entity* _old, int _index)
 {
 	M_ASSERT(_old);
 	M_ASSERT(_old->parent() != _this->self());
+	if (m_asleep)
+		return;
 	if (_this->botherNotifying() && _this->familyDependencies() & Depender::DependsOnChildren)
 	{
 		m_changeQueue << Entry(_this, DependencyRemoved, _old, 0, _index);
@@ -203,6 +216,8 @@ void ChangeMan::childRemoved(Depender* _this, Entity* _old, int _index)
 void ChangeMan::childMoved(Depender* _this, Entity* _ch, int _oI)
 {
 	M_ASSERT(_ch);
+	if (m_asleep)
+		return;
 	if (_this->botherNotifying() && _this->familyDependencies() & Depender::TestOnOrder)
 		m_changeQueue << Entry(_this, ChildMoved, _ch, 0, _oI);
 	if (Depender* d = _ch->tryKind<Depender>())
@@ -215,6 +230,8 @@ void ChangeMan::parentAdded(Depender* _this)
 {
 	Entity* p = _this->self()->parent();
 	M_ASSERT(p);
+	if (m_asleep)
+		return;
 	if (_this->botherNotifying() && _this->familyDependencies() & Depender::DependsOnParent)
 		m_changeQueue << Entry(_this, DependencyAdded, p);
 
@@ -239,6 +256,8 @@ void ChangeMan::parentSwitched(Depender* _this, Entity* _old)
 	M_ASSERT(_old);
 	M_ASSERT(p);
 	M_ASSERT(p != _old);
+	if (m_asleep)
+		return;
 	if (_this->botherNotifying() && _this->familyDependencies() & Depender::DependsOnParent)
 		m_changeQueue << Entry(_this, DependencySwitched, p, _old);
 		
@@ -271,6 +290,8 @@ void ChangeMan::parentRemoved(Depender* _this, Entity* _old)
 {
 	M_ASSERT(_old);
 	M_ASSERT(!_this->self()->parent());
+	if (m_asleep)
+		return;
 	if (_this->botherNotifying() && _this->familyDependencies() & Depender::DependsOnParent)
 		m_changeQueue << Entry(_this, DependencyRemoved, _old);
 		

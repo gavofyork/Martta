@@ -21,14 +21,14 @@
 #pragma once
 
 #include "ValueDefiner.h"
-#include "DeclarationEntity.h"
+#include "Declaration.h"
 
 namespace Martta
 {
 
-class Simple: public DeclarationEntity, public_interface ValueDefiner
+class Simple: public Declaration, public_interface ValueDefiner
 {
-	MARTTA_OBJECT(DeclarationEntity)
+	MARTTA_OBJECT(Declaration)
 	MARTTA_INHERITS(ValueDefiner, 0)
 	
 public:

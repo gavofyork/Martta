@@ -66,13 +66,13 @@ bool VirtualOverload::keyPressed(EntityKeyEvent const* _e)
 void VirtualOverload::exportDom(QDomElement& _element) const
 {
 	Super::exportDom(_element);
-	_element.setAttribute("base", m_base->key());
+	_element.setAttribute("base", m_base.key());
 }
 
 void VirtualOverload::importDom(QDomElement const& _element)
 {
 	Super::importDom(_element);
-	m_base = rootEntity()->locate<VirtualMethod>(_element.attribute("base"));
+	m_base.restoreFrom(_element.attribute("base"));
 }
 
 QList<VirtualMethod*> VirtualOverload::possibilities() const

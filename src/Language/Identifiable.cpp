@@ -20,11 +20,12 @@
 
 #include <QtXml>
 
+#include "ModelPtrRegistrar.h"
 #include "BasicRoot.h"
 #include "IdLabel.h"
 #include "TextLabel.h"
 #include "Entity.h"
-#include "DeclarationEntity.h"
+#include "Declaration.h"
 #include "Identifiable.h"
 
 namespace Martta
@@ -32,6 +33,10 @@ namespace Martta
 
 MARTTA_INTERFACE_CPP(Identifiable);
 MARTTA_NAMED_CPP(Identifiable, Identity);
+
+Identifiable::~Identifiable()
+{
+}
 
 QString Identifiable::name() const
 {
@@ -49,19 +54,13 @@ QString Identifiable::codeName() const
 
 QString Identifiable::key() const
 {
-	M_ASSERT(self()->hasAncestor<DeclarationEntity>());
-	return self()->ancestor<DeclarationEntity>()->key() + "::" + QString::number(self()->ancestor<DeclarationEntity>()->registerAnonymous(this));
+	M_ASSERT(self()->hasAncestor<Declaration>());
+	return self()->ancestor<Declaration>()->key() + "::" + QString::number(self()->ancestor<Declaration>()->registerAnonymous(this));
 }
 
 Identifiable* Identifiable::addressableContext() const
 {
 	return self()->parentIs<Identifiable>() ? self()->parentAs<Identifiable>() : 0;
-}
-
-void Identifiable::onLeaveScene(BasicRoot* _new, BasicRoot* _old)
-{
-	if (_old && _old != _new)
-		_old->noteDeletion(this);
 }
 
 Identifiable* Identifiable::lookupChild(QString const& _key) const
@@ -75,13 +74,13 @@ Identifiable* Identifiable::lookupChild(QString const& _key) const
 void Identifiable::importDom(QDomElement const& _element)
 {
 	if (_element.hasAttribute("index"))
-		self()->ancestor<DeclarationEntity>()->registerAnonymous(this, _element.attribute("index").toInt());
+		self()->ancestor<Declaration>()->registerAnonymous(this, _element.attribute("index").toInt());
 }
 
 void Identifiable::exportDom(QDomElement& _element) const
 {
 	if (!addressableContext())
-		_element.setAttribute("index", self()->ancestor<DeclarationEntity>()->registerAnonymous(this));
+		_element.setAttribute("index", self()->ancestor<Declaration>()->registerAnonymous(this));
 }
 
 }

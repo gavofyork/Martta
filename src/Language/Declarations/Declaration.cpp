@@ -22,38 +22,67 @@
 #include <QtXml>
 
 // TODO REMOVE!
-#include "NamespaceEntity.h"
+#include "Namespace.h"
 #include "Class.h"
 
+#include "ModelPtrRegistrar.h"
 #include "Common.h"
 #include "BasicRoot.h"
 #include "TextLabel.h"
 #include "OperatorLabel.h"
 #include "ValueDefiner.h"
-#include "DeclarationEntity.h"
+#include "Declaration.h"
 
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(DeclarationEntity);
+MARTTA_OBJECT_CPP(Declaration);
 
-DeclarationEntity::~DeclarationEntity()
+Declaration::~Declaration()
 {
-	if (rootEntity() && rootEntity() != this)
-		rootEntity()->noteDeletion(this);
-	else
-		qInformation() << "Deleting" << this << "with no rootEntity!";
 }
 
-QList<ValueDefiner*> DeclarationEntity::valuesKnown() const
+// Identification, search & location.
+// TODO: move to Identifiable, make recursive?.
+Identifiable* Declaration::findEntity(QString const& _key) const
 {
-	QList<ValueDefiner*> ret = parentIs<DeclarationEntity>() ? parentAs<DeclarationEntity>()->valuesKnown() : QList<ValueDefiner*>();
-	foreach (DeclarationEntity* d, cardinalSiblingsOf<DeclarationEntity>())
+//	qDebug() << *this << "Seaching for" << _key;
+	qDebug() << _key;
+	if (_key.startsWith("::"))
+	{
+		Identifiable const* i = this;
+		QString k = _key;
+		while (i && !k.isEmpty())
+		{
+			QString s = k.section("::", 1, 1);
+			k = k.mid(s.size() + 2);
+			i = i->lookupChild(s);
+//			qDebug() << "Key" << s << "gives" << (i ? i->self() : 0);
+		}
+		return const_cast<Identifiable*>(i);
+	}
+	else
+		return ModelPtrRegistrar::get()->findDeclaration(_key);
+}
+
+void Declaration::archivePtrs(bool) const
+{
+}
+
+void Declaration::restorePtrs() const
+{
+	ModelPtrRegistrar::get()->restorePtrs(this);
+}
+
+QList<ValueDefiner*> Declaration::valuesKnown() const
+{
+	QList<ValueDefiner*> ret = parentIs<Declaration>() ? parentAs<Declaration>()->valuesKnown() : QList<ValueDefiner*>();
+	foreach (Declaration* d, cardinalSiblingsOf<Declaration>())
 		ret += d->valuesAdded();
 	return ret;
 }
 
-QString DeclarationEntity::key() const
+QString Declaration::key() const
 {
 	if (addressableContext())
 		return addressableContext()->key() + "::" + identity();
@@ -61,14 +90,14 @@ QString DeclarationEntity::key() const
 		return Identifiable::key();
 }
 
-Kinds DeclarationEntity::allowedKinds(int _i) const
+Kinds Declaration::allowedKinds(int _i) const
 {
 	if (_i == Identity)
 		return Kind::of<TextLabel>();
 	return Super::allowedKinds(_i);
 }
 
-Identifiable* DeclarationEntity::lookupChild(QString const& _key) const
+Identifiable* Declaration::lookupChild(QString const& _key) const
 {
 	bool ok;
 	int k = _key.toInt(&ok);
@@ -77,37 +106,37 @@ Identifiable* DeclarationEntity::lookupChild(QString const& _key) const
 	return Identifiable::lookupChild(_key);
 }
 
-QList<DeclarationEntity*> DeclarationEntity::utilisedSiblings() const
+QList<Declaration*> Declaration::utilisedSiblings() const
 {
-	QList<DeclarationEntity*> ret;
-	foreach (DeclarationEntity* i, utilised())
+	QList<Declaration*> ret;
+	foreach (Declaration* i, utilised())
 		if (i->hasAncestor(parent()))
 		{
-			DeclarationEntity* e = sibling(i->ancestorIndex(parent()))->asKind<DeclarationEntity>();
+			Declaration* e = sibling(i->ancestorIndex(parent()))->asKind<Declaration>();
 			if (e && !ret.contains(e))
 				ret << e;
 		}
 	return ret;
 }
 
-QList<DeclarationEntity*> DeclarationEntity::utilised() const
+QList<Declaration*> Declaration::utilised() const
 {
-	QList<DeclarationEntity*> ret;
-	foreach (DeclarationEntity* i, cardinalChildrenOf<DeclarationEntity>())
+	QList<Declaration*> ret;
+	foreach (Declaration* i, cardinalChildrenOf<Declaration>())
 		ret << i->utilised();
 //	qDebug() << name() << "(" << kind().name() << ") utilises:";
-//	foreach (DeclarationEntity* i, ret)
+//	foreach (Declaration* i, ret)
 //		qDebug() << "    " << i->name() << "(" << i->kind().name() << ")";
 	return ret;
 }
 
-void DeclarationEntity::importDom(QDomElement const& _element)
+void Declaration::importDom(QDomElement const& _element)
 {
 	Identifiable::importDom(_element);
 	Super::importDom(_element);
 }
 
-void DeclarationEntity::exportDom(QDomElement& _element) const
+void Declaration::exportDom(QDomElement& _element) const
 {
 	Identifiable::exportDom(_element);
 	Super::exportDom(_element);

@@ -24,7 +24,7 @@
 #include <QObject>
 #include <QAbstractItemModel>
 
-#include "NamespaceEntity.h"
+#include "Namespace.h"
 #include "Root.h"
 #include "Method.h"
 #include "Class.h"
@@ -65,14 +65,14 @@ public:
 	QList<Class*>				classes() const { return m_classes; }
 	void 						rename(QString const& _filename) { m_filename = _filename; nameChanged(); }
 
-	NamespaceEntity*			ns() { return m_namespace; }
-	NamespaceEntity const*		ns() const { return m_namespace; }
+	Namespace*					ns() { return m_namespace; }
+	Namespace const*			ns() const { return m_namespace; }
 	Method*						program() const { return m_program; }
 	Class*						programClass() const { return m_program->parent()->asKind<Class>(); }
 	QString						executable();
 	QString						lastCompileError() const { return m_lastCompileError; }
-	Root const*			root() const { return &m_declarations; }
-	Root*					root() { return &m_declarations; }
+	Root const*					root() const { return &m_declarations; }
+	Root*						root() { return &m_declarations; }
 
 	void						serialise(QDomDocument& _d) const;
 	void						deserialise(QDomDocument& _d);
@@ -156,7 +156,7 @@ public:
 	// State
 	Root					m_declarations;		///< Our full program model. Merged with all other include/projects.
 
-	NamespaceEntity*			m_namespace;		///< Our namespace. All the project's stuff goes under here. Probably a better alternative to m_classes.
+	Namespace*			m_namespace;		///< Our namespace. All the project's stuff goes under here. Probably a better alternative to m_classes.
 
 	// Temporaries
 	bool						m_alteringDepends;	///< True whenever we don't want changes to the CDepends model implicitly causing a reset (and thus ser./deser.).

@@ -55,7 +55,7 @@ protected:
 	virtual void						importDom(QDomElement const& _element);
 	virtual void						apresLoad() { addDependency(m_subject->self()); Super::apresLoad(); }
 	virtual Kinds						ancestralDependencies() const;
-	virtual void						onDependencyChanged(Entity*) { if (m_subject) changed(); }
+	virtual void						onDependencyChanged(Entity* _e) {  debugTree(); qDebug() << _e; qDebug() << &*m_subject; if (m_subject) changed(); }
 	
 	ModelPtr<ValueDefiner>				m_subject;
 	bool								m_specific;

@@ -572,7 +572,7 @@ List<T> GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::values() const
 	for (t::uint i = 0; i < m_capacity; i++)
 		if (m_nodes[i])
 		{
-			Node* m = m_nodes[i];
+			Node* m = m_nodes + i;
 			Node* j = m;
 			do
 				ret << j->value();
