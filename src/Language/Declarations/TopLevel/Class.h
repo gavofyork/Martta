@@ -30,9 +30,11 @@ class Class: public TopLevelType
 	MARTTA_OBJECT(TopLevelType)
 
 public:
+	enum { Artificials = FirstNamed, EndOfNamed };
+
 	static bool							keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e);
 
-	QList<Declaration*>			members(bool _isConst = false, Access _access = Private) const;
+	QList<Declaration*>					members(bool _isConst = false, Access _access = Private) const;
 	template<class T> inline QList<T*>	membersOf(bool _isConst = false, Access _access = Private) const { return filterEntities<T>(members(_isConst, _access)); }
 	
 	Access								baseAccess(Class* _c) const;
@@ -43,8 +45,7 @@ protected:
 	virtual QString						implementationCode() const;
 	virtual QString						defineLayout(ViewKeys&) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
-	virtual QList<Declaration*>	utilised() const;
-//	virtual int							notificationRequirements() const { return BeComplete; }
+	virtual QList<Declaration*>			utilised() const;
 	virtual void						onDependencyChanged(Entity* _e);
 	virtual void						apresLoad() { rejigDeps(); checkImplicitConstructors(); }
 	virtual void						onDependencyAdded(Entity* _e);

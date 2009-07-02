@@ -72,7 +72,7 @@ void Class::rejigDeps()
 
 Entity* Class::isExpander() const
 {
-	return cardinalChildCount() > 3 ? child(3) : const_cast<Class*>(this);
+	return cardinalChildCount() ? child(0) : const_cast<Class*>(this);
 }
 
 bool Class::checkImplicitConstructors()
@@ -80,53 +80,64 @@ bool Class::checkImplicitConstructors()
 	bool ret = false;
 	
 	// Check default constructors.
-	int nonImplicits = membersOf<Constructor>().size() - membersOf<ArtificialCopyConstructor>().size() - membersOf<ArtificialDefaultConstructor>().size();
-	if (!nonImplicits && !membersOf<ArtificialDefaultConstructor>().size())
+	int nonImplicits = cardinalChildCountOf<Constructor>();
+	if (!nonImplicits && !childCountOf<ArtificialDefaultConstructor>(Artificials))
 	{
 		// Don't have one anymore; create a ArtificialDefaultConstructor, then return true to allow any dependents to rejig themselves.
-		back().insertSilent(new ArtificialDefaultConstructor);
+		(new ArtificialDefaultConstructor)->silentMove(middle(Artificials));
 		ret = true;
 	}
-	else if (nonImplicits && membersOf<ArtificialDefaultConstructor>().size())
+	else if (nonImplicits && childCountOf<ArtificialDefaultConstructor>(Artificials))
 	{
 		// TODO: Notifications?
-		membersOf<ArtificialDefaultConstructor>()[0]->killAndDelete();
+		// TODO: work out a replacement default constructor if there is one and put it as a substitute
+		Constructor* realDefaultConstructor = 0;
+		childOf<ArtificialDefaultConstructor>(Artificials)->killAndDelete(realDefaultConstructor);
 		ret = true;
 	}
 
 	// Check copy constructors.
-	int copyConstructors = 0;
-	foreach (Constructor* i, membersOf<Constructor>())
+	int artificialCCs = childCountOf<ArtificialCopyConstructor>(Artificials);
+	Constructor* realCC = 0;
+	foreach (Constructor* i, cardinalChildrenOf<Constructor>())
 		if (i->argumentCount() == 1 && (i->argumentType(0) == Type(this).topWith(Reference()) || i->argumentType(0) == Type(this).topWith(Const()).topWith(Reference())))
-			copyConstructors++;
-	if (!copyConstructors)
+		{
+			realCC = i;
+			break;
+		}
+	if (!realCC && !artificialCCs)
 	{
 		// Don't have one anymore; create a ArtificialCopyConstructor, then return true to allow any dependents to rejig themselves.
-		back().insertSilent(new ArtificialCopyConstructor);
+		middle(Artificials).insertSilent(new ArtificialCopyConstructor);
 		ret = true;
 	}
-	else if (copyConstructors > 1 && membersOf<ArtificialCopyConstructor>().size())
+	else if (realCC && artificialCCs)
 	{
 		// TODO: Notifications?
-		membersOf<ArtificialCopyConstructor>()[0]->killAndDelete();
+		childOf<ArtificialCopyConstructor>(Artificials)->killAndDelete(realCC);
 		ret = true;
 	}
 	
 	// Check assignment operators.
-	int assignmentOperators = 0;
-	foreach (MethodOperator* i, membersOf<MethodOperator>())
-		if (i->id() == Operator::Equals && Type(*i->asKind<LambdaNamer>()->argumentType(0)->ignore<Reference>()->ignore<Const>()) == Type(this))
-			assignmentOperators++;
-	if (!assignmentOperators)
+	int artificialAOs = childCountOf<ArtificialAssignmentOperator>(Artificials);
+	MethodOperator* realAO = 0;
+	foreach (MethodOperator* i, cardinalChildrenOf<MethodOperator>())
+		if (i->id() == Operator::Equals && i->argumentType(0) == Type(this).topWith(Reference()) || i->argumentType(0) == Type(this).topWith(Const()).topWith(Reference()))
+		{
+			realAO = i;
+			break;
+		}
+	if (!realAO && !artificialAOs)
 	{
 		// Don't have one anymore; create an ArtificialAssignmentOperator, then return true to allow any dependents to rejig themselves.
-		back().insertSilent(new ArtificialAssignmentOperator);
+		// TODO Should really put this in dependencyRemoved so that on deletion of the realAO it substitutes the Artificial one in.
+		middle(Artificials).insertSilent(new ArtificialAssignmentOperator);
 		ret = true;
 	}
-	else if (assignmentOperators > 1 && membersOf<ArtificialAssignmentOperator>().size())
+	else if (realAO && artificialAOs)
 	{
-		// TODO: Notifications?
-		membersOf<ArtificialAssignmentOperator>()[0]->killAndDelete();
+		// TODO: Notifications? Looked aftre by the imminent changed() perhaps?
+		childOf<ArtificialAssignmentOperator>(Artificials)->killAndDelete(realAO);
 		ret = true;
 	}
 	return ret;
@@ -142,45 +153,50 @@ void Class::onChildrenInitialised()
 
 void Class::onDependencyAdded(Entity* _e)
 {
+	if (_e->index() >= 0 && (_e->isKind<MethodOperator>() || _e->isKind<ConversionOperator>() || _e->isKind<Constructor>()))
+		if (checkImplicitConstructors())
+			changed();
 	if (_e->isKind<Member>())
 		rejigDeps();
-	if ((_e->isKind<ConversionOperator>() || (_e->isKind<MethodOperator>() && !_e->isKind<ArtificialAssignmentOperator>()) || (_e->isKind<Constructor>() && !_e->isKind<ArtificialDefaultConstructor>() && !_e->isKind<ArtificialCopyConstructor>())) &&
-		isInModel() && checkImplicitConstructors())
-		changed();
 }
 
-void Class::onDependencyRemoved(Entity* _e, int)
+void Class::onDependencyRemoved(Entity* _e, int _oi)
 {
+	// TODO: Will it remove the Access label dep? Even if the member is only moved to another class?
+	if (_oi >= 0 && (_e->isKind<MethodOperator>() || _e->isKind<ConversionOperator>() || _e->isKind<Constructor>()))
+		if (checkImplicitConstructors())
+			changed();
 	if (_e->isKind<Member>())
 		rejigDeps();
-	// TODO: Will it remove the Access label dep? Even if the member is only moved to another class?
-	if ((_e->isKind<ConversionOperator>() || (_e->isKind<MethodOperator>() && !_e->isKind<ArtificialAssignmentOperator>()) || (_e->isKind<Constructor>() && !_e->isKind<ArtificialDefaultConstructor>() && !_e->isKind<ArtificialCopyConstructor>())) &&
-		isInModel() && checkImplicitConstructors())
-		changed();
 }
 
 void Class::onDependencyChanged(Entity* _e)
 {
-	if ((_e->isKind<Base>() || _e->isKind<ConversionOperator>() || (_e->isKind<MethodOperator>() && !_e->isKind<ArtificialAssignmentOperator>()) || (_e->isKind<Constructor>() && !_e->isKind<ArtificialDefaultConstructor>() && !_e->isKind<ArtificialCopyConstructor>())) &&
-		isInModel() && checkImplicitConstructors())
-		changed();
+	if (_e->isKind<Base>() || _e->index() >= 0 && (_e->isKind<MethodOperator>() || _e->isKind<ConversionOperator>() || _e->isKind<Constructor>()))
+		if (checkImplicitConstructors())
+			changed();
 	if (_e->isKind<TextLabel>())
-		changed();
+		changed(Visually);
 	if (_e->isKind<AccessLabel>())
 		relayoutLater();
 }
 
 Kinds Class::allowedKinds(int _i) const
 {
-	return _i >= 0 ? (Kind::of<Member>(), Kind::of<Base>()) : Super::allowedKinds(_i);
+	if (_i >= 0)
+		return (Kind::of<Member>(), Kind::of<Base>());
+	if (_i == Artificials)
+		return Kind::of<Artificial>();
+	return Super::allowedKinds(_i);
 }
 
 QString Class::implementationCode() const
 {
 	QString ret;
-	foreach (Declaration* f, cardinalChildrenOf<Declaration>())
+	foreach (Member* f, cardinalChildrenOf<Member>())
 		ret += f->implementationCode() + "\n";
-	if (ret.endsWith("\n\n")) ret.chop(1);
+	if (ret.endsWith("\n\n"))
+		ret.chop(1);
 	return ret;
 }
 
@@ -189,7 +205,7 @@ QString Class::interfaceCode() const
 	// TODO: ordering for enums?
 	QString ret;
 	ret += "class " + codeName() + "\n";
-	if (cardinalChildrenOf<Base>().size())
+	if (cardinalChildCountOf<Base>())
 		ret += ":";
 	foreach (Base* f, cardinalChildrenOf<Base>())
 		ret += f->code() + ", ";
@@ -215,6 +231,9 @@ QList<Declaration*> Class::members(bool _isConst, Access _access) const
 {
 	QList<Declaration*> ret;
 	foreach (MemberValue* i, cardinalChildrenOf<MemberValue>())
+		if ((i->isConst() || !_isConst) && i->access() <= _access)
+			ret += i;
+	foreach (MemberValue* i, childrenAs<MemberValue>(Artificials))
 		if ((i->isConst() || !_isConst) && i->access() <= _access)
 			ret += i;
 	foreach (Base* i, cardinalChildrenOf<Base>())
@@ -301,7 +320,7 @@ QString Class::defineLayout(ViewKeys& _keys) const
 	}
 	else
 	{
-		if (cardinalChildrenOf<Base>().count())
+		if (cardinalChildCountOf<Base>())
 		{
 			ret += ";ynormal;' ['";
 			foreach (Base* i, cardinalChildrenOf<Base>())
@@ -313,11 +332,11 @@ QString Class::defineLayout(ViewKeys& _keys) const
 			ret += QString::number(n) + " method" + (n > 1 ? "s, " : ", ");
 		if (int n = cardinalChildCountOf<MemberVariable>())
 			ret += QString::number(n) + " variable" + (n > 1 ? "s, " : ", ");
-		if (int n = (cardinalChildCountOf<Constructor>() - cardinalChildCountOf<ArtificialCopyConstructor>() - cardinalChildCountOf<ArtificialDefaultConstructor>()))
+		if (int n = cardinalChildCountOf<Constructor>())
 			ret += QString::number(n) + " constructor" + (n > 1 ? "s, " : ", ");
 		if (int n = cardinalChildCountOf<Destructor>())
 			ret += QString::number(n) + " destructor" + (n > 1 ? "s, " : ", ");
-		if (int n = (cardinalChildCountOf<MethodOperator>() - cardinalChildCountOf<ArtificialAssignmentOperator>()))
+		if (int n = cardinalChildCountOf<MethodOperator>())
 			ret += QString::number(n) + " operator" + (n > 1 ? "s, " : ", ");
 		if (ret.endsWith(", "))
 			ret.chop(2);

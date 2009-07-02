@@ -1,29 +1,16 @@
 BUG QObject: Do not delete object, 'unnamed', during its event handler!
 BUG Moving is crazily slow over statements.
-TODO optimise Class.
-TODO visual change system back.
 
-TODO special EntryMethod
-MINOR double - int gets -(int, int) not -(double, double)
-
-TODO Look into Dynagraph/Boost or GraphViz for graphing the code.
-
-TODO references leave hopeful names behind when invalid
-TODO same with invocations when function arg is deleted, return when return type is removed.
-
-TODO TypeNamer::type = 0;
-TODO move crap from ExplicitType to TypeDefinition.
-
-TODO page up & down broken.
-TODO join statements or tree insert.
-TODO insertion of entities in, e.g. argument lists for function calls.
-TODO Code metrics and distribution etc.
-
-TODO virtual overload properly
-TODO inherited methods don't work.
-TODO Statements to reject placeholders.
-TODO anonymous -> metasyntactic variable
-
+Small things:
+- Special EntryMethod.
+- Join statements or tree insert.
+  - 'J' -> Joins next line to last [] in current.
+- Insertion of entities in, e.g. argument lists for function calls.
+  - Just a comma?
+- FIX Page up & down.
+- CLEAN Move crap from ExplicitType to TypeDefinition.
+- CLEAN Clean up Class.
+- Visual change system.
 Dynamic code-loading (plugins).
 - Move everything over so that plugins use Martta-specific data types.
   - Will need QRgb-like type & QHashSet type.
@@ -187,7 +174,16 @@ Move the commitContextChange stuff from CodeScene's key event handler into the E
 
 === MINOR TASKS ===
 
-"J" -> Joins next line to last [] in current.
+BUG Inherited methods don't work.
+WISH References leave hopeful names behind when invalid.
+WISH Same with invocations when function arg is deleted, return when return type is removed.
+
+MINOR double - int gets -(int, int) not -(double, double)
+MINOR Statements to reject placeholders.
+TODO virtual overload properly.
+WISH Code metrics and distribution etc.
+WISH Look into Dynagraph/Boost or GraphViz for graphing the code.
+WISH Anonymous -> metasyntactic variable. Must work with libraries.
 
 Currently MemberOperations' leftType needs only to be of type  "Class", rather than "Class&"?
 

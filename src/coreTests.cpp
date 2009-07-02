@@ -390,7 +390,7 @@ int coreTests()
 		b->silentMove(pos ? a->middle(pos) : a->back()); \
 		TEST("Clearing entities (children: " #pos ")") FAILED_IF(!a->children().contains(b)); \
 		TEST("Clearing entities (cardinalChildren(): " #pos ")") FAILED_IF(bool(pos) == a->cardinalChildren().contains(b)); \
-		TEST("Clearing entities (childrenAt(int): " #pos ")") FAILED_IF(!a->childrenAt(pos).contains(b)); \
+		TEST("Clearing entities (children(int): " #pos ")") FAILED_IF(!a->children(pos).contains(b)); \
 		r->killAndDelete(); \
 		TEST("Clearing entities (a pointer: " #pos ")") FAILED_IF(a); \
 		TEST("Clearing entities (b pointer: " #pos ")") FAILED_IF(b); \
@@ -408,10 +408,10 @@ int coreTests()
 		a->prepareChildren();
 		TEST_FOR("Negatives: prepareChildren() makes complete", a->isComplete());
 		TEST_FOR("Negatives: no entities", a->cardinalChildCount() == 0);
-		TEST_FOR("Negatives: no As", a->childCountAt(TestNegativesB::NamedChildA) == 0);
-		TEST_FOR("Negatives: one B", a->childCountAt(TestNegativesB::NamedChildB) == 1);
-		TEST_FOR("Negatives: two Cs", a->childCountAt(TestNegativesB::NamedChildC) == 2);
-		TEST_FOR("Negatives: no 'D's", a->childCountAt(TestNegativesB::NamedChildC + 1) == 0);
+		TEST_FOR("Negatives: no As", a->childCount(TestNegativesB::NamedChildA) == 0);
+		TEST_FOR("Negatives: one B", a->childCount(TestNegativesB::NamedChildB) == 1);
+		TEST_FOR("Negatives: two Cs", a->childCount(TestNegativesB::NamedChildC) == 2);
+		TEST_FOR("Negatives: no 'D's", a->childCount(TestNegativesB::NamedChildC + 1) == 0);
 	qInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
 		a->child(TestNegativesB::NamedChildC)->replace(new Label);
 		TEST_FOR("Negatives: bad replacement makes incomplete", !a->isComplete());
@@ -445,10 +445,10 @@ int coreTests()
 		a = r.childAs<TestNegativesB>(0);
 		
 		FAILED_IF(a->cardinalChildCount() != 0);
-		FAILED_IF(a->childCountAt(TestNegativesB::NamedChildA) != 0);
-		FAILED_IF(a->childCountAt(TestNegativesB::NamedChildB) != 1);
-		FAILED_IF(a->childCountAt(TestNegativesB::NamedChildC) != 2);
-		FAILED_IF(a->childCountAt(TestNegativesB::NamedChildC + 1) != 0);
+		FAILED_IF(a->childCount(TestNegativesB::NamedChildA) != 0);
+		FAILED_IF(a->childCount(TestNegativesB::NamedChildB) != 1);
+		FAILED_IF(a->childCount(TestNegativesB::NamedChildC) != 2);
+		FAILED_IF(a->childCount(TestNegativesB::NamedChildC + 1) != 0);
 	}
 	
 	return failed;

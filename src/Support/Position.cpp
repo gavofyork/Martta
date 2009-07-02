@@ -80,7 +80,7 @@ bool Position::allowedToBeKind(Kind _k) const
 
 bool Position::isRequired() const
 {
-	return m_index < 0 ? (m_parent->childCountAt(m_index) < m_parent->minRequired(m_index)) : ((m_index == UndefinedIndex ? m_parent->cardinalChildCount() : m_index) < m_parent->minRequired());
+	return m_index < 0 ? (m_parent->childCount(m_index) < m_parent->minRequired(m_index)) : ((m_index == UndefinedIndex ? m_parent->cardinalChildCount() : m_index) < m_parent->minRequired());
 }
 
 Kinds Position::allowedKinds() const

@@ -24,7 +24,6 @@
 #include "CommonGraphics.h"
 #include "DecorationContext.h"
 #include "CodeScene.h"
-#include "TypeDefinition.h"
 #include "EditDelegate.h"
 #include "Entity.h"
 
@@ -136,7 +135,7 @@ bool Entity::isNecessary() const
 				return true;
 	}
 	else
-		if (parent()->childCountAt(m_index) - 1 < parent()->minRequired(m_index))
+		if (parent()->childCount(m_index) - 1 < parent()->minRequired(m_index))
 			return true;
 	return false;
 }
@@ -146,10 +145,10 @@ bool Entity::isComplete() const
 	if (e.size() < minRequired(Cardinals))
 		return false;
 	for (int i = INT_MIN; i < virtualEndOfNamed(); i++)
-		if (childCountAt(i) < minRequired(i))
+		if (childCount(i) < minRequired(i))
 			return false;
 	foreach (int i, AuxilliaryRegistrar::get()->names())
-		if (childCountAt(i) < minRequired(i))
+		if (childCount(i) < minRequired(i))
 			return false;
 	foreach (Entity* i, children())
 		if (!i->isAllowed())
@@ -585,9 +584,10 @@ bool Entity::attemptInsert(EntityKeyEvent const* _e)
 }
 bool Entity::attemptAppend(EntityKeyEvent const* _e)
 {
-	foreach (Kind i, allowedKinds(cardinalChildCount()))
-		if (AuxilliaryRegistrar::get()->auxilliary(i.name())->dispatchKeyPress(back(), _e))
-			return true;
+	foreach (int i, knownNames() << cardinalChildCount())
+		foreach (Kind k, allowedKinds(i))
+			if (AuxilliaryRegistrar::get()->auxilliary(k.name())->dispatchKeyPress(middle(i), _e))
+				return true;
 	return false;
 }
 
@@ -728,10 +728,10 @@ Position Entity::firstFor(Kind const& _k)
 	if (pi != NonePrefered)
 		return middle(pi);
 	for (int i = INT_MIN; i < virtualEndOfNamed(); i++)
-		if (middle(i).allowedToBeKind(_k) && (middle(i).exists() && middle(i)->isPlaceholder() || childCountAt(i) < minRequired(i)))
+		if (middle(i).allowedToBeKind(_k) && (middle(i).exists() && middle(i)->isPlaceholder() || childCount(i) < minRequired(i)))
 			return middle(i);
 	foreach (int i, AuxilliaryRegistrar::get()->names())
-		if (middle(i).allowedToBeKind(_k) && (middle(i).exists() && middle(i)->isPlaceholder() || childCountAt(i) < minRequired(i)))
+		if (middle(i).allowedToBeKind(_k) && (middle(i).exists() && middle(i)->isPlaceholder() || childCount(i) < minRequired(i)))
 			return middle(i);
 	if (back().allowedToBeKind(_k) && cardinalChildCount() < minRequired(Cardinals))
 		return back();
@@ -772,7 +772,7 @@ bool Entity::validifyChild(int _i, int* _added)
 			e->oneFootInTheGrave();
 			e->killAndDelete();
 		}
-	while (childCountAt(_i) < minRequired(_i))
+	while (childCount(_i) < minRequired(_i))
 	{
 		middle(_i).spawnPreparedSilent()->parentAdded();
 		*_added = (*_added == INT_MAX - 1) ? _i : INT_MAX;
@@ -818,10 +818,10 @@ bool Entity::validifyChildren()
 Entity* Entity::prepareChildren()
 {
 	for (int i = INT_MIN; i < virtualEndOfNamed(); i++)
-		while (childCountAt(i) < minRequired(i))
+		while (childCount(i) < minRequired(i))
 			middle(i).spawnPreparedSilent()->parentAdded();
 	foreach (int i, AuxilliaryRegistrar::get()->names())
-		while (childCountAt(i) < minRequired(i))
+		while (childCount(i) < minRequired(i))
 			middle(i).spawnPreparedSilent()->parentAdded();
 	for (int i = m_cardinalChildren.size(); i < minRequired(Cardinals); ++i)
 		back().spawnPreparedSilent()->parentAdded();

@@ -33,13 +33,13 @@ class MethodOperator: public MemberLambda
 public:
 	virtual Operator					id() const;
 
+	virtual int							argumentCount() const;
+	virtual Type						argumentType(int _i) const;
+
 protected:	
 	virtual int							minRequired(int _i) const { return _i == Cardinals ? isBinary() ? 1 : 0 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
 	
-	virtual int							argumentCount() const;
-	virtual Type						argumentType(int _i) const;
-
 private:
 	bool								isBinary() const { return id().isBinary(); }
 };
