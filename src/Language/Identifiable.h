@@ -22,7 +22,6 @@
 
 #include <QString>
 
-#include "SceneLeaver.h"
 #include "Meta.h"
 
 class QDomElement;
@@ -31,10 +30,9 @@ namespace Martta
 {
 
 // Don't forget to use import/export functions!
-class Identifiable: public_interface SceneLeaver
+class Identifiable
 {
 	MARTTA_INTERFACE
-	MARTTA_INHERITS(SceneLeaver, 0)
 
 public:
 	MARTTA_NAMED(Identity)
@@ -64,8 +62,6 @@ public:
 	virtual bool						isHidden() const { return codeName().startsWith(".") || name().isEmpty(); }				///< true for anonymous enums.
 
 	virtual Identifiable*				lookupChild(QString const& _key) const;
-	
-//	virtual void						onLeaveScene(BasicRoot* _new, BasicRoot* _old);
 	
 protected:
 	// These *MUST* be used by any final class in its export/import functions.

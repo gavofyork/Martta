@@ -626,11 +626,7 @@ void Entity::commitMove(InsertionPoint const& _oldPosition)
 	if (oldRoot && newRoot != oldRoot)
 		foreach (CodeScene* i, CodeScene::all())
 			i->leaving(this, _oldPosition);
-	// Notify ourself if the root entity has changed.
-	if (newRoot != oldRoot)
-		onLeaveScene(newRoot, oldRoot);
 	
-	// Change root here, since onLeaveScene requries it to be how it was (existing model poointers will use the cached pointer's - our - rootEntity to unhook itself).
 	m_rootEntity = newRoot;
 	
 	// Update the root of all entities to which we are an ancestor.
@@ -728,7 +724,6 @@ void Entity::checkRoot()
 {
 	if (parent()->rootEntity() != rootEntity())
 	{
-		onLeaveScene(parent()->rootEntity(), rootEntity());
 		m_rootEntity = parent()->rootEntity();
 	}
 	foreach (Entity* e, children())

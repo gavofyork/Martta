@@ -62,7 +62,6 @@
 #include "Language/Labels/Label.cpp"
 #include "Language/Labels/OperatorLabel.cpp"
 #include "Language/Labels/TextLabel.cpp"
-#include "Language/SceneLeaver.cpp"
 #include "Language/Statements/AssignedVariable.cpp"
 #include "Language/Statements/BareTyped.cpp"
 #include "Language/Statements/BreakStatement.cpp"
