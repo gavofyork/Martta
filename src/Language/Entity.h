@@ -30,6 +30,7 @@
 #include "ChildValidifier.h"
 #include "Depender.h"
 #include "Dependee.h"
+#include "Serialisable.h"
 
 #include "Dier.h"
 #include "Meta.h"
@@ -43,8 +44,8 @@ namespace Martta
 {
 
 class EntityStylist;
-class EditDelegateFace;
 
+class EditDelegateFace;
 class CodeScene;
 class DecorationContext;
 
@@ -56,12 +57,13 @@ class DecorationContext;
  * scene. This applies even if the situation is temporary, since the check/changes happen at move
  * time.
  */
-class Entity: public Nothing, public SafePointerTarget, virtual public Dier, public_interface ChildValidifier, public_interface Depender, public_interface Dependee
+class Entity: public Nothing, public SafePointerTarget, virtual public Dier, public_interface ChildValidifier, public_interface Depender, public_interface Dependee, public_interface Serialisable
 {
 	MARTTA_COMMON(Nothing)
 	MARTTA_INHERITS(ChildValidifier, 0)
 	MARTTA_INHERITS(Dependee, 1)
 	MARTTA_INHERITS(Depender, 2)
+	MARTTA_INHERITS(Serialisable, 3)
 	
 	friend class EntityStylist;
 	friend class EditDelegateFace;
@@ -79,8 +81,8 @@ public:
 	inline void							operator delete(void* p);
 	
 	/// Copy constructor which doesn't do anything. Have to have it so a derived class can use it.
-	inline Entity(): Dier(), ChildValidifier(), Depender(), Dependee(), SafePointerTarget(), m_parent(0), m_index(UndefinedIndex) {}
-	inline Entity(Entity const&): Dier(), ChildValidifier(), Familial(), Depender(), Dependee(), SafePointerTarget() { M_ASSERT(false); }
+	inline Entity(): Dier(), ChildValidifier(), Depender(), Dependee(), Serialisable(), SafePointerTarget(), m_parent(0), m_index(UndefinedIndex) {}
+	inline Entity(Entity const&): Dier(), ChildValidifier(), Familial(), Depender(), Dependee(), Serialisable(), SafePointerTarget() { M_ASSERT(false); }
 	
 	static void							initialiseClass() {}
 	static void							finaliseClass() {}
@@ -341,10 +343,10 @@ public:
 	bool								isValid() const;
 
 	// Insertion points
-	inline Position				over() const { return Position(parent(), index()); }
-	inline Position				front() { return Position(this, 0); }
-	inline Position				back() { return Position(this, UndefinedIndex); }
-	inline Position				middle(int _at) { return Position(this, _at); }
+	inline Position						over() const { return Position(parent(), index()); }
+	inline Position						front() { return Position(this, 0); }
+	inline Position						back() { return Position(this, UndefinedIndex); }
+	inline Position						middle(int _at) { return Position(this, _at); }
 	/**
 	 * Order of preference:
 	 * - A named position that requires us to be there.
@@ -354,7 +356,7 @@ public:
 	 * - The back of the cardinals if it allows us being there.
 	 * - Nowhere
 	 */
-	Position						firstFor(Kind const& _k);
+	Position							firstFor(Kind const& _k);
 	bool								attemptAppend(EntityKeyEvent const* _e);
 	bool								attemptInsert(EntityKeyEvent const* _e);
 	

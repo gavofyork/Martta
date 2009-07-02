@@ -12,7 +12,7 @@ Small things:
 - Visual change system.
 Dynamic code-loading (plugins).
 - Move everything over so that plugins use Martta-specific data types.
-  - Will need QRgb-like type & QHashSet type.
+  - Will need QRgb-like type.
   - Get rid of XML dependencies.
   - Will need to move all decoration code into layout system and invent markup for it.
 
