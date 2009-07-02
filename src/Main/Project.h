@@ -154,9 +154,9 @@ public:
 	Method*						m_program;			///< Ptr to the program class.
 
 	// State
-	Root					m_declarations;		///< Our full program model. Merged with all other include/projects.
+	Root						m_declarations;		///< Our full program model. Merged with all other include/projects.
 
-	Namespace*			m_namespace;		///< Our namespace. All the project's stuff goes under here. Probably a better alternative to m_classes.
+	Namespace*					m_namespace;		///< Our namespace. All the project's stuff goes under here. Probably a better alternative to m_classes.
 
 	// Temporaries
 	bool						m_alteringDepends;	///< True whenever we don't want changes to the CDepends model implicitly causing a reset (and thus ser./deser.).

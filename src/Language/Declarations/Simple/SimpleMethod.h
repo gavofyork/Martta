@@ -30,12 +30,12 @@ class SimpleMethod: public Simple
 	MARTTA_OBJECT(Simple)
 
 public:
-	template<class T> inline static SimpleMethod* create(QString const& _name, bool _isConst, Type const& _returns, Types const& _args, BasicRoot* _root)
+	template<class T> inline static SimpleMethod* create(QString const& _name, bool _isConst, Type const& _returns, Types const& _args)
 	{
 		SimpleMethod* s = new SimpleMethod;
 		s->m_name = _name;
 		T t;
-		s->construct(&t, T::s_members.count(), _isConst, _returns, _args, _root, T::staticAuxilliary()->name());
+		s->construct(&t, T::s_members.count(), _isConst, _returns, _args, T::staticAuxilliary()->name());
 		T::s_members.append(s);
 		return s;
 	}

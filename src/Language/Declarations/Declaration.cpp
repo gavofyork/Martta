@@ -27,7 +27,6 @@
 
 #include "ModelPtrRegistrar.h"
 #include "Common.h"
-#include "BasicRoot.h"
 #include "TextLabel.h"
 #include "OperatorLabel.h"
 #include "ValueDefiner.h"

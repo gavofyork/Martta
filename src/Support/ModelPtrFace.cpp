@@ -22,7 +22,6 @@
 
 #include "Common.h"
 #include "Declaration.h"
-#include "BasicRoot.h"
 #include "ModelPtrRegistrar.h"
 #include "ModelPtr.h"
 

@@ -29,7 +29,7 @@ class QXmlContentHandler;
 namespace Martta
 {
 
-class BasicRoot;
+class Declaration;
 class DeclarationFile;
 
 class GccXml
@@ -37,7 +37,7 @@ class GccXml
 public:
 	static void extractHeaders(QString const& _c, QXmlContentHandler* _h);
 
-	static QXmlContentHandler* declarationsHandler(BasicRoot* _d, QList<DeclarationFile*>* _l);
+	static QXmlContentHandler* declarationsHandler(Declaration* _d, QList<DeclarationFile*>* _l);
 	static QXmlContentHandler* filesExtractorHandler(QStringList* _f);
 };
 

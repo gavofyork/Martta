@@ -36,9 +36,10 @@ public:
 
 	// Use this instead of deleting it or you'll have to unregister them explicitly.
 	virtual void						destruct();
+	virtual Kinds						allowedKinds(int _i) const;
 
 protected:
-	void								construct(TypeEntity const* _scope, int _id, bool _isConst, Type const& _returns, Types const& _args, BasicRoot* _root, char const* _key);
+	void								construct(TypeEntity const* _scope, int _id, bool _isConst, Type const& _returns, Types const& _args, char const* _key);
 	
 	QString								m_key;
 	int									m_myId;

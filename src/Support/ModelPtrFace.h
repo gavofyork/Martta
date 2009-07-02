@@ -27,7 +27,6 @@
 namespace Martta
 {
 
-class BasicRoot;
 class Identifiable;
 class Declaration;
 class ModelPtrRegistrar;

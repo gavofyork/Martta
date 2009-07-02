@@ -18,19 +18,34 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "TopLevelType.h"
-#include "BasicRoot.h"
+#pragma once
+
+#include <QObject>
+#include <QTimer>
+
+#include "SafePointer.h"
+#include "Entity.h"
 
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(BasicRoot);
-
-Kinds BasicRoot::allowedKinds(int _i) const
+class CullManager: public QObject
 {
-	if (_i >= 0)
-		return Kind::of<TopLevel>();
-	return Super::allowedKinds(_i);
-}
+	Q_OBJECT
+	
+public:
+	static inline CullManager*			get() { return s_this ? s_this : (s_this = new CullManager); } 
+
+	inline void							checkCull(Entity* _e) { if (!m_cullList.size()) QTimer::singleShot(0, this, SLOT(doCulling())); m_cullList << _e; }
+	
+private slots:
+	void								doCulling();
+
+private:
+	// List of entities to check and possibly delete at next opportunity when nothing else happening.
+	QList<SafePointer<Entity> >			m_cullList;
+
+	static CullManager*					s_this;
+};
 
 }

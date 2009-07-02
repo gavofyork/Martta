@@ -34,7 +34,6 @@
 #include "StringType.h"
 #include "Memberify.h"
 #include "Const.h"
-#include "BasicRoot.h"
 #include "EditDelegate.h"
 #include "Reference.h"
 #include "CodeScene.h"
@@ -169,7 +168,6 @@ Type Referenced::type() const
 void Referenced::importDom(QDomElement const& _element)
 {
 	Entity::importDom(_element);
-//	m_subject = rootEntity()->locate<ValueDefiner>(_element.attribute("subject"));
 	m_subject.restoreFrom(_element.attribute("subject"));
 	m_specific = _element.attribute("specific").toInt();
 	m_lastSet = _element.attribute("lastSet").toInt();
@@ -317,7 +315,7 @@ void ReferencedEdit::updateSubset()
 	if (subject()->m_lastSet & ScopedSet)
 		m_valuesInScope << castEntities<ValueDefiner>(subject()->ancestor<Declaration>()->valuesKnown());
 	if (subject()->m_lastSet & GlobalSet)
-		m_valuesInScope << subject()->rootEntity()->selfAndAncestorsChildrenOf<ValueDefiner>();
+		m_valuesInScope << subject()->root()->childrenOf<ValueDefiner>();
 	if (subject()->m_lastSet & ArgumentSet && subject()->hasAncestor<LambdaNamer>())
 		for (int i = 0; i < subject()->ancestor<LambdaNamer>()->argumentCount(); i++)
 			m_valuesInScope << subject()->ancestor<LambdaNamer>()->argument(i);

@@ -77,6 +77,7 @@ bool ChangeMan::changed(Dependee* _changer, int _aspect)
 	}
 	
 	processQueue();
+	m_hasChanged = true;
 	
 	m_changing.removeLast();
 	return true;
@@ -154,6 +155,7 @@ void ChangeMan::childrenInitialised(Depender* _this)
 	if (_this->botherNotifying() && _this->familyDependencies() & Depender::DependsOnChildren)
 		m_changeQueue << Entry(_this, EntityChildrenInitialised);
 	processQueue();
+	m_hasChanged = true;
 }
 
 void ChangeMan::childAdded(Depender* _this, int _index)
@@ -169,6 +171,7 @@ void ChangeMan::childAdded(Depender* _this, int _index)
 				childMoved(_this, _this->self()->child(i), i - 1);
 	}
 	processQueue();
+	m_hasChanged = true;
 }
 
 void ChangeMan::childSwitched(Depender* _this, Entity* _ch, Entity* _old)
@@ -211,6 +214,7 @@ void ChangeMan::childRemoved(Depender* _this, Entity* _old, int _index)
 				childMoved(_this, _this->self()->child(i), i + 1);
 	}
 	processQueue();
+	m_hasChanged = true;
 }
 
 void ChangeMan::childMoved(Depender* _this, Entity* _ch, int _oI)
@@ -224,6 +228,7 @@ void ChangeMan::childMoved(Depender* _this, Entity* _ch, int _oI)
 		if (d->botherNotifying() && d->familyDependencies() & Depender::DependsOnIndex)
 			m_changeQueue << Entry(d, IndexChanged, 0, 0, _oI);
 	processQueue();
+	m_hasChanged = true;
 }
 
 void ChangeMan::parentAdded(Depender* _this)

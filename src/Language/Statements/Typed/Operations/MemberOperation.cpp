@@ -22,7 +22,6 @@
 #include "Reference.h"
 #include "ExplicitType.h"
 #include "Const.h"
-#include "BasicRoot.h"
 #include "FunctionType.h"
 #include "AddressType.h"
 #include "Memberify.h"

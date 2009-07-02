@@ -18,19 +18,24 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "TopLevelType.h"
-#include "BasicRoot.h"
+#include "CullManager.h"
 
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(BasicRoot);
+CullManager* CullManager::s_this = 0;
 
-Kinds BasicRoot::allowedKinds(int _i) const
+void CullManager::doCulling()
 {
-	if (_i >= 0)
-		return Kind::of<TopLevel>();
-	return Super::allowedKinds(_i);
+	TIME_FUNCTION;
+	int checked = 0;
+	while (m_cullList.size())
+		if (Entity* e = m_cullList.takeLast())
+		{
+			e->cull();
+			checked++;
+		}
+	qDebug() << "Checked" << checked << "for culling.";
 }
 
 }

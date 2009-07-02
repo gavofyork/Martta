@@ -20,8 +20,7 @@
 
 #include <QtXml>
 
-#include "BasicRoot.h"	// Might be able to get rid of this later.
-
+#include "CullManager.h"
 #include "CommonGraphics.h"
 #include "DecorationContext.h"
 #include "CodeScene.h"
@@ -196,8 +195,7 @@ bool Entity::isAllowed(int _i, Kind _o) const
 // Culling
 void Entity::checkForCullingLater()
 {
-	if (rootEntity())
-		rootEntity()->checkCull(this);
+	CullManager::get()->checkCull(this);
 }
 bool Entity::cull()
 {
@@ -619,24 +617,14 @@ void Entity::commitMove(InsertionPoint const& _oldPosition)
 	if (_oldPosition.parent() == m_parent)
 		return;
 
-	BasicRoot* oldRoot = m_rootEntity;
-	BasicRoot* newRoot = m_parent ? m_parent->m_rootEntity : 0;
+	Entity* oldRoot = _oldPosition.parent() ? _oldPosition.parent()->root() : 0;
+	Entity* newRoot = root();
 	
+	// TODO: Must be a better way of doing this?
 	// Tell scene we're leaving if we had a non-null root entity and it's different.
 	if (oldRoot && newRoot != oldRoot)
 		foreach (CodeScene* i, CodeScene::all())
 			i->leaving(this, _oldPosition);
-	
-	m_rootEntity = newRoot;
-	
-	// Update the root of all entities to which we are an ancestor.
-	foreach (Entity* e, children())
-		e->checkRoot();
-		
-	if (newRoot)
-		newRoot->setChanged();
-	if (oldRoot && oldRoot != newRoot)
-		oldRoot->setChanged();
 }
 void Entity::removeFromBrood(int _index, Entity* _e)
 {
@@ -720,15 +708,6 @@ void Entity::moveWithinBrood(int _old, int _new)
 		for (int i = rejigFrom; i < m_cardinalChildren.size(); i++)
 			m_cardinalChildren[i]->m_index = i;
 }
-void Entity::checkRoot()
-{
-	if (parent()->rootEntity() != rootEntity())
-	{
-		m_rootEntity = parent()->rootEntity();
-	}
-	foreach (Entity* e, children())
-		e->checkRoot();
-}
 
 void Entity::changed(int _aspects)
 {
@@ -736,7 +715,6 @@ void Entity::changed(int _aspects)
 		return;
 	if (Dependee::changed(_aspects))
 	{
-		m_rootEntity->setChanged();
 		if (!isEditing())
 			checkForCullingLater();
 		if (_aspects & Visually)

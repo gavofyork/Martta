@@ -20,7 +20,6 @@
 
 #include <QtXml>
 
-#include "BasicRoot.h"
 #include "Class.h"
 #include "Compound.h"
 #include "LambdaNamer.h"

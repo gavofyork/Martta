@@ -1,4 +1,5 @@
-TODO restorePtrs takes far too long!
+BUG QObject: Do not delete object, 'unnamed', during its event handler!
+TODO culling takes too long.
 TODO Get rid of DE/Id deps.
 TODO Get rid of Root::get() static singleton crap.
 TODO Statements to reject placeholders.

@@ -21,6 +21,7 @@
 #include <QtGui>
 #include <QtXml>
 
+#include "ChangeMan.h"
 #include "Project.h"
 #include "Artificial.h"
 #include "Function.h"
@@ -62,7 +63,6 @@ MainWindow::MainWindow(QWidget* _p, Qt::WindowFlags _f):
 	setCorner(Qt::TopRightCorner, Qt::RightDockWidgetArea);
 	setCorner(Qt::BottomRightCorner, Qt::RightDockWidgetArea);
 
-	connect(m_project, SIGNAL(changed()), SLOT(updateProgramCode()));
 	updateProgramCode();
 
 	connect(m_project, SIGNAL(subjectInvalid()), SLOT(resetSubject()));
@@ -121,7 +121,7 @@ void MainWindow::updateLanguage()
 void MainWindow::resetSubject()
 {
 	m_codeScene->setSubject(m_project->ns());
-	M_ASSERT(!m_codeScene->current() || m_codeScene->current()->rootEntity() == m_project->root());
+	M_ASSERT(!m_codeScene->current() || m_codeScene->current()->root() == m_project->root());
 	entityFocused(m_codeScene->current());
 }
 
@@ -223,7 +223,7 @@ void MainWindow::delayedUpdate()
 		foreach (ValueDefiner* v, e->ancestor<Declaration>()->valuesKnown())
 			new QTreeWidgetItem(g, QStringList() << QString(v->name()) << QString(v->type()->code()));
 /*		QTreeWidgetItem* gl = new QTreeWidgetItem(typesVisible, QStringList() << QString("Global"));
-		foreach (ValueDefiner* v, e->rootEntity()->selfAndAncestorsChildrenOf<ValueDefiner>())
+		foreach (ValueDefiner* v, e->root()->childrenOf<ValueDefiner>())
 			new QTreeWidgetItem(gl, QStringList() << QString(v->name()) << QString(v->type()->code()));*/
 		typesVisible->expandAll();
 		typesVisible->verticalScrollBar()->setValue(vvalue);
@@ -288,6 +288,12 @@ void MainWindow::delayedUpdate()
 	else
 		t += "Nothing selected.";
 	informationView->setText(t);
+
+	if (ChangeMan::get()->hasChanged())
+	{
+		updateProgramCode();
+		ChangeMan::get()->resetChanged();
+	}
 }
 
 void MainWindow::on_actShowDeps_triggered()

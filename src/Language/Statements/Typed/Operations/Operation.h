@@ -39,8 +39,8 @@ public:
 	virtual Precedence					precedence() const { return id().precedence(); }
 	virtual Operator					id() const { return Operator(); }
 
-	static void							registerOperator(Operator _o, ValueDefiner* _v, BasicRoot*) { s_operatorCatalogue.insert(_o, _v); }
-	static void							unregisterOperator(Operator _o, ValueDefiner* _v, BasicRoot*) { s_operatorCatalogue.remove(_o, _v); }
+	static void							registerOperator(Operator _o, ValueDefiner* _v) { s_operatorCatalogue.insert(_o, _v); }
+	static void							unregisterOperator(Operator _o, ValueDefiner* _v) { s_operatorCatalogue.remove(_o, _v); }
 
 protected:
 	virtual bool						isSlidable(int) const { return false; }
@@ -55,8 +55,6 @@ protected:
 	static bool							prototypeHasArgumentAt(Type const& _t, int _cardinal);
 	static QList<ValueDefiner*>			findBestOverload(Types const& _actual, QList<ValueDefiner*> const _candidates);
 	
-	// TODO: Should really be indexed on BasicRoot too, but this won't matter until there are multiple RootEntities at once, 
-	// and I doubt that's going to happen any time soon.
 	static QMultiHash<Operator, ValueDefiner*>	s_operatorCatalogue;
 };
 

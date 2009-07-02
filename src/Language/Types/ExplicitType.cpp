@@ -21,7 +21,6 @@
 #include <QtXml>
 
 #include "CodeScene.h"
-#include "BasicRoot.h"
 #include "Class.h"
 #include "Enumeration.h"
 #include "Const.h"

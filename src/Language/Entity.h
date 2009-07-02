@@ -47,7 +47,6 @@ class EditDelegateFace;
 
 class CodeScene;
 class DecorationContext;
-class BasicRoot;
 
 /**
  * Note regarding rootEntity/null-Context: You can never depend on something which does not share the
@@ -80,7 +79,7 @@ public:
 	inline void							operator delete(void* p);
 	
 	/// Copy constructor which doesn't do anything. Have to have it so a derived class can use it.
-	inline Entity(): Dier(), ChildValidifier(), Depender(), Dependee(), SafePointerTarget(), m_rootEntity(0), m_parent(0), m_index(UndefinedIndex) {}
+	inline Entity(): Dier(), ChildValidifier(), Depender(), Dependee(), SafePointerTarget(), m_parent(0), m_index(UndefinedIndex) {}
 	inline Entity(Entity const&): Dier(), ChildValidifier(), Familial(), Depender(), Dependee(), SafePointerTarget() { M_ASSERT(false); }
 	
 	static void							initialiseClass() {}
@@ -151,6 +150,8 @@ public:
 	bool								hasSelfAncestor(Entity const* _a) const;
 	template<class T> T*				selfAncestor() const { Entity* r = selfAncestor(T::staticKind); return r ? r->asKind<T>() : 0; }
 	Entity*								selfAncestor(Kind _k) const;
+	inline Entity*						root() const { Entity* e; for (e = const_cast<Entity*>(this); e->m_parent; e = e->m_parent) {} return e; }
+	template<class T> T*				rootOf() const { T* r = tryKind<T>(); for (Entity* e = const_cast<Entity*>(this); e; e = e->m_parent) if (T* t = e->tryKind<T>()) r = t; return r; }
 	
 	template<class T> QList<T*>			selfAndAncestorsChildrenOf() const { QList<T*> ret = childrenOf<T>(); return parent() ? ret + parent()->selfAndAncestorsChildrenOf<T>() : ret; }
 	
@@ -328,8 +329,8 @@ public:
 	/// @warning This uses allowedKinds() and minRequired, and so is not safe to be called from your reimplementation of
 	/// these or anything that they (indirectly) use.
 	bool								isComplete() const;
-	/// @returns true if object is current in heirarchy leading to a BasicRoot.
-	inline bool							isInModel() const { return m_rootEntity; }
+	/// @returns true if object is current in some sort of legitimate (change-tracking) heirarchy.
+	virtual bool						isInModel() const { return true; }
 	/// @returns true if everything is absolutely, 100%, fine.
 	bool								isValid() const;
 
@@ -421,7 +422,6 @@ public:
 	
 	/// Called directly following a load.
 	virtual void						apresLoad() {}
-	inline BasicRoot*					rootEntity() const { return m_rootEntity; }
 	
 protected:
 	virtual ~Entity();
@@ -454,9 +454,6 @@ protected:
 	/// dependency as necessary.
 	template<class T, class U> void		setDependency(T& _dependencyVariable, U const& _dependency);
 	
-protected:
-	BasicRoot*							m_rootEntity;
-
 private:
 	/** This will insert an entity @a _child into our brood at index @a _childsIndex.
 	 * It will make sure all children have the correct index but nothing more. In particular
@@ -491,9 +488,6 @@ private:
 	 */
 	void								moveWithinBrood(int _old, int _new);
 	
-	/// Just makes sure that the rootEntity is the parent's root entity. Should only be called from the parent.
-	void								checkRoot();
-
 	/// Helper function for validifyChildren()
 	bool								validifyChild(int _i, int* _added);
 	

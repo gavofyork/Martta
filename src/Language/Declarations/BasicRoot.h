@@ -20,17 +20,10 @@
 
 #pragma once
 
-#include <QTimer>
-
-#include "Operator.h"
-#include "Identifiable.h"
-#include "ModelPtr.h"
 #include "Declaration.h"
 
 namespace Martta
 {
-
-class ModelPtrFace;
 
 /**
  * The language root for an entire program.
@@ -40,45 +33,16 @@ class ModelPtrFace;
  *
  * Aside from that it should also encompass all the implementation of the project in question.
  */
-class BasicRoot: public QObject, public Declaration
+class BasicRoot: public Declaration
 {
-	Q_OBJECT
 	MARTTA_OBJECT(Declaration)
 
 public:
-	BasicRoot();
-
-	static BasicRoot*					get() { return s_this; }
-
 	virtual QString						name() const { return QString(); }
 	virtual Entity*						parent() const { return 0; }
 	virtual QString						reference() const { return ""; }
 	virtual QString						key() const { return ""; }
 	virtual Kinds						allowedKinds(int) const;
-
-	void								checkCull(Entity* _e) { if (!m_cullList.size()) QTimer::singleShot(0, this, SLOT(doCulling())); m_cullList << _e; }
-
-	virtual void						exportDom(QDomElement&) const { M_ASSERT(0); }
-
-	void								setChanged();
-
-public slots:	
-	void								ensureSyncedModel();
-
-private slots:
-	void								doCulling();
-	
-signals:
-	/// Indicates that some or all of the model has changed and needs reinterpretation.
-	void								modelChanged();
-
-private:
-	bool								m_changed;
-
-	// List of entities to check and possibly delete at next opportunity when nothing else happening.
-	QList<SafePointer<Entity> >			m_cullList;
-
-	static BasicRoot*					s_this;
 };
 
 }

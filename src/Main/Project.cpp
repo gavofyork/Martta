@@ -77,7 +77,6 @@ Project::Project(QString const& _load):
 	m_classes.setParent(this);
 
 	connect(&m_cDepends, SIGNAL(modelReset()), SLOT(reloadHeadersAndUpdateSubject()));
-	connect(&m_declarations, SIGNAL(modelChanged()), SIGNAL(changed()));
 
 	{
 	QTemporaryFile out;
@@ -450,7 +449,7 @@ void Project::reloadHeaders()
 	{
 		Entity* e = es.back();
 		es.pop_back();
-		M_ASSERT(e->rootEntity() == &m_declarations);
+		M_ASSERT(e->root() == &m_declarations);
 		es << e->children();
 	}
 }

@@ -31,10 +31,10 @@ class SimpleOperator: public Simple
 	MARTTA_OBJECT(Simple)
 	
 public:
-	template<class T> static SimpleOperator* create(Operator _o, Type const& _returns, Types const& _args, BasicRoot* _root)
+	template<class T> static SimpleOperator* create(Operator _o, Type const& _returns, Types const& _args)
 	{
 		SimpleOperator* s = new SimpleOperator;
-		s->construct(T::s_nonMembers.count(), _o, _returns, _args, _root, T::staticAuxilliary()->name());
+		s->construct(T::s_nonMembers.count(), _o, _returns, _args, T::staticAuxilliary()->name());
 		T::s_nonMembers.append(s);
 		return s;
 	}
@@ -44,7 +44,7 @@ public:
 	virtual void						destruct();
 
 private:
-	void								construct(int _id, Operator _o, Type const& _returns, Types const& _args, BasicRoot* _root, char const* _key);
+	void								construct(int _id, Operator _o, Type const& _returns, Types const& _args, char const* _key);
 	
 	Operator							m_operator;
 };

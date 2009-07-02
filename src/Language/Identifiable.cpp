@@ -21,7 +21,6 @@
 #include <QtXml>
 
 #include "ModelPtrRegistrar.h"
-#include "BasicRoot.h"
 #include "IdLabel.h"
 #include "TextLabel.h"
 #include "Entity.h"

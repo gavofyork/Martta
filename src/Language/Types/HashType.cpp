@@ -23,7 +23,6 @@
 #include "FunctionType.h"
 #include "Reference.h"
 #include "Const.h"
-#include "BasicRoot.h"
 #include "Memberify.h"
 #include "MemberTemplateType.h"
 #include "SimpleMethod.h"
@@ -46,8 +45,6 @@ bool HashType::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEve
 
 void HashType::initialiseClass()
 {
-	BasicRoot* root = BasicRoot::get();
-	
 	Type k = Type(MemberTemplateType(KeyType));
 	Type kr = Type(k).topWith(Reference());
 	Type kc = Type(k).topWith(Const());
@@ -71,40 +68,40 @@ void HashType::initialiseClass()
 	// TODO: Give parameters some names!
 	// TODO: Handle defaults.
 	
-	SimpleMethod::create<HashType>("reserve", false, v, u, root);
-	SimpleMethod::create<HashType>("capacity", true, i, n, root);
-	SimpleMethod::create<HashType>("squeeze", false, v, n, root);
-	SimpleMethod::create<HashType>("resize", false, v, u, root);
+	SimpleMethod::create<HashType>("reserve", false, v, u);
+	SimpleMethod::create<HashType>("capacity", true, i, n);
+	SimpleMethod::create<HashType>("squeeze", false, v, n);
+	SimpleMethod::create<HashType>("resize", false, v, u);
 
-	SimpleMethod::create<HashType>("contains", true, b, kcr, root);
-	SimpleMethod::create<HashType>("contains", true, b, kcr, root);
-	SimpleMethod::create<HashType>("count", true, i, n, root);
-	SimpleMethod::create<HashType>("isEmpty", true, b, n, root);
-	SimpleMethod::create<HashType>("size", true, i, n, root);
-	SimpleMethod::create<HashType>("count", true, i, kcr, root);
+	SimpleMethod::create<HashType>("contains", true, b, kcr);
+	SimpleMethod::create<HashType>("contains", true, b, kcr);
+	SimpleMethod::create<HashType>("count", true, i, n);
+	SimpleMethod::create<HashType>("isEmpty", true, b, n);
+	SimpleMethod::create<HashType>("size", true, i, n);
+	SimpleMethod::create<HashType>("count", true, i, kcr);
 
-	SimpleMethod::create<HashType>("clear", false, v, n, root);
-	SimpleMethod::create<HashType>("insert", false, it, (kcr, tcr), root);
-	SimpleMethod::create<HashType>("insertMulti", false, it, (kcr, tcr), root);
-	SimpleMethod::create<HashType>("remove", false, i, kcr, root);
-	SimpleMethod::create<HashType>("removeOne", false, i, kcr, root);
-	SimpleMethod::create<HashType>("take", false, t, kcr, root);
+	SimpleMethod::create<HashType>("clear", false, v, n);
+	SimpleMethod::create<HashType>("insert", false, it, (kcr, tcr));
+	SimpleMethod::create<HashType>("insertMulti", false, it, (kcr, tcr));
+	SimpleMethod::create<HashType>("remove", false, i, kcr);
+	SimpleMethod::create<HashType>("removeOne", false, i, kcr);
+	SimpleMethod::create<HashType>("take", false, t, kcr);
 
-	SimpleMethod::create<HashType>("key", true, kc, tcr, root);
-	SimpleMethod::create<HashType>("key", true, kc, (tcr, kcr), root);
-	SimpleMethod::create<HashType>("keys", true, lk, tcr, root);
-	SimpleMethod::create<HashType>("keys", true, lk, n, root);
-	SimpleMethod::create<HashType>("uniqueKeys", true, lk, n, root);
+	SimpleMethod::create<HashType>("key", true, kc, tcr);
+	SimpleMethod::create<HashType>("key", true, kc, (tcr, kcr));
+	SimpleMethod::create<HashType>("keys", true, lk, tcr);
+	SimpleMethod::create<HashType>("keys", true, lk, n);
+	SimpleMethod::create<HashType>("uniqueKeys", true, lk, n);
 
-	SimpleMethod::create<HashType>("value", true, tc, kcr, root);
-	SimpleMethod::create<HashType>("value", true, tc, (kcr, tcr), root);
-	SimpleMethod::create<HashType>("values", true, lt, kcr, root);
-	SimpleMethod::create<HashType>("values", true, lt, n, root);
+	SimpleMethod::create<HashType>("value", true, tc, kcr);
+	SimpleMethod::create<HashType>("value", true, tc, (kcr, tcr));
+	SimpleMethod::create<HashType>("values", true, lt, kcr);
+	SimpleMethod::create<HashType>("values", true, lt, n);
 	
-	SimpleMethod::create<HashType>("unite", false, hr, hcr, root);
+	SimpleMethod::create<HashType>("unite", false, hr, hcr);
 
-	SimpleOperator::create<HashType>(Operator::EqualsEquals, b, (hcr, hcr), root);
-	SimpleOperator::create<HashType>(Operator::BangEquals, b, (hcr, hcr), root);
+	SimpleOperator::create<HashType>(Operator::EqualsEquals, b, (hcr, hcr));
+	SimpleOperator::create<HashType>(Operator::BangEquals, b, (hcr, hcr));
 }
 
 void HashType::finaliseClass()

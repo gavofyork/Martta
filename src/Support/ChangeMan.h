@@ -30,6 +30,7 @@ class Dependee;
 
 class ChangeMan
 {
+
 public:
 	enum Operation
 	{
@@ -99,8 +100,11 @@ public:
 	void								removeAllDependencies(Depender* _der);
 	bool								haveDependency(Depender const* _der, Dependee const* _dee) const { return m_dependees.constFind(const_cast<Depender*>(_der), const_cast<Dependee*>(_dee)) != m_dependees.end(); }
 
+	bool								hasChanged() const { return m_hasChanged; }
+	void								resetChanged() { m_hasChanged = false; }
+
 private:
-	ChangeMan(): m_asleep(false) {}
+	ChangeMan(): m_asleep(false), m_hasChanged(false) {}
 	virtual ~ChangeMan() {}
 
 	void								processQueue();
@@ -116,6 +120,7 @@ private:
 	QList<Entry>						m_changesDone;
 	
 	bool								m_asleep;
+	bool								m_hasChanged;
 	
 	static ChangeMan*					s_this;
 };

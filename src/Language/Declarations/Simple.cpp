@@ -30,7 +30,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(Simple);
 
-void Simple::construct(TypeEntity const* _scope, int _id, bool _isConst, Type const& _returns, Types const& _args, BasicRoot*, char const* _key)
+void Simple::construct(TypeEntity const* _scope, int _id, bool _isConst, Type const& _returns, Types const& _args, char const* _key)
 {
 	m_key = _key;
 	m_myId = _id;
@@ -48,17 +48,20 @@ void Simple::construct(TypeEntity const* _scope, int _id, bool _isConst, Type co
 	t.topWith(Reference());
 	t.placeCopy(back());
 
-	// Rather superfluous, but needed for Declaration's I/O and so we can register a key.
-//	m_rootEntity = _root;
-//	rootEntity()->registerDeclaration(this);
 	ModelPtrRegistrar::get()->registerDeclaration(this);
 }
 
 void Simple::destruct()
 {
-//	rootEntity()->unregisterDeclaration(this);
 	ModelPtrRegistrar::get()->unregisterDeclaration(this);
 	delete this;
+}
+
+Kinds Simple::allowedKinds(int _i) const
+{
+	if (_i >= 0)
+		return Kind::of<TypeEntity>();
+	return Super::allowedKinds(_i);
 }
 
 }

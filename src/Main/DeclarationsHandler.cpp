@@ -41,7 +41,6 @@
 #include "FunctionType.h"
 #include "Memberify.h"
 #include "Reference.h"
-#include "BasicRoot.h"
 #include "TextLabel.h"
 #include "DeclarationsHandler.h"
 
@@ -349,14 +348,15 @@ void TypedefResolver::init(QXmlAttributes const& _a)
 void TypedefResolver::resolve(DeclarationsHandler* _h)
 {
 	TypeResolver::resolve(_h);
-	m_subject->back().place(_h->resolveType(m_typeId));
-	if (m_subject->childIs<ExplicitType>(0) && m_subject->childAs<ExplicitType>(0)->subject()->isKind<Struct>() && m_subject->childAs<ExplicitType>(0)->subject()->asKind<Struct>()->codeName() == m_subject->codeName())
-	{
-		// Cloned struct name; make the structure anonymous.
-		TopLevelType* e = m_subject->childAs<ExplicitType>(0)->subject()->asKind<Struct>();
-		e->silentMove(m_subject->back());
-		_h->removeFromFile(e);
-	}
+	m_subject->middle(Typedef::Aliased).place(_h->resolveType(m_typeId));
+	if (ExplicitType* e = m_subject->tryChild<ExplicitType>(Typedef::Aliased))
+		if (Struct* s = e->subject()->tryKind<Struct>())
+			if (s->codeName() == m_subject->codeName())
+			{
+				// Cloned struct name; make the structure anonymous.
+				s->silentMove(m_subject->middle(Typedef::ShadowedStruct));
+				_h->removeFromFile(s);
+			}
 }
 
 template<class T>

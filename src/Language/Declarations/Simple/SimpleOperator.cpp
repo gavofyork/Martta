@@ -22,7 +22,6 @@
 #include "Memberify.h"
 #include "Type.h"
 #include "Reference.h"
-#include "BasicRoot.h"
 #include "Operation.h"
 #include "SimpleOperator.h"
 
@@ -31,16 +30,16 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(SimpleOperator);
 
-void SimpleOperator::construct(int _id, Operator _o, Type const& _returns, Types const& _args, BasicRoot* _root, char const* _key)
+void SimpleOperator::construct(int _id, Operator _o, Type const& _returns, Types const& _args, char const* _key)
 {
 	m_operator = _o;
-	Simple::construct(0, _id, false, _returns, _args, _root, _key);
-	Operation::registerOperator(_o, this, _root);
+	Simple::construct(0, _id, false, _returns, _args, _key);
+	Operation::registerOperator(_o, this);
 }
 
 void SimpleOperator::destruct()
 {
-	Operation::unregisterOperator(m_operator, this, rootEntity());
+	Operation::unregisterOperator(m_operator, this);
 	Super::destruct();
 }
 

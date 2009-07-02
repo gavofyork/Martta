@@ -129,6 +129,7 @@
 #include "Support/Common.cpp"
 #include "Support/CommonGraphics.cpp"
 #include "Support/CompletionDelegate.cpp"
+#include "Support/CullManager.cpp"
 #include "Support/Dier.cpp"
 #include "Support/EditDelegate.cpp"
 #include "Support/EntityKeyEvent.cpp"

@@ -20,6 +20,7 @@
 
 #include "TextLabel.h"
 #include "TypeEntity.h"
+#include "Struct.h"
 #include "Typedef.h"
 
 namespace Martta
@@ -31,6 +32,8 @@ Kinds Typedef::allowedKinds(int _i) const
 {
 	if (_i == Aliased)
 		return Kind::of<TypeEntity>();
+	if (_i == ShadowedStruct)
+		return Kind::of<Struct>();
 	return Super::allowedKinds(_i);
 }
 

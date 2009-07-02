@@ -18,7 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "BasicRoot.h"
 #include "SimpleMethod.h"
 
 namespace Martta
