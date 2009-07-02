@@ -29,7 +29,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(FloatLiteral);
 
-bool FloatLiteral::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
+bool FloatLiteral::keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e)
 {
 	if (_p.exists() && _p->isKind<IntegerLiteral>() && _e->text() == ".")
 	{

@@ -32,7 +32,7 @@ class MemberEnumeration: public Member, public_interface EnumerationNamer
 	MARTTA_INHERITS(EnumerationNamer, 0)
 	
 public:
-	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
+	static bool							keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e);
 
 protected:
 	// From Member

@@ -25,7 +25,7 @@ namespace Martta
 
 class Entity;
 class EntityKeyEvent;
-class InsertionPoint;
+class Position;
 	
 class AuxilliaryFace
 {
@@ -41,7 +41,7 @@ public:
 	virtual Entity*						create() const = 0;
 	virtual void						initialise() const = 0;
 	virtual void						finalise() const = 0;
-	virtual bool						dispatchKeyPress(InsertionPoint const& _p, EntityKeyEvent const* _e) const = 0;
+	virtual bool						dispatchKeyPress(Position const& _p, EntityKeyEvent const* _e) const = 0;
 };
 
 }

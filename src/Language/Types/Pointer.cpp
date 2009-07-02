@@ -26,7 +26,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(Pointer);
 
-bool Pointer::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
+bool Pointer::keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e)
 {
 	return simpleInsertionPointKeyPressHandler<Pointer>(_p, _e, "*", false);
 }

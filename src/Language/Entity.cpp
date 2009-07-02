@@ -527,7 +527,7 @@ void Entity::keyPressEvent(EntityKeyEvent* _e)
 }
 bool Entity::keyPressed(EntityKeyEvent const* _e)
 {
-	InsertionPoint p = over();
+	Position p = over();
 	if (_e->codeScene()->isCurrent(this) && (_e->key() == Qt::Key_Delete && _e->modifiers() == Qt::ShiftModifier || _e->key() == Qt::Key_Backspace && isEditing(_e->codeScene())))
 	{
 //		p.parent()->debugTree();
@@ -592,7 +592,7 @@ bool Entity::attemptAppend(EntityKeyEvent const* _e)
 }
 
 // Context/position changing.
-void Entity::prepareMove(InsertionPoint const& _newPosition)
+void Entity::prepareMove(Position const& _newPosition)
 {
 	if (_newPosition == over())
 		return;
@@ -612,7 +612,7 @@ void Entity::prepareMove(InsertionPoint const& _newPosition)
 			m_index = UndefinedIndex;
 	}
 }
-void Entity::commitMove(InsertionPoint const& _oldPosition)
+void Entity::commitMove(Position const& _oldPosition)
 {
 	if (_oldPosition.parent() == m_parent)
 		return;
@@ -722,7 +722,7 @@ void Entity::changed(int _aspects)
 	}
 }
 
-InsertionPoint Entity::firstFor(Kind const& _k)
+Position Entity::firstFor(Kind const& _k)
 {
 	int pi = definePreferedFor(_k);
 	if (pi != NonePrefered)
@@ -847,7 +847,7 @@ bool Entity::removeInvalidChildren()
 	return ret;
 }
 
-void Entity::put(InsertionPoint const& _newPosition)
+void Entity::put(Position const& _newPosition)
 {
 	M_ASSERT(this);
 	if (_newPosition.exists() && _newPosition->isPlaceholder())
@@ -856,10 +856,10 @@ void Entity::put(InsertionPoint const& _newPosition)
 		move(_newPosition);
 }
 
-void Entity::move(InsertionPoint const& _newPosition)
+void Entity::move(Position const& _newPosition)
 {
 	M_ASSERT(this);
-	InsertionPoint old = over();
+	Position old = over();
 	
 	silentMove(_newPosition);
 	if (old.parent() == m_parent && m_parent)
@@ -894,7 +894,7 @@ void Entity::move(InsertionPoint const& _newPosition)
 }
 Entity* Entity::usurp(Entity* _u)
 {
-	InsertionPoint you = _u->over();
+	Position you = _u->over();
 
 	over().insertSilent(_u);
 	
@@ -929,7 +929,7 @@ Entity* Entity::usurp(Entity* _u)
 }
 Entity* Entity::replace(Entity* _r)
 {
-	InsertionPoint you = _r->over();
+	Position you = _r->over();
 	
 	over().insertSilent(_r);
 	kill(_r);
@@ -949,10 +949,10 @@ Entity* Entity::replace(Entity* _r)
 }
 Entity* Entity::insert(Entity* _e, int _preferedIndex)
 {
-	InsertionPoint you = _e->over();
+	Position you = _e->over();
 	
 	over().insertSilent(_e);
-	InsertionPoint ip = _preferedIndex == NonePrefered ? _e->firstFor(kind()) : _e->middle(_preferedIndex);
+	Position ip = _preferedIndex == NonePrefered ? _e->firstFor(kind()) : _e->middle(_preferedIndex);
 	M_ASSERT(ip != Nowhere);
 	if (ip.allowedToBeKind(kind()))
 	{
@@ -991,10 +991,10 @@ Entity* Entity::insert(Entity* _e, int _preferedIndex)
 } 
 bool Entity::tryInsert(Entity* _e, int _preferedIndex)
 {
-	InsertionPoint you = _e->over();
+	Position you = _e->over();
 	
 	over().insertSilent(_e);
-	InsertionPoint ip = _preferedIndex == NonePrefered ? _e->firstFor(kind()) : _e->middle(_preferedIndex);
+	Position ip = _preferedIndex == NonePrefered ? _e->firstFor(kind()) : _e->middle(_preferedIndex);
 	if (!ip.allowedToBeKind(kind()))
 		ip = Nowhere;
 	ip.insertSilent(this);
@@ -1021,7 +1021,7 @@ bool Entity::tryInsert(Entity* _e, int _preferedIndex)
 void Entity::deleteAndRefill(Entity* _e, bool _moveToGrave)
 {
 	Entity* c = parent();
-	InsertionPoint p = over();
+	Position p = over();
 	
 	if (_e)
 	{

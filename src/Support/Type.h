@@ -58,8 +58,8 @@ public:
 	bool operator==(Type const& _t) const;
 	bool operator!=(Type const& _t) const { return !operator==(_t); }
 
-	inline void insertSilentCopy(InsertionPoint _p) const { _p.insertSilent(m_top->clone(0)); }
-	inline void placeCopy(InsertionPoint _p) const { _p.place(m_top->clone(0)); }
+	inline void insertSilentCopy(Position _p) const { _p.insertSilent(m_top->clone(0)); }
+	inline void placeCopy(Position _p) const { _p.place(m_top->clone(0)); }
 
 	inline operator Types() const { return Types() << *this; }
 	inline Types	operator,(Type const& _q) const { return Types() << *this << _q; }

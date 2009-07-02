@@ -10,7 +10,6 @@
 #include "Language/Conditional.cpp"
 #include "Language/Corporal.cpp"
 #include "Language/Declarations/Argument.cpp"
-#include "Language/Declarations/BasicRoot.cpp"
 #include "Language/Declarations/Declaration.cpp"
 #include "Language/Declarations/EnumerationNamer.cpp"
 #include "Language/Declarations/EnumValue.cpp"
@@ -133,7 +132,6 @@
 #include "Support/Dier.cpp"
 #include "Support/EditDelegate.cpp"
 #include "Support/EntityKeyEvent.cpp"
-#include "Support/InsertionPoint.cpp"
 #include "Support/Kind.cpp"
 #include "Support/Location.cpp"
 #include "Support/Meta.cpp"
@@ -141,5 +139,6 @@
 #include "Support/ModelPtrFace.cpp"
 #include "Support/ModelPtrRegistrar.cpp"
 #include "Support/Operator.cpp"
+#include "Support/Position.cpp"
 #include "Support/Type.cpp"
 

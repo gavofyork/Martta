@@ -27,7 +27,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(Destructor);
 
-bool Destructor::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
+bool Destructor::keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e)
 {
 	return simpleInsertionPointKeyPressHandler<Destructor>(_p, _e, "~");
 }

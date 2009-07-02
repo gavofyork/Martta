@@ -34,7 +34,7 @@
 #include "AccessLabel.h"
 #include "ListType.h"
 #include "StringType.h"
-#include "BasicRoot.h"
+#include "Root.h"
 #include "Pointer.h"
 #include "Enumeration.h"
 #include "EnumValue.h"
@@ -120,7 +120,7 @@ int typeTests()
 	
 	TEST("Class creation...")
 	{
-		BasicRoot r;
+		Root r;
 		Class* X = new Class;
 		X->prepareChildren();
 		r.back().place(X);
@@ -184,7 +184,7 @@ int typeTests()
 	}
 	{
 #define CAST_TEST(F, T, R) TEST("EnumValue Conversion casting... " #F "->" #T) TEST_THIS_CAST(F, T, R)
-		BasicRoot r;
+		Root r;
 		Enumeration* X = new Enumeration;
 		X->prepareChildren();
 		X->setUnnamed();
@@ -253,7 +253,7 @@ int typeTests()
 	}
 	TEST("Class construction testing.")
 	{
-		BasicRoot r;
+		Root r;
 		Class* X = new Class;
 		X->prepareChildren();
 		r.back().place(X);
@@ -261,7 +261,7 @@ int typeTests()
 	}
 	{
 #define CAST_TEST(F, T, R) TEST("Reference casting... " #F "->" #T) TEST_THIS_CAST(F, T, R)
-		BasicRoot r;
+		Root r;
 		Class* X = new Class;
 		X->prepareChildren();
 		r.back().place(X);
@@ -283,7 +283,7 @@ int typeTests()
 	}
 	{
 #define CAST_TEST(F, T, R) TEST("Memberify casting... " #F "->" #T) TEST_THIS_CAST(F, T, R)
-		BasicRoot r;
+		Root r;
 		Class* B = new Class;
 		Class* D = new Class;
 		B->prepareChildren();

@@ -33,7 +33,7 @@
 
 #include "Dier.h"
 #include "Meta.h"
-#include "InsertionPoint.h"
+#include "Position.h"
 #include "SafePointer.h"
 
 class QTextStream;
@@ -50,8 +50,8 @@ class DecorationContext;
 
 /**
  * Note regarding rootEntity/null-Context: You can never depend on something which does not share the
- * same BasicRoot object as you. Objects yet to be inserted into the program have a nullContext and thus
- * no BasicRoot. If you make objects within the scene children of such objects they will be moved
+ * same Root object as you. Objects yet to be inserted into the program have a nullContext and thus
+ * no Root. If you make objects within the scene children of such objects they will be moved
  * out of scene, and thus can have no interactions (i.e. dependencies/references) with objects within the
  * scene. This applies even if the situation is temporary, since the check/changes happen at move
  * time.
@@ -85,13 +85,13 @@ public:
 	static void							initialiseClass() {}
 	static void							finaliseClass() {}
 	
-	void								prepareMove(InsertionPoint const& _newPosition);
-	void								commitMove(InsertionPoint const& _oldPosition);
-	void								silentMove(InsertionPoint const& _to) { InsertionPoint from = over(); prepareMove(_to); commitMove(from); }
+	void								prepareMove(Position const& _newPosition);
+	void								commitMove(Position const& _oldPosition);
+	void								silentMove(Position const& _to) { Position from = over(); prepareMove(_to); commitMove(from); }
 	void								silentRemove() { silentMove(Nowhere); }
-	void								move(InsertionPoint const& _newPosition);
+	void								move(Position const& _newPosition);
 	/// Same as move() except that if the destination is a placeholder we replace it, 
-	void								put(InsertionPoint const& _newPosition);
+	void								put(Position const& _newPosition);
 
 	inline int							index() const { return m_index; }
 	inline Entity*						parent() const { return m_parent; }
@@ -335,10 +335,10 @@ public:
 	bool								isValid() const;
 
 	// Insertion points
-	inline InsertionPoint				over() const { return InsertionPoint(parent(), index()); }
-	inline InsertionPoint				front() { return InsertionPoint(this, 0); }
-	inline InsertionPoint				back() { return InsertionPoint(this, UndefinedIndex); }
-	inline InsertionPoint				middle(int _at) { return InsertionPoint(this, _at); }
+	inline Position				over() const { return Position(parent(), index()); }
+	inline Position				front() { return Position(this, 0); }
+	inline Position				back() { return Position(this, UndefinedIndex); }
+	inline Position				middle(int _at) { return Position(this, _at); }
 	/**
 	 * Order of preference:
 	 * - A named position that requires us to be there.
@@ -348,7 +348,7 @@ public:
 	 * - The back of the cardinals if it allows us being there.
 	 * - Nowhere
 	 */
-	InsertionPoint						firstFor(Kind const& _k);
+	Position						firstFor(Kind const& _k);
 	bool								attemptAppend(EntityKeyEvent const* _e);
 	bool								attemptInsert(EntityKeyEvent const* _e);
 	
@@ -366,7 +366,7 @@ public:
 	bool								activated(CodeScene* _s);
 	virtual bool						onActivated(CodeScene*) { return false; }
 	virtual bool						keyPressed(EntityKeyEvent const*);
-	static bool							keyPressedOnInsertionPoint(InsertionPoint const&, EntityKeyEvent const*) { return false; }
+	static bool							keyPressedOnInsertionPoint(Position const&, EntityKeyEvent const*) { return false; }
 	
 	QString								indexName(int _i) const;
 	QString								indexName() const { return m_parent ? m_parent->indexName(m_index) : "[Orphan]"; }
@@ -413,9 +413,9 @@ public:
 	inline static bool					isTemporary(Entity* _e) { SafePointer<Entity> p(_e); p->clearEditing(); return !p; }
 	static bool							isValidName(QString const& _n);
 	template<class T>
-	inline static bool					simplePlaceholderKeyPressHandler(InsertionPoint const& _p, EntityKeyEvent const* _e, QString const& _t);
+	inline static bool					simplePlaceholderKeyPressHandler(Position const& _p, EntityKeyEvent const* _e, QString const& _t);
 	template<class T>
-	inline static bool					simpleInsertionPointKeyPressHandler(InsertionPoint const& _p, EntityKeyEvent const* _e, QString const& _t, bool _ontoNew = true);	
+	inline static bool					simpleInsertionPointKeyPressHandler(Position const& _p, EntityKeyEvent const* _e, QString const& _t, bool _ontoNew = true);	
 
 	void								debugTree() const;
 	void								debugTree(QString const& _i) const;
@@ -430,7 +430,7 @@ protected:
 	/// Notes parentSwitched to child, and child removal to old parent.
 	/// @important This does *not* notify the new parent of the child addition; you must do that yourself! 
 	/// This assumes _old is still valid!
-	inline void							parentSwitchedWithChildRemoved(InsertionPoint const& _old)
+	inline void							parentSwitchedWithChildRemoved(Position const& _old)
 	{
 		if (m_parent && _old.parent())
 		{
@@ -568,7 +568,7 @@ void Martta::Entity::setDependency(T& _dependencyVariable, U const& _dependency)
 }
 
 template<class T>
-bool Martta::Entity::simplePlaceholderKeyPressHandler(InsertionPoint const& _p, EntityKeyEvent const* _e, QString const& _t)
+bool Martta::Entity::simplePlaceholderKeyPressHandler(Position const& _p, EntityKeyEvent const* _e, QString const& _t)
 {
 	if (_e->text() == _t && _p.allowedToBeKind<T>() && _p.exists() && _p->isPlaceholder())
 	{
@@ -581,7 +581,7 @@ bool Martta::Entity::simplePlaceholderKeyPressHandler(InsertionPoint const& _p, 
 }
 
 template<class T>
-bool Martta::Entity::simpleInsertionPointKeyPressHandler(InsertionPoint const& _p, EntityKeyEvent const* _e, QString const& _t, bool _ontoNew)
+bool Martta::Entity::simpleInsertionPointKeyPressHandler(Position const& _p, EntityKeyEvent const* _e, QString const& _t, bool _ontoNew)
 {
 	if (_e->text() == _t && _p.allowedToBeKind<T>())
 	{

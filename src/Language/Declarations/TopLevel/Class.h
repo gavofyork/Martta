@@ -30,7 +30,7 @@ class Class: public TopLevelType
 	MARTTA_OBJECT(TopLevelType)
 
 public:
-	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
+	static bool							keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e);
 
 	QList<Declaration*>			members(bool _isConst = false, Access _access = Private) const;
 	template<class T> inline QList<T*>	membersOf(bool _isConst = false, Access _access = Private) const { return filterEntities<T>(members(_isConst, _access)); }

@@ -58,7 +58,7 @@ Access Class::baseAccess(Class* _c) const
 	return NoAccess;
 }
 	
-bool Class::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
+bool Class::keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e)
 {
 	return simpleInsertionPointKeyPressHandler<Class>(_p, _e, "L");
 }

@@ -30,7 +30,7 @@ class LongMemberOperation: public GenericMemberOperation
 	MARTTA_OBJECT(GenericMemberOperation)
 
 public:
-	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
+	static bool							keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e);
 
 protected:
 	virtual Type						scope() const;

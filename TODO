@@ -1,15 +1,9 @@
 BUG QObject: Do not delete object, 'unnamed', during its event handler!
-TODO culling takes too long.
-TODO Get rid of DE/Id deps.
-TODO Get rid of Root::get() static singleton crap.
-TODO Statements to reject placeholders.
-TODO inherited methods don't work.
+BUG Moving is crazily slow over statements.
 TODO optimise Class.
+TODO visual change system back.
+
 TODO special EntryMethod
-TODO virtual interface
-TODO virtual overload
-TODO anonymous -> metasyntactic variable
-TODO InsertionPoint -> Position
 MINOR double - int gets -(int, int) not -(double, double)
 
 TODO Look into Dynagraph/Boost or GraphViz for graphing the code.
@@ -24,6 +18,11 @@ TODO page up & down broken.
 TODO join statements or tree insert.
 TODO insertion of entities in, e.g. argument lists for function calls.
 TODO Code metrics and distribution etc.
+
+TODO virtual overload properly
+TODO inherited methods don't work.
+TODO Statements to reject placeholders.
+TODO anonymous -> metasyntactic variable
 
 Dynamic code-loading (plugins).
 - Move everything over so that plugins use Martta-specific data types.

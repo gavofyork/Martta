@@ -18,25 +18,25 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "InsertionPoint.h"
+#include "Position.h"
 
 #include "Entity.h"
 
 namespace Martta
 {
 
-bool InsertionPoint::exists() const
+bool Position::exists() const
 {
 	return isValid() && m_index != UndefinedIndex && m_parent->child(m_index);
 }
 
-Entity* InsertionPoint::entity() const
+Entity* Position::entity() const
 {
 	M_ASSERT(exists());
 	return m_parent->child(m_index);
 }
 
-Entity* InsertionPoint::spawnPreparedSilent() const
+Entity* Position::spawnPreparedSilent() const
 {
 	Entity* ret = Entity::spawn(allowedKinds().commonBase().name());
 	ret->prepareChildren();
@@ -44,7 +44,7 @@ Entity* InsertionPoint::spawnPreparedSilent() const
 	return ret;
 }
 
-Entity* InsertionPoint::spawnPrepared() const
+Entity* Position::spawnPrepared() const
 {
 	Entity* ret = Entity::spawn(allowedKinds().commonBase().name());
 	ret->prepareChildren();
@@ -52,48 +52,48 @@ Entity* InsertionPoint::spawnPrepared() const
 	return ret;
 }
 
-Entity* InsertionPoint::place(Entity* _e) const
+Entity* Position::place(Entity* _e) const
 {
 	M_ASSERT(_e);
 	_e->put(*this);
 	return _e;
 }
 
-Entity* InsertionPoint::insert(Entity* _e) const
+Entity* Position::insert(Entity* _e) const
 {
 	M_ASSERT(_e);
 	_e->move(*this);
 	return _e;
 }
 
-void InsertionPoint::insertSilent(Entity* _e) const
+void Position::insertSilent(Entity* _e) const
 {
 	M_ASSERT(_e);
 	_e->silentMove(*this);
 }
 
-bool InsertionPoint::allowedToBeKind(Kind _k) const
+bool Position::allowedToBeKind(Kind _k) const
 {
 	return _k.isKind(m_parent->allowedKinds(m_index == UndefinedIndex ? m_parent->cardinalChildCount() : m_index))
 			&& !_k.isKind(m_parent->deniedKinds(m_index == UndefinedIndex ? m_parent->cardinalChildCount() : m_index));
 }
 
-bool InsertionPoint::isRequired() const
+bool Position::isRequired() const
 {
 	return m_index < 0 ? (m_parent->childCountAt(m_index) < m_parent->minRequired(m_index)) : ((m_index == UndefinedIndex ? m_parent->cardinalChildCount() : m_index) < m_parent->minRequired());
 }
 
-Kinds InsertionPoint::allowedKinds() const
+Kinds Position::allowedKinds() const
 {
 	return m_parent->allowedKinds(m_index == UndefinedIndex ? m_parent->cardinalChildCount() : m_index);
 }
 
-Kinds InsertionPoint::deniedKinds() const
+Kinds Position::deniedKinds() const
 {
 	return m_parent->deniedKinds(m_index == UndefinedIndex ? m_parent->cardinalChildCount() : m_index);
 }
 
-Entity* InsertionPoint::nearestEntity() const
+Entity* Position::nearestEntity() const
 {
 	if (m_parent->child(m_index))
 		return m_parent->child(m_index);
@@ -103,7 +103,7 @@ Entity* InsertionPoint::nearestEntity() const
 		return m_parent;
 }
 
-QDebug operator<<(QDebug _out, InsertionPoint const& _item)
+QDebug operator<<(QDebug _out, Position const& _item)
 {
 	_out << _item.m_index << "@" << &*_item.m_parent;
 	if (_item.exists())

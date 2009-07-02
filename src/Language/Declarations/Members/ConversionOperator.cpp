@@ -34,7 +34,7 @@ QString ConversionOperator::basicCode(FunctionCodeScope _ref) const
 	return Martta::code(qualifiers() & MethodMask) + callingCode(_ref) + (isConst() ? " const" : "");
 }
 
-bool ConversionOperator::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
+bool ConversionOperator::keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e)
 {
 	return simpleInsertionPointKeyPressHandler<ConversionOperator>(_p, _e, "X");
 }

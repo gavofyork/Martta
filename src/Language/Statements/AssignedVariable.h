@@ -34,7 +34,7 @@ class AssignedVariable: public BareTyped, public_interface VariableNamer
 public:
 	enum { AssignedValue = FirstNamed, EndOfNamed };
 	
-	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
+	static bool							keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e);
 	
 protected:
 	// From Entity via BareTyped

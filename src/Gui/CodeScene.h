@@ -91,10 +91,10 @@ public:
 	void						reinterpretCurrentKeyEvent() { m_reinterpretCurrentKeyEvent = true; }
 	
 	// Bracketing code.
-	void						setBracketed(InsertionPoint const& _p) { m_bracketed.append(_p); }
-	void						removeBracket(InsertionPoint const& _p) { m_bracketed.removeAt(m_bracketed.lastIndexOf(_p)); }
-	bool						isBracketed(InsertionPoint const& _p) const { return m_bracketed.contains(_p); }
-	InsertionPoint				nearestBracket(InsertionPoint const& _p) const;
+	void						setBracketed(Position const& _p) { m_bracketed.append(_p); }
+	void						removeBracket(Position const& _p) { m_bracketed.removeAt(m_bracketed.lastIndexOf(_p)); }
+	bool						isBracketed(Position const& _p) const { return m_bracketed.contains(_p); }
+	Position				nearestBracket(Position const& _p) const;
 	
 	// For EditDelegateFace
 	void						forgetMe(EditDelegateFace* _me) { if (m_editDelegate == _me) m_editDelegate = 0; }
@@ -115,7 +115,7 @@ public slots:
 	/// For when an entity has changed in the scene.
 	void						relayoutLater(Entity* _e);
 	inline void					leaving(Entity* _e) { leaving(_e, _e->over()); }
-	void						leaving(Entity* _e, InsertionPoint const& _grave);
+	void						leaving(Entity* _e, Position const& _grave);
 
 	void						killStrobe();
 	
@@ -175,7 +175,7 @@ private:
 	QPointF				m_borderOffset;
 	bool				m_ensureCurrentVisible;
 	
-	QList<InsertionPoint>	m_bracketed;
+	QList<Position>	m_bracketed;
 	
 	static QList<CodeScene*> s_allScenes;
 };

@@ -33,7 +33,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(SimpleUnaryOperation);	
 
-bool SimpleUnaryOperation::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
+bool SimpleUnaryOperation::keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e)
 {
 	if (!_p.exists())
 		return false;
@@ -47,7 +47,7 @@ bool SimpleUnaryOperation::keyPressedOnInsertionPoint(InsertionPoint const& _p, 
 		return false;
 	
 	Operator o(_e->text(), pre ? Operator::UnaryPrefix : Operator::UnaryPostfix);
-	InsertionPoint p = slideOnPrecedence(_p, o.precedence(), o.associativity(), _e->nearestBracket(_p));
+	Position p = slideOnPrecedence(_p, o.precedence(), o.associativity(), _e->nearestBracket(_p));
 	bool b = findOperators(o, p->isKind<Typed>() ? p->asKind<Typed>()->type() : Type()).size();
 	if (b && !isTemporary(p.entity()))
 	{

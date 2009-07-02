@@ -66,7 +66,7 @@ CodeScene::~CodeScene()
 	s_allScenes.removeAll(this);
 }
 
-void CodeScene::leaving(Entity* _e, InsertionPoint const&)
+void CodeScene::leaving(Entity* _e, Position const&)
 {
 	if (m_subject == _e)
 	{
@@ -184,11 +184,11 @@ void CodeScene::setEditing(Entity* _e)
 	}
 }
 
-InsertionPoint CodeScene::nearestBracket(InsertionPoint const& _p) const
+Position CodeScene::nearestBracket(Position const& _p) const
 {
 	int n = UndefinedIndex;
-	InsertionPoint ret;
-	foreach (InsertionPoint i, m_bracketed)
+	Position ret;
+	foreach (Position i, m_bracketed)
 		if (_p == i)
 		{
 			n = 0;
@@ -275,7 +275,7 @@ void CodeScene::paintEvent(QPaintEvent*)
 		m_current = m_subject;
 	}
 
-	foreach (InsertionPoint i, m_bracketed)
+	foreach (Position i, m_bracketed)
 		if (!i.exists() || (i.entity() != m_current && !m_current->hasAncestor(i.entity())))
 			m_bracketed.removeAll(i);
 	
@@ -283,7 +283,7 @@ void CodeScene::paintEvent(QPaintEvent*)
 	p.translate(m_borderOffset);
 
 	p.setPen(Qt::NoPen);
-	foreach (InsertionPoint i, m_bracketed)
+	foreach (Position i, m_bracketed)
 	{
 		QRectF br = bounds(i.entity());
 		QLinearGradient g(br.topLeft(), br.bottomLeft());
@@ -397,7 +397,7 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 	if (!m_subject || !current()) return;
 
 	SafePointer<Entity> n = current();
-	InsertionPoint currentPoint = n->over();
+	Position currentPoint = n->over();
 	
 	m_doInsert = false;
 
@@ -407,8 +407,8 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 	if (m_strobeFocus && !_e->text().isEmpty() && _e->text() != " ")
 	{
 		Entity* originalStrobeChild = m_strobeChild;
-		InsertionPoint sCrPoint;
-		InsertionPoint sChPoint;
+		Position sCrPoint;
+		Position sChPoint;
 		if (m_strobeCreation)
 		{
 //			m_strobeCreation->debugTree();

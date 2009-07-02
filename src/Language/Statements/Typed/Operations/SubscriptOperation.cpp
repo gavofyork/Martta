@@ -112,7 +112,7 @@ bool SubscriptOperation::keyPressed(EntityKeyEvent const* _e)
 	return true;
 }
 
-bool SubscriptOperation::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
+bool SubscriptOperation::keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e)
 {
 	if (_p.exists() && !_p->isPlaceholder() && _p->isKind<Typed>() &&
 		(	_p->asKind<Typed>()->type()->isType<ListType>() ||

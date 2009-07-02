@@ -52,7 +52,7 @@ QString AssignedVariable::code() const
 	return basicCode() + " = " + asTyped(AssignedValue)->code();
 }
 
-bool AssignedVariable::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
+bool AssignedVariable::keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e)
 {
 	if (!_p->isAllowed<DefaultConstructedVariable>())
 		return simplePlaceholderKeyPressHandler<AssignedVariable>(_p, _e, "V");

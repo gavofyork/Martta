@@ -30,7 +30,7 @@ class AssignmentOperation: public BinaryOperation
 	MARTTA_OBJECT(BinaryOperation)
 
 public:
-	inline static bool					keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e) { return simpleKeyPressedOnInsertionPointHandler<AssignmentOperation>(_p, _e, "=", Operator(Operator::Equals).precedence(), Operator(Operator::Equals).associativity()); }
+	inline static bool					keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e) { return simpleKeyPressedOnInsertionPointHandler<AssignmentOperation>(_p, _e, "=", Operator(Operator::Equals).precedence(), Operator(Operator::Equals).associativity()); }
 
 private:
 	virtual Types						allowedTypes(int _index) const;

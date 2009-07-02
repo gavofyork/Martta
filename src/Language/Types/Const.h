@@ -32,7 +32,7 @@ class Const: public ModifyingType
 public:
 	Const() {}
 	
-	inline static bool					keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e) { return simpleInsertionPointKeyPressHandler<Const>(_p, _e, "!", false); }
+	inline static bool					keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e) { return simpleInsertionPointKeyPressHandler<Const>(_p, _e, "!", false); }
 	
 protected:
 	virtual bool						hasDefaultConstructor() const { return original() && original()->hasDefaultConstructor(); }

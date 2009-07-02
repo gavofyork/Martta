@@ -22,7 +22,7 @@
 
 #include "TypeEntity.h"
 
-#include "BasicRoot.h"
+#include "Root.h"
 #include "Entity.h"
 #include "Depender.h"
 #include "Dependee.h"
@@ -127,7 +127,7 @@ int test()
 	enum { DependsOnNothing = 0, DependsOnParent = 1, DependsOnChildren = 2, DependsOnBoth = 3, DependsOnIndex = 4, TestOnOrder = 8, DependsOnChildOrder = DependsOnChildren | TestOnOrder };
 	TEST("Change system: Family dependencies changing, inert")
 	{
-		BasicRoot r;
+		Root r;
 		
 		activity.clear();
 		NewEntity* n1 = new NewEntity("n1");
@@ -144,7 +144,7 @@ int test()
 	TEST("Change system: Family dependencies changing, active")
 	{
 		activity.clear();
-		BasicRoot r;
+		Root r;
 		NewEntity* n1 = new NewEntity("n1", DependsOnChildren);
 		r.back().place(n1);
 		NewEntity* n2 = new NewEntity("n2", DependsOnParent);
@@ -167,7 +167,7 @@ int test()
 	
 	TEST("Change system: Family dependencies moving")
 	{
-		BasicRoot r;
+		Root r;
 		NewEntity* n1 = new NewEntity("n1", DependsOnChildOrder);
 		r.back().place(n1);
 		NewEntity* n2 = new NewEntity("n2", DependsOnParent);
@@ -187,7 +187,7 @@ int test()
 
 	TEST("Change system: Aspects & recursive changing")
 	{
-		BasicRoot r;
+		Root r;
 		NewEntity* n1 = new NewEntity("n1");
 		r.back().place(n1);
 		NewEntity* n2 = new NewEntitySilly("n2", DependsOnChildren);
@@ -208,7 +208,7 @@ int test()
 		// n1[NE2] ---> n2[NE2] ---> n3[NE] ---> n4[NE]
 		//               ^ - - - - - - - - - - - /
 		activity.clear();
-		BasicRoot r;
+		Root r;
 		NewEntity* n1 = new NewEntity2("n1", DependsOnNothing);
 		r.back().place(n1);
 		NewEntity* n2 = new NewEntity2("n2", DependsOnNothing);
@@ -252,7 +252,7 @@ int test()
 	TEST("Change system: Freeform dependencies")
 	{
 		activity.clear();
-		BasicRoot r;
+		Root r;
 		NewEntity* n1 = new NewEntity("n1", DependsOnNothing);
 		r.back().place(n1);
 		NewEntity* n2 = new NewEntity("n2", DependsOnNothing);

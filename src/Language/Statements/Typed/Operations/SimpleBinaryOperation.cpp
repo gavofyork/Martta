@@ -32,14 +32,14 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(SimpleBinaryOperation);	
 
-bool SimpleBinaryOperation::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
+bool SimpleBinaryOperation::keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e)
 {
 	Operator o(_e->text(), Operator::Binary);
 	if (!_p.exists() || _p->isPlaceholder() || o.isNull())
 		return false;
 		
 	bool ok = false;
-	InsertionPoint p = slideOnPrecedence(_p, o.precedence(), o.associativity(), _e->nearestBracket(_p));
+	Position p = slideOnPrecedence(_p, o.precedence(), o.associativity(), _e->nearestBracket(_p));
 	M_ASSERT(!p.entity()->isEditing());
 	if (p->isKind<Typed>() && findOperators(o, p->asKind<Typed>()->type()).size())
 		ok = true;

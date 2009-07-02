@@ -42,12 +42,12 @@ protected:
 	Type								leftType() const { return typeOf(FirstOperand); }
 	Type								rightType() const { return typeOf(SecondOperand); }
 
-	template<class T> static bool		simpleKeyPressedOnInsertionPointHandler(InsertionPoint const& _p, EntityKeyEvent const* _e, QString const& _t, Precedence _d, Associativity _a)
+	template<class T> static bool		simpleKeyPressedOnInsertionPointHandler(Position const& _p, EntityKeyEvent const* _e, QString const& _t, Precedence _d, Associativity _a)
 	{
 		if (!_p.exists() || _p->isPlaceholder() || _e->text() != _t)
 			return false;
 
-		InsertionPoint p = slideOnPrecedence(_p, _d, _a, _e->nearestBracket(_p));
+		Position p = slideOnPrecedence(_p, _d, _a, _e->nearestBracket(_p));
 //		qDebug() << "Slide from" << _p << "to" << p;
 		if (!isTemporary(p.entity()))
 		{
@@ -63,7 +63,7 @@ protected:
 		}
 		return false;
 	}
-	template<class T> static bool		simpleKeyPressedOnInsertionPointHandler(InsertionPoint const& _p, EntityKeyEvent const* _e, Operator _o)
+	template<class T> static bool		simpleKeyPressedOnInsertionPointHandler(Position const& _p, EntityKeyEvent const* _e, Operator _o)
 	{
 		return simpleKeyPressedOnInsertionPointHandler<T>(_p, _e, _o.code(), _o.precedence(), _o.associativity());
 	}

@@ -38,7 +38,7 @@ MARTTA_OBJECT_CPP(HashType);
 QList<SimpleMethod*> HashType::s_members;
 QList<SimpleOperator*> HashType::s_nonMembers;
 
-bool HashType::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
+bool HashType::keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e)
 {
 	return simpleInsertionPointKeyPressHandler<HashType>(_p, _e, "#");
 }

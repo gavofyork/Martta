@@ -66,7 +66,7 @@ bool EnumerationNamer::keyPressed(EntityKeyEvent const* _e)
 {
 	if (_e->key() == Qt::Key_Return && _e->codeScene()->viewKeys(self())["expanded"].toBool())
 	{
-		InsertionPoint p = (_e->isFocused() || _e->focalIndex() == 0) ?
+		Position p = (_e->isFocused() || _e->focalIndex() == 0) ?
 		(/*_e->inserting() || */_e->modifiers() & Qt::ShiftModifier) ?
 		self()->front() :
 		self()->back() :

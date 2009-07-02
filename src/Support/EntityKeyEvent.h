@@ -22,7 +22,7 @@
 
 #include <QKeyEvent>
 
-#include "InsertionPoint.h"
+#include "Position.h"
 
 namespace Martta
 {
@@ -57,7 +57,7 @@ public:
 	}
 
 	Entity*			focus() const { return m_focus; }
-	InsertionPoint	focusPoint() const;
+	Position	focusPoint() const;
 	bool			isFocused() const { return m_isFocused; }
 	bool			focusIsPlaceholder() const { return m_focusIsPlaceholder; }
 	int				focalIndex() const { return m_focalIndex; }
@@ -66,7 +66,7 @@ public:
 	CodeScene*		codeScene() const { return m_codeScene; }
 	Entity*			strobeCreation() const { return m_strobeCreation; }
 	Entity*			strobeChild() const { return m_strobeChild; }
-	InsertionPoint	nearestBracket(InsertionPoint const& _p) const;
+	Position	nearestBracket(Position const& _p) const;
 
 	void			noteStrobeCreation(Entity* _creation, Entity* _old) const { M_ASSERT(!m_strobeCreation); m_strobeCreation = _creation; m_strobeChild = _old; }
 	

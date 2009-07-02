@@ -30,12 +30,12 @@ void EntityKeyEvent::reinterpretLater() const
 	m_codeScene->reinterpretCurrentKeyEvent();
 }
 
-InsertionPoint EntityKeyEvent::focusPoint() const
+Position EntityKeyEvent::focusPoint() const
 {
 	return m_focus->over();
 }
 
-InsertionPoint EntityKeyEvent::nearestBracket(InsertionPoint const& _p) const
+Position EntityKeyEvent::nearestBracket(Position const& _p) const
 {
 	return m_codeScene->nearestBracket(_p);
 }

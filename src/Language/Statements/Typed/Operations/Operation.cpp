@@ -120,7 +120,7 @@ QList<ValueDefiner*> Operation::findBestOverload(Types const& _actual, QList<Val
 	return ret;
 }
 
-bool Operation::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
+bool Operation::keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e)
 {
 	if (_e->text() == "(" && _p->isPlaceholder())
 	{
@@ -151,9 +151,9 @@ bool Operation::keyPressed(EntityKeyEvent const* _e)
 	return Super::keyPressed(_e);
 }
 
-InsertionPoint Operation::slideOnPrecedence(InsertionPoint _p, Precedence _d, Associativity _a, InsertionPoint const& _block)
+Position Operation::slideOnPrecedence(Position _p, Precedence _d, Associativity _a, Position const& _block)
 {
-	InsertionPoint p = _p;
+	Position p = _p;
 	while (_block != p && p->parentIs<Operation>() && p.entity() == p->parentAs<Operation>()->lastOperand() &&
 		   (_d > p->parentAs<Operation>()->precedence() || _d == p->parentAs<Operation>()->precedence() && _a == LeftAssociativity))
 		p = p.parent()->over();

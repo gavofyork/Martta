@@ -47,7 +47,7 @@ protected:
 	virtual int							familyDependencies() const { return DependsOnBoth; }
 	virtual void						onDependencySwitched(Entity* _e, Entity* _o) { if (_e == parent()) relayoutLater(); else Super::onDependencySwitched(_e, _o); }
 	
-	template<class T> static bool		simpleKeyPressedOnInsertionPointHandler(InsertionPoint const& _p, EntityKeyEvent const* _e, QString const& _t, Precedence _d, Associativity _a, bool _pre = true, bool _confusable = false)
+	template<class T> static bool		simpleKeyPressedOnInsertionPointHandler(Position const& _p, EntityKeyEvent const* _e, QString const& _t, Precedence _d, Associativity _a, bool _pre = true, bool _confusable = false)
 	{
 		if (!_p.exists() || _e->text() != _t)
 			return false;
@@ -60,7 +60,7 @@ protected:
 		else
 			return false;
 		
-		InsertionPoint p = pre ? _p : slideOnPrecedence(_p, _d, _a, _e->nearestBracket(_p));
+		Position p = pre ? _p : slideOnPrecedence(_p, _d, _a, _e->nearestBracket(_p));
 		
 		if (isTemporary(p.entity()))
 			return false;
@@ -75,7 +75,7 @@ protected:
 			n->setCurrent();
 		return true;
 	}
-	template<class T> static bool		simpleKeyPressedOnInsertionPointHandler(InsertionPoint const& _p, EntityKeyEvent const* _e, Operator _o)
+	template<class T> static bool		simpleKeyPressedOnInsertionPointHandler(Position const& _p, EntityKeyEvent const* _e, Operator _o)
 	{
 		return simpleKeyPressedOnInsertionPointHandler<T>(_p, _e, _o.code(), _o.precedence(), _o.associativity(), _o.isPrefix(), _o.isConfusablePostfix());
 	}

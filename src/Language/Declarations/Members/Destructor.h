@@ -32,7 +32,7 @@ class Destructor: public MemberLambda
 	MARTTA_OBJECT(MemberLambda)
 
 public:
-	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
+	static bool							keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e);
 
 protected:
 	virtual int							minRequired(int _i) const { return _i == Identity || _i == Returned || _i == Constness ? 0 : Super::minRequired(_i); }

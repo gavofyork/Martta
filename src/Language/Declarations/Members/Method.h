@@ -30,7 +30,7 @@ class Method: public MemberLambda
 	MARTTA_OBJECT(MemberLambda)
 
 public:
-	static bool keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e) { return simpleInsertionPointKeyPressHandler<Method>(_p, _e, "M"); }
+	static bool keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e) { return simpleInsertionPointKeyPressHandler<Method>(_p, _e, "M"); }
 };
 
 }

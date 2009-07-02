@@ -37,7 +37,7 @@ public:
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual Types						allowedTypes(int _index) const;
 	virtual QString						code() const;
-	inline static bool					keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e) { return simplePlaceholderKeyPressHandler<ReturnStatement>(_p, _e, "R"); }
+	inline static bool					keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e) { return simplePlaceholderKeyPressHandler<ReturnStatement>(_p, _e, "R"); }
 
 	virtual Kinds						ancestralDependencies() const { return Kind::of<LambdaNamer>(); }
 	virtual void						onDependencyChanged(Entity* _e);

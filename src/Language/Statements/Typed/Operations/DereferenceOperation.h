@@ -30,7 +30,7 @@ class DereferenceOperation: public UnaryOperation
 	MARTTA_OBJECT(UnaryOperation)
 
 public:
-	inline static bool					keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e) { return simpleKeyPressedOnInsertionPointHandler<DereferenceOperation>(_p, _e, Operator::StarX); }
+	inline static bool					keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e) { return simpleKeyPressedOnInsertionPointHandler<DereferenceOperation>(_p, _e, Operator::StarX); }
 
 private:
 	virtual Types						allowedTypes(int) const;

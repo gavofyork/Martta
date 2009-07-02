@@ -20,14 +20,29 @@
 
 #pragma once
 
-#include "BasicRoot.h"
+#include "Declaration.h"
 
 namespace Martta
 {
 
-class Root: public BasicRoot
+/**
+ * The language root for an entire program.
+ *
+ * This encompasses everything required to compile a single program. It should include forward declarations of all
+ * kinds from all dependencies (including C-style).
+ *
+ * Aside from that it should also encompass all the implementation of the project in question.
+ */
+class Root: public Declaration
 {
-	MARTTA_OBJECT(BasicRoot)
+	MARTTA_OBJECT(Declaration)
+
+public:
+	virtual QString						name() const { return QString(); }
+	virtual Entity*						parent() const { return 0; }
+	virtual QString						reference() const { return ""; }
+	virtual QString						key() const { return ""; }
+	virtual Kinds						allowedKinds(int) const;
 };
 
 }

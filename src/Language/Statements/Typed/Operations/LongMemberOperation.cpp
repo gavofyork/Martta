@@ -57,7 +57,7 @@ QString LongMemberOperation::code() const
 	return parenthesise(left()->code() + "->" + right()->code());
 }
 
-bool LongMemberOperation::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
+bool LongMemberOperation::keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e)
 {
 /*	qDebug() << _p.exists();
 	if (_p.exists())

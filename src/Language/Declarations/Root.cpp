@@ -18,11 +18,19 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "TopLevelType.h"
 #include "Root.h"
 
 namespace Martta
 {
 
 MARTTA_OBJECT_CPP(Root);
+
+Kinds Root::allowedKinds(int _i) const
+{
+	if (_i >= 0)
+		return Kind::of<TopLevel>();
+	return Super::allowedKinds(_i);
+}
 
 }

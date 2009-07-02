@@ -33,7 +33,7 @@ class Operation: public Evaluation
 public:
 	enum { FirstOperand = FirstNamed, TheOperand = FirstOperand, SecondOperand, EndOfNamed };
 	
-	static bool							keyPressedOnInsertionPoint(InsertionPoint const&, EntityKeyEvent const*);
+	static bool							keyPressedOnInsertionPoint(Position const&, EntityKeyEvent const*);
 	bool								keyPressed(EntityKeyEvent const*);
 	
 	virtual Precedence					precedence() const { return id().precedence(); }
@@ -45,7 +45,7 @@ public:
 protected:
 	virtual bool						isSlidable(int) const { return false; }
 	virtual Entity*						lastOperand() const { return child(SecondOperand) ? child(SecondOperand) : child(FirstOperand); }	// QUICK optimise into overrides
-	static InsertionPoint				slideOnPrecedence(InsertionPoint _p, Precedence _d, Associativity _a, InsertionPoint const& _block);
+	static Position				slideOnPrecedence(Position _p, Precedence _d, Associativity _a, Position const& _block);
 	
 	// Must return all entities that are LambdaNamer-derived and whose id() is operator _o.
 	static QList<ValueDefiner*>			allOperators(Operator _o);

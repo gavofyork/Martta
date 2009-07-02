@@ -34,18 +34,18 @@ static const int UndefinedIndex = INT_MAX;
 
 class Entity;
 	
-class InsertionPoint
+class Position
 {
 	friend class Entity;
-	friend QDebug operator<<(QDebug _out, InsertionPoint const& _item);
+	friend QDebug operator<<(QDebug _out, Position const& _item);
 	
 public:
-	InsertionPoint(): m_parent(0), m_index(UndefinedIndex) {}
-	InsertionPoint(InsertionPoint const& _c): m_parent(_c.m_parent), m_index(_c.m_index) {}
-	InsertionPoint& operator=(InsertionPoint const& _c) { m_parent = _c.m_parent; m_index = _c.m_index; return *this; }
+	Position(): m_parent(0), m_index(UndefinedIndex) {}
+	Position(Position const& _c): m_parent(_c.m_parent), m_index(_c.m_index) {}
+	Position& operator=(Position const& _c) { m_parent = _c.m_parent; m_index = _c.m_index; return *this; }
 	
-	inline bool							operator==(InsertionPoint const& _c) const { return _c.m_parent == m_parent && _c.m_index == m_index; }
-	inline bool							operator!=(InsertionPoint const& _c) const { return !operator==(_c); }
+	inline bool							operator==(Position const& _c) const { return _c.m_parent == m_parent && _c.m_index == m_index; }
+	inline bool							operator!=(Position const& _c) const { return !operator==(_c); }
 	
 	inline 								operator bool() const { return isValid(); }
 	template<class T> inline bool		allowedToBeKind() const { return allowedToBeKind(Kind::of<T>()); }
@@ -110,15 +110,15 @@ public:
 	
 	// TODO: Bring these in once I'm comfortable with them.
 //	template<class T> inline T*			operator<<=(T* _e) const { place(_e); return _e; }
-//	template<class T> inline InsertionPoint const& operator<<(T* _e) const { place(_e); return InsertionPoint(m_parent, (m_index == -1) ? -1 : (_e->index() + 1)); }
+//	template<class T> inline Position const& operator<<(T* _e) const { place(_e); return Position(m_parent, (m_index == -1) ? -1 : (_e->index() + 1)); }
 	
 private:
-	InsertionPoint(Entity* _context, int _index = UndefinedIndex): m_parent(_context), m_index(_index) {}
+	Position(Entity* _context, int _index = UndefinedIndex): m_parent(_context), m_index(_index) {}
 
 	SafePointer<Entity>					m_parent;
 	int									m_index;
 };
 
-static const InsertionPoint Nowhere;
+static const Position Nowhere;
 
 }

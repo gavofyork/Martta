@@ -30,7 +30,7 @@ class SubscriptOperation: public BinaryOperation
 	MARTTA_OBJECT(BinaryOperation)
 
 public:
-	inline static bool					keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
+	inline static bool					keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e);
 
 private:
 	virtual QString						defineLayout(ViewKeys&) const { return QString("%1;Mi;^;'[';%2;']'").arg(FirstOperand).arg(SecondOperand); }

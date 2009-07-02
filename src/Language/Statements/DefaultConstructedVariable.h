@@ -32,7 +32,7 @@ class DefaultConstructedVariable: public Primary, public_interface VariableNamer
 	MARTTA_INHERITS(VariableNamer, 0)
 
 public:
-	static bool							keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e);
+	static bool							keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e);
 
 protected:
 	// From Entity via BareTyped

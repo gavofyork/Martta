@@ -29,7 +29,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(VirtualPure);
 
-bool VirtualPure::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
+bool VirtualPure::keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e)
 {
 	return simpleInsertionPointKeyPressHandler<VirtualPure>(_p, _e, "0");
 }

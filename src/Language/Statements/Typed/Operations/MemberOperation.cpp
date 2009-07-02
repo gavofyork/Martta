@@ -56,7 +56,7 @@ QString MemberOperation::code() const
 	return parenthesise(left()->code() + "." + right()->code());
 }
 
-bool MemberOperation::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
+bool MemberOperation::keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e)
 {
 	if (_p.exists() && !_p->isPlaceholder() && _p->isKind<Typed>() &&
 		_p->asKind<Typed>()->type()->isType<Reference>())

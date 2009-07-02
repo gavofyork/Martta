@@ -28,7 +28,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(IfStatement);	
 	
-bool IfStatement::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
+bool IfStatement::keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e)
 {
 	return simplePlaceholderKeyPressHandler<IfStatement>(_p, _e, "?");
 }

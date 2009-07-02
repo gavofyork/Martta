@@ -59,7 +59,7 @@ bool Compound::keyPressed(EntityKeyEvent const* _e)
 {
 	if (_e->key() == Qt::Key_Return)
 	{
-		InsertionPoint p = (_e->isFocused()) ?
+		Position p = (_e->isFocused()) ?
 		(/*_e->inserting() || */_e->modifiers() & Qt::ShiftModifier) ?
 		front() :
 		back() :

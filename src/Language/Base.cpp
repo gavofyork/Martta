@@ -35,7 +35,7 @@ Class* Base::classType() const
 	return childAs<ExplicitType>(Superclass)->subject()->asKind<Class>();
 }
 	
-bool Base::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
+bool Base::keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e)
 {
 	return simpleInsertionPointKeyPressHandler<Base>(_p, _e, "B");
 }

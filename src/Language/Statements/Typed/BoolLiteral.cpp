@@ -27,7 +27,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(BoolLiteral);
 
-bool BoolLiteral::keyPressedOnInsertionPoint(InsertionPoint const& _p, EntityKeyEvent const* _e)
+bool BoolLiteral::keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e)
 {
 	if (_p.exists() && _p->isPlaceholder() && QRegExp("[IO]").exactMatch(_e->text()))
 	{

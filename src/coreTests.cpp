@@ -41,7 +41,7 @@
 #include "AccessLabel.h"
 #include "ListType.h"
 #include "StringType.h"
-#include "BasicRoot.h"
+#include "Root.h"
 #include "Pointer.h"
 #include "Enumeration.h"
 #include "EnumValue.h"
@@ -319,7 +319,7 @@ int coreTests()
 	}
 	TEST("Pointer archival/restoration")
 	{
-		BasicRoot* r = new BasicRoot;
+		Root* r = new Root;
 		Namespace* n = new Namespace;
 		n->prepareChildren();
 		r->back().place(n);
@@ -372,7 +372,7 @@ int coreTests()
 	}
 	TEST("Pre-test")
 	{
-		BasicRoot* r = new BasicRoot;
+		Root* r = new Root;
 		SafePointer<TestNegatives> a = new TestNegatives;
 		SafePointer<TestNegatives> b = new TestNegatives;
 		a->silentMove(r->back());
@@ -383,7 +383,7 @@ int coreTests()
 	}
 #define CLEAR_TEST(pos) \
 	{ \
-		BasicRoot* r = new BasicRoot; \
+		Root* r = new Root; \
 		SafePointer<TestNegatives> a = new TestNegatives; \
 		SafePointer<TestNegatives> b = new TestNegatives; \
 		a->silentMove(r->back()); \
@@ -401,7 +401,7 @@ int coreTests()
 #undef CLEAR_TEST
 #define TEST_FOR(T, X) TEST(T) FAILED_IF(!(X))
 	{
-		BasicRoot r;
+		Root r;
 		SafePointer<TestNegativesB> a = new TestNegativesB;
 		a->silentMove(r.back());
 		TEST_FOR("Negatives: start incomplete", !a->isComplete());
@@ -425,7 +425,7 @@ int coreTests()
 	qInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
 	TEST("Negatives save/load")
 	{
-		BasicRoot r;
+		Root r;
 		SafePointer<TestNegativesB> a = new TestNegativesB;
 		a->silentMove(r.back());
 		a->prepareChildren();

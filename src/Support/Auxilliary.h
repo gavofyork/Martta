@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include "InsertionPoint.h"
+#include "Position.h"
 #include "AuxilliaryFace.h"
 #include "AuxilliaryRegistrar.h"
 
@@ -40,7 +40,7 @@ public:
 	Auxilliary(char const* _name): m_name(_name) { AuxilliaryRegistrar::get()->registerAuxilliary(this); }
 	virtual bool						isInterface() const { return false; }
 	virtual char const*					name() const { return m_name; }
-	virtual bool						dispatchKeyPress(InsertionPoint const& _p, EntityKeyEvent const* _e) const;
+	virtual bool						dispatchKeyPress(Position const& _p, EntityKeyEvent const* _e) const;
 	virtual void						initialise() const { T::initialiseClass(); }
 	virtual void						finalise() const { T::finaliseClass(); }
 	virtual AuxilliaryFace const*		superAuxilliary() const { return T::Super::staticAuxilliary(); }
@@ -58,7 +58,7 @@ public:
 	InterfaceAuxilliary(char const* _name): m_name(_name) { AuxilliaryRegistrar::get()->registerAuxilliary(this); }
 	virtual bool						isInterface() const { return true; }
 	virtual char const*					name() const { return m_name; }
-	virtual bool						dispatchKeyPress(InsertionPoint const&, EntityKeyEvent const*) const { return false; }
+	virtual bool						dispatchKeyPress(Position const&, EntityKeyEvent const*) const { return false; }
 	virtual void						initialise() const {}
 	virtual void						finalise() const {}
 	virtual AuxilliaryFace const*		superAuxilliary() const { return 0; }
@@ -72,7 +72,7 @@ private:
 }
 
 template<class T>
-bool Martta::Auxilliary<T>::dispatchKeyPress(InsertionPoint const& _p, EntityKeyEvent const* _e) const
+bool Martta::Auxilliary<T>::dispatchKeyPress(Position const& _p, EntityKeyEvent const* _e) const
 {
 	if (_p.allowedToBeKind<T>() && T::keyPressedOnInsertionPoint(_p, _e)) return true;
 	foreach (Kind k, AuxilliaryRegistrar::get()->immediateDeriveds<T>())
