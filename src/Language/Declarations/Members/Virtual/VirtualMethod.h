@@ -32,7 +32,7 @@ class VirtualMethod: public Method, public_interface Virtual
 	MARTTA_INHERITS(Virtual, 0)
 	
 public:
-	static bool							keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e) { return simpleInsertionPointKeyPressHandler<VirtualMethod>(_p, _e, "V"); }
+	static bool							keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e) { return simplePositionKeyPressHandler<VirtualMethod>(_p, _e, "V"); }
 	
 protected:
 	virtual QString						memberInterfaceCode() const;

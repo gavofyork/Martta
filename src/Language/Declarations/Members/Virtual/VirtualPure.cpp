@@ -29,9 +29,9 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(VirtualPure);
 
-bool VirtualPure::keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e)
+bool VirtualPure::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
 {
-	return simpleInsertionPointKeyPressHandler<VirtualPure>(_p, _e, "0");
+	return simplePositionKeyPressHandler<VirtualPure>(_p, _e, "0");
 }
 	
 Kinds VirtualPure::allowedKinds(int _i) const

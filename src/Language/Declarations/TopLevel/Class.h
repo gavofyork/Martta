@@ -32,7 +32,7 @@ class Class: public TopLevelType
 public:
 	enum { Artificials = FirstNamed, EndOfNamed };
 
-	static bool							keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e);
+	static bool							keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e);
 
 	QList<Declaration*>					members(bool _isConst = false, Access _access = Private) const;
 	template<class T> inline QList<T*>	membersOf(bool _isConst = false, Access _access = Private) const { return filterEntities<T>(members(_isConst, _access)); }

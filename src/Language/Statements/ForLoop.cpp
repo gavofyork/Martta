@@ -56,7 +56,7 @@ Types ForLoop::allowedTypes(int _index) const
 	return Super::allowedTypes(_index);
 }
 
-bool ForLoop::keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e)
+bool ForLoop::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
 {
 	return simplePlaceholderKeyPressHandler<ForLoop>(_p, _e, "F");
 }

@@ -31,7 +31,7 @@ class VirtualOverload: public VirtualMethod
 	MARTTA_OBJECT(VirtualMethod)
 	
 public:
-	static bool							keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e) { return simpleInsertionPointKeyPressHandler<VirtualOverload>(_p, _e, "L"); }
+	static bool							keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e) { return simplePositionKeyPressHandler<VirtualOverload>(_p, _e, "L"); }
 	
 	VirtualMethod*						get() const { return m_base; }
 	void								set(VirtualMethod* _m) { setDependency(m_base, _m); }

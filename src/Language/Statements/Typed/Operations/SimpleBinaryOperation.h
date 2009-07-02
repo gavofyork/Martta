@@ -38,7 +38,7 @@ class SimpleBinaryOperation: public BinaryOperation
 public:
 	SimpleBinaryOperation(Operator _o = Operator(), Type const& _left = Type(), Type const& _right = Type()): m_operator(_o), m_symbolCache(0) { setOperation(_o, _left, _right); }
 	
-	static bool							keyPressedOnInsertionPoint(Position const&, EntityKeyEvent const*);
+	static bool							keyPressedOnPosition(Position const&, EntityKeyEvent const*);
 
 protected:
 	virtual Operator					id() const { return m_operator; }

@@ -30,7 +30,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(IntegerLiteral);
 
-bool IntegerLiteral::keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e)
+bool IntegerLiteral::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
 {
 	if (_p.exists() && QRegExp("-[0-9]").exactMatch(_e->text()) && _p->isPlaceholder())
 	{

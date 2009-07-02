@@ -39,7 +39,7 @@ class StringType: public TypeEntity
 public:
 	static void							initialiseClass();
 	static void							finaliseClass();
-	inline static bool					keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e) { return simpleInsertionPointKeyPressHandler<StringType>(_p, _e, "$"); }
+	inline static bool					keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e) { return simplePositionKeyPressHandler<StringType>(_p, _e, "$"); }
 	virtual bool						isWellDefined() const { return true; }
 	
 protected:

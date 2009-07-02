@@ -26,9 +26,9 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(Pointer);
 
-bool Pointer::keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e)
+bool Pointer::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
 {
-	return simpleInsertionPointKeyPressHandler<Pointer>(_p, _e, "*", false);
+	return simplePositionKeyPressHandler<Pointer>(_p, _e, "*", false);
 }
 
 Types Pointer::assignableTypes() const

@@ -36,7 +36,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(ExplicitType);
 
-bool ExplicitType::keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e)
+bool ExplicitType::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
 {
 	if (_p.exists() && _p->isPlaceholder() && QRegExp("[A-Z:]").exactMatch(_e->text()))
 	{

@@ -374,7 +374,7 @@ public:
 	bool								activated(CodeScene* _s);
 	virtual bool						onActivated(CodeScene*) { return false; }
 	virtual bool						keyPressed(EntityKeyEvent const*);
-	static bool							keyPressedOnInsertionPoint(Position const&, EntityKeyEvent const*) { return false; }
+	static bool							keyPressedOnPosition(Position const&, EntityKeyEvent const*) { return false; }
 	
 	QString								indexName(int _i) const;
 	QString								indexName() const { return m_parent ? m_parent->indexName(m_index) : "[Orphan]"; }
@@ -423,7 +423,7 @@ public:
 	template<class T>
 	inline static bool					simplePlaceholderKeyPressHandler(Position const& _p, EntityKeyEvent const* _e, QString const& _t);
 	template<class T>
-	inline static bool					simpleInsertionPointKeyPressHandler(Position const& _p, EntityKeyEvent const* _e, QString const& _t, bool _ontoNew = true);	
+	inline static bool					simplePositionKeyPressHandler(Position const& _p, EntityKeyEvent const* _e, QString const& _t, bool _ontoNew = true);	
 
 	void								debugTree() const;
 	void								debugTree(QString const& _i) const;
@@ -589,7 +589,7 @@ bool Martta::Entity::simplePlaceholderKeyPressHandler(Position const& _p, Entity
 }
 
 template<class T>
-bool Martta::Entity::simpleInsertionPointKeyPressHandler(Position const& _p, EntityKeyEvent const* _e, QString const& _t, bool _ontoNew)
+bool Martta::Entity::simplePositionKeyPressHandler(Position const& _p, EntityKeyEvent const* _e, QString const& _t, bool _ontoNew)
 {
 	if (_e->text() == _t && _p.allowedToBeKind<T>())
 	{

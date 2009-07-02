@@ -37,7 +37,7 @@ class SimpleUnaryOperation: public UnaryOperation
 public:
 	SimpleUnaryOperation(Operator _o = Operator(), Type const& _type = Type()): m_operator(_o), m_symbolCache(0) { setOperation(_o, _type); }
 
-	static bool							keyPressedOnInsertionPoint(Position const&, EntityKeyEvent const*);
+	static bool							keyPressedOnPosition(Position const&, EntityKeyEvent const*);
 
 protected:
 	virtual Operator					id() const { return m_operator; }

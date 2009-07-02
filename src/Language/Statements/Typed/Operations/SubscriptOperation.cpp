@@ -112,13 +112,13 @@ bool SubscriptOperation::keyPressed(EntityKeyEvent const* _e)
 	return true;
 }
 
-bool SubscriptOperation::keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e)
+bool SubscriptOperation::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
 {
 	if (_p.exists() && !_p->isPlaceholder() && _p->isKind<Typed>() &&
 		(	_p->asKind<Typed>()->type()->isType<ListType>() ||
 			_p->asKind<Typed>()->type()->isType<AddressType>() ||
 			_p->asKind<Typed>()->type()->isType<HashType>()))
-		return simpleKeyPressedOnInsertionPointHandler<SubscriptOperation>(_p, _e, "[", 2, LeftAssociativity);
+		return simpleKeyPressedOnPositionHandler<SubscriptOperation>(_p, _e, "[", 2, LeftAssociativity);
 	else
 		return false;
 }

@@ -32,7 +32,7 @@ class Constructor: public MemberLambda
 	MARTTA_OBJECT(MemberLambda)
 
 public:
-	static bool							keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e);
+	static bool							keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e);
 
 protected:
 	// From MemberLambda

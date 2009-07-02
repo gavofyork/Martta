@@ -37,9 +37,9 @@ QString Constructor::basicCode(FunctionCodeScope _ref) const
 	return Martta::code(qualifiers() & MethodMask) + callingCode(_ref);
 }
 
-bool Constructor::keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e)
+bool Constructor::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
 {
-	return simpleInsertionPointKeyPressHandler<Constructor>(_p, _e, "C");
+	return simplePositionKeyPressHandler<Constructor>(_p, _e, "C");
 }
 
 QString Constructor::name() const

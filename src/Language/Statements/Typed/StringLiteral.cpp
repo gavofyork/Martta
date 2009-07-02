@@ -28,7 +28,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(StringLiteral);
 
-bool StringLiteral::keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e)
+bool StringLiteral::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
 {
 	if (_p.exists() && _p->isPlaceholder() && _e->text() == "\"")
 	{

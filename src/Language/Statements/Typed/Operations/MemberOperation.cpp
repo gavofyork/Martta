@@ -56,11 +56,11 @@ QString MemberOperation::code() const
 	return parenthesise(left()->code() + "." + right()->code());
 }
 
-bool MemberOperation::keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e)
+bool MemberOperation::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
 {
 	if (_p.exists() && !_p->isPlaceholder() && _p->isKind<Typed>() &&
 		_p->asKind<Typed>()->type()->isType<Reference>())
-		return simpleKeyPressedOnInsertionPointHandler<MemberOperation>(_p, _e, ".", 2, LeftAssociativity);
+		return simpleKeyPressedOnPositionHandler<MemberOperation>(_p, _e, ".", 2, LeftAssociativity);
 	else
 		return false;
 }

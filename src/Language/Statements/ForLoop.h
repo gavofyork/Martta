@@ -40,7 +40,7 @@ public:
 	virtual Kinds						allowedKinds(int _index) const;
 	virtual Types						allowedTypes(int _index) const;
 
-	static bool							keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e);
+	static bool							keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e);
 	
 	virtual QString						code() const;
 

@@ -48,7 +48,7 @@ public:
 	bool								haveSingleCastOperator(TypeEntity const* _t, bool _const = false) const;
 	bool								haveSingleConversionConstructor(TypeEntity const* _f) const;
 
-	static bool							keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e);
+	static bool							keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e);
 	
 	virtual bool						isNull() const { return !m_subject.isUsable(); }
 	

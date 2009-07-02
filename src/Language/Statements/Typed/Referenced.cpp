@@ -61,7 +61,7 @@ enum { LocalVariables = 1<<0, LocalLambdas = 1<<1, SET(Local),
 #undef SET
 #undef JOIN
 
-bool Referenced::keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e)
+bool Referenced::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
 {
 	if (_p.exists() && _p->isPlaceholder() && QRegExp("[a-z]").exactMatch(_e->text()) && _p->isKind<Typed>() && _p->asKind<Typed>()->ourAllowedTypes().size() && _p->asKind<Typed>()->ourAllowedTypes()[0]->isType<Memberify>())
 	{

@@ -32,7 +32,7 @@ class Array: public AddressType
 public:
 	enum { Length = FirstNamed, EndOfNamed };
 
-	inline static bool					keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e) { return simpleInsertionPointKeyPressHandler<Array>(_p, _e, "["); }
+	inline static bool					keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e) { return simplePositionKeyPressHandler<Array>(_p, _e, "["); }
 	
 protected:
 	virtual bool						hasDefaultConstructor() const { return true; }

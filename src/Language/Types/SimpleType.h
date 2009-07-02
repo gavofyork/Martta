@@ -85,7 +85,7 @@ public:
 	void								set(int _m) { setId(_m); }
 	virtual bool						isNull() const { return m_id == -1; }
 	
-	static bool							keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e);
+	static bool							keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e);
 
 protected:
 	virtual bool						hasDefaultConstructor() const { return true; }

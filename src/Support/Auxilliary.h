@@ -74,7 +74,7 @@ private:
 template<class T>
 bool Martta::Auxilliary<T>::dispatchKeyPress(Position const& _p, EntityKeyEvent const* _e) const
 {
-	if (_p.allowedToBeKind<T>() && T::keyPressedOnInsertionPoint(_p, _e)) return true;
+	if (_p.allowedToBeKind<T>() && T::keyPressedOnPosition(_p, _e)) return true;
 	foreach (Kind k, AuxilliaryRegistrar::get()->immediateDeriveds<T>())
 		if (AuxilliaryRegistrar::get()->auxilliary(k.name())->dispatchKeyPress(_p, _e))
 			return true;

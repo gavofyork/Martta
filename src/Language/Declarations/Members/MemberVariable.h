@@ -32,7 +32,7 @@ class MemberVariable: public MemberValue, public_interface VariableNamer
 	MARTTA_INHERITS(VariableNamer, 0)
 	
 public:
-	static bool							keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e);
+	static bool							keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e);
 	
 protected:
 	virtual bool						keyPressed(EntityKeyEvent const* _e) { return VariableNamer::keyPressed(_e) ? true : Super::keyPressed(_e); }

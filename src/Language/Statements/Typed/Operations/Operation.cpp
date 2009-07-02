@@ -120,7 +120,7 @@ QList<ValueDefiner*> Operation::findBestOverload(Types const& _actual, QList<Val
 	return ret;
 }
 
-bool Operation::keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e)
+bool Operation::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
 {
 	if (_e->text() == "(" && _p->isPlaceholder())
 	{

@@ -27,9 +27,9 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(MemberEnumeration);
 
-bool MemberEnumeration::keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e)
+bool MemberEnumeration::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
 {
-	return simpleInsertionPointKeyPressHandler<MemberEnumeration>(_p, _e, "E");
+	return simplePositionKeyPressHandler<MemberEnumeration>(_p, _e, "E");
 }
 
 Kinds MemberEnumeration::allowedKinds(int _i) const

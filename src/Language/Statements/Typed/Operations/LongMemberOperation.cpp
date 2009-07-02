@@ -57,7 +57,7 @@ QString LongMemberOperation::code() const
 	return parenthesise(left()->code() + "->" + right()->code());
 }
 
-bool LongMemberOperation::keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e)
+bool LongMemberOperation::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
 {
 /*	qDebug() << _p.exists();
 	if (_p.exists())
@@ -74,7 +74,7 @@ bool LongMemberOperation::keyPressedOnInsertionPoint(Position const& _p, EntityK
 	if (_p.exists() && !_p->isPlaceholder() && _p->isKind<Typed>() &&
 		_p->asKind<Typed>()->type()->isType<AddressType>() &&
 		_p->asKind<Typed>()->type()->asType<AddressType>()->original()->isType<ExplicitType>())
-		return simpleKeyPressedOnInsertionPointHandler<LongMemberOperation>(_p, _e, Operator::XArrow);
+		return simpleKeyPressedOnPositionHandler<LongMemberOperation>(_p, _e, Operator::XArrow);
 	else
 		return false;
 }

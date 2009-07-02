@@ -36,9 +36,9 @@ Kinds MemberVariable::allowedKinds(int _i) const
 	return Super::allowedKinds(_i);
 }
 
-bool MemberVariable::keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e)
+bool MemberVariable::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
 {
-	return simpleInsertionPointKeyPressHandler<MemberVariable>(_p, _e, "A");
+	return simplePositionKeyPressHandler<MemberVariable>(_p, _e, "A");
 }
 
 }

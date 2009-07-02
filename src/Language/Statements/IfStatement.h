@@ -34,7 +34,7 @@ class IfStatement: public Untyped, public_interface Corporal, public_interface C
 public:
 	enum { AltBody = FirstNamed, EndOfNamed };
 
-	static bool							keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e);
+	static bool							keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e);
 	
 protected:
 	virtual QString						code() const;

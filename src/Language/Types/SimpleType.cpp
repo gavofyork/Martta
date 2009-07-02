@@ -40,7 +40,7 @@ MARTTA_OBJECT_CPP(SimpleType);
 
 QList<SimpleOperator*> SimpleType::s_nonMembers;
 
-bool SimpleType::keyPressedOnInsertionPoint(Position const& _p, EntityKeyEvent const* _e)
+bool SimpleType::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
 {
 	if (_p.exists() && _p->isPlaceholder() && QRegExp("[a-z]").exactMatch(_e->text()))
 	{
