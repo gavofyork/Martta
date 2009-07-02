@@ -9,7 +9,6 @@ Small things:
   - Just a comma?
 - FIX Page up & down.
 - CLEAN Move crap from ExplicitType to TypeDefinition.
-- CLEAN Clean up Class.
 - Visual change system.
 Dynamic code-loading (plugins).
 - Move everything over so that plugins use Martta-specific data types.
