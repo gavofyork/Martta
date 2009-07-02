@@ -560,7 +560,7 @@ void Martta::Entity::setDependency(T& _dependencyVariable, U const& _dependency)
 	if (_dependencyVariable != _dependency)
 	{
 		Entity* old = _dependencyVariable->asKind<Entity>();
-		M_ASSERT(!_dependency || _dependency->asKind<Entity>()->isInModel());
+//		M_ASSERT(!_dependency || _dependency->asKind<Entity>()->isInModel());	// Can also be a SimpleEntity - probably best to virtualise.
 		M_ASSERT(!old || old->asKind<Entity>()->isInModel());
 		if (old)
 			removeDependency(old);

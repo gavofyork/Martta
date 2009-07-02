@@ -47,7 +47,6 @@ Declaration::~Declaration()
 Identifiable* Declaration::findEntity(QString const& _key) const
 {
 //	qDebug() << *this << "Seaching for" << _key;
-	qDebug() << _key;
 	if (_key.startsWith("::"))
 	{
 		Identifiable const* i = this;
@@ -61,8 +60,7 @@ Identifiable* Declaration::findEntity(QString const& _key) const
 		}
 		return const_cast<Identifiable*>(i);
 	}
-	else
-		return ModelPtrRegistrar::get()->findDeclaration(_key);
+	return 0;
 }
 
 void Declaration::archivePtrs(bool) const

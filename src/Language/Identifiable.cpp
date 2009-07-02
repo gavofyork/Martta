@@ -75,12 +75,14 @@ void Identifiable::importDom(QDomElement const& _element)
 {
 	if (_element.hasAttribute("index"))
 		self()->ancestor<Declaration>()->registerAnonymous(this, _element.attribute("index").toInt());
+	ModelPtrRegistrar::get()->registerTemp(this, _element.attribute("generalkey"));
 }
 
 void Identifiable::exportDom(QDomElement& _element) const
 {
 	if (!addressableContext())
 		_element.setAttribute("index", self()->ancestor<Declaration>()->registerAnonymous(this));
+	_element.setAttribute("generalkey", key());
 }
 
 }

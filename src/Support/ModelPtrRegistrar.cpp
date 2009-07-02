@@ -31,9 +31,21 @@ void ModelPtrRegistrar::toBeRestored(ModelPtrFace* _p)
 	m_modelPtrs << _p;
 }
 
-void ModelPtrRegistrar::restorePtrs(Declaration const* _root) const
+void regDecs(Declaration* _d)
+{
+	ModelPtrRegistrar::get()->registerTemp(_d, _d->key());
+	foreach (Declaration* i, _d->childrenOf<Declaration>())
+		regDecs(i);
+}
+
+void ModelPtrRegistrar::restorePtrs(Declaration const* _root)
 {
 	qInformation() << "Restoring up to" << m_modelPtrs.size() << "pointers";
+	
+	TIME_STATEMENT(recurseOn)
+		foreach (Declaration* d, _root->childrenOf<Declaration>())
+			regDecs(d);
+	
 	// NOTE: Some model pointers naturally depend on others further down the model pointer list to be understood and restored.
 	// For this reason we loop doing multiple passes until no more model pointers can be restored. This results in a worst-case
 	// performance of O(n^2), which given the vast amount of model pointers most programs entail is unacceptable.
@@ -42,31 +54,24 @@ void ModelPtrRegistrar::restorePtrs(Declaration const* _root) const
 	// circular dependencies will not arise, if only because this thing is possible and there's no reason why either of the methods
 	// given for restoration are flawed.
 	int restored = 0;
-	for (int r = 0;; r = 0)
+	for (QList<ModelPtrFace*>::Iterator i = m_modelPtrs.begin(); i != m_modelPtrs.end();)
 	{
-		foreach(ModelPtrFace* i, m_modelPtrs)
-			if (i->isArchived())
-			{
-				i->tryRestore(_root);
-				if (!i->isArchived())
-					restored++;
-			}
-		if (!r)
-			break;
-		restored += r;
+		TIME_STATEMENT(tryRestore) (*i)->tryRestore(_root);
+		if ((*i)->isArchived())
+			++i;
+		else
+		{
+			restored++;
+			i = m_modelPtrs.erase(i);
+		}
 	}
-	
+		
 	qInformation() << "Restored " << restored << "pointers";
 	
+	m_tempRegistered.clear();
+	
 	foreach(ModelPtrFace* i, m_modelPtrs)
-		if (i->isArchived())
-		{
-			qCritical() << "ERROR: Couldn't restore model pointer with key: " << i->key();
-			i->tryRestore(_root);
-//			i->gone();
-		}
-		
-	m_modelPtrs.clear();
+		qCritical() << "ERROR: Couldn't restore model pointer with key: " << i->key();
 }
 
 }

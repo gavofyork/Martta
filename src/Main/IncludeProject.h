@@ -58,7 +58,7 @@ public:
 	void							removeLib(int _i) { m_libs.erase(m_libs.begin() + _i); }
 
 	void							assimilate(DeclarationFile* _f);
-	QList<TypeDefinition*>				types() const { return m_types; }
+	QList<TypeDefinition*>			types() const { return m_types; }
 	QList<Function*>				functions() const { return m_functions; }
 	QList<Variable*>				variables() const { return m_variables; }
 
@@ -71,7 +71,7 @@ private:
 	QStringList						m_includes;
 	QStringList						m_libs;
 
-	QList<TypeDefinition*>				m_types;
+	QList<TypeDefinition*>			m_types;
 	QList<Function*>				m_functions;
 	QList<Variable*>				m_variables;
 };

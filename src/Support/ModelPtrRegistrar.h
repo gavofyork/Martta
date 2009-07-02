@@ -38,14 +38,17 @@ public:
 	static ModelPtrRegistrar*			get() { return s_this ? s_this : new ModelPtrRegistrar; }
 
 	void								toBeRestored(ModelPtrFace* _p);
-	void								restorePtrs(Declaration const* _root) const;
+	void								restorePtrs(Declaration const* _root);
+
+	void								registerTemp(Identifiable const* _e, QString _key) { M_ASSERT(!m_registered.contains(_key)); m_tempRegistered[_key] = const_cast<Identifiable*>(_e); }
+	void								registerDeclaration(Identifiable* _e) { M_ASSERT(!m_registered.contains(_e->key())); m_registered[_e->key()] = _e; }
+	void								unregisterDeclaration(Identifiable* _e) { M_ASSERT(m_registered.values().contains(_e)); m_registered.remove(m_registered.key(_e)); }
 	
-	void								registerDeclaration(Declaration* _e) { M_ASSERT(!m_registered.contains(_e->key())); m_registered[_e->key()] = _e; }
-	void								unregisterDeclaration(Declaration* _e) { M_ASSERT(m_registered.values().contains(_e)); m_registered.remove(m_registered.key(_e)); }
-	Declaration*						findDeclaration(QString const& _key) const { if (m_registered.contains(_key)) return m_registered[_key]; return 0; }
+	Identifiable*						find(QString const& _key) const { if (m_registered.contains(_key)) return m_registered[_key]; if (m_tempRegistered.contains(_key)) return m_tempRegistered[_key]; return 0; }
 	
 private:
-	QHash<QString, Declaration*>		m_registered;
+	QHash<QString, Identifiable*>		m_registered;
+	QHash<QString, Identifiable*>		m_tempRegistered;
 	mutable QList<ModelPtrFace*>		m_modelPtrs;
 
 	static ModelPtrRegistrar*			s_this;
