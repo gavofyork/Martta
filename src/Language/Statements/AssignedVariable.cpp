@@ -47,7 +47,7 @@ Types AssignedVariable::allowedTypes(int _index) const
 	return Super::allowedTypes(_index);
 }
 
-QString AssignedVariable::code() const
+String AssignedVariable::code() const
 {
 	return basicCode() + " = " + asTyped(AssignedValue)->code();
 }

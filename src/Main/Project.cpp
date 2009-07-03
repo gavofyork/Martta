@@ -142,9 +142,9 @@ void Project::resetAsNew()
 	emit nameChanged();
 }
 
-QString Project::code() const
+String Project::code() const
 {
-	QString ret;
+	String ret;
 
 	ret += "#include \"" + m_supportPath + "msList.h\"\n";
 	ret += "#include \"" + m_supportPath + "msString.h\"\n";
@@ -156,7 +156,7 @@ QString Project::code() const
 
 	if (m_namespace)
 	{
-		QString ic = m_namespace->interfaceCode();
+		String ic = m_namespace->interfaceCode();
 		if (ic.isEmpty())
 			return QString();
 		ret += ic + "\n" + m_namespace->implementationCode() + "\n";
@@ -537,9 +537,9 @@ QVariant Project::CDepends::data(QModelIndex const& _i, int _r) const
 			if (checkHeading(_i, Functions)) return "Functions";
 			if (checkHeading(_i, Variables)) return "Variables";
 			if (checkHeading(_i, Includes)) return "Includes";
-			if (checkItem(_i, Types)) return checkItem(_i, All)->types()[_i.row()]->code();
-			if (checkItem(_i, Functions)) return checkItem(_i, All)->functions()[_i.row()]->basicCode(LambdaNamer::InsideScope);
-			if (checkItem(_i, Variables)) return checkItem(_i, All)->variables()[_i.row()]->basicCode();
+			if (checkItem(_i, Types)) return checkItem(_i, All)->types()[_i.row()]->code().toQString();
+			if (checkItem(_i, Functions)) return checkItem(_i, All)->functions()[_i.row()]->basicCode(LambdaNamer::InsideScope).toQString();
+			if (checkItem(_i, Variables)) return checkItem(_i, All)->variables()[_i.row()]->basicCode().toQString();
 			if (checkItem(_i, Includes)) return checkItem(_i, All)->includes()[_i.row()];
 			M_ASSERT(false);
 		case HeadingRole:
@@ -665,7 +665,7 @@ QVariant Project::Classes::data(QModelIndex const& _i, int _r) const
 			if (checkRoot(_i))
 				return QVariant();
 			else
-				return at(_i.row())->name();
+				return at(_i.row())->name().toQString();
 		case OwnerRole:
 			if (!checkRoot(_i)) return QVariant::fromValue<void*>(at(_i.row()));
 			return QVariant();

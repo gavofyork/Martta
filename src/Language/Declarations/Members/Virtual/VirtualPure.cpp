@@ -41,7 +41,7 @@ Kinds VirtualPure::allowedKinds(int _i) const
 	return Super::allowedKinds(_i);
 }
 
-QString VirtualPure::memberInterfaceCode() const
+String VirtualPure::memberInterfaceCode() const
 {
 	return "virtual " + basicCode(LambdaNamer::InsideScope) + " = 0;\n";
 }

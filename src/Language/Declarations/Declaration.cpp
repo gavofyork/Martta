@@ -43,16 +43,16 @@ Declaration::~Declaration()
 
 // Identification, search & location.
 // TODO: move to Identifiable, make recursive?.
-Identifiable* Declaration::findEntity(QString const& _key) const
+Identifiable* Declaration::findEntity(String const& _key) const
 {
 //	qDebug() << *this << "Seaching for" << _key;
 	if (_key.startsWith("::"))
 	{
 		Identifiable const* i = this;
-		QString k = _key;
+		String k = _key;
 		while (i && !k.isEmpty())
 		{
-			QString s = k.section("::", 1, 1);
+			String s = k.section("::", 1, 1);
 			k = k.mid(s.size() + 2);
 			i = i->lookupChild(s);
 //			qDebug() << "Key" << s << "gives" << (i ? i->self() : 0);
@@ -79,7 +79,7 @@ QList<ValueDefiner*> Declaration::valuesKnown() const
 	return ret;
 }
 
-QString Declaration::key() const
+String Declaration::key() const
 {
 	if (addressableContext())
 		return addressableContext()->key() + "::" + identity();
@@ -94,7 +94,7 @@ Kinds Declaration::allowedKinds(int _i) const
 	return Super::allowedKinds(_i);
 }
 
-Identifiable* Declaration::lookupChild(QString const& _key) const
+Identifiable* Declaration::lookupChild(String const& _key) const
 {
 	bool ok;
 	int k = _key.toInt(&ok);

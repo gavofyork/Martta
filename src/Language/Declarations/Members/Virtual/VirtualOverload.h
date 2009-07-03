@@ -35,15 +35,15 @@ public:
 	
 	VirtualMethod*						get() const { return m_base; }
 	void								set(VirtualMethod* _m) { setDependency(m_base, _m); }
-	QString								defineEditLayout(ViewKeys&, VirtualMethod*) const;
+	String								defineEditLayout(ViewKeys const&, VirtualMethod*) const;
 	QList<VirtualMethod*>				possibilities() const;
 	
 protected:
 	virtual int							minRequired(int _i) const { return _i == Identity || _i == Constness || _i == Returned ? 0 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
-	virtual QString						memberLambdaDefineLayout(ViewKeys&) const;
-	virtual QString						name() const { return m_base.isUsable() ? m_base->name() : QString(); }
-	virtual QString						codeName() const { return m_base ? m_base->codeName() : QString(); }
+	virtual String						memberLambdaDefineLayout(ViewKeys const&) const;
+	virtual String						name() const { return m_base.isUsable() ? m_base->name() : String(); }
+	virtual String						codeName() const { return m_base ? m_base->codeName() : String(); }
 	virtual bool						isInValidState() const { return m_base.isUsable(); }
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);

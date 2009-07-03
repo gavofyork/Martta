@@ -75,10 +75,10 @@ public:
 	void						navigateAway(Entity* _from, NavigationDirection _d = Forwards);	/// Selects closest focusable entity visually _d from _from. e.g. 4 on ()s: (++X + 4)
 	void						navigateToNew(Entity* _from);									/// Selects closest focusable sibling-owned entity visually forwards from _from, or parent if none.
 
-	template<typename T> void	setViewKey(Entity* _e, QString const& _key, T const& _v) { m_viewKeys[_e][_key] = _v; }
-	QHash<QString, QVariant>&	viewKeys(Entity* _e) { return m_viewKeys[_e]; }
-	QString						layoutString(Entity* _e);		///< @returns the layout string for the entity _e.
-	QStringList					layoutList(Entity* _e) { if (!m_listCache.contains(_e)) recacheLayoutList(_e, layoutString(_e)); return m_listCache[_e]; }			///< @returns the layout list for the entity _e.
+	void						setViewKey(Entity* _e, String const& _key, bool _v) { m_viewKeys[_e][_key] = String::number(_v); }
+	ViewKeys const&				viewKeys(Entity* _e) { return m_viewKeys[_e]; }
+	String						layoutString(Entity* _e);		///< @returns the layout string for the entity _e.
+	StringList					layoutList(Entity* _e) { if (!m_listCache.contains(_e)) recacheLayoutList(_e, layoutString(_e)); return m_listCache[_e]; }			///< @returns the layout list for the entity _e.
 	
 	/// Marks the given entity as requiring a repaint.
 	bool						markDirty(Entity* _e);
@@ -134,7 +134,7 @@ protected:
 private:
 	bool						keyPressedAsNavigation(EntityKeyEvent const* _e);
 	void						doRefreshLayout();
-	void						recacheLayoutList(Entity* _e, QString const& _s);			///< @returns the layout list for the entity _e.
+	void						recacheLayoutList(Entity* _e, String const& _s);			///< @returns the layout list for the entity _e.
 	
 	// Properties
 	Entity*				m_subject;
@@ -150,14 +150,14 @@ private:
 	Entity*				m_lastRealCurrent;
 	EditDelegateFace*	m_editDelegate;
 
-	QHash<Entity*, QHash<QString, QVariant> >m_viewKeys;
+	QHash<Entity*, ViewKeys>				m_viewKeys;
 	QHash<Entity*, QPicture>				m_pictures;
 	QHash<Entity*, QRectF>					m_bounds;
 	QHash<Entity*, QList<Entity*> >			m_orders;
 	QSet<Entity*>							m_visible;
 	QHash<Entity*, Entity*>					m_leftmostChild;
 	QHash<Entity*, Entity*>					m_rightmostChild;
-	QHash<Entity*, QStringList>				m_listCache;
+	QHash<Entity*, StringList>				m_listCache;
 	QHash<Entity*, uint>					m_cacheKey;
 	
 	QList<int>			m_pagingRoute;
@@ -165,7 +165,7 @@ private:
 	SafePointer<Entity>	m_strobeCreation;
 	SafePointer<Entity>	m_strobeChild;
 	SafePointer<Entity>	m_strobeFocus;
-	QString				m_strobeText;
+	String				m_strobeText;
 	bool				m_insert;
 	bool				m_doInsert;
 	bool				m_insertLock;

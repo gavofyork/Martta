@@ -15,6 +15,7 @@ CONFIG += warn_on \
           qt
 TARGET = ../bin/Martta
 mac:QMAKE_LFLAGS += -Wl,-Sp
+mac:QMAKE_CXXFLAGS_DEBUG += -O0 -g3
 CONFIG -= stl
 QT += xml svg
 FORMS += Gui/MainWindow.ui
@@ -27,7 +28,6 @@ unix {
 	 LIBS += ../support/libsupport.a
 }
 INCLUDEPATH += ../support
-mac:QMAKE_CXXFLAGS_DEBUG += -O0 -g3
 PRECOMPILED_HEADER = Precompiled.h
 DISTFILES += ../TODO
 RESOURCES += Operators.qrc

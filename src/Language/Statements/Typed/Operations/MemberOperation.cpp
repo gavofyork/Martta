@@ -50,7 +50,7 @@ Type MemberOperation::scope() const
 	return *leftType()->ignore<Reference>();
 }
 	
-QString MemberOperation::code() const
+String MemberOperation::code() const
 {
 	if (!haveLeft() || !haveRight()) return "";
 	return parenthesise(left()->code() + "." + right()->code());

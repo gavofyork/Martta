@@ -27,9 +27,9 @@ namespace Martta
 MARTTA_INTERFACE_CPP(Corporal);
 MARTTA_NAMED_CPP(Corporal, Body);
 
-QString Corporal::defineLayout(ViewKeys&, bool _shrink) const
+String Corporal::defineLayout(ViewKeys const&, bool _shrink) const
 {
-	return (QString(!_shrink || self()->child(Body) && self()->child(Body)->cardinalChildCount() ? ";n;i;%2" : ";%2")).arg(Body);
+	return (String(!_shrink || self()->child(Body) && self()->child(Body)->cardinalChildCount() ? ";n;i;%2" : ";%2")).arg(Body);
 }
 
 bool Corporal::keyPressed(EntityKeyEvent const* _e)

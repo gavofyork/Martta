@@ -26,6 +26,9 @@
 #include <cstring>
 #include <cerrno>
 
+#include <iostream>
+using namespace std;
+
 #include "msString.h"
 
 namespace MarttaSupport
@@ -132,22 +135,17 @@ String& String::operator=(char const* _latin1)
 	
 String& String::operator=(wchar_t const* _unicode)
 {
-	changed();
-	t::uint l = _unicode ? wcslen(_unicode) : 0;
-	reserve(l);
-	m_length = l;
+	resize(_unicode ? wcslen(_unicode) : 0);
 	if (m_data)
-	{
-		memcpy(m_data, _unicode, l);
-		m_data[l] = 0;
-	}
+		memcpy(m_data, _unicode, m_length * sizeof(wchar_t));
 	return *this;
 }
 
 String& String::operator=(String const& _other)
 {
 	resize(_other.m_length);
-	std::memcpy(m_data, _other.m_data, _other.m_length * sizeof(wchar_t));
+	if (m_data)
+		std::memcpy(m_data, _other.m_data, _other.m_length * sizeof(wchar_t));
 	return *this;
 }
 
@@ -163,11 +161,14 @@ bool String::boolCompare(wchar_t const* _other) const
 
 int String::compare(wchar_t const* _other) const
 {
-	if (!_other)
-		return false;
-	if (!m_data)
-		return true;
-	return wcscmp(m_data, _other);
+	if (!_other && !m_data)
+		return 0;
+	else if (!m_data)
+		return wcscmp(L"", _other);
+	else if (!_other)
+		return wcscmp(m_data, L"");
+	else
+		return wcscmp(m_data, _other);
 }
 
 int String::toInt(bool* _ok, int _base) const
@@ -723,7 +724,7 @@ String String::arg(String const& _a, int _fieldWidth, Char _fillChar) const
 		else
 			a = &((*new String(_fieldWidth - _a.m_length, _fillChar)) += _a);
 	}
-	for (int p = findNextPlaceholder(&token); p != -1; p = indexOf(token, p + a->m_length))
+	for (int p = findNextPlaceholder(&token); p != -1; p = ret.indexOf(token, p + a->m_length))
 		ret.replace(p, token[2] ? 3 : 2, *a);
 	if (a != &_a)
 		delete a;
@@ -736,7 +737,7 @@ String String::arg(Char _a, int _fieldWidth, Char _fillChar) const
 		return arg(String(1, _a), _fieldWidth, _fillChar);
 	String ret(*this);
 	wchar_t const* token;
-	for (int p = findNextPlaceholder(&token); p != -1; p = indexOf(token, p + 1))
+	for (int p = findNextPlaceholder(&token); p != -1; p = ret.indexOf(token, p + 1))
 		ret.replace(p, token[2] ? 3 : 2, _a);
 	return ret;
 }

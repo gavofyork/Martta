@@ -32,7 +32,7 @@ namespace Martta
 // Exists: void T::set(R)
 // Exists: R T::get()
 // Works: NameTrait<R>::name(R)
-// Exists: QString T::defineEditLayout(ViewKeys&, R); should contain %1 for where the editing is to be.
+// Exists: QString T::defineEditLayout(ViewKeys const&, R); should contain %1 for where the editing is to be.
 // Might exist: T::committed()
 
 template<class T, class R>
@@ -58,9 +58,9 @@ public:
 	{
 		return (m_name + m_completion).toUpper() == NameTrait<R>::name(m_selection).toUpper();
 	}
-	virtual QString defineLayout(ViewKeys& _v) const
+	virtual String defineLayout(ViewKeys const& _v) const
 	{
-		QString ret = EditDelegate<T>::subject()->defineEditLayout(_v, m_selection);
+		String ret = EditDelegate<T>::subject()->defineEditLayout(_v, m_selection);
 		if (ret.contains("%1"))
 			return ret.arg("'" + m_name + "';s;ygrayed;'" + m_completion + "'");
 		else
@@ -70,7 +70,7 @@ public:
 	{
 		if (_e->key() == Qt::Key_Backspace && m_name.size() > 1)
 			m_name.chop(1);
-		else if (QRegExp("[a-zA-Z]").exactMatch(_e->text()))
+		else if (_e->text().length() == 1 && _e->text()[0].isLetter())
 			m_name += _e->text();
 		else if (_e->key() == Qt::Key_Tab)
 			m_name += m_completion;
@@ -103,8 +103,8 @@ public:
 		}
 	}
 	R							m_selection;
-	QString						m_name;
-	QString						m_completion;
+	String						m_name;
+	String						m_completion;
 	QList<R>					m_possibilities;
 	bool						m_immediateCommits;
 };

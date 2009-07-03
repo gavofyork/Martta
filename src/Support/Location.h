@@ -21,7 +21,8 @@
 #ifndef MARTTALOCATION_H
 #define MARTTALOCATION_H
 
-#include <QString>
+#include <msString.h>
+using MarttaSupport::String;
 
 namespace Martta
 {
@@ -33,7 +34,7 @@ class Location
 public:
 	bool				isInHeader() const { return !m_file.isEmpty(); }
 
-	QString				m_file;			// null for generated project file.
+	String				m_file;			// null for generated project file.
 	int					m_lineNumber;
 };
 

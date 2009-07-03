@@ -34,8 +34,8 @@ public:
 	
 protected:
 	virtual Type						type() const;
-	virtual QString						code() const { return "this"; }
-	virtual QString						defineLayout(ViewKeys&) const;
+	virtual String						code() const { return "this"; }
+	virtual String						defineLayout(ViewKeys const&) const;
 };
 
 }

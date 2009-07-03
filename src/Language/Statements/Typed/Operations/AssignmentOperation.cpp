@@ -27,7 +27,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(AssignmentOperation);	
 	
-QString AssignmentOperation::code() const
+String AssignmentOperation::code() const
 {
 	Typed* e = asTyped(FirstOperand);
 	Typed* f = asTyped(SecondOperand);

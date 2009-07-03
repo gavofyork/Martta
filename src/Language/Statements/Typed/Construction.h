@@ -39,7 +39,7 @@ public:
 	virtual Types						allowedTypes(int _index) const;
 
 	virtual Type						type() const;
-	virtual QString						code() const;
+	virtual String						code() const;
 
 	virtual void						exportDom(QDomElement& _element) const;
 	virtual void						importDom(QDomElement const& _element);

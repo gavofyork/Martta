@@ -35,12 +35,12 @@ TypeEntity* VariableNamer::actualType() const
 	return TypeEntity::null;
 }
 
-QString VariableNamer::basicCode() const
+String VariableNamer::basicCode() const
 {
 	if (IdLabel* i = self()->tryChild<IdLabel>(Identity))
 		return actualType()->code(" " + i->code());
 	else
-		return QString::null;
+		return String::null;
 }
 
 bool VariableNamer::keyPressed(EntityKeyEvent const* _e)
@@ -67,7 +67,7 @@ Type VariableNamer::type() const
 		return Type();
 }
 
-QString VariableNamer::defineLayout(ViewKeys&) const
+String VariableNamer::defineLayout(ViewKeys const&) const
 {
 	return ("%1;s" + actualType()->idColour() + ";Mi;>name;fb0;!%2").arg(OurType).arg(Identity);
 }

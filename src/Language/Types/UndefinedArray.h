@@ -30,9 +30,9 @@ class UndefinedArray: public AddressType
 	MARTTA_OBJECT(AddressType)
 
 protected:
-	virtual QString						code(QString const& _middle) const;
+	virtual String						code(String const& _middle) const;
 	virtual TypeEntity*					newClone() const { return new UndefinedArray; }
-	virtual QString						defineLayout(ViewKeys&) const { return QString("ycode;%1;^;'[]'").arg(Original); }
+	virtual String						defineLayout(ViewKeys const&) const { return String("ycode;%1;^;'[]'").arg(Original); }
 };
 
 }

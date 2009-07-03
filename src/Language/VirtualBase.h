@@ -30,8 +30,8 @@ class VirtualBase: public Base
 	MARTTA_OBJECT(Base)
 	 
 protected:
-	virtual QString						code() const;
-	virtual QString						defineLayout(ViewKeys&) const;
+	virtual String						code() const;
+	virtual String						defineLayout(ViewKeys const&) const;
 };
 
 }

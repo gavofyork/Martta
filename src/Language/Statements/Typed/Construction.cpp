@@ -68,10 +68,10 @@ Type Construction::type() const
 	return Type(m_subject->classType()).topWith(Reference());
 }
 
-QString Construction::code() const
+String Construction::code() const
 {
 	if (!m_subject.isUsable())
-		return QString();
+		return String();
 	return m_subject->classType()->reference() + callList();
 }
 

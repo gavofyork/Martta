@@ -41,7 +41,7 @@ public:
 protected:
 	void								construct(TypeEntity const* _scope, int _id, bool _isConst, Type const& _returns, Types const& _args, char const* _key);
 	
-	QString								m_key;
+	String								m_key;
 	int									m_myId;
 };
 

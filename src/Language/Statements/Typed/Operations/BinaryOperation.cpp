@@ -25,9 +25,9 @@ namespace Martta
 	
 MARTTA_OBJECT_CPP(BinaryOperation);	
 
-QString BinaryOperation::defineLayout(ViewKeys&) const
+String BinaryOperation::defineLayout(ViewKeys const&) const
 {
-	QString middle = QString("%2;Mi;^;%1;Mi;%3").arg(operatorLayout()).arg(FirstOperand).arg(SecondOperand);
+	String middle = String("%2;Mi;^;%1;Mi;%3").arg(operatorLayout()).arg(FirstOperand).arg(SecondOperand);
 	if (!parent()->isKind<Operation>())
 		return middle;
 	return "B#0000000a;Mo;" + middle + ";Mo";

@@ -174,7 +174,7 @@ bool ExplicitType::defineSimilarityFrom(TypeEntity const* _f, Castability _c) co
 			Super::defineSimilarityFrom(_f, _c);
 }
 
-QString ExplicitType::idColour() const
+String ExplicitType::idColour() const
 {
 	return "#f77";
 }
@@ -201,7 +201,7 @@ QList<Declaration*> ExplicitType::utilised() const
 	return m_subject.isUsable() ? subject()->utilisedInUse() : Super::utilised();	// TODO: define for other types.
 }
 
-QString ExplicitType::defineLayout(ViewKeys&) const
+String ExplicitType::defineLayout(ViewKeys const&) const
 {
 	return "^;fb;s" + idColour() + ";'" + (m_subject.isUsable() ? m_subject->name() : "[]") + "'";
 }
@@ -221,7 +221,7 @@ QList<TypeDefinition*> ExplicitType::possibilities()
 	return ret;
 }
 
-QString ExplicitType::defineEditLayout(ViewKeys&, TypeDefinition*) const
+String ExplicitType::defineEditLayout(ViewKeys const&, TypeDefinition*) const
 {
 	return "fb;s" + idColour() + ";^;%1";
 }

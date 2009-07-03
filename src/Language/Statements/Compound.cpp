@@ -28,9 +28,9 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(Compound);	
 	
-QString Compound::code() const
+String Compound::code() const
 {
-	QString ret = "{\n";
+	String ret = "{\n";
 	foreach (Statement* s, statements())
 		ret += s->codeAsStatement() + "\n";
 	ret += "\n}";
@@ -45,7 +45,7 @@ void Compound::appendDefinedUptoHere(int _i, QList<ValueDefiner*>* _list) const
 				*_list += childAs<ValueDefiner>(i);
 }
 
-QString Compound::defineLayout(ViewKeys&) const
+String Compound::defineLayout(ViewKeys const&) const
 {
 	if (statements().size() > 1 || parentIs<LambdaNamer>())
 		return "ycode;-i;'{';n;" + times(0, cardinalChildCount(), ";n;") + ";n;-i;'}'";

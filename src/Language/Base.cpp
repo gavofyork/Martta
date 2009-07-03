@@ -59,10 +59,10 @@ Access Base::access() const
 	return childAs<AccessLabel>(Accessibility)->access();
 }
 
-QString Base::code() const
+String Base::code() const
 {
 	if (!isComplete())
-		return QString();
+		return String();
 	return childAs<Label>(Accessibility)->code() + " " + childAs<TypeEntity>(Superclass)->code();
 }
 
@@ -82,9 +82,9 @@ Kinds Base::allowedKinds(int _i) const
 	return Super::allowedKinds(_i);
 }
 
-QString Base::defineLayout(ViewKeys&) const
+String Base::defineLayout(ViewKeys const&) const
 {
-	return QString("^;ycode;'inherits';Mi;%1;Mi;'as';Mi;%2").arg(Superclass).arg(Accessibility);
+	return String("^;ycode;'inherits';Mi;%1;Mi;'as';Mi;%2").arg(Superclass).arg(Accessibility);
 }
 
 }

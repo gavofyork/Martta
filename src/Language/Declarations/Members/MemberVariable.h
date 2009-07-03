@@ -39,9 +39,9 @@ protected:
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity*) { changed(); }
 	virtual QList<Declaration*>	utilised() const { return actualType()->utilised(); }
-	virtual QString						memberInterfaceCode() const { return VariableNamer::interfaceCode(); }
-	virtual QString						memberImplementationCode() const { return VariableNamer::implementationCode(); }
-	virtual QString						memberDefineLayout(ViewKeys& _k) const { return VariableNamer::defineLayout(_k); }
+	virtual String						memberInterfaceCode() const { return VariableNamer::interfaceCode(); }
+	virtual String						memberImplementationCode() const { return VariableNamer::implementationCode(); }
+	virtual String						memberDefineLayout(ViewKeys const& _k) const { return VariableNamer::defineLayout(_k); }
 	virtual int							minRequired(int _i) const { return _i == OurType ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual Type						type() const { return MemberValue::memberifiedType(VariableNamer::type()); }

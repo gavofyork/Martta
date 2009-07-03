@@ -96,13 +96,13 @@ bool Referenced::isSuperfluous() const
 	return m_subject.isNull() || Super::isSuperfluous();
 }
 
-QString Referenced::code() const
+String Referenced::code() const
 {
 	if (!m_subject.isNull() && !m_specific && m_subject->isKind<Member>())
 		return m_subject->codeName();
 	if (!m_subject.isNull())
 		return m_subject->reference();
-	return QString();
+	return String();
 }
 
 Kinds Referenced::ancestralDependencies() const
@@ -213,14 +213,14 @@ void Referenced::decorate(DecorationContext const& _c) const
 	Super::decorate(_c);
 }
 
-QString Referenced::defineLayout(ViewKeys&) const
+String Referenced::defineLayout(ViewKeys const&) const
 {
-	QString ret = QString(m_lastSet&GlobalSet ? "p:/global.svg;" : "");
+	String ret = String(m_lastSet&GlobalSet ? "p:/global.svg;" : "");
 	if (m_subject && m_subject->isKind<MemberVariable>())
 		ret += "(;M4;[[[;fs-2;fb;c#777;e#fff;'M';]]];);";
 	else if (m_subject && m_subject->isKind<Argument>())
 		ret += "(;M4;[[[;fs-2;fb;c#777;e#fff;'_';]]];);";
-	ret += "^;s" + (m_subject ? m_subject->type()->idColour() : TypeEntity::null->idColour()) + ";c;'" + (m_subject ? m_subject->name() : QString()) + "'";
+	ret += "^;s" + (m_subject ? m_subject->type()->idColour() : TypeEntity::null->idColour()) + ";c;'" + (m_subject ? m_subject->name() : String()) + "'";
 	return ret;
 }
 
@@ -233,15 +233,15 @@ public:
 	virtual void				commit();
 	virtual bool				keyPressed(EntityKeyEvent const* _e);
 	virtual bool				isValid() const;
-	virtual QString				defineLayout(ViewKeys&) const;
+	virtual String				defineLayout(ViewKeys const&) const;
 	
 private:
 	void						setSubset(uint _s) { subject()->m_lastSet = _s; updateSubset(); } 
 	void						updateSubset();
 	void						updateCompletion();
 
-	QString						m_completion;
-	QString						m_entityName;
+	String						m_completion;
+	String						m_entityName;
 	ValueDefiner*				m_entity;
 
 	// Actual scope the symbol will be in
@@ -302,9 +302,9 @@ void ReferencedEdit::leavingEditIntact()
 	}
 }
 
-QString ReferencedEdit::defineLayout(ViewKeys&) const
+String ReferencedEdit::defineLayout(ViewKeys const&) const
 {
-	return QString(subject()->m_lastSet&GlobalSet ? "p:/global.svg;" : "") + "^;s" + (subject()->m_subject ? subject()->m_subject->type()->idColour() : TypeEntity::null->idColour()) + ";'" + m_entityName + "';s;ygrayed;'" + m_completion + "'";
+	return String(subject()->m_lastSet&GlobalSet ? "p:/global.svg;" : "") + "^;s" + (subject()->m_subject ? subject()->m_subject->type()->idColour() : TypeEntity::null->idColour()) + ";'" + m_entityName + "';s;ygrayed;'" + m_completion + "'";
 }
 
 void ReferencedEdit::updateSubset()

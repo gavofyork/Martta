@@ -45,13 +45,13 @@ public:
 	Class*								scopeClass(bool* _isConst = 0) const;
 	void								setScope(Type const& _newScope);
 	void								setScopeClass(Class* _scope, bool _isConst = false);
-	virtual QString						code(QString const& _middle) const;
+	virtual String						code(String const& _middle) const;
 	virtual bool						isWellDefined() const { return Super::isWellDefined() && scope(); }
 	
 protected:
 	virtual Types						assignableTypes() const;
 	virtual TypeEntity*					newClone() const;
-	virtual QString						modifierLayout() const;
+	virtual String						modifierLayout() const;
 	virtual bool						isSuperfluous() const { return !childIs<TypeEntity>(Scope) || Super::isSuperfluous(); }
 	virtual bool						canStandAlone() const { return false; }
 	virtual bool						defineSimilarityFrom(TypeEntity const* _f, Castability _c) const;

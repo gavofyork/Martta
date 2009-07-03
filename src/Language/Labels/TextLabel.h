@@ -30,29 +30,29 @@ class TextLabel: public IdLabel
 	MARTTA_OBJECT(IdLabel)
 	
 public:
-	TextLabel(QString const& _t = QString()): m_text(_t) {}
+	TextLabel(String const& _t = String()): m_text(_t) {}
 	
 	// Queries the parent's isChildInValidState() to check if we're valid - if so and we're null it makes up a name. If not it just returns "".
 	// @note NEVER call them from the parent's isChildInValidState() function.
-	QString								name() const;
-	virtual QString						code() const;
+	String								name() const;
+	virtual String						code() const;
 	
 	// These tell the truth (i.e. independent of what parent thinks).
 	bool								isNamed() const { return !m_text.isEmpty(); }
-	QString								text() const { return m_text; }
-	void								setText(QString const& _t) { m_text = _t; changed(); }
+	String								text() const { return m_text; }
+	void								setText(String const& _t) { m_text = _t; changed(); }
 	
 protected:
 	virtual void						exportDom(QDomElement& _element) const;
 	virtual void						importDom(QDomElement const& _element);
 	virtual void						apresLoad();
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
-	virtual QString						defineLayout(ViewKeys&) const;
+	virtual String						defineLayout(ViewKeys const&) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
 	virtual void						decorate(DecorationContext const& _c) const;
 	
 private:
-	QString								m_text;
+	String								m_text;
 };
 
 }

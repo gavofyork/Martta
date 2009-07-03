@@ -68,9 +68,9 @@ bool EnumValue::isChildInValidState(int _i) const
 	return false;
 }
 
-QString EnumValue::defineLayout(ViewKeys&) const
+String EnumValue::defineLayout(ViewKeys const&) const
 {
-	QString r = QString("^;%1").arg(Identity);
+	String r = String("^;%1").arg(Identity);
 	if (child(Definition))
 		return (r + ";' := ';%1").arg(Definition);
 	return r;
@@ -81,7 +81,7 @@ bool EnumValue::isSuperfluous() const
 	return childAs<TextLabel>(Identity)->text().isEmpty();
 }
 
-QString EnumValue::code() const
+String EnumValue::code() const
 {
 	if (childIs<Typed>(Definition))
 		return codeName() + " = " + childAs<Typed>(Definition)->code();

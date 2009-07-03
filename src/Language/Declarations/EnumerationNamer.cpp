@@ -31,9 +31,9 @@ namespace Martta
 
 MARTTA_INTERFACE_CPP(EnumerationNamer);
 
-QString EnumerationNamer::interfaceCode() const
+String EnumerationNamer::interfaceCode() const
 {
-	QString ret;
+	String ret;
 	ret += "enum " + codeName() + "\n";
 	ret += "{\n";
 	foreach (EnumValue* f, self()->cardinalChildrenOf<EnumValue>())
@@ -46,8 +46,8 @@ QString EnumerationNamer::interfaceCode() const
 
 void EnumerationNamer::updateStem()
 {
-	QString oldStem = m_stem;
-	m_stem = QString();
+	String oldStem = m_stem;
+	m_stem = String();
 	foreach (EnumValue* i, self()->cardinalChildrenOf<EnumValue>())
 		if (m_stem.isEmpty())
 			m_stem = i->codeName();
@@ -95,10 +95,10 @@ bool EnumerationNamer::keyPressed(EntityKeyEvent const* _e)
 	return true;
 }
 
-QString EnumerationNamer::defineLayout(ViewKeys& _viewKeys) const
+String EnumerationNamer::defineLayout(ViewKeys const& _viewKeys) const
 {
-	QString ret;
-	QString name;
+	String ret;
+	String name;
 	if (isNamed())
 		name = (";Mo;fb;cblack;s" + Type(const_cast<TypeDefinition*>(asKind<TypeDefinition>()))->idColour() + ";!%1").arg(Identity);
 	else
@@ -107,7 +107,7 @@ QString EnumerationNamer::defineLayout(ViewKeys& _viewKeys) const
 	{
 		ret += "ycode;'enum'" + name + ";s;ycode;n;'{'";
 		foreach (EnumValue* f, self()->cardinalChildrenOf<EnumValue>())
-			ret += QString(";n;i;%1").arg(f->index());
+			ret += String(";n;i;%1").arg(f->index());
 		ret += ";n;'}'";
 	}
 	else
@@ -115,7 +115,7 @@ QString EnumerationNamer::defineLayout(ViewKeys& _viewKeys) const
 		ret += "ycode;'enum'" + name + ";s;yminor;' (";
 		int n = self()->cardinalChildCountOf<EnumValue>();
 		if (n > 1 || !self()->cardinalChildOf<EnumValue>()->codeName().isEmpty())
-			ret += QString::number(n) + " entr" + (n > 1 ? "ies" : "y");
+			ret += String::number(n) + " entr" + (n > 1 ? "ies" : "y");
 		if (ret.endsWith("("))
 			ret += "empty";
 		ret += ")'";

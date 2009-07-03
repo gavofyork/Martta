@@ -39,26 +39,26 @@ void ModelPtrFace::tryRestore(Declaration const* _root)
 		// pointing at was deleted while we were archived. What we get back is naturally a
 		// null pointer.
 		if (m_cache)
-			m_key = QString::null;
+			m_key = String::null;
 	}
 }
 
-QString ModelPtrFace::key() const
+String ModelPtrFace::key() const
 {
 	if (!m_key.isEmpty())
 		return m_key;
 	if (m_cache)
 		return m_cache->key();
-	return QString::null;
+	return String::null;
 }
 
 void ModelPtrFace::set(Identifiable* _e)
 {
 	m_cache = _e;
-	m_key = QString::null;
+	m_key = String::null;
 }
 
-void ModelPtrFace::set(QString const& _k)
+void ModelPtrFace::set(String const& _k)
 {
 	m_cache = 0;
 	m_key = _k;

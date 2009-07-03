@@ -33,7 +33,7 @@ extern int g_typeCount;
 }
 using namespace Martta;
 
-QString activity;
+String activity;
 
 class NewEntity: public Entity, public_interface Depender, public_interface Dependee
 {

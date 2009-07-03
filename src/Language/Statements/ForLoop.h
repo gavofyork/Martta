@@ -42,12 +42,12 @@ public:
 
 	static bool							keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e);
 	
-	virtual QString						code() const;
+	virtual String						code() const;
 
 private:
 	virtual QList<int> const&			defineDeclarationOrder() const { static const QList<int> r = QList<int>() << Initialiser << Condition << Ticker << Body; return r; }
 	virtual void						decorate(DecorationContext const& _c) const;
-	virtual QString						defineLayout(ViewKeys&) const;
+	virtual String						defineLayout(ViewKeys const&) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
 };
 

@@ -32,7 +32,7 @@ class Argument: public Declaration, public_interface VariableNamer
 	MARTTA_INHERITS(VariableNamer, 0)
 	
 protected:
-	virtual QString						defineLayout(ViewKeys& _k) const { return VariableNamer::defineLayout(_k); }
+	virtual String						defineLayout(ViewKeys const& _k) const { return VariableNamer::defineLayout(_k); }
 	virtual QList<Declaration*>	utilised() const { return actualType()->utilised(); }
 
 	virtual Identifiable*				addressableContext() const { return 0; }
@@ -41,8 +41,8 @@ protected:
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity*) { changed(); }
-	virtual QString						interfaceCode() const { return VariableNamer::interfaceCode(); }
-	virtual QString						implementationCode() const { return VariableNamer::implementationCode(); }
+	virtual String						interfaceCode() const { return VariableNamer::interfaceCode(); }
+	virtual String						implementationCode() const { return VariableNamer::implementationCode(); }
 	virtual bool						isSuperfluous() const;
 };
 

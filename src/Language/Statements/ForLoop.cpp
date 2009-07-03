@@ -80,15 +80,15 @@ bool ForLoop::keyPressed(EntityKeyEvent const* _e)
 	return true;
 }
 
-QString ForLoop::defineLayout(ViewKeys& _k) const
+String ForLoop::defineLayout(ViewKeys const& _k) const
 {
 	return ("Hfull;ycode;^;'for (';%1;'\\; ';%2;'\\; ';%3;')'" + Corporal::defineLayout(_k, true)).arg(Initialiser).arg(Condition).arg(Ticker);
-//	QString((!child(3) || !child(3)->child(0) || child(3)->child(0)->isPlaceholder()) ? ";' ';(;3;)" : ";n;i;(;3;)");
+//	String((!child(3) || !child(3)->child(0) || child(3)->child(0)->isPlaceholder()) ? ";' ';(;3;)" : ";n;i;(;3;)");
 }
 
-QString ForLoop::code() const
+String ForLoop::code() const
 {
-	QString ret;
+	String ret;
 	ret += "for (" + (asStatement(Initialiser) ? asStatement(Initialiser)->code() : "");
 	ret += "; " + (asStatement(Condition) ? asStatement(Condition)->code() : "");
 	ret += "; " + (asStatement(Ticker) ? asStatement(Ticker)->code() : "");

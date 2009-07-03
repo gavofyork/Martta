@@ -37,7 +37,7 @@ private:
 	virtual Types						deniedTypes(int) const;
 	virtual Type						apparentType() const;
 	virtual Type						type() const;
-	virtual QString						code() const;
+	virtual String						code() const;
 	virtual Operator					id() const { return Operator::StarX; }
 };
 

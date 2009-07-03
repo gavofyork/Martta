@@ -134,7 +134,7 @@ Types ListType::allowedTypes(int _i) const
 	return Super::allowedTypes(_i);
 }
 
-QString ListType::code(QString const& _middle) const
+String ListType::code(String const& _middle) const
 {
 	if (childIs<TypeEntity>(Original))
 		return "::MarttaSupport::List< " + childAs<TypeEntity>(Original)->code() + " >" + _middle;
@@ -142,7 +142,7 @@ QString ListType::code(QString const& _middle) const
 		return "::MarttaSupport::List<>" + _middle;
 }
 
-QString ListType::defineLayout(ViewKeys&) const
+String ListType::defineLayout(ViewKeys const&) const
 {
 	return ("ycode;%1;^;" + typeLayout() + "'[[]]'").arg(Original);
 }

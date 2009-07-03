@@ -20,6 +20,9 @@
 
 #include <QtXml>
 
+#include <msString.h>
+using MarttaSupport::Char;
+
 #include "TypeDefinition.h"
 #include "Const.h"
 #include "Reference.h"
@@ -64,42 +67,42 @@ QList<ValueDefiner*> SimpleBinaryOperation::findOperators(Operator _o, Type cons
 	return findBestOverload((_left, _right), allOperators(_o.symbol()));
 }
 
-QString SimpleBinaryOperation::operatorLayout() const
+String SimpleBinaryOperation::operatorLayout() const
 {
 	if (id().symbol() == Operator::BangEquals)
-		return QString::fromWCharArray(L"ycode;fs+1;'=';M-5;'/';M-6;'='");
+		return L"ycode;fs+1;'=';M-5;'/';M-6;'='";
 	else if (id().symbol() == Operator::EqualsEquals)
-		return QString::fromWCharArray(L"ycode;fs+1;'=';M-3;'='");
+		return L"ycode;fs+1;'=';M-3;'='";
 	else if (id().symbol() == Operator::LessThanEquals)
-		return QString("ycode;'").append(QChar(0x2264)) + "'";
+		return String(L"ycode;'%1'").arg(MarttaSupport::Char(0x2264));
 	else if (id().symbol() == Operator::GreaterThanEquals)
-		return QString("ycode;'").append(QChar(0x2265)) + "'";
+		return String(L"ycode;'%1'").arg(MarttaSupport::Char(0x2265));
 	else if (id().symbol() == Operator::LeftShift)
-		return QString::fromWCharArray(L"ycode;'<';M-4;'<'");
+		return L"ycode;'<';M-4;'<'";
 	else if (id().symbol() == Operator::RightShift)
-		return QString::fromWCharArray(L"ycode;'>';M-4;'>'");
+		return L"ycode;'>';M-4;'>'";
 	else if (id().symbol() == Operator::LeftShiftEquals)
-		return QString::fromWCharArray(L"ycode;'<';M-4;'<';M-3;'='");
+		return L"ycode;'<';M-4;'<';M-3;'='";
 	else if (id().symbol() == Operator::RightShiftEquals)
-		return QString::fromWCharArray(L"ycode;'>';M-4;'>';M-3;'='");
+		return L"ycode;'>';M-4;'>';M-3;'='";
 	else if (id().symbol() == Operator::Star)
-		return QString("ycode;'").append(QChar(0x00d7)) + "'";
+		return String(L"ycode;'%1'").arg(MarttaSupport::Char(0x00d7));
 	else if (id().symbol() == Operator::Slash)
-		return QString("ycode;'").append(QChar(0x00f7)) + "'";
+		return String(L"ycode;'%1'").arg(MarttaSupport::Char(0x00f7));
 	else if (id().symbol() == Operator::BarBar)
-		return QString("ycode;'").append(QChar(0x06f7)) + "'";
+		return String(L"ycode;'%1'").arg(MarttaSupport::Char(0x06f7));
 	else if (id().symbol() == Operator::AmpersAmpers)
-		return QString("ycode;'").append(QChar(0x06f8)) + "'";
+		return String(L"ycode;'%1'").arg(MarttaSupport::Char(0x06f8));
 	else if (id().symbol() == Operator::PlusEquals)
-		return QString::fromWCharArray(L"ycode;'+';M-3;'='");
+		return L"ycode;'+';M-3;'='";
 	else if (id().symbol() == Operator::MinusEquals)
-		return QString::fromWCharArray(L"ycode;'-';M-3;'='");
+		return L"ycode;'-';M-3;'='";
 	else if (id().symbol() == Operator::StarEquals)
-		return QString("ycode;'").append(QChar(0x00d7)) + "';M-3;'='";
+		return String(L"ycode;'%1';M-3;'='").arg(MarttaSupport::Char(0x00d7));
 	else if (id().symbol() == Operator::SlashEquals)
-		return QString("ycode;'").append(QChar(0x00f7)) + "';M-3;'='";
+		return String(L"ycode;'%1';M-3;'='").arg(MarttaSupport::Char(0x00f7));
 	else
-		return QString("ycode;'%1'").arg(id().code());
+		return String(L"ycode;'%1'").arg(id().code());
 }
 
 void SimpleBinaryOperation::setOperation(Operator _o, Type const& _left, Type const& _right)
@@ -117,10 +120,10 @@ void SimpleBinaryOperation::onDependencyChanged(Entity*)
 	refreshOperation();
 }
 
-QString SimpleBinaryOperation::code() const
+String SimpleBinaryOperation::code() const
 {
 	if (!haveLeft() || !haveRight() || !m_symbolCache)
-		return QString();
+		return String();
 	return parenthesise(left()->code() + " " + id().code() + " " + right()->code());
 }
 

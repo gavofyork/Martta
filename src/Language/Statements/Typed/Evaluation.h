@@ -31,7 +31,7 @@ class Evaluation: public Typed
 
 public:
 	virtual bool						doINeedParenthesising(Entity const*) const { return true; }
-	QString								parenthesise(QString const& _code) const { return parent()->doINeedParenthesising(this) ? "(" + _code + ")" : _code; }
+	String								parenthesise(String const& _code) const { return parent()->doINeedParenthesising(this) ? "(" + _code + ")" : _code; }
 };
 
 }

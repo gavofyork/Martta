@@ -54,7 +54,7 @@ void ModelPtrRegistrar::restorePtrs(Declaration const* _root)
 	// circular dependencies will not arise, if only because this thing is possible and there's no reason why either of the methods
 	// given for restoration are flawed.
 	int restored = 0;
-	for (QList<ModelPtrFace*>::Iterator i = m_modelPtrs.begin(); i != m_modelPtrs.end();)
+	for (List<ModelPtrFace*>::Iterator i = m_modelPtrs.begin(); i != m_modelPtrs.end();)
 	{
 		TIME_STATEMENT(tryRestore) (*i)->tryRestore(_root);
 		if ((*i)->isArchived())
@@ -70,7 +70,7 @@ void ModelPtrRegistrar::restorePtrs(Declaration const* _root)
 	
 	m_tempRegistered.clear();
 	
-	foreach(ModelPtrFace* i, m_modelPtrs)
+	MS_FOREACH (ModelPtrFace* i, m_modelPtrs)
 		qCritical() << "ERROR: Couldn't restore model pointer with key: " << i->key();
 }
 

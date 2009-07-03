@@ -37,15 +37,15 @@ public:
 protected:
 	virtual int							minRequired(int _i) const { return _i == Identity || _i == Returned || _i == Constness ? 0 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
-	virtual QString						defineReturnLayout(ViewKeys&) const { return QString::null; }
+	virtual String						defineReturnLayout(ViewKeys const&) const { return String::null; }
 	virtual bool						isConst() const { return false; }
 	virtual bool						isInValidState() const { return Super::Super::isInValidState(); }
 
-	virtual QString						name() const;
-	virtual QString						codeName() const;
+	virtual String						name() const;
+	virtual String						codeName() const;
 	
 	virtual Type						returns() const { return Type(); }
-	virtual QString						basicCode(FunctionCodeScope _ref) const;
+	virtual String						basicCode(FunctionCodeScope _ref) const;
 };
 
 }

@@ -20,7 +20,10 @@
 
 #pragma once
 
-#include <QHash>
+#include <msHash.h>
+#include <msList.h>
+#include <msString.h>
+using namespace MarttaSupport;
 
 #include "Declaration.h"
 
@@ -40,16 +43,16 @@ public:
 	void								toBeRestored(ModelPtrFace* _p);
 	void								restorePtrs(Declaration const* _root);
 
-	void								registerTemp(Identifiable const* _e, QString _key) { M_ASSERT(!m_registered.contains(_key)); m_tempRegistered[_key] = const_cast<Identifiable*>(_e); }
+	void								registerTemp(Identifiable const* _e, String const& _key) { M_ASSERT(!m_registered.contains(_key)); m_tempRegistered[_key] = const_cast<Identifiable*>(_e); }
 	void								registerDeclaration(Identifiable* _e) { M_ASSERT(!m_registered.contains(_e->key())); m_registered[_e->key()] = _e; }
 	void								unregisterDeclaration(Identifiable* _e) { M_ASSERT(m_registered.values().contains(_e)); m_registered.remove(m_registered.key(_e)); }
 	
-	Identifiable*						find(QString const& _key) const { if (m_registered.contains(_key)) return m_registered[_key]; if (m_tempRegistered.contains(_key)) return m_tempRegistered[_key]; return 0; }
+	Identifiable*						find(String const& _key) const { if (m_registered.contains(_key)) return m_registered[_key]; if (m_tempRegistered.contains(_key)) return m_tempRegistered[_key]; return 0; }
 	
 private:
-	QHash<QString, Identifiable*>		m_registered;
-	QHash<QString, Identifiable*>		m_tempRegistered;
-	mutable QList<ModelPtrFace*>		m_modelPtrs;
+	Hash<String, Identifiable*>			m_registered;
+	Hash<String, Identifiable*>			m_tempRegistered;
+	mutable List<ModelPtrFace*>			m_modelPtrs;
 
 	static ModelPtrRegistrar*			s_this;
 };

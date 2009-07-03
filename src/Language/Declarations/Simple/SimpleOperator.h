@@ -39,7 +39,7 @@ public:
 		return s;
 	}
 	virtual Operator					id() const { return m_operator; }
-	virtual QString						key() const { return "@" + m_key + "@N" + QString::number(m_myId); }
+	virtual String						key() const { return "@" + m_key + "@N" + String::number(m_myId); }
 	
 	virtual void						destruct();
 

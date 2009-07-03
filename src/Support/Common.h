@@ -23,10 +23,11 @@
 #include <cmath>
 
 #include <QDebug>
-#include <QStringList>
-#include <QVariant>
 #include <QTime>
-#include <QColor>
+
+#include <msString.h>
+using MarttaSupport::String;
+using MarttaSupport::StringList;
 
 void assertFailed(char const* _c);
 
@@ -46,9 +47,9 @@ template<class T> inline T round(T const& x) { return ((x)>=0?(long)((x)+0.5):(l
 class Timer
 {
 public:
-	Timer(QString const& _name): m_name(_name), m_time(QTime::currentTime()) {}
+	Timer(String const& _name): m_name(_name), m_time(QTime::currentTime()) {}
 	~Timer() { qInformation() << m_name << ":" << m_time.elapsed() << "ms"; }
-	QString m_name;
+	String m_name;
 	QTime m_time;
 };
 
@@ -72,7 +73,7 @@ enum Access
 	NoAccess
 };
 
-typedef QHash<QString, QVariant> const ViewKeys;
+typedef QHash<String, String> ViewKeys;
 
 typedef double Precedence;
 extern const Precedence NoPrecedence;
@@ -102,18 +103,18 @@ enum Qualifier
 };
 Q_DECLARE_FLAGS(Qualifiers, Qualifier)
 
-inline QString code(Access _i)
+inline char const* code(Access _i)
 {
 	switch (_i)
 	{
 		case Public: return "public";
 		case Protected: return "protected";
 		case Private: return "private";
-		default: return QString();
+		default: return "";
 	}
 }
 
-inline QString code(Qualifier _q)
+inline char const* code(Qualifier _q)
 {
 	switch (_q)
 	{
@@ -125,7 +126,7 @@ inline QString code(Qualifier _q)
 		case Restrict: return "restrict";
 		case Inline: return "inline";
 		case Explicit: return "explicit";
-		default: return QString();
+		default: return "";
 	}
 }
 
@@ -136,7 +137,7 @@ enum WhitespacePosition
 	AtEnd
 };
 
-QString code(Qualifiers _q, WhitespacePosition _p = AtEnd);
+String code(Qualifiers _q, WhitespacePosition _p = AtEnd);
 
 template<class T> inline void setFlag(QFlags<T>& _s, T _f, bool _v = true)
 {
@@ -150,16 +151,14 @@ template<class T> inline QList<T> reversed(QList<T> const& _l)
 	return ret;
 }
 
-QColor colourByName(QString const& _n);
-
 template<class T>
 class NameTrait
 {
 public:
-	static QString name(T _val) { return _val ? _val->name() : QString(); }
+	static String name(T _val) { return _val ? _val->name() : String(); }
 };
 
-template<class S> inline QList<S> nameStarts(QList<S> const& _l, QString const& _s)
+template<class S> inline QList<S> nameStarts(QList<S> const& _l, String const& _s)
 {
 	QList<S> ret;
 	foreach (S i, _l)
@@ -168,36 +167,36 @@ template<class S> inline QList<S> nameStarts(QList<S> const& _l, QString const& 
 	return ret;
 }
 
-inline QString times(int _s, int _omte, QString const& _btwn)
+inline String times(int _s, int _omte, String const& _btwn)
 {
-	QString r;
+	String r;
 	if (_omte <= _s)
 		return r;
-	r = QString::number(_s);
+	r = String::number(_s);
 	for (int i = _s + 1; i < _omte; i++)
-		r += _btwn + QString::number(i);
+		r += _btwn + String::number(i);
 	return r;
 }
 
-inline QString camelCase(QString const& _t)
+inline String camelCase(String const& _t)
 {
 	if (!_t.size())
 		return _t;
-	QString t = _t.simplified();
-	QString ret;
+	String t = _t.simplified();
+	String ret;
 	ret.reserve(t.size());
 	for(int i = 0; i < t.size(); i++)
 		if (t[i] == ' ')
-			ret += t[++i].toUpper();
+			ret += String("%1").arg(t[++i]).toUpper()[0];
 		else
 			ret += t[i];
 	return ret;
 }
 
-inline QStringList startsWith(QStringList const& _l, QString const& _s)
+inline StringList startsWith(StringList const& _l, String const& _s)
 {
-	QStringList ret;
-	foreach (QString i, _l)
+	StringList ret;
+	foreach (String i, _l)
 		if (i.toLower().startsWith(_s.toLower()))
 			ret << i;
 	return ret;

@@ -42,10 +42,10 @@ public:
 protected:
 	/// Override if you want a completely different layout (rather than the LambdaNamer template).
 	/// Overriding this will still do the const decoration etc. If you don't want that, override Member::memberDefineLayout or Entity::defineLayout.
-	virtual QString						memberLambdaDefineLayout(ViewKeys& _v) const { return LambdaNamer::defineLayout(_v); }
+	virtual String						memberLambdaDefineLayout(ViewKeys const& _v) const { return LambdaNamer::defineLayout(_v); }
 
-	virtual QString						memberImplementationCode() const { return LambdaNamer::implementationCode(); }
-	virtual QString						memberInterfaceCode() const { return LambdaNamer::interfaceCode(); }
+	virtual String						memberImplementationCode() const { return LambdaNamer::implementationCode(); }
+	virtual String						memberInterfaceCode() const { return LambdaNamer::interfaceCode(); }
 
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity*) { changed(); }
@@ -54,11 +54,11 @@ protected:
 	virtual int							minRequired(int _i) const { return _i == Constness || _i == Body || _i == Returned ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
 	
-	virtual QString						basicCode(FunctionCodeScope _ref) const;
+	virtual String						basicCode(FunctionCodeScope _ref) const;
 
 	virtual bool						isInValidState() const { return type().isWellDefined(); }
 	virtual Entity*						isExpander() const;
-	virtual QString						memberDefineLayout(ViewKeys& _v) const;
+	virtual String						memberDefineLayout(ViewKeys const& _v) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
 	virtual void						memberDecorate(DecorationContext const& _p) const;
 	virtual Type						type() const { return MemberValue::memberifiedType(LambdaNamer::type()); }

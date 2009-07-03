@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include <QString>
+#include <String>
 #include "Type.h"
 #include "ValueDefiner.h"
 
@@ -44,12 +44,12 @@ public:
 	
 	enum FunctionCodeScope { InsideScope = 0, OutsideScope = 1 };
 	/// @note non-virtual - specifically to avoid automatic mixins. You have to mix it in explicitly.
-	QString								interfaceCode() const { return basicCode(InsideScope) + ";\n"; }
-	QString								implementationCode() const;
-	QString								defineLayout(ViewKeys& _viewKeys, QString _middle = QString::null) const;
+	String								interfaceCode() const { return basicCode(InsideScope) + ";\n"; }
+	String								implementationCode() const;
+	String								defineLayout(ViewKeys const& _viewKeys, String _middle = String::null) const;
 	bool								keyPressed(EntityKeyEvent const* _e);
 	/// Gives a parameter list of the call. This depends on argumentType/CodeName, ellipsis, reference and codeName.
-	QString								callingCode(FunctionCodeScope _ref) const;
+	String								callingCode(FunctionCodeScope _ref) const;
 
 	// From ValueDefiner. Do be careful though - if you've got a mixin situation where one side is pure virtual
 	// still, explicitly scope this side on the call or you'll crash.
@@ -65,14 +65,14 @@ public:
 	
 	/// Basic code for this function call. Is essentially the interfaceCode without the final ';'.
 	/// A default implementation exists.
-	virtual QString						basicCode(FunctionCodeScope _ref) const;
-	virtual QString						definePreLayout(ViewKeys&) const { return QString::null; }
-	virtual QString						defineMidLayout(ViewKeys&, QString _middle) const { return _middle; }
-	virtual QString						definePostLayout(ViewKeys&) const { return QString::null; }
-	virtual QString						defineNameLayout(ViewKeys& _viewKeys) const;
-	virtual QString						defineReturnLayout(ViewKeys& _viewKeys) const;
-	virtual QString						defineArgListLayout(ViewKeys& _viewKeys) const;
-	virtual QString						defineBodyLayout(ViewKeys& _viewKeys) const;
+	virtual String						basicCode(FunctionCodeScope _ref) const;
+	virtual String						definePreLayout(ViewKeys const&) const { return String::null; }
+	virtual String						defineMidLayout(ViewKeys const&, String _middle) const { return _middle; }
+	virtual String						definePostLayout(ViewKeys const&) const { return String::null; }
+	virtual String						defineNameLayout(ViewKeys const& _viewKeys) const;
+	virtual String						defineReturnLayout(ViewKeys const& _viewKeys) const;
+	virtual String						defineArgListLayout(ViewKeys const& _viewKeys) const;
+	virtual String						defineBodyLayout(ViewKeys const& _viewKeys) const;
 	
 	/// Used for default implementation of implementationCode. Can be safely ignored if implementationCode is reimplemented.
 	virtual Compound*					body() const;
@@ -85,8 +85,8 @@ public:
 	virtual Argument*					argument(int _index) const;
 	virtual Type						returns() const;
 	virtual Type						argumentType(int _index) const;
-	virtual QString						argumentName(int _index) const;
-	virtual QString						argumentCodeName(int _index) const;
+	virtual String						argumentName(int _index) const;
+	virtual String						argumentCodeName(int _index) const;
 	
 protected:
 	virtual ~LambdaNamer()				{}

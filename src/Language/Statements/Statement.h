@@ -36,8 +36,8 @@ class Statement: public Entity, public_interface TypedOwner
 	MARTTA_INHERITS(TypedOwner, 0)
 
 public:
-	virtual QString						code() const { return "(void)0;"; }
-	virtual QString						codeAsStatement() const { return code(); }
+	virtual String						code() const { return "(void)0;"; }
+	virtual String						codeAsStatement() const { return code(); }
 
 	virtual QList<ValueDefiner*>		valuesInLocalScope() const;
 

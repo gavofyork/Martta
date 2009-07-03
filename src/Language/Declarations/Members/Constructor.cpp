@@ -32,7 +32,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(Constructor);	
 
-QString Constructor::basicCode(FunctionCodeScope _ref) const
+String Constructor::basicCode(FunctionCodeScope _ref) const
 {
 	return Martta::code(qualifiers() & MethodMask) + callingCode(_ref);
 }
@@ -42,12 +42,12 @@ bool Constructor::keyPressedOnPosition(Position const& _p, EntityKeyEvent const*
 	return simplePositionKeyPressHandler<Constructor>(_p, _e, "C");
 }
 
-QString Constructor::name() const
+String Constructor::name() const
 {
 	return classType()->name();
 }
 
-QString Constructor::codeName() const
+String Constructor::codeName() const
 {
 	return classType()->codeName();
 }

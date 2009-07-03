@@ -44,9 +44,9 @@ bool BoolLiteral::keyPressedOnPosition(Position const& _p, EntityKeyEvent const*
 	return true;
 }
 
-QString BoolLiteral::defineLayout(ViewKeys&) const
+String BoolLiteral::defineLayout(ViewKeys const&) const
 {
-	return QString("^;'%1'").arg(m_value ? "true" : "false");
+	return String("^;'%1'").arg(m_value ? "true" : "false");
 }
 
 void BoolLiteral::exportDom(QDomElement& _element) const

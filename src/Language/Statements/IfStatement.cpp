@@ -33,9 +33,9 @@ bool IfStatement::keyPressedOnPosition(Position const& _p, EntityKeyEvent const*
 	return simplePlaceholderKeyPressHandler<IfStatement>(_p, _e, "?");
 }
 	
-QString IfStatement::code() const
+String IfStatement::code() const
 {
-	QString ret;
+	String ret;
 	ret += "if (" + (isStatement(Condition) ? asStatement(Condition)->code() : "");
 	ret += ")\n" + (isStatement(Body) ? asStatement(Body)->codeAsStatement() : "");
 	ret += "else\n" + (isStatement(AltBody) ? asStatement(AltBody)->codeAsStatement() : "{}");
@@ -73,10 +73,10 @@ bool IfStatement::keyPressed(EntityKeyEvent const* _e)
 	return true;
 }
 
-QString IfStatement::defineLayout(ViewKeys& _k) const
+String IfStatement::defineLayout(ViewKeys const& _k) const
 {
-	return QString("ycode;^;'if (';%1;')'").arg(Condition) + Corporal::defineLayout(_k, true) +
-			(child(AltBody) ? ";n;'else'" + QString(child(AltBody)->cardinalChildCount() ? ";n;i;%1" : ";%1").arg(AltBody) : QString());
+	return String("ycode;^;'if (';%1;')'").arg(Condition) + Corporal::defineLayout(_k, true) +
+			(child(AltBody) ? ";n;'else'" + String(child(AltBody)->cardinalChildCount() ? ";n;i;%1" : ";%1").arg(AltBody) : String());
 }
 
 }

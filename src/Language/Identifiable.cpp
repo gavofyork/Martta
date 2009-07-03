@@ -37,24 +37,24 @@ Identifiable::~Identifiable()
 {
 }
 
-QString Identifiable::name() const
+String Identifiable::name() const
 {
 	if (TextLabel* l = self()->tryChild<TextLabel>(Identity))
 		return l->name();
-	return QString::null;
+	return String::null;
 }
 
-QString Identifiable::codeName() const
+String Identifiable::codeName() const
 {
 	if (IdLabel* l = self()->tryChild<IdLabel>(Identity))
 		return l->code();
-	return QString::null;
+	return String::null;
 }
 
-QString Identifiable::key() const
+String Identifiable::key() const
 {
 	M_ASSERT(self()->hasAncestor<Declaration>());
-	return self()->ancestor<Declaration>()->key() + "::" + QString::number(self()->ancestor<Declaration>()->registerAnonymous(this));
+	return self()->ancestor<Declaration>()->key() + "::" + String::number(self()->ancestor<Declaration>()->registerAnonymous(this));
 }
 
 Identifiable* Identifiable::addressableContext() const
@@ -62,7 +62,7 @@ Identifiable* Identifiable::addressableContext() const
 	return self()->parentIs<Identifiable>() ? self()->parentAs<Identifiable>() : 0;
 }
 
-Identifiable* Identifiable::lookupChild(QString const& _key) const
+Identifiable* Identifiable::lookupChild(String const& _key) const
 {
 	foreach (Identifiable* e, self()->cardinalChildrenOf<Identifiable>())
 		if (e->identity() == _key)

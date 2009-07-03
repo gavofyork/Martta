@@ -29,7 +29,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(ConversionOperator);
 
-QString ConversionOperator::basicCode(FunctionCodeScope _ref) const
+String ConversionOperator::basicCode(FunctionCodeScope _ref) const
 {
 	return Martta::code(qualifiers() & MethodMask) + callingCode(_ref) + (isConst() ? " const" : "");
 }
@@ -39,17 +39,17 @@ bool ConversionOperator::keyPressedOnPosition(Position const& _p, EntityKeyEvent
 	return simplePositionKeyPressHandler<ConversionOperator>(_p, _e, "X");
 }
 
-QString ConversionOperator::defineNameLayout(ViewKeys&) const
+String ConversionOperator::defineNameLayout(ViewKeys const&) const
 {
-	return QString("ycode;'operator';Mi;1");
+	return String("ycode;'operator';Mi;1");
 }
 
-QString ConversionOperator::name() const
+String ConversionOperator::name() const
 {
 	return "_operator" + returns()->code();
 }
 
-QString ConversionOperator::codeName() const
+String ConversionOperator::codeName() const
 {
 	return "operator " + returns()->code();
 }

@@ -30,7 +30,7 @@ class SimpleMethod: public Simple
 	MARTTA_OBJECT(Simple)
 
 public:
-	template<class T> inline static SimpleMethod* create(QString const& _name, bool _isConst, Type const& _returns, Types const& _args)
+	template<class T> inline static SimpleMethod* create(String const& _name, bool _isConst, Type const& _returns, Types const& _args)
 	{
 		SimpleMethod* s = new SimpleMethod;
 		s->m_name = _name;
@@ -39,13 +39,13 @@ public:
 		T::s_members.append(s);
 		return s;
 	}
-	virtual QString						name() const { return m_name; }
-	virtual QString						codeName() const { return m_name; }
-	virtual QString						reference() const { return m_name; }
-	virtual QString						key() const { return "@" + m_key + "@" + QString::number(m_myId); }
+	virtual String						name() const { return m_name; }
+	virtual String						codeName() const { return m_name; }
+	virtual String						reference() const { return m_name; }
+	virtual String						key() const { return "@" + m_key + "@" + String::number(m_myId); }
 	
 private:
-	QString								m_name;
+	String								m_name;
 };
 
 }

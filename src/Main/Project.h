@@ -99,7 +99,7 @@ signals:
 	void nameChanged();
 
 public:
-	QString						code() const;
+	String						code() const;
 
 	// Properties
 	class CDepends: public QAbstractItemModel, public QList<IncludeProject*>

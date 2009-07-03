@@ -38,9 +38,9 @@ Type VirtualOverload::returns() const
 	return m_base.isUsable() ? m_base->returns() : Type();
 }
 	
-QString VirtualOverload::memberLambdaDefineLayout(ViewKeys& _viewKeys) const
+String VirtualOverload::memberLambdaDefineLayout(ViewKeys const& _viewKeys) const
 {
-	return ("yminor;'VIRTUAL';Mo;>name;ycode;'" + (m_base ? m_base->asKind<LambdaNamer>()->basicCode(LambdaNamer::InsideScope) : QString("[]")) + "';Mo" + QString(_viewKeys["expanded"].toBool() ? body()->cardinalChildCount() ? ";n;i;0" : ";0" : ""));
+	return ("yminor;'VIRTUAL';Mo;>name;ycode;'" + (m_base ? m_base->asKind<LambdaNamer>()->basicCode(LambdaNamer::InsideScope) : String("[]")) + "';Mo" + String(_viewKeys["expanded"].toBool() ? body()->cardinalChildCount() ? ";n;i;0" : ";0" : ""));
 }
 
 Kinds VirtualOverload::allowedKinds(int _i) const
@@ -83,10 +83,10 @@ QList<VirtualMethod*> VirtualOverload::possibilities() const
 	return ret;
 }
 
-QString VirtualOverload::defineEditLayout(ViewKeys& _viewKeys, VirtualMethod*) const
+String VirtualOverload::defineEditLayout(ViewKeys const& _viewKeys, VirtualMethod*) const
 {
 	// having the margin here is horrible, but it'll do for now
-	return "m24,0,0,0;^;ycode;'virtual';Mo;>name;ynormal;%1;Mo" + QString(_viewKeys["expanded"].toBool() ? QString(body()->cardinalChildCount() ? ";n;i;%1" : ";%1").arg(Body) : "");
+	return "m24,0,0,0;^;ycode;'virtual';Mo;>name;ynormal;%1;Mo" + String(_viewKeys["expanded"].toBool() ? String(body()->cardinalChildCount() ? ";n;i;%1" : ";%1").arg(Body) : "");
 }
 
 EditDelegateFace* VirtualOverload::newDelegate(CodeScene* _s)

@@ -44,8 +44,8 @@ public:
 		m_strobeChild			(0)
 	{
 	}
-	EntityKeyEvent(QKeyEvent const& _e, QString const& _strobe, Entity* _focus, bool _isFocused, bool _focusIsPlaceholder, int _focalIndex, CodeScene* _codeScene):
-	QKeyEvent				(QEvent::ShortcutOverride, 0, _e.modifiers(), _strobe + _e.text(), _e.isAutoRepeat(), (_strobe + _e.text()).length()),
+	EntityKeyEvent(QKeyEvent const& _e, String const& _strobe, Entity* _focus, bool _isFocused, bool _focusIsPlaceholder, int _focalIndex, CodeScene* _codeScene):
+	QKeyEvent				(QEvent::ShortcutOverride, 0, _e.modifiers(), _strobe.toQString() + _e.text(), _e.isAutoRepeat(), (_strobe.toQString() + _e.text()).length()),
 		m_focus					(_focus),
 		m_isFocused				(_isFocused),
 		m_focusIsPlaceholder	(_focusIsPlaceholder),
@@ -57,7 +57,8 @@ public:
 	}
 
 	Entity*			focus() const { return m_focus; }
-	Position	focusPoint() const;
+	String			text() const { return String(QKeyEvent::text()); }
+	Position		focusPoint() const;
 	bool			isFocused() const { return m_isFocused; }
 	bool			focusIsPlaceholder() const { return m_focusIsPlaceholder; }
 	int				focalIndex() const { return m_focalIndex; }
@@ -66,7 +67,7 @@ public:
 	CodeScene*		codeScene() const { return m_codeScene; }
 	Entity*			strobeCreation() const { return m_strobeCreation; }
 	Entity*			strobeChild() const { return m_strobeChild; }
-	Position	nearestBracket(Position const& _p) const;
+	Position		nearestBracket(Position const& _p) const;
 
 	void			noteStrobeCreation(Entity* _creation, Entity* _old) const { M_ASSERT(!m_strobeCreation); m_strobeCreation = _creation; m_strobeChild = _old; }
 	

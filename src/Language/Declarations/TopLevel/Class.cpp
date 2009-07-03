@@ -190,9 +190,9 @@ Kinds Class::allowedKinds(int _i) const
 	return Super::allowedKinds(_i);
 }
 
-QString Class::implementationCode() const
+String Class::implementationCode() const
 {
-	QString ret;
+	String ret;
 	foreach (Member* f, cardinalChildrenOf<Member>())
 		ret += f->implementationCode() + "\n";
 	if (ret.endsWith("\n\n"))
@@ -200,10 +200,10 @@ QString Class::implementationCode() const
 	return ret;
 }
 
-QString Class::interfaceCode() const
+String Class::interfaceCode() const
 {
 	// TODO: ordering for enums?
-	QString ret;
+	String ret;
 	ret += "class " + codeName() + "\n";
 	if (cardinalChildCountOf<Base>())
 		ret += ":";
@@ -277,44 +277,45 @@ bool Class::keyPressed(EntityKeyEvent const* _e)
 	return true;
 }
 
-QString Class::defineLayout(ViewKeys& _keys) const
+String Class::defineLayout(ViewKeys const& _keys) const
 {
-	QString ret = ("^;ycode;'class ';fb;cblack;s" + Type(const_cast<Class*>(this))->idColour() + ";!%1;s;ycode").arg(Identity);
+	String ret = ("^;ycode;'class ';fb;cblack;s" + Type(const_cast<Class*>(this))->idColour() + ";!%1;s;ycode").arg(Identity);
 	
 	if (_keys["expanded"].toBool())
 	{
 		foreach (Base* i, cardinalChildrenOf<Base>())
-			ret += QString(";n;i;%1").arg(i->index());
+			ret += String(";n;i;%1").arg(i->index());
 		
 		ret += ";n;'{'";
 
 		for (int i = 0; i < AccessCount; i++)
 		{	
-			QString mem;
+			String mem;
 			Kinds recognised;
 			recognised << Kind::of<Constructor>();
 			foreach (MemberLambda* f, cardinalChildrenOf<Constructor>())
 				if (f->access() == Access(i))
-					mem += QString(";n;%1").arg(f->index());
+					mem += String(";n;%1").arg(f->index());
 			recognised << Kind::of<Destructor>();
 			foreach (MemberLambda* f, cardinalChildrenOf<Destructor>())
 				if (f->access() == Access(i))
-					mem += QString(";n;%1").arg(f->index());
+					mem += String(";n;%1").arg(f->index());
 			recognised << Kind::of<Method>();
 			foreach (MemberLambda* f, cardinalChildrenOf<Method>())
 				if (f->access() == Access(i))
-					mem += QString(";n;%1").arg(f->index());
+					mem += String(";n;%1").arg(f->index());
 			foreach (MemberLambda* f, cardinalChildrenOf<MemberLambda>())
 				if (f->access() == Access(i) && !f->Entity::isKind(recognised))
-					mem += QString(";n;%1").arg(f->index());
+					mem += String(";n;%1").arg(f->index());
 			foreach (MemberVariable* f, cardinalChildrenOf<MemberVariable>())
 				if (f->access() == Access(i))
-					mem += QString(";n;%1").arg(f->index());
+					mem += String(";n;%1").arg(f->index());
 			foreach (MemberEnumeration* f, cardinalChildrenOf<MemberEnumeration>())
 				if (f->access() == Access(i))
-					mem += QString(";n;%1").arg(f->index());
+					mem += String(";n;%1").arg(f->index());
 			if (!mem.isEmpty())
-				ret += ";n;s" + AccessLabel(Access(i)).idColour().name() + "44;'" + Martta::code(Access(i)) + "';s" + mem;
+//				ret += String(L";n;s%0144;'%2';s%3").arg(AccessLabel(Access(i)).idColour().name()).arg(Martta::code(Access(i))).arg(mem);
+				ret += String(L";n;'%1';s%2").arg(Martta::code(Access(i))).arg(mem);
 		}
 		ret += ";n;'}'";
 	}
@@ -324,20 +325,20 @@ QString Class::defineLayout(ViewKeys& _keys) const
 		{
 			ret += ";ynormal;' ['";
 			foreach (Base* i, cardinalChildrenOf<Base>())
-				ret += QString(";%1").arg(i->index());
+				ret += String(";%1").arg(i->index());
 			ret += ";']'";
 		}
 		ret += ";yminor;' (";
 		if (int n = cardinalChildCountOf<Method>())
-			ret += QString::number(n) + " method" + (n > 1 ? "s, " : ", ");
+			ret += String::number(n) + " method" + (n > 1 ? "s, " : ", ");
 		if (int n = cardinalChildCountOf<MemberVariable>())
-			ret += QString::number(n) + " variable" + (n > 1 ? "s, " : ", ");
+			ret += String::number(n) + " variable" + (n > 1 ? "s, " : ", ");
 		if (int n = cardinalChildCountOf<Constructor>())
-			ret += QString::number(n) + " constructor" + (n > 1 ? "s, " : ", ");
+			ret += String::number(n) + " constructor" + (n > 1 ? "s, " : ", ");
 		if (int n = cardinalChildCountOf<Destructor>())
-			ret += QString::number(n) + " destructor" + (n > 1 ? "s, " : ", ");
+			ret += String::number(n) + " destructor" + (n > 1 ? "s, " : ", ");
 		if (int n = cardinalChildCountOf<MethodOperator>())
-			ret += QString::number(n) + " operator" + (n > 1 ? "s, " : ", ");
+			ret += String::number(n) + " operator" + (n > 1 ? "s, " : ", ");
 		if (ret.endsWith(", "))
 			ret.chop(2);
 		ret += ")";

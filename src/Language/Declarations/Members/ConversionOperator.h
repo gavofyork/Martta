@@ -33,13 +33,13 @@ public:
 	static bool							keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e);
 
 protected:
-	virtual QString						defineNameLayout(ViewKeys& _viewKeys) const;
-	virtual QString						defineReturnLayout(ViewKeys&) const { return QString::null; }
-	virtual QString						name() const;
-	virtual QString						codeName() const;
+	virtual String						defineNameLayout(ViewKeys const& _viewKeys) const;
+	virtual String						defineReturnLayout(ViewKeys const&) const { return String::null; }
+	virtual String						name() const;
+	virtual String						codeName() const;
 	virtual int							minRequired(int _i) const { return _i == Identity ? 0 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
-	virtual QString						basicCode(FunctionCodeScope _ref) const;
+	virtual String						basicCode(FunctionCodeScope _ref) const;
 };
 
 }

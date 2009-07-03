@@ -21,6 +21,8 @@
 #include <QtSvg>
 #include <QtGui>
 
+#include <msHash.h>
+
 #include "CommonGraphics.h"
 #include "DecorationContext.h"
 #include "EditDelegate.h"
@@ -47,7 +49,7 @@ CodeScene::CodeScene(QWidget* _p):
 	m_strobeCreation	(0),
 	m_strobeChild		(0),
 	m_strobeFocus		(0),
-	m_strobeText		(0),
+	m_strobeText		(String::null),
 	m_insert			(false),
 	m_insertLock		(false),
 	m_lastDefiniteX		(-1.f),
@@ -219,27 +221,27 @@ bool CodeScene::event(QEvent* _e)
 	return QWidget::event(_e);
 }
 
-QString CodeScene::layoutString(Entity* _e)
+String CodeScene::layoutString(Entity* _e)
 {
 	if (isEditing(_e))
 		return editDelegate()->defineLayout(m_viewKeys[_e]);
 	return m_stylist->defineLayout(_e, m_viewKeys[_e]);
 }
 
-void CodeScene::recacheLayoutList(Entity* _e, QString const& _s)
+void CodeScene::recacheLayoutList(Entity* _e, String const& _s)
 {
-	QString s = _s;
-	m_cacheKey[_e] = qHash(s);
-	QStringList list;
+	String s = _s;
+	m_cacheKey[_e] = MarttaSupport::hashOf(s);
+	StringList list;
 	if (!s.isEmpty())
 	{
 		if (_e == m_subject && s.right(2) != ";n" && s.right(3) != ";n;")
 			s += ";n";
-		s.replace("\\;", QString(QChar(0xff69)));
-		s.replace(";", QString(QChar(0xff70)));
-		s.replace(QString(QChar(0xff69)), ";");
+		s.replace("\\;", String(wchar_t(0xff69)));
+		s.replace(";", String(wchar_t(0xff70)));
+		s.replace(String(wchar_t(0xff69)), ";");
 	
-		list = s.split(QString(QChar(0xff70)));
+		list = s.split(String(wchar_t(0xff70)));
 		if (_e->isUsurped())
 			list.removeAll("^");
 		if (!list.contains("^"))
@@ -521,7 +523,7 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 //		else
 //			m_strobeChild = 0;
 		if (m_strobeFocus)
-			m_strobeText += _e->text()[0];
+			m_strobeText += String(_e->text())[0];
 	}
 }
 
@@ -733,8 +735,8 @@ void CodeScene::resetLayoutCache(Entity* _e)
 {
 	if (m_listCache.contains(_e))
 	{
-		QString s = layoutString(_e);
-		if (qHash(s) != m_cacheKey[_e])
+		String s = layoutString(_e);
+		if (hashOf(s) != m_cacheKey[_e])
 			recacheLayoutList(_e, s);
 	}
 }
@@ -941,7 +943,7 @@ Entity* CodeScene::traverse(Entity* _e, bool _upwards, float _x)
 
 	// Step 2: Search all siblings to determine closest to us in Y axis aside from our direct ancestor.
 	float d = -1.f;
-	Entity* x;
+	Entity* x = 0;
 	foreach (Entity* i, e->children())
 	if (i->index() != ci && isInScene(i))
 	{
@@ -1006,8 +1008,8 @@ Entity* CodeScene::traverse(Entity* _e, bool _upwards, float _x)
 	return e;
 }
 
-static QHash<QString, QSvgRenderer*> s_picCache;
-static QHash<QString, QPixmap*> s_imgCache;
+static QHash<String, QSvgRenderer*> s_picCache;
+static QHash<String, QPixmap*> s_imgCache;
 
 class ItemToBe
 {
@@ -1020,9 +1022,9 @@ public:
 class TextToBe: public ItemToBe
 {
 public:
-	TextToBe(QRectF _br, QString const& _text, QColor _colour, QColor _shadow, QColor _emboss, QFont _font):
+	TextToBe(QRectF _br, String const& _text, QColor _colour, QColor _shadow, QColor _emboss, QFont _font):
 	ItemToBe(_br), text(_text), colour(_colour), shadow(_shadow), emboss(_emboss), font(_font) {}
-	QString text;
+	String text;
 	QColor colour;
 	QColor shadow;
 	QColor emboss;
@@ -1079,11 +1081,11 @@ public:
 	{
 	}
 	
-	bool interpret(QString e)
+	bool interpret(String e)
 	{
 		if (e.startsWith("m"))
 		{
-			QStringList m = e.mid(1).split(",");
+			StringList m = e.mid(1).split(",");
 			leftMargin = m[0].toInt();
 			topMargin = m[1].toInt();
 			rightMargin = m[2].toInt();
@@ -1178,7 +1180,7 @@ public:
 		}
 		else if (e.startsWith("'"))
 		{
-			QString t = e.mid(1, e.length() - 2);
+			String t = e.mid(1, e.length() - 2);
 			QSizeF br = textSize(t, curFont);
 			textsToBe << TextToBe(QRectF(QPointF(nextX, nextY), br), t, curCol, curShadow, curEmboss, curFont);
 			nextX += br.width();
@@ -1332,7 +1334,7 @@ void CodeScene::doRefreshLayout()
 		return;
 	
 	QList<Entity*> oldBounds = m_bounds.keys();
-	QStringList list = layoutList(m_subject);
+	StringList list = layoutList(m_subject);
 	
 	// Actual program.
 	QStack<LayoutFrame*> frames;
@@ -1343,7 +1345,7 @@ void CodeScene::doRefreshLayout()
 	{
 		QTime timer;
 		timer.start();
-		QString e = list[i];
+		String e = list[i];
 		if (f->interpret(e))
 		{
 		}
@@ -1411,7 +1413,7 @@ void CodeScene::doRefreshLayout()
 		{
 			f->subject = f->subject->child(e.mid(7).toInt());
 			int k = 1;
-			foreach (QString j, layoutList(f->subject))
+			foreach (String j, layoutList(f->subject))
 				list.insert(i + k++, j);
 		}
 		else if (e == "^")
@@ -1441,7 +1443,7 @@ void CodeScene::doRefreshLayout()
 		}
 		else if (QRegExp("!-?[0-9]+").exactMatch(e) && f->subject->child(e.mid(1).toInt()) || QRegExp("-?[0-9]+").exactMatch(e) && f->subject->child(e.toInt()))
 		{
-			QString s = e.startsWith("!") ? e.mid(1) : e;
+			String s = e.startsWith("!") ? e.mid(1) : e;
 			Entity* c = f->subject->child(s.toInt());
 			if (layoutList(c).size())
 			{

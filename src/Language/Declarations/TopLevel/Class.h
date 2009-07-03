@@ -41,9 +41,9 @@ public:
 	
 protected:
 	virtual Kinds						allowedKinds(int) const;
-	virtual QString						interfaceCode() const;
-	virtual QString						implementationCode() const;
-	virtual QString						defineLayout(ViewKeys&) const;
+	virtual String						interfaceCode() const;
+	virtual String						implementationCode() const;
+	virtual String						defineLayout(ViewKeys const&) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
 	virtual QList<Declaration*>			utilised() const;
 	virtual void						onDependencyChanged(Entity* _e);

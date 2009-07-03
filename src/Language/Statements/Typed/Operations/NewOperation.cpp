@@ -37,10 +37,10 @@ bool NewOperation::isValidState() const
 	return childAs<TypeEntity>(TheOperand)->canStandAlone();
 }
 	
-QString NewOperation::code() const
+String NewOperation::code() const
 {
 	if (!isComplete())
-		return QString();
+		return String();
 	return parenthesise("new " + childAs<TypeEntity>(TheOperand)->code());
 }
 

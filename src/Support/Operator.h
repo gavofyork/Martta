@@ -20,8 +20,6 @@
 
 #pragma once
 
-#include <QString>
-
 #include "Common.h"
 
 namespace Martta
@@ -39,7 +37,7 @@ public:
 
 	Operator(Symbol _s = NoOperator): m_symbol(_s) {}
 	enum Arity { Unknown = -1, UnaryPrefix = 0, UnaryPostfix, Binary };
-	Operator(QString const& _symbol, Arity _a = Unknown);
+	Operator(String const& _symbol, Arity _a = Unknown);
 
 	Symbol								symbol() const { return m_symbol; }
 	void								setSymbol(Symbol _s) { m_symbol = _s; }
@@ -50,7 +48,7 @@ public:
 	bool								isConfusablePostfix() const { return (int)m_symbol > (int)LastPrefix && (int)m_symbol <= (int)LastConfusable; }
 	bool								isUnary() const { return (int)m_symbol <= (int)LastUnary; }
 	bool								isBinary() const { return (int)m_symbol > (int)LastUnary; }
-	inline QString						code() const;
+	inline char const*					code() const;
 	inline Precedence					precedence() const;
 	inline Associativity				associativity() const;
 
@@ -68,7 +66,7 @@ inline uint qHash(Operator const& _o) { return (uint)_o.m_symbol; }
 
 }
 
-inline QString Martta::Operator::code() const
+inline char const* Martta::Operator::code() const
 {
 	switch (m_symbol)
 	{
@@ -109,7 +107,7 @@ inline QString Martta::Operator::code() const
 		case Comma: return ",";
 		case Squares: return "[]";
 		case Parentheses: return "()";
-		default: return QString();
+		default: return "";
 	}
 };
 

@@ -27,9 +27,9 @@ namespace Martta
 	
 MARTTA_OBJECT_CPP(AccessLabel);
 	
-QString AccessLabel::defineLayout(ViewKeys&) const
+String AccessLabel::defineLayout(ViewKeys const&) const
 {
-	return QString("^;ynormal;'%1'").arg(Martta::code(m_access));
+	return String("^;ynormal;'%1'").arg(Martta::code(m_access));
 }
 
 bool AccessLabel::keyPressed(EntityKeyEvent const* _e)

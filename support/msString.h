@@ -152,20 +152,20 @@ public:
 	bool					boolCompare(wchar_t const* _other) const;
 	inline bool				boolCompare(char const* _other) const { return boolCompare(String(_other)); }
 	
-	inline bool				operator==(String const& _other) const { return compare(_other) == 0; }
-	inline bool				operator!=(String const& _other) const { return compare(_other) != 0; }
+	inline bool				operator==(String const& _other) const { return boolCompare(_other); }
+	inline bool				operator!=(String const& _other) const { return !boolCompare(_other); }
 	inline bool				operator<(String const& _other) const { return compare(_other) < 0; }
 	inline bool				operator<=(String const& _other) const { return compare(_other) <= 0; }
 	inline bool				operator>(String const& _other) const { return compare(_other) > 0; }
 	inline bool				operator>=(String const& _other) const { return compare(_other) >= 0; }
-	inline bool				operator==(wchar_t const* _other) const { return compare(_other) == 0; }
-	inline bool				operator!=(wchar_t const* _other) const { return compare(_other) != 0; }
+	inline bool				operator==(wchar_t const* _other) const { return boolCompare(_other); }
+	inline bool				operator!=(wchar_t const* _other) const { return !boolCompare(_other); }
 	inline bool				operator<(wchar_t const* _other) const { return compare(_other) < 0; }
 	inline bool				operator<=(wchar_t const* _other) const { return compare(_other) <= 0; }
 	inline bool				operator>(wchar_t const* _other) const { return compare(_other) > 0; }
 	inline bool				operator>=(wchar_t const* _other) const { return compare(_other) >= 0; }
-	inline bool				operator==(char const* _other) const { return compare(_other) == 0; }
-	inline bool				operator!=(char const* _other) const { return compare(_other) != 0; }
+	inline bool				operator==(char const* _other) const { return boolCompare(_other); }
+	inline bool				operator!=(char const* _other) const { return !boolCompare(_other); }
 	inline bool				operator<(char const* _other) const { return compare(_other) < 0; }
 	inline bool				operator<=(char const* _other) const { return compare(_other) <= 0; }
 	inline bool				operator>(char const* _other) const { return compare(_other) > 0; }
@@ -262,6 +262,9 @@ public:
 	static String			number(double _n, char _format = 'g', int _precision = 6);
 
 	String					arg(String const& _a, int _fieldWidth = 0, Char _fillChar = L' ') const;
+	inline String			arg(wchar_t const* _a, int _fieldWidth = 0, Char _fillChar = L' ') const { return arg(String(_a), _fieldWidth, _fillChar); }
+	inline String			arg(char const* _a, int _fieldWidth = 0, Char _fillChar = L' ') const { return arg(String(_a), _fieldWidth, _fillChar); }
+	inline String			arg(void* _a) const { return arg(number((t::uint)_a, 16)); }
 	inline String			arg(bool _a) const { return arg(number(_a)); }
 	inline String			arg(double _a, int _fieldWidth = 0, char _format = 'g', int _precision = -1, Char _fillChar = L' ') const { return arg(String::number(_a, _format, _precision), _fieldWidth, _fillChar); }
 	inline String			arg(int _a, int _fieldWidth = 0, wchar_t _fillChar = L' ') const { return arg(String::number(_a), _fieldWidth, Char(_fillChar)); }

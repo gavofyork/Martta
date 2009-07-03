@@ -52,9 +52,9 @@ void StringLiteral::exportDom(QDomElement& _element) const
 	_element.setAttribute("value", m_value);
 }
 
-QString StringLiteral::defineLayout(ViewKeys&) const
+String StringLiteral::defineLayout(ViewKeys const&) const
 {
-	return QString("^;ycode;'\"';ynormal;'%1';ygrayed;'\"'").arg(m_value);
+	return String("^;ycode;'\"';ynormal;'%1';ygrayed;'\"'").arg(m_value);
 }
 
 bool StringLiteral::keyPressed(EntityKeyEvent const* _e)
@@ -78,7 +78,7 @@ EditDelegateFace* StringLiteral::newDelegate(CodeScene* _s)
 		{
 			if (_e->key() == Qt::Key_Backspace)
 				subject()->m_value.chop(1);
-			else if (_e->text()[0] >= 32 && _e->text() != "\"")
+			else if (_e->text()[0].isGraph() && _e->text() != L"\"")
 				subject()->m_value += _e->text();
 			else
 				return false;

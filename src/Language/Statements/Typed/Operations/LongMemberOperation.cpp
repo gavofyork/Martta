@@ -51,7 +51,7 @@ Types LongMemberOperation::allowedTypes(int _index) const
 		return Super::allowedTypes(_index);
 }
 
-QString LongMemberOperation::code() const
+String LongMemberOperation::code() const
 {
 	if (!haveLeft() || !haveRight()) return "";
 	return parenthesise(left()->code() + "->" + right()->code());

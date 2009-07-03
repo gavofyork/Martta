@@ -38,7 +38,7 @@ class Referenced: public Typed
 public:
 	Referenced(ValueDefiner* _v = 0, bool _specific = false);
 
-	virtual QString						code() const;
+	virtual String						code() const;
 	virtual Type						type() const;
 	ModelPtr<ValueDefiner>				subject() const { return m_subject; }
 	void								setSubject(ValueDefiner* _e) { setDependency(m_subject, _e); }
@@ -47,7 +47,7 @@ public:
 
 protected:
 	virtual bool						isInValidState() const;
-	virtual QString						defineLayout(ViewKeys&) const;
+	virtual String						defineLayout(ViewKeys const&) const;
 	virtual void						decorate(DecorationContext const& _c) const;
 	virtual bool						isSuperfluous() const;
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);

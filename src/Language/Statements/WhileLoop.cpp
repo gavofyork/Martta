@@ -47,15 +47,15 @@ Types WhileLoop::allowedTypes(int _index) const
 	return Super::allowedTypes(_index);
 }
 
-QString WhileLoop::code() const
+String WhileLoop::code() const
 {
-	QString ret;
+	String ret;
 	ret += "while (" + (asStatement(Condition) ? asStatement(Condition)->code() : "");
 	ret += ")\n" + (asStatement(Body) ? asStatement(Body)->codeAsStatement() : "");
 	return ret;
 }
 
-QString WhileLoop::defineLayout(ViewKeys& _k) const
+String WhileLoop::defineLayout(ViewKeys const& _k) const
 {
 	return ("ycode;^;'while (';%1;')'" + Corporal::defineLayout(_k, true)).arg(Condition);
 }
@@ -76,15 +76,15 @@ Kinds UntilLoop::allowedKinds(int _index) const
 	return Super::allowedKinds(_index);
 }
 
-QString UntilLoop::code() const
+String UntilLoop::code() const
 {
-	QString ret;
+	String ret;
 	ret += "while (!(" + (asStatement(Condition) ? asStatement(Condition)->code() : "");
 	ret += "))\n" + (asStatement(Body) ? asStatement(Body)->codeAsStatement() : "");
 	return ret;
 }
 
-QString UntilLoop::defineLayout(ViewKeys& _k) const
+String UntilLoop::defineLayout(ViewKeys const& _k) const
 {
 	return ("ycode;^;'until (';%1;')'" + Corporal::defineLayout(_k, true)).arg(Condition);
 }

@@ -25,12 +25,12 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(VirtualBase);
 	
-QString VirtualBase::defineLayout(ViewKeys& _v) const
+String VirtualBase::defineLayout(ViewKeys const& _v) const
 {
 	return Super::defineLayout(_v) + ";Mi;ycode;'[virtual]'";
 }
  
-QString VirtualBase::code() const
+String VirtualBase::code() const
 {
 	return "virtual " + Super::code();
 }

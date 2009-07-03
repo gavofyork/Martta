@@ -20,8 +20,6 @@
 
 #pragma once
 
-#include <QColor>
-
 #include "ModifyingType.h"
 
 namespace Martta
@@ -36,14 +34,14 @@ public:
 	
 private:
 	virtual QList<ValueDefiner*>		applicableMembers(Entity* _s = 0, bool _isConst = false) const { return original() ? original()->applicableMembers(_s, _isConst) : Super::applicableMembers(_s); }
-	virtual QString 					code(QString const& _middle) const { return original()->code("&" + _middle); }
+	virtual String						code(String const& _middle) const { return original()->code("&" + _middle); }
 	virtual bool						isType(Kind _typeKind) { return Entity::isKind(_typeKind) || original()->isType(_typeKind); }
 	virtual TypeEntity*					asType(Kind _typeKind) { if (Entity::isKind(_typeKind)) return this; M_ASSERT(original()->isType(_typeKind)); return original()->asType(_typeKind); }
-	virtual QString						idColour() const { return original() ? original()->idColour() : TypeEntity::null->idColour(); }
+	virtual String						idColour() const { return original() ? original()->idColour() : TypeEntity::null->idColour(); }
 	virtual TypeEntity* 				newClone() const { return new Reference; }
 	virtual bool						defineSimilarityFrom(TypeEntity const* _f, Castability _c) const;
 	virtual bool						defineSimilarityTo(TypeEntity const* _t, Castability _c) const;
-	virtual QString						defineLayout(ViewKeys&) const;
+	virtual String						defineLayout(ViewKeys const&) const;
 	virtual void						decorate(DecorationContext const& _c) const;
 	virtual QList<Declaration*>	utilised() const { return QList<Declaration*>(); }
 };

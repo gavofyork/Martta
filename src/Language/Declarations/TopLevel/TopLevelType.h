@@ -43,7 +43,7 @@ protected:
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	
 	// From TypeDefinition
-	virtual QString						code() const { return codeName(); }
+	virtual String						code() const { return codeName(); }
 	virtual bool						hasDefaultConstructor() const { return false; }
 	virtual Types						assignableTypes() const;
 	virtual QList<Declaration*>	utilisedInUse() const { return QList<Declaration*>() << const_cast<TopLevelType*>(this); }

@@ -42,7 +42,7 @@ protected:
 	Type								leftType() const { return typeOf(FirstOperand); }
 	Type								rightType() const { return typeOf(SecondOperand); }
 
-	template<class T> static bool		simpleKeyPressedOnPositionHandler(Position const& _p, EntityKeyEvent const* _e, QString const& _t, Precedence _d, Associativity _a)
+	template<class T> static bool		simpleKeyPressedOnPositionHandler(Position const& _p, EntityKeyEvent const* _e, String const& _t, Precedence _d, Associativity _a)
 	{
 		if (!_p.exists() || _p->isPlaceholder() || _e->text() != _t)
 			return false;
@@ -68,8 +68,8 @@ protected:
 		return simpleKeyPressedOnPositionHandler<T>(_p, _e, _o.code(), _o.precedence(), _o.associativity());
 	}
 	
-	virtual QString						operatorLayout() const { return "ycode;'" + id().code() + "'"; }
-	virtual QString						defineLayout(ViewKeys&) const;
+	virtual String						operatorLayout() const { return String("ycode;'") + id().code() + "'"; }
+	virtual String						defineLayout(ViewKeys const&) const;
 
 	virtual int							familyDependencies() const { return DependsOnBoth; }
 	virtual void						onDependencySwitched(Entity* _e, Entity* _o) { if (_e == parent()) relayoutLater(); else Super::onDependencySwitched(_e, _o); }

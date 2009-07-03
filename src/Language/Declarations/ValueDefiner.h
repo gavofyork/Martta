@@ -34,7 +34,7 @@ class ValueDefiner: public_interface Identifiable, public_interface TypeNamer
 	MARTTA_INHERITS(TypeNamer, 1)
 	
 public:
-	virtual QString						identity() const { return type()->code(name()).replace(" ", "").replace("::", ";;"); }
+	virtual String						identity() const { return type()->code(name()).replace(" ", "").replace("::", ";;"); }
 };
 
 }

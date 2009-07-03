@@ -20,9 +20,11 @@
 
 #pragma once
 
-#include <QString>
-
 #include "AuxilliaryFace.h"
+
+#include "msString.h"
+using MarttaSupport::String;
+using MarttaSupport::StringList;
 
 namespace Martta
 {
@@ -37,10 +39,10 @@ public:
 	inline static AuxilliaryRegistrar*	get() { if (!s_this) s_this = new AuxilliaryRegistrar; return s_this; }
 	void								registerName(int _n, char const* _name);
 	inline QList<int> const&			names() const { return m_names; }
-	QString const&						nameOfArbitrary(int _n) const;
-	int									arbitraryOfName(QString const& _name) const;
+	MarttaSupport::String const&						nameOfArbitrary(int _n) const;
+	int									arbitraryOfName(String const& _name) const;
 	
-	inline AuxilliaryFace const*		auxilliary(QString const& _kindName) { return m_auxilliaries[_kindName]; }
+	inline AuxilliaryFace const*		auxilliary(String const& _kindName) { return m_auxilliaries[_kindName]; }
 	void								registerAuxilliary(AuxilliaryFace const* _a);
 	inline QList<AuxilliaryFace const*> const&	allInterfaces() const { return m_allInterfaces; }
 	
@@ -61,7 +63,7 @@ public:
 	inline QMultiMap<AuxilliaryFace const*, AuxilliaryFace const*> const& interfaces() const { return m_interfacesMap; }
 	inline QMultiMap<AuxilliaryFace const*, AuxilliaryFace const*> const& supers() const { return m_supersMap; }
 	
-	void								recurseAux(AuxilliaryFace const* _face, QString const& _indent) const;
+	void								recurseAux(AuxilliaryFace const* _face, String const& _indent) const;
 	void								initialiseClasses();
 	void								finaliseClasses();
 	void								jigCache();
@@ -72,9 +74,9 @@ private:
 	static AuxilliaryRegistrar*			s_this;										///< Us.
 	bool								m_isInitialised;							///< We're initialised.
 	QList<int>							m_names;									///< The entity names.
-	QHash<int, QString>					m_nameMap;
-	QHash<QString, int>					m_invNameMap;
-	QHash<QString, AuxilliaryFace const*> m_auxilliaries;							///< All our auxilliaries.
+	QHash<int, String>					m_nameMap;
+	QHash<String, int>					m_invNameMap;
+	QHash<String, AuxilliaryFace const*> m_auxilliaries;							///< All our auxilliaries.
 	QList<AuxilliaryFace const*>		m_allInterfaces;							///< All our interfaces.
 	QMultiMap<AuxilliaryFace const*, AuxilliaryFace const*> m_immediateDerivedsMap;	///< Immediately derived classes (only Entity-derived classes here).
 	QMultiMap<AuxilliaryFace const*, AuxilliaryFace const*> m_interfacesMap;		///< All interfaces fulfilled (no Entity-derived classes in the values here).

@@ -27,7 +27,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(OperatorLabel);
 	
-QString OperatorLabel::defineLayout(ViewKeys&) const
+String OperatorLabel::defineLayout(ViewKeys const&) const
 {
 	return "ycode;'operator" + symbolCode() + "'";
 }

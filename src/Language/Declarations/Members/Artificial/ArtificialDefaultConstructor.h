@@ -34,9 +34,9 @@ class ArtificialDefaultConstructor: public Constructor, public_interface Artific
 protected:
 	virtual int							minRequired(int) const { return 0; }
 	virtual Kinds						allowedKinds(int) const { return Kinds(); }
-	virtual QString						interfaceCode() const { return ""; }
-	virtual QString						implementationCode() const { return ""; }
-	virtual QString						defineLayout(ViewKeys&) const { return QString(); }
+	virtual String						interfaceCode() const { return ""; }
+	virtual String						implementationCode() const { return ""; }
+	virtual String						defineLayout(ViewKeys const&) const { return String(); }
 	
 	virtual Access						access() const { return Public; }
 	virtual Compound*					body() const { return 0; }

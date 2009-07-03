@@ -37,8 +37,8 @@ private:
 	virtual Types						deniedTypes(int _index) const;
 	virtual Type						type() const;
 	virtual Type						apparentType() const;
-	virtual QString						code() const;
-	virtual QString						operatorLayout() const { return "ycode;'&'"; }
+	virtual String						code() const;
+	virtual String						operatorLayout() const { return "ycode;'&'"; }
 };
 
 }

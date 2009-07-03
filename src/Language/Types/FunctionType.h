@@ -49,13 +49,13 @@ public:
 
 	void								setEllipsis(bool _on = true) { m_ellipsis = _on; }
 
-	virtual QString						idColour() const { return "#b7f"; }
+	virtual String						idColour() const { return "#b7f"; }
 	
 private:
 	virtual Types						assignableTypes() const;
 	virtual int							minRequired(int _i) const { return _i == Returned ? m_wild ? 0 : 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int) const { return m_wild ? Kinds() : Kinds(Kind::of<TypeEntity>()); }
-	virtual QString						code(QString const& _middle) const;
+	virtual String						code(String const& _middle) const;
 	virtual TypeEntity*					newClone() const { return new FunctionType(m_ellipsis, m_wild); }
 	virtual bool						canStandAlone() const { return false; }
 	virtual bool						defineSimilarityTo(TypeEntity const* _t, Castability _c) const;

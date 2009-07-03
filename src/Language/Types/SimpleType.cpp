@@ -66,11 +66,11 @@ bool SimpleType::keyPressed(EntityKeyEvent const* _e)
 	return true;
 }
 
-QString SimpleType::code(QString const& _middle) const
+String SimpleType::code(String const& _middle) const
 {
-	if (m_id == -1) return QString();
+	if (m_id == -1) return String();
 	if (m_id == Wchar) return "wchar_t";
-	return QString((m_id & Unsigned) ? (m_id & Float || m_id & Double) ? "complex " : "unsigned " : "") +
+	return String((m_id & Unsigned) ? (m_id & Float || m_id & Double) ? "complex " : "unsigned " : "") +
 			(((m_id & Longlong) == Longlong) ? "long long " : (m_id & Short) ? "short " : (m_id & Long) ? "long " : "") +
 			((m_id & Float) ? "float" : (m_id & Bool) ? "bool" : (m_id & Double) ? "double" : (m_id & Char) ? "char" : (m_id & Int) ? "int" : "void") + _middle;
 }
@@ -112,9 +112,9 @@ bool SimpleType::defineSimilarityFrom(TypeEntity const* _f, Castability _c) cons
 		Super::defineSimilarityFrom(_f, _c);
 }
 
-QString SimpleType::defineLayout(ViewKeys&) const
+String SimpleType::defineLayout(ViewKeys const&) const
 {
-	return typeLayout() + "^;'" + ((id() == -1) ? QString("[]") : name(id())) + "'";
+	return typeLayout() + "^;'" + ((id() == -1) ? String("[]") : name(id())) + "'";
 }
 
 void SimpleType::importDom(QDomElement const& _element)
@@ -134,7 +134,7 @@ class NameTrait<int>
 {
 public:
 	enum { StringId = 0xff00 };
-	static QString name(int _val) { return (_val == StringId) ? "string" : SimpleType::name(_val); }
+	static String name(int _val) { return (_val == StringId) ? "string" : SimpleType::name(_val); }
 };
 
 QList<int> SimpleType::possibilities()
@@ -146,7 +146,7 @@ QList<int> SimpleType::possibilities()
 	return ret;
 }
 
-QString SimpleType::defineEditLayout(ViewKeys&, int) const
+String SimpleType::defineEditLayout(ViewKeys const&, int) const
 {
 	return "^;c;s" + idColour() + ";fb;%1";
 }
@@ -178,20 +178,20 @@ void SimpleType::initialiseClass()
 	foreach (int d, integral)
 	{
 		// unit inc/decrement operators.
-		foreach (QString s, QString("++,--").split(","))
+		foreach (String s, String("++,--").split(","))
 		{	SimpleOperator::create<SimpleType>(Operator(s, Operator::UnaryPrefix), Type(d)/*.topWith(Reference())*/, Type(d).topWith(Reference()));
 			SimpleOperator::create<SimpleType>(Operator(s, Operator::UnaryPostfix), Type(d)/*.topWith(Reference())*/, Type(d).topWith(Reference()));
 		}
 		// modulo/logical operators
-		foreach (QString s, QString("%,&,|,^").split(","))
+		foreach (String s, String("%,&,|,^").split(","))
 			SimpleOperator::create<SimpleType>(Operator(s), Type(d), (Type(d), Type(d)));
-		foreach (QString s, QString(">>,<<").split(","))
+		foreach (String s, String(">>,<<").split(","))
 			SimpleOperator::create<SimpleType>(Operator(s), Type(d), (Type(d), Type(Int)));
-		foreach (QString s, QString("%=,&=,|=,^=").split(","))
+		foreach (String s, String("%=,&=,|=,^=").split(","))
 			SimpleOperator::create<SimpleType>(Operator(s), Type(d).topWith(Reference()), (Type(d).topWith(Reference()), Type(d)));
-		foreach (QString s, QString(">>=,<<=").split(","))
+		foreach (String s, String(">>=,<<=").split(","))
 			SimpleOperator::create<SimpleType>(Operator(s), Type(d).topWith(Reference()), (Type(d).topWith(Reference()), Type(Int)));
-		foreach (QString s, QString("~").split(","))
+		foreach (String s, String("~").split(","))
 			SimpleOperator::create<SimpleType>(Operator(s), Type(d), Type(d));
 	}
 
@@ -199,44 +199,44 @@ void SimpleType::initialiseClass()
 	foreach (int d, scalar)
 	{
 		// comparison
-		foreach (QString s, QString("<,>,<=,>=").split(","))
+		foreach (String s, String("<,>,<=,>=").split(","))
 			SimpleOperator::create<SimpleType>(Operator(s), Type(Bool), (Type(d), Type(d)));
 		// simple arithmetic
-		foreach (QString s, QString("+,-,*,/").split(","))
+		foreach (String s, String("+,-,*,/").split(","))
 			SimpleOperator::create<SimpleType>(Operator(s, Operator::Binary), Type(d), (Type(d), Type(d)));
 		// increment
-		foreach (QString s, QString("+=,-=,*=,/=").split(","))
+		foreach (String s, String("+=,-=,*=,/=").split(","))
 			SimpleOperator::create<SimpleType>(Operator(s), Type(d).topWith(Reference()), (Type(d).topWith(Reference()), Type(d)));
 		// signing
-		foreach (QString s, QString("+,-").split(","))
+		foreach (String s, String("+,-").split(","))
 			SimpleOperator::create<SimpleType>(Operator(s, Operator::UnaryPrefix), Type(d), Type(d));
 	}
 
 	// boolean
-	foreach (QString s, QString("||,&&").split(","))
+	foreach (String s, String("||,&&").split(","))
 		SimpleOperator::create<SimpleType>(Operator(s), Type(Bool), (Type(Bool), Type(Bool)));
-	foreach (QString s, QString("!").split(","))
+	foreach (String s, String("!").split(","))
 		SimpleOperator::create<SimpleType>(Operator(s), Type(Bool), Type(Bool));
 
 	// all types
 	foreach (int d, QList<int>(numeric) << Bool << Wchar)
 	{
 		// (in)equality
-		foreach (QString s, QString("==,!=").split(","))
+		foreach (String s, String("==,!=").split(","))
 			SimpleOperator::create<SimpleType>(Operator(s), Type(Bool), (Type(d), Type(d)));
 	}
 
 	// pointer types (we use Ptr for them in the lookup)
-	foreach (QString s, QString("++,--").split(","))
+	foreach (String s, String("++,--").split(","))
 	{
 		SimpleOperator::create<SimpleType>(Operator(s, Operator::UnaryPrefix), Type().topWith(Pointer()), Type(Void).topWith(Const()).topWith(Pointer()).topWith(Reference()));
 		SimpleOperator::create<SimpleType>(Operator(s, Operator::UnaryPostfix), Type().topWith(Pointer()), Type(Void).topWith(Const()).topWith(Pointer()).topWith(Reference()));
 	}
-	foreach (QString s, QString("<,>,<=,>=,==,!=").split(","))
+	foreach (String s, String("<,>,<=,>=,==,!=").split(","))
 		SimpleOperator::create<SimpleType>(Operator(s), Type(Bool), (Type(Void).topWith(Const()).topWith(Pointer()), Type().topWith(Pointer())));
-	foreach (QString s, QString("+,-").split(","))
+	foreach (String s, String("+,-").split(","))
 		SimpleOperator::create<SimpleType>(Operator(s, Operator::Binary), Type().topWith(Pointer()), (Type(Void).topWith(Const()).topWith(Pointer()), Type(Int)));
-	foreach (QString s, QString("+=,-=").split(","))
+	foreach (String s, String("+=,-=").split(","))
 		SimpleOperator::create<SimpleType>(Operator(s), Type().topWith(Pointer()).topWith(Reference()), (Type(Void).topWith(Const()).topWith(Pointer()).topWith(Reference()), Type(Int)));
 }
 

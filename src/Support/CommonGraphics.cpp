@@ -22,4 +22,18 @@
 
 namespace Martta
 {
+
+QColor colourByName(String const& _n)
+{
+	QColor ret;
+	if (_n.startsWith("#") && (_n.size() - 1) % 4 == 0)
+	{
+		ret = QColor(_n.mid(0, (_n.size() - 1) / 4 * 3 + 1).toQString());
+		ret.setAlpha(QColor(String("#%1%1%1").arg(_n.mid((_n.size() - 1) / 4 * 3 + 1, (_n.size() - 1) / 4)).toQString()).red());
+	}
+	else
+		ret = QColor(_n.toQString());
+	return ret;
+}
+
 }

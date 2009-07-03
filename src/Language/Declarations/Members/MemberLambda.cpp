@@ -77,10 +77,10 @@ void MemberLambda::memberDecorate(DecorationContext const& _p) const
 	}
 }
 
-QString MemberLambda::basicCode(FunctionCodeScope _ref) const
+String MemberLambda::basicCode(FunctionCodeScope _ref) const
 {
 	if (!isComplete())
-		return QString();
+		return String();
 	return Martta::code(qualifiers() & MethodMask) + returns()->code(" " + callingCode(_ref)) + (isConst() ? " const" : "");
 }
 
@@ -99,7 +99,7 @@ Type MemberLambda::thisType() const
 	return t.topWith(Pointer());
 }
 
-QString MemberLambda::memberDefineLayout(ViewKeys& _v) const
+String MemberLambda::memberDefineLayout(ViewKeys const& _v) const
 {
 	return (isConst() ? "M-17;fs11;fb;ewhite;c#5f6f7f;'C';M9;fb0;e#0000;c#0000;fs;" : "") + memberLambdaDefineLayout(_v);
 }

@@ -40,8 +40,8 @@ public:
 protected:
 	virtual Types						allowedTypes(int) const { return Type(Void).topWith(Const()).topWith(Pointer()); }
 	virtual Type						type() const { return Type(Void); }
-	virtual QString						code() const { return "delete " + childAs<Statement>(TheOperand)->code(); }	
-	virtual QString						defineLayout(ViewKeys&) const { return QString("p:/delete.svg;^;%d;p:/delete.svg").arg(TheOperand); }
+	virtual String						code() const { return "delete " + childAs<Statement>(TheOperand)->code(); }	
+	virtual String						defineLayout(ViewKeys const&) const { return String("p:/delete.svg;^;%d;p:/delete.svg").arg(TheOperand); }
 };
 
 }

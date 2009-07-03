@@ -40,7 +40,7 @@ public:
 	Qualifiers							qualifiers() const { return m_qualifiers; }
 	
 protected:
-	virtual QString						defineLayout(ViewKeys& _k) const { return "^;" + VariableNamer::defineLayout(_k); }
+	virtual String						defineLayout(ViewKeys const& _k) const { return "^;" + VariableNamer::defineLayout(_k); }
 	virtual QList<Declaration*>	utilised() const { return actualType()->utilised(); }
 	
 	virtual bool						keyPressed(EntityKeyEvent const* _e) { return VariableNamer::keyPressed(_e) ? true : Super::keyPressed(_e); }
@@ -50,8 +50,8 @@ protected:
 	virtual void						onDependencyChanged(Entity*) { changed(); } 
 	virtual void						exportDom(QDomElement& _element) const;
 	virtual void						importDom(QDomElement const& _element);
-	virtual QString						interfaceCode() const { return Martta::code(m_qualifiers & VariableMask) + VariableNamer::interfaceCode(); }
-	virtual QString						implementationCode() const { return VariableNamer::implementationCode(); }
+	virtual String						interfaceCode() const { return Martta::code(m_qualifiers & VariableMask) + VariableNamer::interfaceCode(); }
+	virtual String						implementationCode() const { return VariableNamer::implementationCode(); }
 	
 private:
 	Qualifiers							m_qualifiers;

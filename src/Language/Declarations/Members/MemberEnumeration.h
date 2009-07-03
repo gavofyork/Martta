@@ -36,14 +36,14 @@ public:
 
 protected:
 	// From Member
-	virtual QString						memberDefineLayout(const ViewKeys& _k) const { return EnumerationNamer::defineLayout(_k); }
-	virtual QString						memberInterfaceCode() const { return EnumerationNamer::interfaceCode(); }
-	virtual QString						memberImplementationCode() const { return QString::null; }
+	virtual String						memberDefineLayout(ViewKeys const& _k) const { return EnumerationNamer::defineLayout(_k); }
+	virtual String						memberInterfaceCode() const { return EnumerationNamer::interfaceCode(); }
+	virtual String						memberImplementationCode() const { return String::null; }
 	
 	// From TypeDefinition/EnumerationNamer
 	virtual bool						hasDefaultConstructor() const { return EnumerationNamer::hasDefaultConstructor(); }
 	virtual Types						assignableTypes() const { return Type(const_cast<MemberEnumeration*>(this)); }
-	virtual QString						code() const { return codeName(); }
+	virtual String						code() const { return codeName(); }
 	virtual QList<Declaration*>	utilisedInUse() const { return QList<Declaration*>() << const_cast<MemberEnumeration*>(this); }
 	
 	// From Declaration

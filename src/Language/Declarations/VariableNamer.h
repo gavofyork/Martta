@@ -34,14 +34,14 @@ public:
 	MARTTA_NAMED(OurType)
 	
 	TypeEntity*							actualType() const;
-	QString								basicCode() const;
+	String								basicCode() const;
 	
 protected:
 	virtual Type						type() const;
 	
-	inline QString						interfaceCode() const { return basicCode() + ";\n"; }
-	inline QString						implementationCode() const { return QString::null; }
-	QString								defineLayout(ViewKeys&) const;
+	inline String						interfaceCode() const { return basicCode() + ";\n"; }
+	inline String						implementationCode() const { return String::null; }
+	String								defineLayout(ViewKeys const&) const;
 	bool								keyPressed(EntityKeyEvent const* _e);
 };
 

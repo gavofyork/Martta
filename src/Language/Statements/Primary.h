@@ -30,8 +30,8 @@ class Primary: public Statement
 	MARTTA_PLACEHOLDER(Statement)
 
 public:
-	virtual QString						codeAsStatement() const { return code() + ";"; }
-	virtual QString						code() const { return "(void)0"; }
+	virtual String						codeAsStatement() const { return code() + ";"; }
+	virtual String						code() const { return "(void)0"; }
 };
 
 }

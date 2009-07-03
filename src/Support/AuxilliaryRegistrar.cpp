@@ -31,13 +31,13 @@ int registerName(int _n, char const* _name)
 	return _n;
 }
 
-QString const& AuxilliaryRegistrar::nameOfArbitrary(int _n) const
+MarttaSupport::String const& AuxilliaryRegistrar::nameOfArbitrary(int _n) const
 {
 	M_ASSERT(m_nameMap.contains(_n));
 	return const_cast<AuxilliaryRegistrar*>(this)->m_nameMap[_n];
 }
 
-int AuxilliaryRegistrar::arbitraryOfName(QString const& _name) const
+int AuxilliaryRegistrar::arbitraryOfName(String const& _name) const
 {
 	M_ASSERT(m_invNameMap.contains(_name));
 	return m_invNameMap[_name];
@@ -120,7 +120,7 @@ QList<AuxilliaryFace const*> AuxilliaryRegistrar::calculateInterfaces(Auxilliary
 	return ret;
 }
 
-void AuxilliaryRegistrar::recurseAux(AuxilliaryFace const* _face, QString const& _indent) const
+void AuxilliaryRegistrar::recurseAux(AuxilliaryFace const* _face, String const& _indent) const
 {
 	qInformation() << _indent << _face->name();
 	foreach (AuxilliaryFace const* i, m_immediateDerivedsMap.values(_face))

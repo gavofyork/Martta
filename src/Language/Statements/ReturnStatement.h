@@ -36,12 +36,12 @@ public:
 	virtual int							minRequired(int _i) const;
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual Types						allowedTypes(int _index) const;
-	virtual QString						code() const;
+	virtual String						code() const;
 	inline static bool					keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e) { return simplePlaceholderKeyPressHandler<ReturnStatement>(_p, _e, "R"); }
 
 	virtual Kinds						ancestralDependencies() const { return Kind::of<LambdaNamer>(); }
 	virtual void						onDependencyChanged(Entity* _e);
-	virtual QString						defineLayout(ViewKeys&) const { return "^;ycode;'return'" + (child(Returned) ? QString(";Mo;%1").arg(Returned) : QString::null); }
+	virtual String						defineLayout(ViewKeys const&) const { return "^;ycode;'return'" + (child(Returned) ? String(";Mo;%1").arg(Returned) : String::null); }
 };
 
 }

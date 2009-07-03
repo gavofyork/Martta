@@ -35,8 +35,8 @@ public:
 private:
 	virtual Types						allowedTypes(int _index) const;
 	virtual Type						type() const;
-	virtual QString						code() const;
-	virtual QString						operatorLayout() const { return "ycode;':='"; }
+	virtual String						code() const;
+	virtual String						operatorLayout() const { return "ycode;':='"; }
 	virtual Operator					id() const { return Operator::Equals; }
 	virtual int							familyDependencies() const { return Super::familyDependencies() | DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity* _e) { if (_e->parent() == this) changed(); Super::onDependencyChanged(_e); }

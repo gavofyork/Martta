@@ -46,9 +46,9 @@ public:
 protected:
 	virtual int							minRequired(int _i) const { return _i == Original ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _index) const;
-	virtual QString						idColour() const { return original() ? original()->idColour() : TypeEntity::null->idColour(); }
-	virtual QString						defineLayout(ViewKeys&) const { return ("%1;^;" + modifierLayout()).arg(Original); }
-	virtual QString						modifierLayout() const { return QString(); }
+	virtual String						idColour() const { return original() ? original()->idColour() : TypeEntity::null->idColour(); }
+	virtual String						defineLayout(ViewKeys const&) const { return ("%1;^;" + modifierLayout()).arg(Original); }
+	virtual String						modifierLayout() const { return String(); }
 	virtual TypeEntity*					newClone() const { return new ModifyingType; }
 	virtual TypeEntity*					bottom() { return childIs<TypeEntity>(Original) ? childAs<TypeEntity>(Original) : this; }
 	virtual bool						canStandAlone() const { return original() ? original()->canStandAlone() : false; }

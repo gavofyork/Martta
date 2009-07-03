@@ -28,7 +28,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(ReferenceOperation);	
 	
-QString ReferenceOperation::code() const
+String ReferenceOperation::code() const
 {
 	if (!haveOperand())
 		return "";

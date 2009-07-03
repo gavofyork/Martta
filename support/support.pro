@@ -5,6 +5,7 @@
 TEMPLATE = lib
 CONFIG += staticlib
 CONFIG -= qt
+mac:QMAKE_CXXFLAGS_DEBUG += -Os -g3
 TARGET = support
 DEPENDPATH += .
 INCLUDEPATH += .

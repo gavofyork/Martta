@@ -25,9 +25,9 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(UnaryOperation);	
 	
-QString UnaryOperation::defineLayout(ViewKeys&) const
+String UnaryOperation::defineLayout(ViewKeys const&) const
 {
-	QString ret = isPostfix() ? "%2;^;%1" : "^;%1;%2";
+	String ret = isPostfix() ? "%2;^;%1" : "^;%1;%2";
 	if (parent()->isKind<Operation>())
 		ret = "B#0000000a;Mi;" + ret + ";Mi";
 	return ret.arg(operatorLayout()).arg(TheOperand);

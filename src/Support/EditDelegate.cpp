@@ -40,7 +40,7 @@ EditDelegateFace::~EditDelegateFace()
 		m_subject->checkForCullingLater();
 }
 
-QString EditDelegateFace::defineLayout(ViewKeys& _v) const
+String EditDelegateFace::defineLayout(ViewKeys const& _v) const
 {
 	return m_subject->defineLayout(_v);
 }

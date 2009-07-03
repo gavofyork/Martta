@@ -43,7 +43,7 @@ public:
 	void								set(TypeDefinition* _m) { setSubject(_m); }
 	
 	QList<TypeDefinition*>				possibilities();
-	virtual QString						defineEditLayout(ViewKeys&, TypeDefinition*) const;
+	virtual String						defineEditLayout(ViewKeys const&, TypeDefinition*) const;
 	
 	bool								haveSingleCastOperator(TypeEntity const* _t, bool _const = false) const;
 	bool								haveSingleConversionConstructor(TypeEntity const* _f) const;
@@ -56,14 +56,14 @@ protected:
 	virtual bool						hasDefaultConstructor() const;
 	virtual Types						assignableTypes() const;
 	virtual QList<ValueDefiner*>		applicableMembers(Entity* _s = 0, bool _isConst = false) const;
-	virtual QString						code(QString const& _middle) const { return (m_subject ? m_subject->asKind<Identifiable>()->reference() : "") + _middle; }
+	virtual String						code(String const& _middle) const { return (m_subject ? m_subject->asKind<Identifiable>()->reference() : "") + _middle; }
 	virtual bool						contentsEquivalentTo(TypeEntity const* _t) const { return _t->asKind<ExplicitType>()->m_subject == m_subject; }
-	virtual QString						idColour() const;
+	virtual String						idColour() const;
 	virtual void						exportDom(QDomElement& _element) const;
 	virtual void						importDom(QDomElement const& _element);
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 	virtual TypeEntity*					newClone() const { return new ExplicitType(m_subject); }
-	virtual QString						defineLayout(ViewKeys&) const;
+	virtual String						defineLayout(ViewKeys const&) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
 //	virtual bool						isSuperfluous() const;
 	virtual bool						canStandAlone() const;

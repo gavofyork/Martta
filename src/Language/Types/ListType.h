@@ -48,14 +48,14 @@ protected:
 	virtual bool						hasDefaultConstructor() const { return true; }
 	virtual QList<ValueDefiner*>		applicableMembers(Entity* _s = 0, bool _isConst = false) const;
 	
-	virtual QString						code(QString const& _middle) const;
+	virtual String						code(String const& _middle) const;
 	virtual int							minRequired(int _i) const { return _i == Original ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual Types						allowedTypes(int _i) const;
 	virtual TypeEntity*					newClone() const { return new ListType; }
-	virtual QString						defineLayout(ViewKeys&) const;
+	virtual String						defineLayout(ViewKeys const&) const;
 	virtual bool						defineSimilarityFrom(TypeEntity const* _f, Castability _c) const;
-	virtual QString						idColour() const { return "#7fb"; }
+	virtual String						idColour() const { return "#7fb"; }
 	
 	static QList<SimpleMethod*>			s_members;
 	static QList<SimpleOperator*>		s_nonMembers;

@@ -54,7 +54,7 @@ QList<Declaration*> Array::utilised() const
 	return Super::utilised();
 }
 
-QString Array::code(QString const& _middle) const
+String Array::code(String const& _middle) const
 {
 	return childAs<TypeEntity>(Original)->code(_middle + "[" + childAs<Typed>(Length)->code() + "]");
 }

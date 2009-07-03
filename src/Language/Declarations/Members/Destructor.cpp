@@ -39,17 +39,17 @@ Kinds Destructor::allowedKinds(int _i) const
 	return Super::allowedKinds(_i);
 }
 
-QString Destructor::name() const
+String Destructor::name() const
 {
 	return "~" + classType()->name();
 }
 
-QString Destructor::codeName() const
+String Destructor::codeName() const
 {
 	return "~" + classType()->codeName();
 }
 
-QString Destructor::basicCode(FunctionCodeScope _ref) const
+String Destructor::basicCode(FunctionCodeScope _ref) const
 {
 	return Martta::code(qualifiers() & MethodMask) + callingCode(_ref);
 }

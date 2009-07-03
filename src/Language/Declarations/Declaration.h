@@ -41,9 +41,9 @@ public:
 	virtual ~Declaration();
 
 	/// From Identifiable (default implementations).
-	virtual QString						key() const;
-	virtual Identifiable*				lookupChild(QString const& _key) const;
-	Identifiable*						findEntity(QString const& _key) const;	// Treats this entity as root scope and looks for (scoped) _key in it. 
+	virtual String						key() const;
+	virtual Identifiable*				lookupChild(String const& _key) const;
+	Identifiable*						findEntity(String const& _key) const;	// Treats this entity as root scope and looks for (scoped) _key in it. 
 	void								archivePtrs(bool _clear = false) const;
 	void								restorePtrs() const;
 	
@@ -56,8 +56,8 @@ public:
 	QList<ValueDefiner*>				valuesKnown() const;
 	virtual QList<ValueDefiner*>		valuesAdded() const { return QList<ValueDefiner*>(); }
 	
-	virtual QString						interfaceCode() const { return QString(); }
-	virtual QString						implementationCode() const { return QString(); }
+	virtual String						interfaceCode() const { return String(); }
+	virtual String						implementationCode() const { return String(); }
 
 	virtual void						exportDom(QDomElement& _element) const;
 	virtual void						importDom(QDomElement const& _element);

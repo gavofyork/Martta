@@ -22,6 +22,14 @@
 
 #include "TestHelper.h"
 
+#include "Type.h"
+#include "ExplicitType.h"
+#include "Root.h"
+#include "Class.h"
+#include "Const.h"
+#include "Reference.h"
+
+
 #include "TypeEntity.h"
 namespace Martta
 {
@@ -49,9 +57,24 @@ int test()
 	failed += supportTests();
 	TEST("Auxilliaries Initialisation")
 		AuxilliaryRegistrar::get()->jigCache();
-	failed += coreTests();
+/*	failed += coreTests();
 	failed += typeTests();
 	failed += changeTests();
+*/
+
+	{
+		Root r;
+		Class* C = new Class;
+		C->prepareChildren();
+		r.back().place(C);
+		Type t;
+		t = Type(ExplicitType(C)).topWith(Const());
+		Type u;
+		u = t.toppedWith(Reference());
+		String code;
+		code = u->code();
+		qDebug() << code;
+	}
 	
 	TEST("Memory leaking")
 	{

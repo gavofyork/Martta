@@ -93,10 +93,10 @@ Type SimpleUnaryOperation::type() const
 	return protoReturn();
 }
 
-QString SimpleUnaryOperation::code() const
+String SimpleUnaryOperation::code() const
 {
 	if (!haveOperand() || !m_symbolCache)
-		return QString();
+		return String();
 	if (isPostfix())
 		return parenthesise(operand()->code() + id().code());
 	else
@@ -110,14 +110,14 @@ Types SimpleUnaryOperation::allowedTypes(int _index) const
 	return Super::allowedTypes(_index);
 }
 
-QString SimpleUnaryOperation::operatorLayout() const
+String SimpleUnaryOperation::operatorLayout() const
 {
 	if (id().symbol() == Operator::PlusPlusX || id().symbol() == Operator::XPlusPlus)
-		return QString::fromWCharArray(L"ycode;'+';M-3;'+'");
+		return L"ycode;'+';M-3;'+'";
 	else if (id().symbol() == Operator::MinusMinusX || id().symbol() == Operator::XMinusMinus)
-		return QString::fromWCharArray(L"ycode;'-';M-1;'-'");
+		return L"ycode;'-';M-1;'-'";
 	else
-		return "ycode;'" + id().code() + "'";
+		return String("ycode;'%1'").arg(id().code());
 }
 
 void SimpleUnaryOperation::importDom(QDomElement const& _element)

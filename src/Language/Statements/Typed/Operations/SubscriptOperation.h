@@ -33,11 +33,11 @@ public:
 	inline static bool					keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e);
 
 private:
-	virtual QString						defineLayout(ViewKeys&) const { return QString("%1;Mi;^;'[';%2;']'").arg(FirstOperand).arg(SecondOperand); }
+	virtual String						defineLayout(ViewKeys const&) const { return String("%1;Mi;^;'[';%2;']'").arg(FirstOperand).arg(SecondOperand); }
 	virtual Types						allowedTypes(int _index) const;
 	virtual Types						deniedTypes(int _index) const;
 	virtual Type						type() const;
-	virtual QString						code() const;
+	virtual String						code() const;
 	virtual bool						isValidState() const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
 	virtual int							familyDependencies() const { return DependsOnChildren; }

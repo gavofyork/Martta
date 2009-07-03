@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include <QColor>
+#include <QRgb>
 
 #include "Label.h"
 
@@ -34,7 +34,7 @@ class AccessLabel: public Label
 public:
 	AccessLabel(Access _a = Public): m_access(_a) {}
 	
-	inline QColor						idColour() const { return idColour(m_access); }
+	inline QRgb							idColour() const { return idColour(m_access); }
 	inline Access						access() const { return m_access; }
 	inline void							setAccess(Access _a) { m_access = _a; changed(); }
 	
@@ -43,9 +43,9 @@ public:
 protected:
 	virtual void						exportDom(QDomElement& _element) const;
 	virtual void						importDom(QDomElement const& _element);
-	virtual QString						defineLayout(ViewKeys&) const;
+	virtual String						defineLayout(ViewKeys const&) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
-	virtual QString						code() const { return Martta::code(m_access); }
+	virtual String						code() const { return Martta::code(m_access); }
 	virtual bool						onActivated(CodeScene*) { setAccess((Access)(((int)m_access + 1) % (int)AccessCount)); return true; }
 	
 private:

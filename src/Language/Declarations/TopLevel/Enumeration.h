@@ -38,13 +38,13 @@ class Enumeration: public TopLevelType, public_interface EnumerationNamer
 public:
 	static bool							keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e);
 	
-	virtual QString						code() const { return isNamed() ? codeName() : "enum ["+m_stem+"*]"; }
+	virtual String						code() const { return isNamed() ? codeName() : "enum ["+m_stem+"*]"; }
 	
 protected:
 	virtual int							minRequired(int _i) const { return _i == Cardinals ? 1 : _i == Identity ? 0 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
-	virtual QString						defineLayout(const ViewKeys& _k) const { return "^;" + EnumerationNamer::defineLayout(_k); }
-	virtual QString						interfaceCode() const { return EnumerationNamer::interfaceCode(); }
+	virtual String						defineLayout(ViewKeys const& _k) const { return "^;" + EnumerationNamer::defineLayout(_k); }
+	virtual String						interfaceCode() const { return EnumerationNamer::interfaceCode(); }
 	virtual bool						hasDefaultConstructor() const { return EnumerationNamer::hasDefaultConstructor(); }
 	virtual QList<ValueDefiner*>		valuesAdded() const { return EnumerationNamer::valuesAdded(); }
 	virtual Types						assignableTypes() const { return Type(const_cast<Enumeration*>(this)); }

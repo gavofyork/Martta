@@ -48,25 +48,12 @@ QTime s_timeTimers[16];
 
 const Precedence NoPrecedence = log(0.0);
 
-QString code(Qualifiers _q, WhitespacePosition _p)
+String code(Qualifiers _q, WhitespacePosition _p)
 {
-	QString ret;
+	String ret;
 	for (uint i = 1; (uint)QualifierMask > i; i <<= 1)
 		if (_q & i)
-			ret += ((!ret.isEmpty() && _p == NoWhitespace || _p == AtStart) ? " " : "") + code((Qualifier)i) + ((_p == AtEnd) ? " " : "");
-	return ret;
-}
-
-QColor colourByName(QString const& _n)
-{
-	QColor ret;
-	if (_n.startsWith("#") && (_n.size() - 1) % 4 == 0)
-	{
-		ret = QColor(_n.mid(0, (_n.size() - 1) / 4 * 3 + 1));
-		ret.setAlpha(QColor(QString("#%1%1%1").arg(_n.mid((_n.size() - 1) / 4 * 3 + 1, (_n.size() - 1) / 4))).red());
-	}
-	else
-		ret = QColor(_n);
+			ret += ((!ret.isEmpty() && _p == NoWhitespace || _p == AtStart) ? " " : "") + String(code((Qualifier)i)) + ((_p == AtEnd) ? " " : "");
 	return ret;
 }
 

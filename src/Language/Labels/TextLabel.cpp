@@ -20,6 +20,10 @@
 
 #include <QtXml>
 
+#include <msString.h>
+using MarttaSupport::String;
+using MarttaSupport::Char;
+
 #include "CommonGraphics.h"
 #include "Variable.h"
 #include "Argument.h"
@@ -36,16 +40,16 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(TextLabel);	
 
-QString TextLabel::code() const
+String TextLabel::code() const
 {
 	if (m_text.isEmpty())
 		if (isValid())
-			return QString("_ANON%1").arg((int)this);
+			return String("_ANON%1").arg((int)this);
 		else
-			return QString::null;
+			return String::null;
 	else
 	{
-		QString prefix = "";
+		String prefix = "";
 		if (parent()->hasAncestor<Namespace>())
 		{
 			if (parentIs<Argument>())
@@ -80,24 +84,24 @@ void TextLabel::exportDom(QDomElement& _element) const
 void TextLabel::apresLoad()
 {
 	if (m_text.startsWith("_ANON"))
-		m_text = QString::null;
+		m_text = String::null;
 }
 
-QString TextLabel::name() const
+String TextLabel::name() const
 {
 	if (m_text.isEmpty() && isValid())
-		return QString("_ANON%1").arg((int)this);//return "foo";	// TODO: make it proper.
+		return String("_ANON%1").arg((int)this);//return "foo";	// TODO: make it proper.
 	else if (m_text.isEmpty())
-		return QString::null;
+		return String::null;
 	else if (parentIs<TypeDefinition>() || parentIs<Namespace>())
 		return m_text.left(1).toUpper() + camelCase(m_text.mid(1));
 	else
 		return camelCase(m_text);
 }
 
-QString TextLabel::defineLayout(ViewKeys&) const
+String TextLabel::defineLayout(ViewKeys const&) const
 {
-	QString key = "";
+	String key = "";
 	if (parent()->hasAncestor<Namespace>())
 	{
 		if (parentIs<Argument>())
@@ -105,7 +109,7 @@ QString TextLabel::defineLayout(ViewKeys&) const
 		else if (parentIs<MemberVariable>())
 			key = "(;M4;[[[;fs-2;fb;c#777;e#fff;'M';]]];);";
 	}
-	return "^;" + key + (name().isEmpty() ? "yminor;'[ANONYMOUS]'" : (QString(isNamed() ? "c#000" : "c#aaa") + ";'" + name() + "'"));
+	return "^;" + key + (name().isEmpty() ? "yminor;'[ANONYMOUS]'" : (String(isNamed() ? "c#000" : "c#aaa") + ";'" + name() + "'"));
 }
 
 void TextLabel::decorate(DecorationContext const& _c) const
@@ -137,8 +141,8 @@ void TextLabel::decorate(DecorationContext const& _c) const
 class Delegate: public EditDelegate<TextLabel>
 {
 public:
-	Delegate(TextLabel* _e, CodeScene* _s): EditDelegate<TextLabel>(_e, _s), m_text(subject()->isNamed() ? subject()->text() : QString::null) {}
-	void setText(QString const& _t) { m_text = _t; }
+	Delegate(TextLabel* _e, CodeScene* _s): EditDelegate<TextLabel>(_e, _s), m_text(subject()->isNamed() ? subject()->text() : String::null) {}
+	void setText(String const& _t) { m_text = _t; }
 	virtual bool keyPressed(EntityKeyEvent const* _e)
 	{
 		if (_e->key() == Qt::Key_Backspace)
@@ -152,11 +156,11 @@ public:
 	virtual void commit()
 	{
 		// translate to all-lower, space separated.
-		QString actual = "";
+		String actual = "";
 		bool wordBreak = true;
 		for (int i = 0; i < m_text.size(); i++)
 		{
-			QChar c = m_text[i];
+			MarttaSupport::Char c = m_text[i];
 			if (c.isLetter())
 			{
 				if (c.isUpper() && i && m_text[i-1].isLower())
@@ -185,9 +189,9 @@ public:
 	{
 		return true;//!m_text.isEmpty();
 	}
-	virtual QString defineLayout(ViewKeys&) const
+	virtual String defineLayout(ViewKeys const&) const
 	{
-		QString key = "";
+		String key = "";
 		if (subject()->parent()->hasAncestor<Namespace>())
 		{
 			if (subject()->parentIs<Argument>())
@@ -195,9 +199,9 @@ public:
 			else if (subject()->parentIs<MemberVariable>())
 				key = "(;M4;[[[;fs-2;fb;c#777;e#fff;'M';]]];)";
 		}
-		return "^;" + (m_text.isEmpty() ? QString("yminor;'ANONYMOUS'") : (key + ";'" + m_text + "'"));
+		return "^;" + (m_text.isEmpty() ? String("yminor;'ANONYMOUS'") : (key + ";'" + m_text + "'"));
 	}
-	QString m_text;
+	String m_text;
 };
 
 bool TextLabel::keyPressed(EntityKeyEvent const* _e)

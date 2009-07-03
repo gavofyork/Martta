@@ -39,8 +39,8 @@ protected:
 	virtual QList<ValueDefiner*>		applicableMembers(Entity* _s = 0, bool = false) const { return original() ? original()->applicableMembers(_s, true) : Super::applicableMembers(_s); }
 	virtual bool						isType(Kind _typeKind) { return Entity::isKind(_typeKind) || original()->isType(_typeKind); }
 	virtual TypeEntity*					asType(Kind _typeKind) { if (Entity::isKind(_typeKind)) return this; M_ASSERT(original()->isType(_typeKind)); return original()->asType(_typeKind); }
-	virtual QString						code(QString const& _middle) const;
-	virtual QString						defineLayout(ViewKeys&) const;
+	virtual String						code(String const& _middle) const;
+	virtual String						defineLayout(ViewKeys const&) const;
 	virtual TypeEntity*					newClone() const { return new Const; }
 	virtual void						decorate(DecorationContext const& _c) const;
 	virtual Kinds						deniedKinds(int _i) const;

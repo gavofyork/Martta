@@ -42,11 +42,11 @@ public:
 	// Accessor methods.
 	// From ValueDefiner from TypeNamer.
 	virtual Type						type() const;
-	virtual QString						code() const;
+	virtual String						code() const;
 
 protected:
 	virtual Identifiable*				addressableContext() const { return parentAs<Identifiable>()->addressableContext(); }
-	virtual QString						defineLayout(ViewKeys&) const;
+	virtual String						defineLayout(ViewKeys const&) const;
 	virtual int							minRequired(int _i) const { return _i == Identity ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);

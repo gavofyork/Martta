@@ -56,17 +56,17 @@ bool IntegerLiteral::keyPressedOnPosition(Position const& _p, EntityKeyEvent con
 	return true;
 }
 
-QString IntegerLiteral::defineLayout(ViewKeys&) const
+String IntegerLiteral::defineLayout(ViewKeys const&) const
 {
 	double value;
 	modf(m_value, &value);
-	QString ret = (value > 0 || value < 0) ? "" : ",0";
+	String ret = (value > 0 || value < 0) ? "" : ",0";
 	for (int v = value < 0 ? -value : value; v >= 1; v /= 1000)
-		ret = (",%1" + ret).arg((int)fmod((double)v, 1000.0), v >= 1000 ? 3 : 0, 10, QChar('0'));
+		ret = (",%1" + ret).arg((int)fmod((double)v, 1000.0), v >= 1000 ? 3 : 0, 10, '0');
 	ret = ret.mid(1);
 	if (m_signed)
 		ret = (m_value < 0 ? "-" : "") + ret;
-	return QString("^;ynormal;'%1';ycode;'%2';'%3'").arg(ret).arg(m_signed ? "" : "u").arg(m_range == ShortRange ? "s" : m_range == LongRange ? "l" : m_range == LonglongRange ? "ll" : "");
+	return String("^;ynormal;'%1';ycode;'%2';'%3'").arg(ret).arg(m_signed ? "" : "u").arg(m_range == ShortRange ? "s" : m_range == LongRange ? "l" : m_range == LonglongRange ? "ll" : "");
 }
 
 void IntegerLiteral::exportDom(QDomElement& _element) const
@@ -88,7 +88,7 @@ EditDelegateFace* IntegerLiteral::newDelegate(CodeScene* _s)
 	class Delegate: public EditDelegate<IntegerLiteral>
 	{
 	public:
-		Delegate(IntegerLiteral* _e, CodeScene* _s): EditDelegate<IntegerLiteral>(_e, _s), m_entry (QString::number(_e->m_value))
+		Delegate(IntegerLiteral* _e, CodeScene* _s): EditDelegate<IntegerLiteral>(_e, _s), m_entry (String::number(_e->m_value))
 		{
 			if (!subject()->m_signed)
 				m_entry.remove("-");
@@ -129,12 +129,12 @@ EditDelegateFace* IntegerLiteral::newDelegate(CodeScene* _s)
 			m_entry.toInt(&ret);
 			return ret;
 		}
-		virtual QString defineLayout(ViewKeys&) const
+		virtual String defineLayout(ViewKeys const&) const
 		{
-			QString ret;
-			return ret + QString("^;ynormal;'%1';ycode;'%2';'%3'").arg(m_entry).arg(subject()->m_signed ? "" : "u").arg((subject()->m_range == ShortRange ? "s" : subject()->m_range == LongRange ? "l" : subject()->m_range == LonglongRange ? "ll" : ""));
+			String ret;
+			return ret + String("^;ynormal;'%1';ycode;'%2';'%3'").arg(m_entry).arg(subject()->m_signed ? "" : "u").arg((subject()->m_range == ShortRange ? "s" : subject()->m_range == LongRange ? "l" : subject()->m_range == LonglongRange ? "ll" : ""));
 		}
-		QString m_entry;
+		String m_entry;
 	};
 	return new Delegate(this, _s);
 }

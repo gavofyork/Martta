@@ -42,8 +42,8 @@ protected:
 private:
 	virtual int							minRequired(int _i) const { return _i == Condition || _i == Body ? 1 : Super::minRequired(_i); }
 	virtual Types						allowedTypes(int _index) const;
-	virtual QString						code() const;
-	virtual QString						defineLayout(ViewKeys&) const;
+	virtual String						code() const;
+	virtual String						defineLayout(ViewKeys const&) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
 	virtual QList<int> const&			defineDeclarationOrder() const { static const QList<int> r = QList<int>() << Condition << Body; return r; }
 };
@@ -56,8 +56,8 @@ public:
 	inline static bool					keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e) { return simplePlaceholderKeyPressHandler<UntilLoop>(_p, _e, "U"); }
 	
 private:
-	virtual QString						code() const;
-	virtual QString						defineLayout(ViewKeys&) const;
+	virtual String						code() const;
+	virtual String						defineLayout(ViewKeys const&) const;
 	virtual Kinds						allowedKinds(int _index) const;
 };
 

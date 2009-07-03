@@ -33,10 +33,10 @@ public:
 	inline static bool					keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e) { return simpleKeyPressedOnPositionHandler<NewOperation>(_p, _e, "N", NoPrecedence, NoAssociativity); }
 
 private:
-	virtual QString						operatorLayout() const { return "ycode;'new '"; }
+	virtual String						operatorLayout() const { return "ycode;'new '"; }
 	virtual Kinds						allowedKinds(int _index) const;
 	virtual Type						type() const;
-	virtual QString						code() const;
+	virtual String						code() const;
 	virtual bool						isValidState() const;
 };
 

@@ -40,8 +40,8 @@ public:
 protected:
 	virtual bool						hasDefaultConstructor() const { return true; }
 	
-	QString								defineLayout(const ViewKeys& _k) const;
-	QString								interfaceCode() const;
+	String								defineLayout(ViewKeys const& _k) const;
+	String								interfaceCode() const;
 	bool								keyPressed(EntityKeyEvent const* _e);
 	QList<ValueDefiner*>				valuesAdded() const { return self()->cardinalChildrenOf<ValueDefiner>(); }
 	
@@ -50,7 +50,7 @@ protected:
 	void								onDependencyRemoved(Entity* _e);
 	Entity*								isExpander() const;
 	
-	QString								m_stem;
+	String								m_stem;
 };
 
 }

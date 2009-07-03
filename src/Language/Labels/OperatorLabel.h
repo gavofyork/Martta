@@ -36,18 +36,18 @@ public:
 	OperatorLabel() {}
 	OperatorLabel(Operator _o): m_operator(_o) {}
 	OperatorLabel(Operator::Symbol _s): m_operator(_s) {}
-	OperatorLabel(QString const& _key): m_operator(_key) {}
+	OperatorLabel(String const& _key): m_operator(_key) {}
 
 	Operator							id() const { return m_operator; }
-	virtual QString						code() const { return "operator" + symbolCode(); }
-	inline QString						symbolCode() const { return m_operator.code(); }
+	virtual String						code() const { return "operator" + symbolCode(); }
+	inline String						symbolCode() const { return m_operator.code(); }
 	Operator::Symbol					symbol() const { return m_operator.symbol(); }
 	void								setSymbol(Operator::Symbol _s) { m_operator.setSymbol(_s); }
 	
 protected:
 	virtual void						exportDom(QDomElement& _element) const;
 	virtual void						importDom(QDomElement const& _element);
-	virtual QString						defineLayout(ViewKeys&) const;
+	virtual String						defineLayout(ViewKeys const&) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
 
 private:

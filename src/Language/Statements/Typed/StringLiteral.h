@@ -32,24 +32,24 @@ class StringLiteral: public Literal
 	MARTTA_OBJECT(Literal)
 
 public:
-	StringLiteral(QString const& _string = QString()): m_value(_string) {}
+	StringLiteral(String const& _string = String()): m_value(_string) {}
 
-	QString								value() const { return m_value; }
-	void								setValue(QString const& _s) { m_value = _s; changed(); }
+	String								value() const { return m_value; }
+	void								setValue(String const& _s) { m_value = _s; changed(); }
 	
 	static bool							keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e);
 
 protected:
 	virtual Type						type() const { return Type(Char).topWith(Const()).topWith(Pointer()); }
-	virtual QString						code() const { return "\"" + QString(m_value).replace("\"", "\\\"") + "\""; }
+	virtual String						code() const { return "\"" + String(m_value).replace("\"", "\\\"") + "\""; }
 	virtual void						exportDom(QDomElement& _element) const;
 	virtual void						importDom(QDomElement const& _element);
-	virtual QString						defineLayout(ViewKeys&) const;
+	virtual String						defineLayout(ViewKeys const&) const;
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
 
 private:
-	QString								m_value;
+	String								m_value;
 };
 
 }

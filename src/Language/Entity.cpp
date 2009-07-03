@@ -20,10 +20,11 @@
 
 #include <QtXml>
 
-#include "CullManager.h"
-#include "CommonGraphics.h"
-#include "DecorationContext.h"
-#include "CodeScene.h"
+#include "CullManager.h"		// Abstract away Qt stuff (just a callback?)
+#include "CommonGraphics.h"		// Move dependent logic into CodeScene.
+#include "DecorationContext.h"	// Remove
+#include "CodeScene.h"			// Abstract into Model & Scene
+
 #include "EditDelegate.h"
 #include "Entity.h"
 
@@ -38,14 +39,14 @@ int s_deletes = 0;
 	
 MARTTA_PLACEHOLDER_CPP(Entity);
 
-QString Entity::indexName(int _i) const
+String Entity::indexName(int _i) const
 {
 	if (_i == UndefinedIndex)
 		return "[Undefined]";
 	if (_i >= 0)
-		return QString::number(_i);
+		return String::number(_i);
 	if (_i < virtualEndOfNamed())
-		return QString((char)('A' + _i - INT_MIN));
+		return String((char)('A' + _i - INT_MIN));
 	return AuxilliaryRegistrar::get()->nameOfArbitrary(_i);
 }
 
@@ -118,9 +119,10 @@ int Entity::ancestorIndex(Entity const* _a) const
 }
 
 // Validity/status checking
-bool Entity::isValidName(QString const& _n)
+bool Entity::isValidName(String const&)
 {
-	return QRegExp("[a-zA-Z][a-zA-Z0-9_]*").exactMatch(_n);
+	return true;
+//	return QRegExp("[a-zA-Z][a-zA-Z0-9_]*").exactMatch(_n);
 }
 bool Entity::isNecessary() const
 {
@@ -240,20 +242,20 @@ void Entity::debugTree() const
 	QList<Entity const*> ancestors;
 	for (Entity const* i = parent(); i; i = i->parent())
 		ancestors.push_front(i);
-	QString indent = "";
+	String indent = "";
 	foreach (Entity const* i, ancestors)
 	{
-		qDebug(qPrintable(indent + i->kind().name() + " (%x)"), i);
+		qDebug((indent + i->kind().name() + " (%x)").toCString(), i);
 		indent += "    ";
 	}
 	debugTree(indent);
 }
-void Entity::debugTree(QString const& _i) const
+void Entity::debugTree(String const& _i) const
 {
-	qDebug(qPrintable(_i + kind().name() + " (%x)"), this);
+	qDebug((_i + kind().name() + " (%x)").toCString(), this);
 	for (QHash<int, Entity*>::ConstIterator i = m_namedChildren.begin(); i != m_namedChildren.end(); ++i)
 		if (i.key() < virtualEndOfNamed())
-			i.value()->debugTree(_i + "|   [" + QString::number(i.key() - INT_MIN) + "] ");
+			i.value()->debugTree(_i + "|   [" + String::number(i.key() - INT_MIN) + "] ");
 		else
 			i.value()->debugTree(_i + "|   [" + AuxilliaryRegistrar::get()->nameOfArbitrary(i.key()) + "] ");
 	foreach (Entity* i, m_cardinalChildren)
@@ -266,10 +268,10 @@ void Entity::exportDom(QDomElement& _element) const
 	foreach (Entity* e, children())
 	{
 		QDomElement n = _element.ownerDocument().createElement("entity");
-		n.setAttribute("kind", e->kind().name());
+		n.setAttribute("kind", e->kind().name().toCString());
 		if (e->index() < 0)
 		{	if (e->index() >= virtualEndOfNamed())	// proper name - store as name
-				n.setAttribute("childname", AuxilliaryRegistrar::get()->nameOfArbitrary(e->index()));
+				n.setAttribute("childname", AuxilliaryRegistrar::get()->nameOfArbitrary(e->index()).toCString());
 			else
 				n.setAttribute("contextindex", e->index());
 		}
@@ -418,7 +420,7 @@ void Entity::repaint()
 	foreach (CodeScene* i, CodeScene::all())
 		repaint(i);
 }
-QString Entity::defineLayout(ViewKeys&) const
+String Entity::defineLayout(ViewKeys const&) const
 {
 	return "^;ycode;'[]'";
 }
@@ -426,8 +428,8 @@ void Entity::decorate(DecorationContext const& _c) const
 {
 	if (!isValid())
 	{
-		_c->setPen(QPen(QColor(255, 128, 128), 2, Qt::DotLine, Qt::RoundCap));
-		_c->drawLine(QPointF(_c().left(), _c().bottom() - 2.f), QPointF(_c().right() - 2.f, _c().bottom() - 2.f));
+//		_c->setPen(QPen(QColor(255, 128, 128), 2, Qt::DotLine, Qt::RoundCap));
+//		_c->drawLine(QPointF(_c().left(), _c().bottom() - 2.f), QPointF(_c().right() - 2.f, _c().bottom() - 2.f));
 	}
 }
 
@@ -443,7 +445,7 @@ bool Entity::activated(CodeScene* _s)
 		return true;
 	else if (Entity* e = isExpander())
 	{
-		_s->viewKeys(this)["expanded"] = !(_s->viewKeys(this)["expanded"].toBool());
+		_s->setViewKey(this, "expanded", !_s->viewKeys(this)["expanded"].toBool());
 		relayout(_s);
 		
 		if (_s->viewKeys(this)["expanded"].toBool())
@@ -560,13 +562,13 @@ bool Entity::keyPressed(EntityKeyEvent const* _e)
 		activated(_e->codeScene());
 	else if (_e->text() == "{" && !_e->codeScene()->viewKeys(this)["expanded"].toBool() && isExpander())
 	{
-		_e->codeScene()->viewKeys(this)["expanded"] = true;
+		_e->codeScene()->setViewKey(this, "expanded", true);
 		relayout(_e->codeScene());
 		isExpander()->setCurrent();
 	}
 	else if (_e->text() == "}" && _e->codeScene()->viewKeys(this)["expanded"].toBool() && isExpander())
 	{
-		_e->codeScene()->viewKeys(this)["expanded"] = false;
+		_e->codeScene()->setViewKey(this, "expanded", false);
 		relayout(_e->codeScene());
 		setCurrent();
 	}

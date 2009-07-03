@@ -82,7 +82,7 @@ Types ReturnStatement::allowedTypes(int _i) const
 	return Super::allowedTypes(_i);
 }
 
-QString ReturnStatement::code() const
+String ReturnStatement::code() const
 {
 	return childIs<Typed>(Returned) ? "return " + childAs<Typed>(Returned)->codeAsStatement() : "return;";
 }

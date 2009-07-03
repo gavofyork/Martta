@@ -40,7 +40,7 @@ class TypeDefinition: public_interface Identifiable
 	MARTTA_INHERITS(Identifiable, 0)
 
 public:
-	virtual QString						code() const = 0;
+	virtual String						code() const = 0;
 	virtual bool						hasDefaultConstructor() const = 0;
 	virtual Types						assignableTypes() const = 0;
 	virtual QList<Declaration*>	utilisedInUse() const = 0;

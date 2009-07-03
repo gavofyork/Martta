@@ -62,16 +62,16 @@ public:
 	void setId(int _d) { m_id = _d; changed(); }
 	void committed();
 
-	virtual QString code(QString const& _middle) const;
+	virtual String code(String const& _middle) const;
 
-	static inline QString name(int _d)
+	static inline String name(int _d)
 	{
-		return (_d == -1) ? QString() : (_d == Wchar) ? QString("wchar_t") : (QString((_d & Unsigned) ? (_d & Float || _d & Double) ? "c" : "u" : "") +
+		return (_d == -1) ? String() : (_d == Wchar) ? String("wchar_t") : (String((_d & Unsigned) ? (_d & Float || _d & Double) ? "c" : "u" : "") +
 				(((_d & Longlong) == Longlong) ? "ll" : (_d & Short) ? "s" : (_d & Long) ? "l" : "") +
 				((_d & Float) ? "float" : (_d & Bool) ? "bool" : (_d & Double) ? "double" : (_d & Char) ? "char" : (_d & Int) ? "int" : "void"));
 	}
 
-	static int id(QString const& _n)
+	static int id(String const& _n)
 	{
 		for (int i = 0; i < s_simpleIdsCount; i++)
 			if (name(s_simpleIds[i]) == _n)
@@ -80,7 +80,7 @@ public:
 	}
 
 	QList<int>							possibilities();
-	virtual QString						defineEditLayout(ViewKeys&, int) const;
+	virtual String						defineEditLayout(ViewKeys const&, int) const;
 	int									get() const { return m_id; }
 	void								set(int _m) { setId(_m); }
 	virtual bool						isNull() const { return m_id == -1; }
@@ -91,9 +91,9 @@ protected:
 	virtual bool						hasDefaultConstructor() const { return true; }
 	virtual Types						assignableTypes() const;
 	virtual bool						contentsEquivalentTo(TypeEntity const* _t) const { return _t->asKind<SimpleType>()->m_id == m_id; }
-	virtual QString						idColour() const { return "#fb7"; }
+	virtual String						idColour() const { return "#fb7"; }
 	virtual TypeEntity*					newClone() const { return new SimpleType(m_id); }
-	virtual QString						defineLayout(ViewKeys&) const;
+	virtual String						defineLayout(ViewKeys const&) const;
 	virtual void						exportDom(QDomElement& _element) const;
 	virtual void						importDom(QDomElement const& _element);
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);

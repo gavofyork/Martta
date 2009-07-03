@@ -38,10 +38,10 @@ class Root: public Declaration
 	MARTTA_OBJECT(Declaration)
 
 public:
-	virtual QString						name() const { return QString(); }
+	virtual String						name() const { return String(); }
 	virtual Entity*						parent() const { return 0; }
-	virtual QString						reference() const { return ""; }
-	virtual QString						key() const { return ""; }
+	virtual String						reference() const { return ""; }
+	virtual String						key() const { return ""; }
 	virtual Kinds						allowedKinds(int) const;
 };
 

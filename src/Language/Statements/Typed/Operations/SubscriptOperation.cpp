@@ -32,7 +32,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(SubscriptOperation);	
 	
-QString SubscriptOperation::code() const
+String SubscriptOperation::code() const
 {
 	if (!haveLeft() || !haveRight())
 		return "";

@@ -39,7 +39,7 @@ public:
 	virtual int							minRequired(int _i) const { return _i == Cardinals ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int) const;
 	
-	virtual QString						code() const { return isHidden() ? QString("[union]") : (/*"union " + */codeName()); }
+	virtual String						code() const { return isHidden() ? String("[union]") : (/*"union " + */codeName()); }
 };
 
 }

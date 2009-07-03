@@ -48,9 +48,9 @@ bool FloatLiteral::keyPressedOnPosition(Position const& _p, EntityKeyEvent const
 	return true;
 }
 
-QString FloatLiteral::defineLayout(ViewKeys&) const
+String FloatLiteral::defineLayout(ViewKeys const&) const
 {
-	return QString(m_precision == SinglePrecision ? "^;'%1f'" : m_precision == DoublePrecision ? "^;'%1'" : "^;'%1ld'").arg(m_value);
+	return String(m_precision == SinglePrecision ? "^;'%1f'" : m_precision == DoublePrecision ? "^;'%1'" : "^;'%1ld'").arg(m_value);
 }
 
 void FloatLiteral::exportDom(QDomElement& _element) const
@@ -72,7 +72,7 @@ EditDelegateFace* FloatLiteral::newDelegate(CodeScene* _s)
 	class Delegate: public EditDelegate<FloatLiteral>
 	{
 	public:
-		Delegate(FloatLiteral* _e, CodeScene* _s): EditDelegate<FloatLiteral>(_e, _s), m_entry(QString("%1").arg(_e->m_value))
+		Delegate(FloatLiteral* _e, CodeScene* _s): EditDelegate<FloatLiteral>(_e, _s), m_entry(String("%1").arg(_e->m_value))
 		{
 			if (!m_entry.contains("."))
 				m_entry += ".";
@@ -103,12 +103,12 @@ EditDelegateFace* FloatLiteral::newDelegate(CodeScene* _s)
 			m_entry.toDouble(&ret);
 			return ret;
 		}
-		QString defineLayout(ViewKeys&) const
+		String defineLayout(ViewKeys const&) const
 		{
-			return (QString("^;ynormal;'%1';ycode;") + (subject()->m_precision == SinglePrecision ? "'f'" : subject()->m_precision == DoublePrecision ? "" : "'ld'")).arg(m_entry);
+			return (String("^;ynormal;'%1';ycode;") + (subject()->m_precision == SinglePrecision ? "'f'" : subject()->m_precision == DoublePrecision ? "" : "'ld'")).arg(m_entry);
 		}
 		
-		QString m_entry;
+		String m_entry;
 	};
 	return new Delegate(this, _s);
 }

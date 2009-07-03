@@ -40,13 +40,13 @@ private:
 	virtual Kinds						allowedKinds(int _index) const;
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity*) { changed(); }
-	virtual QString						defineLayout(ViewKeys& _k) const { return (VariableNamer::defineLayout(_k) + ";Mi;^;ycode;'(';Mi;%1;Mi;')'").arg(OurConstruction); }
+	virtual String						defineLayout(ViewKeys const& _k) const { return (VariableNamer::defineLayout(_k) + ";Mi;^;ycode;'(';Mi;%1;Mi;')'").arg(OurConstruction); }
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
 	virtual void						exportDom(QDomElement& _element) const { VariableNamer::exportDom(_element); Super::exportDom(_element); }
 	virtual void						importDom(QDomElement const& _element) { VariableNamer::importDom(_element); Super::importDom(_element); }
 
 	// From Statement via BareTyped
-	virtual QString						code() const;
+	virtual String						code() const;
 	
 	// From Identifiable via VariableNamer
 	virtual Identifiable*				addressableContext() const { return 0; }

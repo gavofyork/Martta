@@ -35,12 +35,12 @@ bool Namespace::keyPressed(EntityKeyEvent const* _e)
 		return Super::keyPressed(_e);
 }
 
-QString Namespace::defineLayout(ViewKeys&) const
+String Namespace::defineLayout(ViewKeys const&) const
 {
-	QString ret = QString("ycode;'namespace';Mi;%1;n;").arg(Identity);
+	String ret = String("ycode;'namespace';Mi;%1;n;").arg(Identity);
 	
 	for(int i = 0; i < cardinalChildCount(); i++)
-		ret += QString("i;%1;v8;").arg(i);
+		ret += String("i;%1;v8;").arg(i);
 	return ret;
 }
 
@@ -51,9 +51,9 @@ Kinds Namespace::allowedKinds(int _i) const
 	return Super::allowedKinds(_i);
 }
 
-QString Namespace::interfaceCode() const
+String Namespace::interfaceCode() const
 {
-	QString ret;
+	String ret;
 	ret += "namespace " + codeName() + "\n{\n";
 
 	QList<Declaration*> q;
@@ -68,7 +68,7 @@ QString Namespace::interfaceCode() const
 
 	QList<Declaration*> ds = solve(q, deps);
 	if (!ds.size())
-		return QString();
+		return String();
 	foreach (Declaration* i, ds)
 		ret += i->interfaceCode() + "\n";
 	
@@ -77,9 +77,9 @@ QString Namespace::interfaceCode() const
 	return ret;
 }
 
-QString Namespace::implementationCode() const
+String Namespace::implementationCode() const
 {
-	QString ret;
+	String ret;
 	QList<Declaration*> ordered;
 	foreach (Declaration* i, cardinalChildrenOf<Declaration>())
 		ret += i->implementationCode() + "\n";

@@ -48,16 +48,16 @@ bool Const::defineSimilarityTo(TypeEntity const* _t, Castability _c) const
 		Super::defineSimilarityTo(_t, _c);
 }
 
-QString Const::code(QString const& _middle) const
+String Const::code(String const& _middle) const
 {
 	if (childIs<TypeEntity>(Original))
 		return childAs<TypeEntity>(Original)->code(" const" + _middle);
-	return QString();
+	return String();
 }
 
-QString Const::defineLayout(ViewKeys&) const
+String Const::defineLayout(ViewKeys const&) const
 {
-	return QString("%1;(;M2;^;fb;s;ewhite;c#5f6f7f;fs-2;'C';M3;)").arg(Original);
+	return String("%1;(;M2;^;fb;s;ewhite;c#5f6f7f;fs-2;'C';M3;)").arg(Original);
 }
 
 void Const::decorate(DecorationContext const& _c) const

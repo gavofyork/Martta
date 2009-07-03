@@ -45,8 +45,8 @@ public:
 
 protected:
 	virtual Type						type() const { return Type(m_precision == SinglePrecision ? Float : m_precision == DoublePrecision ? Double : (Long|Double)); }
-	virtual QString						code() const { QString ret = QString("%1").arg(m_value); if (!ret.contains(".")) ret += "."; ret += m_precision == SinglePrecision ? "f" : m_precision == DoublePrecision ? "" : "ld"; return ret; }
-	virtual QString						defineLayout(ViewKeys&) const;
+	virtual String						code() const { String ret = String("%1").arg(m_value); if (!ret.contains(".")) ret += "."; ret += m_precision == SinglePrecision ? "f" : m_precision == DoublePrecision ? "" : "ld"; return ret; }
+	virtual String						defineLayout(ViewKeys const&) const;
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 	virtual void						exportDom(QDomElement& _element) const;
 	virtual void						importDom(QDomElement const& _element);

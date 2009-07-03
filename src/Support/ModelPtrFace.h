@@ -20,8 +20,6 @@
 
 #pragma once
 
-#include <QString>
-
 #include "Common.h"
 
 namespace Martta
@@ -55,20 +53,20 @@ public:
 	/// took is recorded for later restoration.
 	inline bool isArchived() const { return !m_key.isEmpty(); }
 
-	inline QString identity() const { return key().section("::", -1); }
-	QString key() const;
+	inline String identity() const { return key().section("::", -1); }
+	String key() const;
 
-	void restoreFrom(QString const& _key) { set(_key); }
+	void restoreFrom(String const& _key) { set(_key); }
 	void tryRestore(Declaration const* _root);
 
 protected:
 	void set(Identifiable* _e);
-	void set(QString const& _k = QString::null);
+	void set(String const& _k = String::null);
 	inline Identifiable* get() { return m_cache; }
 
 private:
 	Identifiable*		m_cache;
-	QString				m_key;
+	String				m_key;
 };
 
 }

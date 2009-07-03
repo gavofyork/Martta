@@ -125,11 +125,11 @@ TypeEntity* Memberify::scopeType() const
 		return TypeEntity::null;
 }
 
-QString Memberify::code(QString const& _middle) const
+String Memberify::code(String const& _middle) const
 {
 	if (scopeType())
 		return original()->code(" " + scopeType()->code() + ":: " + _middle) + (original()->ignore<ModifyingType>()->isType<FunctionType>() && isConst() ? " const" : "");
-	return QString();
+	return String();
 }
 
 bool Memberify::defineSimilarityFrom(TypeEntity const* _f, Castability _c) const
@@ -146,10 +146,10 @@ bool Memberify::defineSimilarityFrom(TypeEntity const* _f, Castability _c) const
 			|| Super::defineSimilarityFrom(_f, _c);
 }
 
-QString Memberify::modifierLayout() const
+String Memberify::modifierLayout() const
 {
 	if (!scopeClass())
-		return QString();
+		return String();
 	return "ycode;'" + scopeClass()->name() + "'";
 }
 

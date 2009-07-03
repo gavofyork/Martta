@@ -25,7 +25,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(UndefinedArray);
 	
-QString UndefinedArray::code(QString const& _middle) const
+String UndefinedArray::code(String const& _middle) const
 {
 	return childAs<TypeEntity>(Original)->code(_middle + "[]");
 }

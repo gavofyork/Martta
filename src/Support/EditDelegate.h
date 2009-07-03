@@ -41,7 +41,7 @@ public:
 	void						lazyCommit() { if (m_immediateCommits) tryCommit(); }
 	void						tryCommit() { if (isValid()) commit(); }
 	
-	virtual QString				defineLayout(ViewKeys&) const;
+	virtual String				defineLayout(ViewKeys const&) const;
 	virtual bool				keyPressed(EntityKeyEvent const*) { return false; }
 	/// Called only once, and only when this will be destroyed but the subject will live.
 	virtual void				leavingEditIntact() {}

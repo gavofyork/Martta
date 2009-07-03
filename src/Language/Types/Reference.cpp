@@ -58,9 +58,9 @@ bool Reference::defineSimilarityFrom(TypeEntity const* _f, Castability _c) const
 		Super::defineSimilarityFrom(_f, _c);
 }
 
-QString Reference::defineLayout(ViewKeys&) const
+String Reference::defineLayout(ViewKeys const&) const
 {
-	return QString("%1;(;M1;^;fb;s;e#ffffff;c#7f6f5f;fs-2;'&';M2;)").arg(Original);
+	return String("%1;(;M1;^;fb;s;e#ffffff;c#7f6f5f;fs-2;'&';M2;)").arg(Original);
 }
 
 void Reference::decorate(DecorationContext const& _c) const

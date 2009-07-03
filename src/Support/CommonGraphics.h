@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include <QColor>
 #include <QRect>
 #include <QRectF>
 #include <QPainter>
@@ -32,6 +33,8 @@ namespace Martta
 {
 	
 static const QRectF BigRect(0.f, 0.f, 1.e99, 1.e99);
+
+QColor colourByName(String const& _n);
 
 inline QColor qRgba(QRgb _v, int _alpha)
 {

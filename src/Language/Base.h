@@ -35,13 +35,13 @@ public:
 	enum { Accessibility = FirstNamed, Superclass, EndOfNamed };
 	
 	Access								access() const;
-	QString								code() const;
+	String								code() const;
 	Class*								classType() const;
 	
 	static bool							keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e);
 	
 protected:
-	virtual QString						defineLayout(ViewKeys&) const;
+	virtual String						defineLayout(ViewKeys const&) const;
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual void						onDependencyChanged(Entity* _e);
 	virtual int							familyDependencies() const { return DependsOnChildren; }

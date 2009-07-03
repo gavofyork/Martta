@@ -32,10 +32,10 @@ class Namespace: public TopLevel
 public:
 	virtual bool						isGloballyIdentifiable() const { return true; }
 	virtual Kinds						allowedKinds(int _i) const;
-	virtual QString						defineLayout(ViewKeys&) const;
+	virtual String						defineLayout(ViewKeys const&) const;
 	
-	QString								interfaceCode() const;
-	QString								implementationCode() const;
+	String								interfaceCode() const;
+	String								implementationCode() const;
 
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
 };

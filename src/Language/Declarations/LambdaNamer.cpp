@@ -35,35 +35,35 @@ MARTTA_NAMED_CPP(LambdaNamer, Body)
 MARTTA_NAMED_CPP(LambdaNamer, Name)
 MARTTA_NAMED_CPP(LambdaNamer, Returned)
 
-QString LambdaNamer::defineReturnLayout(ViewKeys&) const
+String LambdaNamer::defineReturnLayout(ViewKeys const&) const
 {
-	return QString("%1;Mo").arg(Returned);
+	return String("%1;Mo").arg(Returned);
 }
 
-QString LambdaNamer::defineNameLayout(ViewKeys&) const
+String LambdaNamer::defineNameLayout(ViewKeys const&) const
 {
 	if (self()->child(Identity))
-		return QString("ynormal;s%1;!%2").arg(FunctionType().idColour()).arg(Identity);
+		return String("ynormal;s%1;!%2").arg(FunctionType().idColour()).arg(Identity);
 	else
 		return "ycode;'" + name().replace(";", "\\;").replace("'", "\\'") + "'";
 }
 
-QString LambdaNamer::defineArgListLayout(ViewKeys&) const
+String LambdaNamer::defineArgListLayout(ViewKeys const&) const
 {
 	return "ycode;'(';" + times(0, self()->cardinalChildCount(), ";', ';") + ";')'";
 }
 
-QString LambdaNamer::defineBodyLayout(ViewKeys& _viewKeys) const
+String LambdaNamer::defineBodyLayout(ViewKeys const& _viewKeys) const
 {
-	QString ret;
+	String ret;
 	if (body())
 		if (_viewKeys["expanded"].toBool())
-			ret += (body()->cardinalChildCount() ? "n;i;" : "") + QString::number(Body);
+			ret += (body()->cardinalChildCount() ? "n;i;" : "") + String::number(Body);
 		else
 		{
 			ret += "yminor;' (";
 			if (int n = body()->cardinalChildrenOf<Primary>().count() + body()->cardinalChildrenOf<Untyped>().count())
-				ret += QString::number(n) + " statement" + (n > 1 ? "s, " : ", ");
+				ret += String::number(n) + " statement" + (n > 1 ? "s, " : ", ");
 			if (ret.endsWith(", "))
 				ret.chop(2);
 			ret += ")";
@@ -76,7 +76,7 @@ QString LambdaNamer::defineBodyLayout(ViewKeys& _viewKeys) const
 	return ret;
 }
 
-QString LambdaNamer::defineLayout(ViewKeys& _k, QString _middle) const
+String LambdaNamer::defineLayout(ViewKeys const& _k, String _middle) const
 {
 	// TODO handle ellipsis here so we can put one in/take one out
 	return definePreLayout(_k) + ";" + defineReturnLayout(_k) + ";>name;" + defineNameLayout(_k) + ";" + defineArgListLayout(_k) + ";" + defineMidLayout(_k, _middle) + ";" + defineBodyLayout(_k) + ";" + definePostLayout(_k);
@@ -114,14 +114,14 @@ Type LambdaNamer::type() const
 	return ret;
 }
 
-QString LambdaNamer::implementationCode() const
+String LambdaNamer::implementationCode() const
 {
-	return basicCode(LambdaNamer::OutsideScope) + "\n" + (body() ? body()->code() : QString());
+	return basicCode(LambdaNamer::OutsideScope) + "\n" + (body() ? body()->code() : String());
 }
 
-QString LambdaNamer::callingCode(FunctionCodeScope _ref) const
+String LambdaNamer::callingCode(FunctionCodeScope _ref) const
 {
-	QString ret = ((_ref == OutsideScope) ? reference() : codeName()) + "(";
+	String ret = ((_ref == OutsideScope) ? reference() : codeName()) + "(";
 	for (int i = 0; i < argumentCount(); i++)
 	{
 		if (i) ret += ", ";
@@ -133,7 +133,7 @@ QString LambdaNamer::callingCode(FunctionCodeScope _ref) const
 	return ret;
 }
 
-QString LambdaNamer::basicCode(FunctionCodeScope _ref) const
+String LambdaNamer::basicCode(FunctionCodeScope _ref) const
 {
 	return Martta::code(qualifiers() & FunctionMask) + returns()->code(" " + callingCode(_ref));
 }
@@ -169,18 +169,18 @@ Type LambdaNamer::argumentType(int _index) const
 	return 0;
 }
 
-QString LambdaNamer::argumentName(int _index) const
+String LambdaNamer::argumentName(int _index) const
 {
 	if (Argument* v = argument(_index))
 		return v->name();
-	return 0;
+	return String::null;
 }
 
-QString LambdaNamer::argumentCodeName(int _index) const
+String LambdaNamer::argumentCodeName(int _index) const
 {
 	if (Argument* v = argument(_index))
 		return v->codeName();
-	return 0;
+	return String::null;
 }
 
 }

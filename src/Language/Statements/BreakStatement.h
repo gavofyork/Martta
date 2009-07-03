@@ -30,8 +30,8 @@ class BreakStatement: public Untyped
 	MARTTA_OBJECT(Untyped)
 
 private:
-	virtual QString						code() const { return "break;"; }
-	virtual QString						defineLayout(ViewKeys&) const { return "^;ycode;'break'"; }
+	virtual String						code() const { return "break;"; }
+	virtual String						defineLayout(ViewKeys const&) const { return "^;ycode;'break'"; }
 };
 
 }

@@ -40,15 +40,15 @@ public:
 	virtual Access						access() const;
 	Class*								classType() const;
 	
-	virtual QString 					interfaceCode() const;
-	virtual QString 					implementationCode() const { return memberImplementationCode(); }
+	virtual String 					interfaceCode() const;
+	virtual String 					implementationCode() const { return memberImplementationCode(); }
 	
 protected:
 	// New virtuals.
-	virtual QString						memberInterfaceCode() const { return QString::null; }
-	virtual QString						memberImplementationCode() const { return QString::null; }
+	virtual String						memberInterfaceCode() const { return String::null; }
+	virtual String						memberImplementationCode() const { return String::null; }
 	virtual void						memberDecorate(DecorationContext const&) const {}
-	virtual QString						memberDefineLayout(ViewKeys&) const { return QString::null; }
+	virtual String						memberDefineLayout(ViewKeys const&) const { return String::null; }
 	
 	// Old virtuals.
 	virtual int							minRequired(int _i) const { return _i == Accessibility ? 1 : Super::minRequired(_i); }
@@ -57,7 +57,7 @@ protected:
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity*) { changed(); }
-	virtual QString						defineLayout(ViewKeys&) const;
+	virtual String						defineLayout(ViewKeys const&) const;
 };
 
 }

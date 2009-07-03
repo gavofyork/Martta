@@ -33,21 +33,21 @@ class ArtificialAssignmentOperator: public MethodOperator, public_interface Arti
 	
 protected:
 	virtual Operator					id() const { return Operator::Equals; }
-	virtual QString						name() const { return "operator="; }
-	virtual QString						codeName() const { return "operator="; }
-	virtual QString						defineLayout(ViewKeys&) const { return QString(); }
+	virtual String						name() const { return "operator="; }
+	virtual String						codeName() const { return "operator="; }
+	virtual String						defineLayout(ViewKeys const&) const { return String(); }
 	virtual	bool						isConst() const { return true; }
 	virtual Access						access() const { return Public; }
 	virtual int							firstArgumentIndex() const { return 0; }
 	virtual int							minRequired(int) const { return 0; }
 	virtual Kinds						allowedKinds(int) const { return Kinds(); }
-	virtual QString						interfaceCode() const { return ""; }
-	virtual QString						implementationCode() const { return ""; }
+	virtual String						interfaceCode() const { return ""; }
+	virtual String						implementationCode() const { return ""; }
 	virtual Compound*					body() const { return 0; }
 	virtual int							argumentCount() const { return 1; }
 	virtual Type						argumentType(int) const;
-	virtual QString						argumentCodeName(int) const { return "source"; }
-	virtual QString						argumentName(int) const { return "source"; }
+	virtual String						argumentCodeName(int) const { return "source"; }
+	virtual String						argumentName(int) const { return "source"; }
 	virtual Type						returns() const;
 };
 

@@ -39,14 +39,14 @@ Type Invocation::type() const
 	// TODO: Handle objects with () operators.
 }
 
-QString Invocation::code() const
+String Invocation::code() const
 {
 	return isTyped(Callee) ? asTyped(Callee)->code() + callList(castEntities<Typed>(cardinalChildren())) : "";
 }
 
-QString Invocation::callList(QList<Typed*> _parameters) const
+String Invocation::callList(QList<Typed*> _parameters) const
 {
-	QString ret;
+	String ret;
 	ret += "(";
 	bool first = true;
 	foreach (Typed* s, _parameters)
@@ -92,12 +92,12 @@ Types Invocation::allowedTypes(int _index) const
 	return Super::allowedTypes(_index);
 }
 
-QString Invocation::defineLayout(ViewKeys&) const
+String Invocation::defineLayout(ViewKeys const&) const
 {
-	QString ret = "%1;ycode;'(';^";
+	String ret = "%1;ycode;'(';^";
 	ret = ret.arg(Callee);
 	for (int i = 0; i < cardinalChildCount(); i++)
-		ret += QString((i == 0) ? ";%1" : ";', ';%1").arg(i);
+		ret += String((i == 0) ? ";%1" : ";', ';%1").arg(i);
 	return ret + ";')'";
 }
 

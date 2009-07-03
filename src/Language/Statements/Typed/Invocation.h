@@ -32,7 +32,7 @@ class Invocation: public Evaluation
 public:
 	enum { Callee = FirstNamed, EndOfNamed };
 
-	QString								callList() const { return callList(castEntities<Typed>(cardinalChildren())); }
+	String								callList() const { return callList(castEntities<Typed>(cardinalChildren())); }
 	static bool							keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e);
 
 protected:
@@ -40,10 +40,10 @@ protected:
 	virtual Kinds						allowedKinds(int _index) const;
 	virtual Types						allowedTypes(int _index) const;
 	virtual Type						type() const;
-	virtual QString						code() const;
+	virtual String						code() const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
-	virtual QString						defineLayout(ViewKeys&) const;
-	QString								callList(QList<Typed*> _parameters) const;
+	virtual String						defineLayout(ViewKeys const&) const;
+	String								callList(QList<Typed*> _parameters) const;
 	virtual int							familyDependencies() const { return Super::familyDependencies() | DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity* _e);
 };

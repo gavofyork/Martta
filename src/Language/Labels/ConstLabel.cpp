@@ -27,9 +27,9 @@ namespace Martta
 	
 MARTTA_OBJECT_CPP(ConstLabel);
 	
-QString ConstLabel::defineLayout(ViewKeys&) const
+String ConstLabel::defineLayout(ViewKeys const&) const
 {
-	return QString("^;ycode;p%1").arg(m_isConst ? ":/snowflake.svg" : ":/fire.svg");
+	return String("^;ycode;p%1").arg(m_isConst ? ":/snowflake.svg" : ":/fire.svg");
 }
 	
 bool ConstLabel::keyPressed(EntityKeyEvent const* _e)

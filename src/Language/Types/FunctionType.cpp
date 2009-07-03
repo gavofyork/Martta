@@ -56,12 +56,12 @@ Types FunctionType::assignableTypes() const
 	return Type(*this);
 }
 
-QString FunctionType::code(QString const& _middle) const
+String FunctionType::code(String const& _middle) const
 {
 	if (m_wild)
 		return "#unknown-type#(" + _middle + ")(...)";
 	
-	QString ret = returnType()->code() + "(" + _middle + ")(";
+	String ret = returnType()->code() + "(" + _middle + ")(";
 	foreach (Entity* e, cardinalChildren())
 	{
 		if (ret.right(1) != "(")

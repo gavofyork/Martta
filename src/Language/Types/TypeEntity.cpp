@@ -44,7 +44,7 @@ Types TypeEntity::assignableTypes() const
 
 bool TypeEntity::isSimilarTo(TypeEntity const* _t, Castability _similarity) const
 {
-	static QString s_ind = "        ";
+	static String s_ind = "        ";
 	if (g_debugCastability)
 	{
 		qInformation() << (s_ind + "isSimilar from " + code() + " to " + _t->code() + " (for %1)").arg(_similarity);

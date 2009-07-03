@@ -47,11 +47,11 @@ protected:
 	virtual Types						assignableTypes() const;
 	virtual QList<ValueDefiner*>		applicableMembers(Entity* _s = 0, bool _isConst = false) const;
 	
-	virtual QString						code(QString const& _middle) const;
-	virtual QString						defineLayout(ViewKeys&) const;
+	virtual String						code(String const& _middle) const;
+	virtual String						defineLayout(ViewKeys const&) const;
 	virtual bool						defineSimilarityFrom(TypeEntity const* _f, Castability _c) const;
 	virtual bool						defineSimilarityTo(TypeEntity const* _t, Castability _c) const;
-	virtual QString						idColour() const { return "#fb7"; }
+	virtual String						idColour() const { return "#fb7"; }
 
 	virtual TypeEntity*					newClone() const { return new StringType; }
 	

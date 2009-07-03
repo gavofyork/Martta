@@ -42,22 +42,25 @@ public:
 	{
 		if (m_failed || s_asserted)
 		{
-			qInformation() << "FAILED! " << s_asserted;
+			qInformation() << "FAILED! " << (m_failed ? m_failed : s_asserted);
 			exit(1);
 			(*m_failedCounter)++;
 		}
 		s_asserted = m_oldAsserted;
 	}
-	void failed() { m_failed = true; }
+	void failed() { m_failed = "Unknown"; }
+	void failed(char const* _problem) { m_failed = _problem; }
 	bool isDone() const { return m_done; }
 	void done() { m_done = true; }
 	
 private:
 	char const* m_name;
-	bool m_failed;
+	char const* m_failed;
 	bool m_done;
 	char const* m_oldAsserted;
 	int* m_failedCounter;
 };
 #define TEST(S) for (TestHelper _h(S, &failed); !_h.isDone(); _h.done()) 
-#define FAILED_IF(X) if (X) _h.failed(); else (void)0
+#define FAILED_IF(X) if (X) _h.failed(#X); else (void)0
+#define UNLESS(X) if (X) (void)0; else _h.failed
+#define IF(X) if (!(X)) (void)0; else _h.failed

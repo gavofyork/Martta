@@ -35,8 +35,8 @@ public:
 	static bool							keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e) { return simplePositionKeyPressHandler<VirtualMethod>(_p, _e, "V"); }
 	
 protected:
-	virtual QString						memberInterfaceCode() const;
-	virtual QString						definePreLayout(ViewKeys& _k) const { return Super::definePreLayout(_k) + ";yminor;'VIRTUAL';Mo"; }
+	virtual String						memberInterfaceCode() const;
+	virtual String						definePreLayout(ViewKeys const& _k) const { return Super::definePreLayout(_k) + ";yminor;'VIRTUAL';Mo"; }
 };
 
 }

@@ -221,12 +221,12 @@ bool StringType::defineSimilarityFrom(TypeEntity const* _f, Castability _c) cons
 		Super::defineSimilarityFrom(_f, _c);
 }
 
-QString StringType::code(QString const& _middle) const
+String StringType::code(String const& _middle) const
 {
 	return "::MarttaSupport::String" + _middle;
 }
 
-QString StringType::defineLayout(ViewKeys&) const
+String StringType::defineLayout(ViewKeys const&) const
 {
 	return typeLayout() + "^;'string'";
 }

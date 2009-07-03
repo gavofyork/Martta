@@ -32,7 +32,7 @@ class Corporal
 public:
 	MARTTA_NAMED(Body)
 	
-	QString							defineLayout(ViewKeys&, bool _shrink) const;
+	String							defineLayout(ViewKeys const&, bool _shrink) const;
 	bool							keyPressed(EntityKeyEvent const* _e);
 	
 	virtual ~Corporal() {}

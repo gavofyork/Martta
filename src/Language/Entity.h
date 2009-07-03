@@ -20,12 +20,17 @@
 
 #pragma once
 
-#include <QDebug>
+#include <QDebug>			// Move to mDebug & link in.
 #include <QList>
 #include <QHash>
+#include <QRgb>
+#include <qglobal.h>
+
+#include <msString.h>
+using MarttaSupport::String;
 
 // Same here - move to interface?
-#include "EntityKeyEvent.h"
+#include "EntityKeyEvent.h"	// Depends on QKeyEvent
 
 #include "ChildValidifier.h"
 #include "Depender.h"
@@ -199,7 +204,7 @@ public:
 	/**
 	 * Create a new entity.
 	 */
-	inline static Entity*				spawn(QString const& _kind) { AuxilliaryFace const* f = AuxilliaryRegistrar::get()->auxilliary(_kind); M_ASSERT(f); return f->create(); }
+	inline static Entity*				spawn(String const& _kind) { AuxilliaryFace const* f = AuxilliaryRegistrar::get()->auxilliary(_kind); M_ASSERT(f); return f->create(); }
 
 	/**
 	 * Destructs the object. Use this before delete. It sets the parent to zero while the object is still
@@ -376,11 +381,11 @@ public:
 	virtual bool						keyPressed(EntityKeyEvent const*);
 	static bool							keyPressedOnPosition(Position const&, EntityKeyEvent const*) { return false; }
 	
-	QString								indexName(int _i) const;
-	QString								indexName() const { return m_parent ? m_parent->indexName(m_index) : "[Orphan]"; }
+	String								indexName(int _i) const;
+	String								indexName() const { return m_parent ? m_parent->indexName(m_index) : "[Orphan]"; }
 	QList<int>							knownNames() const;
 	
-	virtual QString						defineLayout(ViewKeys&) const;
+	virtual String						defineLayout(ViewKeys const&) const;
 	virtual Entity*						isExpander() const { return 0; }
 	
 	/// We become current in all code scenes.
@@ -419,14 +424,14 @@ public:
 	
 	/// Static helpers.
 	inline static bool					isTemporary(Entity* _e) { SafePointer<Entity> p(_e); p->clearEditing(); return !p; }
-	static bool							isValidName(QString const& _n);
+	static bool							isValidName(String const& _n);
 	template<class T>
-	inline static bool					simplePlaceholderKeyPressHandler(Position const& _p, EntityKeyEvent const* _e, QString const& _t);
+	inline static bool					simplePlaceholderKeyPressHandler(Position const& _p, EntityKeyEvent const* _e, String const& _t);
 	template<class T>
-	inline static bool					simplePositionKeyPressHandler(Position const& _p, EntityKeyEvent const* _e, QString const& _t, bool _ontoNew = true);	
+	inline static bool					simplePositionKeyPressHandler(Position const& _p, EntityKeyEvent const* _e, String const& _t, bool _ontoNew = true);	
 
 	void								debugTree() const;
-	void								debugTree(QString const& _i) const;
+	void								debugTree(String const& _i) const;
 	
 	/// Called directly following a load.
 	virtual void						apresLoad() {}
@@ -512,7 +517,7 @@ class EntityStylist
 public:
 	virtual ~EntityStylist() {}
 	
-	virtual QString defineLayout(Entity* _e, ViewKeys& _k)
+	virtual String defineLayout(Entity* _e, ViewKeys const& _k)
 	{
 		return _e->defineLayout(_k);
 	}
@@ -576,7 +581,7 @@ void Martta::Entity::setDependency(T& _dependencyVariable, U const& _dependency)
 }
 
 template<class T>
-bool Martta::Entity::simplePlaceholderKeyPressHandler(Position const& _p, EntityKeyEvent const* _e, QString const& _t)
+bool Martta::Entity::simplePlaceholderKeyPressHandler(Position const& _p, EntityKeyEvent const* _e, String const& _t)
 {
 	if (_e->text() == _t && _p.allowedToBeKind<T>() && _p.exists() && _p->isPlaceholder())
 	{
@@ -589,7 +594,7 @@ bool Martta::Entity::simplePlaceholderKeyPressHandler(Position const& _p, Entity
 }
 
 template<class T>
-bool Martta::Entity::simplePositionKeyPressHandler(Position const& _p, EntityKeyEvent const* _e, QString const& _t, bool _ontoNew)
+bool Martta::Entity::simplePositionKeyPressHandler(Position const& _p, EntityKeyEvent const* _e, String const& _t, bool _ontoNew)
 {
 	if (_e->text() == _t && _p.allowedToBeKind<T>())
 	{

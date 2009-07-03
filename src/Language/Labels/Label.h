@@ -30,7 +30,7 @@ class Label: public Entity
 	MARTTA_PLACEHOLDER(Entity)
 	
 public:
-	inline virtual QString				code() const { return QString(); }
+	inline virtual String				code() const { return String(); }
 	virtual int							familyDependencies() const { return DependsOnNothing; }
 };
 

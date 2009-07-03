@@ -32,7 +32,7 @@ class MemberTemplateType: public TypeEntity
 public:
 	MemberTemplateType(int _index = 0): m_index(_index) {}
 	
-	virtual QString						code(QString) const { return QString("<%1>").arg(m_index); }
+	virtual String						code(String) const { return String("<%1>").arg(m_index); }
 
 	/// After calling substitute, this object may no longer exist.
 	void								substitute();

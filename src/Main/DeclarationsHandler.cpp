@@ -330,7 +330,7 @@ void TypeResolver::init(QXmlAttributes const& _a)
 	m_contextId = _a.value("context");
 	m_fileId = _a.value("file");
 	if (m_fileId.isEmpty())
-		qCritical("NULL fileId for non-fundamental type %s", subject()->name().toLatin1().data());
+		qCritical("NULL fileId for non-fundamental type %s", subject()->name().toCString());
 }
 
 void TypeResolver::resolve(DeclarationsHandler* _h)

@@ -35,8 +35,8 @@ public:
 protected:
 	virtual Types						allowedTypes(int _index) const;
 	virtual Type						scope() const;
-	virtual QString						code() const;
-	virtual QString						defineLayout(ViewKeys&) const { return QString("%1;Mi;^;p:/dot.svg;Mi;%2").arg(FirstOperand).arg(SecondOperand); }
+	virtual String						code() const;
+	virtual String						defineLayout(ViewKeys const&) const { return String("%1;Mi;^;p:/dot.svg;Mi;%2").arg(FirstOperand).arg(SecondOperand); }
 };
 
 }

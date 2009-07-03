@@ -38,8 +38,8 @@ public:
 protected:
 	virtual int							minRequired(int _i) const { return _i == Body ? 0 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
-	virtual QString						memberInterfaceCode() const;
-	virtual QString						memberImplementationCode() const { return QString::null; }
+	virtual String						memberInterfaceCode() const;
+	virtual String						memberImplementationCode() const { return String::null; }
 	virtual Entity*						isExpander() const { return 0; }
 };
 

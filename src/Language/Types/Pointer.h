@@ -20,8 +20,6 @@
 
 #pragma once
 
-#include <QColor>
-
 #include "AddressType.h"
 
 namespace Martta
@@ -37,9 +35,9 @@ public:
 protected:
 	virtual Types						assignableTypes() const;
 	virtual bool						hasDefaultConstructor() const { return true; }
-	virtual QString						code(QString const& _middle) const { return original()->code("*" + _middle); }
-	virtual QString						modifierLayout() const { return "ycode;'*'"; }
-	virtual QString						idColour() const { return QColor(original() ? original()->idColour() : TypeEntity::null->idColour()).darker(120).name(); }
+	virtual String						code(String const& _middle) const { return original()->code("*" + _middle); }
+	virtual String						modifierLayout() const { return "ycode;'*'"; }
+	virtual String						idColour() const { return /*QColor(*/original() ? original()->idColour() : TypeEntity::null->idColour()/*).darker(120).name()*/; }
 	virtual TypeEntity*					newClone() const { return new Pointer; }
 	virtual QList<Declaration*>	utilised() const { return QList<Declaration*>(); }
 };

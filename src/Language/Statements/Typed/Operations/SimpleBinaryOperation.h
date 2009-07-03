@@ -42,12 +42,12 @@ public:
 
 protected:
 	virtual Operator					id() const { return m_operator; }
-	virtual QString						operatorLayout() const;
+	virtual String						operatorLayout() const;
 	virtual void						exportDom(QDomElement& _element) const;
 	virtual void						importDom(QDomElement const& _element);
 	virtual Types						allowedTypes(int _index) const;
 	virtual Type						type() const;
-	virtual QString						code() const;
+	virtual String						code() const;
 	virtual Precedence					precedence() const { return id().precedence(); }
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity* _e);

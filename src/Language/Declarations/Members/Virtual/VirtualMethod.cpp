@@ -26,7 +26,7 @@ namespace Martta
 	
 MARTTA_OBJECT_CPP(VirtualMethod);
 
-QString VirtualMethod::memberInterfaceCode() const
+String VirtualMethod::memberInterfaceCode() const
 {
 	return "virtual " + basicCode(LambdaNamer::InsideScope) + ";\n";
 }

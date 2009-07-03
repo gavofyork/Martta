@@ -38,8 +38,8 @@ public:
 
 protected:
 	virtual Type						type() const { return Type(Bool); }
-	virtual QString						code() const { return m_value ? "true" : "false"; }
-	virtual QString						defineLayout(ViewKeys&) const;
+	virtual String						code() const { return m_value ? "true" : "false"; }
+	virtual String						defineLayout(ViewKeys const&) const;
 	virtual void						exportDom(QDomElement& _element) const;
 	virtual void						importDom(QDomElement const& _element);
 

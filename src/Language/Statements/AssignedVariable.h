@@ -41,7 +41,7 @@ protected:
 	virtual int							minRequired(int _i) const { return _i == OurType || _i == AssignedValue || _i == Identity ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _index) const;
 	virtual int							familyDependencies() const { return DependsOnChildren; }
-	virtual QString						defineLayout(ViewKeys& _k) const { return (VariableNamer::defineLayout(_k) + ";Mi;^;ycode;':=';Mi;%1").arg(AssignedValue); }
+	virtual String						defineLayout(ViewKeys const& _k) const { return (VariableNamer::defineLayout(_k) + ";Mi;^;ycode;':=';Mi;%1").arg(AssignedValue); }
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
 	virtual void						onDependencyChanged(Entity*);
 	virtual void						onDependencySwitched(Entity*, Entity*);
@@ -49,7 +49,7 @@ protected:
 	virtual void						importDom(QDomElement const& _element) { VariableNamer::importDom(_element); Super::importDom(_element); }
 
 	// From Statement via BareTyped
-	virtual QString						code() const;
+	virtual String						code() const;
 	
 	// From BareTyped
 	virtual Types						allowedTypes(int _index) const;

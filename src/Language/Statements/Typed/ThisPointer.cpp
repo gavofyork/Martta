@@ -40,7 +40,7 @@ Type ThisPointer::type() const
 	return ancestor<MemberLambda>()->thisType();
 }
 
-QString ThisPointer::defineLayout(ViewKeys&) const
+String ThisPointer::defineLayout(ViewKeys const&) const
 {
 	return "^;s" + type()->idColour() + ";'this'";
 }

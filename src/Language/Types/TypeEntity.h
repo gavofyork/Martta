@@ -47,8 +47,8 @@ public:
 	TypeEntity(): m_owner(0) { g_typeCount++; }
 	~TypeEntity() { g_typeCount--; }
 	
-	virtual QString						idColour() const { return "#777"; }
-	virtual QString						code(QString const& _middle = "") const { return _middle; }
+	virtual String						idColour() const { return "#777"; }
+	virtual String						code(String const& _middle = "") const { return _middle; }
 	virtual TypeEntity*					bottom() { return this; }
 
 	virtual bool						isInModel() const { return parent() && !m_owner ? parent()->isInModel() : true; }
@@ -137,8 +137,8 @@ protected:
 	Type*								owner() const { return m_owner; }
 	void								setOwner(Type* _o) { m_owner = _o; }
 	
-	QString								typeLayout() const { return QString("e;c;s%1;fb;").arg(idColour()); } 
-	QString								instanceLayout() const { return QString("e;c;s%1;fb0;").arg(idColour()); } 
+	String								typeLayout() const { return String("e;c;s%1;fb;").arg(idColour()); } 
+	String								instanceLayout() const { return String("e;c;s%1;fb0;").arg(idColour()); } 
 	
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity*) { changed(); }

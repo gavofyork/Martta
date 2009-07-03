@@ -36,12 +36,12 @@ public:
 	
 protected:
 	virtual bool						hasDefaultConstructor() const { return true; }
-	virtual QString						code(QString const& _middle) const;
+	virtual String						code(String const& _middle) const;
 	virtual int							minRequired(int _i) const { return _i == Length ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual Types						allowedTypes(int _i) const;
 	virtual TypeEntity*					newClone() const;
-	virtual QString						defineLayout(ViewKeys&) const { return QString("ycode;%1;^;'[';%2;']'").arg(Original).arg(Length); }
+	virtual String						defineLayout(ViewKeys const&) const { return String("ycode;%1;^;'[';%2;']'").arg(Original).arg(Length); }
 	virtual QList<Declaration*>	utilised() const;
 };
 

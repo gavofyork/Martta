@@ -39,7 +39,7 @@ Kinds ConstructedVariable::allowedKinds(int _index) const
 	return Super::allowedKinds(_index);
 }
 
-QString ConstructedVariable::code() const
+String ConstructedVariable::code() const
 {
 	return basicCode() + childAs<Construction>(OurConstruction)->callList();
 }

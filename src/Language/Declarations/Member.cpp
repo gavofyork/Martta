@@ -48,21 +48,21 @@ Kinds Member::allowedKinds(int _i) const
 		return Super::allowedKinds(_i);
 }
 
-QString Member::interfaceCode() const
+String Member::interfaceCode() const
 {
 	if (!isComplete())
-		return QString();
+		return String();
 	return childAs<Label>(Accessibility)->code() + ": " + memberInterfaceCode();
 }
 
-QString Member::defineLayout(ViewKeys& _k) const
+String Member::defineLayout(ViewKeys const& _k) const
 {
 	return "^;m24,0,0,0;" + memberDefineLayout(_k);
 }
 
 void Member::decorate(DecorationContext const& _p) const
 {
-	if (isComplete())
+/*	if (isComplete())
 	{
 		_p->setPen(Qt::NoPen);
 		QColor c = childAs<AccessLabel>(Accessibility)->idColour();
@@ -70,7 +70,7 @@ void Member::decorate(DecorationContext const& _p) const
 		_p->setBrush(c);
 		_p->drawRect(QRectF(16.f, 0.f, 4.f, _p.cap(0).height()));
 		memberDecorate(_p);
-	}
+	}*/
 	Super::decorate(_p);
 }
 

@@ -19,6 +19,7 @@ Dynamic code-loading (plugins).
 - Move everything over so that plugins use Martta-specific data types.
   - Get rid of XML dependencies.
   - Move QString to String.
+    - Optimise with copy on write.
   - Move QHash to Hash.
   - Move QList to List.
   - Make QRgb-like type (to/from string, storage).

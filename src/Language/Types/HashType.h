@@ -54,10 +54,10 @@ protected:
 	virtual int							minRequired(int _i) const { return _i == KeyType ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual TypeEntity*					newClone() const { return new HashType; }
-	virtual QString						code(QString const& _middle) const;
-	virtual QString						defineLayout(ViewKeys&) const;
+	virtual String						code(String const& _middle) const;
+	virtual String						defineLayout(ViewKeys const&) const;
 	virtual bool						defineSimilarityTo(TypeEntity const* _t, Castability _c) const;
-	virtual QString						idColour() const { return "#bf7"; }
+	virtual String						idColour() const { return "#bf7"; }
 	
 	static QList<SimpleMethod*>			s_members;	
 	static QList<SimpleOperator*>		s_nonMembers;	
