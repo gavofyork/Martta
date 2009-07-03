@@ -1,5 +1,10 @@
 BUG QObject: Do not delete object, 'unnamed', during its event handler!
 BUG Moving is crazily slow over statements.
+- To fix change key press dispatch method:
+  - All allowedKinds on Position and execute the Auxilliary's dispatchKeyPress.
+  - Do recursively but prune on denied Kinds.
+  - Remove all allowedToBeKind (or other Kind-checking) in handlers.
+- Need to work out how to get good Profile build.
 
 Small things:
 - Special EntryMethod.
@@ -12,9 +17,16 @@ Small things:
 - Visual change system.
 Dynamic code-loading (plugins).
 - Move everything over so that plugins use Martta-specific data types.
-  - Will need QRgb-like type.
   - Get rid of XML dependencies.
-  - Will need to move all decoration code into layout system and invent markup for it.
+  - Move QString to String.
+  - Move QHash to Hash.
+  - Move QList to List.
+  - Make QRgb-like type (to/from string, storage).
+  - Make QColor-like type (dark/lighter functions).
+  - Make qDebug-like function.
+  - Make QRegExp-like class (
+  - Move all decoration code into layout system and invent markup for it.
+  - Abstract CodeScene into CodeScene & CodeView.
 
 --------------------------------------------------------------------------------
 
