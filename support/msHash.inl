@@ -641,7 +641,7 @@ Key const GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::key(T const& _valu
 	for (t::uint i = 0; i < m_capacity; i++)
 		if (m_nodes[i])
 		{
-			Node* m = m_nodes[i];
+			Node* m = m_nodes + i;
 			Node* j = m;
 			do
 				if (j->value() == _value)
@@ -657,7 +657,7 @@ Key const GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::key(T const& _valu
 	for (t::uint i = 0; i < m_capacity; i++)
 		if (m_nodes[i])
 		{
-			Node* m = m_nodes[i];
+			Node* m = m_nodes + i;
 			Node* j = m;
 			do
 				if (j->value() == _value)

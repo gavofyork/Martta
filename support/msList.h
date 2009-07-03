@@ -101,8 +101,8 @@ public:
 	public:
 		Iterator(): m_ptr(0) {}
 		Iterator(Iterator const& _i): m_ptr(_i.m_ptr) {}
-		inline T const& operator*() const { star(*m_ptr); }
-		inline T const* operator->() const { &star(*m_ptr); }
+		inline T const& operator*() const { return star(*m_ptr); }
+		inline T const* operator->() const { return &star(*m_ptr); }
 		inline Iterator operator+(int _n) const { return Iterator(m_ptr + _n); }
 		inline Iterator& operator++(int) { Iterator ret(*this); m_ptr++; return ret; }
 		inline Iterator& operator++() { m_ptr++; return *this; }
@@ -165,6 +165,9 @@ public:
 		ConstIterator(ST* _p): m_ptr(_p) {}
 		ST* m_ptr;
 	};
+	
+	typedef Iterator iterator;
+	typedef ConstIterator const_iterator;
 	
 	inline List(): m_data(0), m_count(0), m_reserved(0) {}
 	List(List<T> const& _other);
@@ -238,6 +241,76 @@ private:
 	int m_count;
 	int m_reserved;
 };
+
+// Taken from Qt 4.4, Copyright Nokia. Used under licence (GPL).
+#if defined(__GNUC__) && !defined(__INTEL_COMPILER)
+/* make use of typeof-extension */
+template <typename T>
+class MForeachContainer {
+public:
+    inline MForeachContainer(const T& t) : c(t), brk(0), i(c.begin()), e(c.end()) { }
+    const T c;
+    int brk;
+    typename T::const_iterator i, e;
+};
+
+#define MS_FOREACH(variable, container)                                \
+for (MForeachContainer<__typeof__(container)> _container_(container); \
+     !_container_.brk && _container_.i != _container_.e;              \
+     __extension__  ({ ++_container_.brk; ++_container_.i; }))                       \
+    for (variable = *_container_.i;; __extension__ ({--_container_.brk; break;}))
+
+#else
+
+struct MForeachContainerBase {};
+
+template <typename T>
+class MForeachContainer : public MForeachContainerBase {
+public:
+    inline MForeachContainer(const T& t): c(t), brk(0), i(c.begin()), e(c.end()){};
+    const T c;
+    mutable int brk;
+    mutable typename T::const_iterator i, e;
+    inline bool condition() const { return (!brk++ && i != e); }
+};
+
+template <typename T> inline T *mForeachPointer(const T &) { return 0; }
+
+template <typename T> inline MForeachContainer<T> mForeachContainerNew(const T& t)
+{ return MForeachContainer<T>(t); }
+
+template <typename T>
+inline const MForeachContainer<T> *mForeachContainer(const MForeachContainerBase *base, const T *)
+{ return static_cast<const MForeachContainer<T> *>(base); }
+
+#if (defined(_MSC_VER) && _MSC_VER < 1300 && !defined(__INTEL_COMPILER)) || defined(__sgi)
+/*
+   Proper for-scoping in VC++6 and MIPSpro CC
+*/
+#  define MS_FOREACH(variable,container)                                                             \
+    if(0){}else                                                                                     \
+    for (const MForeachContainerBase &_container_ = mForeachContainerNew(container);                \
+         mForeachContainer(&_container_, true ? 0 : mForeachPointer(container))->condition();       \
+         ++mForeachContainer(&_container_, true ? 0 : mForeachPointer(container))->i)               \
+        for (variable = *mForeachContainer(&_container_, true ? 0 : mForeachPointer(container))->i; \
+             mForeachContainer(&_container_, true ? 0 : mForeachPointer(container))->brk;           \
+             --mForeachContainer(&_container_, true ? 0 : mForeachPointer(container))->brk)
+
+#else
+#  define MS_FOREACH(variable, container) \
+    for (const MForeachContainerBase &_container_ = mForeachContainerNew(container); \
+         mForeachContainer(&_container_, true ? 0 : mForeachPointer(container))->condition();       \
+         ++mForeachContainer(&_container_, true ? 0 : mForeachPointer(container))->i)               \
+        for (variable = *mForeachContainer(&_container_, true ? 0 : mForeachPointer(container))->i; \
+             mForeachContainer(&_container_, true ? 0 : mForeachPointer(container))->brk;           \
+             --mForeachContainer(&_container_, true ? 0 : mForeachPointer(container))->brk)
+#endif
+
+#endif
+
+#ifndef foreach
+#define foreach M_FOREACH
+#endif
 
 }
 

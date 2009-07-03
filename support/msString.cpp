@@ -31,6 +31,10 @@
 namespace MarttaSupport
 {
 
+String const String::null;
+String const String::s_true(L"true");
+String const String::s_false(L"false");
+
 /*inline void memcpy(void* _d, void const* _s, int _c)
 {
 	char* d = (char*)_d + _c;
@@ -47,7 +51,68 @@ inline int strlen(char const* _s)
 			++ret;
 	return ret;
 }*/
-	
+
+bool Char::operator==(char _ch)
+{
+	return m_value == btowc(_ch);
+}
+
+Char::Char(char _ch):
+	m_value(btowc(_ch))
+{
+}
+
+Char& Char::operator=(char _ch)
+{
+	m_value = btowc(_ch);
+	return *this;
+}
+
+Char::operator char() const
+{
+	return wctob(m_value);
+}
+
+bool Char::isNumber() const
+{
+	return iswdigit(m_value);
+}
+
+bool Char::isLetter() const
+{
+	return iswalpha(m_value);
+}
+
+bool Char::isSpace() const
+{
+	return iswspace(m_value);
+}
+
+bool Char::isGraph() const
+{
+	return iswgraph(m_value);
+}
+
+bool Char::isLower() const
+{
+	return iswlower(m_value);
+}
+
+bool Char::isUpper() const
+{
+	return iswupper(m_value);
+}
+
+Char Char::toUpper() const
+{
+	return (wchar_t)towupper(m_value);
+}
+
+Char Char::toLower() const
+{
+	return (wchar_t)towlower(m_value);
+}
+
 String& String::operator=(char const* _latin1)
 {
 	changed();
@@ -64,6 +129,20 @@ String& String::operator=(char const* _latin1)
 	}
 	return *this;
 }
+	
+String& String::operator=(wchar_t const* _unicode)
+{
+	changed();
+	t::uint l = _unicode ? wcslen(_unicode) : 0;
+	reserve(l);
+	m_length = l;
+	if (m_data)
+	{
+		memcpy(m_data, _unicode, l);
+		m_data[l] = 0;
+	}
+	return *this;
+}
 
 String& String::operator=(String const& _other)
 {
@@ -72,45 +151,23 @@ String& String::operator=(String const& _other)
 	return *this;
 }
 
-bool String::operator==(String const& _other) const
+bool String::boolCompare(String const& _other) const
 {
 	return m_length == _other.m_length && !memcmp(m_data, _other.m_data, m_length * sizeof(wchar_t));
 }
 
-bool String::operator<(String const& _other) const
+bool String::boolCompare(wchar_t const* _other) const
 {
-	if (!_other.m_data)
-		return false;
-	if (!m_data)
-		return true;
-	return wcscmp(m_data, _other.m_data) < 0;
+	return m_length == wcslen(_other) && !memcmp(m_data, _other, m_length * sizeof(wchar_t));
 }
 
-bool String::operator<=(String const& _other) const
+int String::compare(wchar_t const* _other) const
 {
+	if (!_other)
+		return false;
 	if (!m_data)
 		return true;
-	if (!_other.m_data)
-		return false;
-	return wcscmp(m_data, _other.m_data) <= 0;
-}
-
-bool String::operator>(String const& _other) const
-{
-	if (!m_data)
-		return false;
-	if (!_other.m_data)
-		return true;
-	return wcscmp(m_data, _other.m_data) > 0;
-}
-
-bool String::operator>=(String const& _other) const
-{
-	if (!_other.m_data)
-		return true;
-	if (!m_data)
-		return false;
-	return wcscmp(m_data, _other.m_data) >= 0;
+	return wcscmp(m_data, _other);
 }
 
 int String::toInt(bool* _ok, int _base) const
@@ -154,7 +211,7 @@ bool String::startsWith(String const& _str) const
 	return !memcmp(_str.m_data, m_data, _str.m_length * sizeof(wchar_t));
 }
 
-String& String::fill(wchar_t _ch, int _len)
+String& String::fill(Char _ch, int _len)
 {
 	if (_len >= 0)
 		resize(_len);
@@ -176,7 +233,7 @@ int String::count(String const& _str) const
 	return ret;
 }
 
-int String::count(wchar_t _ch) const
+int String::count(Char _ch) const
 {
 	int ret = 0;
 	wchar_t* i = m_data + m_length;
@@ -197,7 +254,7 @@ bool String::contains(String const& _str) const
 	return false;
 }
 
-bool String::contains(wchar_t _ch) const
+bool String::contains(Char _ch) const
 {
 	wchar_t* i = m_data + m_length;
 	while (i != m_data)
@@ -224,7 +281,7 @@ int String::lastIndexOf(String const& _str, int _from) const
 	return -1;
 }
 
-int String::lastIndexOf(wchar_t _ch, int _from) const
+int String::lastIndexOf(Char _ch, int _from) const
 {
 	wchar_t* i;
 	if (_from < 0)
@@ -285,7 +342,7 @@ int String::indexOf(wchar_t const* _str, int _from) const
 	return -1;
 }
 
-int String::indexOf(wchar_t _ch, int _from) const
+int String::indexOf(Char _ch, int _from) const
 {
 	wchar_t* i;
 	if (_from < 0)
@@ -321,7 +378,7 @@ StringList String::split(String const& _sep) const
 	return ret;
 }
 
-StringList String::split(wchar_t _sep) const
+StringList String::split(Char _sep) const
 {
 	StringList ret;
 	if (!m_length)
@@ -355,7 +412,7 @@ int String::indexOfNth(String const& _str, t::uint _th) const
 	return -1;
 }
 
-int String::indexOfNth(wchar_t _ch, t::uint _th) const
+int String::indexOfNth(Char _ch, t::uint _th) const
 {
 	// for *this == _ch:
 	// _th == 0 -> -1
@@ -390,7 +447,7 @@ int String::lastIndexOfNth(String const& _str, t::uint _th) const
 	return -1;
 }
 
-int String::lastIndexOfNth(wchar_t _ch, t::uint _th) const
+int String::lastIndexOfNth(Char _ch, t::uint _th) const
 {
 	// for *this == _ch:
 	// _th == 0 -> 1
@@ -452,7 +509,7 @@ String& String::replace(t::uint _position, t::uint _n, String const& _after)
 	return *this;
 }
 
-String& String::replace(t::uint _position, t::uint _n, wchar_t _after)
+String& String::replace(t::uint _position, t::uint _n, Char _after)
 {
 	ASSERT(_position < m_length);
 	ASSERT(_position + _n <= m_length);
@@ -488,7 +545,7 @@ String& String::replace(String const& _before, String const& _after)
 	return *this;
 }
 
-String& String::replace(wchar_t _ch, String const& _after)
+String& String::replace(Char _ch, String const& _after)
 {
 	int i = 0;
 	while (i < (int)m_length && (i = indexOf(_ch, i)) != -1)
@@ -500,7 +557,7 @@ String& String::replace(wchar_t _ch, String const& _after)
 	return *this;
 }
 
-String& String::replace(wchar_t _before, wchar_t _after)
+String& String::replace(Char _before, Char _after)
 {
 	wchar_t* i = m_data + m_length;
 	while (i != m_data)
@@ -524,7 +581,7 @@ String String::section(String const& _sep, int _start, int _end) const
 	return f < t ? mid(f, t - f) : String();
 }
 
-String String::section(wchar_t _sep, int _start, int _end) const
+String String::section(Char _sep, int _start, int _end) const
 {
 	if (!m_length)
 		return String();
@@ -563,14 +620,7 @@ String& String::append(char const* _latin1)
 	return *this;
 }
 
-String& String::append(wchar_t _ch)
-{
-	resize(m_length + 1);
-	m_data[m_length - 1] = _ch;
-	return *this;
-}
-
-String& String::append(char _ch)
+String& String::append(Char _ch)
 {
 	resize(m_length + 1);
 	m_data[m_length - 1] = _ch;
@@ -660,7 +710,7 @@ String String::number(double _n, char _format, int _precision)
 	return ret;
 }
 
-String String::arg(String const& _a, int _fieldWidth, wchar_t _fillChar) const
+String String::arg(String const& _a, int _fieldWidth, Char _fillChar) const
 {
 	String ret(*this);
 	wchar_t const* token;
@@ -680,7 +730,7 @@ String String::arg(String const& _a, int _fieldWidth, wchar_t _fillChar) const
 	return ret;
 }
 
-String String::arg(wchar_t _a, int _fieldWidth, wchar_t _fillChar) const
+String String::arg(Char _a, int _fieldWidth, Char _fillChar) const
 {
 	if (_fieldWidth > 1 || _fieldWidth < -1)
 		return arg(String(1, _a), _fieldWidth, _fillChar);
@@ -691,22 +741,14 @@ String String::arg(wchar_t _a, int _fieldWidth, wchar_t _fillChar) const
 	return ret;
 }
 
-String String::arg(char _a, int _fieldWidth, wchar_t _fillChar) const
-{
-	return arg((wchar_t)btowc(_a), _fieldWidth, _fillChar);
-}
-
 int String::findNextPlaceholder(wchar_t const** _token) const
 {
-	static wchar_t s[4] = L"%0";
-	for (t::uint i = 0; i < 99; i++)
+	// Only goes below 10 at the moment.
+	// If making it go below 100, don't forget that %10 should never match for %1 (it did originally).
+	static wchar_t s[3] = L"%0";
+	for (t::uint i = 1; i < 10; i++)
 	{
-		if (i < 10)
-			s[1] = L'0' + i, s[2] = 0;
-		else if (i == 10)
-			s[1] = L'1', s[1] = L'0', s[2] = 0;
-		else
-			s[1] = L'0' + i / 10, s[2] = L'0' + i % 10, s[3] = 0;
+		s[1] = L'0' + i, s[2] = 0;
 		int n;
 		if ((n = indexOf(s)) != -1)
 		{
