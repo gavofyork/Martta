@@ -18,7 +18,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "msSupport.h"
+#include <msSupport.h>
+
 #include "CodeScene.h"
 #include "FunctionType.h"
 #include "Reference.h"
@@ -31,7 +32,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(Operation);
 
-QMultiHash<Operator, ValueDefiner*> Operation::s_operatorCatalogue;
+MultiHash<Operator, ValueDefiner*> Operation::s_operatorCatalogue;
 
 Type Operation::prototypeOf(Type const& _t, int _index)
 {
@@ -67,10 +68,10 @@ bool Operation::prototypeHasArgumentAt(Type const& _t, int _cardinal)
 	return false;
 }
 
-QList<ValueDefiner*> Operation::findBestOverload(Types const& _actual, QList<ValueDefiner*> const _candidates)
+List<ValueDefiner*> Operation::findBestOverload(Types const& _actual, List<ValueDefiner*> const _candidates)
 {
 //	qDebug() << "Finding best overload for" << _actual;
-	QList<ValueDefiner*> ret;
+	List<ValueDefiner*> ret;
 	// Go through each one and give a score, then return the best one(s)...
 	int bestScore = 0;
 	foreach (ValueDefiner* i, _candidates)
@@ -164,9 +165,9 @@ Position Operation::slideOnPrecedence(Position _p, Precedence _d, Associativity 
 	return p;
 }
 
-QList<ValueDefiner*> Operation::allOperators(Operator _o)
+List<ValueDefiner*> Operation::allOperators(Operator _o)
 {
-	QList<ValueDefiner*> ret = s_operatorCatalogue.values(_o);
+	List<ValueDefiner*> ret = s_operatorCatalogue.values(_o);
 	// TODO: Search classes etc.
 	return ret;
 }

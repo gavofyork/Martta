@@ -44,7 +44,7 @@ String Invocation::code() const
 	return isTyped(Callee) ? asTyped(Callee)->code() + callList(castEntities<Typed>(cardinalChildren())) : "";
 }
 
-String Invocation::callList(QList<Typed*> _parameters) const
+String Invocation::callList(List<Typed*> _parameters) const
 {
 	String ret;
 	ret += "(";

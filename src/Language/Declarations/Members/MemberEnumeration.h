@@ -44,10 +44,10 @@ protected:
 	virtual bool						hasDefaultConstructor() const { return EnumerationNamer::hasDefaultConstructor(); }
 	virtual Types						assignableTypes() const { return Type(const_cast<MemberEnumeration*>(this)); }
 	virtual String						code() const { return codeName(); }
-	virtual QList<Declaration*>	utilisedInUse() const { return QList<Declaration*>() << const_cast<MemberEnumeration*>(this); }
+	virtual List<Declaration*>	utilisedInUse() const { return List<Declaration*>() << const_cast<MemberEnumeration*>(this); }
 	
 	// From Declaration
-	virtual QList<ValueDefiner*>		valuesAdded() const { return EnumerationNamer::valuesAdded(); }
+	virtual List<ValueDefiner*>		valuesAdded() const { return EnumerationNamer::valuesAdded(); }
 
 	// From Entity
 	virtual int							minRequired(int _i) const { return _i == Cardinals ? 1 : _i == Identity ? 0 : Super::minRequired(_i); }

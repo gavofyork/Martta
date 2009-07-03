@@ -60,7 +60,7 @@ private:
 	void								setOperation(Operator _o, Type const& _left = Type(), Type const& _right = Type());
 	void								refreshOperation() { setOperation(m_operator, leftType(), rightType()); }
 	
-	static QList<ValueDefiner*>			findOperators(Operator _o, Type const& _left = Type(), Type const& _right = Type());
+	static List<ValueDefiner*>			findOperators(Operator _o, Type const& _left = Type(), Type const& _right = Type());
 	
 	// Change to OperatorLabel?
 	Operator							m_operator;

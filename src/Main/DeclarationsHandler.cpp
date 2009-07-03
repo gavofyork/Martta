@@ -145,7 +145,7 @@ private:
 	QString					m_returnsId;
 	QString					m_contextId;
 	QString					m_fileId;
-	QList<QString>			m_argIds;
+	List<QString>			m_argIds;
 };
 
 class VariableResolver: public Resolver
@@ -625,19 +625,19 @@ bool DeclarationsHandler::endDocument()
 	}
 
 	TIME_STATEMENT(Clean temps)
-{
-	// Clean up all temporaries that the resolution process depended on.
-	foreach(ArrayType* i, m_arrays.values()) delete i;
-	m_arrays.clear();
-	foreach(CvQualifiedType* i, m_cvQualifieds.values()) delete i;
-	m_cvQualifieds.clear();
-	foreach(PointerType* i, m_pointers.values()) delete i;
-	m_pointers.clear();
-	foreach(IncomingFunctionType* i, m_functionTypes.values()) delete i;
-	m_functionTypes.clear();
+	{
+		// Clean up all temporaries that the resolution process depended on.
+		foreach(ArrayType* i, m_arrays.values()) delete i;
+		m_arrays.clear();
+		foreach(CvQualifiedType* i, m_cvQualifieds.values()) delete i;
+		m_cvQualifieds.clear();
+		foreach(PointerType* i, m_pointers.values()) delete i;
+		m_pointers.clear();
+		foreach(IncomingFunctionType* i, m_functionTypes.values()) delete i;
+		m_functionTypes.clear();
 
-	(*m_l) = m_files.values();
-}
+		(*m_l) = m_files.values();
+	}
 	return true;
 }
 

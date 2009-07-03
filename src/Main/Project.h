@@ -61,8 +61,8 @@ public:
 	QString						filename() const { return m_filename; }
 	QAbstractItemModel*			cDependsModel() { return &m_cDepends; }
 	QAbstractItemModel*			classesModel() { return &m_classes; }
-	QList<IncludeProject*>		cDepends() const { return m_cDepends; }
-	QList<Class*>				classes() const { return m_classes; }
+	List<IncludeProject*>		cDepends() const { return m_cDepends; }
+	List<Class*>				classes() const { return m_classes; }
 	void 						rename(QString const& _filename) { m_filename = _filename; nameChanged(); }
 
 	Namespace*					ns() { return m_namespace; }
@@ -102,7 +102,7 @@ public:
 	String						code() const;
 
 	// Properties
-	class CDepends: public QAbstractItemModel, public QList<IncludeProject*>
+	class CDepends: public QAbstractItemModel, public List<IncludeProject*>
 	{
 	public:
 		void 					reset() { QAbstractItemModel::reset(); }
@@ -134,7 +134,7 @@ public:
 	//
 	// These are for reference only; the real "owner" is the parent entity in the language
 	// model. It is used and maintained just to keep Qt's model/view system happy.
-	class Classes: public QAbstractItemModel, public QList<Class*>
+	class Classes: public QAbstractItemModel, public List<Class*>
 	{
 	public:
 		void 					reset() { QAbstractItemModel::reset(); }

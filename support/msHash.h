@@ -324,6 +324,9 @@ public:
 		t::uint m_count;
 	};
 	
+	typedef Iterator iterator;
+	typedef ConstIterator const_iterator;
+	
 	inline GeneralHash(): m_count(0), m_autoGrow(true), m_autoShrink(true) { allocate(Min); }
 	~GeneralHash();
 	
@@ -375,8 +378,9 @@ public:
 	Iterator insert(Key const& _key, T const& _value);
 	Iterator insertMulti(Key const& _key, T const& _value);
 	int remove(Key const& _key);
-	//TODO: int remove(Key const& _key, T const& _value);
+	int remove(Key const& _key, T const& _value) { int r = 0; while (removeOne(_key, _value)) r++; return r; }
 	int removeOne(Key const& _key);
+	int removeOne(Key const& _key, T const& _value);
 	T take(Key const& _key);
 
 	Key const key(T const& _value) const;
@@ -397,6 +401,7 @@ public:
 	inline ConstIterator end() const { return constEnd(); }
 	inline Iterator end() { return Iterator(m_nodes + m_capacity, m_nodes + m_capacity); }
 	inline ConstIterator constFind(Key const& _key) const;
+	inline ConstIterator find(Key const& _key) const { return constFind(_key); }
 	inline Iterator find(Key const& _key);
 	Iterator erase(Iterator _pos);
 

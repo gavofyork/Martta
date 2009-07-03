@@ -22,8 +22,6 @@
 
 #include <climits>
 
-#include <QList>
-
 #include "SafePointer.h"
 #include "Kind.h"
 

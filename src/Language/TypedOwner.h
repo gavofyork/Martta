@@ -20,7 +20,8 @@
 
 #pragma once
 
-#include <QList>
+#include <msList.h>
+using MarttaSupport::List;
 
 #include "ChildValidifier.h"
 
@@ -28,7 +29,7 @@ namespace Martta
 {
 
 class Type;
-typedef QList<Type> Types;
+typedef List<Type> Types;
 
 class TypedOwner: public_interface ChildValidifier
 {

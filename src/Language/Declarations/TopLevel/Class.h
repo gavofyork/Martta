@@ -34,8 +34,8 @@ public:
 
 	static bool							keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e);
 
-	QList<Declaration*>					members(bool _isConst = false, Access _access = Private) const;
-	template<class T> inline QList<T*>	membersOf(bool _isConst = false, Access _access = Private) const { return filterEntities<T>(members(_isConst, _access)); }
+	List<Declaration*>					members(bool _isConst = false, Access _access = Private) const;
+	template<class T> inline List<T*>	membersOf(bool _isConst = false, Access _access = Private) const { return filterEntities<T>(members(_isConst, _access)); }
 	
 	Access								baseAccess(Class* _c) const;
 	
@@ -45,7 +45,7 @@ protected:
 	virtual String						implementationCode() const;
 	virtual String						defineLayout(ViewKeys const&) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
-	virtual QList<Declaration*>			utilised() const;
+	virtual List<Declaration*>			utilised() const;
 	virtual void						onDependencyChanged(Entity* _e);
 	virtual void						apresLoad() { rejigDeps(); checkImplicitConstructors(); }
 	virtual void						onDependencyAdded(Entity* _e);

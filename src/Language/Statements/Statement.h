@@ -39,9 +39,9 @@ public:
 	virtual String						code() const { return "(void)0;"; }
 	virtual String						codeAsStatement() const { return code(); }
 
-	virtual QList<ValueDefiner*>		valuesInLocalScope() const;
+	virtual List<ValueDefiner*>		valuesInLocalScope() const;
 
-	QList<Statement*>					statements() const { return cardinalChildrenOf<Statement>(); }
+	List<Statement*>					statements() const { return cardinalChildrenOf<Statement>(); }
 	bool			 					isStatement(int _i) const { return childIs<Statement>(_i); }
 	Statement*		 					asStatement(int _i) const { return childAs<Statement>(_i); }
 
@@ -57,8 +57,8 @@ public:
 	}
 	
 protected:
-	virtual QList<int> const&			defineDeclarationOrder() const { static const QList<int> r; return r; }
-	virtual void						appendDefinedUptoHere(int, QList<ValueDefiner*>*) const;
+	virtual List<int> const&			defineDeclarationOrder() const { static const List<int> r; return r; }
+	virtual void						appendDefinedUptoHere(int, List<ValueDefiner*>*) const;
 };
 
 }

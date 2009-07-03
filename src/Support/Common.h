@@ -26,6 +26,11 @@
 #include <QTime>
 
 #include <msString.h>
+#include <msHash.h>
+#include <msList.h>
+using MarttaSupport::Hash;
+using MarttaSupport::MultiHash;
+using MarttaSupport::List;
 using MarttaSupport::String;
 using MarttaSupport::StringList;
 
@@ -73,7 +78,7 @@ enum Access
 	NoAccess
 };
 
-typedef QHash<String, String> ViewKeys;
+typedef Hash<String, String> ViewKeys;
 
 typedef double Precedence;
 extern const Precedence NoPrecedence;
@@ -144,9 +149,9 @@ template<class T> inline void setFlag(QFlags<T>& _s, T _f, bool _v = true)
 	_s = (_s.testFlag(_f) != _v) ? _s ^ _f : _s;
 }
 
-template<class T> inline QList<T> reversed(QList<T> const& _l)
+template<class T> inline List<T> reversed(List<T> const& _l)
 {
-	QList<T> ret;
+	List<T> ret;
 	foreach (T i, _l) ret.prepend(i);
 	return ret;
 }
@@ -158,9 +163,9 @@ public:
 	static String name(T _val) { return _val ? _val->name() : String(); }
 };
 
-template<class S> inline QList<S> nameStarts(QList<S> const& _l, String const& _s)
+template<class S> inline List<S> nameStarts(List<S> const& _l, String const& _s)
 {
-	QList<S> ret;
+	List<S> ret;
 	foreach (S i, _l)
 		if (NameTrait<S>::name(i).toLower().startsWith(_s.toLower()))
 			ret << i;
@@ -202,63 +207,60 @@ inline StringList startsWith(StringList const& _l, String const& _s)
 	return ret;
 }
 
-template<class T, class F> inline QList<T> qlist_cast(QList<F> _f)
+template<class T, class F> inline List<T> qlist_cast(List<F> _f)
 {
-	QList<T> ret;
+	List<T> ret;
 	foreach (F i, _f)
 		ret << static_cast<T>(i);
 	return ret;
 }
 
-template<class T, class F> inline QList<T*> castEntities(QList<F*> _f)
+template<class T, class F> inline List<T*> castEntities(List<F*> _f)
 {
-	QList<T*> ret;
+	List<T*> ret;
 	foreach (F* i, _f)
 		ret << static_cast<T*>(i);
 	return ret;
 }
 
-template<class T, class F> inline QList<T*> filterEntities(QList<F*> _f)
+template<class T, class F> inline List<T*> filterEntities(List<F*> _f)
 {
-	QList<T*> ret;
+	List<T*> ret;
 	foreach (F* i, _f)
 		if (i->template isKind<T>())
 			ret << i->template asKind<T>();
 	return ret;
 }
 
-template<class T, class S> inline QMultiMap<S, T> inverted(QMultiMap<T, S> const& _m)
+template<class T, class S> inline MultiHash<S, T> inverted(MultiHash<T, S> const& _m)
 {
-	QMultiMap<S, T> ret;
-	for (QMapIterator<T, S> i(_m); i.hasNext();)
-	{
-		i.next();
+	MultiHash<S, T> ret;
+	for (typename MultiHash<T, S>::ConstIterator i = _m.begin(); i != _m.end(); ++i)
 		ret.insert(i.value(), i.key());
-	}
 	return ret;
 }
 
-template<class T> QList<T> solve(QList<T> const& _q, QMultiMap<T, T> const& _deps)
+template<class T> List<T> solve(List<T> const& _q, MultiHash<T, T> const& _deps)
 {
-	QList<T> q = _q;
-	QList<T> ret;
-	QMultiMap<T, T> deps = _deps;
-	QMultiMap<T, T> depees = inverted(_deps);
-	while (!q.empty())
+	List<T> q = _q;
+	List<T> ret;
+	MultiHash<T, T> deps = _deps;
+	MultiHash<T, T> depees = inverted(_deps);
+	while (!q.isEmpty())
 	{
 		T n = q.takeLast();
 		ret << n;
 		foreach (T m, depees.values(n))	// go through all that depend on n
 		{
-			depees.remove(n, m);
-			deps.remove(m, n);
+			depees.removeOne(n, m);
+			deps.removeOne(m, n);
 			if (!deps.count(m))			// if they themselves don't depend on anything else, whack them in q.
 				q << m;
 		}
 	}
 	
 	if (deps.size())
-		return QList<T>();
+		return List<T>();
 	return ret;
 }
 

@@ -47,7 +47,7 @@ Types Array::allowedTypes(int _i) const
 	return Super::allowedTypes(_i);
 }
 
-QList<Declaration*> Array::utilised() const
+List<Declaration*> Array::utilised() const
 {
 	if (childIs<Typed>(Length))
 		return Super::utilised() + childAs<Typed>(Length)->type()->utilised();

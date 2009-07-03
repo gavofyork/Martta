@@ -298,7 +298,7 @@ void Project::deserialise(QDomDocument& _d)
 	QList<DeclarationFile*> files;
 	TIME_STATEMENT("Main extraction") GccXml::extractHeaders(c, GccXml::declarationsHandler(&m_declarations, &files));
 
-	QList<DeclarationFile*> orphans;
+	List<DeclarationFile*> orphans;
 	foreach (DeclarationFile* i, files)
 	{
 		foreach (IncludeProject* j, cDepends())
@@ -365,7 +365,7 @@ void Project::deserialise(QDomDocument& _d)
 	else
 		m_program = 0;
 
-	QList<SafePointer<Entity> > uplist;
+	List<SafePointer<Entity> > uplist;
 	uplist << m_namespace;
 	TIME_STATEMENT(Depends)
 	while (uplist.size())
@@ -444,14 +444,15 @@ void Project::reloadHeaders()
 	doc.save(t, 4);
 	deserialise(doc);
 	
+#if DEBUG
 	QList<Entity*> es = QList<Entity*>() << m_namespace;
 	while (es.size())
 	{
-		Entity* e = es.back();
-		es.pop_back();
+		Entity* e = es.takeLast();
 		M_ASSERT(e->root() == &m_declarations);
 		es << e->children();
 	}
+#endif
 }
 
 ////////////////////

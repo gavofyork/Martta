@@ -27,7 +27,7 @@ namespace Martta
 
 class Declaration;
 class Type;
-typedef QList<Type> Types;
+typedef List<Type> Types;
 
 /**
  * Class for permanent types.
@@ -43,7 +43,7 @@ public:
 	virtual String						code() const = 0;
 	virtual bool						hasDefaultConstructor() const = 0;
 	virtual Types						assignableTypes() const = 0;
-	virtual QList<Declaration*>	utilisedInUse() const = 0;
+	virtual List<Declaration*>	utilisedInUse() const = 0;
 	
 	virtual ~TypeDefinition() {}
 	// TODO: implicit-cast/conversion information

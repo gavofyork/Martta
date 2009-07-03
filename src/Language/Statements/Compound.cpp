@@ -37,7 +37,7 @@ String Compound::code() const
 	return ret;
 }
 
-void Compound::appendDefinedUptoHere(int _i, QList<ValueDefiner*>* _list) const
+void Compound::appendDefinedUptoHere(int _i, List<ValueDefiner*>* _list) const
 {
 	if (_i >= 0)
 		for(int i = 0; i < _i; ++i)

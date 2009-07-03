@@ -49,7 +49,7 @@ public:
 protected:
 	virtual bool						hasDefaultConstructor() const { return true; }
 	virtual Types						assignableTypes() const;
-	virtual QList<ValueDefiner*>		applicableMembers(Entity* _s = 0, bool _isConst = false) const;
+	virtual List<ValueDefiner*>		applicableMembers(Entity* _s = 0, bool _isConst = false) const;
 	
 	virtual int							minRequired(int _i) const { return _i == KeyType ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
@@ -59,8 +59,8 @@ protected:
 	virtual bool						defineSimilarityTo(TypeEntity const* _t, Castability _c) const;
 	virtual String						idColour() const { return "#bf7"; }
 	
-	static QList<SimpleMethod*>			s_members;	
-	static QList<SimpleOperator*>		s_nonMembers;	
+	static List<SimpleMethod*>			s_members;	
+	static List<SimpleOperator*>		s_nonMembers;	
 };
 
 }

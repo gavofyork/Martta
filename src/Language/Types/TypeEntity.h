@@ -76,7 +76,7 @@ public:
 	virtual bool						hasDefaultConstructor() const { return false; }
 	/// Types that assignment operator may take on right hand side, assuming left hand side is a reference to this type.
 	virtual Types						assignableTypes() const;
-	virtual QList<ValueDefiner*>		applicableMembers(Entity* /*_s*/ = 0, bool /*_isConst*/ = false) const { return QList<ValueDefiner*>(); }
+	virtual List<ValueDefiner*>		applicableMembers(Entity* /*_s*/ = 0, bool /*_isConst*/ = false) const { return List<ValueDefiner*>(); }
 	
 	/// isType/asType: They ignore qualifiers and test for/identify the physical type stored.
 	/// In terms of C++, Reference and Const are considered physically transparent (though
@@ -99,7 +99,7 @@ public:
 	/// Just a tunnel into other TypeEntity's newClone methods.
 	static TypeEntity*					cloneOf(TypeEntity const* _t, Type* _owner) { return _t->newClone(_owner); }
 	
-	virtual QList<Declaration*>	utilised() const { return QList<Declaration*>(); }
+	virtual List<Declaration*>	utilised() const { return List<Declaration*>(); }
 	
 protected:
 	/// This newClone is the simple one; it doesn't have to change the ownership or duplicate the children.

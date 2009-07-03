@@ -45,7 +45,7 @@ public:
 	virtual String						code() const;
 
 private:
-	virtual QList<int> const&			defineDeclarationOrder() const { static const QList<int> r = QList<int>() << Initialiser << Condition << Ticker << Body; return r; }
+	virtual List<int> const&			defineDeclarationOrder() const { static const List<int> r = List<int>() << Initialiser << Condition << Ticker << Body; return r; }
 	virtual void						decorate(DecorationContext const& _c) const;
 	virtual String						defineLayout(ViewKeys const&) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);

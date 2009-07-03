@@ -33,7 +33,7 @@ class Argument: public Declaration, public_interface VariableNamer
 	
 protected:
 	virtual String						defineLayout(ViewKeys const& _k) const { return VariableNamer::defineLayout(_k); }
-	virtual QList<Declaration*>	utilised() const { return actualType()->utilised(); }
+	virtual List<Declaration*>	utilised() const { return actualType()->utilised(); }
 
 	virtual Identifiable*				addressableContext() const { return 0; }
 	virtual bool						keyPressed(EntityKeyEvent const* _e) { return VariableNamer::keyPressed(_e) ? true : Super::keyPressed(_e); }

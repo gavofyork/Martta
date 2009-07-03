@@ -43,7 +43,7 @@ private slots:
 
 private:
 	// List of entities to check and possibly delete at next opportunity when nothing else happening.
-	QList<SafePointer<Entity> >			m_cullList;
+	List<SafePointer<Entity> >			m_cullList;
 
 	static CullManager*					s_this;
 };

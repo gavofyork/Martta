@@ -39,7 +39,7 @@ class IncludeProject
 public:
 	IncludeProject(QString const& _n = ""): m_name(_n) {}
 
-	QString							name() const { return m_name; }
+	QString const&					name() const { return m_name; }
 	void							setName(QString const& _n) { m_name = _n; }
 
 	QString							code() const;
@@ -47,20 +47,20 @@ public:
 	bool							ownsFile(QString const& _f) const { return m_includes.contains(_f); }
 	void							reset() { m_types.clear(); m_functions.clear(); m_variables.clear(); }
 
-	QStringList						includes() const { return m_includes; }
+	QStringList const&				includes() const { return m_includes; }
 	void							addInclude(QString const& _f = "") { m_includes.append(_f); }
 	void							setInclude(int _i, QString const& _n) { m_includes[_i] = _n; }
 	void							removeInclude(int _i) { m_includes.erase(m_includes.begin() + _i); }
 
-	QStringList						libs() const { return m_libs; }
+	QStringList const&				libs() const { return m_libs; }
 	void							addLib(QString const& _f = "") { m_libs.append(_f); }
 	void							setLib(int _i, QString const& _n) { m_libs[_i] = _n; }
 	void							removeLib(int _i) { m_libs.erase(m_libs.begin() + _i); }
 
 	void							assimilate(DeclarationFile* _f);
-	QList<TypeDefinition*>			types() const { return m_types; }
-	QList<Function*>				functions() const { return m_functions; }
-	QList<Variable*>				variables() const { return m_variables; }
+	QList<TypeDefinition*> const&	types() const { return m_types; }
+	QList<Function*> const&			functions() const { return m_functions; }
+	QList<Variable*> const&			variables() const { return m_variables; }
 
 	// Save/load
 	void							exportDom(QDomElement& _context) const;

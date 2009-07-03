@@ -42,9 +42,9 @@ Type Statement::typeOf(int _i) const
 	return childIs<Typed>(_i) ? childAs<Typed>(_i)->type() : Type();
 }
 
-void Statement::appendDefinedUptoHere(int _index, QList<ValueDefiner*>* _list) const
+void Statement::appendDefinedUptoHere(int _index, List<ValueDefiner*>* _list) const
 {
-	QList<int> const& order = defineDeclarationOrder();
+	List<int> const& order = defineDeclarationOrder();
 	if (order.contains(_index))
 		foreach (int i, order)
 			if (_index == i)
@@ -53,11 +53,11 @@ void Statement::appendDefinedUptoHere(int _index, QList<ValueDefiner*>* _list) c
 				*_list << v;
 }
 
-QList<ValueDefiner*> Statement::valuesInLocalScope() const
+List<ValueDefiner*> Statement::valuesInLocalScope() const
 {
 	if (!parentIs<Statement>())
-		return QList<ValueDefiner*>();
-	QList<ValueDefiner*> ret = parentAs<Statement>()->valuesInLocalScope();
+		return List<ValueDefiner*>();
+	List<ValueDefiner*> ret = parentAs<Statement>()->valuesInLocalScope();
 	parentAs<Statement>()->appendDefinedUptoHere(index(), &ret);
 	return ret;
 }

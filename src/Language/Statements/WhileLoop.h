@@ -45,7 +45,7 @@ private:
 	virtual String						code() const;
 	virtual String						defineLayout(ViewKeys const&) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
-	virtual QList<int> const&			defineDeclarationOrder() const { static const QList<int> r = QList<int>() << Condition << Body; return r; }
+	virtual List<int> const&			defineDeclarationOrder() const { static const List<int> r = List<int>() << Condition << Body; return r; }
 };
 
 class UntilLoop: public WhileLoop

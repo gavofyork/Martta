@@ -38,7 +38,7 @@ const int s_simpleIdsCount = sizeof(s_simpleIds) / sizeof(s_simpleIds[0]);
 
 MARTTA_OBJECT_CPP(SimpleType);
 
-QList<SimpleOperator*> SimpleType::s_nonMembers;
+List<SimpleOperator*> SimpleType::s_nonMembers;
 
 bool SimpleType::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
 {
@@ -137,9 +137,9 @@ public:
 	static String name(int _val) { return (_val == StringId) ? "string" : SimpleType::name(_val); }
 };
 
-QList<int> SimpleType::possibilities()
+List<int> SimpleType::possibilities()
 {
-	QList<int> ret;
+	List<int> ret;
 	for (int i = 0; i < s_simpleIdsCount; i++)
 		ret << s_simpleIds[i];
 	ret << NameTrait<int>::StringId;
@@ -167,11 +167,11 @@ void SimpleType::committed()
 
 void SimpleType::initialiseClass()
 {
-	QList<int> integral;
+	List<int> integral;
 	integral << Char << (Short|Int) << Int << (Long|Int) << (Longlong|Int) << (Unsigned|Char) << (Unsigned|Short|Int) << (Unsigned|Int) << (Unsigned|Long|Int) << (Unsigned|Longlong|Int);
-	QList<int> scalar;
+	List<int> scalar;
 	scalar << integral << Float << Double << (Long|Double);
-	QList<int> numeric;
+	List<int> numeric;
 	numeric << scalar << (Complex|Float) << (Complex|Double) << (Complex|Long|Double);
 	
 	// integral types
@@ -219,7 +219,7 @@ void SimpleType::initialiseClass()
 		SimpleOperator::create<SimpleType>(Operator(s), Type(Bool), Type(Bool));
 
 	// all types
-	foreach (int d, QList<int>(numeric) << Bool << Wchar)
+	foreach (int d, List<int>(numeric) << Bool << Wchar)
 	{
 		// (in)equality
 		foreach (String s, String("==,!=").split(","))

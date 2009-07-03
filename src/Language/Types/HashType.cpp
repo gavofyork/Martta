@@ -35,8 +35,8 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(HashType);
 
-QList<SimpleMethod*> HashType::s_members;
-QList<SimpleOperator*> HashType::s_nonMembers;
+List<SimpleMethod*> HashType::s_members;
+List<SimpleOperator*> HashType::s_nonMembers;
 
 bool HashType::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
 {
@@ -117,9 +117,9 @@ Types HashType::assignableTypes() const
 	return Type(*this);
 }
 
-QList<ValueDefiner*> HashType::applicableMembers(Entity*, bool _isConst) const
+List<ValueDefiner*> HashType::applicableMembers(Entity*, bool _isConst) const
 {
-	QList<ValueDefiner*> ret;
+	List<ValueDefiner*> ret;
 	foreach (SimpleMethod* i, s_members)
 		if (i->type()->asType<Memberify>()->isConst() || !_isConst)
 			ret += i;

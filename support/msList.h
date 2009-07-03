@@ -72,8 +72,8 @@ public:
 	enum { isTrivial = isSimple<T>::value };
 	
 	// star; use instead of * operator on a item of m_data. 
-	inline static T& star(ST& _d) { if (!isTrivial) return *(T*)_d; else return *(T*)&_d; }
-	inline static T const& star(ST const& _d) { if (!isTrivial) return *(T const*)_d; else return *(T const*)&_d; }
+	inline static T& star(ST& _d) { if (!isTrivial) return **(T**)&_d; else return *(T*)&_d; }
+	inline static T const& star(ST const& _d) { if (!isTrivial) return **(T const**)&_d; else return *(T const*)&_d; }
 	
 	class Box
 	{

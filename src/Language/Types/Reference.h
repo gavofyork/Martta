@@ -33,7 +33,7 @@ public:
 	inline static bool					keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e) { return simplePositionKeyPressHandler<Reference>(_p, _e, "&", false); }
 	
 private:
-	virtual QList<ValueDefiner*>		applicableMembers(Entity* _s = 0, bool _isConst = false) const { return original() ? original()->applicableMembers(_s, _isConst) : Super::applicableMembers(_s); }
+	virtual List<ValueDefiner*>		applicableMembers(Entity* _s = 0, bool _isConst = false) const { return original() ? original()->applicableMembers(_s, _isConst) : Super::applicableMembers(_s); }
 	virtual String						code(String const& _middle) const { return original()->code("&" + _middle); }
 	virtual bool						isType(Kind _typeKind) { return Entity::isKind(_typeKind) || original()->isType(_typeKind); }
 	virtual TypeEntity*					asType(Kind _typeKind) { if (Entity::isKind(_typeKind)) return this; M_ASSERT(original()->isType(_typeKind)); return original()->asType(_typeKind); }
@@ -43,7 +43,7 @@ private:
 	virtual bool						defineSimilarityTo(TypeEntity const* _t, Castability _c) const;
 	virtual String						defineLayout(ViewKeys const&) const;
 	virtual void						decorate(DecorationContext const& _c) const;
-	virtual QList<Declaration*>	utilised() const { return QList<Declaration*>(); }
+	virtual List<Declaration*>	utilised() const { return List<Declaration*>(); }
 };
 
 }

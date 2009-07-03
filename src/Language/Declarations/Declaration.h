@@ -50,11 +50,11 @@ public:
 	int									registerAnonymous(Identifiable const* _e) const { if (m_anonyma.contains(_e)) return m_anonyma.indexOf(_e); m_anonyma << _e; return m_anonyma.size() - 1; }
 	void								registerAnonymous(Identifiable const* _e, int _k) { while (m_anonyma.size() <= _k) m_anonyma << 0; m_anonyma[_k] = _e; }
 
-	QList<Declaration*>					utilisedSiblings() const;
-	virtual QList<Declaration*>			utilised() const;
+	List<Declaration*>					utilisedSiblings() const;
+	virtual List<Declaration*>			utilised() const;
 
-	QList<ValueDefiner*>				valuesKnown() const;
-	virtual QList<ValueDefiner*>		valuesAdded() const { return QList<ValueDefiner*>(); }
+	List<ValueDefiner*>				valuesKnown() const;
+	virtual List<ValueDefiner*>		valuesAdded() const { return List<ValueDefiner*>(); }
 	
 	virtual String						interfaceCode() const { return String(); }
 	virtual String						implementationCode() const { return String(); }
@@ -67,7 +67,7 @@ protected:
 	virtual Kinds						allowedKinds(int _i) const;
 
 private:
-	mutable QList<Identifiable const*>	m_anonyma;
+	mutable List<Identifiable const*>	m_anonyma;
 };
 
 }

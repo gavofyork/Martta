@@ -42,7 +42,7 @@ protected:
 	virtual Types						allowedTypes(int _i) const;
 	virtual TypeEntity*					newClone() const;
 	virtual String						defineLayout(ViewKeys const&) const { return String("ycode;%1;^;'[';%2;']'").arg(Original).arg(Length); }
-	virtual QList<Declaration*>	utilised() const;
+	virtual List<Declaration*>	utilised() const;
 };
 
 }

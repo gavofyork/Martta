@@ -46,7 +46,7 @@ protected:
 	// Assumes we are (eventually) a non-const ref.
 	virtual Types						assignableTypes() const;
 	virtual bool						hasDefaultConstructor() const { return true; }
-	virtual QList<ValueDefiner*>		applicableMembers(Entity* _s = 0, bool _isConst = false) const;
+	virtual List<ValueDefiner*>		applicableMembers(Entity* _s = 0, bool _isConst = false) const;
 	
 	virtual String						code(String const& _middle) const;
 	virtual int							minRequired(int _i) const { return _i == Original ? 1 : Super::minRequired(_i); }
@@ -57,8 +57,8 @@ protected:
 	virtual bool						defineSimilarityFrom(TypeEntity const* _f, Castability _c) const;
 	virtual String						idColour() const { return "#7fb"; }
 	
-	static QList<SimpleMethod*>			s_members;
-	static QList<SimpleOperator*>		s_nonMembers;
+	static List<SimpleMethod*>			s_members;
+	static List<SimpleOperator*>		s_nonMembers;
 };
 
 }

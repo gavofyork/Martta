@@ -31,7 +31,7 @@
 namespace Martta
 {
 
-QList<CodeScene*> CodeScene::s_allScenes;
+List<CodeScene*> CodeScene::s_allScenes;
 	
 CodeScene::CodeScene(QWidget* _p):
 	QWidget				(_p),
@@ -886,7 +886,7 @@ void CodeScene::navigateToNew(Entity* _e)
 	if (!isInScene(_e) || !isInScene(_e->parent()))
 		doRefreshLayout();
 	
-	QList<Entity*> o = m_orders[_e->parent()];
+	List<Entity*> o = m_orders[_e->parent()];
 	int i = o.indexOf(_e);
 	if (i != UndefinedIndex && i < o.count() - 1)
 		navigateInto(o[i + 1]);
@@ -1008,8 +1008,8 @@ Entity* CodeScene::traverse(Entity* _e, bool _upwards, float _x)
 	return e;
 }
 
-static QHash<String, QSvgRenderer*> s_picCache;
-static QHash<String, QPixmap*> s_imgCache;
+static Hash<String, QSvgRenderer*> s_picCache;
+static Hash<String, QPixmap*> s_imgCache;
 
 class ItemToBe
 {
@@ -1303,7 +1303,7 @@ public:
 	}
 	
 	QList<QRectF> captured;
-	QList<Entity*> order;
+	List<Entity*> order;
 	float minimumLineWidth;
 	float minimumLineHeight;
 	float leftMargin;
@@ -1319,9 +1319,9 @@ public:
 	QColor& curEmboss;
 	QFont& curFont;
 	QColor back;
-	QList<TextToBe> textsToBe;
-	QList<PicToBe> picsToBe;
-	QList<RenToBe> rensToBe;
+	List<TextToBe> textsToBe;
+	List<PicToBe> picsToBe;
+	List<RenToBe> rensToBe;
 	QPicture pic;
 	QPainter p;
 	Entity* subject;
@@ -1333,14 +1333,14 @@ void CodeScene::doRefreshLayout()
 	if (!m_subject)
 		return;
 	
-	QList<Entity*> oldBounds = m_bounds.keys();
+	List<Entity*> oldBounds = m_bounds.keys();
 	StringList list = layoutList(m_subject);
 	
 	// Actual program.
 	QStack<LayoutFrame*> frames;
 	LayoutFrame* f = new LayoutFrame(*new QColor(0, 0, 0, 255), *new QColor(0, 0, 0, 0), *new QColor(0, 0, 0, 0), *new QFont, m_subject);
 
-	QList<float> times;
+	List<float> times;
 	for (int i = 0; i < list.size(); i++)
 	{
 		QTime timer;
@@ -1448,7 +1448,8 @@ void CodeScene::doRefreshLayout()
 			if (layoutList(c).size())
 			{
 				// Remove all of child's entities.
-				m_visible.subtract(QSet<Entity*>::fromList(c->children()));
+				foreach (Entity* csi, c->children())
+					m_visible.remove(csi);
 				list.insert(i + 1, e.startsWith("!") ? "[" : "[[");
 				list.insert(i + 2, "include" + s);
 				list.insert(i + 3, e.startsWith("!") ? "]" : "]]");

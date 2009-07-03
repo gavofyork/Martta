@@ -62,7 +62,7 @@ bool SimpleBinaryOperation::keyPressedOnPosition(Position const& _p, EntityKeyEv
 	return false;
 }
 
-QList<ValueDefiner*> SimpleBinaryOperation::findOperators(Operator _o, Type const& _left, Type const& _right)
+List<ValueDefiner*> SimpleBinaryOperation::findOperators(Operator _o, Type const& _left, Type const& _right)
 {
 	return findBestOverload((_left, _right), allOperators(_o.symbol()));
 }
@@ -107,7 +107,7 @@ String SimpleBinaryOperation::operatorLayout() const
 
 void SimpleBinaryOperation::setOperation(Operator _o, Type const& _left, Type const& _right)
 {
-	QList<ValueDefiner*> l = findOperators(_o, _left, _right);
+	List<ValueDefiner*> l = findOperators(_o, _left, _right);
 	if (l.size() && (m_symbolCache != l[0] || m_operator != _o))
 	{
 		m_operator = _o;

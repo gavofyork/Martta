@@ -45,15 +45,15 @@ public:
 	Types								ourDeniedTypes() const;
 };
 
-QList<TypeNamer*> filterTypeds(Type const& _t, QList<TypeNamer*> const& _l);
-QList<TypeNamer*> filterTypedsInv(Type const& _t, QList<TypeNamer*> const& _l);
+template<class T> List<T*> filterTypeds(Type const& _t, List<T*> const& _l);
+template<class T> List<T*> filterTypedsInv(Type const& _t, List<T*> const& _l);
 
 }
 
 template<class T>
-QList<T*> Martta::filterTypeds(Type const& _t, QList<T*> const& _l)
+List<T*> Martta::filterTypeds(Type const& _t, List<T*> const& _l)
 {
-	QList<T*> ret;
+	List<T*> ret;
 	
 	foreach (T* i, _l)
 	{
@@ -68,9 +68,9 @@ QList<T*> Martta::filterTypeds(Type const& _t, QList<T*> const& _l)
 }
 
 template<class T>
-QList<T*> Martta::filterTypedsInv(Type const& _t, QList<T*> const& _l)
+List<T*> Martta::filterTypedsInv(Type const& _t, List<T*> const& _l)
 {
-	QList<T*> ret;
+	List<T*> ret;
 	
 	foreach (T* i, _l)
 		if (!(i->type().isSimilarTo(_t, TypeEntity::Physical) && i->type().isSimilarTo(_t, TypeEntity::Convertible)))

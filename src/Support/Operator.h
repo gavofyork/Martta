@@ -27,7 +27,7 @@ namespace Martta
 
 class Operator
 {
-	friend inline uint qHash(Operator const&);
+	friend inline uint hashOf(Operator const&);
 
 public:
 	enum Symbol { NoOperator = -1, PlusPlusX = 0, MinusMinusX, PlusX, MinusX, BangX, StarX, TildeX, LastPrefix = TildeX, XPlusPlus, XMinusMinus, LastConfusable = XMinusMinus, XArrow, LastUnary = XArrow,
@@ -62,7 +62,7 @@ private:
 	Symbol								m_symbol;
 };
 
-inline uint qHash(Operator const& _o) { return (uint)_o.m_symbol; }
+inline uint hashOf(Operator const& _o) { return (uint)_o.m_symbol; }
 
 }
 

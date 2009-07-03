@@ -245,7 +245,7 @@ private:
 	ValueDefiner*				m_entity;
 
 	// Actual scope the symbol will be in
-	QList<ValueDefiner*>		m_valuesInScope;
+	List<ValueDefiner*>		m_valuesInScope;
 	bool						m_immediateCommits;
 };
 
@@ -324,15 +324,15 @@ void ReferencedEdit::updateSubset()
 		Type method = Type(FunctionType(false, true)).topWith(Memberify()).topWith(Reference());
 		foreach (Type t, subject()->ourAllowedTypes())
 		{
-			QList<ValueDefiner*> appMems;
+			List<ValueDefiner*> appMems;
 			if (t->isType<Memberify>() && t->asType<Memberify>()->scope())
 				appMems = t->asType<Memberify>()->scope()->applicableMembers(subject(), t->asType<Memberify>()->isConst());
 			else if (subject()->hasAncestor<Class>())
 				appMems = castEntities<ValueDefiner>(subject()->ancestor<Class>()->membersOf<MemberValue>(subject()->hasAncestor<MemberLambda>() ? subject()->ancestor<MemberLambda>()->isConst() : false));
 			if (subject()->m_lastSet & MemberSet == MemberVariables)
-				appMems = filterTypedsInv(method, appMems);
+				appMems = filterTypedsInv<ValueDefiner>(method, appMems);
 			else if (subject()->m_lastSet & MemberSet == MemberLambdas)
-				appMems = filterTypeds(method, appMems);
+				appMems = filterTypeds<ValueDefiner>(method, appMems);
 			m_valuesInScope << appMems;
 		}
 	}
@@ -395,7 +395,7 @@ bool ReferencedEdit::isValid() const
 void ReferencedEdit::updateCompletion()
 {
 	m_completion = "";
-	QList<ValueDefiner*> potentials = nameStarts(m_valuesInScope, m_entityName);
+	List<ValueDefiner*> potentials = nameStarts(m_valuesInScope, m_entityName);
 	if (potentials.size() == 1)
 	{
 		m_completion = potentials[0]->name().mid(m_entityName.size());

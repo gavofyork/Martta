@@ -28,7 +28,7 @@ MS_TEST_METHOD_EXISTANCE(committed)
 namespace Martta
 {
 
-// Exists: QList<R> T::possibilities()
+// Exists: List<R> T::possibilities()
 // Exists: void T::set(R)
 // Exists: R T::get()
 // Works: NameTrait<R>::name(R)
@@ -87,7 +87,7 @@ public:
 	void updateCompletion()
 	{
 		m_completion = "";
-		QList<R> potentials = nameStarts(m_possibilities, m_name);
+		List<R> potentials = nameStarts(m_possibilities, m_name);
 		if (potentials.size() == 1)
 		{
 			m_completion = NameTrait<R>::name(potentials[0]).mid(m_name.size());
@@ -105,7 +105,7 @@ public:
 	R							m_selection;
 	String						m_name;
 	String						m_completion;
-	QList<R>					m_possibilities;
+	List<R>					m_possibilities;
 	bool						m_immediateCommits;
 };
 

@@ -68,7 +68,7 @@ void Memberify::setScope(Type const& _newScope)
 {
 	M_ASSERT(scope());
 	scope()->replace(TypeEntity::cloneOf(&*_newScope, owner()));
-	QList<TypeEntity*> l;
+	List<TypeEntity*> l;
 	l << childrenOf<TypeEntity>();
 	while (!l.isEmpty())
 	{

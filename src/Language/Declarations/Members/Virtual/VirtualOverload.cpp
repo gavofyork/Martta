@@ -74,9 +74,9 @@ void VirtualOverload::importDom(QDomElement const& _element)
 	m_base.restoreFrom(_element.attribute("base"));
 }
 
-QList<VirtualMethod*> VirtualOverload::possibilities() const
+List<VirtualMethod*> VirtualOverload::possibilities() const
 {
-	QList<VirtualMethod*> ret;
+	List<VirtualMethod*> ret;
 	foreach (VirtualMethod* i, parentAs<Class>()->membersOf<VirtualMethod>())
 		if (i->parent() != parent())
 			ret << i;

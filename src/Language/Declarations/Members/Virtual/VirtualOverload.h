@@ -36,7 +36,7 @@ public:
 	VirtualMethod*						get() const { return m_base; }
 	void								set(VirtualMethod* _m) { setDependency(m_base, _m); }
 	String								defineEditLayout(ViewKeys const&, VirtualMethod*) const;
-	QList<VirtualMethod*>				possibilities() const;
+	List<VirtualMethod*>				possibilities() const;
 	
 protected:
 	virtual int							minRequired(int _i) const { return _i == Identity || _i == Constness || _i == Returned ? 0 : Super::minRequired(_i); }

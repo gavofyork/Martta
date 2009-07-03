@@ -20,7 +20,8 @@
 
 #pragma once
 
-#include <QList>
+#include <msList.h>
+using MarttaSupport::List;
 
 #include "AuxilliaryRegistrar.h"
 #include "AuxilliaryFace.h"
@@ -32,18 +33,18 @@ namespace Martta
 class Entity;
 class Kind;
 
-class Kinds: public QList<Kind>
+class Kinds: public List<Kind>
 {
 public:
 	Kinds() {}
 	Kinds(Kind const& _k) { append(_k); }
-	Kinds(QList<Kind> const& _k): QList<Kind>(_k) {}
-	inline Kinds(QList<AuxilliaryFace const*> const& _k);
+	Kinds(List<Kind> const& _k): List<Kind>(_k) {}
+	inline Kinds(List<AuxilliaryFace const*> const& _k);
 	
 	inline Kinds operator,(Kind const& _c) const { return Kinds(*this) << _c; }
 	
 	inline Kinds& operator<<(Kind const& _k) { append(_k); return *this; }
-	inline Kinds& operator<<(Kinds const& _k) { this->QList<Kind>::operator<<(_k); return *this; }
+	inline Kinds& operator<<(Kinds const& _k) { this->List<Kind>::operator<<(_k); return *this; }
 	
 	inline bool containsBaseOf(Kind const& _derived) const;
 	inline bool containsKindOf(Kind const& _base) const;
@@ -85,7 +86,7 @@ public:
 	inline bool operator==(Kind _c) const { return m_mo == _c.m_mo; }
 	inline bool operator!=(Kind _c) const { return !operator==(_c); }
 	inline bool operator<(Kind _cmp) const { return m_mo < _cmp.m_mo; }
-	inline Kinds operator,(Kind _c) const { return QList<Kind>() << *this << _c; }
+	inline Kinds operator,(Kind _c) const { return List<Kind>() << *this << _c; }
 
 private:
 	AuxilliaryFace const* m_mo;
@@ -103,7 +104,7 @@ inline bool Martta::Kind::isKind(Kinds const& _bases) const
 	return _bases.containsBaseOf(*this);
 }
 
-inline Martta::Kinds::Kinds(QList<AuxilliaryFace const*> const& _k)
+inline Martta::Kinds::Kinds(List<AuxilliaryFace const*> const& _k)
 {
 	foreach (AuxilliaryFace const* i, _k)
 		append(Kind(i));

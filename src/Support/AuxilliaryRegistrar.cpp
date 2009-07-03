@@ -96,11 +96,11 @@ void AuxilliaryRegistrar::finaliseClasses()
 	m_isInitialised = false;
 }
 
-QList<AuxilliaryFace const*> AuxilliaryRegistrar::calculateInterfaces(AuxilliaryFace const* _a) const
+List<AuxilliaryFace const*> AuxilliaryRegistrar::calculateInterfaces(AuxilliaryFace const* _a) const
 {
 	M_ASSERT(_a);
-	QList<AuxilliaryFace const*> ret;
-	QList<AuxilliaryFace const*> yet;
+	List<AuxilliaryFace const*> ret;
+	List<AuxilliaryFace const*> yet;
 	for (AuxilliaryFace const* k = _a;; k = yet.takeLast())
 	{
 		for (int i = 0; i < k->interfaceAuxilliaryCount(); i++)

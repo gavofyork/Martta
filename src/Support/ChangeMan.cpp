@@ -61,7 +61,7 @@ bool ChangeMan::changed(Dependee* _changer, int _aspect)
 	if (Depender* d = e->tryParent<Depender>())
 		if (d->botherNotifying() && d->familyDependencies() & Depender::DependsOnChildren)
 			m_changeQueue << Entry(d, _aspect, e);
-	QList<Entity*> es;
+	List<Entity*> es;
 	es << _changer->self();
 	while (es.size())
 	{
@@ -240,7 +240,7 @@ void ChangeMan::parentAdded(Depender* _this)
 	if (_this->botherNotifying() && _this->familyDependencies() & Depender::DependsOnParent)
 		m_changeQueue << Entry(_this, DependencyAdded, p);
 
-	QList<Entity*> es;
+	List<Entity*> es;
 	es << _this->self();
 	while (es.size())
 	{
@@ -266,7 +266,7 @@ void ChangeMan::parentSwitched(Depender* _this, Entity* _old)
 	if (_this->botherNotifying() && _this->familyDependencies() & Depender::DependsOnParent)
 		m_changeQueue << Entry(_this, DependencySwitched, p, _old);
 		
-	QList<Entity*> es;
+	List<Entity*> es;
 	es << _this->self();
 	while (es.size())
 	{
@@ -300,7 +300,7 @@ void ChangeMan::parentRemoved(Depender* _this, Entity* _old)
 	if (_this->botherNotifying() && _this->familyDependencies() & Depender::DependsOnParent)
 		m_changeQueue << Entry(_this, DependencyRemoved, _old);
 		
-	QList<Entity*> es;
+	List<Entity*> es;
 	es << _this->self();
 	while (es.size())
 	{

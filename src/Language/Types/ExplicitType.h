@@ -42,7 +42,7 @@ public:
 	TypeDefinition*						get() const { return m_subject; }
 	void								set(TypeDefinition* _m) { setSubject(_m); }
 	
-	QList<TypeDefinition*>				possibilities();
+	List<TypeDefinition*>				possibilities();
 	virtual String						defineEditLayout(ViewKeys const&, TypeDefinition*) const;
 	
 	bool								haveSingleCastOperator(TypeEntity const* _t, bool _const = false) const;
@@ -55,7 +55,7 @@ public:
 protected:
 	virtual bool						hasDefaultConstructor() const;
 	virtual Types						assignableTypes() const;
-	virtual QList<ValueDefiner*>		applicableMembers(Entity* _s = 0, bool _isConst = false) const;
+	virtual List<ValueDefiner*>		applicableMembers(Entity* _s = 0, bool _isConst = false) const;
 	virtual String						code(String const& _middle) const { return (m_subject ? m_subject->asKind<Identifiable>()->reference() : "") + _middle; }
 	virtual bool						contentsEquivalentTo(TypeEntity const* _t) const { return _t->asKind<ExplicitType>()->m_subject == m_subject; }
 	virtual String						idColour() const;
@@ -70,7 +70,7 @@ protected:
 	virtual bool						defineSimilarityTo(TypeEntity const* _t, Castability _c) const;
 	virtual bool						defineSimilarityFrom(TypeEntity const* _from, Castability _c) const;
 	virtual void						apresLoad() { addDependency(m_subject->self()); Super::apresLoad(); }
-	virtual QList<Declaration*>	utilised() const;
+	virtual List<Declaration*>	utilised() const;
 	
 	ModelPtr<TypeDefinition>			m_subject;
 };

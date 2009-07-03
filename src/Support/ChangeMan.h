@@ -114,10 +114,10 @@ private:
 	QMultiHash<Dependee*, Depender*>	m_dependers;
 	QMultiHash<Depender*, Dependee*>	m_dependees;
 	
-	QList<Changing>						m_changing;
+	List<Changing>						m_changing;
 	
-	QList<Entry>						m_changeQueue;
-	QList<Entry>						m_changesDone;
+	List<Entry>						m_changeQueue;
+	List<Entry>						m_changesDone;
 	
 	bool								m_asleep;
 	bool								m_hasChanged;

@@ -20,6 +20,9 @@
 
 #pragma once
 
+#include <msHash.h>
+using MarttaSupport::MultiHash;
+
 #include "Operator.h"
 #include "Evaluation.h"
 
@@ -40,22 +43,22 @@ public:
 	virtual Operator					id() const { return Operator(); }
 
 	static void							registerOperator(Operator _o, ValueDefiner* _v) { s_operatorCatalogue.insert(_o, _v); }
-	static void							unregisterOperator(Operator _o, ValueDefiner* _v) { s_operatorCatalogue.remove(_o, _v); }
+	static void							unregisterOperator(Operator _o, ValueDefiner* _v) { s_operatorCatalogue.removeOne(_o, _v); }
 
 protected:
 	virtual bool						isSlidable(int) const { return false; }
 	virtual Entity*						lastOperand() const { return child(SecondOperand) ? child(SecondOperand) : child(FirstOperand); }	// QUICK optimise into overrides
-	static Position				slideOnPrecedence(Position _p, Precedence _d, Associativity _a, Position const& _block);
+	static Position						slideOnPrecedence(Position _p, Precedence _d, Associativity _a, Position const& _block);
 	
 	// Must return all entities that are LambdaNamer-derived and whose id() is operator _o.
-	static QList<ValueDefiner*>			allOperators(Operator _o);
+	static List<ValueDefiner*>			allOperators(Operator _o);
 	
 	/// The argument type of the method or function type _t. argument _index can be UndefinedIndex (return type), TheOperand/FirstOperand or SecondOperand.
 	static Type							prototypeOf(Type const& _t, int _index = UndefinedIndex);
 	static bool							prototypeHasArgumentAt(Type const& _t, int _cardinal);
-	static QList<ValueDefiner*>			findBestOverload(Types const& _actual, QList<ValueDefiner*> const _candidates);
+	static List<ValueDefiner*>			findBestOverload(Types const& _actual, List<ValueDefiner*> const _candidates);
 	
-	static QMultiHash<Operator, ValueDefiner*>	s_operatorCatalogue;
+	static MultiHash<Operator, ValueDefiner*>	s_operatorCatalogue;
 };
 
 }

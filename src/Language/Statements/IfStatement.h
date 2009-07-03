@@ -43,7 +43,7 @@ protected:
 	virtual int							minRequired(int _i) const { return _i == Condition || _i == Body ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _index) const;
 	virtual Types						allowedTypes(int _index) const;
-	virtual QList<int> const&			defineDeclarationOrder() const { static const QList<int> r = QList<int>() << Condition << Body; return r; }
+	virtual List<int> const&			defineDeclarationOrder() const { static const List<int> r = List<int>() << Condition << Body; return r; }
 };
 
 }

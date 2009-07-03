@@ -20,7 +20,8 @@
 
 #pragma once
 
-#include <QList>
+#include <msList.h>
+using MarttaSupport::List;
 
 namespace Martta
 {
@@ -84,7 +85,7 @@ protected:
 		foreach (SafePointerFace* i, m_safePointers)
 			i->m_pointer = 0;
 	}
-	QList<SafePointerFace*>					m_safePointers;
+	List<SafePointerFace*>					m_safePointers;
 };
 
 void SafePointerFace::set(SafePointerTarget* _e)

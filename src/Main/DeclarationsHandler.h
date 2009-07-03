@@ -70,27 +70,27 @@ private:
 	virtual bool skippedEntity(QString const&) { return true; }
 	virtual bool startPrefixMapping(QString const&, QString const&) { return true; }
 
-	Declaration*					m_d;
-	QList<DeclarationFile*>* 		m_l;
+	Declaration*							m_d;
+	QList<DeclarationFile*>*				m_l;
 
-	Enumeration*					m_lastEnum;
-	FunctionResolver*				m_lastFunction;
-	IncomingFunctionType*			m_lastIncomingFunctionType;
+	Enumeration*							m_lastEnum;
+	FunctionResolver*						m_lastFunction;
+	IncomingFunctionType*					m_lastIncomingFunctionType;
 
-	QMap<QString, Declaration*>	m_contexts;
-	QMap<QString, Function*>		m_functions;
-	QMap<QString, Variable*>		m_variables;
-	QMap<QString, TopLevelType*>		m_types;
+	QHash<QString, Declaration*>			m_contexts;
+	QHash<QString, Function*>				m_functions;
+	QHash<QString, Variable*>				m_variables;
+	QHash<QString, TopLevelType*>			m_types;
 
-	QMap<QString, int>			m_simples;
-	QMap<QString, ArrayType*> 		m_arrays;
-	QMap<QString, CvQualifiedType*>	m_cvQualifieds;
-	QMap<QString, PointerType*>		m_pointers;
-	QMap<QString, IncomingFunctionType*>	m_functionTypes;
+	QHash<QString, int>						m_simples;
+	QHash<QString, ArrayType*>				m_arrays;
+	QHash<QString, CvQualifiedType*>		m_cvQualifieds;
+	QHash<QString, PointerType*>			m_pointers;
+	QHash<QString, IncomingFunctionType*>	m_functionTypes;
 
-	QMap<QString, DeclarationFile*>	m_files;
+	QHash<QString, DeclarationFile*>		m_files;
 
-	QList<Resolver*>				m_resolvers;
+	QList<Resolver*>						m_resolvers;
 };
 
 }

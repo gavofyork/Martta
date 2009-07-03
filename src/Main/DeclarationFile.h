@@ -36,7 +36,7 @@ class DeclarationFile
 public:
 	DeclarationFile(QString const& _name): m_filename(_name) {}
 	QString					m_filename;
-	QList<TypeDefinition*>		m_types;
+	QList<TypeDefinition*>	m_types;
 	QList<Function*>		m_functions;
 	QList<Variable*>		m_variables;
 };

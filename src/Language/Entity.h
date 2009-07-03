@@ -21,12 +21,15 @@
 #pragma once
 
 #include <QDebug>			// Move to mDebug & link in.
-#include <QList>
-#include <QHash>
 #include <QRgb>
 #include <qglobal.h>
 
+#include <msList.h>
+#include <msHash.h>
 #include <msString.h>
+using MarttaSupport::Hash;
+using MarttaSupport::MultiHash;
+using MarttaSupport::List;
 using MarttaSupport::String;
 
 // Same here - move to interface?
@@ -107,14 +110,14 @@ public:
 	template<class T> inline T*			tryParent() const { return m_parent ? m_parent->tryKind<T>() : 0; }
 	
 	inline int							childCount() const { return m_namedChildren.size() + m_cardinalChildren.size(); }
-	inline QList<Entity*>				children() const { return m_namedChildren.values() + m_cardinalChildren; }
+	inline List<Entity*>				children() const { return m_namedChildren.values() + m_cardinalChildren; }
 	inline Entity*						child(int _i) const { if (_i >= 0 && _i < m_cardinalChildren.size()) { M_ASSERT(m_cardinalChildren[_i]->m_parent == this); return m_cardinalChildren[_i]; } else return _i < 0 ? m_namedChildren.value(_i) : 0; }
-	inline int							childCount(int _i) const { if (_i >= 0) return _i < m_cardinalChildren.size() ? 1 : 0; int r = 0; QHash<int, Entity*>::ConstIterator i = m_namedChildren.find(_i); while (i != m_namedChildren.end() && i.key() == _i) ++r, ++i; return r; }
-	inline QList<Entity*>				children(int _i) const { if(_i < 0) return m_namedChildren.values(_i); if (_i < m_cardinalChildren.size()) return QList<Entity*>() << child(_i); return QList<Entity*>(); }
-	template<class T> inline QList<T*>	childrenOf() const { return filterEntities<T>(children()); }
-	template<class T> inline QList<T*>	childrenAs() const { return castEntities<T>(children()); }
-	template<class T> inline QList<T*>	childrenOf(int _i) const { return filterEntities<T>(children(_i)); }
-	template<class T> inline QList<T*>	childrenAs(int _i) const { return castEntities<T>(children(_i)); }
+	inline int							childCount(int _i) const { if (_i >= 0) return _i < m_cardinalChildren.size() ? 1 : 0; int r = 0; Hash<int, Entity*>::ConstIterator i = m_namedChildren.find(_i); while (i != m_namedChildren.end() && i.key() == _i) ++r, ++i; return r; }
+	inline List<Entity*>				children(int _i) const { if(_i < 0) return m_namedChildren.values(_i); if (_i < m_cardinalChildren.size()) return List<Entity*>() << child(_i); return List<Entity*>(); }
+	template<class T> inline List<T*>	childrenOf() const { return filterEntities<T>(children()); }
+	template<class T> inline List<T*>	childrenAs() const { return castEntities<T>(children()); }
+	template<class T> inline List<T*>	childrenOf(int _i) const { return filterEntities<T>(children(_i)); }
+	template<class T> inline List<T*>	childrenAs(int _i) const { return castEntities<T>(children(_i)); }
 	template<class T> inline int		childIndexOf() const { foreach (Entity* e, children()) if (e->isKind<T>()) return e->m_index; return UndefinedIndex; }
 	template<class T> inline int		childCountOf() const { int r = 0; foreach (Entity* i, children()) if (i->isKind<T>()) r++; return r; }
 	template<class T> inline int		childCountOf(int _i) const { int r = 0; foreach (Entity* i, children(_i)) if (i->isKind<T>()) r++; return r; }
@@ -124,10 +127,10 @@ public:
 	template<class T> inline T*			childAs(int _i) const { Entity* e = child(_i); M_ASSERT(e); return e->asKind<T>(); }
 	template<class T> inline T*			tryChild(int _i) const { if (Entity* e = child(_i)) return e->tryKind<T>(); return 0; }
 	
-	inline QList<Entity*> const&		cardinalChildren() const { return m_cardinalChildren; }
+	inline List<Entity*> const&		cardinalChildren() const { return m_cardinalChildren; }
 	inline int							cardinalChildCount() const { return m_cardinalChildren.size(); }
-	template<class T> inline QList<T*>	cardinalChildrenOf() const { return filterEntities<T>(m_cardinalChildren); }
-	template<class T> inline QList<T*>	cardinalChildrenAs() const { return castEntities<T>(m_cardinalChildren); }
+	template<class T> inline List<T*>	cardinalChildrenOf() const { return filterEntities<T>(m_cardinalChildren); }
+	template<class T> inline List<T*>	cardinalChildrenAs() const { return castEntities<T>(m_cardinalChildren); }
 	template<class T> inline T*			cardinalChildOf() const { M_ASSERT(cardinalChildCountOf<T>()); return childAs<T>(cardinalChildIndexOf<T>()); }
 	template<class T> inline int		cardinalChildIndexOf() const { for (int r = 0; r < m_cardinalChildren.size(); ++r) if (childIs<T>(r)) return r; return UndefinedIndex; }
 	template<class T> inline int		cardinalChildCountOf() const { int r = 0; foreach (Entity* i, m_cardinalChildren) if (i->isKind<T>()) r++; return r; }
@@ -136,17 +139,17 @@ public:
 	template<class T> inline bool		siblingIs(int _i) const { return m_parent ? m_parent->childIs<T>(_i) : false; }
 	template<class T> inline T*			siblingAs(int _i) const { M_ASSERT(m_parent); return m_parent->childAs<T>(_i); }
 	template<class T> inline T*			trySibling(int _i) const { return m_parent ? m_parent->tryChild<T>(_i) : 0; }
-	inline QList<Entity*>				siblings() const { if (!m_parent) return QList<Entity*>(); QList<Entity*> ret; foreach (Entity* e, m_parent->children()) if (e != this) ret += e; return ret; }
-	template<class T> inline QList<T*>	siblingsOf() const { return filterEntities<T>(siblings()); }
+	inline List<Entity*>				siblings() const { if (!m_parent) return List<Entity*>(); List<Entity*> ret; foreach (Entity* e, m_parent->children()) if (e != this) ret += e; return ret; }
+	template<class T> inline List<T*>	siblingsOf() const { return filterEntities<T>(siblings()); }
 	inline int							siblingCount() const { return m_parent ? m_parent->childCount() - 1 : 0; }
-	inline QList<Entity*>				cardinalSiblings() const { if (!m_parent) return QList<Entity*>(); QList<Entity*> ret; foreach (Entity* e, m_parent->m_cardinalChildren) if (e != this) ret += e; return ret; }
-	template<class T> inline QList<T*>	cardinalSiblingsOf() const { return filterEntities<T>(cardinalSiblings());  }
+	inline List<Entity*>				cardinalSiblings() const { if (!m_parent) return List<Entity*>(); List<Entity*> ret; foreach (Entity* e, m_parent->m_cardinalChildren) if (e != this) ret += e; return ret; }
+	template<class T> inline List<T*>	cardinalSiblingsOf() const { return filterEntities<T>(cardinalSiblings());  }
 	inline int							cardinalSiblingCount() const { return m_parent ? m_parent->cardinalChildCount() - (m_index < 0 ? 0 : 1) : 0; }
-	inline QList<Entity*>				parentsChildren() const { return m_parent ? m_parent->children() : QList<Entity*>(); }
-	template<class T> inline QList<T*>	parentsChildrenOf() const { return m_parent ? m_parent->childrenOf<T>() : QList<T*>(); }
+	inline List<Entity*>				parentsChildren() const { return m_parent ? m_parent->children() : List<Entity*>(); }
+	template<class T> inline List<T*>	parentsChildrenOf() const { return m_parent ? m_parent->childrenOf<T>() : List<T*>(); }
 	inline int							parentsChildCount() const { return m_parent ? m_parent->childCount() : 0; }
-	inline QList<Entity*>				parentsCardinalChildren() const { return m_parent ? m_parent->cardinalChildren() : QList<Entity*>(); }
-	template<class T> inline QList<T*>	parentsCardinalChildrenOf() const { return m_parent ? m_parent->cardinalChildrenOf<T>() : QList<T*>(); }
+	inline List<Entity*>				parentsCardinalChildren() const { return m_parent ? m_parent->cardinalChildren() : List<Entity*>(); }
+	template<class T> inline List<T*>	parentsCardinalChildrenOf() const { return m_parent ? m_parent->cardinalChildrenOf<T>() : List<T*>(); }
 	inline int							parentsCardinalChildCount() const { M_ASSERT(m_parent); return m_parent->m_cardinalChildren.size(); }
 
 	template<class T> bool				hasAncestor() const { return hasAncestor(T::staticKind); }
@@ -166,10 +169,10 @@ public:
 	inline Entity*						root() const { Entity* e; for (e = const_cast<Entity*>(this); e->m_parent; e = e->m_parent) {} return e; }
 	template<class T> T*				rootOf() const { T* r = tryKind<T>(); for (Entity* e = const_cast<Entity*>(this); e; e = e->m_parent) if (T* t = e->tryKind<T>()) r = t; return r; }
 	
-	template<class T> QList<T*>			selfAndAncestorsChildrenOf() const { QList<T*> ret = childrenOf<T>(); return parent() ? ret + parent()->selfAndAncestorsChildrenOf<T>() : ret; }
+	template<class T> List<T*>			selfAndAncestorsChildrenOf() const { List<T*> ret = childrenOf<T>(); return parent() ? ret + parent()->selfAndAncestorsChildrenOf<T>() : ret; }
 	
 	inline int							nonPlaceholderCount() const { int ret = 0; foreach (Entity* i, m_cardinalChildren) if (!i->isPlaceholder()) ret++; return ret; }
-	inline QList<Entity*>				nonPlaceholders() const { QList<Entity*> ret; foreach (Entity* i, m_cardinalChildren) if (!i->isPlaceholder()) ret += i; return ret; }
+	inline List<Entity*>				nonPlaceholders() const { List<Entity*> ret; foreach (Entity* i, m_cardinalChildren) if (!i->isPlaceholder()) ret += i; return ret; }
 	inline Entity*						nonPlaceholder(int _i) const { int c = 0; foreach (Entity* i, m_cardinalChildren) if (c++ == _i) return i; M_ASSERT(false); return 0; }
 
 	virtual bool						usurpsChild(Entity const*) const { return false; }
@@ -383,7 +386,7 @@ public:
 	
 	String								indexName(int _i) const;
 	String								indexName() const { return m_parent ? m_parent->indexName(m_index) : "[Orphan]"; }
-	QList<int>							knownNames() const;
+	List<int>							knownNames() const;
 	
 	virtual String						defineLayout(ViewKeys const&) const;
 	virtual Entity*						isExpander() const { return 0; }
@@ -508,8 +511,8 @@ private:
 
 	Entity*								m_parent;
 	int									m_index;
-	QList<Entity*>						m_cardinalChildren;
-	QHash<int, Entity*>					m_namedChildren;
+	List<Entity*>						m_cardinalChildren;
+	Hash<int, Entity*>					m_namedChildren;
 };
 
 class EntityStylist

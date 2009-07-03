@@ -38,7 +38,7 @@ public:
 	CodeScene(QWidget* _p = 0);
 	~CodeScene();
 
-	static QList<CodeScene*> const&	all() { return s_allScenes; }
+	static List<CodeScene*> const&	all() { return s_allScenes; }
 	
 	// Set the current attributes.
 	void						setSubject(Entity* _subject);
@@ -62,8 +62,8 @@ public:
 	Entity*						at(QPointF const&) const;
 	
 	// Relative determiners.
-	Entity*						next(Entity* _e) const { QList<Entity*> o = m_orders[m_subject]; for (int i = 0; i < o.size() - 1; i++) if (o[i] == _e) return o[i + 1]; return 0; }
-	Entity*						previous(Entity* _e) const { QList<Entity*> o = m_orders[m_subject]; for (int i = 1; i < o.size(); i++) if (o[i] == _e) return o[i - 1]; return 0; }
+	Entity*						next(Entity* _e) const { List<Entity*> o = m_orders[m_subject]; for (int i = 0; i < o.size() - 1; i++) if (o[i] == _e) return o[i + 1]; return 0; }
+	Entity*						previous(Entity* _e) const { List<Entity*> o = m_orders[m_subject]; for (int i = 1; i < o.size(); i++) if (o[i] == _e) return o[i - 1]; return 0; }
 	Entity*						traverse(Entity* _e, bool _upwards, float _x);
 	Entity*						nearest(Entity* _e);
 
@@ -150,17 +150,17 @@ private:
 	Entity*				m_lastRealCurrent;
 	EditDelegateFace*	m_editDelegate;
 
-	QHash<Entity*, ViewKeys>				m_viewKeys;
-	QHash<Entity*, QPicture>				m_pictures;
-	QHash<Entity*, QRectF>					m_bounds;
-	QHash<Entity*, QList<Entity*> >			m_orders;
+	Hash<Entity*, ViewKeys>				m_viewKeys;
+	Hash<Entity*, QPicture>				m_pictures;
+	Hash<Entity*, QRectF>					m_bounds;
+	Hash<Entity*, List<Entity*> >			m_orders;
 	QSet<Entity*>							m_visible;
-	QHash<Entity*, Entity*>					m_leftmostChild;
-	QHash<Entity*, Entity*>					m_rightmostChild;
-	QHash<Entity*, StringList>				m_listCache;
-	QHash<Entity*, uint>					m_cacheKey;
+	Hash<Entity*, Entity*>					m_leftmostChild;
+	Hash<Entity*, Entity*>					m_rightmostChild;
+	Hash<Entity*, StringList>				m_listCache;
+	Hash<Entity*, uint>					m_cacheKey;
 	
-	QList<int>			m_pagingRoute;
+	List<int>			m_pagingRoute;
 	bool				m_navigated;
 	SafePointer<Entity>	m_strobeCreation;
 	SafePointer<Entity>	m_strobeChild;
@@ -175,9 +175,9 @@ private:
 	QPointF				m_borderOffset;
 	bool				m_ensureCurrentVisible;
 	
-	QList<Position>	m_bracketed;
+	List<Position>	m_bracketed;
 	
-	static QList<CodeScene*> s_allScenes;
+	static List<CodeScene*> s_allScenes;
 };
 
 }

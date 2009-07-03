@@ -18,6 +18,9 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include <msHash.h>
+using MarttaSupport::MultiHash;
+
 #include "TextLabel.h"
 #include "TopLevelType.h"
 #include "Namespace.h"
@@ -56,8 +59,8 @@ String Namespace::interfaceCode() const
 	String ret;
 	ret += "namespace " + codeName() + "\n{\n";
 
-	QList<Declaration*> q;
-	QMultiMap<Declaration*, Declaration*> deps;
+	List<Declaration*> q;
+	MultiHash<Declaration*, Declaration*> deps;
 	foreach (Declaration* i, cardinalChildrenOf<Declaration>())
 	{
 		foreach (Declaration* j, i->utilisedSiblings())
@@ -66,7 +69,7 @@ String Namespace::interfaceCode() const
 			q << i;
 	}
 
-	QList<Declaration*> ds = solve(q, deps);
+	List<Declaration*> ds = solve(q, deps);
 	if (!ds.size())
 		return String();
 	foreach (Declaration* i, ds)
@@ -80,7 +83,7 @@ String Namespace::interfaceCode() const
 String Namespace::implementationCode() const
 {
 	String ret;
-	QList<Declaration*> ordered;
+	List<Declaration*> ordered;
 	foreach (Declaration* i, cardinalChildrenOf<Declaration>())
 		ret += i->implementationCode() + "\n";
 	if (ret.endsWith("\n\n")) ret.chop(1);

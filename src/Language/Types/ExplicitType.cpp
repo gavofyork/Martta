@@ -55,7 +55,7 @@ Types ExplicitType::assignableTypes() const
 	return m_subject ? m_subject->assignableTypes() : Types();
 }
 
-QList<ValueDefiner*> ExplicitType::applicableMembers(Entity* _s, bool _isConst) const
+List<ValueDefiner*> ExplicitType::applicableMembers(Entity* _s, bool _isConst) const
 {
 	Access a = Public;
 	if (_s->ancestor<Class>() && _s->ancestor<Class>() == m_subject)
@@ -64,7 +64,7 @@ QList<ValueDefiner*> ExplicitType::applicableMembers(Entity* _s, bool _isConst) 
 		a = Protected;
 	if (Class* c = m_subject ? m_subject->tryKind<Class>() : 0)
 		return c->membersOf<ValueDefiner>(_isConst, a);
-	return QList<ValueDefiner*>();
+	return List<ValueDefiner*>();
 }
 
 bool ExplicitType::haveSingleCastOperator(TypeEntity const* _t, bool _const) const
@@ -143,7 +143,7 @@ bool ExplicitType::defineSimilarityTo(TypeEntity const* _t, Castability _c) cons
 				if (c == ts)
 					return true;
 				// Note Physical attribute should be tested last.
-				QList<Base*> bases = c->cardinalChildrenOf<Base>();
+				List<Base*> bases = c->cardinalChildrenOf<Base>();
 				while (bases.size())
 				{
 					Base* b = bases.takeLast();
@@ -196,7 +196,7 @@ bool ExplicitType::keyPressed(EntityKeyEvent const* _e)
 	return true;
 }
 
-QList<Declaration*> ExplicitType::utilised() const
+List<Declaration*> ExplicitType::utilised() const
 {
 	return m_subject.isUsable() ? subject()->utilisedInUse() : Super::utilised();	// TODO: define for other types.
 }
@@ -206,9 +206,9 @@ String ExplicitType::defineLayout(ViewKeys const&) const
 	return "^;fb;s" + idColour() + ";'" + (m_subject.isUsable() ? m_subject->name() : "[]") + "'";
 }
 
-QList<TypeDefinition*> ExplicitType::possibilities()
+List<TypeDefinition*> ExplicitType::possibilities()
 {
-	QList<TypeDefinition*> ret;
+	List<TypeDefinition*> ret;
 	TypeDefinition* old = m_subject;
 	foreach (TypeDefinition* i, parent()->selfAndAncestorsChildrenOf<TypeDefinition>())
 	{

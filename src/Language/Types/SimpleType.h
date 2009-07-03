@@ -79,7 +79,7 @@ public:
 		return -1;
 	}
 
-	QList<int>							possibilities();
+	List<int>							possibilities();
 	virtual String						defineEditLayout(ViewKeys const&, int) const;
 	int									get() const { return m_id; }
 	void								set(int _m) { setId(_m); }
@@ -104,7 +104,7 @@ protected:
 
 private:
 	int m_id;
-	static QList<SimpleOperator*> s_nonMembers;
+	static List<SimpleOperator*> s_nonMembers;
 };
 
 }

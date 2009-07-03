@@ -412,6 +412,45 @@ int GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::removeOne(Key const& _ke
 }
 
 template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+int GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::removeOne(Key const& _key, T const& _value)
+{
+	checkSize();
+	Node* m = m_nodes + indexOf(_key);
+	if (!m->isActive())
+		return 0;
+	Node* p = 0;
+	Node* i = m;
+	do
+	{
+		if (i->key() == _key && i->value() == _value)
+			goto OK;
+		p = i;
+	}
+	while ((i = i->m_next) != m);
+	return 0;
+	OK:
+	Node* x = i->m_next;
+	if (p)
+		delete i;
+	i = x;
+	// l is one before the dead node or zero if it is m.
+	
+	if (p)				// some before us.
+		p->m_next = i;
+	else if (i != m)	// none before us and some after us.
+	{
+		// substitute in p for m.
+		m->swap(*i);
+		m->m_next = i->m_next;
+		delete i;
+	}
+	else				// none before us and none after us.
+		m->deactivate();
+	m_count--;
+	return 1;
+}
+
+template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::erase(Iterator _pos)
 {
 

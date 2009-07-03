@@ -38,7 +38,7 @@ protected:
 	virtual bool						keyPressed(EntityKeyEvent const* _e) { return VariableNamer::keyPressed(_e) ? true : Super::keyPressed(_e); }
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity*) { changed(); }
-	virtual QList<Declaration*>	utilised() const { return actualType()->utilised(); }
+	virtual List<Declaration*>	utilised() const { return actualType()->utilised(); }
 	virtual String						memberInterfaceCode() const { return VariableNamer::interfaceCode(); }
 	virtual String						memberImplementationCode() const { return VariableNamer::implementationCode(); }
 	virtual String						memberDefineLayout(ViewKeys const& _k) const { return VariableNamer::defineLayout(_k); }

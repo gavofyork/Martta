@@ -34,8 +34,8 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(ListType);
 
-QList<SimpleMethod*> ListType::s_members;
-QList<SimpleOperator*> ListType::s_nonMembers;
+List<SimpleMethod*> ListType::s_members;
+List<SimpleOperator*> ListType::s_nonMembers;
 
 void ListType::initialiseClass()
 {
@@ -105,9 +105,9 @@ Types ListType::assignableTypes() const
 	return Type(*this);
 }
 
-QList<ValueDefiner*> ListType::applicableMembers(Entity*, bool _isConst) const
+List<ValueDefiner*> ListType::applicableMembers(Entity*, bool _isConst) const
 {
-	QList<ValueDefiner*> ret;
+	List<ValueDefiner*> ret;
 	foreach (SimpleMethod* i, s_members)
 		if (i->type()->asType<Memberify>()->isConst() || !_isConst)
 			ret += i;

@@ -45,7 +45,7 @@ public:
 protected:
 	virtual bool						hasDefaultConstructor() const { return true; }
 	virtual Types						assignableTypes() const;
-	virtual QList<ValueDefiner*>		applicableMembers(Entity* _s = 0, bool _isConst = false) const;
+	virtual List<ValueDefiner*>		applicableMembers(Entity* _s = 0, bool _isConst = false) const;
 	
 	virtual String						code(String const& _middle) const;
 	virtual String						defineLayout(ViewKeys const&) const;
@@ -55,8 +55,8 @@ protected:
 
 	virtual TypeEntity*					newClone() const { return new StringType; }
 	
-	static QList<SimpleMethod*>			s_members;	
-	static QList<SimpleOperator*>		s_nonMembers;	
+	static List<SimpleMethod*>			s_members;	
+	static List<SimpleOperator*>		s_nonMembers;	
 };
 
 }

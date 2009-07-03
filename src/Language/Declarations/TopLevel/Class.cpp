@@ -218,18 +218,18 @@ String Class::interfaceCode() const
 	return ret;
 }
 
-QList<Declaration*> Class::utilised() const
+List<Declaration*> Class::utilised() const
 {
-	QList<Declaration*> ret;
+	List<Declaration*> ret;
 	foreach (Base* i, cardinalChildrenOf<Base>())
 		ret << i->classType();
 	ret += Super::utilised();
 	return ret;
 }
 
-QList<Declaration*> Class::members(bool _isConst, Access _access) const
+List<Declaration*> Class::members(bool _isConst, Access _access) const
 {
-	QList<Declaration*> ret;
+	List<Declaration*> ret;
 	foreach (MemberValue* i, cardinalChildrenOf<MemberValue>())
 		if ((i->isConst() || !_isConst) && i->access() <= _access)
 			ret += i;

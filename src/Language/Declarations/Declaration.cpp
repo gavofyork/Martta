@@ -71,9 +71,9 @@ void Declaration::restorePtrs() const
 	ModelPtrRegistrar::get()->restorePtrs(this);
 }
 
-QList<ValueDefiner*> Declaration::valuesKnown() const
+List<ValueDefiner*> Declaration::valuesKnown() const
 {
-	QList<ValueDefiner*> ret = parentIs<Declaration>() ? parentAs<Declaration>()->valuesKnown() : QList<ValueDefiner*>();
+	List<ValueDefiner*> ret = parentIs<Declaration>() ? parentAs<Declaration>()->valuesKnown() : List<ValueDefiner*>();
 	foreach (Declaration* d, cardinalSiblingsOf<Declaration>())
 		ret += d->valuesAdded();
 	return ret;
@@ -103,9 +103,9 @@ Identifiable* Declaration::lookupChild(String const& _key) const
 	return Identifiable::lookupChild(_key);
 }
 
-QList<Declaration*> Declaration::utilisedSiblings() const
+List<Declaration*> Declaration::utilisedSiblings() const
 {
-	QList<Declaration*> ret;
+	List<Declaration*> ret;
 	foreach (Declaration* i, utilised())
 		if (i->hasAncestor(parent()))
 		{
@@ -116,9 +116,9 @@ QList<Declaration*> Declaration::utilisedSiblings() const
 	return ret;
 }
 
-QList<Declaration*> Declaration::utilised() const
+List<Declaration*> Declaration::utilised() const
 {
-	QList<Declaration*> ret;
+	List<Declaration*> ret;
 	foreach (Declaration* i, cardinalChildrenOf<Declaration>())
 		ret << i->utilised();
 //	qDebug() << name() << "(" << kind().name() << ") utilises:";

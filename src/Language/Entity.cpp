@@ -50,9 +50,9 @@ String Entity::indexName(int _i) const
 	return AuxilliaryRegistrar::get()->nameOfArbitrary(_i);
 }
 
-QList<int> Entity::knownNames() const
+List<int> Entity::knownNames() const
 {
-	QList<int> ret = AuxilliaryRegistrar::get()->names();
+	List<int> ret = AuxilliaryRegistrar::get()->names();
 	for (int i = INT_MIN; i < virtualEndOfNamed(); ++i)
 		ret << i;
 	return ret;
@@ -143,7 +143,7 @@ bool Entity::isNecessary() const
 }
 bool Entity::isComplete() const
 {
-	QList<Entity*> e = cardinalChildren();
+	List<Entity*> e = cardinalChildren();
 	if (e.size() < minRequired(Cardinals))
 		return false;
 	for (int i = INT_MIN; i < virtualEndOfNamed(); i++)
@@ -221,7 +221,7 @@ void Entity::kill(Entity* _substitute)
 }
 void Entity::clearEntities()
 {
-	QList<Entity*> tbd;
+	List<Entity*> tbd;
 	while (m_cardinalChildren.size())
 	{
 		tbd << m_cardinalChildren.last();
@@ -239,9 +239,9 @@ void Entity::clearEntities()
 // Debug
 void Entity::debugTree() const
 {
-	QList<Entity const*> ancestors;
+	List<Entity const*> ancestors;
 	for (Entity const* i = parent(); i; i = i->parent())
-		ancestors.push_front(i);
+		ancestors.prepend(i);
 	String indent = "";
 	foreach (Entity const* i, ancestors)
 	{
@@ -253,7 +253,7 @@ void Entity::debugTree() const
 void Entity::debugTree(String const& _i) const
 {
 	qDebug((_i + kind().name() + " (%x)").toCString(), this);
-	for (QHash<int, Entity*>::ConstIterator i = m_namedChildren.begin(); i != m_namedChildren.end(); ++i)
+	for (Hash<int, Entity*>::ConstIterator i = m_namedChildren.begin(); i != m_namedChildren.end(); ++i)
 		if (i.key() < virtualEndOfNamed())
 			i.value()->debugTree(_i + "|   [" + String::number(i.key() - INT_MIN) + "] ");
 		else
@@ -341,7 +341,7 @@ void Entity::navigateOnto(CodeScene* _s)
 }
 void Entity::dropCursor()
 {
-	QList<Entity*> s = children();
+	List<Entity*> s = children();
 	while (s.size())
 	{
 		Entity* e = s.takeFirst();
@@ -639,7 +639,7 @@ void Entity::removeFromBrood(int _index, Entity* _e)
 			m_cardinalChildren[i]->m_index = i;
 	}
 	else
-		for (QHash<int, Entity*>::iterator i = m_namedChildren.find(_index); i != m_namedChildren.end() && i.key() == _index; ++i)
+		for (Hash<int, Entity*>::Iterator i = m_namedChildren.find(_index); i != m_namedChildren.end() && i.key() == _index; ++i)
 			if (i.value() == _e)
 			{
 				m_namedChildren.erase(i);
@@ -901,7 +901,7 @@ Entity* Entity::usurp(Entity* _u)
 	over().insertSilent(_u);
 	
 	// Move children over.
-	QList<Entity*> es = m_cardinalChildren + m_namedChildren.values();
+	List<Entity*> es = m_cardinalChildren + m_namedChildren.values();
 	foreach (Entity* e, m_cardinalChildren)
 		e->silentMove(_u->back());
 	foreach (Entity* e, m_namedChildren.values())

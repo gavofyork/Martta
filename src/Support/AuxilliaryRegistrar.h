@@ -22,7 +22,12 @@
 
 #include "AuxilliaryFace.h"
 
-#include "msString.h"
+#include <msString.h>
+#include <msList.h>
+#include <msHash.h>
+using MarttaSupport::List;
+using MarttaSupport::Hash;
+using MarttaSupport::MultiHash;
 using MarttaSupport::String;
 using MarttaSupport::StringList;
 
@@ -38,30 +43,30 @@ public:
 
 	inline static AuxilliaryRegistrar*	get() { if (!s_this) s_this = new AuxilliaryRegistrar; return s_this; }
 	void								registerName(int _n, char const* _name);
-	inline QList<int> const&			names() const { return m_names; }
+	inline List<int> const&			names() const { return m_names; }
 	MarttaSupport::String const&						nameOfArbitrary(int _n) const;
 	int									arbitraryOfName(String const& _name) const;
 	
 	inline AuxilliaryFace const*		auxilliary(String const& _kindName) { return m_auxilliaries[_kindName]; }
 	void								registerAuxilliary(AuxilliaryFace const* _a);
-	inline QList<AuxilliaryFace const*> const&	allInterfaces() const { return m_allInterfaces; }
+	inline List<AuxilliaryFace const*> const&	allInterfaces() const { return m_allInterfaces; }
 	
 	template<class T>
-	inline QList<AuxilliaryFace const*> immediateInterfaces() const { return immediateInterfaces(T::staticAuxilliary()); } 
-	inline QList<AuxilliaryFace const*> immediateInterfaces(AuxilliaryFace const* _a) const { QList<AuxilliaryFace const*> ret; for (int i = 0; i < _a->interfaceAuxilliaryCount(); i++) ret << _a->interfaceAuxilliary(i); return ret; }
+	inline List<AuxilliaryFace const*> immediateInterfaces() const { return immediateInterfaces(T::staticAuxilliary()); } 
+	inline List<AuxilliaryFace const*> immediateInterfaces(AuxilliaryFace const* _a) const { List<AuxilliaryFace const*> ret; for (int i = 0; i < _a->interfaceAuxilliaryCount(); i++) ret << _a->interfaceAuxilliary(i); return ret; }
 	template<class T>
-	inline QList<AuxilliaryFace const*> immediateDeriveds() const { return immediateDeriveds(T::staticAuxilliary()); } 
-	inline QList<AuxilliaryFace const*> immediateDeriveds(AuxilliaryFace const* _a) const { return m_immediateDerivedsMap.values(_a); } 
+	inline List<AuxilliaryFace const*> immediateDeriveds() const { return immediateDeriveds(T::staticAuxilliary()); } 
+	inline List<AuxilliaryFace const*> immediateDeriveds(AuxilliaryFace const* _a) const { return m_immediateDerivedsMap.values(_a); } 
 	template<class T>
-	inline QList<AuxilliaryFace const*> interfaces() const { return interfaces(T::staticAuxilliary()); } 
-	inline QList<AuxilliaryFace const*> interfaces(AuxilliaryFace const* _a) const { return m_interfacesMap.values(_a); }
+	inline List<AuxilliaryFace const*> interfaces() const { return interfaces(T::staticAuxilliary()); } 
+	inline List<AuxilliaryFace const*> interfaces(AuxilliaryFace const* _a) const { return m_interfacesMap.values(_a); }
 	template<class T>
-	inline QList<AuxilliaryFace const*> supers() const { return supers(T::staticAuxilliary()); } 
-	inline QList<AuxilliaryFace const*> supers(AuxilliaryFace const* _a) const { return m_supersMap.values(_a); }
+	inline List<AuxilliaryFace const*> supers() const { return supers(T::staticAuxilliary()); } 
+	inline List<AuxilliaryFace const*> supers(AuxilliaryFace const* _a) const { return m_supersMap.values(_a); }
 	
-	inline QMultiMap<AuxilliaryFace const*, AuxilliaryFace const*> const& immediateDeriveds() const { return m_immediateDerivedsMap; }
-	inline QMultiMap<AuxilliaryFace const*, AuxilliaryFace const*> const& interfaces() const { return m_interfacesMap; }
-	inline QMultiMap<AuxilliaryFace const*, AuxilliaryFace const*> const& supers() const { return m_supersMap; }
+	inline MultiHash<AuxilliaryFace const*, AuxilliaryFace const*> const& immediateDeriveds() const { return m_immediateDerivedsMap; }
+	inline MultiHash<AuxilliaryFace const*, AuxilliaryFace const*> const& interfaces() const { return m_interfacesMap; }
+	inline MultiHash<AuxilliaryFace const*, AuxilliaryFace const*> const& supers() const { return m_supersMap; }
 	
 	void								recurseAux(AuxilliaryFace const* _face, String const& _indent) const;
 	void								initialiseClasses();
@@ -69,18 +74,18 @@ public:
 	void								jigCache();
 	
 private:
-	QList<AuxilliaryFace const*>		calculateInterfaces(AuxilliaryFace const* _a) const;
+	List<AuxilliaryFace const*>			calculateInterfaces(AuxilliaryFace const* _a) const;
 
 	static AuxilliaryRegistrar*			s_this;										///< Us.
 	bool								m_isInitialised;							///< We're initialised.
-	QList<int>							m_names;									///< The entity names.
-	QHash<int, String>					m_nameMap;
-	QHash<String, int>					m_invNameMap;
-	QHash<String, AuxilliaryFace const*> m_auxilliaries;							///< All our auxilliaries.
-	QList<AuxilliaryFace const*>		m_allInterfaces;							///< All our interfaces.
-	QMultiMap<AuxilliaryFace const*, AuxilliaryFace const*> m_immediateDerivedsMap;	///< Immediately derived classes (only Entity-derived classes here).
-	QMultiMap<AuxilliaryFace const*, AuxilliaryFace const*> m_interfacesMap;		///< All interfaces fulfilled (no Entity-derived classes in the values here).
-	QMultiMap<AuxilliaryFace const*, AuxilliaryFace const*> m_supersMap;			///< All supers (way back to Entity together with interfaces).
+	List<int>							m_names;									///< The entity names.
+	Hash<int, String>					m_nameMap;
+	Hash<String, int>					m_invNameMap;
+	Hash<String, AuxilliaryFace const*> m_auxilliaries;								///< All our auxilliaries.
+	List<AuxilliaryFace const*>			m_allInterfaces;							///< All our interfaces.
+	MultiHash<AuxilliaryFace const*, AuxilliaryFace const*> m_immediateDerivedsMap;	///< Immediately derived classes (only Entity-derived classes here).
+	MultiHash<AuxilliaryFace const*, AuxilliaryFace const*> m_interfacesMap;		///< All interfaces fulfilled (no Entity-derived classes in the values here).
+	MultiHash<AuxilliaryFace const*, AuxilliaryFace const*> m_supersMap;			///< All supers (way back to Entity together with interfaces).
 };
 
 }

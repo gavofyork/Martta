@@ -50,7 +50,7 @@ protected:
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity*) { changed(); }
 	virtual void						onDependencyRemoved(Entity*, int) { changed(); }
-	virtual QList<Declaration*>	utilised() const;
+	virtual List<Declaration*>	utilised() const;
 	virtual int							minRequired(int _i) const { return _i == Constness || _i == Body || _i == Returned ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
 	

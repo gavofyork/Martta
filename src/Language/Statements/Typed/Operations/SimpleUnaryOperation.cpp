@@ -61,14 +61,14 @@ bool SimpleUnaryOperation::keyPressedOnPosition(Position const& _p, EntityKeyEve
 	return false;
 }
 
-QList<ValueDefiner*> SimpleUnaryOperation::findOperators(Operator _o, Type const& _type)
+List<ValueDefiner*> SimpleUnaryOperation::findOperators(Operator _o, Type const& _type)
 {
 	return findBestOverload((_type), allOperators(_o.symbol()));
 }
 
 void SimpleUnaryOperation::setOperation(Operator _o, Type const& _type)
 {
-	QList<ValueDefiner*> l = findOperators(_o, _type);
+	List<ValueDefiner*> l = findOperators(_o, _type);
 	if (l.size() && (m_symbolCache != l[0] || m_operator != _o))
 	{
 		m_operator = _o;
