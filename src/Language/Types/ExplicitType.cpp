@@ -38,7 +38,7 @@ MARTTA_OBJECT_CPP(ExplicitType);
 
 bool ExplicitType::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
 {
-	if (_p.exists() && _p->isPlaceholder() && QRegExp("[A-Z:]").exactMatch(_e->text()))
+	if (_p.exists() && _p->isPlaceholder() && _e->text().length() == 1 && (_e->text()[0].isUpper() || _e->text()[0] == L':'))
 	{
 		_e->reinterpretLater();
 		// switch to Explicit Type.
@@ -186,7 +186,7 @@ bool ExplicitType::canStandAlone() const
 
 bool ExplicitType::keyPressed(EntityKeyEvent const* _e)
 {
-	if (QRegExp("[A-Z:]").exactMatch(_e->text()))
+	if (_e->text().length() == 1 && (_e->text()[0].isUpper() || _e->text()[0] == L':'))
 	{
 		_e->reinterpretLater();
 		setEditing(_e->codeScene());

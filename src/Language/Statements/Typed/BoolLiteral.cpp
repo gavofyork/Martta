@@ -29,13 +29,13 @@ MARTTA_OBJECT_CPP(BoolLiteral);
 
 bool BoolLiteral::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
 {
-	if (_p.exists() && _p->isPlaceholder() && QRegExp("[IO]").exactMatch(_e->text()))
+	if (_p.exists() && _p->isPlaceholder() && (_e->text() == "I" || _e->text() == "O"))
 	{
 		BoolLiteral* l = new BoolLiteral(_e->text() == "I");
 		_p.place(l);
 		l->setCurrent();
 	}
-	else if (_p.exists() && _p->isKind<BoolLiteral>() && QRegExp("[IO]").exactMatch(_e->text()))
+	else if (_p.exists() && _p->isKind<BoolLiteral>() && (_e->text() == "I" || _e->text() == "O"))
 	{
 		_p->asKind<BoolLiteral>()->setValue(_e->text() == "I");
 	}

@@ -119,10 +119,16 @@ int Entity::ancestorIndex(Entity const* _a) const
 }
 
 // Validity/status checking
-bool Entity::isValidName(String const&)
+bool Entity::isValidName(String const& _s)
 {
+	if (_s.isEmpty())
+		return false;
+	if (!_s[0].isLetter())
+		return false;
+	for (int i = 1; i < _s.length(); ++i)
+		if (!_s[i].isAlphaNumeric() && _s[i] != L'_')
+			return false;
 	return true;
-//	return QRegExp("[a-zA-Z][a-zA-Z0-9_]*").exactMatch(_n);
 }
 bool Entity::isNecessary() const
 {

@@ -84,7 +84,7 @@ bool EnumerationNamer::keyPressed(EntityKeyEvent const* _e)
 	{
 		self()->setCurrent();
 	}
-	else if (QRegExp("[a-z]").exactMatch(_e->text()) && !isNamed())
+	else if (_e->text().length() == 1 && _e->text()[0].isLower() && !isNamed())
 	{
 		setNamed();
 		_e->codeScene()->setCurrent(self()->child(Identity));

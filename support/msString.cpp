@@ -86,6 +86,11 @@ bool Char::isLetter() const
 	return iswalpha(m_value);
 }
 
+bool Char::isAlphaNumeric() const
+{
+	return iswalnum(m_value);
+}
+
 bool Char::isSpace() const
 {
 	return iswspace(m_value);

@@ -42,7 +42,7 @@ List<SimpleOperator*> SimpleType::s_nonMembers;
 
 bool SimpleType::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
 {
-	if (_p.exists() && _p->isPlaceholder() && QRegExp("[a-z]").exactMatch(_e->text()))
+	if (_p.exists() && _p->isPlaceholder() && _e->text().length() == 1 && _e->text()[0].isLower())
 	{
 		_e->reinterpretLater();
 		SimpleType* s = new SimpleType;
@@ -56,7 +56,7 @@ bool SimpleType::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* 
 
 bool SimpleType::keyPressed(EntityKeyEvent const* _e)
 {
-	if (QRegExp("[a-z:]").exactMatch(_e->text()))
+	if (_e->text().length() == 1 && (_e->text()[0].isLower() || _e->text()[0] == L':'))
 	{
 		_e->reinterpretLater();
 		setEditing(_e->codeScene());

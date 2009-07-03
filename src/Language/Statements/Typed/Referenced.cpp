@@ -63,7 +63,7 @@ enum { LocalVariables = 1<<0, LocalLambdas = 1<<1, SET(Local),
 
 bool Referenced::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
 {
-	if (_p.exists() && _p->isPlaceholder() && QRegExp("[a-z]").exactMatch(_e->text()) && _p->isKind<Typed>() && _p->asKind<Typed>()->ourAllowedTypes().size() && _p->asKind<Typed>()->ourAllowedTypes()[0]->isType<Memberify>())
+	if (_p.exists() && _p->isPlaceholder() && _e->text().length() == 1 && _e->text()[0].isLower() && _p->isKind<Typed>() && _p->asKind<Typed>()->ourAllowedTypes().size() && _p->asKind<Typed>()->ourAllowedTypes()[0]->isType<Memberify>())
 	{
 		_e->reinterpretLater();
 		Referenced* r = new Referenced;
@@ -71,7 +71,7 @@ bool Referenced::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* 
 		r->m_lastSet = MemberLambdas;
 		r->setEditing(_e->codeScene());
 	}
-	else if (_p.exists() && _p->isPlaceholder() && QRegExp("[a-zML:_]").exactMatch(_e->text()))
+	else if (_p.exists() && _p->isPlaceholder() && _e->text().length() == 1 && (_e->text()[0].isLower() || _e->text()[0] == L'M' || _e->text()[0] == L'L' || _e->text()[0] == L':' || _e->text()[0] == L'_'))
 	{
 		_e->reinterpretLater();
 		Referenced* r = new Referenced;
@@ -368,7 +368,7 @@ bool ReferencedEdit::keyPressed(EntityKeyEvent const* _e)
 		setSubset(LocalSet);
 	else if (_e->text() == ":" && !m_entityName.length())
 		setSubset(GlobalSet);
-	else if (QRegExp("[a-z]").exactMatch(_e->text()) || QRegExp("[0-9_A-Z]").exactMatch(_e->text()) && m_entityName.length())
+	else if (_e->text().length() == 1 && (_e->text()[0].isLower() || (_e->text()[0].isAlphaNumeric() || _e->text()[0] == L'_') && m_entityName.length()))
 		m_entityName += _e->text().toLower();
 	else if (_e->text() == " " || _e->text() == "[" || _e->text() == "#")
 	{

@@ -56,6 +56,7 @@ public:
 	inline bool operator==(wchar_t _ch) { return m_value == _ch; }
 	inline bool operator!=(wchar_t _ch) { return m_value != _ch; }
 	
+	bool isAlphaNumeric() const;
 	bool isNumber() const;
 	bool isLetter() const;
 	bool isSpace() const;

@@ -147,7 +147,7 @@ public:
 	{
 		if (_e->key() == Qt::Key_Backspace)
 			m_text = m_text.left(m_text.size() - 1);
-		else if (QRegExp("[A-Za-z0-9_ ]").exactMatch(_e->text()))
+		else if (_e->text().length() == 1 && (_e->text()[0].isAlphaNumeric() || _e->text()[0] == L'_'))
 			m_text += _e->text();
 		else
 			return EditDelegate<TextLabel>::keyPressed(_e);
@@ -206,7 +206,7 @@ public:
 
 bool TextLabel::keyPressed(EntityKeyEvent const* _e)
 {
-	if (_e->isFocused() && QRegExp("[a-z]").exactMatch(_e->text()))
+	if (_e->isFocused() && _e->text().length() == 1 && _e->text()[0].isLower())
 	{
 		setEditing(_e->codeScene());
 		static_cast<Delegate*>(editDelegate(_e->codeScene()))->setText("");

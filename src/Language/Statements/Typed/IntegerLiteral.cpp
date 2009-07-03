@@ -32,21 +32,21 @@ MARTTA_OBJECT_CPP(IntegerLiteral);
 
 bool IntegerLiteral::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
 {
-	if (_p.exists() && QRegExp("-[0-9]").exactMatch(_e->text()) && _p->isPlaceholder())
+	if (_p.exists() && _e->text().length() == 2 && _e->text()[0] == L'-' && _e->text()[1].isNumber() && _p->isPlaceholder())
 	{
 		IntegerLiteral* l = new IntegerLiteral;
 		_p.place(l);
 		l->setValue(_e->text().toDouble());
 		l->setEditing(_e->codeScene());
 	}
-	else if (_p.exists() && _p->isPlaceholder() && QRegExp("[0-9]").exactMatch(_e->text()))
+	else if (_p.exists() && _p->isPlaceholder() && _e->text().length() == 1 && _e->text()[0].isNumber())
 	{
 		IntegerLiteral* l = new IntegerLiteral;
 		_p.place(l);
 		l->setValue(_e->text().toDouble());
 		l->setEditing(_e->codeScene());
 	}
-	else if (_p.exists() && _p->isKind<IntegerLiteral>() && QRegExp("[0-9]").exactMatch(_e->text()))
+	else if (_p.exists() && _p->isKind<IntegerLiteral>() && _e->text().length() == 1 && _e->text()[0].isNumber())
 	{
 		_p->asKind<IntegerLiteral>()->setValue(_e->text().toDouble());
 		_p->setEditing(_e->codeScene());
@@ -97,7 +97,7 @@ EditDelegateFace* IntegerLiteral::newDelegate(CodeScene* _s)
 		{
 			if (_e->key() == Qt::Key_Backspace && m_entry.size() > 1)
 				m_entry = m_entry.left(m_entry.size() - 1);
-			else if (QRegExp("[0-9]").exactMatch(_e->text()))
+			else if (_e->text().length() == 1 && _e->text()[0].isNumber())
 				m_entry += _e->text();
 			else if (_e->text() == "s" && subject()->range() == ShortRange)
 				subject()->setRange(NaturalRange);

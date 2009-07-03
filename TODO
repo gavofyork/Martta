@@ -18,14 +18,10 @@ Small things:
 Dynamic code-loading (plugins).
 - Move everything over so that plugins use Martta-specific data types.
   - Get rid of XML dependencies.
-  - Move QString to String.
-    - Optimise with copy on write.
-  - Move QHash to Hash.
-  - Move QList to List.
+  - Optimise String (and List/Hash perhaps) with copy on write.
   - Make QRgb-like type (to/from string, storage).
   - Make QColor-like type (dark/lighter functions).
   - Make qDebug-like function.
-  - Make QRegExp-like class (
   - Move all decoration code into layout system and invent markup for it.
   - Abstract CodeScene into CodeScene & CodeView.
 

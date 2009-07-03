@@ -38,7 +38,7 @@ bool FloatLiteral::keyPressedOnPosition(Position const& _p, EntityKeyEvent const
 		_p->replace(l);
 		l->setEditing(_e->codeScene());
 	}
-	else if (_p.exists() && _p->isKind<FloatLiteral>() && QRegExp("[0-9]").exactMatch(_e->text()))
+	else if (_p.exists() && _p->isKind<FloatLiteral>() && _e->text().length() == 1 && _e->text()[0].isNumber())
 	{
 		_p->asKind<FloatLiteral>()->setValue(_e->text().toInt());
 		_p->setEditing(_e->codeScene());
@@ -81,7 +81,7 @@ EditDelegateFace* FloatLiteral::newDelegate(CodeScene* _s)
 		{
 			if (_e->key() == Qt::Key_Backspace && m_entry.size() > 1)
 				m_entry = m_entry.left(m_entry.size() - 1);
-			else if (QRegExp("[0-9]").exactMatch(_e->text()) || _e->text() == "." && !m_entry.contains("."))
+			else if (_e->text().length() == 1 && _e->text()[0].isNumber() || _e->text() == "." && !m_entry.contains("."))
 				m_entry += _e->text();
 			else if (_e->text() == "f")
 				subject()->setPrecision(SinglePrecision);
