@@ -96,14 +96,14 @@ String ForLoop::code() const
 	return ret;
 }
 
-void ForLoop::decorate(DecorationContext const& /*_c*/) const
+/*void ForLoop::decorate(DecorationContext const& _c) const
 {
-/*	_c->setPen(Qt::NoPen);
+	_c->setPen(Qt::NoPen);
 	_c->setBrush(QColor::fromHsv(120, 16, 236));
 	QPainterPath p;
 	p.addRect(_c.cap(0));
 	p.addRect(_c.cap(1));
-	_c->drawPath(p);*/
-}
+	_c->drawPath(p);
+}*/
 
 }

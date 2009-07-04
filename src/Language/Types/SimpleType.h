@@ -91,7 +91,7 @@ protected:
 	virtual bool						hasDefaultConstructor() const { return true; }
 	virtual Types						assignableTypes() const;
 	virtual bool						contentsEquivalentTo(TypeEntity const* _t) const { return _t->asKind<SimpleType>()->m_id == m_id; }
-	virtual String						idColour() const { return "#fb7"; }
+	virtual Rgb							idColour() const { return 0xffbb77; }
 	virtual TypeEntity*					newClone() const { return new SimpleType(m_id); }
 	virtual String						defineLayout(ViewKeys const&) const;
 	virtual void						exportDom(QDomElement& _element) const;

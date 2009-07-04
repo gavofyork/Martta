@@ -181,7 +181,7 @@ void Referenced::exportDom(QDomElement& _element) const
 	_element.setAttribute("specific", m_specific);
 	_element.setAttribute("lastSet", m_lastSet);
 }
-
+/*
 void Referenced::decorate(DecorationContext const& _c) const
 {
 	//TODO: Check!
@@ -211,7 +211,7 @@ void Referenced::decorate(DecorationContext const& _c) const
 		}
 	}
 	Super::decorate(_c);
-}
+}*/
 
 String Referenced::defineLayout(ViewKeys const&) const
 {
@@ -220,7 +220,7 @@ String Referenced::defineLayout(ViewKeys const&) const
 		ret += "(;M4;[[[;fs-2;fb;c#777;e#fff;'M';]]];);";
 	else if (m_subject && m_subject->isKind<Argument>())
 		ret += "(;M4;[[[;fs-2;fb;c#777;e#fff;'_';]]];);";
-	ret += "^;s" + (m_subject ? m_subject->type()->idColour() : TypeEntity::null->idColour()) + ";c;'" + (m_subject ? m_subject->name() : String()) + "'";
+	ret += "^;s" + (m_subject ? m_subject->type()->idColour() : TypeEntity::null->idColour()).name() + ";c;'" + (m_subject ? m_subject->name() : String()) + "'";
 	return ret;
 }
 
@@ -304,7 +304,7 @@ void ReferencedEdit::leavingEditIntact()
 
 String ReferencedEdit::defineLayout(ViewKeys const&) const
 {
-	return String(subject()->m_lastSet&GlobalSet ? "p:/global.svg;" : "") + "^;s" + (subject()->m_subject ? subject()->m_subject->type()->idColour() : TypeEntity::null->idColour()) + ";'" + m_entityName + "';s;ygrayed;'" + m_completion + "'";
+	return String(subject()->m_lastSet&GlobalSet ? "p:/global.svg;" : "") + "^;s" + (subject()->m_subject ? subject()->m_subject->type()->idColour() : TypeEntity::null->idColour()).name() + ";'" + m_entityName + "';s;ygrayed;'" + m_completion + "'";
 }
 
 void ReferencedEdit::updateSubset()

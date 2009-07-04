@@ -174,9 +174,9 @@ bool ExplicitType::defineSimilarityFrom(TypeEntity const* _f, Castability _c) co
 			Super::defineSimilarityFrom(_f, _c);
 }
 
-String ExplicitType::idColour() const
+Rgb ExplicitType::idColour() const
 {
-	return "#f77";
+	return 0xff7777;
 }
 
 bool ExplicitType::canStandAlone() const
@@ -203,7 +203,7 @@ List<Declaration*> ExplicitType::utilised() const
 
 String ExplicitType::defineLayout(ViewKeys const&) const
 {
-	return "^;fb;s" + idColour() + ";'" + (m_subject.isUsable() ? m_subject->name() : "[]") + "'";
+	return "^;fb;s" + idColour().name() + ";'" + (m_subject.isUsable() ? m_subject->name() : "[]") + "'";
 }
 
 List<TypeDefinition*> ExplicitType::possibilities()
@@ -223,7 +223,7 @@ List<TypeDefinition*> ExplicitType::possibilities()
 
 String ExplicitType::defineEditLayout(ViewKeys const&, TypeDefinition*) const
 {
-	return "fb;s" + idColour() + ";^;%1";
+	return "fb;s" + idColour().name() + ";^;%1";
 }
 
 EditDelegateFace* ExplicitType::newDelegate(CodeScene* _s)

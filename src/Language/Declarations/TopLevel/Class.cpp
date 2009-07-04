@@ -279,7 +279,7 @@ bool Class::keyPressed(EntityKeyEvent const* _e)
 
 String Class::defineLayout(ViewKeys const& _keys) const
 {
-	String ret = ("^;ycode;'class ';fb;cblack;s" + Type(const_cast<Class*>(this))->idColour() + ";!%1;s;ycode").arg(Identity);
+	String ret = ("^;ycode;'class ';fb;cblack;s" + Type(const_cast<Class*>(this))->idColour().name() + ";!%1;s;ycode").arg(Identity);
 	
 	if (_keys["expanded"].toBool())
 	{
@@ -314,8 +314,7 @@ String Class::defineLayout(ViewKeys const& _keys) const
 				if (f->access() == Access(i))
 					mem += String(";n;%1").arg(f->index());
 			if (!mem.isEmpty())
-//				ret += String(L";n;s%0144;'%2';s%3").arg(AccessLabel(Access(i)).idColour().name()).arg(Martta::code(Access(i))).arg(mem);
-				ret += String(L";n;'%1';s%2").arg(Martta::code(Access(i))).arg(mem);
+				ret += String(L";n;s%1;'%2';s%3").arg(AccessLabel(Access(i)).idColour().name(0x44)).arg(Martta::code(Access(i))).arg(mem);
 		}
 		ret += ";n;'}'";
 	}

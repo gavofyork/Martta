@@ -42,7 +42,7 @@ Type ThisPointer::type() const
 
 String ThisPointer::defineLayout(ViewKeys const&) const
 {
-	return "^;s" + type()->idColour() + ";'this'";
+	return "^;s" + type()->idColour().name() + ";'this'";
 }
 
 }

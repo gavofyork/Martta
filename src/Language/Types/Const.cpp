@@ -60,7 +60,7 @@ String Const::defineLayout(ViewKeys const&) const
 	return String("%1;(;M2;^;fb;s;ewhite;c#5f6f7f;fs-2;'C';M3;)").arg(Original);
 }
 
-void Const::decorate(DecorationContext const& _c) const
+/*void Const::decorate(DecorationContext const& _c) const
 {
 	QRectF r = alignedForUnitPen(_c(1));
 	r.setX(r.x() - 16);
@@ -74,7 +74,7 @@ void Const::decorate(DecorationContext const& _c) const
 	_c->setPen(Qt::NoPen);
 	_c->setBrush(go);
 	_c->drawRoundRect(r, 50, 100);
-}
+}*/
 
 Kinds Const::deniedKinds(int _i) const
 {

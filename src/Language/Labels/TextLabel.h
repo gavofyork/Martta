@@ -49,7 +49,7 @@ protected:
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 	virtual String						defineLayout(ViewKeys const&) const;
 	virtual bool						keyPressed(EntityKeyEvent const* _e);
-	virtual void						decorate(DecorationContext const& _c) const;
+//	virtual void						decorate(DecorationContext const& _c) const;
 	
 private:
 	String								m_text;

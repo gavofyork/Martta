@@ -55,10 +55,10 @@ public:
 protected:
 	virtual bool						hasDefaultConstructor() const;
 	virtual Types						assignableTypes() const;
-	virtual List<ValueDefiner*>		applicableMembers(Entity* _s = 0, bool _isConst = false) const;
+	virtual List<ValueDefiner*>			applicableMembers(Entity* _s = 0, bool _isConst = false) const;
 	virtual String						code(String const& _middle) const { return (m_subject ? m_subject->asKind<Identifiable>()->reference() : "") + _middle; }
 	virtual bool						contentsEquivalentTo(TypeEntity const* _t) const { return _t->asKind<ExplicitType>()->m_subject == m_subject; }
-	virtual String						idColour() const;
+	virtual Rgb							idColour() const;
 	virtual void						exportDom(QDomElement& _element) const;
 	virtual void						importDom(QDomElement const& _element);
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
@@ -70,7 +70,7 @@ protected:
 	virtual bool						defineSimilarityTo(TypeEntity const* _t, Castability _c) const;
 	virtual bool						defineSimilarityFrom(TypeEntity const* _from, Castability _c) const;
 	virtual void						apresLoad() { addDependency(m_subject->self()); Super::apresLoad(); }
-	virtual List<Declaration*>	utilised() const;
+	virtual List<Declaration*>			utilised() const;
 	
 	ModelPtr<TypeDefinition>			m_subject;
 };

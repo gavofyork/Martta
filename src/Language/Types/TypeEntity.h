@@ -47,7 +47,7 @@ public:
 	TypeEntity(): m_owner(0) { g_typeCount++; }
 	~TypeEntity() { g_typeCount--; }
 	
-	virtual String						idColour() const { return "#777"; }
+	virtual Rgb							idColour() const { return 0x7777777; }
 	virtual String						code(String const& _middle = "") const { return _middle; }
 	virtual TypeEntity*					bottom() { return this; }
 
@@ -76,7 +76,7 @@ public:
 	virtual bool						hasDefaultConstructor() const { return false; }
 	/// Types that assignment operator may take on right hand side, assuming left hand side is a reference to this type.
 	virtual Types						assignableTypes() const;
-	virtual List<ValueDefiner*>		applicableMembers(Entity* /*_s*/ = 0, bool /*_isConst*/ = false) const { return List<ValueDefiner*>(); }
+	virtual List<ValueDefiner*>			applicableMembers(Entity* /*_s*/ = 0, bool /*_isConst*/ = false) const { return List<ValueDefiner*>(); }
 	
 	/// isType/asType: They ignore qualifiers and test for/identify the physical type stored.
 	/// In terms of C++, Reference and Const are considered physically transparent (though
@@ -99,7 +99,7 @@ public:
 	/// Just a tunnel into other TypeEntity's newClone methods.
 	static TypeEntity*					cloneOf(TypeEntity const* _t, Type* _owner) { return _t->newClone(_owner); }
 	
-	virtual List<Declaration*>	utilised() const { return List<Declaration*>(); }
+	virtual List<Declaration*>			utilised() const { return List<Declaration*>(); }
 	
 protected:
 	/// This newClone is the simple one; it doesn't have to change the ownership or duplicate the children.
@@ -137,8 +137,8 @@ protected:
 	Type*								owner() const { return m_owner; }
 	void								setOwner(Type* _o) { m_owner = _o; }
 	
-	String								typeLayout() const { return String("e;c;s%1;fb;").arg(idColour()); } 
-	String								instanceLayout() const { return String("e;c;s%1;fb0;").arg(idColour()); } 
+	String								typeLayout() const { return String("e;c;s%1;fb;").arg(idColour().name()); } 
+	String								instanceLayout() const { return String("e;c;s%1;fb0;").arg(idColour().name()); } 
 	
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity*) { changed(); }

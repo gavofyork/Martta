@@ -1380,7 +1380,7 @@ void CodeScene::doRefreshLayout()
 						p.setBrush(f->back);
 						p.drawRect(br);
 					}
-					f->subject->decorate(DecorationContext(&p, br, f->captured));
+//					f->subject->decorate(DecorationContext(&p, br, f->captured));
 					p.drawPicture(0, 0, f->pic);
 				}
 			

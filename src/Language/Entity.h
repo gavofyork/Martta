@@ -21,12 +21,13 @@
 #pragma once
 
 #include <QDebug>			// Move to mDebug & link in.
-#include <QRgb>
 #include <qglobal.h>
 
+#include <msRgb.h>
 #include <msList.h>
 #include <msHash.h>
 #include <msString.h>
+using MarttaSupport::Rgb;
 using MarttaSupport::Hash;
 using MarttaSupport::MultiHash;
 using MarttaSupport::List;
@@ -52,7 +53,6 @@ namespace Martta
 {
 
 class EntityStylist;
-
 class EditDelegateFace;
 class CodeScene;
 class DecorationContext;
@@ -127,7 +127,7 @@ public:
 	template<class T> inline T*			childAs(int _i) const { Entity* e = child(_i); M_ASSERT(e); return e->asKind<T>(); }
 	template<class T> inline T*			tryChild(int _i) const { if (Entity* e = child(_i)) return e->tryKind<T>(); return 0; }
 	
-	inline List<Entity*> const&		cardinalChildren() const { return m_cardinalChildren; }
+	inline List<Entity*> const&			cardinalChildren() const { return m_cardinalChildren; }
 	inline int							cardinalChildCount() const { return m_cardinalChildren.size(); }
 	template<class T> inline List<T*>	cardinalChildrenOf() const { return filterEntities<T>(m_cardinalChildren); }
 	template<class T> inline List<T*>	cardinalChildrenAs() const { return castEntities<T>(m_cardinalChildren); }
@@ -376,7 +376,7 @@ public:
 
 	// UI
 	/// 
-	virtual void						decorate(DecorationContext const&) const;
+//	virtual void						decorate(DecorationContext const&) const;
 	virtual EditDelegateFace*			newDelegate(CodeScene*) { return 0; }
 	// We've been double-clicked.
 	bool								activated(CodeScene* _s);

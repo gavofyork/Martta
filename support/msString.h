@@ -67,6 +67,19 @@ public:
 	Char toLower() const;
 	Char toUpper() const;
 	
+	inline int toInt(bool* _ok = 0, t::uint _base = 10)
+	{
+		bool ok;
+		_ok = _ok ? _ok : &ok;
+		t::uint r = m_value - L'0';
+		if (r < 10)
+			ok = (r < _base);
+		else if ((r = m_value - L'A') < 26u)
+			ok = ((r += 10) < _base);
+		else if ((r = m_value - L'a') < 26u)
+			ok = ((r += 10) < _base);
+		return ok ? r : -1;
+	}
 private:
 	wchar_t m_value;
 };

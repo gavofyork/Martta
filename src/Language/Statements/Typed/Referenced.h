@@ -48,7 +48,7 @@ public:
 protected:
 	virtual bool						isInValidState() const;
 	virtual String						defineLayout(ViewKeys const&) const;
-	virtual void						decorate(DecorationContext const& _c) const;
+//	virtual void						decorate(DecorationContext const& _c) const;
 	virtual bool						isSuperfluous() const;
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 	virtual void						exportDom(QDomElement& _element) const;

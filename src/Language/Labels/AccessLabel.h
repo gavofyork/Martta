@@ -20,7 +20,8 @@
 
 #pragma once
 
-#include <QRgb>
+#include <msRgb.h>
+using MarttaSupport::Rgb;
 
 #include "Label.h"
 
@@ -34,11 +35,11 @@ class AccessLabel: public Label
 public:
 	AccessLabel(Access _a = Public): m_access(_a) {}
 	
-	inline QRgb							idColour() const { return idColour(m_access); }
+	inline Rgb							idColour() const { return idColour(m_access); }
 	inline Access						access() const { return m_access; }
 	inline void							setAccess(Access _a) { m_access = _a; changed(); }
 	
-	inline static QRgb					idColour(Access _a) { return _a == Public ? qRgb(192, 192, 0) : _a == Protected ? qRgb(255, 127, 0) : _a == Private ? qRgb(255, 0, 0) : qRgb(0, 0, 0); }
+	inline static Rgb					idColour(Access _a) { return _a == Public ? Rgb(192, 192, 0) : _a == Protected ? Rgb(255, 127, 0) : _a == Private ? Rgb(255, 0, 0) : Rgb(0, 0, 0); }
 	
 protected:
 	virtual void						exportDom(QDomElement& _element) const;

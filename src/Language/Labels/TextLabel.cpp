@@ -111,7 +111,7 @@ String TextLabel::defineLayout(ViewKeys const&) const
 	}
 	return "^;" + key + (name().isEmpty() ? "yminor;'[ANONYMOUS]'" : (String(isNamed() ? "c#000" : "c#aaa") + ";'" + name() + "'"));
 }
-
+/*
 void TextLabel::decorate(DecorationContext const& _c) const
 {
 	bool dec= false;
@@ -136,7 +136,7 @@ void TextLabel::decorate(DecorationContext const& _c) const
 		_c->setBrush(go);
 		_c->drawRoundRect(r, 50, 100);
 	}
-}
+}*/
 
 class Delegate: public EditDelegate<TextLabel>
 {

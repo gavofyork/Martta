@@ -62,7 +62,7 @@ String Reference::defineLayout(ViewKeys const&) const
 {
 	return String("%1;(;M1;^;fb;s;e#ffffff;c#7f6f5f;fs-2;'&';M2;)").arg(Original);
 }
-
+/*
 void Reference::decorate(DecorationContext const& _c) const
 {
 	QRectF r = alignedForUnitPen(_c(1));
@@ -80,6 +80,6 @@ void Reference::decorate(DecorationContext const& _c) const
 	_c->setPen(Qt::NoPen);
 	_c->setBrush(go);
 	_c->drawRoundRect(r, 50, 100);
-}
+}*/
 
 }

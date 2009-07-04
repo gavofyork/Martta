@@ -46,7 +46,7 @@ public:
 protected:
 	virtual int							minRequired(int _i) const { return _i == Original ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _index) const;
-	virtual String						idColour() const { return original() ? original()->idColour() : TypeEntity::null->idColour(); }
+	virtual Rgb							idColour() const { return original() ? original()->idColour() : TypeEntity::null->idColour(); }
 	virtual String						defineLayout(ViewKeys const&) const { return ("%1;^;" + modifierLayout()).arg(Original); }
 	virtual String						modifierLayout() const { return String(); }
 	virtual TypeEntity*					newClone() const { return new ModifyingType; }

@@ -430,14 +430,14 @@ String Entity::defineLayout(ViewKeys const&) const
 {
 	return "^;ycode;'[]'";
 }
-void Entity::decorate(DecorationContext const& _c) const
+/*void Entity::decorate(DecorationContext const& _c) const
 {
 	if (!isValid())
 	{
-//		_c->setPen(QPen(QColor(255, 128, 128), 2, Qt::DotLine, Qt::RoundCap));
-//		_c->drawLine(QPointF(_c().left(), _c().bottom() - 2.f), QPointF(_c().right() - 2.f, _c().bottom() - 2.f));
+		_c->setPen(QPen(QColor(255, 128, 128), 2, Qt::DotLine, Qt::RoundCap));
+		_c->drawLine(QPointF(_c().left(), _c().bottom() - 2.f), QPointF(_c().right() - 2.f, _c().bottom() - 2.f));
 	}
-}
+}*/
 
 // Keypress/UI event handlers.
 void Entity::activateEvent(CodeScene* _s)

@@ -43,7 +43,7 @@ String LambdaNamer::defineReturnLayout(ViewKeys const&) const
 String LambdaNamer::defineNameLayout(ViewKeys const&) const
 {
 	if (self()->child(Identity))
-		return String("ynormal;s%1;!%2").arg(FunctionType().idColour()).arg(Identity);
+		return String("ynormal;s%1;!%2").arg(FunctionType().idColour().name()).arg(Identity);
 	else
 		return "ycode;'" + name().replace(";", "\\;").replace("'", "\\'") + "'";
 }

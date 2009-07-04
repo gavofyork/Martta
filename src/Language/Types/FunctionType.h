@@ -49,7 +49,7 @@ public:
 
 	void								setEllipsis(bool _on = true) { m_ellipsis = _on; }
 
-	virtual String						idColour() const { return "#b7f"; }
+	virtual Rgb							idColour() const { return 0xbb77ff; }
 	
 private:
 	virtual Types						assignableTypes() const;

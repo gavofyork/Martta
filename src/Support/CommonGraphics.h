@@ -36,11 +36,6 @@ static const QRectF BigRect(0.f, 0.f, 1.e99, 1.e99);
 
 QColor colourByName(String const& _n);
 
-inline QColor qRgba(QRgb _v, int _alpha)
-{
-	return QColor(qRed(_v), qGreen(_v), qBlue(_v), _alpha);
-}
-
 inline QRect QRF2QR(QRectF const& _r)
 {
 	return QRect((int)_r.x(), (int)_r.y(), (int)_r.width(), (int)_r.height());

@@ -100,7 +100,7 @@ String EnumerationNamer::defineLayout(ViewKeys const& _viewKeys) const
 	String ret;
 	String name;
 	if (isNamed())
-		name = (";Mo;fb;cblack;s" + Type(const_cast<TypeDefinition*>(asKind<TypeDefinition>()))->idColour() + ";!%1").arg(Identity);
+		name = (";Mo;fb;cblack;s" + Type(const_cast<TypeDefinition*>(asKind<TypeDefinition>()))->idColour().name() + ";!%1").arg(Identity);
 	else
 		name = ";Mo;c#777;yminor;'[" + m_stem + "...]'";
 	if (_viewKeys["expanded"].toBool())

@@ -62,7 +62,7 @@ Entity* MemberLambda::isExpander() const
 		return 0;
 }
 
-void MemberLambda::memberDecorate(DecorationContext const& _p) const
+/*void MemberLambda::memberDecorate(DecorationContext const& _p) const
 {
 	if (isConst())
 	{
@@ -75,7 +75,7 @@ void MemberLambda::memberDecorate(DecorationContext const& _p) const
 		_p->setBrush(go);
 		_p->drawRect(r);
 	}
-}
+}*/
 
 String MemberLambda::basicCode(FunctionCodeScope _ref) const
 {

@@ -148,7 +148,7 @@ List<int> SimpleType::possibilities()
 
 String SimpleType::defineEditLayout(ViewKeys const&, int) const
 {
-	return "^;c;s" + idColour() + ";fb;%1";
+	return "^;c;s" + idColour().name() + ";fb;%1";
 }
 
 EditDelegateFace* SimpleType::newDelegate(CodeScene* _s)

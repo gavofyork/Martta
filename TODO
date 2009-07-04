@@ -18,6 +18,7 @@ Small things:
 Dynamic code-loading (plugins).
 - Move everything over so that plugins use Martta-specific data types.
   - Get rid of XML dependencies.
+    - Creation code to be compiled?
   - Optimise String (and List/Hash perhaps) with copy on write.
   - Make QRgb-like type (to/from string, storage).
   - Make QColor-like type (dark/lighter functions).

@@ -69,7 +69,7 @@ Type VariableNamer::type() const
 
 String VariableNamer::defineLayout(ViewKeys const&) const
 {
-	return ("%1;s" + actualType()->idColour() + ";Mi;>name;fb0;!%2").arg(OurType).arg(Identity);
+	return String(L"%1;s%2;Mi;>name;fb0;!%3").arg(OurType).arg(actualType()->idColour().name()).arg(Identity);
 }
 
 }
