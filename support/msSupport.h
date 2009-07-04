@@ -25,9 +25,6 @@
  * ***** END LICENSE BLOCK ***** */
 #pragma once
 
-#include <cstdio>
-#include <iostream>
-
 #define MS_EXPORT __attribute__((visibility("default")))
 
 #define privateinline inline
@@ -39,15 +36,25 @@
 namespace MarttaSupport
 {
 
-#if RELEASE
-struct NullOut
-{
-	inline NullOut& template<class T> operator<<(T) { return *(NullOut*)0; }
-};
-#define mDebug(...) (*(MarttaSupport::NullOut*)0)
+class Rgb;
+class TextStream;
+class String;
+template<class> class List;
+template<class, class, int> class Hash;
+template<class, class, int> class MultiHash;
+typedef List<String> StringList;
+
+
+void assertFailed(int, char const*, char const*, char const*);
+#if defined(__GNUC__)
+#define ASSERT(X) if ((X)) {} else MarttaSupport::assertFailed(__LINE__, __FILE__, __PRETTY_FUNCTION__, #X)
 #else
-#define mDebug(...) std::fprintf(stderr, " \b" __VA_ARGS__); std::cerr << ""
+#define ASSERT(X) if ((X)) {} else MarttaSupport::assertFailed(__LINE__, __FILE__, __FUNCTION__, #X)
 #endif
+#define ASSERT_EQ(X, Y) //if ((X)) {} else assertFailedEq(__LINE__, __FUNCTION__, #X, X, #Y, Y)
+#define ASSERT_NE(X, Y) //if ((X)) {} else assertFailedNe(__LINE__, __FUNCTION__, #X, X, #Y, Y)
+#define STATIC_ASSERT(X)
+
 
 template<typename T>
 inline T max(T const& _a, T const& _b) { return (_a < _b) ? _b : _a; }
@@ -100,9 +107,6 @@ inline t::uint floorLog2(t::uint _a)
 #endif
 	return rett;
 }
-
-#define ASSERT(X)
-#define STATIC_ASSERT(X)
 
 struct MethodExistsTrue { enum { c_val = 1 }; };
 struct MethodExistsFalse { enum { c_val = 0 }; };

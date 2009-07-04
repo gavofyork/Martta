@@ -40,7 +40,7 @@ void regDecs(Declaration* _d)
 
 void ModelPtrRegistrar::restorePtrs(Declaration const* _root)
 {
-	mInformation() << "Restoring up to" << m_modelPtrs.size() << "pointers";
+	mInfo() << "Restoring up to" << m_modelPtrs.size() << "pointers";
 	
 	TIME_STATEMENT(recurseOn)
 		foreach (Declaration* d, _root->childrenOf<Declaration>())
@@ -66,7 +66,7 @@ void ModelPtrRegistrar::restorePtrs(Declaration const* _root)
 		}
 	}
 		
-	mInformation() << "Restored " << restored << "pointers";
+	mInfo() << "Restored " << restored << "pointers";
 	
 	m_tempRegistered.clear();
 	

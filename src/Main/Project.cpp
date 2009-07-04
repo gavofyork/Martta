@@ -55,7 +55,7 @@ Project::Project(QString const& _load):
 	CFURLRef appUrlRef = CFBundleCopyBundleURL(CFBundleGetMainBundle());
 	CFStringRef macPath = CFURLCopyFileSystemPath(appUrlRef, kCFURLPOSIXPathStyle);
 	m_supportPath = QString(CFStringGetCStringPtr(macPath, CFStringGetSystemEncoding())) + "/Support/";
-	mInformation() << "Support path:" << m_supportPath.toLatin1().data();
+	mInfo() << "Support path:" << m_supportPath.toLatin1().data();
 	CFRelease(appUrlRef);
 	CFRelease(macPath);
 #endif
@@ -214,7 +214,7 @@ void Project::build()
 	m_compiler = new QProcess;
 	connect(m_compiler, SIGNAL(finished(int, QProcess::ExitStatus)), SLOT(compileFinished()));
 
-	mInformation() << "Compiling" << src.toLatin1().data();
+	mInfo() << "Compiling" << src.toLatin1().data();
 
 #ifdef Q_WS_WIN
 	QStringList env = QProcess::systemEnvironment();
@@ -252,10 +252,10 @@ void Project::compileFinished()
 {
 	QByteArray err = m_compiler->readAllStandardError();
 	QByteArray out = m_compiler->readAllStandardOutput();
-	mInformation() << out.data();
+	mInfo() << out.data();
 	if (m_compiler->exitCode())
 	{
-		mInformation() << err.size();
+		mInfo() << err.size();
 		QFile::remove(m_tempPath + "/" + exeName());
 		m_lastCompileError = err;
 	}

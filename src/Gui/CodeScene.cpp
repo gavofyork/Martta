@@ -854,7 +854,7 @@ void CodeScene::navigateInto(Entity* _centre)
 	if (!isInScene(_centre))
 		doRefreshLayout();
 	
-	mInformation() << "Navigating into " << _centre;
+	mInfo() << "Navigating into " << _centre;
 //	_centre->debugTree();
 	Entity* n = m_leftmostChild.value(_centre, _centre);
 	if (!n)

@@ -170,18 +170,18 @@ bool Entity::isValid() const
 	
 	if (!isAllowed())
 	{
-		mInformation() << this << "invalid because it's not allowed here by parent." << parent();
+		mInfo() << this << "invalid because it's not allowed here by parent." << parent();
 		return false;
 	}
 	if (!isInValidState())
 	{
-		mInformation() << this << "invalid because it's in an invalid entity state.";
+		mInfo() << this << "invalid because it's in an invalid entity state.";
 		return false;
 	}
 	if (parent())
 		if (!parent()->isChildInValidState(index()))
 		{
-			mInformation() << this << "invalid because its context considers it in an invalid state.";
+			mInfo() << this << "invalid because its context considers it in an invalid state.";
 			return false;
 		}
 	return true;
@@ -251,14 +251,15 @@ void Entity::debugTree() const
 	String indent = "";
 	foreach (Entity const* i, ancestors)
 	{
-		mDebug("%s (%x)", (indent + i->kind().name()).toCString(), (int)i);
+		mDebug() << indent << i;
 		indent += "    ";
 	}
 	debugTree(indent);
 }
+
 void Entity::debugTree(String const& _i) const
 {
-	mDebug("%s (%x)", kind().name().toCString(), (int)this);
+	mDebug() << _i << this;
 	for (Hash<int, Entity*>::ConstIterator i = m_namedChildren.begin(); i != m_namedChildren.end(); ++i)
 		if (i.key() < virtualEndOfNamed())
 			i.value()->debugTree(_i + "|   [" + String::number(i.key() - INT_MIN) + "] ");

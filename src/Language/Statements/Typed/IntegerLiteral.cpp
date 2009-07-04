@@ -62,7 +62,7 @@ String IntegerLiteral::defineLayout(ViewKeys const&) const
 	modf(m_value, &value);
 	String ret = (value > 0 || value < 0) ? "" : ",0";
 	for (int v = value < 0 ? -value : value; v >= 1; v /= 1000)
-		ret = (",%1" + ret).arg((int)fmod((double)v, 1000.0), v >= 1000 ? 3 : 0, 10, '0');
+		ret = (",%1" + ret).arg((uint)fmod((double)v, 1000.0), v >= 1000 ? 3 : 0, 10, '0');
 	ret = ret.mid(1);
 	if (m_signed)
 		ret = (m_value < 0 ? "-" : "") + ret;

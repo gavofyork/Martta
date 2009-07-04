@@ -168,7 +168,7 @@ template<class T> typename List<T>::Iterator List<T>::erase(typename List<T>::It
 {
 	ASSERT(_end.m_ptr > _begin.m_ptr);
 	ASSERT(_begin.m_ptr >= m_data);
-	ASSERT(_end.m_ptr < m_data + m_count);
+	ASSERT(_end.m_ptr <= m_data + m_count);
 	if (!isTrivial)
 		for (ST* i = _begin.m_ptr; i != _end.m_ptr; i++)
 			delete *(T**)i;
@@ -189,7 +189,7 @@ template<class T> int List<T>::indexOf(const T& _value, int _from) const
 
 template<class T> void List<T>::insert(int _i, const T& _value)
 {
-	ASSERT(_i < m_count);
+	ASSERT(_i <= m_count);
 	if (m_reserved == m_count)
 		grow();
 	memmove(m_data + _i + 1, m_data + _i, (m_count - _i) * sizeof(ST)); 
@@ -426,7 +426,7 @@ template<class T> QDebug List<T>::streamToDebug(QDebug _stream) const
 }
 #endif
 
-template<class T> std::ostream& List<T>::streamToDebug(std::ostream& _stream) const
+template<class T> TextStream& List<T>::streamToDebug(TextStream& _stream) const
 {
 	_stream << "{";
 	bool first = true;

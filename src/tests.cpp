@@ -78,13 +78,13 @@ int test()
 	
 	TEST("Memory leaking")
 	{
-		mInformation() << "News/Deletes/Remaining/Types = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes) << "/" << g_typeCount;
+		mInfo() << "News/Deletes/Remaining/Types = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes) << "/" << g_typeCount;
 		FAILED_IF(s_news - s_deletes != 1);
 		FAILED_IF(g_typeCount != 1);
 	}
 	
 	s_testing = false;
-	mInformation() << "PASSED :-)";
+	mInfo() << "PASSED :-)";
 	
 //	exit(failed);
 	return failed;

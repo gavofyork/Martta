@@ -64,13 +64,15 @@ template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitK
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator&
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator::operator++()
 {
+	ASSERT(!m_node->isFrontSentinel());
+	
 	// jump to next if we're at the end of the current master node...
-	if (m_node->isSentinel())
+	if (m_node->isBackSentinel())
 		return *this;
 	if (m_node->m_next == m_masterNode)
 		do
 			m_node = ++m_masterNode;
-		while (!m_node->isSentinel() && !m_masterNode->isActive());
+		while (!m_node->isBackSentinel() && !m_masterNode->isActive());
 	else
 		m_node = m_node->m_next;
 	return *this;
@@ -80,14 +82,14 @@ template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitK
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator&
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator::operator--()
 {
-	ASSERT(!m_node->isSentinel());
+	ASSERT(!m_node->isFrontSentinel());
 	
 	if (m_node == m_masterNode)
 	{
 		do
 			--m_masterNode;
-		while (!m_masterNode->isSentinel() && !m_masterNode->isActive());
-		if (m_masterNode->isSentinel())
+		while (!m_masterNode->isFrontSentinel() && !m_masterNode->isActive());
+		if (m_masterNode->isFrontSentinel())
 			// Give up now; we've reached the sentinel.
 			m_masterNode = m_node;
 		else
@@ -111,13 +113,15 @@ template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitK
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::ConstIterator&
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::ConstIterator::operator++()
 {
+	ASSERT(!m_node->isFrontSentinel());
+	
 	// jump to next if we're at the end of the current master node...
-	if (m_node->isSentinel())
+	if (m_node->isBackSentinel())
 		return *this;
 	if (m_node->m_next == m_masterNode)
 		do
 			m_node = ++m_masterNode;
-		while (!m_node->isSentinel() && !m_masterNode->isActive());
+		while (!m_node->isBackSentinel() && !m_masterNode->isActive());
 	else
 		m_node = m_node->m_next;
 	return *this;
@@ -127,14 +131,14 @@ template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitK
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::ConstIterator&
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::ConstIterator::operator--()
 {
-	ASSERT(!m_node->isSentinel());
+	ASSERT(!m_node->isFrontSentinel());
 	
 	if (m_node == m_masterNode)
 	{
 		do
 			--m_masterNode;
-		while (!m_masterNode->isSentinel() && !m_masterNode->isActive());
-		if (m_masterNode->isSentinel())
+		while (!m_masterNode->isFrontSentinel() && !m_masterNode->isActive());
+		if (m_masterNode->isFrontSentinel())
 			// Give up now; we've reached the sentinel.
 			m_masterNode = m_node;
 		else
@@ -232,8 +236,8 @@ void GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::allocate(t::uint _s)
 	ASSERT(_s >= Min);
 	m_nodes = new Node[_s + 2] + 1;
 	m_capacity = _s;
-	m_nodes[-1].setSentinel();
-	m_nodes[_s].setSentinel();
+	m_nodes[-1].setFrontSentinel();
+	m_nodes[_s].setBackSentinel();
 }
 
 template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
@@ -825,7 +829,7 @@ template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitK
 void GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::resizeToPowerOfTwo(t::uint _size)
 {
 	ASSERT(isPOT(_size));
-	ASSERT(_size >= _Min);
+	ASSERT(_size >= Min);
 	if (m_capacity == _size)
 		return;
 	Node* oldNodes = m_nodes;
@@ -978,7 +982,7 @@ QDebug GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::streamToDebug(QDebug 
 #endif
 
 template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
-std::ostream& GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::streamToDebug(std::ostream& _stream) const
+TextStream& GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::streamToDebug(TextStream& _stream) const
 {
 	_stream << "#{";
 	bool first = true;

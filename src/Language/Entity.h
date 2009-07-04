@@ -527,6 +527,24 @@ public:
 extern int s_news;
 extern int s_deletes;
 
+inline MarttaSupport::TextStream& operator<<(MarttaSupport::TextStream& _out, const Kind& _item)
+{
+	return _out << _item.name();
+}
+
+inline MarttaSupport::TextStream& operator<<(MarttaSupport::TextStream& _out, const Entity& _item)
+{
+	return _out << _item.kind() << "(*" << (&_item) << ")";
+}
+
+inline MarttaSupport::TextStream& operator<<(MarttaSupport::TextStream& _out, const Entity* _item)
+{
+	if (_item)
+		return _out << _item->kind() << "*(" << ((void*)_item) << ")";
+	else
+		return _out << "Entity*( 0 )";
+}
+
 }
 
 void* Martta::Entity::operator new(size_t _size)
@@ -553,24 +571,6 @@ inline QDebug operator<<(QDebug _out, const Martta::Entity& _item)
 }
 
 inline QDebug operator<<(QDebug _out, const Martta::Entity* _item)
-{
-	if (_item)
-		return _out << _item->kind() << "*(" << ((void*)_item) << ")";
-	else
-		return _out << "Entity *( 0 )";
-}
-
-inline std::ostream& operator<<(std::ostream& _out, const Martta::Kind& _item)
-{
-	return _out << _item.name();
-}
-
-inline std::ostream& operator<<(std::ostream& _out, const Martta::Entity& _item)
-{
-	return _out << _item.kind() << "(*" << (&_item) << ")";
-}
-
-inline std::ostream& operator<<(std::ostream& _out, const Martta::Entity* _item)
 {
 	if (_item)
 		return _out << _item->kind() << "*(" << ((void*)_item) << ")";

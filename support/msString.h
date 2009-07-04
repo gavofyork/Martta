@@ -27,13 +27,9 @@
 #pragma once
 
 #include "msSupport.h"
-#include "msList.h"
 
 namespace MarttaSupport
 {
-
-class String;
-typedef List<String> StringList;
 
 class Char
 {
@@ -216,7 +212,7 @@ public:
 	String					trimmed() const;
 	String					simplified() const;
 	String					mid(t::uint _i, t::uint _length) const;
-	inline String			mid(t::uint _i) const { ASSERT(_i >= 0); ASSERT(_i < m_length); return mid(_i, m_length - _i); }
+	inline String			mid(t::uint _i) const { ASSERT(_i <= m_length); return mid(_i, m_length - _i); }
 	inline String			left(t::uint _len) const { ASSERT(_len <= m_length); return mid(0, _len); }
 	inline String			right(t::uint _len) const { ASSERT(_len <= m_length); return mid(m_length - _len, _len); }
 
@@ -271,8 +267,13 @@ public:
 	inline float			toFloat(bool* _ok = 0) const { return (float)toDouble(_ok); }
 
 	static String const&	number(bool _n) { return _n ? s_true : s_false; }
-	static String			number(int _n);
-	static String			number(t::uint _n, int _base = 10);
+	static String			number(unsigned char _n, int _base = 10) { return number((unsigned long)_n, _base); }
+	static String			number(short _n) { return number((long)_n); }
+	static String			number(unsigned short _n, int _base = 10) { return number((unsigned long)_n, _base); }
+	static String			number(int _n) { return number((long)_n); }
+	static String			number(unsigned int _n, int _base = 10) { return number((unsigned long)_n, _base); }
+	static String			number(long _n);
+	static String			number(unsigned long _n, int _base = 10);
 	static String			number(double _n, char _format = 'g', int _precision = 6);
 
 	String					arg(String const& _a, int _fieldWidth = 0, Char _fillChar = L' ') const;
@@ -281,10 +282,20 @@ public:
 	inline String			arg(void* _a) const { return arg(number((t::uint)_a, 16)); }
 	inline String			arg(bool _a) const { return arg(number(_a)); }
 	inline String			arg(double _a, int _fieldWidth = 0, char _format = 'g', int _precision = -1, Char _fillChar = L' ') const { return arg(String::number(_a, _format, _precision), _fieldWidth, _fillChar); }
+	inline String			arg(long _a, int _fieldWidth = 0, wchar_t _fillChar = L' ') const { return arg(String::number(_a), _fieldWidth, Char(_fillChar)); }
+	inline String			arg(long _a, int _fieldWidth = 0, char _fillChar) const { return arg(String::number(_a), _fieldWidth, Char(_fillChar)); }
+	inline String			arg(unsigned long _a, int _fieldWidth = 0, int _base = 10, wchar_t _fillChar = L' ') const { return arg(String::number(_a, _base), _fieldWidth, Char(_fillChar)); }
+	inline String			arg(unsigned long _a, int _fieldWidth = 0, int _base = 10, char _fillChar) const { return arg(String::number(_a, _base), _fieldWidth, Char(_fillChar)); }
 	inline String			arg(int _a, int _fieldWidth = 0, wchar_t _fillChar = L' ') const { return arg(String::number(_a), _fieldWidth, Char(_fillChar)); }
 	inline String			arg(int _a, int _fieldWidth = 0, char _fillChar) const { return arg(String::number(_a), _fieldWidth, Char(_fillChar)); }
-	inline String			arg(t::uint _a, int _fieldWidth = 0, int _base = 10, wchar_t _fillChar = L' ') const { return arg(String::number(_a, _base), _fieldWidth, Char(_fillChar)); }
-	inline String			arg(t::uint _a, int _fieldWidth = 0, int _base = 10, char _fillChar) const { return arg(String::number(_a, _base), _fieldWidth, Char(_fillChar)); }
+	inline String			arg(unsigned int _a, int _fieldWidth = 0, int _base = 10, wchar_t _fillChar = L' ') const { return arg(String::number(_a, _base), _fieldWidth, Char(_fillChar)); }
+	inline String			arg(unsigned int _a, int _fieldWidth = 0, int _base = 10, char _fillChar) const { return arg(String::number(_a, _base), _fieldWidth, Char(_fillChar)); }
+	inline String			arg(short _a, int _fieldWidth = 0, wchar_t _fillChar = L' ') const { return arg(String::number(_a), _fieldWidth, Char(_fillChar)); }
+	inline String			arg(short _a, int _fieldWidth = 0, char _fillChar) const { return arg(String::number(_a), _fieldWidth, Char(_fillChar)); }
+	inline String			arg(unsigned short _a, int _fieldWidth = 0, int _base = 10, wchar_t _fillChar = L' ') const { return arg(String::number(_a, _base), _fieldWidth, Char(_fillChar)); }
+	inline String			arg(unsigned short _a, int _fieldWidth = 0, int _base = 10, char _fillChar) const { return arg(String::number(_a, _base), _fieldWidth, Char(_fillChar)); }
+	inline String			arg(unsigned char _a, int _fieldWidth = 0, int _base = 10, wchar_t _fillChar = L' ') const { return arg(String::number(_a, _base), _fieldWidth, Char(_fillChar)); }
+	inline String			arg(unsigned char _a, int _fieldWidth = 0, int _base = 10, char _fillChar) const { return arg(String::number(_a, _base), _fieldWidth, Char(_fillChar)); }
 	String					arg(Char _a, int _fieldWidth = 0, Char _fillChar = L' ') const;
 	inline String			arg(Char _a, int _fieldWidth = 0, wchar_t _fillChar) const { return arg(_a, _fieldWidth, Char(_fillChar)); }
 	inline String			arg(Char _a, int _fieldWidth = 0, char _fillChar) const { return arg(_a, _fieldWidth, Char(_fillChar)); }
@@ -348,11 +359,6 @@ inline const String operator+(String const& _s, char _ch) { return String(_s) +=
 inline const String operator+(char _ch, String const& _s) { return String(_s).prepend(_ch); }
 inline const String operator+(String const& _s, wchar_t _ch) { return String(_s) += _ch; }
 inline const String operator+(wchar_t _ch, String const& _s) { return String(_s).prepend(_ch); }
-
-inline std::ostream& operator<<(std::ostream& _out, MarttaSupport::String const& _string)
-{
-	return _out << _string.toCString();
-}
 
 }
 

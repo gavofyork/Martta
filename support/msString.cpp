@@ -26,7 +26,9 @@
 #include <cstring>
 #include <cerrno>
 
+#include "msList.h"
 #include "msString.h"
+#include "msDebug.h"
 
 namespace MarttaSupport
 {
@@ -668,8 +670,7 @@ String String::simplified() const
 
 String String::mid(t::uint _i, t::uint _length) const
 {
-	ASSERT(_i >= 0);
-	ASSERT(_i < m_length);
+	ASSERT(_i <= m_length);
 	ASSERT(_i + _length <= m_length);
 	String ret;
 	ret.resize(_length);
@@ -677,7 +678,7 @@ String String::mid(t::uint _i, t::uint _length) const
 	return ret;
 }
 
-String String::number(int _n)
+String String::number(long _n)
 {
 	static wchar_t s_format[] = L"%d";
 	static wchar_t s_result[128];
@@ -688,7 +689,7 @@ String String::number(int _n)
 	return ret;
 }
 
-String String::number(t::uint _n, int _base)
+String String::number(unsigned long _n, int _base)
 {
 	static wchar_t s_format[] = L"%d";
 	static wchar_t s_result[128];

@@ -122,14 +122,14 @@ List<AuxilliaryFace const*> AuxilliaryRegistrar::calculateInterfaces(AuxilliaryF
 
 void AuxilliaryRegistrar::recurseAux(AuxilliaryFace const* _face, String const& _indent) const
 {
-	mInformation() << _indent << _face->name();
+	mInfo() << _indent << _face->name();
 	foreach (AuxilliaryFace const* i, m_immediateDerivedsMap.values(_face))
 		recurseAux(i, _indent + "|   ");
 }
 
 void AuxilliaryRegistrar::registerAuxilliary(AuxilliaryFace const* _a)
 {
-//	mInformation() << "Registering" << _a->name();
+//	mInfo() << "Registering" << _a->name();
 	m_auxilliaries[_a->name()] = _a;
 }
 	

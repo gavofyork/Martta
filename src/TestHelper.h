@@ -36,13 +36,13 @@ public:
 		m_failedCounter	(_c)
 	{
 		s_asserted = false;
-		mInformation() << "Testing" << m_name;
+		mInfo() << "Testing" << m_name;
 	}
 	~TestHelper()
 	{
 		if (m_failed || s_asserted)
 		{
-			mInformation() << "FAILED! " << (m_failed ? m_failed : s_asserted);
+			mInfo() << "FAILED! " << (m_failed ? m_failed : s_asserted);
 			exit(1);
 			(*m_failedCounter)++;
 		}

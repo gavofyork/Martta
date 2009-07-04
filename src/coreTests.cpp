@@ -412,17 +412,17 @@ int coreTests()
 		TEST_FOR("Negatives: one B", a->childCount(TestNegativesB::NamedChildB) == 1);
 		TEST_FOR("Negatives: two Cs", a->childCount(TestNegativesB::NamedChildC) == 2);
 		TEST_FOR("Negatives: no 'D's", a->childCount(TestNegativesB::NamedChildC + 1) == 0);
-	mInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
+	mInfo() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
 		a->child(TestNegativesB::NamedChildC)->replace(new Label);
 		TEST_FOR("Negatives: bad replacement makes incomplete", !a->isComplete());
-	mInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
+	mInfo() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
 		a->validifyChildren();
 		TEST_FOR("Negatives: validifyChildren() makes complete", a->isComplete());
-	mInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
+	mInfo() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
 		a->validifyChildren();
 		TEST_FOR("Negatives: 2nd validifyChildren() and still complete", a->isComplete());
 	}
-	mInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
+	mInfo() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
 	TEST("Negatives save/load")
 	{
 		Root r;

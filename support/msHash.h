@@ -107,7 +107,7 @@ public:
 	// Both set() and swap() methods must be called on inActive() nodes.
 	privateinline void set(Key const& _key, T const& _value)
 	{
-		ASSERT(!isActive());
+		ASSERT(isActive());
 		if (sizeof(Key) > sizeof(Key*))
 			if (m_key)
 				*m_key = _key;
@@ -126,7 +126,7 @@ public:
 	template<bool IK2>
 	privateinline void copy(PNode<Key, T, IK2> const& _n)
 	{
-		ASSERT(!isActive());
+		ASSERT(isActive());
 		if (sizeof(Key) > sizeof(Key*))
 			if (m_key)
 				*m_key = _n.key();
@@ -144,7 +144,7 @@ public:
 	}
 	privateinline void swap(PNode& _n)
 	{
-		ASSERT(!isActive());
+		ASSERT(isActive());
 		MarttaSupport::swap(m_key, _n.m_key);
 		MarttaSupport::swap(m_value, _n.m_value);
 	}
@@ -155,13 +155,15 @@ public:
 	
 	// If there's no m_next or m_previous, then we're inactive.
 	privateinline operator bool() const { return isActive(); }
-	privateinline bool isActive() const { return m_next && m_next != (PNode*)1; }
+	privateinline bool isActive() const { return m_next && m_next != (PNode*)1 && m_next != (PNode*)2; }
 	// May only be called on inactive heads of rows. They become isActive().
 	privateinline void activate() { ASSERT(!m_next); m_next = this; }
 	// May only be called on single heads of rows. They become !isActive().
 	privateinline void deactivate() { this->~PNode(); m_next = 0; m_value = 0; m_key = 0; }
-	privateinline bool isSentinel() const { return m_next == (PNode*)1; }
-	privateinline void setSentinel() { m_next = (PNode*)1; }
+	privateinline bool isFrontSentinel() const { return m_next == (PNode*)1; }
+	privateinline bool isBackSentinel() const { return m_next == (PNode*)2; }
+	privateinline void setFrontSentinel() { m_next = (PNode*)1; }
+	privateinline void setBackSentinel() { m_next = (PNode*)2; }
 
 	PNode* m_next;
 		
@@ -180,7 +182,7 @@ public:
 	// Both set() and usurp() methods must be called on inActive() nodes.
 	privateinline void set(T const& _value)
 	{
-		ASSERT(!isActive());
+		ASSERT(isActive());
 		if (sizeof(T) > sizeof(T*))
 			if (m_value)
 				*m_value = _value;
@@ -192,7 +194,7 @@ public:
 	template<bool IK2>
 	privateinline void copy(PNode<Key, T, IK2> const& _n)
 	{
-		ASSERT(!isActive());
+		ASSERT(isActive());
 		if (sizeof(T) > sizeof(T*))
 			if (m_value)
 				*m_value = _n.value();
@@ -203,7 +205,7 @@ public:
 	}
 	privateinline void swap(PNode& _n)
 	{
-		ASSERT(!isActive());
+		ASSERT(isActive());
 		MarttaSupport::swap(m_value, _n.m_value);
 	}
 	
@@ -213,13 +215,15 @@ public:
 		
 	// If there's no m_next or m_previous, then we're inactive.
 	privateinline operator bool() const { return isActive(); }
-	privateinline bool isActive() const { return m_next && m_next != (PNode*)1; }
+	privateinline bool isActive() const { return m_next && m_next != (PNode*)1 && m_next != (PNode*)2; }
 	// May only be called on inactive heads of rows. They become isActive().
 	privateinline void activate() { ASSERT(!m_next); m_next = this; }
 	// May only be called on single heads of rows. They become !isActive().
 	privateinline void deactivate() { this->~PNode(); m_next = 0; m_value = 0; }
-	privateinline bool isSentinel() const { return m_next == (PNode*)1; }
-	privateinline void setSentinel() { m_next = (PNode*)1; }
+	privateinline bool isFrontSentinel() const { return m_next == (PNode*)1; }
+	privateinline bool isBackSentinel() const { return m_next == (PNode*)2; }
+	privateinline void setFrontSentinel() { m_next = (PNode*)1; }
+	privateinline void setBackSentinel() { m_next = (PNode*)2; }
 	
 	PNode* m_next;
 		
@@ -237,7 +241,7 @@ class /*MS_EXPORT*/ GeneralHash
 #if defined(QT_DEBUG) || defined(QT_NO_DEBUG)
 	friend inline QDebug operator<<(QDebug _stream, ::MarttaSupport::GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey> const& _me) { return _me.streamToDebug(_stream); }
 #endif
-	friend inline std::ostream& operator<<(std::ostream& _stream, ::MarttaSupport::GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey> const& _me) { return _me.streamToDebug(_stream); }
+	friend inline TextStream& operator<<(TextStream& _stream, ::MarttaSupport::GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey> const& _me) { return _me.streamToDebug(_stream); }
 
 	typedef PNode<Key, T, ImplicitKey> Node;
 
@@ -450,7 +454,7 @@ private:
 #if defined(QT_DEBUG) || defined(QT_NO_DEBUG)
 	QDebug streamToDebug(QDebug _stream) const;
 #endif
-	std::ostream& streamToDebug(std::ostream& _stream) const;
+	TextStream& streamToDebug(TextStream& _stream) const;
 	
 	Node* m_nodes;
 	t::uint m_capacity;
