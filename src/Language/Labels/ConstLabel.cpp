@@ -34,7 +34,7 @@ String ConstLabel::defineLayout(ViewKeys const&) const
 	
 bool ConstLabel::keyPressed(EntityKeyEvent const* _e)
 {
-	if (_e->text() == "!" || _e->key() == Qt::Key_Tab)
+	if (_e->text() == "!" || _e->text() == L"\t")
 		setIsConst(!isConst());
 	else
 		return Super::keyPressed(_e);

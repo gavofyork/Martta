@@ -57,7 +57,7 @@ String Compound::defineLayout(ViewKeys const&) const
 
 bool Compound::keyPressed(EntityKeyEvent const* _e)
 {
-	if (_e->key() == Qt::Key_Return)
+	if (_e->text() == "\n")
 	{
 		Position p = (_e->isFocused()) ?
 		(/*_e->inserting() || */_e->modifiers() & Qt::ShiftModifier) ?
@@ -68,7 +68,7 @@ bool Compound::keyPressed(EntityKeyEvent const* _e)
 		p.place(s);
 		s->setCurrent();
 	}
-	else if (_e->key() == Qt::Key_Home && _e->focalIndex() != UndefinedIndex)
+	else if (_e->text() == L"¬" && _e->focalIndex() != UndefinedIndex)
 	{
 		child(_e->focalIndex())->setCurrent();
 	}

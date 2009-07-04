@@ -302,7 +302,7 @@ void Entity::importDom(QDomElement const& _element)
 			if (e)
 				e->importDom(i.toElement());
 			else
-				qCritical() << "Unknown element of kind" << i.toElement().attribute("kind");
+				mCritical() << "Unknown element of kind" << i.toElement().attribute("kind");
 		}
 }
 
@@ -536,7 +536,7 @@ void Entity::keyPressEvent(EntityKeyEvent* _e)
 bool Entity::keyPressed(EntityKeyEvent const* _e)
 {
 	Position p = over();
-	if (_e->codeScene()->isCurrent(this) && (_e->key() == Qt::Key_Delete && _e->modifiers() == Qt::ShiftModifier || _e->key() == Qt::Key_Backspace && isEditing(_e->codeScene())))
+	if (_e->codeScene()->isCurrent(this) && (_e->text() == L"\x7f" && _e->modifiers() == Qt::ShiftModifier || _e->text() == L"\b" && isEditing(_e->codeScene())))
 	{
 //		p.parent()->debugTree();
 //		mDebug() << p.index();
@@ -547,7 +547,7 @@ bool Entity::keyPressed(EntityKeyEvent const* _e)
 		if (p.exists())
 			_e->codeScene()->setCurrent(p.entity());
 	}
-	else if (_e->codeScene()->isCurrent(this) && _e->key() == Qt::Key_Delete)
+	else if (_e->codeScene()->isCurrent(this) && _e->text() == L"\x7f")
 	{
 //		p.parent()->debugTree();
 //		mDebug() << p.index();
@@ -561,11 +561,11 @@ bool Entity::keyPressed(EntityKeyEvent const* _e)
 		if (p.exists())
 			_e->codeScene()->setCurrent(p.entity());
 	}
-	else if (_e->codeScene()->isCurrent(this) && (_e->key() == Qt::Key_Escape) && isEditing(_e->codeScene()))
+	else if (_e->codeScene()->isCurrent(this) && _e->text() == L"\x1b" && isEditing(_e->codeScene()))
 		_e->codeScene()->setEditing(0);
-	else if (_e->codeScene()->isCurrent(this) && _e->key() == Qt::Key_Tab && !isEditing(_e->codeScene()))
+	else if (_e->codeScene()->isCurrent(this) && _e->text() == L"\t" && !isEditing(_e->codeScene()))
 		_e->codeScene()->setEditing(this);
-	else if (_e->key() == Qt::Key_Tab)
+	else if (_e->text() == L"\t")
 		activated(_e->codeScene());
 	else if (_e->text() == "{" && !_e->codeScene()->viewKeys(this)["expanded"].toBool() && isExpander())
 	{

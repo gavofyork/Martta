@@ -64,7 +64,7 @@ void EnumerationNamer::updateStem()
 
 bool EnumerationNamer::keyPressed(EntityKeyEvent const* _e)
 {
-	if (_e->key() == Qt::Key_Return && _e->codeScene()->viewKeys(self())["expanded"].toBool())
+	if (_e->text() == L"\n" && _e->codeScene()->viewKeys(self())["expanded"].toBool())
 	{
 		Position p = (_e->isFocused() || _e->focalIndex() == 0) ?
 		(/*_e->inserting() || */_e->modifiers() & Qt::ShiftModifier) ?
@@ -76,7 +76,7 @@ bool EnumerationNamer::keyPressed(EntityKeyEvent const* _e)
 		p.place(s);
 		s->child(Identity)->setCurrent();
 	}
-	else if (_e->key() == Qt::Key_Home && _e->focalIndex() != UndefinedIndex)
+	else if (_e->text() == L"¬" && _e->focalIndex() != UndefinedIndex)
 	{
 		self()->child(_e->focalIndex())->setCurrent();
 	}

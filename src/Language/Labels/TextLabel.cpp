@@ -145,7 +145,7 @@ public:
 	void setText(String const& _t) { m_text = _t; }
 	virtual bool keyPressed(EntityKeyEvent const* _e)
 	{
-		if (_e->key() == Qt::Key_Backspace)
+		if (_e->text() == L"\b")
 			m_text = m_text.left(m_text.size() - 1);
 		else if (_e->text().length() == 1 && (_e->text()[0].isAlphaNumeric() || _e->text()[0] == L'_'))
 			m_text += _e->text();

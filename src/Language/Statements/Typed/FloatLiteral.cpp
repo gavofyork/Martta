@@ -79,7 +79,7 @@ EditDelegateFace* FloatLiteral::newDelegate(CodeScene* _s)
 		}
 		virtual bool keyPressed(EntityKeyEvent const* _e)
 		{
-			if (_e->key() == Qt::Key_Backspace && m_entry.size() > 1)
+			if (_e->text() == L"\b" && m_entry.size() > 1)
 				m_entry = m_entry.left(m_entry.size() - 1);
 			else if (_e->text().length() == 1 && _e->text()[0].isNumber() || _e->text() == "." && !m_entry.contains("."))
 				m_entry += _e->text();

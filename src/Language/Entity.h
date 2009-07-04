@@ -559,7 +559,7 @@ void Martta::Entity::operator delete(void* p)
 	s_deletes++;
 	free(p);
 }
-
+/*
 inline QDebug operator<<(QDebug _out, const Martta::Kind& _item)
 {
 	return _out << _item.name();
@@ -577,7 +577,7 @@ inline QDebug operator<<(QDebug _out, const Martta::Entity* _item)
 	else
 		return _out << "Entity *( 0 )";
 }
-
+*/
 template<class T, class U>
 void Martta::Entity::setDependency(T& _dependencyVariable, U const& _dependency)
 {

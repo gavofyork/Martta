@@ -394,6 +394,35 @@ Entity* CodeScene::editEntity() const
 	return m_editDelegate ? m_editDelegate->subject() : 0;
 }
 
+int translateMods(int _e)
+{
+	int r = 0;
+	if (_e & Qt::ShiftModifier)
+		r |= EntityKeyEvent::ShiftModifier;
+	if (_e & Qt::ControlModifier)
+		r |= EntityKeyEvent::ControlModifier;
+	return r;
+}
+
+wchar_t const* translateKey(int _e)
+{
+	switch (_e)
+	{
+	case Qt::Key_Delete:
+		return L"\x7f";
+	case Qt::Key_Escape:
+		return L"\x1b";
+	case Qt::Key_Return:
+		return L"\n";
+	case Qt::Key_Backspace:
+		return L"\b";
+	case Qt::Key_Tab:
+		return L"\t";
+	default:
+		return 0;
+	}
+}
+
 void CodeScene::keyPressEvent(QKeyEvent* _e)
 {
 	if (!m_subject || !current()) return;
@@ -403,8 +432,7 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 	
 	m_doInsert = false;
 
-	EntityKeyEvent e(*_e, 0, false, false, UndefinedIndex, 0);
-	e.setAccepted(false);
+	EntityKeyEvent e;
 	
 	if (m_strobeFocus && !_e->text().isEmpty() && _e->text() != " ")
 	{
@@ -421,8 +449,7 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 			m_strobeChild->prepareMove(sCrPoint);
 		}
 		mDebug() << "strobeText: " << m_strobeText;
-		e = EntityKeyEvent(*_e, m_strobeText, &*m_strobeFocus, true, m_strobeFocus->isPlaceholder(), -1, this);
-		e.setAccepted(false);
+		e = EntityKeyEvent(m_strobeText + String(_e->text()), translateMods(_e->modifiers()), &*m_strobeFocus, true, m_strobeFocus->isPlaceholder(), UndefinedIndex, this);
 		Entity::keyPressEventStarter(&e);
 		if (e.isAccepted())
 		{
@@ -451,7 +478,7 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 			{
 				// Strobe child died - cancel strobe and issue warning (can't strobe further now).
 				killStrobe();
-				qCritical() << "ERROR: Strober killed strobe child so cannot continue strobing.";
+				mCritical() << "ERROR: Strober killed strobe child so cannot continue strobing.";
 			}
 		}
 		else if (sCrPoint && sChPoint)
@@ -461,11 +488,14 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 		}	
 	}
 
+
+	// isAccepted no longer being referential between QKE & EKE may cause problems here?
+
 	if (!e.isAccepted())
 	{
 		// rejig for single key press.
-		e = EntityKeyEvent(*_e, n, true, n->isPlaceholder(), -1, this);
-		e.setAccepted(false);
+		wchar_t const* k = translateKey(_e->key());
+		e = EntityKeyEvent(k ? String(k) : String(_e->text()), translateMods(_e->modifiers()), n, true, n->isPlaceholder(), UndefinedIndex, this);
 		Entity::keyPressEventStarter(&e);
 		if (e.isAccepted())
 			killStrobe();
@@ -474,12 +504,12 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 	bool allowStrobeInit = true;
 	
 	// Navigation keys or the strobe kill key.
-	if (!e.isAccepted() && (keyPressedAsNavigation(&e) || _e->text() == " "))
+	if (!e.isAccepted() && (keyPressedAsNavigation(_e) || _e->text() == " "))
 	{
-		e.accept();
 		killStrobe();
 		// Navigation keys can never initialise a strobe.
 		allowStrobeInit = false;
+		e.accept();
 	}
 	
 	if (m_reinterpretCurrentKeyEvent) allowStrobeInit = false;
@@ -523,11 +553,13 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 //		else
 //			m_strobeChild = 0;
 		if (m_strobeFocus)
-			m_strobeText += String(_e->text())[0];
+			m_strobeText += _e->text()[0].toLatin1();
 	}
+	if (e.isAccepted())
+		_e->accept();
 }
 
-bool CodeScene::keyPressedAsNavigation(EntityKeyEvent const* _e)
+bool CodeScene::keyPressedAsNavigation(QKeyEvent const* _e)
 {
 	if (_e->matches(QKeySequence::MoveToNextChar))
 	{

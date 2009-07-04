@@ -345,9 +345,9 @@ void ReferencedEdit::commit()
 
 bool ReferencedEdit::keyPressed(EntityKeyEvent const* _e)
 {
-	if (_e->key() == Qt::Key_Tab)
+	if (_e->text() == L"\t")
 		m_entityName += m_completion;
-	else if (_e->key() == Qt::Key_Backspace && m_entityName.length())
+	else if (_e->text() == L"\b" && m_entityName.length())
 	{
 		if (_e->modifiers() == Qt::ControlModifier)
 			m_entityName.chop(1);
@@ -358,7 +358,7 @@ bool ReferencedEdit::keyPressed(EntityKeyEvent const* _e)
 				m_entityName.chop(1);
 		}
 	}
-	else if (_e->key() == Qt::Key_Backspace && !m_entityName.length())
+	else if (_e->text() == L"\b" && !m_entityName.length())
 		setSubset(LocalSet|MemberLambdas);
 	else if (_e->text() == "_" && !m_entityName.length())
 		setSubset(ArgumentSet);

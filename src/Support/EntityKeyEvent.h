@@ -20,21 +20,23 @@
 
 #pragma once
 
-#include <QKeyEvent>
-
-#include "Position.h"
+#include "Common.h"
+#include "SafePointer.h"
 
 namespace Martta
 {
 	
 class Entity;
 class CodeScene;
+class Position;
 
-class EntityKeyEvent: public QKeyEvent
+class EntityKeyEvent
 {
 public:
-	EntityKeyEvent(QKeyEvent const& _e, Entity* _focus, bool _isFocused, bool _focusIsPlaceholder, int _focalIndex, CodeScene* _codeScene):
-		QKeyEvent				(_e),
+	EntityKeyEvent(String const& _text = String::null, int _modifiers = 0, Entity* _focus = 0, bool _isFocused = false, bool _focusIsPlaceholder = false, int _focalIndex = -1, CodeScene* _codeScene = 0):
+		m_text					(_text),
+		m_modifiers				(_modifiers),
+		m_accepted				(false),
 		m_focus					(_focus),
 		m_isFocused				(_isFocused),
 		m_focusIsPlaceholder	(_focusIsPlaceholder),
@@ -44,20 +46,14 @@ public:
 		m_strobeChild			(0)
 	{
 	}
-	EntityKeyEvent(QKeyEvent const& _e, String const& _strobe, Entity* _focus, bool _isFocused, bool _focusIsPlaceholder, int _focalIndex, CodeScene* _codeScene):
-	QKeyEvent				(QEvent::ShortcutOverride, 0, _e.modifiers(), _strobe.toQString() + _e.text(), _e.isAutoRepeat(), (_strobe.toQString() + _e.text()).length()),
-		m_focus					(_focus),
-		m_isFocused				(_isFocused),
-		m_focusIsPlaceholder	(_focusIsPlaceholder),
-		m_focalIndex			(_focalIndex),
-		m_codeScene				(_codeScene),
-		m_strobeCreation		(0),
-		m_strobeChild			(0)
-	{
-	}
+	
+	enum { ShiftModifier = 0x01, ControlModifier = 0x02 };
 
+	void			accept() { m_accepted = true; }
+	bool			isAccepted() const { return m_accepted; }
+	int				modifiers() const { return m_modifiers; }
 	Entity*			focus() const { return m_focus; }
-	String			text() const { return String(QKeyEvent::text()); }
+	String			text() const { return m_text; }
 	Position		focusPoint() const;
 	bool			isFocused() const { return m_isFocused; }
 	bool			focusIsPlaceholder() const { return m_focusIsPlaceholder; }
@@ -77,6 +73,10 @@ public:
 	void			setFocalIndex(int _e) { m_focalIndex = _e; }
 	
 private:
+	String			m_text;
+	int				m_modifiers;
+	
+	bool			m_accepted;
 	Entity*			m_focus;
 	bool			m_isFocused;
 	bool			m_focusIsPlaceholder;

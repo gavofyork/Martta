@@ -51,6 +51,12 @@ void StringLiteral::exportDom(QDomElement& _element) const
 	Literal::exportDom(_element);
 	_element.setAttribute("value", m_value);
 }
+// CODES!
+// Delete -> \x7f
+// Return -> \n
+// Backspace -> \b
+// Tab -> \t
+// Escape -> \x1b
 
 String StringLiteral::defineLayout(ViewKeys const&) const
 {
@@ -76,7 +82,7 @@ EditDelegateFace* StringLiteral::newDelegate(CodeScene* _s)
 		Delegate(StringLiteral* _e, CodeScene* _s): EditDelegate<StringLiteral>(_e, _s) {}
 		virtual bool keyPressed(EntityKeyEvent const* _e)
 		{
-			if (_e->key() == Qt::Key_Backspace)
+			if (_e->text() == L"\b")
 				subject()->m_value.chop(1);
 			else if (_e->text()[0].isGraph() && _e->text() != L"\"")
 				subject()->m_value += _e->text();

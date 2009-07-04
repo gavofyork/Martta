@@ -132,7 +132,7 @@ protected:
 	virtual bool				event(QEvent* _e);
 
 private:
-	bool						keyPressedAsNavigation(EntityKeyEvent const* _e);
+	bool						keyPressedAsNavigation(QKeyEvent const* _e);
 	void						doRefreshLayout();
 	void						recacheLayoutList(Entity* _e, String const& _s);			///< @returns the layout list for the entity _e.
 	

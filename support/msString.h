@@ -363,19 +363,19 @@ inline const String operator+(wchar_t _ch, String const& _s) { return String(_s)
 }
 
 #if defined(QT_DEBUG)// || defined(QT_NO_DEBUG)
-inline QDataStream& operator<<(QDataStream& _stream, MarttaSupport::String const& _string)
+/*inline QDataStream& operator<<(QDataStream& _stream, MarttaSupport::String const& _string)
 {
 	_stream << _string.length();
 	wchar_t const* d = _string.data() + _string.length();
 	while (d-- != _string.data())
 		if (sizeof(wchar_t) == 1)
-			_stream << (quint8 const&)*d;
+			_stream << (uint8_t const&)*d;
 		else if (sizeof(wchar_t) == 2)
-			_stream << (quint16 const&)*d;
+			_stream << (uint16_t const&)*d;
 		else if (sizeof(wchar_t) == 4)
-			_stream << (quint32 const&)*d;
+			_stream << (uint32_t const&)*d;
 		else if (sizeof(wchar_t) == 8)
-			_stream << (quint64 const&)*d;
+			_stream << (uint64_t const&)*d;
 	return _stream;
 }
 
@@ -400,7 +400,7 @@ inline QDataStream& operator>>(QDataStream& _stream, MarttaSupport::String& _str
 inline QDebug operator<<(QDebug _stream, MarttaSupport::String const& _string)
 {
 	return _stream << _string.toQString();
-}
+}*/
 #endif
 
 #if defined(QT_DEBUG) || defined(QT_NO_DEBUG)

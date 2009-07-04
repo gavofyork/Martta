@@ -20,6 +20,9 @@
 
 #pragma once
 
+#include <msTextStream.h>
+using MarttaSupport::TextStream;
+
 #include "Common.h"
 #include "SimpleType.h"
 #include "TypeEntity.h"
@@ -112,7 +115,7 @@ inline Types operator,(Types const& _qs, Type const& _t)
 	return Types(_qs) << _t;
 }
 
-inline QDebug operator<<(QDebug _out, Martta::Type const& _item)
+inline TextStream& operator<<(TextStream& _out, Martta::Type const& _item)
 {
 	return _out << _item->code();
 }

@@ -71,7 +71,7 @@ void ModelPtrRegistrar::restorePtrs(Declaration const* _root)
 	m_tempRegistered.clear();
 	
 	M_FOREACH (ModelPtrFace* i, m_modelPtrs)
-		qCritical() << "ERROR: Couldn't restore model pointer with key: " << i->key();
+		mCritical() << "ERROR: Couldn't restore model pointer with key: " << i->key();
 }
 
 }

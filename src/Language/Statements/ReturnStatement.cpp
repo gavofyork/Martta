@@ -18,6 +18,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include <msDebug.h>
+
 #include "Typed.h"
 #include "Function.h"
 #include "ReturnStatement.h"
@@ -32,7 +34,7 @@ int ReturnStatement::minRequired(int _i) const
 {
 	if (!hasAncestor<LambdaNamer>())
 	{
-		qCritical("*** ERROR: Return statement without callable ancestor!");
+		mCritical() << "*** ERROR: Return statement without callable ancestor!";
 		return 0;
 	}
 
@@ -56,7 +58,7 @@ Kinds ReturnStatement::allowedKinds(int _i) const
 {
 	if (!hasAncestor<LambdaNamer>())
 	{
-		qCritical("Return statement without lambda ancestor!");
+		mCritical() << "Return statement without lambda ancestor!";
 		return Kinds();
 	}
 
@@ -71,7 +73,7 @@ Types ReturnStatement::allowedTypes(int _i) const
 	{
 		if (!hasAncestor<LambdaNamer>())
 		{
-			qCritical("Return statement without lambda ancestor!");
+			mCritical() << "Return statement without lambda ancestor!";
 			return Types();
 		}
 		if (!ancestor<LambdaNamer>()->returns().isNull() && ancestor<LambdaNamer>()->returns() != Type(Void))

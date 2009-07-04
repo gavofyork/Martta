@@ -44,6 +44,8 @@ namespace Martta
 extern bool s_testing;
 extern char const* s_asserted;
 
+template<class T> class SafePointer;
+
 #if _MSC_VER
 template<class T> inline T round(T const& x) { return ((x)>=0?(long)((x)+0.5):(long)((x)-0.5)); }
 #endif

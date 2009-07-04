@@ -68,11 +68,11 @@ public:
 	}
 	virtual bool keyPressed(EntityKeyEvent const* _e)
 	{
-		if (_e->key() == Qt::Key_Backspace && m_name.size() > 1)
+		if (_e->text() == L"\b" && m_name.size() > 1)
 			m_name.chop(1);
 		else if (_e->text().length() == 1 && _e->text()[0].isLetter())
 			m_name += _e->text();
-		else if (_e->key() == Qt::Key_Tab)
+		else if (_e->text() == L"\t")
 			m_name += m_completion;
 		else
 			return EditDelegate<T>::keyPressed(_e);
