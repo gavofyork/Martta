@@ -62,14 +62,14 @@ bool AssignedVariable::keyPressedOnPosition(Position const& _p, EntityKeyEvent c
 
 void AssignedVariable::onDependencyChanged(Entity* _e)
 {
-	qDebug() << this << ": Dependency Changed: " << _e;
+	mDebug() << this << ": Dependency Changed: " << _e;
 	debugTree();
 	changed();
 }
 
 void AssignedVariable::onDependencySwitched(Entity* _e, Entity*)
 {
-	qDebug() << this << ": Dependency Switched: " << _e;
+	mDebug() << this << ": Dependency Switched: " << _e;
 	debugTree();
 	if (_e == child(AssignedValue) && _e->kind() == Kind::of<Typed>())
 	{

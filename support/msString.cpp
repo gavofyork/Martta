@@ -26,9 +26,6 @@
 #include <cstring>
 #include <cerrno>
 
-#include <iostream>
-using namespace std;
-
 #include "msString.h"
 
 namespace MarttaSupport

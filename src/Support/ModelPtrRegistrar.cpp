@@ -40,7 +40,7 @@ void regDecs(Declaration* _d)
 
 void ModelPtrRegistrar::restorePtrs(Declaration const* _root)
 {
-	qInformation() << "Restoring up to" << m_modelPtrs.size() << "pointers";
+	mInformation() << "Restoring up to" << m_modelPtrs.size() << "pointers";
 	
 	TIME_STATEMENT(recurseOn)
 		foreach (Declaration* d, _root->childrenOf<Declaration>())
@@ -66,11 +66,11 @@ void ModelPtrRegistrar::restorePtrs(Declaration const* _root)
 		}
 	}
 		
-	qInformation() << "Restored " << restored << "pointers";
+	mInformation() << "Restored " << restored << "pointers";
 	
 	m_tempRegistered.clear();
 	
-	MS_FOREACH (ModelPtrFace* i, m_modelPtrs)
+	M_FOREACH (ModelPtrFace* i, m_modelPtrs)
 		qCritical() << "ERROR: Couldn't restore model pointer with key: " << i->key();
 }
 

@@ -26,6 +26,10 @@
 
 #pragma once
 
+#if defined(QT_DEBUG) //|| defined(QT_NO_DEBUG)
+#include <QDebug>
+#endif
+
 #include "msSupport.h"
 
 namespace MarttaSupport
@@ -61,6 +65,10 @@ class /*MS_EXPORT*/ List
 		return _me.streamToDebug(_stream);
 	}
 #endif
+	friend inline std::ostream& operator<<(std::ostream& _stream, ::MarttaSupport::List<T> const& _me)
+	{
+		return _me.streamToDebug(_stream);
+	}
 
 	typedef typename isSimple<T>::StorageType ST;
 
@@ -236,81 +244,12 @@ private:
 #if defined(QT_DEBUG) //|| defined(QT_NO_DEBUG)
 	QDebug streamToDebug(QDebug _stream) const;
 #endif
+	std::ostream& streamToDebug(std::ostream& _stream) const;
 	
 	ST* m_data;
 	int m_count;
 	int m_reserved;
 };
-
-// Taken from Qt 4.4, Copyright Nokia. Used under licence (GPL).
-#if defined(__GNUC__) && !defined(__INTEL_COMPILER)
-/* make use of typeof-extension */
-template <typename T>
-class MForeachContainer {
-public:
-    inline MForeachContainer(const T& t) : c(t), brk(0), i(c.begin()), e(c.end()) { }
-    const T c;
-    int brk;
-    typename T::const_iterator i, e;
-};
-
-#define MS_FOREACH(variable, container)                                \
-for (MForeachContainer<__typeof__(container)> _container_(container); \
-     !_container_.brk && _container_.i != _container_.e;              \
-     __extension__  ({ ++_container_.brk; ++_container_.i; }))                       \
-    for (variable = *_container_.i;; __extension__ ({--_container_.brk; break;}))
-
-#else
-
-struct MForeachContainerBase {};
-
-template <typename T>
-class MForeachContainer : public MForeachContainerBase {
-public:
-    inline MForeachContainer(const T& t): c(t), brk(0), i(c.begin()), e(c.end()){};
-    const T c;
-    mutable int brk;
-    mutable typename T::const_iterator i, e;
-    inline bool condition() const { return (!brk++ && i != e); }
-};
-
-template <typename T> inline T *mForeachPointer(const T &) { return 0; }
-
-template <typename T> inline MForeachContainer<T> mForeachContainerNew(const T& t)
-{ return MForeachContainer<T>(t); }
-
-template <typename T>
-inline const MForeachContainer<T> *mForeachContainer(const MForeachContainerBase *base, const T *)
-{ return static_cast<const MForeachContainer<T> *>(base); }
-
-#if (defined(_MSC_VER) && _MSC_VER < 1300 && !defined(__INTEL_COMPILER)) || defined(__sgi)
-/*
-   Proper for-scoping in VC++6 and MIPSpro CC
-*/
-#  define MS_FOREACH(variable,container)                                                             \
-    if(0){}else                                                                                     \
-    for (const MForeachContainerBase &_container_ = mForeachContainerNew(container);                \
-         mForeachContainer(&_container_, true ? 0 : mForeachPointer(container))->condition();       \
-         ++mForeachContainer(&_container_, true ? 0 : mForeachPointer(container))->i)               \
-        for (variable = *mForeachContainer(&_container_, true ? 0 : mForeachPointer(container))->i; \
-             mForeachContainer(&_container_, true ? 0 : mForeachPointer(container))->brk;           \
-             --mForeachContainer(&_container_, true ? 0 : mForeachPointer(container))->brk)
-
-#else
-#  define MS_FOREACH(variable, container) \
-    for (const MForeachContainerBase &_container_ = mForeachContainerNew(container); \
-         mForeachContainer(&_container_, true ? 0 : mForeachPointer(container))->condition();       \
-         ++mForeachContainer(&_container_, true ? 0 : mForeachPointer(container))->i)               \
-        for (variable = *mForeachContainer(&_container_, true ? 0 : mForeachPointer(container))->i; \
-             mForeachContainer(&_container_, true ? 0 : mForeachPointer(container))->brk;           \
-             --mForeachContainer(&_container_, true ? 0 : mForeachPointer(container))->brk)
-#endif
-
-#endif
-
-#ifndef foreach
-#define foreach M_FOREACH
-#endif
 
 }
 

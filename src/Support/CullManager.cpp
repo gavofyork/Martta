@@ -35,7 +35,7 @@ void CullManager::doCulling()
 			e->cull();
 			checked++;
 		}
-	qDebug() << "Checked" << checked << "for culling.";
+	mDebug() << "Checked" << checked << "for culling.";
 }
 
 }

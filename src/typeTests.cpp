@@ -203,9 +203,9 @@ int typeTests()
 		Type x = Xv->type();
 		Type y = Yv->type();
 		Type i = Type(Int);
-		qDebug() << x->code();
-		qDebug() << y->code();
-		qDebug() << i->code();
+		mDebug() << x->code();
+		mDebug() << y->code();
+		mDebug() << i->code();
 //		CAST_TEST(x, x, Logical);
 		CAST_TEST(x, y, Unrelated);
 		CAST_TEST(x, i, Logical);

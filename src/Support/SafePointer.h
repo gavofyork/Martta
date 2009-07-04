@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include <msSupport.h>
 #include <msList.h>
 using MarttaSupport::List;
 
@@ -72,7 +73,7 @@ protected:
 		if (_sub == this || !_sub)
 			return;
 		
-		foreach (SafePointerFace* i, m_safePointers)
+		M_FOREACH (SafePointerFace* i, m_safePointers)
 		{
 			i->m_pointer = _sub;
 			_sub->m_safePointers << i;

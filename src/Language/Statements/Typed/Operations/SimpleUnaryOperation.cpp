@@ -82,11 +82,11 @@ Type SimpleUnaryOperation::type() const
 		return Type();
 	if (protoReturn().isUltimatelyNull() && !typeOf(TheOperand).isNull())
 	{
-/*		qDebug() << typeOf(TheOperand)->code();
+/*		mDebug() << typeOf(TheOperand)->code();
 		typeOf(TheOperand)->debugTree();
-		qDebug() << protoReturn()->code();
+		mDebug() << protoReturn()->code();
 		protoReturn()->debugTree();
-		qDebug() << typeOf(TheOperand).strippedTo(protoReturn())->code();
+		mDebug() << typeOf(TheOperand).strippedTo(protoReturn())->code();
 		typeOf(TheOperand).strippedTo(protoReturn())->debugTree();*/
 		return typeOf(TheOperand).strippedTo(protoReturn());
 	}

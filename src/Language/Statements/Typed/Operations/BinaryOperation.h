@@ -48,7 +48,7 @@ protected:
 			return false;
 
 		Position p = slideOnPrecedence(_p, _d, _a, _e->nearestBracket(_p));
-//		qDebug() << "Slide from" << _p << "to" << p;
+//		mDebug() << "Slide from" << _p << "to" << p;
 		if (!isTemporary(p.entity()))
 		{
 			Entity* n = new T;

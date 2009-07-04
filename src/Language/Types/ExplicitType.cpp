@@ -212,7 +212,7 @@ List<TypeDefinition*> ExplicitType::possibilities()
 	TypeDefinition* old = m_subject;
 	foreach (TypeDefinition* i, parent()->selfAndAncestorsChildrenOf<TypeDefinition>())
 	{
-		qDebug() << i->name();
+		mDebug() << i->name();
 		m_subject = i;
 		if (parent()->isChildInValidState(index()))
 			ret << i;

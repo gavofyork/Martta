@@ -20,9 +20,8 @@ Dynamic code-loading (plugins).
   - Get rid of XML dependencies.
     - Creation code to be compiled?
   - Optimise String (and List/Hash perhaps) with copy on write.
-  - Make QRgb-like type (to/from string, storage).
-  - Make QColor-like type (dark/lighter functions).
   - Make qDebug-like function.
+  - Make EntityKeyEvent not depend on QKeyEvent. 
   - Move all decoration code into layout system and invent markup for it.
   - Abstract CodeScene into CodeScene & CodeView.
 

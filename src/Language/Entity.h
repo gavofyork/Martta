@@ -20,9 +20,10 @@
 
 #pragma once
 
-#include <QDebug>			// Move to mDebug & link in.
-#include <qglobal.h>
+// Same here - move to interface?
+#include "EntityKeyEvent.h"	// Depends on QKeyEvent
 
+#include <msSupport.h>
 #include <msRgb.h>
 #include <msList.h>
 #include <msHash.h>
@@ -32,9 +33,6 @@ using MarttaSupport::Hash;
 using MarttaSupport::MultiHash;
 using MarttaSupport::List;
 using MarttaSupport::String;
-
-// Same here - move to interface?
-#include "EntityKeyEvent.h"	// Depends on QKeyEvent
 
 #include "ChildValidifier.h"
 #include "Depender.h"
@@ -555,6 +553,24 @@ inline QDebug operator<<(QDebug _out, const Martta::Entity& _item)
 }
 
 inline QDebug operator<<(QDebug _out, const Martta::Entity* _item)
+{
+	if (_item)
+		return _out << _item->kind() << "*(" << ((void*)_item) << ")";
+	else
+		return _out << "Entity *( 0 )";
+}
+
+inline std::ostream& operator<<(std::ostream& _out, const Martta::Kind& _item)
+{
+	return _out << _item.name();
+}
+
+inline std::ostream& operator<<(std::ostream& _out, const Martta::Entity& _item)
+{
+	return _out << _item.kind() << "(*" << (&_item) << ")";
+}
+
+inline std::ostream& operator<<(std::ostream& _out, const Martta::Entity* _item)
 {
 	if (_item)
 		return _out << _item->kind() << "*(" << ((void*)_item) << ")";

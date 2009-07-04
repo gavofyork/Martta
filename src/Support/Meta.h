@@ -56,8 +56,8 @@ private: \
 	template<int m>						struct AltSuperCount<m, Nothing> { static const int count = m; }; \
 	template<int m, int d = 0>			struct ASHelper { static AuxilliaryFace const** altSupers() { static AuxilliaryFace const* r[m]; r[m - 1] = AltSuper<m - 1>::TheType::staticAuxilliary(); memcpy(r, ASHelper<m - 1>::altSupers(), (m - 1) * sizeof(AuxilliaryFace const*)); return r; } }; \
 	template<int d>						struct ASHelper<0, d> { static AuxilliaryFace const** altSupers() { static AuxilliaryFace const* r[0]; return r; } }; \
-	template<int m, typename T>			struct ASTHelper { typedef typename AltSuper<m - 1>::TheType H; static void const* altSupers(T const* _this, Kind _k) { /*qDebug() << "[" << T::staticKind.name() << "] Searching on " << m << "-1th entry: " << H::staticKind.name() << " for " << _k.name();*/ return H::staticKind.isKind(_k) ? tryCast<H const*>(_this)->tryInterface(_k) : ASTHelper<m - 1, T>::altSupers(_this, _k); } }; \
-	template<typename T>				struct ASTHelper<0, T> { static void const* altSupers(T const*, Kind) { /*qDebug() << "[" << T::staticKind.name() << "] Unable to find."; */return 0; } }; \
+	template<int m, typename T>			struct ASTHelper { typedef typename AltSuper<m - 1>::TheType H; static void const* altSupers(T const* _this, Kind _k) { /*mDebug() << "[" << T::staticKind.name() << "] Searching on " << m << "-1th entry: " << H::staticKind.name() << " for " << _k.name();*/ return H::staticKind.isKind(_k) ? tryCast<H const*>(_this)->tryInterface(_k) : ASTHelper<m - 1, T>::altSupers(_this, _k); } }; \
+	template<typename T>				struct ASTHelper<0, T> { static void const* altSupers(T const*, Kind) { /*mDebug() << "[" << T::staticKind.name() << "] Unable to find."; */return 0; } }; \
 	virtual void const*					toInterface(Kind _k) const { return tryInterface(_k); }
 
 #define MARTTA_INHERITS(S, i) \
@@ -122,13 +122,13 @@ public: \
 #define MARTTA_OBJECT_CPP(E) \
 	MARTTA_CPP_BASIC(E) \
 	AuxilliaryFace const* E::staticAuxilliary() { if (!s_auxilliary_##E) s_auxilliary_##E = new Auxilliary<E>("Martta::" #E); return s_auxilliary_##E; } \
-	void const* E::tryInterface(Kind _k) const { /*qDebug() << "tryInterface(Object): " << E::staticKind.name() << ", searching " << _k.name();*/ M_ASSERT(this); if (_k == staticKind) { /*qDebug() << "Shouldn't happen - object matched but wanted interface: Want " << _k.name() << ", got " << E::staticKind.name() << "!";*/ return (void const*)this; } /*qDebug() << "Trying ASTHelper " << GetCount<E>::Value << " interfaces";*/ if (void const* r = ASTHelper<GetCount<E>::Value, E>::altSupers(this, _k)) return r; /*qDebug() << "Moving to Super (" << Super::staticKind.name() << ")...";*/ return Super::tryInterface(_k); }
+	void const* E::tryInterface(Kind _k) const { /*mDebug() << "tryInterface(Object): " << E::staticKind.name() << ", searching " << _k.name();*/ M_ASSERT(this); if (_k == staticKind) { /*mDebug() << "Shouldn't happen - object matched but wanted interface: Want " << _k.name() << ", got " << E::staticKind.name() << "!";*/ return (void const*)this; } /*mDebug() << "Trying ASTHelper " << GetCount<E>::Value << " interfaces";*/ if (void const* r = ASTHelper<GetCount<E>::Value, E>::altSupers(this, _k)) return r; /*mDebug() << "Moving to Super (" << Super::staticKind.name() << ")...";*/ return Super::tryInterface(_k); }
 
 #define MARTTA_PLACEHOLDER_CPP(E) MARTTA_OBJECT_CPP(E)
 
 #define MARTTA_INTERFACE_CPP(E) \
 	MARTTA_CPP_BASIC(E) \
 	AuxilliaryFace const* E::staticAuxilliary() { if (!s_auxilliary_##E) s_auxilliary_##E = new InterfaceAuxilliary<E>("Martta::" #E); return s_auxilliary_##E; } \
-	void const* E::tryInterface(Kind _k) const { /*qDebug() << "tryInterface: " << E::staticKind.name() << ", searching " << _k.name();*/ M_ASSERT(this); if (_k == staticKind) { /*qDebug() << "Matched: Want " << _k.name() << ", got " << E::staticKind.name() << "!"; */return (void const*)this; } /*qDebug() << "Trying ASTHelper " << GetCount<E>::Value << " interfaces";*/ if (void const* r = ASTHelper<GetCount<E>::Value, E>::altSupers(this, _k)) return r; /*qDebug() << "Failed";*/ return 0; }
+	void const* E::tryInterface(Kind _k) const { /*mDebug() << "tryInterface: " << E::staticKind.name() << ", searching " << _k.name();*/ M_ASSERT(this); if (_k == staticKind) { /*mDebug() << "Matched: Want " << _k.name() << ", got " << E::staticKind.name() << "!"; */return (void const*)this; } /*mDebug() << "Trying ASTHelper " << GetCount<E>::Value << " interfaces";*/ if (void const* r = ASTHelper<GetCount<E>::Value, E>::altSupers(this, _k)) return r; /*mDebug() << "Failed";*/ return 0; }
 
 #define public_interface virtual public

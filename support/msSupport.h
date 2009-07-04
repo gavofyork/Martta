@@ -25,6 +25,9 @@
  * ***** END LICENSE BLOCK ***** */
 #pragma once
 
+#include <cstdio>
+#include <iostream>
+
 #define MS_EXPORT __attribute__((visibility("default")))
 
 #define privateinline inline
@@ -36,6 +39,15 @@
 namespace MarttaSupport
 {
 
+#if RELEASE
+struct NullOut
+{
+	inline NullOut& template<class T> operator<<(T) { return *(NullOut*)0; }
+};
+#define mDebug(...) (*(MarttaSupport::NullOut*)0)
+#else
+#define mDebug(...) std::fprintf(stderr, " \b" __VA_ARGS__); std::cerr << ""
+#endif
 
 template<typename T>
 inline T max(T const& _a, T const& _b) { return (_a < _b) ? _b : _a; }
@@ -90,6 +102,7 @@ inline t::uint floorLog2(t::uint _a)
 }
 
 #define ASSERT(X)
+#define STATIC_ASSERT(X)
 
 struct MethodExistsTrue { enum { c_val = 1 }; };
 struct MethodExistsFalse { enum { c_val = 0 }; };
@@ -106,5 +119,75 @@ template<class T> inline void M(T&, MethodExistsFalse&){} \
 template<class T> inline void M(T& _a) { M(_a, IfMethodExists<T>(0)); } \
 }
 
+
+// Taken from Qt 4.4, Copyright Nokia. Used under licence (GPL).
+#if defined(__GNUC__) && !defined(__INTEL_COMPILER)
+/* make use of typeof-extension */
+template <typename T>
+class MForeachContainer {
+public:
+    inline MForeachContainer(const T& t) : c(t), brk(0), i(c.begin()), e(c.end()) { }
+    const T c;
+    int brk;
+    typename T::const_iterator i, e;
+};
+
+#define M_FOREACH(variable, container)                                \
+for (MarttaSupport::MForeachContainer<__typeof__(container)> _container_(container); \
+     !_container_.brk && _container_.i != _container_.e;              \
+     __extension__  ({ ++_container_.brk; ++_container_.i; }))                       \
+    for (variable = *_container_.i;; __extension__ ({--_container_.brk; break;}))
+
+#else
+
+struct MForeachContainerBase {};
+
+template <typename T>
+class MForeachContainer : public MForeachContainerBase {
+public:
+    inline MForeachContainer(const T& t): c(t), brk(0), i(c.begin()), e(c.end()){};
+    const T c;
+    mutable int brk;
+    mutable typename T::const_iterator i, e;
+    inline bool condition() const { return (!brk++ && i != e); }
+};
+
+template <typename T> inline T *mForeachPointer(const T &) { return 0; }
+
+template <typename T> inline MForeachContainer<T> mForeachContainerNew(const T& t)
+{ return MForeachContainer<T>(t); }
+
+template <typename T>
+inline const MForeachContainer<T> *mForeachContainer(const MForeachContainerBase *base, const T *)
+{ return static_cast<const MForeachContainer<T> *>(base); }
+
+#if (defined(_MSC_VER) && _MSC_VER < 1300 && !defined(__INTEL_COMPILER)) || defined(__sgi)
+/*
+   Proper for-scoping in VC++6 and MIPSpro CC
+*/
+#  define M_FOREACH(variable,container)                                                             \
+    if(0){}else                                                                                     \
+    for (const MarttaSupport::MForeachContainerBase &_container_ = mForeachContainerNew(container);                \
+         mForeachContainer(&_container_, true ? 0 : mForeachPointer(container))->condition();       \
+         ++mForeachContainer(&_container_, true ? 0 : mForeachPointer(container))->i)               \
+        for (variable = *mForeachContainer(&_container_, true ? 0 : mForeachPointer(container))->i; \
+             mForeachContainer(&_container_, true ? 0 : mForeachPointer(container))->brk;           \
+             --mForeachContainer(&_container_, true ? 0 : mForeachPointer(container))->brk)
+
+#else
+#  define M_FOREACH(variable, container) \
+    for (const MarttaSupport::MForeachContainerBase &_container_ = mForeachContainerNew(container); \
+         mForeachContainer(&_container_, true ? 0 : mForeachPointer(container))->condition();       \
+         ++mForeachContainer(&_container_, true ? 0 : mForeachPointer(container))->i)               \
+        for (variable = *mForeachContainer(&_container_, true ? 0 : mForeachPointer(container))->i; \
+             mForeachContainer(&_container_, true ? 0 : mForeachPointer(container))->brk;           \
+             --mForeachContainer(&_container_, true ? 0 : mForeachPointer(container))->brk)
+#endif
+
+#endif
+
+#ifndef foreach
+#define foreach M_FOREACH
+#endif
 
 }

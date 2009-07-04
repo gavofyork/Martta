@@ -72,18 +72,18 @@ void CodeScene::leaving(Entity* _e, Position const&)
 {
 	if (m_subject == _e)
 	{
-		qDebug() << "Gaa! Subject leaving! Don't know what to do!";
+		mDebug() << "Gaa! Subject leaving! Don't know what to do!";
 		// TODO: Move to a safe (dormant) state, until we get told of a new subject.
 		int i = 9;
 		i++;
 	}
 	
-//	qDebug() << "Removing from scene " << _e;
+//	mDebug() << "Removing from scene " << _e;
 
 	Entity* e = 0;
 	if (m_current == _e)
 	{
-//		qDebug() << "Trying to calculate next...";
+//		mDebug() << "Trying to calculate next...";
 //		_e->debugTree();
 		Entity* n = next(_e);
 		M_ASSERT(!n || n->parent());
@@ -92,10 +92,10 @@ void CodeScene::leaving(Entity* _e, Position const&)
 		M_ASSERT(!p || p->parent());
 		while (p && p->hasAncestor(_e)) p = previous(p);
 		/*{
-			qDebug() << "Leaving entity:";
+			mDebug() << "Leaving entity:";
 			_e->debugTree();
-			if (n) n->debugTree(); else qDebug() << "Nothing next";
-			if (p) p->debugTree(); else qDebug() << "Nothing previous";
+			if (n) n->debugTree(); else mDebug() << "Nothing next";
+			if (p) p->debugTree(); else mDebug() << "Nothing previous";
 		}*/
 		if (n)
 			e = n;
@@ -267,13 +267,13 @@ void CodeScene::paintEvent(QPaintEvent*)
 		m_lastRealCurrent = m_current;
 	else
 	{
-		qDebug() << "paintEvent: setting current to" << m_lastRealCurrent << "(LRC)";
+		mDebug() << "paintEvent: setting current to" << m_lastRealCurrent << "(LRC)";
 		m_current = m_lastRealCurrent;
 	}
 	
 	if (!m_current)
 	{
-		qDebug() << "paintEvent: setting current to" << m_subject << "(subject)";
+		mDebug() << "paintEvent: setting current to" << m_subject << "(subject)";
 		m_current = m_subject;
 	}
 
@@ -420,7 +420,7 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 			m_strobeCreation->prepareMove(Nowhere);
 			m_strobeChild->prepareMove(sCrPoint);
 		}
-		qDebug() << "strobeText: " << m_strobeText;
+		mDebug() << "strobeText: " << m_strobeText;
 		e = EntityKeyEvent(*_e, m_strobeText, &*m_strobeFocus, true, m_strobeFocus->isPlaceholder(), -1, this);
 		e.setAccepted(false);
 		Entity::keyPressEventStarter(&e);
@@ -640,7 +640,7 @@ void CodeScene::silentlySetCurrent(Entity* _e)
 {
 	if (m_leavingEdit)
 	{
-//		qDebug() << "silentlySetCurrent: setting current to" << _e;
+//		mDebug() << "silentlySetCurrent: setting current to" << _e;
 		m_current = _e;
 	}
 }
@@ -649,9 +649,9 @@ void CodeScene::setCurrent(Entity* _e)
 {
 	M_ASSERT(_e);
 
-//	qDebug() << "";
-//	qDebug() << "setCurrent: want to set current to" << _e;
-//	qDebug() << "";
+//	mDebug() << "";
+//	mDebug() << "setCurrent: want to set current to" << _e;
+//	mDebug() << "";
 	if (m_current == _e || !m_subject)
 		return;
 
@@ -669,21 +669,21 @@ void CodeScene::setCurrent(Entity* _e)
 	
 	if (isInScene(_e) && !isFocusable(_e))
 	{
-		qDebug() << "In scene and not focusable - definitely wrong.";
+		mDebug() << "In scene and not focusable - definitely wrong.";
 		_e->debugTree();
 		Entity* ne = nearest(_e);
 		if (!isFocusable(ne))
 		{
-			qDebug() << "!!! ERROR nearest returned a non-focusable entity.";
+			mDebug() << "!!! ERROR nearest returned a non-focusable entity.";
 			ne = nearest(_e);
 		}
 		_e = ne;
 	}
 		
-/*	qDebug() << "";
-	qDebug() << "setCurrent: setting current to" << _e;
-	qDebug() << "";
-	qDebug() << "";*/
+/*	mDebug() << "";
+	mDebug() << "setCurrent: setting current to" << _e;
+	mDebug() << "";
+	mDebug() << "";*/
 //	_e->debugTree();
 	m_current = _e;
 	
@@ -854,12 +854,12 @@ void CodeScene::navigateInto(Entity* _centre)
 	if (!isInScene(_centre))
 		doRefreshLayout();
 	
-	qInformation() << "Navigating into " << _centre;
+	mInformation() << "Navigating into " << _centre;
 //	_centre->debugTree();
 	Entity* n = m_leftmostChild.value(_centre, _centre);
 	if (!n)
 	{
-		qDebug() << "Can't find anything here.";
+		mDebug() << "Can't find anything here.";
 		n = m_leftmostChild.value(_centre, _centre);
 	}
 	setCurrent(n ? n : nearest(_centre));
@@ -1474,11 +1474,11 @@ void CodeScene::doRefreshLayout()
 	delete f;
 	M_ASSERT(frames.isEmpty());
 
-//	qDebug() << list;
+//	mDebug() << list;
 //	static int count = 0;
-//	qDebug() << count++ << list.size() << "commands.";
+//	mDebug() << count++ << list.size() << "commands.";
 //	for (int i = 0; i < list.size(); i++)
-//		qDebug() << list[i] << times[i];
+//		mDebug() << list[i] << times[i];
 }
 
 }

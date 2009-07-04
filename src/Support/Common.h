@@ -22,7 +22,6 @@
 
 #include <cmath>
 
-#include <QDebug>
 #include <QTime>
 
 #include <msString.h>
@@ -37,7 +36,7 @@ using MarttaSupport::StringList;
 void assertFailed(char const* _c);
 
 #define M_ASSERT(T) if (!(T)) assertFailed(#T);
-#define qInformation qDebug
+#define mInformation mDebug
 
 namespace Martta
 {
@@ -53,7 +52,7 @@ class Timer
 {
 public:
 	Timer(String const& _name): m_name(_name), m_time(QTime::currentTime()) {}
-	~Timer() { qInformation() << m_name << ":" << m_time.elapsed() << "ms"; }
+	~Timer() { mInformation() << m_name << ":" << m_time.elapsed() << "ms"; }
 	String m_name;
 	QTime m_time;
 };

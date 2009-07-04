@@ -426,4 +426,21 @@ template<class T> QDebug List<T>::streamToDebug(QDebug _stream) const
 }
 #endif
 
+template<class T> std::ostream& List<T>::streamToDebug(std::ostream& _stream) const
+{
+	_stream << "{";
+	bool first = true;
+	ST* e = m_data + m_count;
+	ST* i = m_data;
+	for (; i < e; i++)
+	{
+		if (first)
+			first = false;
+		else
+			_stream << ",";
+		_stream << star(*i);
+	}
+	return _stream << "}";
+}
+
 }

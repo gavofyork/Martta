@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 	r = app.exec();
 	}
 
-	qInformation() << "Type count:" << g_typeCount;
+	mInformation() << "Type count:" << g_typeCount;
 
 	return r;
 }

@@ -170,18 +170,18 @@ bool Entity::isValid() const
 	
 	if (!isAllowed())
 	{
-		qInformation() << this << "invalid because it's not allowed here by parent." << parent();
+		mInformation() << this << "invalid because it's not allowed here by parent." << parent();
 		return false;
 	}
 	if (!isInValidState())
 	{
-		qInformation() << this << "invalid because it's in an invalid entity state.";
+		mInformation() << this << "invalid because it's in an invalid entity state.";
 		return false;
 	}
 	if (parent())
 		if (!parent()->isChildInValidState(index()))
 		{
-			qInformation() << this << "invalid because its context considers it in an invalid state.";
+			mInformation() << this << "invalid because its context considers it in an invalid state.";
 			return false;
 		}
 	return true;
@@ -220,7 +220,7 @@ bool Entity::cull()
 void Entity::kill(Entity* _substitute)
 {
 //	if (isInModel())
-//		qDebug() << "Killing" << this;
+//		mDebug() << "Killing" << this;
 	if (_substitute)
 		rewirePointer(_substitute);
 	silentRemove();
@@ -251,14 +251,14 @@ void Entity::debugTree() const
 	String indent = "";
 	foreach (Entity const* i, ancestors)
 	{
-		qDebug((indent + i->kind().name() + " (%x)").toCString(), i);
+		mDebug("%s (%x)", (indent + i->kind().name()).toCString(), (int)i);
 		indent += "    ";
 	}
 	debugTree(indent);
 }
 void Entity::debugTree(String const& _i) const
 {
-	qDebug((_i + kind().name() + " (%x)").toCString(), this);
+	mDebug("%s (%x)", kind().name().toCString(), (int)this);
 	for (Hash<int, Entity*>::ConstIterator i = m_namedChildren.begin(); i != m_namedChildren.end(); ++i)
 		if (i.key() < virtualEndOfNamed())
 			i.value()->debugTree(_i + "|   [" + String::number(i.key() - INT_MIN) + "] ");
@@ -290,7 +290,7 @@ void Entity::importDom(QDomElement const& _element)
 	for (QDomNode i = _element.firstChild(); !i.isNull(); i = i.nextSibling())
 		if (i.isElement() && i.toElement().tagName() == "entity")
 		{
-			qDebug() << i.toElement().attribute("kind");
+			mDebug() << i.toElement().attribute("kind").toLatin1().data();
 			Entity* e = spawn(i.toElement().attribute("kind"));
 			if (i.toElement().hasAttribute("contextindex"))
 				e->silentMove(middle(i.toElement().attribute("contextindex").toInt()));
@@ -538,25 +538,25 @@ bool Entity::keyPressed(EntityKeyEvent const* _e)
 	if (_e->codeScene()->isCurrent(this) && (_e->key() == Qt::Key_Delete && _e->modifiers() == Qt::ShiftModifier || _e->key() == Qt::Key_Backspace && isEditing(_e->codeScene())))
 	{
 //		p.parent()->debugTree();
-//		qDebug() << p.index();
+//		mDebug() << p.index();
 //		debugTree();
 		deleteAndRefill(0, false);	// NOTE: Was true; changed to false to avoid erroneous currents being set. May need a rethink.
 //		p.parent()->debugTree();
-//		qDebug() << p.index();
+//		mDebug() << p.index();
 		if (p.exists())
 			_e->codeScene()->setCurrent(p.entity());
 	}
 	else if (_e->codeScene()->isCurrent(this) && _e->key() == Qt::Key_Delete)
 	{
 //		p.parent()->debugTree();
-//		qDebug() << p.index();
+//		mDebug() << p.index();
 //		debugTree();
 		if (nonPlaceholderCount() == 1 && isAllowed(nonPlaceholder(0)->kind()))
 			deleteAndRefill(nonPlaceholder(0), false);	// SEE ABOVE.
 		else
 			deleteAndRefill(0, false);	// SEE ABOVE.
 //		p.parent()->debugTree();
-//		qDebug() << p.index();
+//		mDebug() << p.index();
 		if (p.exists())
 			_e->codeScene()->setCurrent(p.entity());
 	}

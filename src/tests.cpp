@@ -73,18 +73,18 @@ int test()
 		u = t.toppedWith(Reference());
 		String code;
 		code = u->code();
-		qDebug() << code;
+		mDebug() << code;
 	}
 	
 	TEST("Memory leaking")
 	{
-		qInformation() << "News/Deletes/Remaining/Types = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes) << "/" << g_typeCount;
+		mInformation() << "News/Deletes/Remaining/Types = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes) << "/" << g_typeCount;
 		FAILED_IF(s_news - s_deletes != 1);
 		FAILED_IF(g_typeCount != 1);
 	}
 	
 	s_testing = false;
-	qInformation() << "PASSED :-)";
+	mInformation() << "PASSED :-)";
 	
 //	exit(failed);
 	return failed;

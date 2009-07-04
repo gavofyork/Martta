@@ -18,8 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include <QDebug>
-
 #include "TypeEntity.h"
 
 #include "Root.h"

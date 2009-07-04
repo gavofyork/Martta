@@ -59,16 +59,16 @@ String LongMemberOperation::code() const
 
 bool LongMemberOperation::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
 {
-/*	qDebug() << _p.exists();
+/*	mDebug() << _p.exists();
 	if (_p.exists())
 	{
-		qDebug() << (!_p->isPlaceholder()) << " " << _p->isKind<Typed>();
+		mDebug() << (!_p->isPlaceholder()) << " " << _p->isKind<Typed>();
 		if (_p->isKind<Typed>())
-		{	qDebug() << _p->asKind<Typed>()->type()->code();
+		{	mDebug() << _p->asKind<Typed>()->type()->code();
 			_p->debugTree();
-			qDebug() << _p->asKind<Typed>()->type()->isType<AddressType>();
+			mDebug() << _p->asKind<Typed>()->type()->isType<AddressType>();
 			if (_p->asKind<Typed>()->type()->isType<AddressType>())
-				qDebug() << _p->asKind<Typed>()->type()->asType<AddressType>()->original()->isType<ExplicitType>();
+				mDebug() << _p->asKind<Typed>()->type()->asType<AddressType>()->original()->isType<ExplicitType>();
 		}
 	}*/
 	if (_p.exists() && !_p->isPlaceholder() && _p->isKind<Typed>() &&

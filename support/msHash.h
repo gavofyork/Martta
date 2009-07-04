@@ -237,6 +237,7 @@ class /*MS_EXPORT*/ GeneralHash
 #if defined(QT_DEBUG) || defined(QT_NO_DEBUG)
 	friend inline QDebug operator<<(QDebug _stream, ::MarttaSupport::GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey> const& _me) { return _me.streamToDebug(_stream); }
 #endif
+	friend inline std::ostream& operator<<(std::ostream& _stream, ::MarttaSupport::GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey> const& _me) { return _me.streamToDebug(_stream); }
 
 	typedef PNode<Key, T, ImplicitKey> Node;
 
@@ -449,6 +450,7 @@ private:
 #if defined(QT_DEBUG) || defined(QT_NO_DEBUG)
 	QDebug streamToDebug(QDebug _stream) const;
 #endif
+	std::ostream& streamToDebug(std::ostream& _stream) const;
 	
 	Node* m_nodes;
 	t::uint m_capacity;

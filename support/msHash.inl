@@ -977,4 +977,31 @@ QDebug GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::streamToDebug(QDebug 
 }
 #endif
 
+template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+std::ostream& GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::streamToDebug(std::ostream& _stream) const
+{
+	_stream << "#{";
+	bool first = true;
+	for (t::uint i = 0; i < m_capacity; i++)
+		if (m_nodes[i])
+		{
+			Node* m = m_nodes + i;
+			Node* j = m;
+			do
+			{
+				Key const& key = j->key();
+				if (first)
+					first = false;
+				else
+					_stream << ",";
+				_stream << key << "=> {" << j->value();
+				while (j->m_next != m && j->m_next->key() == key)
+					_stream << "," << (j = j->m_next)->value();
+				_stream << "}";
+			}
+			while ((j = j->m_next) != m);
+		}
+	return _stream << "}";
+}
+
 }

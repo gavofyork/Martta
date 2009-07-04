@@ -298,7 +298,14 @@ public:
 	static String const		s_false;
 
 private:
-	privateinline void		changed() { delete [] m_cache; m_cache = 0; }
+	privateinline void		changed()
+	{
+		delete [] m_cache;
+		m_cache = 0;
+#if defined(DEBUG)
+		checkCache();
+#endif
+	}
 	void					checkCache() const;
 	int						findNextPlaceholder(wchar_t const** _token) const;
 		
@@ -341,6 +348,11 @@ inline const String operator+(String const& _s, char _ch) { return String(_s) +=
 inline const String operator+(char _ch, String const& _s) { return String(_s).prepend(_ch); }
 inline const String operator+(String const& _s, wchar_t _ch) { return String(_s) += _ch; }
 inline const String operator+(wchar_t _ch, String const& _s) { return String(_s).prepend(_ch); }
+
+inline std::ostream& operator<<(std::ostream& _out, MarttaSupport::String const& _string)
+{
+	return _out << _string.toCString();
+}
 
 }
 

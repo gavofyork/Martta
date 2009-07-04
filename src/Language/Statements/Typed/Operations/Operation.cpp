@@ -70,7 +70,7 @@ bool Operation::prototypeHasArgumentAt(Type const& _t, int _cardinal)
 
 List<ValueDefiner*> Operation::findBestOverload(Types const& _actual, List<ValueDefiner*> const _candidates)
 {
-//	qDebug() << "Finding best overload for" << _actual;
+//	mDebug() << "Finding best overload for" << _actual;
 	List<ValueDefiner*> ret;
 	// Go through each one and give a score, then return the best one(s)...
 	int bestScore = 0;
@@ -78,7 +78,7 @@ List<ValueDefiner*> Operation::findBestOverload(Types const& _actual, List<Value
 	{
 		Type c = i->type();
 		
-//		qDebug() << "Checking" << c;
+//		mDebug() << "Checking" << c;
 		
 		if (!prototypeHasArgumentAt(c, _actual.count() - 1))
 			continue;
@@ -106,7 +106,7 @@ List<ValueDefiner*> Operation::findBestOverload(Types const& _actual, List<Value
 			break;
 			OK:
 			j++;
-//			qDebug() << "Similarity of parameter" << j << "(" << t << ") is" << score;
+//			mDebug() << "Similarity of parameter" << j << "(" << t << ") is" << score;
 		}
 		
 		if (score > bestScore)

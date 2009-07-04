@@ -57,10 +57,10 @@ List<T*> Martta::filterTypeds(Type const& _t, List<T*> const& _l)
 	
 	foreach (T* i, _l)
 	{
-//		qDebug() << "fT:" << i->type()->code() << "(" << _t->code() << ")";
+//		mDebug() << "fT:" << i->type()->code() << "(" << _t->code() << ")";
 		if (i->type().isSimilarTo(_t, TypeEntity::Physical) && i->type().isSimilarTo(_t, TypeEntity::Convertible))
 		{
-//			qDebug() << "OK";
+//			mDebug() << "OK";
 			ret << i;
 		}
 	}

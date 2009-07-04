@@ -45,7 +45,7 @@ Declaration::~Declaration()
 // TODO: move to Identifiable, make recursive?.
 Identifiable* Declaration::findEntity(String const& _key) const
 {
-//	qDebug() << *this << "Seaching for" << _key;
+//	mDebug() << *this << "Seaching for" << _key;
 	if (_key.startsWith("::"))
 	{
 		Identifiable const* i = this;
@@ -55,7 +55,7 @@ Identifiable* Declaration::findEntity(String const& _key) const
 			String s = k.section("::", 1, 1);
 			k = k.mid(s.size() + 2);
 			i = i->lookupChild(s);
-//			qDebug() << "Key" << s << "gives" << (i ? i->self() : 0);
+//			mDebug() << "Key" << s << "gives" << (i ? i->self() : 0);
 		}
 		return const_cast<Identifiable*>(i);
 	}
@@ -121,9 +121,9 @@ List<Declaration*> Declaration::utilised() const
 	List<Declaration*> ret;
 	foreach (Declaration* i, cardinalChildrenOf<Declaration>())
 		ret << i->utilised();
-//	qDebug() << name() << "(" << kind().name() << ") utilises:";
+//	mDebug() << name() << "(" << kind().name() << ") utilises:";
 //	foreach (Declaration* i, ret)
-//		qDebug() << "    " << i->name() << "(" << i->kind().name() << ")";
+//		mDebug() << "    " << i->name() << "(" << i->kind().name() << ")";
 	return ret;
 }
 

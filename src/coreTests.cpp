@@ -242,22 +242,22 @@ int coreTests()
 		Entity* t = new TestEntity;
 		Entity* b = new TestEntityB;
 		char* v = (char*)0x1000;
-/*		qDebug() << (void*)static_cast<Entity*>((TestEntity*)v);
-		qDebug() << (void*)static_cast<TagA*>((TestEntity*)v);
-		qDebug() << (void*)static_cast<TagE*>((TestEntity*)v);
-		qDebug() << t << t->tryKind<TagA>() << " " << t->tryKind<TagB>() << " " << t->tryKind<TagC>() << " " << t->tryKind<TagD>() << " " << t->tryKind<TagE>();
-		qDebug() << (void*)static_cast<Entity*>((TestEntityB*)v);
-		qDebug() << (void*)static_cast<TagA*>((TestEntityB*)v);
-		qDebug() << (void*)static_cast<TagB*>((TestEntityB*)v);
-		qDebug() << (void*)static_cast<TagC*>((TestEntityB*)v);
-		qDebug() << (void*)static_cast<TagD*>((TestEntityB*)v);
-		qDebug() << (void*)static_cast<TagE*>((TestEntityB*)v);
-		qDebug() << b << b->tryKind<TagA>() << " " << b->tryKind<TagB>() << " " << b->tryKind<TagC>() << " " << b->tryKind<TagD>() << " " << b->tryKind<TagE>();
-		qDebug() << b->asKind<TagA>()->tagAVirtual();
-		qDebug() << b->asKind<TagB>()->tagBVirtual();
-		qDebug() << b->asKind<TagC>()->tagCVirtual();
-		qDebug() << b->asKind<TagD>()->tagDVirtual();
-		qDebug() << b->asKind<TagE>()->tagEVirtual();
+/*		mDebug() << (void*)static_cast<Entity*>((TestEntity*)v);
+		mDebug() << (void*)static_cast<TagA*>((TestEntity*)v);
+		mDebug() << (void*)static_cast<TagE*>((TestEntity*)v);
+		mDebug() << t << t->tryKind<TagA>() << " " << t->tryKind<TagB>() << " " << t->tryKind<TagC>() << " " << t->tryKind<TagD>() << " " << t->tryKind<TagE>();
+		mDebug() << (void*)static_cast<Entity*>((TestEntityB*)v);
+		mDebug() << (void*)static_cast<TagA*>((TestEntityB*)v);
+		mDebug() << (void*)static_cast<TagB*>((TestEntityB*)v);
+		mDebug() << (void*)static_cast<TagC*>((TestEntityB*)v);
+		mDebug() << (void*)static_cast<TagD*>((TestEntityB*)v);
+		mDebug() << (void*)static_cast<TagE*>((TestEntityB*)v);
+		mDebug() << b << b->tryKind<TagA>() << " " << b->tryKind<TagB>() << " " << b->tryKind<TagC>() << " " << b->tryKind<TagD>() << " " << b->tryKind<TagE>();
+		mDebug() << b->asKind<TagA>()->tagAVirtual();
+		mDebug() << b->asKind<TagB>()->tagBVirtual();
+		mDebug() << b->asKind<TagC>()->tagCVirtual();
+		mDebug() << b->asKind<TagD>()->tagDVirtual();
+		mDebug() << b->asKind<TagE>()->tagEVirtual();
 */		FAILED_IF(((char*)static_cast<Entity*>((TestEntity*)v) - v) != ((char*)(t->asKind<Entity>()) - (char*)t));
 		FAILED_IF((char*)static_cast<TagA*>((TestEntity*)v) - v != (char*)(t->asKind<TagA>()) - (char*)t);
 		FAILED_IF((char*)static_cast<TagE*>((TestEntity*)v) - v != (char*)(t->asKind<TagE>()) - (char*)t);
@@ -365,7 +365,7 @@ int coreTests()
 		r->restorePtrs();
 	
 		FAILED_IF(!r->child(0)->childOf<Class>()->childOf<Method>()->childOf<Compound>()->childIs<Referenced>(1));
-		qDebug() << &*r->child(0)->childOf<Class>()->childOf<Method>()->childOf<Compound>()->childAs<Referenced>(1)->subject();
+		mDebug() << &*r->child(0)->childOf<Class>()->childOf<Method>()->childOf<Compound>()->childAs<Referenced>(1)->subject();
 		FAILED_IF(!r->child(0)->childOf<Class>()->childOf<Method>()->childOf<Compound>()->childAs<Referenced>(1)->subject());
 		
 		r->killAndDelete();
@@ -412,17 +412,17 @@ int coreTests()
 		TEST_FOR("Negatives: one B", a->childCount(TestNegativesB::NamedChildB) == 1);
 		TEST_FOR("Negatives: two Cs", a->childCount(TestNegativesB::NamedChildC) == 2);
 		TEST_FOR("Negatives: no 'D's", a->childCount(TestNegativesB::NamedChildC + 1) == 0);
-	qInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
+	mInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
 		a->child(TestNegativesB::NamedChildC)->replace(new Label);
 		TEST_FOR("Negatives: bad replacement makes incomplete", !a->isComplete());
-	qInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
+	mInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
 		a->validifyChildren();
 		TEST_FOR("Negatives: validifyChildren() makes complete", a->isComplete());
-	qInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
+	mInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
 		a->validifyChildren();
 		TEST_FOR("Negatives: 2nd validifyChildren() and still complete", a->isComplete());
 	}
-	qInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
+	mInformation() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
 	TEST("Negatives save/load")
 	{
 		Root r;

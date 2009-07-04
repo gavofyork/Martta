@@ -47,7 +47,7 @@ bool TypeEntity::isSimilarTo(TypeEntity const* _t, Castability _similarity) cons
 	static String s_ind = "        ";
 	if (g_debugCastability)
 	{
-		qInformation() << (s_ind + "isSimilar from " + code() + " to " + _t->code() + " (for %1)").arg(_similarity);
+		mInformation() << (s_ind + "isSimilar from " + code() + " to " + _t->code() + " (for %1)").arg(_similarity);
 		s_ind = "    " + s_ind;
 	}
 	bool c1 = _t->defineSimilarityFrom(this, _similarity);
@@ -55,7 +55,7 @@ bool TypeEntity::isSimilarTo(TypeEntity const* _t, Castability _similarity) cons
 	if (g_debugCastability)
 	{
 		s_ind = s_ind.mid(4);
-		qInformation() << (s_ind + " = %1 (F -> T = %2, T <- F = %3)").arg(c2 || c1).arg(c2).arg(c1);
+		mInformation() << (s_ind + " = %1 (F -> T = %2, T <- F = %3)").arg(c2 || c1).arg(c2).arg(c1);
 	}
 	return c1 || c2;
 }

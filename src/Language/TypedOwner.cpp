@@ -45,7 +45,7 @@ Type TypedOwner::effectiveType(int _i) const
 	foreach (Type t, allowedTypes(_i))
 		if (p.isSimilarTo(t, TypeEntity::Convertible))
 //		{
-//			qDebug() << p->code() << " is convertible to " << t->code() << " t is ultnull? " << t->isUltimatelyNull();
+//			mDebug() << p->code() << " is convertible to " << t->code() << " t is ultnull? " << t->isUltimatelyNull();
 //			t->debugTree();
 			return t->isUltimatelyNull() ? p : t;
 //		}
@@ -79,7 +79,7 @@ bool TypedOwner::isChildInValidState(int _i) const
 				return true;
 			else
 			{
-				qDebug() << self()->childAs<Typed>(_i)->type()->code() << " != " << i->code();
+				mDebug() << self()->childAs<Typed>(_i)->type()->code() << " != " << i->code();
 			}
 	return false;
 }
