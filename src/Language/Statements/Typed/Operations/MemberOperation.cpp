@@ -56,7 +56,7 @@ String MemberOperation::code() const
 	return parenthesise(left()->code() + "." + right()->code());
 }
 
-bool MemberOperation::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
+bool MemberOperation::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
 	if (_p.exists() && !_p->isPlaceholder() && _p->isKind<Typed>() &&
 		_p->asKind<Typed>()->type()->isType<Reference>())

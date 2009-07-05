@@ -30,10 +30,10 @@ class Entity;
 class CodeScene;
 class Position;
 
-class EntityKeyEvent
+class KeyEvent
 {
 public:
-	EntityKeyEvent(String const& _text = String::null, int _modifiers = 0, Entity* _focus = 0, bool _isFocused = false, bool _focusIsPlaceholder = false, int _focalIndex = -1, CodeScene* _codeScene = 0):
+	KeyEvent(String const& _text = String::null, int _modifiers = 0, Entity* _focus = 0, bool _isFocused = false, bool _focusIsPlaceholder = false, int _focalIndex = -1, CodeScene* _codeScene = 0):
 		m_text					(_text),
 		m_modifiers				(_modifiers),
 		m_accepted				(false),

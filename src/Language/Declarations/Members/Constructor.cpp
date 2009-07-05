@@ -37,7 +37,7 @@ String Constructor::basicCode(FunctionCodeScope _ref) const
 	return Martta::code(qualifiers() & MethodMask) + callingCode(_ref);
 }
 
-bool Constructor::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
+bool Constructor::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
 	return simplePositionKeyPressHandler<Constructor>(_p, _e, "C");
 }

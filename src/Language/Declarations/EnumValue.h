@@ -49,7 +49,7 @@ protected:
 	virtual String						defineLayout(ViewKeys const&) const;
 	virtual int							minRequired(int _i) const { return _i == Identity ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int) const;
-	virtual bool						keyPressed(EntityKeyEvent const* _e);
+	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual bool						isChildInValidState(int _i) const;
 	virtual bool						isSuperfluous() const;
 	virtual bool						usurpsChild(Entity const* _e) const { return _e == child(Identity); }

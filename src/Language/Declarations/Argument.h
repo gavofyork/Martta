@@ -36,7 +36,7 @@ protected:
 	virtual List<Declaration*>	utilised() const { return actualType()->utilised(); }
 
 	virtual Identifiable*				addressableContext() const { return 0; }
-	virtual bool						keyPressed(EntityKeyEvent const* _e) { return VariableNamer::keyPressed(_e) ? true : Super::keyPressed(_e); }
+	virtual bool						keyPressed(KeyEvent const* _e) { return VariableNamer::keyPressed(_e) ? true : Super::keyPressed(_e); }
 	virtual int							minRequired(int _i) const { return _i == OurType ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual int							familyDependencies() const { return DependsOnChildren; }

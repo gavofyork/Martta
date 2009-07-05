@@ -408,6 +408,9 @@ public:
 	inline ConstIterator constFind(Key const& _key) const;
 	inline ConstIterator find(Key const& _key) const { return constFind(_key); }
 	inline Iterator find(Key const& _key);
+	inline ConstIterator constFind(Key const& _key, T const& _value) const;
+	inline ConstIterator find(Key const& _key, T const& _value) const { return constFind(_key, _value); }
+	inline Iterator find(Key const& _key, T const& _value);
 	Iterator erase(Iterator _pos);
 
 	template<t::uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
@@ -445,6 +448,7 @@ private:
 	privateinline Node* findNode(Key const& _key) const { return findNode(m_nodes + indexOf(_key), _key); }
 	// Find most recent node of key _key, given the master node _m. Slightly faster if master node is provided.
 	Node* findNode(Node* _m, Key const& _key) const;
+	Node* findNode(Node* _m, Key const& _key, T const& _value) const;
 	void allocate(t::uint _s);
 	void deallocate(Node*& _n);
 

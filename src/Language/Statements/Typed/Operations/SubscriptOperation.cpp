@@ -103,7 +103,7 @@ Type SubscriptOperation::type() const
 	return Type();
 }
 
-bool SubscriptOperation::keyPressed(EntityKeyEvent const* _e)
+bool SubscriptOperation::keyPressed(KeyEvent const* _e)
 {
 	if (_e->text() == "]")
 		setCurrent();
@@ -112,7 +112,7 @@ bool SubscriptOperation::keyPressed(EntityKeyEvent const* _e)
 	return true;
 }
 
-bool SubscriptOperation::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
+bool SubscriptOperation::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
 	if (_p.exists() && !_p->isPlaceholder() && _p->isKind<Typed>() &&
 		(	_p->asKind<Typed>()->type()->isType<ListType>() ||

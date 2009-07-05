@@ -27,7 +27,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(MemberEnumeration);
 
-bool MemberEnumeration::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
+bool MemberEnumeration::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
 	return simplePositionKeyPressHandler<MemberEnumeration>(_p, _e, "E");
 }

@@ -30,7 +30,7 @@ class SubscriptOperation: public BinaryOperation
 	MARTTA_OBJECT(BinaryOperation)
 
 public:
-	inline static bool					keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e);
+	inline static bool					keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 
 private:
 	virtual String						defineLayout(ViewKeys const&) const { return String("%1;Mi;^;'[';%2;']'").arg(FirstOperand).arg(SecondOperand); }
@@ -39,7 +39,7 @@ private:
 	virtual Type						type() const;
 	virtual String						code() const;
 	virtual bool						isValidState() const;
-	virtual bool						keyPressed(EntityKeyEvent const* _e);
+	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 };
 

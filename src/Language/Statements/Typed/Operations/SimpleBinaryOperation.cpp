@@ -35,7 +35,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(SimpleBinaryOperation);	
 
-bool SimpleBinaryOperation::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
+bool SimpleBinaryOperation::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
 	Operator o(_e->text(), Operator::Binary);
 	if (!_p.exists() || _p->isPlaceholder() || o.isNull())

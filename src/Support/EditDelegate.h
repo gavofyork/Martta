@@ -26,7 +26,7 @@ namespace Martta
 {
 
 class CodeScene;
-class EntityKeyEvent;
+class KeyEvent;
 class Entity;
 
 class EditDelegateFace
@@ -42,7 +42,7 @@ public:
 	void						tryCommit() { if (isValid()) commit(); }
 	
 	virtual String				defineLayout(ViewKeys const&) const;
-	virtual bool				keyPressed(EntityKeyEvent const*) { return false; }
+	virtual bool				keyPressed(KeyEvent const*) { return false; }
 	/// Called only once, and only when this will be destroyed but the subject will live.
 	virtual void				leavingEditIntact() {}
 	

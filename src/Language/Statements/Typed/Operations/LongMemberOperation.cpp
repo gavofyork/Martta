@@ -57,7 +57,7 @@ String LongMemberOperation::code() const
 	return parenthesise(left()->code() + "->" + right()->code());
 }
 
-bool LongMemberOperation::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
+bool LongMemberOperation::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
 /*	mDebug() << _p.exists();
 	if (_p.exists())

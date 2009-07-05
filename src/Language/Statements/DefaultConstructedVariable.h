@@ -32,7 +32,7 @@ class DefaultConstructedVariable: public Primary, public_interface VariableNamer
 	MARTTA_INHERITS(VariableNamer, 0)
 
 public:
-	static bool							keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e);
+	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 
 protected:
 	// From Entity via BareTyped
@@ -41,7 +41,7 @@ protected:
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity*) { changed(); }
 	virtual String						defineLayout(ViewKeys const& _k) const { return "^;" + VariableNamer::defineLayout(_k); }
-	virtual bool						keyPressed(EntityKeyEvent const* _e);
+	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual bool						isInValidState() const;
 	virtual void						exportDom(QDomElement& _element) const { VariableNamer::exportDom(_element); Super::exportDom(_element); }
 	virtual void						importDom(QDomElement const& _element) { VariableNamer::importDom(_element); Super::importDom(_element); }

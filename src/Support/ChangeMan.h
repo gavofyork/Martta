@@ -111,13 +111,13 @@ private:
 	void								processEntry(Entry const& _e);
 
 	// These two are symmetrical and used for storing the freeform dependencies.
-	QMultiHash<Dependee*, Depender*>	m_dependers;
-	QMultiHash<Depender*, Dependee*>	m_dependees;
+	MultiHash<Dependee*, Depender*>		m_dependers;
+	MultiHash<Depender*, Dependee*>		m_dependees;
 	
 	List<Changing>						m_changing;
 	
-	List<Entry>						m_changeQueue;
-	List<Entry>						m_changesDone;
+	List<Entry>							m_changeQueue;
+	List<Entry>							m_changesDone;
 	
 	bool								m_asleep;
 	bool								m_hasChanged;

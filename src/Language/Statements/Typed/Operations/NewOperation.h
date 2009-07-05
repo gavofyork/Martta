@@ -30,7 +30,7 @@ class NewOperation: public UnaryOperation
 	MARTTA_OBJECT(UnaryOperation)
 
 public:
-	inline static bool					keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e) { return simpleKeyPressedOnPositionHandler<NewOperation>(_p, _e, "N", NoPrecedence, NoAssociativity); }
+	inline static bool					keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simpleKeyPressedOnPositionHandler<NewOperation>(_p, _e, "N", NoPrecedence, NoAssociativity); }
 
 private:
 	virtual String						operatorLayout() const { return "ycode;'new '"; }

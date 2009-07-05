@@ -58,7 +58,7 @@ Access Class::baseAccess(Class* _c) const
 	return NoAccess;
 }
 	
-bool Class::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
+bool Class::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
 	return simplePositionKeyPressHandler<Class>(_p, _e, "L");
 }
@@ -264,7 +264,7 @@ Types Class::assignableTypes() const
 	return ret;
 }
 
-bool Class::keyPressed(EntityKeyEvent const* _e)
+bool Class::keyPressed(KeyEvent const* _e)
 {
 	if (_e->text() == "H")
 	{

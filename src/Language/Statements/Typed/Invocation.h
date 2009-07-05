@@ -33,7 +33,7 @@ public:
 	enum { Callee = FirstNamed, EndOfNamed };
 
 	String								callList() const { return callList(castEntities<Typed>(cardinalChildren())); }
-	static bool							keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e);
+	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 
 protected:
 	virtual int							minRequired(int _i) const;
@@ -41,7 +41,7 @@ protected:
 	virtual Types						allowedTypes(int _index) const;
 	virtual Type						type() const;
 	virtual String						code() const;
-	virtual bool						keyPressed(EntityKeyEvent const* _e);
+	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual String						defineLayout(ViewKeys const&) const;
 	String								callList(List<Typed*> _parameters) const;
 	virtual int							familyDependencies() const { return Super::familyDependencies() | DependsOnChildren; }

@@ -20,9 +20,6 @@
 
 #pragma once
 
-// Same here - move to interface?
-#include "EntityKeyEvent.h"	// Depends on QKeyEvent
-
 #include <msSupport.h>
 #include <msRgb.h>
 #include <msList.h>
@@ -39,6 +36,7 @@ using MarttaSupport::String;
 #include "Dependee.h"
 #include "Serialisable.h"
 
+#include "KeyEvent.h"
 #include "Dier.h"
 #include "Meta.h"
 #include "Position.h"
@@ -363,8 +361,8 @@ public:
 	 * - Nowhere
 	 */
 	Position							firstFor(Kind const& _k);
-	bool								attemptAppend(EntityKeyEvent const* _e);
-	bool								attemptInsert(EntityKeyEvent const* _e);
+	bool								attemptAppend(KeyEvent const* _e);
+	bool								attemptInsert(KeyEvent const* _e);
 	
 	virtual int							definePreferedFor(Kind const&) const { return NonePrefered; }
 
@@ -379,8 +377,8 @@ public:
 	// We've been double-clicked.
 	bool								activated(CodeScene* _s);
 	virtual bool						onActivated(CodeScene*) { return false; }
-	virtual bool						keyPressed(EntityKeyEvent const*);
-	static bool							keyPressedOnPosition(Position const&, EntityKeyEvent const*) { return false; }
+	virtual bool						keyPressed(KeyEvent const*);
+	static bool							keyPressedOnPosition(Position const&, KeyEvent const*) { return false; }
 	
 	String								indexName(int _i) const;
 	String								indexName() const { return m_parent ? m_parent->indexName(m_index) : "[Orphan]"; }
@@ -419,17 +417,17 @@ public:
 	/// Reset-layout cache.
 	void								resetLayoutCache();
 	
-	static void							keyPressEventStarter(EntityKeyEvent* _e, bool _abortive = false);
-	void								keyPressEvent(EntityKeyEvent* _e);
+	static void							keyPressEventStarter(KeyEvent* _e, bool _abortive = false);
+	void								keyPressEvent(KeyEvent* _e);
 	void								activateEvent(CodeScene* _s);
 	
 	/// Static helpers.
 	inline static bool					isTemporary(Entity* _e) { SafePointer<Entity> p(_e); p->clearEditing(); return !p; }
 	static bool							isValidName(String const& _n);
 	template<class T>
-	inline static bool					simplePlaceholderKeyPressHandler(Position const& _p, EntityKeyEvent const* _e, String const& _t);
+	inline static bool					simplePlaceholderKeyPressHandler(Position const& _p, KeyEvent const* _e, String const& _t);
 	template<class T>
-	inline static bool					simplePositionKeyPressHandler(Position const& _p, EntityKeyEvent const* _e, String const& _t, bool _ontoNew = true);	
+	inline static bool					simplePositionKeyPressHandler(Position const& _p, KeyEvent const* _e, String const& _t, bool _ontoNew = true);	
 
 	void								debugTree() const;
 	void								debugTree(String const& _i) const;
@@ -547,6 +545,12 @@ inline MarttaSupport::TextStream& operator<<(MarttaSupport::TextStream& _out, co
 
 }
 
+extern "C"
+{
+void* malloc(size_t);
+void free(void*);
+}
+
 void* Martta::Entity::operator new(size_t _size)
 {
 	s_news++;
@@ -600,7 +604,7 @@ void Martta::Entity::setDependency(T& _dependencyVariable, U const& _dependency)
 }
 
 template<class T>
-bool Martta::Entity::simplePlaceholderKeyPressHandler(Position const& _p, EntityKeyEvent const* _e, String const& _t)
+bool Martta::Entity::simplePlaceholderKeyPressHandler(Position const& _p, KeyEvent const* _e, String const& _t)
 {
 	if (_e->text() == _t && _p.allowedToBeKind<T>() && _p.exists() && _p->isPlaceholder())
 	{
@@ -613,7 +617,7 @@ bool Martta::Entity::simplePlaceholderKeyPressHandler(Position const& _p, Entity
 }
 
 template<class T>
-bool Martta::Entity::simplePositionKeyPressHandler(Position const& _p, EntityKeyEvent const* _e, String const& _t, bool _ontoNew)
+bool Martta::Entity::simplePositionKeyPressHandler(Position const& _p, KeyEvent const* _e, String const& _t, bool _ontoNew)
 {
 	if (_e->text() == _t && _p.allowedToBeKind<T>())
 	{

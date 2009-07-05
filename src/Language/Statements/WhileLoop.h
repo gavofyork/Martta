@@ -34,7 +34,7 @@ class WhileLoop: public Untyped, public_interface Corporal, public_interface Con
 	MARTTA_INHERITS(Conditional, 1)
 
 public:
-	inline static bool					keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e) { return simplePlaceholderKeyPressHandler<WhileLoop>(_p, _e, "W"); }
+	inline static bool					keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePlaceholderKeyPressHandler<WhileLoop>(_p, _e, "W"); }
 	
 protected:
 	virtual Kinds						allowedKinds(int _index) const;
@@ -44,7 +44,7 @@ private:
 	virtual Types						allowedTypes(int _index) const;
 	virtual String						code() const;
 	virtual String						defineLayout(ViewKeys const&) const;
-	virtual bool						keyPressed(EntityKeyEvent const* _e);
+	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual List<int> const&			defineDeclarationOrder() const { static const List<int> r = List<int>() << Condition << Body; return r; }
 };
 
@@ -53,7 +53,7 @@ class UntilLoop: public WhileLoop
 	MARTTA_OBJECT(WhileLoop)
 
 public:
-	inline static bool					keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e) { return simplePlaceholderKeyPressHandler<UntilLoop>(_p, _e, "U"); }
+	inline static bool					keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePlaceholderKeyPressHandler<UntilLoop>(_p, _e, "U"); }
 	
 private:
 	virtual String						code() const;

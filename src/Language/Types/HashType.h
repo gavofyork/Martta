@@ -43,7 +43,7 @@ public:
 	static void							finaliseClass();
 	TypeEntity const*					key() const { return childIs<TypeEntity>(KeyType) ? childAs<TypeEntity>(KeyType) : TypeEntity::null; }
 	TypeEntity const*					value() const { return childIs<TypeEntity>(ValueType) ? childAs<TypeEntity>(ValueType) : TypeEntity::null; }
-	static bool							keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e);
+	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 	virtual bool						isWellDefined() const { return key() && value() && key()->isWellDefined() && value()->isWellDefined(); }
 	
 protected:

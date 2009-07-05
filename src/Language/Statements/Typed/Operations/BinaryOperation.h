@@ -42,7 +42,7 @@ protected:
 	Type								leftType() const { return typeOf(FirstOperand); }
 	Type								rightType() const { return typeOf(SecondOperand); }
 
-	template<class T> static bool		simpleKeyPressedOnPositionHandler(Position const& _p, EntityKeyEvent const* _e, String const& _t, Precedence _d, Associativity _a)
+	template<class T> static bool		simpleKeyPressedOnPositionHandler(Position const& _p, KeyEvent const* _e, String const& _t, Precedence _d, Associativity _a)
 	{
 		if (!_p.exists() || _p->isPlaceholder() || _e->text() != _t)
 			return false;
@@ -63,7 +63,7 @@ protected:
 		}
 		return false;
 	}
-	template<class T> static bool		simpleKeyPressedOnPositionHandler(Position const& _p, EntityKeyEvent const* _e, Operator _o)
+	template<class T> static bool		simpleKeyPressedOnPositionHandler(Position const& _p, KeyEvent const* _e, Operator _o)
 	{
 		return simpleKeyPressedOnPositionHandler<T>(_p, _e, _o.code(), _o.precedence(), _o.associativity());
 	}

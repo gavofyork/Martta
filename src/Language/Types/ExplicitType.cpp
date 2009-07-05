@@ -36,7 +36,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(ExplicitType);
 
-bool ExplicitType::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
+bool ExplicitType::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
 	if (_p.exists() && _p->isPlaceholder() && _e->text().length() == 1 && (_e->text()[0].isUpper() || _e->text()[0] == L':'))
 	{
@@ -184,7 +184,7 @@ bool ExplicitType::canStandAlone() const
 	return m_subject.isUsable() && m_subject->isKind<Class>() ? !m_subject->self()->childCountOf<VirtualPure>() : true;
 }
 
-bool ExplicitType::keyPressed(EntityKeyEvent const* _e)
+bool ExplicitType::keyPressed(KeyEvent const* _e)
 {
 	if (_e->text().length() == 1 && (_e->text()[0].isUpper() || _e->text()[0] == L':'))
 	{

@@ -20,22 +20,22 @@
 
 #include "Entity.h"
 #include "CodeScene.h"
-#include "EntityKeyEvent.h"
+#include "KeyEvent.h"
 
 namespace Martta
 {
 	
-void EntityKeyEvent::reinterpretLater() const
+void KeyEvent::reinterpretLater() const
 {
 	m_codeScene->reinterpretCurrentKeyEvent();
 }
 
-Position EntityKeyEvent::focusPoint() const
+Position KeyEvent::focusPoint() const
 {
 	return m_focus->over();
 }
 
-Position EntityKeyEvent::nearestBracket(Position const& _p) const
+Position KeyEvent::nearestBracket(Position const& _p) const
 {
 	return m_codeScene->nearestBracket(_p);
 }

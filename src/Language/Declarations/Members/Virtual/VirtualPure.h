@@ -33,7 +33,7 @@ class VirtualPure: public MemberLambda, public_interface Virtual
 	MARTTA_INHERITS(Virtual, 0)
 
 public:
-	static bool							keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e);
+	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 	
 protected:
 	virtual int							minRequired(int _i) const { return _i == Body ? 0 : Super::minRequired(_i); }

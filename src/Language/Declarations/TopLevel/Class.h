@@ -32,7 +32,7 @@ class Class: public TopLevelType
 public:
 	enum { Artificials = FirstNamed, EndOfNamed };
 
-	static bool							keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e);
+	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 
 	List<Declaration*>					members(bool _isConst = false, Access _access = Private) const;
 	template<class T> inline List<T*>	membersOf(bool _isConst = false, Access _access = Private) const { return filterEntities<T>(members(_isConst, _access)); }
@@ -44,7 +44,7 @@ protected:
 	virtual String						interfaceCode() const;
 	virtual String						implementationCode() const;
 	virtual String						defineLayout(ViewKeys const&) const;
-	virtual bool						keyPressed(EntityKeyEvent const* _e);
+	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual List<Declaration*>			utilised() const;
 	virtual void						onDependencyChanged(Entity* _e);
 	virtual void						apresLoad() { rejigDeps(); checkImplicitConstructors(); }

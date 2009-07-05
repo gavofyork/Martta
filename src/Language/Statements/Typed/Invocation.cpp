@@ -112,7 +112,7 @@ void Invocation::onDependencyChanged(Entity* _e)
 	Super::onDependencyChanged(_e);
 }
 
-bool Invocation::keyPressed(EntityKeyEvent const* _e)
+bool Invocation::keyPressed(KeyEvent const* _e)
 {
 	if (_e->text() == "(" && _e->focalIndex() == Callee && child(0))
 		child(0)->navigateOnto(_e->codeScene());
@@ -131,7 +131,7 @@ bool Invocation::keyPressed(EntityKeyEvent const* _e)
 	return true;
 }
 
-bool Invocation::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
+bool Invocation::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
 	if (_p.exists() && !_p->isPlaceholder() && _p->isKind<Typed>() && _e->text() == "(" &&
 		_p->asKind<Typed>()->type()->isType<FunctionType>() && !(_p->parentIs<Invocation>() && _p->index() == Callee) && !isTemporary(_p.entity()))

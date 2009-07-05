@@ -35,7 +35,7 @@ Class* Base::classType() const
 	return childAs<ExplicitType>(Superclass)->subject()->asKind<Class>();
 }
 	
-bool Base::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
+bool Base::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
 	return simplePositionKeyPressHandler<Base>(_p, _e, "B");
 }
@@ -66,7 +66,7 @@ String Base::code() const
 	return childAs<Label>(Accessibility)->code() + " " + childAs<TypeEntity>(Superclass)->code();
 }
 
-bool Base::keyPressed(EntityKeyEvent const* _e)
+bool Base::keyPressed(KeyEvent const* _e)
 {
 	if (child(Accessibility) && child(Accessibility)->keyPressed(_e))		//QUICK do with usurp
 		return true;

@@ -34,11 +34,11 @@ class IfStatement: public Untyped, public_interface Corporal, public_interface C
 public:
 	enum { AltBody = FirstNamed, EndOfNamed };
 
-	static bool							keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e);
+	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 	
 protected:
 	virtual String						code() const;
-	virtual bool						keyPressed(EntityKeyEvent const* _e);
+	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual String						defineLayout(ViewKeys const&) const;
 	virtual int							minRequired(int _i) const { return _i == Condition || _i == Body ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _index) const;

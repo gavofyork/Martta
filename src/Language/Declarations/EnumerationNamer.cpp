@@ -62,7 +62,7 @@ void EnumerationNamer::updateStem()
 		self()->changed();
 }
 
-bool EnumerationNamer::keyPressed(EntityKeyEvent const* _e)
+bool EnumerationNamer::keyPressed(KeyEvent const* _e)
 {
 	if (_e->text() == L"\n" && _e->codeScene()->viewKeys(self())["expanded"].toBool())
 	{

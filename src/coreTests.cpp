@@ -355,7 +355,7 @@ int coreTests()
 		QDomElement prj = doc.createElement("project");
 		doc.appendChild(prj);
 		QDomElement ele = doc.createElement("entity");
-		ele.setAttribute("kind", n->kind().name());
+		ele.setAttribute("kind", n->kind().name().toCString());
 		prj.appendChild(ele);
 		
 		r->archivePtrs();
@@ -434,7 +434,7 @@ int coreTests()
 		QDomElement prj = doc.createElement("project");
 		doc.appendChild(prj);
 		QDomElement ele = doc.createElement("entity");
-		ele.setAttribute("kind", a->kind().name());
+		ele.setAttribute("kind", a->kind().name().toCString());
 		prj.appendChild(ele);
 		
 		r.archivePtrs();

@@ -55,7 +55,7 @@ String Compound::defineLayout(ViewKeys const&) const
 		return "ycode;'{}'";
 }
 
-bool Compound::keyPressed(EntityKeyEvent const* _e)
+bool Compound::keyPressed(KeyEvent const* _e)
 {
 	if (_e->text() == "\n")
 	{

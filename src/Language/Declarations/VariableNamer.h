@@ -42,7 +42,7 @@ protected:
 	inline String						interfaceCode() const { return basicCode() + ";\n"; }
 	inline String						implementationCode() const { return String::null; }
 	String								defineLayout(ViewKeys const&) const;
-	bool								keyPressed(EntityKeyEvent const* _e);
+	bool								keyPressed(KeyEvent const* _e);
 };
 
 }

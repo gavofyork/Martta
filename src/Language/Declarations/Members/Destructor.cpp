@@ -27,7 +27,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(Destructor);
 
-bool Destructor::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
+bool Destructor::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
 	return simplePositionKeyPressHandler<Destructor>(_p, _e, "~");
 }

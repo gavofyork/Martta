@@ -85,7 +85,7 @@ public:
 	void								set(int _m) { setId(_m); }
 	virtual bool						isNull() const { return m_id == -1; }
 	
-	static bool							keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e);
+	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 
 protected:
 	virtual bool						hasDefaultConstructor() const { return true; }
@@ -98,7 +98,7 @@ protected:
 	virtual void						importDom(QDomElement const& _element);
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 	virtual bool						isSuperfluous() const { return Super::isSuperfluous() && m_id == -1; }
-	virtual bool						keyPressed(EntityKeyEvent const* _e);
+	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual bool						defineSimilarityFrom(TypeEntity const* _f, Castability _c) const;
 	virtual bool						defineSimilarityTo(TypeEntity const* _t, Castability _c) const;
 

@@ -40,7 +40,7 @@ MARTTA_OBJECT_CPP(SimpleType);
 
 List<SimpleOperator*> SimpleType::s_nonMembers;
 
-bool SimpleType::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
+bool SimpleType::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
 	if (_p.exists() && _p->isPlaceholder() && _e->text().length() == 1 && _e->text()[0].isLower())
 	{
@@ -54,7 +54,7 @@ bool SimpleType::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* 
 	return true;
 }
 
-bool SimpleType::keyPressed(EntityKeyEvent const* _e)
+bool SimpleType::keyPressed(KeyEvent const* _e)
 {
 	if (_e->text().length() == 1 && (_e->text()[0].isLower() || _e->text()[0] == L':'))
 	{

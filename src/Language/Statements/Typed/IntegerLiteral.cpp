@@ -30,7 +30,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(IntegerLiteral);
 
-bool IntegerLiteral::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
+bool IntegerLiteral::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
 	if (_p.exists() && _e->text().length() == 2 && _e->text()[0] == L'-' && _e->text()[1].isNumber() && _p->isPlaceholder())
 	{
@@ -93,7 +93,7 @@ EditDelegateFace* IntegerLiteral::newDelegate(CodeScene* _s)
 			if (!subject()->m_signed)
 				m_entry.remove("-");
 		}
-		virtual bool keyPressed(EntityKeyEvent const* _e)
+		virtual bool keyPressed(KeyEvent const* _e)
 		{
 			if (_e->text() == L"\b" && m_entry.size() > 1)
 				m_entry = m_entry.left(m_entry.size() - 1);

@@ -30,7 +30,7 @@ class Pointer: public AddressType
 	MARTTA_OBJECT(AddressType)
 
 public:
-	static bool keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e);
+	static bool keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 	
 protected:
 	virtual Types						assignableTypes() const;

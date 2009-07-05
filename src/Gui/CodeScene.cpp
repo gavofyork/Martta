@@ -398,9 +398,9 @@ int translateMods(int _e)
 {
 	int r = 0;
 	if (_e & Qt::ShiftModifier)
-		r |= EntityKeyEvent::ShiftModifier;
+		r |= KeyEvent::ShiftModifier;
 	if (_e & Qt::ControlModifier)
-		r |= EntityKeyEvent::ControlModifier;
+		r |= KeyEvent::ControlModifier;
 	return r;
 }
 
@@ -432,7 +432,7 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 	
 	m_doInsert = false;
 
-	EntityKeyEvent e;
+	KeyEvent e;
 	
 	if (m_strobeFocus && !_e->text().isEmpty() && _e->text() != " ")
 	{
@@ -449,7 +449,7 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 			m_strobeChild->prepareMove(sCrPoint);
 		}
 		mDebug() << "strobeText: " << m_strobeText;
-		e = EntityKeyEvent(m_strobeText + String(_e->text()), translateMods(_e->modifiers()), &*m_strobeFocus, true, m_strobeFocus->isPlaceholder(), UndefinedIndex, this);
+		e = KeyEvent(m_strobeText + String(_e->text().toLatin1().data()), translateMods(_e->modifiers()), &*m_strobeFocus, true, m_strobeFocus->isPlaceholder(), UndefinedIndex, this);
 		Entity::keyPressEventStarter(&e);
 		if (e.isAccepted())
 		{
@@ -495,7 +495,7 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 	{
 		// rejig for single key press.
 		wchar_t const* k = translateKey(_e->key());
-		e = EntityKeyEvent(k ? String(k) : String(_e->text()), translateMods(_e->modifiers()), n, true, n->isPlaceholder(), UndefinedIndex, this);
+		e = KeyEvent(k ? String(k) : String(_e->text().toLatin1().data()), translateMods(_e->modifiers()), n, true, n->isPlaceholder(), UndefinedIndex, this);
 		Entity::keyPressEventStarter(&e);
 		if (e.isAccepted())
 			killStrobe();
@@ -1157,16 +1157,16 @@ public:
 				{
 					p.setBrush(i.shadow);
 					p.setPen(i.shadow);
-					p.drawText(QRectF(i.br.topLeft() - QPointF(1.f, 1.f), i.br.size()), Qt::AlignLeft|Qt::AlignTop, i.text);
+					p.drawText(QRectF(i.br.topLeft() - QPointF(1.f, 1.f), i.br.size()), Qt::AlignLeft|Qt::AlignTop, QString::fromWCharArray(i.text.data()));
 				}
 				if (i.emboss.alpha() != 0)
 				{
 					p.setBrush(i.emboss);
 					p.setPen(i.emboss);
-					p.drawText(QRectF(i.br.topLeft() + QPointF(1.f, 1.f), i.br.size()), Qt::AlignLeft|Qt::AlignTop, i.text);
+					p.drawText(QRectF(i.br.topLeft() + QPointF(1.f, 1.f), i.br.size()), Qt::AlignLeft|Qt::AlignTop, QString::fromWCharArray(i.text.data()));
 				}
 				p.setPen(i.colour);
-				p.drawText(i.br, Qt::AlignLeft|Qt::AlignTop, i.text);
+				p.drawText(i.br, Qt::AlignLeft|Qt::AlignTop, QString::fromWCharArray(i.text.data()));
 			}
 			textsToBe.clear();
 			foreach (RenToBe i, rensToBe)
@@ -1197,7 +1197,7 @@ public:
 		{
 			if (!s_picCache.contains(e.mid(1)))
 			{
-				s_picCache[e.mid(1)] = new QSvgRenderer(e.mid(1));
+				s_picCache[e.mid(1)] = new QSvgRenderer(e.mid(1).toQString());
 			}
 			if (!s_imgCache.contains(e.mid(1)))
 			{
@@ -1461,7 +1461,7 @@ void CodeScene::doRefreshLayout()
 				m_leftmostChild[f->subject->parent()] = m_leftmostChild[f->subject];
 			m_rightmostChild[f->subject->parent()] = m_rightmostChild[f->subject];
 		}
-		else if (QRegExp("-?[0-9]+").exactMatch(e) && f->subject->child(e.toInt()) && m_pictures.contains(f->subject->child(e.toInt())))
+		else if (QRegExp("-?[0-9]+").exactMatch(e.toCString()) && f->subject->child(e.toInt()) && m_pictures.contains(f->subject->child(e.toInt())))
 		{
 			Entity* c = f->subject->child(e.toInt());
 			m_visible.insert(c);
@@ -1473,7 +1473,7 @@ void CodeScene::doRefreshLayout()
 			f->nextX += p.boundingRect().width();
 			f->maxHeight = qMax<float>(f->maxHeight, p.boundingRect().height());
 		}
-		else if (QRegExp("!-?[0-9]+").exactMatch(e) && f->subject->child(e.mid(1).toInt()) || QRegExp("-?[0-9]+").exactMatch(e) && f->subject->child(e.toInt()))
+		else if (QRegExp("!-?[0-9]+").exactMatch(e.toCString()) && f->subject->child(e.mid(1).toInt()) || QRegExp("-?[0-9]+").exactMatch(e.toCString()) && f->subject->child(e.toInt()))
 		{
 			String s = e.startsWith("!") ? e.mid(1) : e;
 			Entity* c = f->subject->child(s.toInt());

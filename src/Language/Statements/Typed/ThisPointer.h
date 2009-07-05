@@ -30,7 +30,7 @@ class ThisPointer: public Typed
 	MARTTA_OBJECT(Typed)
 
 public:
-	static bool							keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e);
+	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 	
 protected:
 	virtual Type						type() const;

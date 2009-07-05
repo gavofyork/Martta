@@ -32,7 +32,7 @@ class MemberEnumeration: public Member, public_interface EnumerationNamer
 	MARTTA_INHERITS(EnumerationNamer, 0)
 	
 public:
-	static bool							keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e);
+	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 
 protected:
 	// From Member
@@ -56,7 +56,7 @@ protected:
 	virtual void						onDependencyAdded(Entity* _e) { EnumerationNamer::onDependencyAdded(_e); }
 	virtual void						onDependencyChanged(Entity* _e) { EnumerationNamer::onDependencyChanged(_e); }
 	virtual void						onDependencyRemoved(Entity* _e, int) { EnumerationNamer::onDependencyRemoved(_e); }
-	virtual bool						keyPressed(EntityKeyEvent const* _e) { M_ASSERT(isComplete()); return EnumerationNamer::keyPressed(_e) ? true : Super::keyPressed(_e); }
+	virtual bool						keyPressed(KeyEvent const* _e) { M_ASSERT(isComplete()); return EnumerationNamer::keyPressed(_e) ? true : Super::keyPressed(_e); }
 	virtual Entity*						isExpander() const { return EnumerationNamer::isExpander(); }
 };
 

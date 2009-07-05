@@ -59,7 +59,7 @@ protected:
 	virtual bool						isInValidState() const { return type().isWellDefined(); }
 	virtual Entity*						isExpander() const;
 	virtual String						memberDefineLayout(ViewKeys const& _v) const;
-	virtual bool						keyPressed(EntityKeyEvent const* _e);
+	virtual bool						keyPressed(KeyEvent const* _e);
 //	virtual void						memberDecorate(DecorationContext const& _p) const;
 	virtual Type						type() const { return MemberValue::memberifiedType(LambdaNamer::type()); }
 };

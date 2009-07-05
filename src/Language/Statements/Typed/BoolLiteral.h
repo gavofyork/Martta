@@ -32,7 +32,7 @@ class BoolLiteral: public Literal
 public:
 	BoolLiteral(bool _value = false): m_value(_value) {}
 
-	static bool							keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e);
+	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 	
 	void								setValue(bool _v) { m_value = _v; changed(); }
 

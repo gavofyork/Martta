@@ -18,7 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "EntityKeyEvent.h"
+#include "KeyEvent.h"
 #include "Corporal.h"
 
 namespace Martta
@@ -32,7 +32,7 @@ String Corporal::defineLayout(ViewKeys const&, bool _shrink) const
 	return (String(!_shrink || self()->child(Body) && self()->child(Body)->cardinalChildCount() ? ";n;i;%2" : ";%2")).arg(Body);
 }
 
-bool Corporal::keyPressed(EntityKeyEvent const* _e)
+bool Corporal::keyPressed(KeyEvent const* _e)
 {
 	if ((_e->text() == ")" || _e->text() == "{") && _e->focalIndex() != Body && self()->child(Body))
 		self()->child(Body)->navigateOnto(_e->codeScene());

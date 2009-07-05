@@ -467,7 +467,7 @@ bool Entity::activated(CodeScene* _s)
 		return isEditing(_s);
 	}
 }
-void Entity::keyPressEventStarter(EntityKeyEvent* _e, bool _abortive)
+void Entity::keyPressEventStarter(KeyEvent* _e, bool _abortive)
 {
 	Entity* f = _e->focus();
 	foreach (Entity* e, f->children())
@@ -518,7 +518,7 @@ void Entity::keyPressEventStarter(EntityKeyEvent* _e, bool _abortive)
 			return;
 	}
 }
-void Entity::keyPressEvent(EntityKeyEvent* _e)
+void Entity::keyPressEvent(KeyEvent* _e)
 {
 	if (keyPressed(_e) || attemptInsert(_e))
 	{
@@ -533,7 +533,7 @@ void Entity::keyPressEvent(EntityKeyEvent* _e)
 		parent()->keyPressEvent(_e);
 	}
 }
-bool Entity::keyPressed(EntityKeyEvent const* _e)
+bool Entity::keyPressed(KeyEvent const* _e)
 {
 	Position p = over();
 	if (_e->codeScene()->isCurrent(this) && (_e->text() == L"\x7f" && _e->modifiers() == Qt::ShiftModifier || _e->text() == L"\b" && isEditing(_e->codeScene())))
@@ -583,7 +583,7 @@ bool Entity::keyPressed(EntityKeyEvent const* _e)
 		return false;
 	return true;
 }
-bool Entity::attemptInsert(EntityKeyEvent const* _e)
+bool Entity::attemptInsert(KeyEvent const* _e)
 {
 	if (parent())
 		foreach (Kind i, parent()->allowedKinds(index()))
@@ -591,7 +591,7 @@ bool Entity::attemptInsert(EntityKeyEvent const* _e)
 				return true;
 	return false;
 }
-bool Entity::attemptAppend(EntityKeyEvent const* _e)
+bool Entity::attemptAppend(KeyEvent const* _e)
 {
 	foreach (int i, knownNames() << cardinalChildCount())
 		foreach (Kind k, allowedKinds(i))

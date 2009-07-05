@@ -121,7 +121,7 @@ List<ValueDefiner*> Operation::findBestOverload(Types const& _actual, List<Value
 	return ret;
 }
 
-bool Operation::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
+bool Operation::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
 	if (_e->text() == "(" && _p->isPlaceholder())
 	{
@@ -132,7 +132,7 @@ bool Operation::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _
 	return false;
 }
 
-bool Operation::keyPressed(EntityKeyEvent const* _e)
+bool Operation::keyPressed(KeyEvent const* _e)
 {
 	if (_e->text() == ")" && _e->codeScene()->isBracketed(over()))
 	{

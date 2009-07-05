@@ -60,7 +60,7 @@ String WhileLoop::defineLayout(ViewKeys const& _k) const
 	return ("ycode;^;'while (';%1;')'" + Corporal::defineLayout(_k, true)).arg(Condition);
 }
 
-bool WhileLoop::keyPressed(EntityKeyEvent const* _e)
+bool WhileLoop::keyPressed(KeyEvent const* _e)
 {
 	if (Corporal::keyPressed(_e))
 		return true;

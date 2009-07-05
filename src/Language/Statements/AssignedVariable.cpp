@@ -52,7 +52,7 @@ String AssignedVariable::code() const
 	return basicCode() + " = " + asTyped(AssignedValue)->code();
 }
 
-bool AssignedVariable::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
+bool AssignedVariable::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
 	if (!_p->isAllowed<DefaultConstructedVariable>())
 		return simplePlaceholderKeyPressHandler<AssignedVariable>(_p, _e, "V");
@@ -79,7 +79,7 @@ void AssignedVariable::onDependencySwitched(Entity* _e, Entity*)
 	}
 }
 
-bool AssignedVariable::keyPressed(EntityKeyEvent const* _e)
+bool AssignedVariable::keyPressed(KeyEvent const* _e)
 {
 	if (VariableNamer::keyPressed(_e))
 		return true;

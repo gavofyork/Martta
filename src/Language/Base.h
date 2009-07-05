@@ -38,7 +38,7 @@ public:
 	String								code() const;
 	Class*								classType() const;
 	
-	static bool							keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e);
+	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 	
 protected:
 	virtual String						defineLayout(ViewKeys const&) const;
@@ -47,7 +47,7 @@ protected:
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual int							minRequired(int _i) const { return _i == Accessibility || _i == Superclass ? 1 : Super::minRequired(_i); }
 	virtual bool						isChildInValidState(int _i) const;
-	virtual bool						keyPressed(EntityKeyEvent const* _e);
+	virtual bool						keyPressed(KeyEvent const* _e);
 };
 
 }

@@ -89,7 +89,7 @@ String EnumValue::code() const
 		return codeName();
 }
 
-bool EnumValue::keyPressed(EntityKeyEvent const* _e)
+bool EnumValue::keyPressed(KeyEvent const* _e)
 {
 	if (_e->text() == "=" && _e->focalIndex() == Identity)
 	{

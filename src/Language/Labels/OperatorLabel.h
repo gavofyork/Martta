@@ -48,7 +48,7 @@ protected:
 	virtual void						exportDom(QDomElement& _element) const;
 	virtual void						importDom(QDomElement const& _element);
 	virtual String						defineLayout(ViewKeys const&) const;
-	virtual bool						keyPressed(EntityKeyEvent const* _e);
+	virtual bool						keyPressed(KeyEvent const* _e);
 
 private:
 	Operator							m_operator;

@@ -44,7 +44,7 @@ String ConstructedVariable::code() const
 	return basicCode() + childAs<Construction>(OurConstruction)->callList();
 }
 
-bool ConstructedVariable::keyPressed(EntityKeyEvent const* _e)
+bool ConstructedVariable::keyPressed(KeyEvent const* _e)
 {
 	if (VariableNamer::keyPressed(_e))
 		return true;

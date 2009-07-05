@@ -36,7 +36,7 @@ protected:
 	virtual int							minRequired(int _i) const { return _i == Cardinals ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const { return _i >= 0 ? Kind::of<Statement>() : Super::allowedKinds(_i); }
 	virtual Types						allowedTypes(int _i) const { return _i >= 0 ? Types(Type()) : Super::allowedTypes(_i); }
-	virtual bool						keyPressed(EntityKeyEvent const* _e);
+	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual String						defineLayout(ViewKeys const&) const;
 	virtual void						appendDefinedUptoHere(int _i, List<ValueDefiner*>* _list) const;
 };

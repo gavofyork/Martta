@@ -74,7 +74,7 @@ String Member::defineLayout(ViewKeys const& _k) const
 	Super::decorate(_p);
 }*/
 
-bool Member::keyPressed(EntityKeyEvent const* _e)
+bool Member::keyPressed(KeyEvent const* _e)
 {
 	// TODO: exchange for usurps
 	if (child(Accessibility)->keyPressed(_e))

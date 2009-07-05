@@ -36,7 +36,7 @@ class Enumeration: public TopLevelType, public_interface EnumerationNamer
 	MARTTA_INHERITS(EnumerationNamer, 0)
 
 public:
-	static bool							keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e);
+	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 	
 	virtual String						code() const { return isNamed() ? codeName() : "enum ["+m_stem+"*]"; }
 	
@@ -49,7 +49,7 @@ protected:
 	virtual List<ValueDefiner*>		valuesAdded() const { return EnumerationNamer::valuesAdded(); }
 	virtual Types						assignableTypes() const { return Type(const_cast<Enumeration*>(this)); }
 
-	virtual bool						keyPressed(EntityKeyEvent const* _e) { M_ASSERT(isComplete()); return EnumerationNamer::keyPressed(_e) ? true : Super::keyPressed(_e); }
+	virtual bool						keyPressed(KeyEvent const* _e) { M_ASSERT(isComplete()); return EnumerationNamer::keyPressed(_e) ? true : Super::keyPressed(_e); }
 	virtual Entity*						isExpander() const { return child(isNamed() ? 1 : 0); }
 
 	virtual int							familyDependencies() { return DependsOnChildren; }

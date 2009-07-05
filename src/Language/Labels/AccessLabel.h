@@ -45,7 +45,7 @@ protected:
 	virtual void						exportDom(QDomElement& _element) const;
 	virtual void						importDom(QDomElement const& _element);
 	virtual String						defineLayout(ViewKeys const&) const;
-	virtual bool						keyPressed(EntityKeyEvent const* _e);
+	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual String						code() const { return Martta::code(m_access); }
 	virtual bool						onActivated(CodeScene*) { setAccess((Access)(((int)m_access + 1) % (int)AccessCount)); return true; }
 	

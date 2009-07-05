@@ -40,7 +40,7 @@ public:
 
 	static void							initialiseClass();
 	static void							finaliseClass();
-	inline static bool					keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e) { return simplePositionKeyPressHandler<ListType>(_p, _e, "[["); }
+	inline static bool					keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePositionKeyPressHandler<ListType>(_p, _e, "[["); }
 	
 protected:
 	// Assumes we are (eventually) a non-const ref.

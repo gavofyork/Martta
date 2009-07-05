@@ -28,7 +28,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(DefaultConstructedVariable);	
 
-bool DefaultConstructedVariable::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
+bool DefaultConstructedVariable::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
 	return simplePlaceholderKeyPressHandler<DefaultConstructedVariable>(_p, _e, "V");
 }
@@ -42,7 +42,7 @@ Kinds DefaultConstructedVariable::allowedKinds(int _index) const
 	return Super::allowedKinds(_index);
 }
 
-bool DefaultConstructedVariable::keyPressed(EntityKeyEvent const* _e)
+bool DefaultConstructedVariable::keyPressed(KeyEvent const* _e)
 {
 	if (VariableNamer::keyPressed(_e))
 		return true;

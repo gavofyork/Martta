@@ -32,7 +32,7 @@ class Const: public ModifyingType
 public:
 	Const() {}
 	
-	inline static bool					keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e) { return simplePositionKeyPressHandler<Const>(_p, _e, "!", false); }
+	inline static bool					keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePositionKeyPressHandler<Const>(_p, _e, "!", false); }
 	
 protected:
 	virtual bool						hasDefaultConstructor() const { return original() && original()->hasDefaultConstructor(); }

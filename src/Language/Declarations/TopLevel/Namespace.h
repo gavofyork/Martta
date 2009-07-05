@@ -37,7 +37,7 @@ public:
 	String								interfaceCode() const;
 	String								implementationCode() const;
 
-	virtual bool						keyPressed(EntityKeyEvent const* _e);
+	virtual bool						keyPressed(KeyEvent const* _e);
 };
 
 }

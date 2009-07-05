@@ -42,7 +42,7 @@ protected:
 	
 	String								defineLayout(ViewKeys const& _k) const;
 	String								interfaceCode() const;
-	bool								keyPressed(EntityKeyEvent const* _e);
+	bool								keyPressed(KeyEvent const* _e);
 	List<ValueDefiner*>				valuesAdded() const { return self()->cardinalChildrenOf<ValueDefiner>(); }
 	
 	void								onDependencyAdded(Entity* _e);

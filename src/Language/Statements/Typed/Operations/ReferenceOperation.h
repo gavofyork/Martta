@@ -30,7 +30,7 @@ class ReferenceOperation: public UnaryOperation
 	MARTTA_OBJECT(UnaryOperation)
 
 public:
-	static bool							keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e) { return simpleKeyPressedOnPositionHandler<ReferenceOperation>(_p, _e, "&", 3, RightAssociativity); }
+	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simpleKeyPressedOnPositionHandler<ReferenceOperation>(_p, _e, "&", 3, RightAssociativity); }
 	
 private:
 	virtual Types						allowedTypes(int _index) const;

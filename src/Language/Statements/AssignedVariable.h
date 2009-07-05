@@ -34,7 +34,7 @@ class AssignedVariable: public BareTyped, public_interface VariableNamer
 public:
 	enum { AssignedValue = FirstNamed, EndOfNamed };
 	
-	static bool							keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e);
+	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 	
 protected:
 	// From Entity via BareTyped
@@ -42,7 +42,7 @@ protected:
 	virtual Kinds						allowedKinds(int _index) const;
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual String						defineLayout(ViewKeys const& _k) const { return (VariableNamer::defineLayout(_k) + ";Mi;^;ycode;':=';Mi;%1").arg(AssignedValue); }
-	virtual bool						keyPressed(EntityKeyEvent const* _e);
+	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual void						onDependencyChanged(Entity*);
 	virtual void						onDependencySwitched(Entity*, Entity*);
 	virtual void						exportDom(QDomElement& _element) const { VariableNamer::exportDom(_element); Super::exportDom(_element); }

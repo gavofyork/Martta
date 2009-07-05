@@ -43,7 +43,7 @@ protected:
 	virtual String						defineLayout(ViewKeys const& _k) const { return "^;" + VariableNamer::defineLayout(_k); }
 	virtual List<Declaration*>	utilised() const { return actualType()->utilised(); }
 	
-	virtual bool						keyPressed(EntityKeyEvent const* _e) { return VariableNamer::keyPressed(_e) ? true : Super::keyPressed(_e); }
+	virtual bool						keyPressed(KeyEvent const* _e) { return VariableNamer::keyPressed(_e) ? true : Super::keyPressed(_e); }
 	virtual int							minRequired(int _i) const { return _i == OurType ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual int							familyDependencies() const { return DependsOnChildren; }

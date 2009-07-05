@@ -41,7 +41,7 @@ public:
 	bool								signedness() const { return m_signed; }
 	void								setSignedness(bool _s) { m_signed = _s; changed(); }
 	
-	static bool							keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e);
+	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 
 protected:
 	virtual Type						type() const { return Type(Int|(m_signed ? Signed : Unsigned)|((int)m_range)); }

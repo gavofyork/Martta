@@ -43,7 +43,7 @@ public:
 	ModelPtr<ValueDefiner>				subject() const { return m_subject; }
 	void								setSubject(ValueDefiner* _e) { setDependency(m_subject, _e); }
 	
-	static bool							keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e);
+	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 
 protected:
 	virtual bool						isInValidState() const;

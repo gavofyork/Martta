@@ -48,7 +48,7 @@ public:
 	bool								haveSingleCastOperator(TypeEntity const* _t, bool _const = false) const;
 	bool								haveSingleConversionConstructor(TypeEntity const* _f) const;
 
-	static bool							keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e);
+	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 	
 	virtual bool						isNull() const { return !m_subject.isUsable(); }
 	
@@ -64,7 +64,7 @@ protected:
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 	virtual TypeEntity*					newClone() const { return new ExplicitType(m_subject); }
 	virtual String						defineLayout(ViewKeys const&) const;
-	virtual bool						keyPressed(EntityKeyEvent const* _e);
+	virtual bool						keyPressed(KeyEvent const* _e);
 //	virtual bool						isSuperfluous() const;
 	virtual bool						canStandAlone() const;
 	virtual bool						defineSimilarityTo(TypeEntity const* _t, Castability _c) const;

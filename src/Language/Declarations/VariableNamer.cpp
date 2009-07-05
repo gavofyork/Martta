@@ -43,7 +43,7 @@ String VariableNamer::basicCode() const
 		return String::null;
 }
 
-bool VariableNamer::keyPressed(EntityKeyEvent const* _e)
+bool VariableNamer::keyPressed(KeyEvent const* _e)
 {
 	if (_e->text() == " " && _e->focalIndex() == OurType)
 	{

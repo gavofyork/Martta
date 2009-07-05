@@ -32,7 +32,7 @@ String OperatorLabel::defineLayout(ViewKeys const&) const
 	return "ycode;'operator" + symbolCode() + "'";
 }
 
-bool OperatorLabel::keyPressed(EntityKeyEvent const* _e)
+bool OperatorLabel::keyPressed(KeyEvent const* _e)
 {
 	return Super::keyPressed(_e);
 }

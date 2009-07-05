@@ -30,7 +30,7 @@ class Reference: public ModifyingType
 	MARTTA_OBJECT(ModifyingType)
 
 public:
-	inline static bool					keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e) { return simplePositionKeyPressHandler<Reference>(_p, _e, "&", false); }
+	inline static bool					keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePositionKeyPressHandler<Reference>(_p, _e, "&", false); }
 	
 private:
 	virtual List<ValueDefiner*>			applicableMembers(Entity* _s = 0, bool _isConst = false) const { return original() ? original()->applicableMembers(_s, _isConst) : Super::applicableMembers(_s); }

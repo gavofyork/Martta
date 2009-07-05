@@ -37,7 +37,7 @@ public:
 	String								value() const { return m_value; }
 	void								setValue(String const& _s) { m_value = _s; changed(); }
 	
-	static bool							keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e);
+	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 
 protected:
 	virtual Type						type() const { return Type(Char).topWith(Const()).topWith(Pointer()); }
@@ -46,7 +46,7 @@ protected:
 	virtual void						importDom(QDomElement const& _element);
 	virtual String						defineLayout(ViewKeys const&) const;
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
-	virtual bool						keyPressed(EntityKeyEvent const* _e);
+	virtual bool						keyPressed(KeyEvent const* _e);
 
 private:
 	String								m_value;

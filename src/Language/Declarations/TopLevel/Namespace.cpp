@@ -30,7 +30,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(Namespace);	
 
-bool Namespace::keyPressed(EntityKeyEvent const* _e)
+bool Namespace::keyPressed(KeyEvent const* _e)
 {
 	if (attemptAppend(_e))
 		return true;

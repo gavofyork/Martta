@@ -195,6 +195,24 @@ GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::find(Key const& _key)
 }
 
 template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::ConstIterator
+GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::constFind(Key const& _key, T const& _value) const
+{
+	Node* m = m_nodes + indexOf(_key);
+	Node* n = findNode(m, _key, _value);
+	return n ? ConstIterator(n, m) : constEnd();
+}
+
+template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator
+GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::find(Key const& _key, T const& _value)
+{
+	Node* m = m_nodes + indexOf(_key);
+	Node* n = findNode(m, _key, _value);
+	return n ? Iterator(n, m) : end();
+}
+
+template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
 template<t::uint Min2, bool AlwaysMulti2>
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>&
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::moveFromBox(typename GeneralHash<Key, T, Min2, AlwaysMulti2, ImplicitKey>::Box const& _b)
@@ -225,6 +243,20 @@ GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::findNode(Node* _m, Key const
 	Node* i = _m;
 	do
 		if (i->key() == _key)
+			return i;
+	while ((i = i->m_next) != _m);
+	return 0;
+}
+
+template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Node*
+GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::findNode(Node* _m, Key const& _key, T const& _value) const
+{
+	if (!_m->isActive())
+		return 0;
+	Node* i = _m;
+	do
+		if (i->key() == _key && i->value() == _value)
 			return i;
 	while ((i = i->m_next) != _m);
 	return 0;

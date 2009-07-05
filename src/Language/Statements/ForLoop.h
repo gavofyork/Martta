@@ -40,7 +40,7 @@ public:
 	virtual Kinds						allowedKinds(int _index) const;
 	virtual Types						allowedTypes(int _index) const;
 
-	static bool							keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e);
+	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 	
 	virtual String						code() const;
 
@@ -48,7 +48,7 @@ private:
 	virtual List<int> const&			defineDeclarationOrder() const { static const List<int> r = List<int>() << Initialiser << Condition << Ticker << Body; return r; }
 //	virtual void						decorate(DecorationContext const& _c) const;
 	virtual String						defineLayout(ViewKeys const&) const;
-	virtual bool						keyPressed(EntityKeyEvent const* _e);
+	virtual bool						keyPressed(KeyEvent const* _e);
 };
 
 }

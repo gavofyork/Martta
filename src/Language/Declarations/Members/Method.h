@@ -30,7 +30,7 @@ class Method: public MemberLambda
 	MARTTA_OBJECT(MemberLambda)
 
 public:
-	static bool keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e) { return simplePositionKeyPressHandler<Method>(_p, _e, "M"); }
+	static bool keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePositionKeyPressHandler<Method>(_p, _e, "M"); }
 };
 
 }

@@ -31,7 +31,7 @@ class VirtualOverload: public VirtualMethod
 	MARTTA_OBJECT(VirtualMethod)
 	
 public:
-	static bool							keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e) { return simplePositionKeyPressHandler<VirtualOverload>(_p, _e, "L"); }
+	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePositionKeyPressHandler<VirtualOverload>(_p, _e, "L"); }
 	
 	VirtualMethod*						get() const { return m_base; }
 	void								set(VirtualMethod* _m) { setDependency(m_base, _m); }
@@ -45,7 +45,7 @@ protected:
 	virtual String						name() const { return m_base.isUsable() ? m_base->name() : String(); }
 	virtual String						codeName() const { return m_base ? m_base->codeName() : String(); }
 	virtual bool						isInValidState() const { return m_base.isUsable(); }
-	virtual bool						keyPressed(EntityKeyEvent const* _e);
+	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 	
 	virtual void						apresLoad() { M_ASSERT(m_base.isUsable()); addDependency(m_base); Super::apresLoad(); }

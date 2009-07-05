@@ -104,7 +104,7 @@ String MemberLambda::memberDefineLayout(ViewKeys const& _v) const
 	return (isConst() ? "M-17;fs11;fb;ewhite;c#5f6f7f;'C';M9;fb0;e#0000;c#0000;fs;" : "") + memberLambdaDefineLayout(_v);
 }
 
-bool MemberLambda::keyPressed(EntityKeyEvent const* _e)
+bool MemberLambda::keyPressed(KeyEvent const* _e)
 {
 	M_ASSERT(isComplete());
 	if (LambdaNamer::keyPressed(_e))

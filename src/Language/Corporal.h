@@ -33,7 +33,7 @@ public:
 	MARTTA_NAMED(Body)
 	
 	String							defineLayout(ViewKeys const&, bool _shrink) const;
-	bool							keyPressed(EntityKeyEvent const* _e);
+	bool							keyPressed(KeyEvent const* _e);
 	
 	virtual ~Corporal() {}
 };

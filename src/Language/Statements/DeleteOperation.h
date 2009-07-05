@@ -35,7 +35,7 @@ class DeleteOperation: public UnaryOperation
 	MARTTA_OBJECT(UnaryOperation)
 
 public:
-	inline static bool					keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e) { return simplePlaceholderKeyPressHandler<DeleteOperation>(_p, _e, "~"); }
+	inline static bool					keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePlaceholderKeyPressHandler<DeleteOperation>(_p, _e, "~"); }
 	
 protected:
 	virtual Types						allowedTypes(int) const { return Type(Void).topWith(Const()).topWith(Pointer()); }

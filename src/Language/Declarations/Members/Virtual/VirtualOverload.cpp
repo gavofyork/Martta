@@ -50,7 +50,7 @@ Kinds VirtualOverload::allowedKinds(int _i) const
 	return Super::allowedKinds(_i);
 }
 
-bool VirtualOverload::keyPressed(EntityKeyEvent const* _e)
+bool VirtualOverload::keyPressed(KeyEvent const* _e)
 {
 	if (_e->text().length() == 1 && _e->text()[0].isLower())
 	{

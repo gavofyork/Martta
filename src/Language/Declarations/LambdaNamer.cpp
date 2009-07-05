@@ -18,7 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "EntityKeyEvent.h"
+#include "KeyEvent.h"
 #include "IdLabel.h"
 #include "Primary.h"
 #include "FunctionType.h"
@@ -82,7 +82,7 @@ String LambdaNamer::defineLayout(ViewKeys const& _k, String _middle) const
 	return definePreLayout(_k) + ";" + defineReturnLayout(_k) + ";>name;" + defineNameLayout(_k) + ";" + defineArgListLayout(_k) + ";" + defineMidLayout(_k, _middle) + ";" + defineBodyLayout(_k) + ";" + definePostLayout(_k);
 }
 
-bool LambdaNamer::keyPressed(EntityKeyEvent const* _e)
+bool LambdaNamer::keyPressed(KeyEvent const* _e)
 {
 	if ((_e->text() == "(" && !argumentCount() && (_e->focalIndex() == Identity || _e->isFocused()) || _e->text() == "," && _e->focalIndex() >= 0) && self()->back().allowedToBeKind<Argument>())
 	{

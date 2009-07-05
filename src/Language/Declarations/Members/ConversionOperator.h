@@ -30,7 +30,7 @@ class ConversionOperator: public MemberLambda
 	MARTTA_OBJECT(MemberLambda)
 
 public:
-	static bool							keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e);
+	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 
 protected:
 	virtual String						defineNameLayout(ViewKeys const& _viewKeys) const;

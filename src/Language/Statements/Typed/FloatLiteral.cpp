@@ -29,7 +29,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(FloatLiteral);
 
-bool FloatLiteral::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
+bool FloatLiteral::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
 	if (_p.exists() && _p->isKind<IntegerLiteral>() && _e->text() == ".")
 	{
@@ -77,7 +77,7 @@ EditDelegateFace* FloatLiteral::newDelegate(CodeScene* _s)
 			if (!m_entry.contains("."))
 				m_entry += ".";
 		}
-		virtual bool keyPressed(EntityKeyEvent const* _e)
+		virtual bool keyPressed(KeyEvent const* _e)
 		{
 			if (_e->text() == L"\b" && m_entry.size() > 1)
 				m_entry = m_entry.left(m_entry.size() - 1);

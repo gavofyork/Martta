@@ -38,7 +38,7 @@ protected:
 	virtual void						exportDom(QDomElement&) const;
 	virtual void						importDom(QDomElement const&);
 	virtual String						defineLayout(ViewKeys const&) const;
-	virtual bool						keyPressed(EntityKeyEvent const* _e);
+	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual String						code() const { return m_isConst ? " const" : ""; }
 	virtual bool						onActivated(CodeScene*) { setIsConst(!m_isConst); return true; }
 	

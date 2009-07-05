@@ -61,7 +61,7 @@ enum { LocalVariables = 1<<0, LocalLambdas = 1<<1, SET(Local),
 #undef SET
 #undef JOIN
 
-bool Referenced::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
+bool Referenced::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
 	if (_p.exists() && _p->isPlaceholder() && _e->text().length() == 1 && _e->text()[0].isLower() && _p->isKind<Typed>() && _p->asKind<Typed>()->ourAllowedTypes().size() && _p->asKind<Typed>()->ourAllowedTypes()[0]->isType<Memberify>())
 	{
@@ -231,7 +231,7 @@ public:
 
 	virtual void				leavingEditIntact();
 	virtual void				commit();
-	virtual bool				keyPressed(EntityKeyEvent const* _e);
+	virtual bool				keyPressed(KeyEvent const* _e);
 	virtual bool				isValid() const;
 	virtual String				defineLayout(ViewKeys const&) const;
 	
@@ -343,7 +343,7 @@ void ReferencedEdit::commit()
 	subject()->setSubject(m_entity);
 }
 
-bool ReferencedEdit::keyPressed(EntityKeyEvent const* _e)
+bool ReferencedEdit::keyPressed(KeyEvent const* _e)
 {
 	if (_e->text() == L"\t")
 		m_entityName += m_completion;

@@ -143,7 +143,7 @@ class Delegate: public EditDelegate<TextLabel>
 public:
 	Delegate(TextLabel* _e, CodeScene* _s): EditDelegate<TextLabel>(_e, _s), m_text(subject()->isNamed() ? subject()->text() : String::null) {}
 	void setText(String const& _t) { m_text = _t; }
-	virtual bool keyPressed(EntityKeyEvent const* _e)
+	virtual bool keyPressed(KeyEvent const* _e)
 	{
 		if (_e->text() == L"\b")
 			m_text = m_text.left(m_text.size() - 1);
@@ -204,7 +204,7 @@ public:
 	String m_text;
 };
 
-bool TextLabel::keyPressed(EntityKeyEvent const* _e)
+bool TextLabel::keyPressed(KeyEvent const* _e)
 {
 	if (_e->isFocused() && _e->text().length() == 1 && _e->text()[0].isLower())
 	{

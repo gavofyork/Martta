@@ -47,7 +47,7 @@ public:
 	String								interfaceCode() const { return basicCode(InsideScope) + ";\n"; }
 	String								implementationCode() const;
 	String								defineLayout(ViewKeys const& _viewKeys, String _middle = String::null) const;
-	bool								keyPressed(EntityKeyEvent const* _e);
+	bool								keyPressed(KeyEvent const* _e);
 	/// Gives a parameter list of the call. This depends on argumentType/CodeName, ellipsis, reference and codeName.
 	String								callingCode(FunctionCodeScope _ref) const;
 

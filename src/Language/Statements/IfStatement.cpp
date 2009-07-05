@@ -28,7 +28,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(IfStatement);	
 	
-bool IfStatement::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
+bool IfStatement::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
 	return simplePlaceholderKeyPressHandler<IfStatement>(_p, _e, "?");
 }
@@ -58,7 +58,7 @@ Types IfStatement::allowedTypes(int _index) const
 	return Super::allowedTypes(_index);
 }
 
-bool IfStatement::keyPressed(EntityKeyEvent const* _e)
+bool IfStatement::keyPressed(KeyEvent const* _e)
 {
 	if (Corporal::keyPressed(_e))
 	{}

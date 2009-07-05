@@ -32,7 +32,7 @@ String AccessLabel::defineLayout(ViewKeys const&) const
 	return String("^;ynormal;'%1'").arg(Martta::code(m_access));
 }
 
-bool AccessLabel::keyPressed(EntityKeyEvent const* _e)
+bool AccessLabel::keyPressed(KeyEvent const* _e)
 {
 	if (_e->text() == "U")
 		setAccess(Public);

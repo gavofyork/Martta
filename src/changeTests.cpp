@@ -40,7 +40,7 @@ class NewEntity: public Entity, public_interface Depender, public_interface Depe
 	MARTTA_INHERITS(Dependee, 1)
 
 public:
-	NewEntity(QString _id = QString::null, int _fd = Depender::DependsOnNothing, Kinds const& _ad = Kinds()): m_id(_id), m_familyDependencies(_fd), m_ancestralDependencies(_ad) {}
+	NewEntity(String _id = String::null, int _fd = Depender::DependsOnNothing, Kinds const& _ad = Kinds()): m_id(_id), m_familyDependencies(_fd), m_ancestralDependencies(_ad) {}
 
 	virtual bool						botherNotifying() const { return true; }
 	virtual int							familyDependencies() const { return m_familyDependencies; }
@@ -52,7 +52,7 @@ public:
 	virtual void						onDependencyChanged(int _aspect, Entity* _e) { activity += (m_id + "C%1%2 ").arg(_aspect).arg(_e->asKind<NewEntity>()->m_id); }
 	virtual void						onDependencySwitched(Entity* _e, Entity* _old) { activity += (m_id + "S%1%2 ").arg(_e->asKind<NewEntity>()->m_id).arg(_old->asKind<NewEntity>()->m_id); }
 	virtual void						onDependencyAdded(Entity* _e) { activity += (m_id + "+%1 ").arg(_e->asKind<NewEntity>()->m_id); }
-	virtual void						onDependencyRemoved(Entity* _e, int _index) { activity += (m_id + "-%1%2 ").arg(_index == UndefinedIndex ? QString::null : QString::number(_index)).arg(_e->asKind<NewEntity>()->m_id); }
+	virtual void						onDependencyRemoved(Entity* _e, int _index) { activity += (m_id + "-%1%2 ").arg(_index == UndefinedIndex ? String::null : String::number(_index)).arg(_e->asKind<NewEntity>()->m_id); }
 	
 	bool								changed(int _aspect = AllAspects) { return Dependee::changed(_aspect); }
 	
@@ -73,7 +73,7 @@ protected:
 	virtual void						parentSwitched(Entity* _exParent) { Depender::parentSwitched(_exParent); }
 	virtual void						parentRemoved(Entity* _exParent) { Depender::parentRemoved(_exParent); }
 	
-	QString m_id;
+	String m_id;
 private:
 	int m_familyDependencies;
 	Kinds m_ancestralDependencies;
@@ -85,7 +85,7 @@ class NewEntity2: public NewEntity
 	MARTTA_OBJECT(NewEntity)
 	
 public:
-	NewEntity2(QString _id = QString::null, int _fd = Depender::DependsOnNothing, Kinds const& _ad = Kinds()): NewEntity(_id, _fd, _ad) {}
+	NewEntity2(String _id = String::null, int _fd = Depender::DependsOnNothing, Kinds const& _ad = Kinds()): NewEntity(_id, _fd, _ad) {}
 };
 MARTTA_OBJECT_CPP(NewEntity2);
 
@@ -94,7 +94,7 @@ class NewEntitySilly: public NewEntity
 	MARTTA_OBJECT(NewEntity)
 	
 public:
-	NewEntitySilly(QString _id = QString::null, int _fd = Depender::DependsOnNothing, Kinds const& _ad = Kinds()): NewEntity(_id, _fd, _ad) {}
+	NewEntitySilly(String _id = String::null, int _fd = Depender::DependsOnNothing, Kinds const& _ad = Kinds()): NewEntity(_id, _fd, _ad) {}
 	
 	virtual void						onDependencyChanged(int _aspect, Entity* _e) { Super::onDependencyChanged(_aspect, _e); if (changed(1)) activity += m_id + "*1 "; }
 };
@@ -162,7 +162,7 @@ int changeTests()
 		
 		activity.clear();
 		n2->move(n1->back());
-		FAILED_IF(!activity.contains("n1M1n3 ") || !activity.contains("n3X1 ") || !activity.contains("n1M0n2 ") || activity.size() != QString("n1M1n3 n1M0n2 n3X1 ").size());
+		FAILED_IF(!activity.contains("n1M1n3 ") || !activity.contains("n3X1 ") || !activity.contains("n1M0n2 ") || activity.size() != String("n1M1n3 n1M0n2 n3X1 ").size());
 	}
 
 	TEST("Change system: Aspects & recursive changing")

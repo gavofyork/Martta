@@ -27,7 +27,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(ThisPointer);	
 
-bool ThisPointer::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
+bool ThisPointer::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
 	// TODO: only when has ancestor of Member
 	return simplePlaceholderKeyPressHandler<ThisPointer>(_p, _e, "T");

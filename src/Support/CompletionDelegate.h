@@ -66,7 +66,7 @@ public:
 		else
 			return ret;
 	}
-	virtual bool keyPressed(EntityKeyEvent const* _e)
+	virtual bool keyPressed(KeyEvent const* _e)
 	{
 		if (_e->text() == L"\b" && m_name.size() > 1)
 			m_name.chop(1);

@@ -32,7 +32,7 @@ String ConstLabel::defineLayout(ViewKeys const&) const
 	return String("^;ycode;p%1").arg(m_isConst ? ":/snowflake.svg" : ":/fire.svg");
 }
 	
-bool ConstLabel::keyPressed(EntityKeyEvent const* _e)
+bool ConstLabel::keyPressed(KeyEvent const* _e)
 {
 	if (_e->text() == "!" || _e->text() == L"\t")
 		setIsConst(!isConst());

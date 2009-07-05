@@ -41,7 +41,7 @@ public:
 	Precision							precision() const { return m_precision; }
 	void								setPrecision(Precision _p) { m_precision = _p; m_value = (_p == DoublePrecision) ? (double)m_value : (_p == SinglePrecision) ? (float)m_value : m_value; changed(); }
 	
-	static bool							keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e);
+	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 
 protected:
 	virtual Type						type() const { return Type(m_precision == SinglePrecision ? Float : m_precision == DoublePrecision ? Double : (Long|Double)); }

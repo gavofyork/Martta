@@ -38,7 +38,7 @@ MARTTA_OBJECT_CPP(HashType);
 List<SimpleMethod*> HashType::s_members;
 List<SimpleOperator*> HashType::s_nonMembers;
 
-bool HashType::keyPressedOnPosition(Position const& _p, EntityKeyEvent const* _e)
+bool HashType::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
 	return simplePositionKeyPressHandler<HashType>(_p, _e, "#");
 }

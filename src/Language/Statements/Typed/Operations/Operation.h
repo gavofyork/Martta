@@ -36,8 +36,8 @@ class Operation: public Evaluation
 public:
 	enum { FirstOperand = FirstNamed, TheOperand = FirstOperand, SecondOperand, EndOfNamed };
 	
-	static bool							keyPressedOnPosition(Position const&, EntityKeyEvent const*);
-	bool								keyPressed(EntityKeyEvent const*);
+	static bool							keyPressedOnPosition(Position const&, KeyEvent const*);
+	bool								keyPressed(KeyEvent const*);
 	
 	virtual Precedence					precedence() const { return id().precedence(); }
 	virtual Operator					id() const { return Operator(); }

@@ -21,6 +21,9 @@
 #include <QtGui>
 #include <QtXml>
 
+// CHANGE PRECOMPILED HEADER SO IT INCLUDES QString BEFORE msString.
+// NO NEED TO DO THAT OUTSIDE THE MARTTA GUI THOUGH (i.e. IN THE LANGUAGE GENERALLY).
+
 #include "ChangeMan.h"
 #include "Project.h"
 #include "Artificial.h"
@@ -137,7 +140,7 @@ void MainWindow::on_actAboutQt_triggered()
 
 static void addChild(QTreeWidgetItem* _p, Entity const* _c)
 {
-	QTreeWidgetItem* t = new QTreeWidgetItem(_p, QStringList() << _c->indexName() << _c->kind().name());
+	QTreeWidgetItem* t = new QTreeWidgetItem(_p, QStringList() << _c->indexName().toCString() << _c->kind().name().toCString());
 	foreach (Entity* e, _c->children())
 		addChild(t, e);
 }

@@ -29,9 +29,9 @@ ChangeMan* ChangeMan::s_this = 0;
 
 void ChangeMan::oneFootInTheGrave(Dependee* _going)
 {
-	for (QMultiHash<Dependee*, Depender*>::Iterator i = m_dependers.find(_going); i != m_dependers.end() && i.key() == _going; i = m_dependers.erase(i))
+	for (MultiHash<Dependee*, Depender*>::Iterator i = m_dependers.find(_going); i != m_dependers.end() && i.key() == _going; i = m_dependers.erase(i))
 	{
-		QMultiHash<Depender*, Dependee*>::Iterator j = m_dependees.find(i.value(), i.key());
+		MultiHash<Depender*, Dependee*>::Iterator j = m_dependees.find(i.value(), i.key());
 		M_ASSERT (j != m_dependees.end());
 		m_dependees.erase(j);
 		if (i.value()->botherNotifying())
@@ -86,9 +86,9 @@ bool ChangeMan::changed(Dependee* _changer, int _aspect)
 void ChangeMan::dead(Dependee* _gone)
 {
 	M_ASSERT(m_changeQueue.size() == 0);
-	for (QMultiHash<Dependee*, Depender*>::Iterator i = m_dependers.find(_gone); i != m_dependers.end() && i.key() == _gone; i = m_dependers.erase(i))
+	for (MultiHash<Dependee*, Depender*>::Iterator i = m_dependers.find(_gone); i != m_dependers.end() && i.key() == _gone; i = m_dependers.erase(i))
 	{
-		QMultiHash<Depender*, Dependee*>::Iterator j = m_dependees.find(i.value(), i.key());
+		MultiHash<Depender*, Dependee*>::Iterator j = m_dependees.find(i.value(), i.key());
 		M_ASSERT (j != m_dependees.end());
 		m_dependees.erase(j);
 	}
@@ -102,9 +102,9 @@ void ChangeMan::dead(Depender* _gone)
 
 void ChangeMan::removeAllDependencies(Depender* _gone)
 {
-	for (QMultiHash<Depender*, Dependee*>::Iterator i = m_dependees.find(_gone); i != m_dependees.end() && i.key() == _gone; i = m_dependees.erase(i))
+	for (MultiHash<Depender*, Dependee*>::Iterator i = m_dependees.find(_gone); i != m_dependees.end() && i.key() == _gone; i = m_dependees.erase(i))
 	{
-		QMultiHash<Dependee*, Depender*>::Iterator j = m_dependers.find(i.value(), i.key());
+		MultiHash<Dependee*, Depender*>::Iterator j = m_dependers.find(i.value(), i.key());
 		M_ASSERT (j != m_dependers.end());
 		m_dependers.erase(j);
 	}
