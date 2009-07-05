@@ -55,8 +55,8 @@ protected:
 	virtual Type						returns() const;
 	virtual inline bool					isConst() const { return m_base.isUsable() ? m_base->isConst() : false; }
 	
-	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p["base"] = m_base.key(); }
-	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_base.restoreFrom(_p["base"]); }
+	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p[L"base"] = m_base.key(); }
+	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_base.restoreFrom(_p[L"base"]); }
 	
 private:
 	ModelPtr<VirtualMethod>				m_base;

@@ -48,8 +48,8 @@ protected:
 	virtual String						defineLayout(ViewKeys const&) const;
 	virtual bool						keyPressed(KeyEvent const* _e);
 //	virtual void						decorate(DecorationContext const& _c) const;
-	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p["text"] = m_text.isEmpty() ? code() : m_text; }
-	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_text = _p["text"]; }
+	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p[L"text"] = m_text.isEmpty() ? code() : m_text; }
+	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_text = _p[L"text"]; }
 	
 private:
 	String								m_text;

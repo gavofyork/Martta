@@ -73,15 +73,15 @@ Identifiable* Identifiable::lookupChild(String const& _key) const
 void Identifiable::properties(Hash<String, String>& _p) const
 {
 	if (!addressableContext())
-		_p["identity"] = String::number(self()->ancestor<Declaration>()->registerAnonymous(this));
-	_p["generalkey"] = key();
+		_p[L"identity"] = String::number(self()->ancestor<Declaration>()->registerAnonymous(this));
+	_p[L"generalkey"] = key();
 }
 
 void Identifiable::setProperties(Hash<String, String> const& _p)
 {
 	if (_p.contains("identity"))
-		self()->ancestor<Declaration>()->registerAnonymous(this, _p["identity"].toInt());
-	ModelPtrRegistrar::get()->registerTemp(this, _p["generalkey"]);
+		self()->ancestor<Declaration>()->registerAnonymous(this, _p[L"identity"].toInt());
+	ModelPtrRegistrar::get()->registerTemp(this, _p[L"generalkey"]);
 }
 
 }

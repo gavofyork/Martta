@@ -47,8 +47,8 @@ public:
 protected:
 	virtual String						defineLayout(ViewKeys const&) const;
 	virtual bool						keyPressed(KeyEvent const* _e);
-	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p["symbol"] = String::number(symbol()); }
-	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); setSymbol((Operator::Symbol)_p["symbol"].toInt()); }
+	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p[L"symbol"] = String::number(symbol()); }
+	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); setSymbol((Operator::Symbol)_p[L"symbol"].toInt()); }
 
 private:
 	Operator							m_operator;

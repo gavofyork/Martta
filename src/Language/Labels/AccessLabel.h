@@ -46,8 +46,8 @@ protected:
 	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual String						code() const { return Martta::code(m_access); }
 	virtual bool						onActivated(CodeScene*) { setAccess((Access)(((int)m_access + 1) % (int)AccessCount)); return true; }
-	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p["access"] = String::number(m_access); }
-	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_access = (Access)_p["access"].toInt(); }
+	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p[L"access"] = String::number(m_access); }
+	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_access = (Access)_p[L"access"].toInt(); }
 
 private:
 	Access								m_access;

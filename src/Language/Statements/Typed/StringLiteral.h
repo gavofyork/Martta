@@ -45,8 +45,8 @@ protected:
 	virtual String						defineLayout(ViewKeys const&) const;
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 	virtual bool						keyPressed(KeyEvent const* _e);
-	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p["value"] = m_value; }
-	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_value = _p["value"]; }
+	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p[L"value"] = m_value; }
+	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_value = _p[L"value"]; }
 
 private:
 	String								m_value;

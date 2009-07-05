@@ -42,8 +42,8 @@ public:
 	virtual String						code() const;
 
 	virtual void						apresLoad() { addDependency(m_subject); Super::apresLoad(); }
-	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p["subject"] = m_subject.key(); }
-	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_subject.restoreFrom(_p["subject"]); }
+	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p[L"subject"] = m_subject.key(); }
+	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_subject.restoreFrom(_p[L"subject"]); }
 
 protected:
 	ModelPtr<Constructor>				m_subject;

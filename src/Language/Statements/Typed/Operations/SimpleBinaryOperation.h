@@ -59,8 +59,8 @@ private:
 	void								refreshOperation() { setOperation(m_operator, leftType(), rightType()); }
 	
 	static List<ValueDefiner*>			findOperators(Operator _o, Type const& _left = Type(), Type const& _right = Type());
-	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p["operator"] = String::number(m_operator.symbol()); }
-	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_operator = Operator((Operator::Symbol)_p["operator"].toInt()); }
+	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p[L"operator"] = String::number(m_operator.symbol()); }
+	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_operator = Operator((Operator::Symbol)_p[L"operator"].toInt()); }
 	
 	// Change to OperatorLabel?
 	Operator							m_operator;

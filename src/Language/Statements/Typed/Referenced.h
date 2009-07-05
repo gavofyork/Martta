@@ -54,8 +54,8 @@ protected:
 	virtual void						apresLoad() { addDependency(m_subject->self()); Super::apresLoad(); }
 	virtual Kinds						ancestralDependencies() const;
 	virtual void						onDependencyChanged(Entity* _e) {  debugTree(); mDebug() << _e; mDebug() << &*m_subject; if (m_subject) changed(); }
-	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p["subject"] = m_subject.key(); _p["specific"] = String::number(m_specific); _p["lastSet"] = String::number(m_lastSet); }
-	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_subject.restoreFrom(_p["subject"]); m_specific = _p["specific"].toBool(); m_lastSet = _p["lastSet"].toInt(); }
+	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p[L"subject"] = m_subject.key(); _p[L"specific"] = String::number(m_specific); _p[L"lastSet"] = String::number(m_lastSet); }
+	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_subject.restoreFrom(_p[L"subject"]); m_specific = _p[L"specific"].toBool(); m_lastSet = _p[L"lastSet"].toInt(); }
 	
 	ModelPtr<ValueDefiner>				m_subject;
 	bool								m_specific;

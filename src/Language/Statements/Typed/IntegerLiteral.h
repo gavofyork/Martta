@@ -48,8 +48,8 @@ protected:
 	virtual String						code() const { return String("%1").arg(m_value, 0, 'f', 0) + (m_signed ? "" : "U") + (m_range == ShortRange ? "" : m_range == LongRange ? "L" : m_range == LonglongRange ? "LL" : ""); }
 	virtual String						defineLayout(ViewKeys const&) const;
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
-	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p["range"] = String::number(m_range); _p["signed"] = String::number(m_signed); _p["value"] = String::number(m_value); }
-	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_range = (Range)_p["range"].toInt(); m_signed = _p["signed"].toBool(); m_value = _p["value"].toDouble(); }
+	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p[L"range"] = String::number(m_range); _p[L"signed"] = String::number(m_signed); _p[L"value"] = String::number(m_value); }
+	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_range = (Range)_p[L"range"].toInt(); m_signed = _p[L"signed"].toBool(); m_value = _p[L"value"].toDouble(); }
 
 private:
 	double								m_value;
