@@ -33,7 +33,7 @@ MARTTA_OBJECT_CPP(NewOperation);
 
 bool NewOperation::isValidState() const
 {
-	M_ASSERT(isComplete());
+	AssertNR(isComplete());
 	return childAs<TypeEntity>(TheOperand)->canStandAlone();
 }
 	

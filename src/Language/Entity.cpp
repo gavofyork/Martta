@@ -76,10 +76,10 @@ List<int> Entity::knownNames() const
 
 Entity::~Entity()
 {
-	M_ASSERT(!m_parent);
+	AssertNR(!m_parent);
 	clearEntities();
-	M_ASSERT(!m_cardinalChildren.size());
-	M_ASSERT(!m_namedChildren.size());
+	AssertNR(!m_cardinalChildren.size());
+	AssertNR(!m_namedChildren.size());
 }
 
 // Model structure management.
@@ -616,11 +616,12 @@ void Entity::commitMove(Position const& _oldPosition)
 }
 void Entity::removeFromBrood(int _index, Entity* _e)
 {
-	M_ASSERT(_index < m_cardinalChildren.size());
+	AssertNR(_index < m_cardinalChildren.size());
 	if (_index >= 0)
 	{
 		Entity* t = m_cardinalChildren.takeAt(_index);
-		M_ASSERT(t == _e);	// confirm that we're taken the right one. if this fails, the parent has something else in the position that the child thinks it occupies.
+		(void)(t);
+		AssertNR(t == _e);	// confirm that we're taken the right one. if this fails, the parent has something else in the position that the child thinks it occupies.
 		for (int i = _index; i < m_cardinalChildren.size(); i++)
 			m_cardinalChildren[i]->m_index = i;
 	}
@@ -634,7 +635,7 @@ void Entity::removeFromBrood(int _index, Entity* _e)
 }
 void Entity::removeAllFromBrood(int _index)
 {
-	M_ASSERT(_index < m_cardinalChildren.size());
+	AssertNR(_index < m_cardinalChildren.size());
 	if (_index >= 0)
 	{
 		m_cardinalChildren.removeAt(_index);
@@ -648,7 +649,7 @@ void Entity::insertIntoBrood(int _index, Entity* _e)
 {
 	if (_index == UndefinedIndex)
 		_index = m_cardinalChildren.size();
-	M_ASSERT(_index <= m_cardinalChildren.size());
+	AssertNR(_index <= m_cardinalChildren.size());
 	if (_index < 0)
 	{
 		_e->m_index = _index;
@@ -667,8 +668,8 @@ void Entity::moveWithinBrood(int _old, int _new)
 		_old = m_cardinalChildren.size() - 1;
 	if (_new == UndefinedIndex)
 		_new = m_cardinalChildren.size() - 1;
-	M_ASSERT(_new <= m_cardinalChildren.size());
-	M_ASSERT(child(_old));
+	AssertNR(_new <= m_cardinalChildren.size());
+	AssertNR(child(_old));
 	if (_new == _old)
 		return;
 		
@@ -837,7 +838,7 @@ bool Entity::removeInvalidChildren()
 
 void Entity::put(Position const& _newPosition)
 {
-	M_ASSERT(this);
+	AssertNR(this);
 	if (_newPosition.exists() && _newPosition->isPlaceholder())
 		_newPosition->replace(this);	// TODO: handle brood-move/replace.
 	else
@@ -846,7 +847,7 @@ void Entity::put(Position const& _newPosition)
 
 void Entity::move(Position const& _newPosition)
 {
-	M_ASSERT(this);
+	AssertNR(this);
 	Position old = over();
 	
 	silentMove(_newPosition);
@@ -941,7 +942,7 @@ Entity* Entity::insert(Entity* _e, int _preferedIndex)
 	
 	over().insertSilent(_e);
 	Position ip = _preferedIndex == NonePrefered ? _e->firstFor(kind()) : _e->middle(_preferedIndex);
-	M_ASSERT(ip != Nowhere);
+	AssertNR(ip != Nowhere);
 	if (ip.allowedToBeKind(kind()))
 	{
 		// Everything going according to plan.

@@ -32,11 +32,11 @@ MARTTA_OBJECT_CPP(ModifyingType);
 
 void ModifyingType::unknit()
 {
-	M_ASSERT(original());
+	AssertNR(original());
 	if (owner() && &**owner() == this)
 	{
-		M_ASSERT(original()->owner() == owner());
-		M_ASSERT(!parent());
+		AssertNR(original()->owner() == owner());
+		AssertNR(!parent());
 		owner()->m_top = original();
 	}
 	//	P -i-> this -0-> original    BECOMES    P -i-> original

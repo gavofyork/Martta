@@ -72,7 +72,7 @@ bool TypedOwner::isChildInValidState(int _i) const
 		if (!self()->childIs<Typed>(_i))
 		{
 			self()->debugTree();
-			M_ASSERT(false);
+			AssertNR(false);
 		}
 		else
 			if (self()->childAs<Typed>(_i)->type().isSimilarTo(i, TypeEntity::Convertible))

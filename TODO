@@ -3,7 +3,6 @@ BUG Moving is crazily slow over statements.
   - All allowedKinds on Position and execute the Auxilliary's dispatchKeyPress.
   - Do recursively but prune on denied Kinds.
   - Remove all allowedToBeKind (or other Kind-checking) in handlers.
-- Need to work out how to get good Profile build.
 
 Small things:
 - Special EntryMethod.
@@ -17,11 +16,9 @@ Small things:
 - OPTIMISE String (and List/Hash/Type perhaps) with copy on write.
 - BRINGBACK Visual change system.
 - BRINGBACK Ser/Deser tests.
+- BRINGBACK decoration code into layout system and markup for it.
 Dynamic code-loading (plugins).
 - Move everything over so that plugins use Martta-specific data types.
-  - Move Assert over.
-  - Move all decoration code into layout system and invent markup for it.
-  - Timing code (Common.h) independent of Qt.
 
 TODO _p[" -> _p[L"
 

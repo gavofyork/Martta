@@ -82,7 +82,7 @@ public:
 	
 	/// Copy constructor which doesn't do anything. Have to have it so a derived class can use it.
 	inline Entity(): Dier(), ChildValidifier(), Depender(), Dependee(), Serialisable(), SafePointerTarget(), m_parent(0), m_index(UndefinedIndex) {}
-	inline Entity(Entity const&): Dier(), ChildValidifier(), Familial(), Depender(), Dependee(), Serialisable(), SafePointerTarget() { M_ASSERT(false); }
+	inline Entity(Entity const&): Dier(), ChildValidifier(), Familial(), Depender(), Dependee(), Serialisable(), SafePointerTarget() { AssertNR(false); }
 	
 	static void							initialiseClass() {}
 	static void							finaliseClass() {}
@@ -98,12 +98,12 @@ public:
 	inline int							index() const { return m_index; }
 	inline Entity*						parent() const { return m_parent; }
 	template<class T> inline bool		parentIs() const { return m_parent ? m_parent->isKind<T>() : false; }
-	template<class T> inline T*			parentAs() const { M_ASSERT(m_parent); return m_parent->asKind<T>(); }
+	template<class T> inline T*			parentAs() const { AssertNR(m_parent); return m_parent->asKind<T>(); }
 	template<class T> inline T*			tryParent() const { return m_parent ? m_parent->tryKind<T>() : 0; }
 	
 	inline int							childCount() const { return m_namedChildren.size() + m_cardinalChildren.size(); }
 	inline List<Entity*>				children() const { return m_namedChildren.values() + m_cardinalChildren; }
-	inline Entity*						child(int _i) const { if (_i >= 0 && _i < m_cardinalChildren.size()) { M_ASSERT(m_cardinalChildren[_i]->m_parent == this); return m_cardinalChildren[_i]; } else return _i < 0 ? m_namedChildren.value(_i) : 0; }
+	inline Entity*						child(int _i) const { if (_i >= 0 && _i < m_cardinalChildren.size()) { AssertNR(m_cardinalChildren[_i]->m_parent == this); return m_cardinalChildren[_i]; } else return _i < 0 ? m_namedChildren.value(_i) : 0; }
 	inline int							childCount(int _i) const { if (_i >= 0) return _i < m_cardinalChildren.size() ? 1 : 0; int r = 0; Hash<int, Entity*>::ConstIterator i = m_namedChildren.find(_i); while (i != m_namedChildren.end() && i.key() == _i) ++r, ++i; return r; }
 	inline List<Entity*>				children(int _i) const { if(_i < 0) return m_namedChildren.values(_i); if (_i < m_cardinalChildren.size()) return List<Entity*>() << child(_i); return List<Entity*>(); }
 	template<class T> inline List<T*>	childrenOf() const { return filterEntities<T>(children()); }
@@ -113,23 +113,23 @@ public:
 	template<class T> inline int		childIndexOf() const { foreach (Entity* e, children()) if (e->isKind<T>()) return e->m_index; return UndefinedIndex; }
 	template<class T> inline int		childCountOf() const { int r = 0; foreach (Entity* i, children()) if (i->isKind<T>()) r++; return r; }
 	template<class T> inline int		childCountOf(int _i) const { int r = 0; foreach (Entity* i, children(_i)) if (i->isKind<T>()) r++; return r; }
-	template<class T> inline T*			childOf() const { M_ASSERT(childCountOf<T>()); return childAs<T>(childIndexOf<T>()); }
-	template<class T> inline T*			childOf(int _i) const { M_ASSERT(childCountOf<T>(_i)); foreach (Entity* i, children(_i)) if (T* r = i->tryKind<T>()) return r; return 0; } 
+	template<class T> inline T*			childOf() const { AssertNR(childCountOf<T>()); return childAs<T>(childIndexOf<T>()); }
+	template<class T> inline T*			childOf(int _i) const { AssertNR(childCountOf<T>(_i)); foreach (Entity* i, children(_i)) if (T* r = i->tryKind<T>()) return r; return 0; } 
 	template<class T> inline bool		childIs(int _i) const { if (Entity* r = child(_i)) return r->isKind<T>(); return false; }
-	template<class T> inline T*			childAs(int _i) const { Entity* e = child(_i); M_ASSERT(e); return e->asKind<T>(); }
+	template<class T> inline T*			childAs(int _i) const { Entity* e = child(_i); AssertNR(e); return e->asKind<T>(); }
 	template<class T> inline T*			tryChild(int _i) const { if (Entity* e = child(_i)) return e->tryKind<T>(); return 0; }
 	
 	inline List<Entity*> const&			cardinalChildren() const { return m_cardinalChildren; }
 	inline int							cardinalChildCount() const { return m_cardinalChildren.size(); }
 	template<class T> inline List<T*>	cardinalChildrenOf() const { return filterEntities<T>(m_cardinalChildren); }
 	template<class T> inline List<T*>	cardinalChildrenAs() const { return castEntities<T>(m_cardinalChildren); }
-	template<class T> inline T*			cardinalChildOf() const { M_ASSERT(cardinalChildCountOf<T>()); return childAs<T>(cardinalChildIndexOf<T>()); }
+	template<class T> inline T*			cardinalChildOf() const { AssertNR(cardinalChildCountOf<T>()); return childAs<T>(cardinalChildIndexOf<T>()); }
 	template<class T> inline int		cardinalChildIndexOf() const { for (int r = 0; r < m_cardinalChildren.size(); ++r) if (childIs<T>(r)) return r; return UndefinedIndex; }
 	template<class T> inline int		cardinalChildCountOf() const { int r = 0; foreach (Entity* i, m_cardinalChildren) if (i->isKind<T>()) r++; return r; }
 
 	inline Entity*						sibling(int _i) const { return m_parent ? m_parent->child(_i) : 0; }
 	template<class T> inline bool		siblingIs(int _i) const { return m_parent ? m_parent->childIs<T>(_i) : false; }
-	template<class T> inline T*			siblingAs(int _i) const { M_ASSERT(m_parent); return m_parent->childAs<T>(_i); }
+	template<class T> inline T*			siblingAs(int _i) const { AssertNR(m_parent); return m_parent->childAs<T>(_i); }
 	template<class T> inline T*			trySibling(int _i) const { return m_parent ? m_parent->tryChild<T>(_i) : 0; }
 	inline List<Entity*>				siblings() const { if (!m_parent) return List<Entity*>(); List<Entity*> ret; foreach (Entity* e, m_parent->children()) if (e != this) ret += e; return ret; }
 	template<class T> inline List<T*>	siblingsOf() const { return filterEntities<T>(siblings()); }
@@ -142,7 +142,7 @@ public:
 	inline int							parentsChildCount() const { return m_parent ? m_parent->childCount() : 0; }
 	inline List<Entity*>				parentsCardinalChildren() const { return m_parent ? m_parent->cardinalChildren() : List<Entity*>(); }
 	template<class T> inline List<T*>	parentsCardinalChildrenOf() const { return m_parent ? m_parent->cardinalChildrenOf<T>() : List<T*>(); }
-	inline int							parentsCardinalChildCount() const { M_ASSERT(m_parent); return m_parent->m_cardinalChildren.size(); }
+	inline int							parentsCardinalChildCount() const { AssertNR(m_parent); return m_parent->m_cardinalChildren.size(); }
 
 	template<class T> bool				hasAncestor() const { return hasAncestor(T::staticKind); }
 	bool								hasAncestor(Kind _k) const;
@@ -165,7 +165,7 @@ public:
 	
 	inline int							nonPlaceholderCount() const { int ret = 0; foreach (Entity* i, m_cardinalChildren) if (!i->isPlaceholder()) ret++; return ret; }
 	inline List<Entity*>				nonPlaceholders() const { List<Entity*> ret; foreach (Entity* i, m_cardinalChildren) if (!i->isPlaceholder()) ret += i; return ret; }
-	inline Entity*						nonPlaceholder(int _i) const { int c = 0; foreach (Entity* i, m_cardinalChildren) if (c++ == _i) return i; M_ASSERT(false); return 0; }
+	inline Entity*						nonPlaceholder(int _i) const { int c = 0; foreach (Entity* i, m_cardinalChildren) if (c++ == _i) return i; AssertNR(false); return 0; }
 
 	virtual bool						usurpsChild(Entity const*) const { return false; }
 	bool								isUsurped() const { return m_parent->usurpsChild(this); }
@@ -199,7 +199,7 @@ public:
 	/**
 	 * Create a new entity.
 	 */
-	inline static Entity*				spawn(String const& _kind) { AuxilliaryFace const* f = AuxilliaryRegistrar::get()->auxilliary(_kind); M_ASSERT(f); return f->create(); }
+	inline static Entity*				spawn(String const& _kind) { AuxilliaryFace const* f = AuxilliaryRegistrar::get()->auxilliary(_kind); AssertNR(f); return f->create(); }
 
 	/**
 	 * Destructs the object. Use this before delete. It sets the parent to zero while the object is still
@@ -274,9 +274,9 @@ public:
 	inline bool							isKind(Kinds _k) const { return this && kind().isKind(_k); }
 	
 	template<class T> inline T*			asInterface() { return const_cast<T*>(const_cast<Entity const*>(this)->asInterface<T>()); }
-	template<class T> inline T const*	asInterface() const { M_ASSERT(isKind<T>()); return reinterpret_cast<T const*>(toInterface(T::staticKind)); }
-	template<class T> inline T*			asKind() { M_ASSERT(this); M_ASSERT(isKind<T>()); return T::IsInterface ? asInterface<T>() : tryCast<T*>(this); }
-	template<class T> inline T const*	asKind() const { M_ASSERT(this); M_ASSERT(isKind<T>()); return T::IsInterface ? asInterface<T>() : tryCast<T const*>(this); }
+	template<class T> inline T const*	asInterface() const { AssertNR(isKind<T>()); return reinterpret_cast<T const*>(toInterface(T::staticKind)); }
+	template<class T> inline T*			asKind() { AssertNR(this); AssertNR(isKind<T>()); return T::IsInterface ? asInterface<T>() : tryCast<T*>(this); }
+	template<class T> inline T const*	asKind() const { AssertNR(this); AssertNR(isKind<T>()); return T::IsInterface ? asInterface<T>() : tryCast<T const*>(this); }
 	template<class T> inline T*			tryKind() { if (this && isKind<T>()) return asKind<T>(); return 0; }
 	template<class T> inline T const*	tryKind() const { if (this && isKind<T>()) return asKind<T>(); return 0; }
 
@@ -585,8 +585,8 @@ void Martta::Entity::setDependency(T& _dependencyVariable, U const& _dependency)
 	if (_dependencyVariable != _dependency)
 	{
 		Entity* old = _dependencyVariable->asKind<Entity>();
-//		M_ASSERT(!_dependency || _dependency->asKind<Entity>()->isInModel());	// Can also be a SimpleEntity - probably best to virtualise.
-		M_ASSERT(!old || old->asKind<Entity>()->isInModel());
+//		AssertNR(!_dependency || _dependency->asKind<Entity>()->isInModel());	// Can also be a SimpleEntity - probably best to virtualise.
+		AssertNR(!old || old->asKind<Entity>()->isInModel());
 		if (old)
 			removeDependency(old);
 		_dependencyVariable = _dependency;

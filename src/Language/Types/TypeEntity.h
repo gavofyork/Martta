@@ -26,9 +26,6 @@
 namespace Martta
 {
 
-extern int g_typeCount;
-extern bool g_debugCastability;
-
 class Declaration;
 class ModifyingType;
 class ValueDefiner;
@@ -42,10 +39,23 @@ class TypeEntity: public Entity, public_interface TypedOwner
 	friend class ModifyingType;
 
 public:
+	static int							s_typeCount;
+	static bool							s_debugCastability;
+
 	enum { Default = FirstNamed, EndOfNamed };
 
-	TypeEntity(): m_owner(0) { g_typeCount++; }
-	~TypeEntity() { g_typeCount--; }
+	inline TypeEntity(): m_owner(0)
+	{
+#if defined(DEBUG)
+		s_typeCount++;
+#endif
+	}
+	inline ~TypeEntity()
+	{
+#if defined(DEBUG)
+		s_typeCount--;
+#endif
+	}
 	
 	virtual Rgb							idColour() const { return 0x7777777; }
 	virtual String						code(String const& _middle = "") const { return _middle; }
@@ -83,7 +93,7 @@ public:
 	/// can still be searched for explicitly). FunctionType, Memberify and AddressType are not.
 	virtual bool						isType(Kind _typeKind) { return Entity::isKind(_typeKind); }
 	template<class T> inline bool		isType() { return isType(Kind::of<T>()); }
-	virtual TypeEntity*					asType(Kind _typeKind) { M_ASSERT(isType(_typeKind)); return this; }
+	virtual TypeEntity*					asType(Kind _typeKind) { (void)(_typeKind); AssertNR(isType(_typeKind)); return this; }
 	template<class T> inline T*			asType() { return static_cast<T*>(asType(Kind::of<T>())); }
 	
 	template<class T> inline TypeEntity*ignore() { return isKind<T>() ? childAs<TypeEntity>(Default) : this; }

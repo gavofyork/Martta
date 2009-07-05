@@ -35,7 +35,7 @@ class ModelPtrFace
 	
 public:
 	inline ModelPtrFace(Identifiable* _e): m_cache(0) { set(_e); }
-	inline ModelPtrFace(ModelPtrFace const& _c): m_cache(0) { M_ASSERT(!_c.isArchived()); set(_c.m_cache); }
+	inline ModelPtrFace(ModelPtrFace const& _c): m_cache(0) { AssertNR(!_c.isArchived()); set(_c.m_cache); }
 	inline ~ModelPtrFace() { set(0); }
 
 	inline ModelPtrFace& operator=(ModelPtrFace const& _c) { if (_c.m_cache) set(_c.m_cache); else set(_c.m_key); return *this; }

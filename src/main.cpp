@@ -23,10 +23,6 @@
 
 #include "tests.h"
 #include "MainWindow.h"
-namespace Martta
-{
-extern int g_typeCount;
-}
 using namespace Martta;
 
 int main(int argc, char *argv[])
@@ -44,8 +40,6 @@ int main(int argc, char *argv[])
 	m.show();
 	r = app.exec();
 	}
-
-	mInfo() << "Type count:" << g_typeCount;
 
 	return r;
 }

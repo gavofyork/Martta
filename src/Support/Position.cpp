@@ -19,7 +19,6 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "Position.h"
-
 #include "Entity.h"
 
 namespace Martta
@@ -32,7 +31,7 @@ bool Position::exists() const
 
 Entity* Position::entity() const
 {
-	M_ASSERT(exists());
+	AssertNR(exists());
 	return m_parent->child(m_index);
 }
 
@@ -54,21 +53,21 @@ Entity* Position::spawnPrepared() const
 
 Entity* Position::place(Entity* _e) const
 {
-	M_ASSERT(_e);
+	AssertNR(_e);
 	_e->put(*this);
 	return _e;
 }
 
 Entity* Position::insert(Entity* _e) const
 {
-	M_ASSERT(_e);
+	AssertNR(_e);
 	_e->move(*this);
 	return _e;
 }
 
 void Position::insertSilent(Entity* _e) const
 {
-	M_ASSERT(_e);
+	AssertNR(_e);
 	_e->silentMove(*this);
 }
 
@@ -103,7 +102,7 @@ Entity* Position::nearestEntity() const
 		return m_parent;
 }
 
-QDebug operator<<(QDebug _out, Position const& _item)
+TextStream& operator<<(TextStream& _out, Position const& _item)
 {
 	_out << _item.m_index << "@" << &*_item.m_parent;
 	if (_item.exists())

@@ -64,7 +64,7 @@ template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitK
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator&
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator::operator++()
 {
-	ASSERT_NR(!m_node->isFrontSentinel());
+	AssertNR(!m_node->isFrontSentinel());
 	
 	// jump to next if we're at the end of the current master node...
 	if (m_node->isBackSentinel())
@@ -82,7 +82,7 @@ template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitK
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator&
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator::operator--()
 {
-	ASSERT_NR(!m_node->isFrontSentinel());
+	AssertNR(!m_node->isFrontSentinel());
 	
 	if (m_node == m_masterNode)
 	{
@@ -113,7 +113,7 @@ template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitK
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::ConstIterator&
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::ConstIterator::operator++()
 {
-	ASSERT_NR(!m_node->isFrontSentinel());
+	AssertNR(!m_node->isFrontSentinel());
 	
 	// jump to next if we're at the end of the current master node...
 	if (m_node->isBackSentinel())
@@ -131,7 +131,7 @@ template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitK
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::ConstIterator&
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::ConstIterator::operator--()
 {
-	ASSERT_NR(!m_node->isFrontSentinel());
+	AssertNR(!m_node->isFrontSentinel());
 	
 	if (m_node == m_masterNode)
 	{
@@ -265,7 +265,7 @@ GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::findNode(Node* _m, Key const
 template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
 void GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::allocate(t::uint _s)
 {
-	ASSERT_NR(_s >= Min);
+	AssertNR(_s >= Min);
 	m_nodes = new Node[_s + 2] + 1;
 	m_capacity = _s;
 	m_nodes[-1].setFrontSentinel();
@@ -292,7 +292,7 @@ template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitK
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Node*
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::freshNode(t::uint _index)
 { 	
-	ASSERT_NR(_index < m_capacity);
+	AssertNR(_index < m_capacity);
 	return freshNode(m_nodes + _index);
 }
 
@@ -310,7 +310,7 @@ template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitK
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Node*
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::staleNode(t::uint _index)
 { 	
-	ASSERT_NR(_index < m_capacity);
+	AssertNR(_index < m_capacity);
 	return freshNode(m_nodes + _index);
 }
 
@@ -494,12 +494,18 @@ typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator GeneralHas
 	Node* p = 0;
 	Node* i = m;
 #ifdef RELEASE
-	while ((i = i->m_next) != _pos.m_node)
+	do
+	{
+		if (i == _pos.m_node)
+			goto OK;
 		p = i;
+	}
+	while ((i = i->m_next) != m);
+	return _pos;
 #else
 	if (!m->isActive())
 	{
-		ASSERT_NR(false);
+		AssertNR(false);
 		/// Bad Iterator; masterNode is inactive.
 		return _pos;
 	}
@@ -511,10 +517,10 @@ typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator GeneralHas
 	}
 	while ((i = i->m_next) != m);
 	/// Bad Iterator; masterNode doesn't contain node.
-	ASSERT_NR(false);
+	AssertNR(false);
 	return _pos;
-	OK:
 #endif
+	OK:
 	Node* x = i->m_next;
 	if (p)
 		delete i;
@@ -860,8 +866,8 @@ List<Key> GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::uniqueKeys() const
 template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
 void GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::resizeToPowerOfTwo(t::uint _size)
 {
-	ASSERT_NR(isPOT(_size));
-	ASSERT_NR(_size >= Min);
+	AssertNR(isPOT(_size));
+	AssertNR(_size >= Min);
 	if (m_capacity == _size)
 		return;
 	Node* oldNodes = m_nodes;
@@ -894,7 +900,7 @@ void GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::moveAndDelete(Node* _n,
 					Node* l = ls[i >> lowerBits];
 					if (l)				// If there's already one in destination bucket and the source is not a master node
 					{
-						ASSERT_NR(j != m);
+						AssertNR(j != m);
 						// stitch...
 						j->m_next = l->m_next;
 						l->m_next = j;
@@ -922,7 +928,7 @@ void GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::moveAndDelete(Node* _n,
 		// go through new buckets, then iterate over possible old buckets.
 		for (t::uint i = 0; i < m_capacity; i++)
 		{
-			ASSERT_NR(!m_nodes[i]);
+			AssertNR(!m_nodes[i]);
 			Node* l = 0;
 			for (t::uint ii = i; ii < _c; ii += m_capacity)
 				if (_n[ii])
@@ -935,7 +941,7 @@ void GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::moveAndDelete(Node* _n,
 						x = j->m_next;
 						if (j != m)
 						{
-							ASSERT_NR(l);
+							AssertNR(l);
 							// stitch...
 							j->m_next = l->m_next;
 							l->m_next = j;
@@ -944,7 +950,7 @@ void GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::moveAndDelete(Node* _n,
 						else
 						{
 							// create... (assigning from a master node)
-							ASSERT_NR(j == m);
+							AssertNR(j == m);
 							if (l)
 								l = appendNode(l);
 							else
@@ -984,7 +990,7 @@ template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitK
 	}
 }
 
-#if defined(QT_DEBUG) || defined(QT_NO_DEBUG)
+#if defined(QT_DEBUG)
 template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
 QDebug GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::streamToDebug(QDebug _stream) const
 {

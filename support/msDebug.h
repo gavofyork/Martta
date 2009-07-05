@@ -28,9 +28,9 @@ namespace MarttaSupport
 
 #if defined(RELEASE) || defined(PROFILE)
 
-struct NullStream
+struct NullOut
 {
-	inline NullStream& template<class T> operator<<(T) { return *(NullStream*)0; }
+	template<class T> inline NullOut& operator<<(T) { return *(NullOut*)0; }
 };
 
 #define mInfo() (*(MarttaSupport::NullOut*)0)
@@ -48,7 +48,7 @@ public:
 	enum Channel { Info = 0, Debug, Warning, Critical, FailedAssert };
 	
 	inline DebugStream(Channel _ch = Debug):
-		m_buffer	(_ch == Warning ? L"*** WARNING " : _ch == Critical ? L"!!! CRITICAL " : _ch == FailedAssert ? L"!!! ASSERT FAILED " : L""),
+		m_buffer	(_ch == Warning ? L"*** WARNING " : _ch == Critical ? L"!!! CRITICAL " : _ch == FailedAssert ? L"!!! Assert FAILED " : L""),
 		m_ts		(&m_buffer),
 		m_channel	(_ch)
 	{

@@ -32,7 +32,7 @@ void ChangeMan::oneFootInTheGrave(Dependee* _going)
 	for (MultiHash<Dependee*, Depender*>::Iterator i = m_dependers.find(_going); i != m_dependers.end() && i.key() == _going; i = m_dependers.erase(i))
 	{
 		MultiHash<Depender*, Dependee*>::Iterator j = m_dependees.find(i.value(), i.key());
-		M_ASSERT (j != m_dependees.end());
+		AssertNR (j != m_dependees.end());
 		m_dependees.erase(j);
 		if (i.value()->botherNotifying())
 			m_changeQueue << Entry(i.value(), DependencyRemoved, _going->self());
@@ -85,18 +85,18 @@ bool ChangeMan::changed(Dependee* _changer, int _aspect)
 
 void ChangeMan::dead(Dependee* _gone)
 {
-	M_ASSERT(m_changeQueue.size() == 0);
+	AssertNR(m_changeQueue.size() == 0);
 	for (MultiHash<Dependee*, Depender*>::Iterator i = m_dependers.find(_gone); i != m_dependers.end() && i.key() == _gone; i = m_dependers.erase(i))
 	{
 		MultiHash<Depender*, Dependee*>::Iterator j = m_dependees.find(i.value(), i.key());
-		M_ASSERT (j != m_dependees.end());
+		AssertNR (j != m_dependees.end());
 		m_dependees.erase(j);
 	}
 }
 
 void ChangeMan::dead(Depender* _gone)
 {
-	M_ASSERT(m_changeQueue.size() == 0);
+	AssertNR(m_changeQueue.size() == 0);
 	removeAllDependencies(_gone); 
 }
 
@@ -105,7 +105,7 @@ void ChangeMan::removeAllDependencies(Depender* _gone)
 	for (MultiHash<Depender*, Dependee*>::Iterator i = m_dependees.find(_gone); i != m_dependees.end() && i.key() == _gone; i = m_dependees.erase(i))
 	{
 		MultiHash<Dependee*, Depender*>::Iterator j = m_dependers.find(i.value(), i.key());
-		M_ASSERT (j != m_dependers.end());
+		AssertNR (j != m_dependers.end());
 		m_dependers.erase(j);
 	}
 }
@@ -160,7 +160,7 @@ void ChangeMan::childrenInitialised(Depender* _this)
 
 void ChangeMan::childAdded(Depender* _this, int _index)
 {
-	M_ASSERT(_this->self()->child(_index));
+	AssertNR(_this->self()->child(_index));
 	if (m_asleep)
 		return;
 	if (_this->botherNotifying() && _this->familyDependencies() & Depender::DependsOnChildren)
@@ -176,10 +176,10 @@ void ChangeMan::childAdded(Depender* _this, int _index)
 
 void ChangeMan::childSwitched(Depender* _this, Entity* _ch, Entity* _old)
 {
-	M_ASSERT(_ch);
-	M_ASSERT(_ch->parent() == _this->self());
-	M_ASSERT(_old);
-	M_ASSERT(_old->parent() != _this->self());
+	AssertNR(_ch);
+	AssertNR(_ch->parent() == _this->self());
+	AssertNR(_old);
+	AssertNR(_old->parent() != _this->self());
 	if (m_asleep)
 		return;
 	if (_this->botherNotifying() && _this->familyDependencies() & Depender::DependsOnChildren)
@@ -190,9 +190,10 @@ void ChangeMan::childSwitched(Depender* _this, Entity* _ch, Entity* _old)
 void ChangeMan::dependencySwitched(Depender* _this, Entity* _currentDependency, Entity* _exDependency)
 {
 	Dependee* dee = _currentDependency->asKind<Dependee>();
-	M_ASSERT(dee);
-	M_ASSERT(_exDependency);
-	M_ASSERT(m_dependees.contains(_this, dee));
+	(void)(dee);
+	AssertNR(dee);
+	AssertNR(_exDependency);
+	AssertNR(m_dependees.contains(_this, dee));
 	if (m_asleep)
 		return;
 	if (_this->botherNotifying())
@@ -202,8 +203,8 @@ void ChangeMan::dependencySwitched(Depender* _this, Entity* _currentDependency, 
 
 void ChangeMan::childRemoved(Depender* _this, Entity* _old, int _index)
 {
-	M_ASSERT(_old);
-	M_ASSERT(_old->parent() != _this->self());
+	AssertNR(_old);
+	AssertNR(_old->parent() != _this->self());
 	if (m_asleep)
 		return;
 	if (_this->botherNotifying() && _this->familyDependencies() & Depender::DependsOnChildren)
@@ -219,7 +220,7 @@ void ChangeMan::childRemoved(Depender* _this, Entity* _old, int _index)
 
 void ChangeMan::childMoved(Depender* _this, Entity* _ch, int _oI)
 {
-	M_ASSERT(_ch);
+	AssertNR(_ch);
 	if (m_asleep)
 		return;
 	if (_this->botherNotifying() && _this->familyDependencies() & Depender::TestOnOrder)
@@ -234,7 +235,7 @@ void ChangeMan::childMoved(Depender* _this, Entity* _ch, int _oI)
 void ChangeMan::parentAdded(Depender* _this)
 {
 	Entity* p = _this->self()->parent();
-	M_ASSERT(p);
+	AssertNR(p);
 	if (m_asleep)
 		return;
 	if (_this->botherNotifying() && _this->familyDependencies() & Depender::DependsOnParent)
@@ -258,9 +259,9 @@ void ChangeMan::parentAdded(Depender* _this)
 void ChangeMan::parentSwitched(Depender* _this, Entity* _old)
 {
 	Entity* p = _this->self()->parent();
-	M_ASSERT(_old);
-	M_ASSERT(p);
-	M_ASSERT(p != _old);
+	AssertNR(_old);
+	AssertNR(p);
+	AssertNR(p != _old);
 	if (m_asleep)
 		return;
 	if (_this->botherNotifying() && _this->familyDependencies() & Depender::DependsOnParent)
@@ -293,8 +294,8 @@ void ChangeMan::parentSwitched(Depender* _this, Entity* _old)
 
 void ChangeMan::parentRemoved(Depender* _this, Entity* _old)
 {
-	M_ASSERT(_old);
-	M_ASSERT(!_this->self()->parent());
+	AssertNR(_old);
+	AssertNR(!_this->self()->parent());
 	if (m_asleep)
 		return;
 	if (_this->botherNotifying() && _this->familyDependencies() & Depender::DependsOnParent)

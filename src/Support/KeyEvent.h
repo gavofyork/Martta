@@ -65,7 +65,7 @@ public:
 	Entity*			strobeChild() const { return m_strobeChild; }
 	Position		nearestBracket(Position const& _p) const;
 
-	void			noteStrobeCreation(Entity* _creation, Entity* _old) const { M_ASSERT(!m_strobeCreation); m_strobeCreation = _creation; m_strobeChild = _old; }
+	void			noteStrobeCreation(Entity* _creation, Entity* _old) const { AssertNR(!m_strobeCreation); m_strobeCreation = _creation; m_strobeChild = _old; }
 	
 	void			setFocus(Entity* _f) { m_focus = _f; }
 	void			setFocusIsPlaceholder(bool _p) { m_focusIsPlaceholder = _p; }

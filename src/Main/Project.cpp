@@ -174,7 +174,7 @@ void Project::clear()
 	m_program = 0;
 	m_namespace = 0;
 	m_declarations.clearEntities();
-//	M_ASSERT(m_declarations.modelPtrs().size() == 0);
+//	AssertNR(m_declarations.modelPtrs().size() == 0);
 //	while (m_classes.size()) m_classes.takeLast()->killAndDelete();
 	m_classes.reset();
 	while (m_cDepends.size()) delete m_cDepends.takeLast();
@@ -184,7 +184,7 @@ void Project::clear()
 
 void Project::build()
 {
-	M_ASSERT(!m_compiler);
+	AssertNR(!m_compiler);
 
 	QString src = m_tempPath + "/" + name() + ".cpp";
 	QString bin = m_tempPath + "/" + exeName();
@@ -277,7 +277,7 @@ QString Project::executable()
 void importDom(QDomElement const& _el, Entity* _p)
 {
 	Entity* e = _p->spawn(_el.attribute("kind"));
-	ASSERT(e, "Spawn doesn't know anything about this kind, yet it did when exported.");
+	Assert(e, "Spawn doesn't know anything about this kind, yet it did when exported.");
 	
 	Hash<String, String> h;
 	String index;
@@ -298,8 +298,8 @@ void Project::deserialise(QDomDocument& _d)
 {
 	TIME_FUNCTION;
 
-	M_ASSERT(!m_alteringDepends);
-	M_ASSERT(_d.documentElement().tagName() == "project");
+	AssertNR(!m_alteringDepends);
+	AssertNR(_d.documentElement().tagName() == "project");
 
 	m_alteringDepends = true;
 	clear();
@@ -366,7 +366,7 @@ void Project::deserialise(QDomDocument& _d)
 	}
 
 	while (files.size()) delete files.takeLast();
-//	M_ASSERT(orphans.isEmpty());
+//	AssertNR(orphans.isEmpty());
 
 	ChangeMan::get()->sleep();
 	TIME_STATEMENT(importDom) importDom(_d.documentElement().namedItem("entity").toElement(), &m_declarations);
@@ -374,7 +374,7 @@ void Project::deserialise(QDomDocument& _d)
 	ChangeMan::get()->wake();
 	
 	m_namespace = m_declarations.childOf<Namespace>();
-	M_ASSERT(m_namespace);
+	AssertNR(m_namespace);
 
 	m_classes << m_namespace->cardinalChildrenOf<Class>();
 
@@ -483,7 +483,7 @@ void Project::reloadHeaders()
 	while (es.size())
 	{
 		Entity* e = es.takeLast();
-		M_ASSERT(e->root() == &m_declarations);
+		AssertNR(e->root() == &m_declarations);
 		es << e->children();
 	}
 #endif
@@ -495,17 +495,17 @@ void Project::reloadHeaders()
 bool Project::CDepends::insertRows(int _r, int _c, QModelIndex const& _p)
 {
 	bool ret = true;
-	M_ASSERT(_c == 1);
+	AssertNR(_c == 1);
 	beginInsertRows(_p, _r, _r + _c - 1);
 	if (_p == QModelIndex())
 	{
-		M_ASSERT(_r == size());
+		AssertNR(_r == size());
 		append(new IncludeProject);
 	}
 	else if (_p.data(Project::HeadingRole).toInt() == Project::Includes)
 	{
 		IncludeProject* p = reinterpret_cast<IncludeProject*>(_p.data(Project::OwnerRole).value<void*>());
-		M_ASSERT(p && p->includes().size() == _r);
+		AssertNR(p && p->includes().size() == _r);
 		p->addInclude();
 	}
 	else
@@ -517,10 +517,10 @@ bool Project::CDepends::insertRows(int _r, int _c, QModelIndex const& _p)
 
 bool Project::CDepends::removeRows(int _r, int _c, QModelIndex const& _p)
 {
-	M_ASSERT(_c == 1);
+	AssertNR(_c == 1);
 	if (_p == QModelIndex())
 	{
-		M_ASSERT(_r < size());
+		AssertNR(_r < size());
 		beginRemoveRows(_p, _r, _r + _c - 1);
 		delete at(_r);
 		erase(begin() + _r);
@@ -529,7 +529,7 @@ bool Project::CDepends::removeRows(int _r, int _c, QModelIndex const& _p)
 	else if (_p.data(Project::HeadingRole).toInt() == Project::Includes)
 	{
 		IncludeProject* p = reinterpret_cast<IncludeProject*>(_p.data(Project::OwnerRole).value<void*>());
-		M_ASSERT(p && _r < p->includes().size());
+		AssertNR(p && _r < p->includes().size());
 		p->removeInclude(_r);
 	}
 	else
@@ -540,7 +540,7 @@ bool Project::CDepends::removeRows(int _r, int _c, QModelIndex const& _p)
 
 IncludeProject* Project::CDepends::checkHeading(QModelIndex _i, int _k) const
 {
-	M_ASSERT(_k < Max);
+	AssertNR(_k < Max);
 	if (_i != QModelIndex() && _i.parent() != QModelIndex() && _i.parent().parent() == QModelIndex() && (_i.row() == _k || _k == All))
 		return at(_i.parent().row());
 	return 0;
@@ -548,7 +548,7 @@ IncludeProject* Project::CDepends::checkHeading(QModelIndex _i, int _k) const
 
 IncludeProject* Project::CDepends::checkItem(QModelIndex _i, int _k) const
 {
-	M_ASSERT(_k < Max);
+	AssertNR(_k < Max);
 	if (_i != QModelIndex() && _i.parent() != QModelIndex() && _i.parent().parent() != QModelIndex() && _i.parent().parent().parent() == QModelIndex() && (_i.parent().row() == _k || _k == All))
 		return at(_i.parent().parent().row());
 	return 0;
@@ -576,7 +576,7 @@ QVariant Project::CDepends::data(QModelIndex const& _i, int _r) const
 			if (checkItem(_i, Functions)) return checkItem(_i, All)->functions()[_i.row()]->basicCode(LambdaNamer::InsideScope).toQString();
 			if (checkItem(_i, Variables)) return checkItem(_i, All)->variables()[_i.row()]->basicCode().toQString();
 			if (checkItem(_i, Includes)) return checkItem(_i, All)->includes()[_i.row()];
-			M_ASSERT(false);
+			AssertNR(false);
 		case HeadingRole:
 			for (int i = 0; i < All; i++)
 				if (checkHeading(_i, i)) return QVariant(i);
@@ -598,7 +598,8 @@ QVariant Project::CDepends::data(QModelIndex const& _i, int _r) const
 
 bool Project::CDepends::setData(QModelIndex const& _i, QVariant const& _v, int _r)
 {
-	M_ASSERT(_r == Qt::EditRole);
+	(void)(_r);
+	AssertNR(_r == Qt::EditRole);
 	bool ret = true;
 	if (checkProject(_i))
 		checkProject(_i)->setName(_v.toString());
@@ -628,7 +629,7 @@ int Project::CDepends::rowCount(QModelIndex const& _i) const
 	if (checkHeading(_i, Variables)) return checkHeading(_i, All)->variables().size();
 	if (checkHeading(_i, Includes)) return checkHeading(_i, All)->includes().size();
 	if (checkItem(_i, All)) return 0;
-	M_ASSERT(false);
+	AssertNR(false);
 	return 0;
 }
 
@@ -661,11 +662,11 @@ QModelIndex Project::CDepends::parent(QModelIndex const& _i) const
 bool Project::Classes::insertRows(int _r, int _c, QModelIndex const& _p)
 {
 	bool ret = true;
-	M_ASSERT(_c == 1);
+	AssertNR(_c == 1);
 	beginInsertRows(_p, _r, _r + _c - 1);
 	if (_p == QModelIndex())
 	{
-		M_ASSERT(_r == size());
+		AssertNR(_r == size());
 //		append(*qobject_cast<Project*>(QAbstractItemModel::parent())->m_namespace <<= new Class);
 	}
 	else
@@ -677,10 +678,10 @@ bool Project::Classes::insertRows(int _r, int _c, QModelIndex const& _p)
 
 bool Project::Classes::removeRows(int _r, int _c, QModelIndex const& _p)
 {
-	M_ASSERT(_c == 1);
+	AssertNR(_c == 1);
 	if (_p == QModelIndex())
 	{
-		M_ASSERT(_r < size());
+		AssertNR(_r < size());
 		beginRemoveRows(_p, _r, _r + _c - 1);
 		at(_r)->killAndDelete();
 		erase(begin() + _r);
@@ -710,7 +711,8 @@ QVariant Project::Classes::data(QModelIndex const& _i, int _r) const
 
 bool Project::Classes::setData(QModelIndex const& _i, QVariant const&, int _r)
 {
-	M_ASSERT(_r == Qt::EditRole);
+	(void)(_r);
+	AssertNR(_r == Qt::EditRole);
 	bool ret = true;
 	if (checkRoot(_i))
 		ret = false;
@@ -733,7 +735,7 @@ int Project::Classes::rowCount(QModelIndex const& _i) const
 {
 	if (checkRoot(_i)) return size();
 	else return 0;
-	M_ASSERT(false);
+	AssertNR(false);
 	return 0;
 }
 
@@ -749,7 +751,7 @@ QModelIndex Project::Classes::parent(QModelIndex const& _i) const
 {
 	if (_i == QModelIndex() || !_i.internalId())	// Top-level (a file); no parent.
 		return QModelIndex();
-	M_ASSERT(0);
+	AssertNR(0);
 	return QModelIndex();
 }
 

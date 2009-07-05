@@ -186,7 +186,7 @@ public:
 	List<T>& operator=(Box const& _returned);
 	
 	void append(T const& _value);
-	inline T const& at(int _i) const { ASSERT_NR(_i >= 0 && _i < m_count); return star(m_data[_i]); }
+	inline T const& at(int _i) const { AssertNR(_i >= 0 && _i < m_count); return star(m_data[_i]); }
 	inline Iterator begin() { return Iterator(m_data); }
 	inline ConstIterator begin() const { return ConstIterator(m_data); }
 	void clear();
@@ -199,32 +199,32 @@ public:
 	inline ConstIterator end() const { return ConstIterator(m_data + m_count); }
 	Iterator erase(Iterator _pos);
 	Iterator erase(Iterator _begin, Iterator _end);
-	inline T& first() { ASSERT_NR(m_count); return star(m_data[0]); }
-	inline T const& first() const { ASSERT_NR(m_count); return star(m_data[0]); }
+	inline T& first() { AssertNR(m_count); return star(m_data[0]); }
+	inline T const& first() const { AssertNR(m_count); return star(m_data[0]); }
 	int indexOf(const T& _value, int _from = 0) const;
 	void insert(int _i, const T& _value);
 	inline Iterator insert(Iterator _before, const T& _value);
 	inline bool isEmpty() const { return !m_count; }
-	inline T& last() { ASSERT_NR(m_count); return star(m_data[m_count - 1]); }
-	inline T const& last() const { ASSERT_NR(m_count); return star(m_data[m_count - 1]); }
+	inline T& last() { AssertNR(m_count); return star(m_data[m_count - 1]); }
+	inline T const& last() const { AssertNR(m_count); return star(m_data[m_count - 1]); }
 	int lastIndexOf(const T& _value, int _from = -1) const;
 	List<T> mid(int _pos, int _length = -1) const;
 	void move(int _from, int _to);
 	void prepend(const T& _value);
 	int removeAll(const T& _value);
-	inline void removeAt(int _i) { ASSERT_NR(_i >= 0 && _i < m_count); erase(Iterator(m_data + _i)); }
-	void removeFirst() { ASSERT_NR(m_count); erase(Iterator(m_data)); }
-	void removeLast() { ASSERT_NR(m_count); erase(Iterator(m_data + m_count - 1)); }
+	inline void removeAt(int _i) { AssertNR(_i >= 0 && _i < m_count); erase(Iterator(m_data + _i)); }
+	void removeFirst() { AssertNR(m_count); erase(Iterator(m_data)); }
+	void removeLast() { AssertNR(m_count); erase(Iterator(m_data + m_count - 1)); }
 	bool removeOne(T const& _value);
-	inline void replace(int _i, T const& _value) { ASSERT_NR(_i >= 0 && _i < m_count); star(m_data[_i]) = _value; }
+	inline void replace(int _i, T const& _value) { AssertNR(_i >= 0 && _i < m_count); star(m_data[_i]) = _value; }
 	void reserve(int _n);
 	inline List<int> reversed() const { return List<int>(*this).reverse(); }
 	List<int>& reverse();
 	inline int size() const { return count(); }
 	inline void swap(int _i, int _j);
 	inline T takeAt(int _i);
-	inline T takeFirst() { ASSERT_NR(m_count); return takeAt(0); }
-	inline T takeLast() { ASSERT_NR(m_count); return takeAt(m_count - 1); }
+	inline T takeFirst() { AssertNR(m_count); return takeAt(0); }
+	inline T takeLast() { AssertNR(m_count); return takeAt(m_count - 1); }
 	inline T value(int _i) const { if(_i >= 0 && _i < m_count) return star(m_data[_i]); else return T(); }
 	inline T value(int _i, T const& _defaultValue) const { if(_i >= 0 && _i < m_count) return star(m_data[_i]); else return _defaultValue; }
 	inline bool operator!=(List<T> const& _other) const { return !operator==(_other); }
@@ -235,7 +235,7 @@ public:
 	inline List<T>& operator<<(T const& _value) { return operator+=(_value); }
 	inline List<T>& operator=(List<T> const& _other);
 	bool operator==(List<T> const& _other) const;
-	inline T& operator[](int _i) { ASSERT_NR(_i >= 0 && _i < m_count); return star(m_data[_i]); }
+	inline T& operator[](int _i) { AssertNR(_i >= 0 && _i < m_count); return star(m_data[_i]); }
 	inline T const& operator[](int _i) const { return at(_i); }
 	
 private:

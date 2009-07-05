@@ -33,13 +33,13 @@ int registerName(int _n, char const* _name)
 
 MarttaSupport::String const& AuxilliaryRegistrar::nameOfArbitrary(int _n) const
 {
-	M_ASSERT(m_nameMap.contains(_n));
+	AssertNR(m_nameMap.contains(_n));
 	return const_cast<AuxilliaryRegistrar*>(this)->m_nameMap[_n];
 }
 
 int AuxilliaryRegistrar::arbitraryOfName(String const& _name) const
 {
-	M_ASSERT(m_invNameMap.contains(_name));
+	AssertNR(m_invNameMap.contains(_name));
 	return m_invNameMap[_name];
 }
 
@@ -98,7 +98,7 @@ void AuxilliaryRegistrar::finaliseClasses()
 
 List<AuxilliaryFace const*> AuxilliaryRegistrar::calculateInterfaces(AuxilliaryFace const* _a) const
 {
-	M_ASSERT(_a);
+	AssertNR(_a);
 	List<AuxilliaryFace const*> ret;
 	List<AuxilliaryFace const*> yet;
 	for (AuxilliaryFace const* k = _a;; k = yet.takeLast())

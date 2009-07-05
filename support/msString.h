@@ -74,6 +74,8 @@ public:
 			ok = ((r += 10) < _base);
 		else if ((r = m_value - L'a') < 26u)
 			ok = ((r += 10) < _base);
+		else
+			ok = false;
 		return ok ? r : -1;
 	}
 private:
@@ -189,7 +191,7 @@ public:
 	String&					append(char const* _str);
 	String&					append(Char _ch);
 	
-	inline Char				at(t::uint _i) const { ASSERT_NR(_i < m_length); return m_data[_i]; }
+	inline Char				at(t::uint _i) const { AssertNR(_i < m_length); return m_data[_i]; }
 	inline Char				value(t::uint _i, Char _default = Char()) const { if (_i < m_length) return m_data[_i]; else return _default; }
 	inline char const*		toCString() const { checkCache(); return m_cache; }
 #if defined(QT_DEBUG) || defined(QT_NO_DEBUG)
@@ -212,9 +214,9 @@ public:
 	String					trimmed() const;
 	String					simplified() const;
 	String					mid(t::uint _i, t::uint _length) const;
-	inline String			mid(t::uint _i) const { ASSERT_NR(_i <= m_length); return mid(_i, m_length - _i); }
-	inline String			left(t::uint _len) const { ASSERT_NR(_len <= m_length); return mid(0, _len); }
-	inline String			right(t::uint _len) const { ASSERT_NR(_len <= m_length); return mid(m_length - _len, _len); }
+	inline String			mid(t::uint _i) const { AssertNR(_i <= m_length); return mid(_i, m_length - _i); }
+	inline String			left(t::uint _len) const { AssertNR(_len <= m_length); return mid(0, _len); }
+	inline String			right(t::uint _len) const { AssertNR(_len <= m_length); return mid(m_length - _len, _len); }
 
 	bool					contains(String const& _str) const;
 	bool					contains(Char _ch) const;

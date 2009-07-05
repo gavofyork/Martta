@@ -25,10 +25,6 @@
 #include "Depender.h"
 #include "Dependee.h"
 #include "TestHelper.h"
-namespace Martta
-{
-extern int g_typeCount;
-}
 using namespace Martta;
 
 String activity;

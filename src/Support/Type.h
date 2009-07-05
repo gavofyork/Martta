@@ -78,7 +78,7 @@ public:
 	}
 	inline Type& place(Type const& _t, int _name = TypeEntity::Default)
 	{
-		M_ASSERT(_name < 0);
+		AssertNR(_name < 0);
 		m_top->middle(_name).place(_t.m_top->clone(this));
 		return *this;
 	}

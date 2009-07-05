@@ -419,21 +419,21 @@ TypeEntity* DeclarationsHandler::resolveType(QString const& _typeId)
 
 QString DeclarationsHandler::commitToFile(QString const& _fileId, Function* _f)
 {
-	M_ASSERT(m_files.contains(_fileId));
+	AssertNR(m_files.contains(_fileId));
 	m_files[_fileId]->m_functions << _f;
 	return m_files[_fileId]->m_filename;
 }
 
 QString DeclarationsHandler::commitToFile(QString const& _fileId, Variable* _f)
 {
-	M_ASSERT(m_files.contains(_fileId));
+	AssertNR(m_files.contains(_fileId));
 	m_files[_fileId]->m_variables << _f;
 	return m_files[_fileId]->m_filename;
 }
 
 QString DeclarationsHandler::commitToFile(QString const& _fileId, TopLevelType* _f)
 {
-	M_ASSERT(m_files.contains(_fileId));
+	AssertNR(m_files.contains(_fileId));
 	m_files[_fileId]->m_types << _f;
 	return m_files[_fileId]->m_filename;
 }
@@ -456,7 +456,7 @@ bool DeclarationsHandler::startDocument()
 bool DeclarationsHandler::startElement(QString const&, QString const& _n, QString const&, QXmlAttributes const& _a)
 {
 	QString conId = _a.value("context");
-	M_ASSERT(conId.isEmpty() || m_contexts.contains(conId));
+	AssertNR(conId.isEmpty() || m_contexts.contains(conId));
 	Declaration* con = m_contexts[conId];
 
 	if (false) {}
@@ -512,7 +512,8 @@ bool DeclarationsHandler::startElement(QString const&, QString const& _n, QStrin
 				if (cid == conId)
 				{
 					bool iwf = tr->isWithFields();
-					M_ASSERT(iwf);
+					(void)(iwf);
+					AssertNR(iwf);
 					Variable* m = new Variable;
 					con->back().place(m);
 					m_resolvers << new VariableResolver(m, _a);
@@ -525,7 +526,7 @@ bool DeclarationsHandler::startElement(QString const&, QString const& _n, QStrin
 	}
 	else if (_n == "EnumValue")
 	{
-		M_ASSERT(m_lastEnum);
+		AssertNR(m_lastEnum);
 		// TODO: refactor for consistency
 		EnumValue* v = new EnumValue;
 		m_lastEnum->back().place(v);
@@ -597,7 +598,7 @@ bool DeclarationsHandler::startElement(QString const&, QString const& _n, QStrin
 		}
 		else
 		{
-			M_ASSERT(_a.value("members").isEmpty());
+			AssertNR(_a.value("members").isEmpty());
 		}
 	}
 	return true;

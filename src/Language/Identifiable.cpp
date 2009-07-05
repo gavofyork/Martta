@@ -53,7 +53,7 @@ String Identifiable::codeName() const
 
 String Identifiable::key() const
 {
-	M_ASSERT(self()->hasAncestor<Declaration>());
+	AssertNR(self()->hasAncestor<Declaration>());
 	return self()->ancestor<Declaration>()->key() + "::" + String::number(self()->ancestor<Declaration>()->registerAnonymous(this));
 }
 

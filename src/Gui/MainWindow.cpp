@@ -119,6 +119,10 @@ MainWindow::~MainWindow()
 	m_program = 0;
 	delete m_updateTimer;
 	m_updateTimer = 0;
+	
+#if defined(DEBUG)
+	mInfo() << "Type count:" << TypeEntity::s_typeCount;
+#endif
 }
 
 template<class T> void addToLanguage(Kind const& _k, T* _p)
@@ -146,7 +150,7 @@ void MainWindow::updateLanguage()
 void MainWindow::resetSubject()
 {
 	m_codeView->setSubject(m_project->ns());
-	M_ASSERT(!m_codeView->current() || m_codeView->current()->root() == m_project->root());
+	AssertNR(!m_codeView->current() || m_codeView->current()->root() == m_project->root());
 	entityFocused(m_codeView->current());
 }
 
@@ -328,7 +332,9 @@ void MainWindow::on_actShowDeps_triggered()
 
 void MainWindow::on_actCastability_triggered()
 {
-	g_debugCastability = actCastability->isChecked();
+#if defined(DEBUG)
+	TypeEntity::s_debugCastability = actCastability->isChecked();
+#endif
 }
 
 void MainWindow::updateCode(Function* _f)

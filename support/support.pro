@@ -3,9 +3,34 @@
 ######################################################################
 
 TEMPLATE = lib
-CONFIG += staticlib
-CONFIG -= qt
-mac:QMAKE_CXXFLAGS_DEBUG += -Os -g3
+CONFIG -= release debug stl qt
+
+# SET THE CONFIG HERE!
+CONFIG += profile warn_on thread staticlib
+
+profile {
+DEFINES += PROFILE
+CONFIG += release
+}
+debug:DEFINES += DEBUG
+release:DEFINES += RELEASE
+
+mac:QMAKE_LFLAGS += -Wl,-Sp
+unix {
+	debug {
+		message("Debug build")
+		QMAKE_CXXFLAGS_DEBUG += -O0 -g3
+	}
+	profile {
+		message("Profile build")
+		QMAKE_CXXFLAGS_RELEASE += -Os -g3
+	}
+	!profile:release {
+		message("Release build")
+		QMAKE_CXXFLAGS_RELEASE += -Os -g0
+	}
+}
+
 TARGET = support
 DEPENDPATH += .
 INCLUDEPATH += .

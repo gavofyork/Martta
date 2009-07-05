@@ -128,7 +128,7 @@ inline bool Martta::Kinds::containsKindOf(Kind const& _base) const
 
 inline Martta::Kind Martta::Kinds::commonBase() const
 {
-	M_ASSERT(size());
+	AssertNR(size());
 	Kind best = at(0);
 	for (int i = 1; i < size(); ++i)
 		if (best.isKind(at(i)))

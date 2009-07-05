@@ -88,7 +88,7 @@ public:
 	
 	// NONVIRTUAL For EditDelegateFace.
 	void						forgetMe(EditDelegateFace* _me) { if (m_editDelegate == _me) m_editDelegate = 0; }
-	void						rememberMe(EditDelegateFace* _me) { M_ASSERT(!m_editDelegate); m_editDelegate = _me; }
+	void						rememberMe(EditDelegateFace* _me) { AssertNR(!m_editDelegate); m_editDelegate = _me; }
 	
 	// Layout retrieval/cache.
 	virtual String				layoutString(Entity* _e) = 0;									///< @returns the layout string for the entity _e.

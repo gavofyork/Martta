@@ -36,6 +36,9 @@
 namespace MarttaSupport
 {
 
+typedef void (*AssertionHandler)(int, char const*, char const*, char const*, char const*);
+extern AssertionHandler s_alternativeAssertionHandler;
+
 class Rgb;
 class TextStream;
 class String;
@@ -48,9 +51,9 @@ typedef List<String> StringList;
 
 void assertFailed(int, char const*, char const*, char const*, char const*);
 #if defined(__GNUC__)
-#define ASSERT(X, R) if ((X)) {} else MarttaSupport::assertFailed(__LINE__, __FILE__, __PRETTY_FUNCTION__, #X, R)
+#define Assert(X, R) if ((X)) {} else MarttaSupport::assertFailed(__LINE__, __FILE__, __PRETTY_FUNCTION__, #X, R)
 #else
-#define ASSERT(X, R) if ((X)) {} else MarttaSupport::assertFailed(__LINE__, __FILE__, __FUNCTION__, #X, R)
+#define Assert(X, R) if ((X)) {} else MarttaSupport::assertFailed(__LINE__, __FILE__, __FUNCTION__, #X, R)
 #endif
 #define ASSERT_EQ(X, Y) //if ((X)) {} else assertFailedEq(__LINE__, __FUNCTION__, #X, X, #Y, Y)
 #define ASSERT_NE(X, Y) //if ((X)) {} else assertFailedNe(__LINE__, __FUNCTION__, #X, X, #Y, Y)
@@ -58,11 +61,11 @@ void assertFailed(int, char const*, char const*, char const*, char const*);
 
 #else
 
-#define ASSERT(X, R) (void)0
+#define Assert(X, R) (void)0
 
 #endif
 
-#define ASSERT_NR(X) ASSERT(X, "");
+#define AssertNR(X) Assert(X, "");
 
 template<typename T>
 inline T max(T const& _a, T const& _b) { return (_a < _b) ? _b : _a; }

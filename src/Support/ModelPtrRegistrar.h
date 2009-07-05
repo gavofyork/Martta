@@ -43,9 +43,9 @@ public:
 	void								toBeRestored(ModelPtrFace* _p);
 	void								restorePtrs(Declaration const* _root);
 
-	void								registerTemp(Identifiable const* _e, String const& _key) { M_ASSERT(!m_registered.contains(_key)); m_tempRegistered[_key] = const_cast<Identifiable*>(_e); }
-	void								registerDeclaration(Identifiable* _e) { M_ASSERT(!m_registered.contains(_e->key())); m_registered[_e->key()] = _e; }
-	void								unregisterDeclaration(Identifiable* _e) { M_ASSERT(m_registered.values().contains(_e)); m_registered.remove(m_registered.key(_e)); }
+	void								registerTemp(Identifiable const* _e, String const& _key) { AssertNR(!m_registered.contains(_key)); m_tempRegistered[_key] = const_cast<Identifiable*>(_e); }
+	void								registerDeclaration(Identifiable* _e) { AssertNR(!m_registered.contains(_e->key())); m_registered[_e->key()] = _e; }
+	void								unregisterDeclaration(Identifiable* _e) { AssertNR(m_registered.values().contains(_e)); m_registered.remove(m_registered.key(_e)); }
 	
 	Identifiable*						find(String const& _key) const { if (m_registered.contains(_key)) return m_registered[_key]; if (m_tempRegistered.contains(_key)) return m_tempRegistered[_key]; return 0; }
 	

@@ -20,22 +20,6 @@
 
 #include "Common.h"
 
-void assertFailed(char const* _c)
-{
-	if (Martta::s_testing)
-	{
-		Martta::s_asserted = _c;
-		int a = 69;
-		(void)a;
-	}
-	else
-	{
-		qCritical("Assertion failed: %s", _c);
-		int a = 69;
-		(void)a;
-	}
-}
-
 namespace Martta
 {
 

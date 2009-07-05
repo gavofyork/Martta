@@ -32,15 +32,8 @@ using MarttaSupport::List;
 using MarttaSupport::String;
 using MarttaSupport::StringList;
 
-void assertFailed(char const* _c);
-
-#define M_ASSERT(T) if (!(T)) assertFailed(#T);
-
 namespace Martta
 {
-
-extern bool s_testing;
-extern char const* s_asserted;
 
 template<class T> class SafePointer;
 

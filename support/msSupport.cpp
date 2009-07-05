@@ -23,12 +23,20 @@
 namespace MarttaSupport
 {
 
+AssertionHandler s_alternativeAssertionHandler = 0;
+
+#if defined(DEBUG)
 void assertFailed(int _line, char const* _file, char const* _function, char const* _failed, char const* _reason)
 {
-	DebugStream(DebugStream::FailedAssert) << _line << "@" << _file << "(" << _function << "): ASSERT(" << _failed << ") " << _reason;
-	int i = 69;
-	i++;
+	if (s_alternativeAssertionHandler)
+		(*s_alternativeAssertionHandler)(_line, _file, _function, _failed, _reason);
+	else
+	{
+		DebugStream(DebugStream::FailedAssert) << _line << "@" << _file << "(" << _function << "): Assert(" << _failed << ") " << _reason;
+		__asm {int 3} 
+	}
 }
+#endif
 
 }
 

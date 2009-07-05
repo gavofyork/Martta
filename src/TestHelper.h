@@ -20,10 +20,10 @@
 
 #pragma once
 
-#include <QDebug>
+#include <cstdio>
+#include <cstdlib>
 
-#include "Common.h"
-using namespace Martta;
+extern char const* s_asserted;
 
 class TestHelper
 {
@@ -35,14 +35,14 @@ public:
 		m_oldAsserted	(s_asserted),
 		m_failedCounter	(_c)
 	{
-		s_asserted = false;
-		mInfo() << "Testing" << m_name;
+		s_asserted = 0;
+		printf("Testing %s\n", m_name);
 	}
 	~TestHelper()
 	{
 		if (m_failed || s_asserted)
 		{
-			mInfo() << "FAILED! " << (m_failed ? m_failed : s_asserted);
+			printf("FAILED! %s\n", m_failed ? m_failed : s_asserted);
 			exit(1);
 			(*m_failedCounter)++;
 		}
@@ -60,6 +60,7 @@ private:
 	char const* m_oldAsserted;
 	int* m_failedCounter;
 };
+
 #define TEST(S) for (TestHelper _h(S, &failed); !_h.isDone(); _h.done()) 
 #define FAILED_IF(X) if (X) _h.failed(#X); else (void)0
 #define UNLESS(X) if (X) (void)0; else _h.failed

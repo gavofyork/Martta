@@ -21,6 +21,8 @@
 #pragma once
 
 #include <climits>
+#include <msTextStream.h>
+using MarttaSupport::TextStream;
 
 #include "SafePointer.h"
 #include "Kind.h"
@@ -35,7 +37,7 @@ class Entity;
 class Position
 {
 	friend class Entity;
-	friend QDebug operator<<(QDebug _out, Position const& _item);
+	friend TextStream& operator<<(TextStream& _out, Position const& _item);
 	
 public:
 	Position(): m_parent(0), m_index(UndefinedIndex) {}

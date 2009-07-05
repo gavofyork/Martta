@@ -35,7 +35,8 @@ MARTTA_OBJECT_CPP(TypeEntity);
 
 TypeEntity* TypeEntity::null = (new TypeEntity)->setOwned();
 
-bool g_debugCastability = false;
+bool TypeEntity::s_debugCastability = false;
+int TypeEntity::s_typeCount = 0;
 
 Types TypeEntity::assignableTypes() const
 {
@@ -44,19 +45,23 @@ Types TypeEntity::assignableTypes() const
 
 bool TypeEntity::isSimilarTo(TypeEntity const* _t, Castability _similarity) const
 {
+#if defined(DEBUG)
 	static String s_ind = "        ";
-	if (g_debugCastability)
+	if (s_debugCastability)
 	{
 		mInfo() << (s_ind + "isSimilar from " + code() + " to " + _t->code() + " (for %1)").arg(_similarity);
 		s_ind = "    " + s_ind;
 	}
+#endif
 	bool c1 = _t->defineSimilarityFrom(this, _similarity);
 	bool c2 = defineSimilarityTo(_t, _similarity);
-	if (g_debugCastability)
+#if defined(DEBUG)
+	if (s_debugCastability)
 	{
 		s_ind = s_ind.mid(4);
 		mInfo() << (s_ind + " = %1 (F -> T = %2, T <- F = %3)").arg(c2 || c1).arg(c2).arg(c1);
 	}
+#endif
 	return c1 || c2;
 }
 

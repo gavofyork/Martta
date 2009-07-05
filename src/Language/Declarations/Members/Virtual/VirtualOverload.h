@@ -48,10 +48,10 @@ protected:
 	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 	
-	virtual void						apresLoad() { M_ASSERT(m_base.isUsable()); addDependency(m_base); Super::apresLoad(); }
+	virtual void						apresLoad() { AssertNR(m_base.isUsable()); addDependency(m_base); Super::apresLoad(); }
 
 	virtual inline int					argumentCount() const { return m_base.isUsable() ? m_base->argumentCount() : 0; }
-	virtual inline Argument*			argument(int _index) const { M_ASSERT(_index < argumentCount()); return m_base.isUsable() ? m_base->argument(_index) : 0; }
+	virtual inline Argument*			argument(int _index) const { AssertNR(_index < argumentCount()); return m_base.isUsable() ? m_base->argument(_index) : 0; }
 	virtual Type						returns() const;
 	virtual inline bool					isConst() const { return m_base.isUsable() ? m_base->isConst() : false; }
 	

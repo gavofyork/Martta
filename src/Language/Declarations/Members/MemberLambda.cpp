@@ -104,7 +104,7 @@ String MemberLambda::memberDefineLayout(ViewKeys const& _v) const
 
 bool MemberLambda::keyPressed(KeyEvent const* _e)
 {
-	M_ASSERT(isComplete());
+	AssertNR(isComplete());
 	if (LambdaNamer::keyPressed(_e))
 		return true;
 	else if ((_e->isFocused() || !childIs<Compound>(_e->focalIndex())) && child(Constness) && childAs<Label>(Constness)->keyPressed(_e))

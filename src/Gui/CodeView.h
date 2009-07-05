@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include <QSet>
 #include <QWidget>
 #include <QPicture>
 

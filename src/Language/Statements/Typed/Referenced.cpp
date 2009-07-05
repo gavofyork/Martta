@@ -117,7 +117,7 @@ bool Referenced::isInValidState() const
 		
 	if (!parentIs<GenericMemberOperation>() && m_subject->isKind<MemberValue>() && hasAncestor<MemberLambda>())
 	{
-		M_ASSERT(hasAncestor<Class>());
+		AssertNR(hasAncestor<Class>());
 		if (!ancestor<Class>()->membersOf<MemberValue>(ancestor<MemberLambda>()->isConst()).contains(m_subject->asKind<MemberValue>()))
 			return false;
 	}
@@ -134,10 +134,10 @@ Type Referenced::type() const
 	// If we're not in a member operation, check if there's some memberification that we can silently discard; 
 	if (!parentIs<GenericMemberOperation>() && t->isType<Memberify>() && hasAncestor<MemberLambda>())
 	{
-		M_ASSERT(hasAncestor<Class>());
+		AssertNR(hasAncestor<Class>());
 		// There is; check to see if we can remove it (by being in a scoped parent and assuming the "this->" precedent).
 		Memberify* m = t->asType<Memberify>();
-		M_ASSERT(m->isKind<Memberify>());
+		AssertNR(m->isKind<Memberify>());
 		if (ancestor<Class>()->baseAccess(m->scopeClass()) <= Protected)
 		{
 			bool memberIsCallable = m->original()->isType<FunctionType>();
@@ -268,7 +268,7 @@ void ReferencedEdit::leavingEditIntact()
 			}
 			else
 			{
-				M_ASSERT(e->childIs<TextLabel>(Identifiable::Identity));
+				AssertNR(e->childIs<TextLabel>(Identifiable::Identity));
 				e->childAs<TextLabel>(Identifiable::Identity)->setText(m_entityName);
 				codeScene()->silentlySetCurrent(e->childOf<TypeEntity>());							// set to the place where the user expects the cursor to be (silently, sicne we might (possibly) already be in a setCurrent!).
 			}

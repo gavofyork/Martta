@@ -18,7 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include <QDebug>
+#include <msDebug.h>
 
 #include "TestHelper.h"
 
@@ -28,13 +28,7 @@
 #include "Class.h"
 #include "Const.h"
 #include "Reference.h"
-
-
 #include "TypeEntity.h"
-namespace Martta
-{
-extern int g_typeCount;
-}
 using namespace Martta;
 
 int supportTests();
@@ -42,25 +36,38 @@ int coreTests();
 int typeTests();
 int changeTests();
 
+char const* s_asserted;
+
+#if defined(DEBUG)
+void assertFailed(int, char const*, char const*, char const* _failed, char const*)
+{
+	s_asserted = _failed;
+}
+#endif
+
 int test()
 {
-	s_testing = true;
 	int failed = 0;
+
+#if defined(DEBUG)	
+	MarttaSupport::s_alternativeAssertionHandler = &assertFailed;
 	TEST("Asserting")
 	{
 		bool testHasActuallySucceeded = true;
-		M_ASSERT(!testHasActuallySucceeded);
+		(void)(testHasActuallySucceeded);
+		AssertNR(!testHasActuallySucceeded);
 		FAILED_IF(!s_asserted);
 		s_asserted = 0;
 	}
+#endif
 	
 	failed += supportTests();
 	TEST("Auxilliaries Initialisation")
 		AuxilliaryRegistrar::get()->jigCache();
-/*	failed += coreTests();
+	failed += coreTests();
 	failed += typeTests();
 	failed += changeTests();
-*/
+
 
 	{
 		Root r;
@@ -76,17 +83,18 @@ int test()
 		mDebug() << code;
 	}
 	
+#if defined(DEBUG)
 	TEST("Memory leaking")
 	{
-		mInfo() << "News/Deletes/Remaining/Types = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes) << "/" << g_typeCount;
+		mInfo() << "News/Deletes/Remaining/Types = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes) << "/" << TypeEntity::s_typeCount;
 		FAILED_IF(s_news - s_deletes != 1);
-		FAILED_IF(g_typeCount != 1);
+		FAILED_IF(TypeEntity::s_typeCount != 1);
 	}
+#endif
 	
-	s_testing = false;
+	MarttaSupport::s_alternativeAssertionHandler = 0;
 	mInfo() << "PASSED :-)";
 	
-//	exit(failed);
 	return failed;
 }
 

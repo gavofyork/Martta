@@ -30,8 +30,6 @@
 namespace Martta
 {
 
-int g_typeCount = 0;
-
 Type::Type(TypeDefinition* _subject):
 	m_top(new ExplicitType(_subject))
 {
@@ -40,7 +38,7 @@ Type::Type(TypeDefinition* _subject):
 
 Type& Type::operator=(Type const& _t)
 {
-	M_ASSERT(m_top);
+	AssertNR(m_top);
 	if (m_top == _t.m_top)
 		return *this;
 	TypeEntity* buf = _t.m_top->clone(this);
@@ -72,7 +70,7 @@ bool Type::isSimilarTo(Type const& _to, TypeEntity::Castability _c) const
  */
 Type Type::strippedTo(Type const& _t) const
 {
-	M_ASSERT(_t.isUltimatelyNull());
+	AssertNR(_t.isUltimatelyNull());
 	Type ret = *this;
 	while (ret.m_top)
 	{
@@ -93,7 +91,7 @@ Type Type::strippedTo(Type const& _t) const
 
 bool Type::isUltimatelyNull() const
 {
-	M_ASSERT(m_top);
+	AssertNR(m_top);
 	TypeEntity* t = m_top;
 	while (t->isKind<ModifyingType>())
 		t = t->asKind<ModifyingType>()->original();

@@ -38,7 +38,7 @@ bool SimpleBinaryOperation::keyPressedOnPosition(Position const& _p, KeyEvent co
 		
 	bool ok = false;
 	Position p = slideOnPrecedence(_p, o.precedence(), o.associativity(), _e->nearestBracket(_p));
-	M_ASSERT(!p.entity()->isEditing());
+	AssertNR(!p.entity()->isEditing());
 	if (p->isKind<Typed>() && findOperators(o, p->asKind<Typed>()->type()).size())
 		ok = true;
 	if (!ok)
@@ -133,7 +133,7 @@ Types SimpleBinaryOperation::allowedTypes(int _index) const
 			return typeOf(FirstOperand).strippedTo(prototypeOf(SecondOperand));
 		if (_index == SecondOperand && prototypeOf(SecondOperand).isUltimatelyNull())
 			return Types();
-		M_ASSERT(!prototypeOf(_index).isNull());
+		AssertNR(!prototypeOf(_index).isNull());
 		return prototypeOf(_index);
 	}
 	return Super::allowedTypes(_index);

@@ -66,7 +66,7 @@ void Memberify::setConst(bool _c)
 
 void Memberify::setScope(Type const& _newScope)
 {
-	M_ASSERT(scope());
+	AssertNR(scope());
 	scope()->replace(TypeEntity::cloneOf(&*_newScope, owner()));
 	List<TypeEntity*> l;
 	l << childrenOf<TypeEntity>();

@@ -80,10 +80,10 @@ void CodeView::leaving(Entity* _e, Position const&)
 //		mDebug() << "Trying to calculate next...";
 //		_e->debugTree();
 		Entity* n = next(_e);
-		M_ASSERT(!n || n->parent());
+		AssertNR(!n || n->parent());
 		while (n && n->hasAncestor(_e)) n = next(n);
 		Entity* p = previous(_e);
-		M_ASSERT(!p || p->parent());
+		AssertNR(!p || p->parent());
 		while (p && p->hasAncestor(_e)) p = previous(p);
 		/*{
 			mDebug() << "Leaving entity:";
@@ -141,7 +141,7 @@ void CodeView::setEditing(Entity* _e)
 	if (m_editDelegate)
 	{
 		// If the edit delegate is half-way to destruction, we can allow it to have a null subject.
-		M_ASSERT(m_editDelegate->subject() == m_current || m_current->usurpsChild(m_editDelegate->subject()) || !m_editDelegate->subject());
+		AssertNR(m_editDelegate->subject() == m_current || m_current->usurpsChild(m_editDelegate->subject()) || !m_editDelegate->subject());
 		if (m_visible.contains(m_editDelegate->subject()))
 		{
 			editDelegate()->tryCommit();
@@ -227,7 +227,7 @@ void CodeView::paintEvent(QPaintEvent*)
 {
 	if (!m_current || !m_subject)
 	{
-		M_ASSERT(!m_subject);
+		AssertNR(!m_subject);
 		return;
 	}
 	
@@ -415,7 +415,7 @@ void CodeView::keyPressEvent(QKeyEvent* _e)
 		if (m_strobeCreation)
 		{
 //			m_strobeCreation->debugTree();
-			M_ASSERT(m_strobeChild);
+			AssertNR(m_strobeChild);
 			sCrPoint = m_strobeCreation->over();
 			sChPoint = m_strobeChild->over();
 			m_strobeCreation->prepareMove(Nowhere);
@@ -652,7 +652,7 @@ void CodeView::silentlySetCurrent(Entity* _e)
 
 void CodeView::setCurrent(Entity* _e)
 {
-	M_ASSERT(_e);
+	AssertNR(_e);
 
 //	mDebug() << "";
 //	mDebug() << "setCurrent: want to set current to" << _e;
@@ -669,8 +669,8 @@ void CodeView::setCurrent(Entity* _e)
 		old = m_current;
 	
 	// A bit bizarre, not necessarily wrong, though.
-	M_ASSERT(_e != m_subject);
-	M_ASSERT(_e);
+	AssertNR(_e != m_subject);
+	AssertNR(_e);
 	
 	if (isInScene(_e) && !isFocusable(_e))
 	{
@@ -1477,7 +1477,7 @@ void CodeView::doRefreshLayout()
 	delete &f->curEmboss;
 	delete &f->curFont;
 	delete f;
-	M_ASSERT(frames.isEmpty());
+	AssertNR(frames.isEmpty());
 
 //	mDebug() << list;
 //	static int count = 0;

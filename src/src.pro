@@ -1,3 +1,31 @@
+CONFIG -= release debug stl
+
+# SET THE CONFIG HERE!
+CONFIG += profile warn_on thread qt
+
+profile {
+DEFINES += PROFILE
+CONFIG += release
+}
+debug:DEFINES += DEBUG
+release:DEFINES += RELEASE
+
+mac:QMAKE_LFLAGS += -Wl,-Sp
+unix {
+	debug {
+		message("Debug build")
+		QMAKE_CXXFLAGS_DEBUG += -O0 -g3
+	}
+	profile {
+		message("Profile build")
+		QMAKE_CXXFLAGS_RELEASE += -Os -g3
+	}
+	!profile:release {
+		message("Release build")
+		QMAKE_CXXFLAGS_RELEASE += -Os -g0
+	}
+}
+
 #unix:MOC_DIR = /tmp
 #unix:RCC_DIR = /tmp
 #unix:UI_DIR = /tmp
@@ -9,14 +37,8 @@ ICON = Martta.icns
 
 QMAKE_BUNDLE_DATA += SUPPORT
 TEMPLATE = app
-CONFIG += warn_on \
-	  debug \
-	  thread \
-          qt
 TARGET = ../bin/Martta
-mac:QMAKE_LFLAGS += -Wl,-Sp
-mac:QMAKE_CXXFLAGS_DEBUG += -O0 -g3
-CONFIG -= stl
+
 QT += xml svg
 FORMS += Gui/MainWindow.ui
 win32 {
