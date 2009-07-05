@@ -47,7 +47,6 @@ protected:
 	// New virtuals.
 	virtual String						memberInterfaceCode() const { return String::null; }
 	virtual String						memberImplementationCode() const { return String::null; }
-	virtual void						memberDecorate(DecorationContext const&) const {}
 	virtual String						memberDefineLayout(ViewKeys const&) const { return String::null; }
 	
 	// Old virtuals.

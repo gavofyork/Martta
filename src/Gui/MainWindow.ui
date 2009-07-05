@@ -76,7 +76,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="Martta::CodeScene" native="1" name="codeView" >
+         <widget class="Martta::CodeView" native="1" name="codeView" >
           <property name="sizePolicy" >
            <sizepolicy vsizetype="Expanding" hsizetype="MinimumExpanding" >
             <horstretch>0</horstretch>
@@ -311,7 +311,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="Martta::CodeScene" native="1" name="classesView" >
+         <widget class="Martta::CodeView" native="1" name="classesView" >
           <property name="palette" >
            <palette>
             <active>
@@ -876,9 +876,9 @@
  <layoutdefault spacing="0" margin="0" />
  <customwidgets>
   <customwidget>
-   <class>Martta::CodeScene</class>
+   <class>Martta::CodeView</class>
    <extends>QWidget</extends>
-   <header>CodeScene.h</header>
+   <header>CodeView.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

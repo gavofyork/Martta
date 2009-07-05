@@ -52,7 +52,7 @@ public:
 	virtual void commit()
 	{
 		EditDelegate<T>::subject()->set(m_selection);
-		EditDelegate<T>::codeScene()->update();
+		EditDelegate<T>::codeScene()->repaint(EditDelegate<T>::subject());
 	}
 	virtual bool isValid() const
 	{
@@ -105,7 +105,7 @@ public:
 	R							m_selection;
 	String						m_name;
 	String						m_completion;
-	List<R>					m_possibilities;
+	List<R>						m_possibilities;
 	bool						m_immediateCommits;
 };
 

@@ -107,7 +107,7 @@ private:
 	ModelPtr<Function>		m_codeEditFunction;
 	QProcess*				m_program;
 	QString					m_outputOwed;
-	CodeScene*				m_codeScene;
+	CodeView*				m_codeView;
 	QTimer*					m_updateTimer;
 };
 

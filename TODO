@@ -13,12 +13,13 @@ Small things:
   - Just a comma?
 - FIX Page up & down.
 - CLEAN Move crap from ExplicitType to TypeDefinition.
+- CLEAN Slim down API of CodeScene.
+- OPTIMISE String (and List/Hash/Type perhaps) with copy on write.
 - Visual change system.
 Dynamic code-loading (plugins).
 - Move everything over so that plugins use Martta-specific data types.
   - Get rid of XML dependencies.
     - Creation code to be compiled?
-  - Optimise String (and List/Hash perhaps) with copy on write.
   - Move all decoration code into layout system and invent markup for it.
   - Timing code (Common.h) independent of Qt.
   - Abstract CodeScene into CodeScene & CodeView.

@@ -62,7 +62,7 @@ MainWindow::MainWindow(QWidget* _p, Qt::WindowFlags _f):
 	m_updateTimer		(0)
 {
 	setupUi(this);
-	m_codeScene = codeView;
+	m_codeView = codeView;
 
 	CullManager::get()->setDelayedActor(new CullActor(this));
 
@@ -89,7 +89,7 @@ MainWindow::MainWindow(QWidget* _p, Qt::WindowFlags _f):
 	connect(m_project, SIGNAL(subjectInvalid()), SLOT(resetSubject()));
 	resetSubject();
 
-	connect(m_codeScene, SIGNAL(currentChanged(Entity*)), SLOT(entityFocused(Entity*)));
+	connect(m_codeView, SIGNAL(currentChanged(Entity*)), SLOT(entityFocused(Entity*)));
 
 //	classesView->setSubject(m_project->ns());
 
@@ -110,7 +110,7 @@ MainWindow::~MainWindow()
 	s.setValue("mainwindow/geometry", saveGeometry());
 	s.setValue("mainwindow/lastproject", m_project->filename());
 	
-	m_codeScene->setSubject(0);
+	m_codeView->setSubject(0);
 	delete m_project;
 	m_project = 0;
 	delete m_program;
@@ -143,9 +143,9 @@ void MainWindow::updateLanguage()
 
 void MainWindow::resetSubject()
 {
-	m_codeScene->setSubject(m_project->ns());
-	M_ASSERT(!m_codeScene->current() || m_codeScene->current()->root() == m_project->root());
-	entityFocused(m_codeScene->current());
+	m_codeView->setSubject(m_project->ns());
+	M_ASSERT(!m_codeView->current() || m_codeView->current()->root() == m_project->root());
+	entityFocused(m_codeView->current());
 }
 
 void MainWindow::on_actAboutMartta_triggered()
@@ -187,8 +187,8 @@ String compileKinds(Kinds const& _t)
 
 void MainWindow::entityFocused(Entity* _e)
 {
-	if (m_codeScene->current() != _e)
-		m_codeScene->setCurrent(_e);
+	if (m_codeView->current() != _e)
+		m_codeView->setCurrent(_e);
 
 	if (!m_updateTimer)
 	{
@@ -203,7 +203,7 @@ void MainWindow::delayedUpdate()
 {
 	m_updateTimer->deleteLater();
 	m_updateTimer = 0;
-	Entity* e = m_codeScene->current();
+	Entity* e = m_codeView->current();
 	QString t;
 	if (e && e->parent())
 	TIME_STATEMENT("update"){
@@ -266,7 +266,7 @@ void MainWindow::delayedUpdate()
 				new QTreeWidgetItem(us, QStringList() << (u ? u->name().toQString() : QString("NULL?")) << (u ? u->kind().name().toQString() : QString("NULL?")));
 		}
 		
-		new QTreeWidgetItem(entityInfo, QStringList() << QString("Layout") << e->defineLayout(m_codeScene->viewKeys(e)).toQString());
+		new QTreeWidgetItem(entityInfo, QStringList() << QString("Layout") << e->defineLayout(m_codeView->viewKeys(e)).toQString());
 		
 		QTreeWidgetItem* rc = new QTreeWidgetItem(entityInfo, QStringList() << "Child restrictions");
 		foreach (int i, e->knownNames())
@@ -339,11 +339,11 @@ void MainWindow::updateCode(Function* _f)
 
 	if (_f)
 	{
-//		m_codeScene->setSubject(_f);
+//		m_codeView->setSubject(_f);
 	}
 	else
 	{
-//		m_codeScene->setSubject(0);
+//		m_codeView->setSubject(0);
 	}
 	m_codeEditFunction = _f;
 }
@@ -360,17 +360,17 @@ void MainWindow::projectRenamed()
 void MainWindow::classSelected(QModelIndex const& _i)
 {
 	(void)_i;
-//	m_codeScene->setSubject(reinterpret_cast<Class*>(_i.data(Project::OwnerRole).value<void*>()));
+//	m_codeView->setSubject(reinterpret_cast<Class*>(_i.data(Project::OwnerRole).value<void*>()));
 }
 
 void MainWindow::on_actNewProject_triggered()
 {
 	if (!confirmLose()) return;
 
-	m_codeScene->setSubject(0);
+	m_codeView->setSubject(0);
 	m_project->resetAsNew();
-	m_codeScene->setSubject(m_project->ns());
-	m_codeScene->setCurrent(m_project->program());
+	m_codeView->setSubject(m_project->ns());
+	m_codeView->setCurrent(m_project->program());
 }
 
 bool MainWindow::confirmLose()
@@ -424,10 +424,10 @@ void MainWindow::on_actOpen_triggered()
 	QString f = QFileDialog::getOpenFileName(this, "Open Project", "/home/gav", "*.xml");
 	if (f.isEmpty()) return;
 
-	m_codeScene->setSubject(0);
+	m_codeView->setSubject(0);
 	m_project->open(f);
-	m_codeScene->setSubject(m_project->ns());
-	m_codeScene->setCurrent(m_project->program());
+	m_codeView->setSubject(m_project->ns());
+	m_codeView->setCurrent(m_project->program());
 }
 
 void MainWindow::on_actSave_triggered()
@@ -513,7 +513,7 @@ void MainWindow::updateProgramCode()
 
 void MainWindow::on_actExecute_triggered()
 {
-	m_codeScene->setEditing(0);
+	m_codeView->setEditing(0);
 	if (m_program)
 	{
 		// TODO: make sure you want to terminate current!

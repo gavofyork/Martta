@@ -21,19 +21,15 @@
 #include <QtSvg>
 #include <QtGui>
 
-#include <msHash.h>
-
 #include "CommonGraphics.h"
-#include "DecorationContext.h"
+//#include "DecorationContext.h"
 #include "EditDelegate.h"
-#include "CodeScene.h"
+#include "CodeView.h"
 
 namespace Martta
 {
 
-List<CodeScene*> CodeScene::s_allScenes;
-	
-CodeScene::CodeScene(QWidget* _p):
+CodeView::CodeView(QWidget* _p):
 	QWidget				(_p),
 	m_subject			(0),
 	m_current			(0),
@@ -44,7 +40,6 @@ CodeScene::CodeScene(QWidget* _p):
 	m_showHover			(true),
 	m_hover				(0),
 	m_lastRealCurrent	(0),
-	m_editDelegate		(0),
 	m_navigated			(false),
 	m_strobeCreation	(0),
 	m_strobeChild		(0),
@@ -58,17 +53,15 @@ CodeScene::CodeScene(QWidget* _p):
 	m_borderOffset		(8.f, 8.f),
 	m_ensureCurrentVisible(false)
 {
-	s_allScenes.append(this);
 	if (m_showHover)
 		setMouseTracking(true);
 }
 
-CodeScene::~CodeScene()
+CodeView::~CodeScene()
 {
-	s_allScenes.removeAll(this);
 }
 
-void CodeScene::leaving(Entity* _e, Position const&)
+void CodeView::leaving(Entity* _e, Position const&)
 {
 	if (m_subject == _e)
 	{
@@ -131,7 +124,7 @@ void CodeScene::leaving(Entity* _e, Position const&)
 		m_lastRealCurrent = 0;
 }
 
-void CodeScene::killStrobe()
+void CodeView::killStrobe()
 {
 	m_strobeChild = 0;
 	m_strobeFocus = 0;
@@ -139,7 +132,7 @@ void CodeScene::killStrobe()
 	m_strobeText = "";
 }
 
-void CodeScene::setEditing(Entity* _e)
+void CodeView::setEditing(Entity* _e)
 {
 	if (_e == editEntity())
 		return;
@@ -186,28 +179,7 @@ void CodeScene::setEditing(Entity* _e)
 	}
 }
 
-Position CodeScene::nearestBracket(Position const& _p) const
-{
-	int n = UndefinedIndex;
-	Position ret;
-	foreach (Position i, m_bracketed)
-		if (_p == i)
-		{
-			n = 0;
-			return i;
-		}
-		else if (int d = _p->hasAncestor(i.entity()))
-		{
-			if (d < n)
-			{
-				n = d;
-				ret = i;
-			}
-		}
-	return ret;
-}
-
-bool CodeScene::event(QEvent* _e)
+bool CodeView::event(QEvent* _e)
 {
 	if (_e->type() == QEvent::KeyPress)
 	{
@@ -221,14 +193,14 @@ bool CodeScene::event(QEvent* _e)
 	return QWidget::event(_e);
 }
 
-String CodeScene::layoutString(Entity* _e)
+String CodeView::layoutString(Entity* _e)
 {
 	if (isEditing(_e))
 		return editDelegate()->defineLayout(m_viewKeys[_e]);
 	return m_stylist->defineLayout(_e, m_viewKeys[_e]);
 }
 
-void CodeScene::recacheLayoutList(Entity* _e, String const& _s)
+void CodeView::recacheLayoutList(Entity* _e, String const& _s)
 {
 	String s = _s;
 	m_cacheKey[_e] = MarttaSupport::hashOf(s);
@@ -250,7 +222,7 @@ void CodeScene::recacheLayoutList(Entity* _e, String const& _s)
 	m_listCache[_e] = list;
 }
 
-void CodeScene::paintEvent(QPaintEvent*)
+void CodeView::paintEvent(QPaintEvent*)
 {
 	if (!m_current || !m_subject)
 	{
@@ -389,7 +361,7 @@ void CodeScene::paintEvent(QPaintEvent*)
 			}*/
 }
 
-Entity* CodeScene::editEntity() const
+Entity* CodeView::editEntity() const
 {
 	return m_editDelegate ? m_editDelegate->subject() : 0;
 }
@@ -423,7 +395,7 @@ wchar_t const* translateKey(int _e)
 	}
 }
 
-void CodeScene::keyPressEvent(QKeyEvent* _e)
+void CodeView::keyPressEvent(QKeyEvent* _e)
 {
 	if (!m_subject || !current()) return;
 
@@ -461,7 +433,7 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 			if (m_strobeChild == originalStrobeChild && sChPoint)	// && c because we only need to move the strobeChild if there was a strobe creation (before, anyways).
 			{
 //				m_strobeChild->commitMove(sChPoint);	// BROKEN: m_strobeChild has already been moved to become the next creation's child - we should have commited it prior to that happening.
-				m_strobeChild->notifyOfStrobe(m_strobeCreation);
+				notifyOfStrobe(m_strobeChild, m_strobeCreation);
 			}
 			if (m_strobeCreation)
 			{
@@ -559,7 +531,7 @@ void CodeScene::keyPressEvent(QKeyEvent* _e)
 		_e->accept();
 }
 
-bool CodeScene::keyPressedAsNavigation(QKeyEvent const* _e)
+bool CodeView::keyPressedAsNavigation(QKeyEvent const* _e)
 {
 	if (_e->matches(QKeySequence::MoveToNextChar))
 	{
@@ -642,7 +614,7 @@ bool CodeScene::keyPressedAsNavigation(QKeyEvent const* _e)
 	return true;
 }	
 
-Entity* CodeScene::nearest(Entity* _e)
+Entity* CodeView::nearest(Entity* _e)
 {
 	if (_e)
 	{
@@ -668,7 +640,7 @@ Entity* CodeScene::nearest(Entity* _e)
 		return m_subject;
 }
 
-void CodeScene::silentlySetCurrent(Entity* _e)
+void CodeView::silentlySetCurrent(Entity* _e)
 {
 	if (m_leavingEdit)
 	{
@@ -677,7 +649,7 @@ void CodeScene::silentlySetCurrent(Entity* _e)
 	}
 }
 
-void CodeScene::setCurrent(Entity* _e)
+void CodeView::setCurrent(Entity* _e)
 {
 	M_ASSERT(_e);
 
@@ -739,13 +711,13 @@ void CodeScene::setCurrent(Entity* _e)
 	update();
 }
 
-void CodeScene::repaint(Entity*)
+void CodeView::repaint(Entity*)
 {
-	// TODO: only update specific area required.
+	// TODO: only update specific area required if non-zero.
 	update();
 }
 
-bool CodeScene::markDirty(Entity* _e)
+bool CodeView::markDirty(Entity* _e)
 {
 	resetLayoutCache(_e);
 	bool relayoutActuallyNeeded = false;
@@ -763,7 +735,7 @@ bool CodeScene::markDirty(Entity* _e)
 	return relayoutActuallyNeeded;
 }
 
-void CodeScene::resetLayoutCache(Entity* _e)
+void CodeView::resetLayoutCache(Entity* _e)
 {
 	if (m_listCache.contains(_e))
 	{
@@ -773,13 +745,13 @@ void CodeScene::resetLayoutCache(Entity* _e)
 	}
 }
 
-void CodeScene::relayoutLater(Entity* _e)
+void CodeView::relayoutLater(Entity* _e)
 {
 	if (markDirty(_e))
 		update();
 }
 
-void CodeScene::relayout(Entity* _e)
+void CodeView::relayout(Entity* _e)
 {
 	if (markDirty(_e))
 	{
@@ -788,18 +760,18 @@ void CodeScene::relayout(Entity* _e)
 	}
 }
 
-void CodeScene::leaveEdit()
+void CodeView::leaveEdit()
 {
 	setEditing(0);
 }
 
-void CodeScene::mouseDoubleClickEvent(QMouseEvent* _e)
+void CodeView::mouseDoubleClickEvent(QMouseEvent* _e)
 {
 	if (Entity* e = at(_e->pos()))
 		e->activateEvent(this);
 }
 
-void CodeScene::mouseMoveEvent(QMouseEvent* _e)
+void CodeView::mouseMoveEvent(QMouseEvent* _e)
 {
 	if (m_showHover)
 	{
@@ -812,13 +784,13 @@ void CodeScene::mouseMoveEvent(QMouseEvent* _e)
 	}
 }
 
-void CodeScene::mousePressEvent(QMouseEvent* _e)
+void CodeView::mousePressEvent(QMouseEvent* _e)
 {
 	if (Entity* e = at(_e->pos()))
 		setCurrent(e);
 }
 
-Entity* CodeScene::at(QPointF const& _p) const
+Entity* CodeView::at(QPointF const& _p) const
 {
 	if (!m_subject)
 		return 0;
@@ -842,7 +814,7 @@ NEXT:
 	return 0;
 }
 
-void CodeScene::setSubject(Entity* _subject)
+void CodeView::setSubject(Entity* _subject)
 {
 //	if (m_subject == _subject)
 //		return;
@@ -878,7 +850,7 @@ void CodeScene::setSubject(Entity* _subject)
 	update();
 }
 
-void CodeScene::navigateInto(Entity* _centre)
+void CodeView::navigateInto(Entity* _centre)
 {
 	leaveEdit();
 	
@@ -897,7 +869,7 @@ void CodeScene::navigateInto(Entity* _centre)
 	setCurrent(n ? n : nearest(_centre));
 }
 
-void CodeScene::navigateOnto(Entity* _shell)
+void CodeView::navigateOnto(Entity* _shell)
 {
 	leaveEdit();
 	
@@ -911,7 +883,7 @@ void CodeScene::navigateOnto(Entity* _shell)
 	setCurrent(nearest(e));
 }
 
-void CodeScene::navigateToNew(Entity* _e)
+void CodeView::navigateToNew(Entity* _e)
 {
 	leaveEdit();
 
@@ -926,7 +898,7 @@ void CodeScene::navigateToNew(Entity* _e)
 		setCurrent(nearest(_e->parent()));
 }
 
-void CodeScene::navigateAway(Entity* _from, NavigationDirection _d)
+void CodeView::navigateAway(Entity* _from, NavigationDirection _d)
 {
 	leaveEdit();
 	
@@ -937,7 +909,7 @@ void CodeScene::navigateAway(Entity* _from, NavigationDirection _d)
 		setCurrent(n);
 }
 
-QRectF CodeScene::bounds(Entity* _e)
+QRectF CodeView::bounds(Entity* _e)
 {
 	QRectF ret = m_bounds[_e];
 	for (Entity* e = _e->parent(); e && m_bounds.contains(e); e = e->parent())
@@ -945,7 +917,7 @@ QRectF CodeScene::bounds(Entity* _e)
 	return QRectF(ret.x() - 1.f, ret.y(), ret.width() + 1.f, ret.height());
 }
 
-Entity* CodeScene::traverse(Entity* _e, bool _upwards, float _x)
+Entity* CodeView::traverse(Entity* _e, bool _upwards, float _x)
 {
 	// Step 1: Find a direct ancestor that has siblings of non-overlapping, Y positions.
 	float ourBound = _upwards ? bounds(_e).top() : bounds(_e).bottom();
@@ -1078,7 +1050,7 @@ public:
 	ItemToBe(_br), picture(_p), boundsFor(0), cs(0) {}
 	QPicture picture;
 	Entity* boundsFor;
-	CodeScene* cs;
+	CodeView* cs;
 };
 
 #define CACHING 0
@@ -1359,7 +1331,7 @@ public:
 	Entity* subject;
 };
 
-void CodeScene::doRefreshLayout()
+void CodeView::doRefreshLayout()
 {
 //	TIME_FUNCTION;
 	if (!m_subject)

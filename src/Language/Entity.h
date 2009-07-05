@@ -51,7 +51,6 @@ namespace Martta
 class EntityStylist;
 class EditDelegateFace;
 class CodeScene;
-class DecorationContext;
 
 /**
  * Note regarding rootEntity/null-Context: You can never depend on something which does not share the

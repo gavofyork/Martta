@@ -126,7 +126,7 @@ bool Operation::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 	if (_e->text() == "(" && _p->isPlaceholder())
 	{
 		_e->codeScene()->setBracketed(_p);
-		_e->codeScene()->update();
+		_e->codeScene()->repaint(0);
 		return true;
 	}
 	return false;

@@ -24,21 +24,20 @@
 #include <QPicture>
 
 #include "Entity.h"
+#include "CodeScene.h"
 
 namespace Martta
 {
 
 class EditDelegateFace;
 
-class CodeScene: public QWidget
+class CodeView: public QWidget, public CodeScene
 {
 	Q_OBJECT
 	
 public:
-	CodeScene(QWidget* _p = 0);
-	~CodeScene();
-
-	static List<CodeScene*> const&	all() { return s_allScenes; }
+	CodeView(QWidget* _p = 0);
+	~CodeView();
 	
 	// Set the current attributes.
 	void						setSubject(Entity* _subject);
@@ -71,12 +70,9 @@ public:
 	void						setCurrent(Entity* _e);											/// Selects the focusable entity nearest to _e.
 	void						navigateInto(Entity* _centre);									/// Selects _centre's leftmost, innermost focusable child. e.g. X on ()s: (++X + 4) 
 	void						navigateOnto(Entity* _shell);									/// Selects _shell's leftmost focusable child. e.g. ++X on ()s: (++X + 4)
-	enum NavigationDirection { Forwards, Backwards };
 	void						navigateAway(Entity* _from, NavigationDirection _d = Forwards);	/// Selects closest focusable entity visually _d from _from. e.g. 4 on ()s: (++X + 4)
 	void						navigateToNew(Entity* _from);									/// Selects closest focusable sibling-owned entity visually forwards from _from, or parent if none.
 
-	void						setViewKey(Entity* _e, String const& _key, bool _v) { m_viewKeys[_e][_key] = String::number(_v); }
-	ViewKeys const&				viewKeys(Entity* _e) { return m_viewKeys[_e]; }
 	String						layoutString(Entity* _e);		///< @returns the layout string for the entity _e.
 	StringList					layoutList(Entity* _e) { if (!m_listCache.contains(_e)) recacheLayoutList(_e, layoutString(_e)); return m_listCache[_e]; }			///< @returns the layout list for the entity _e.
 	
@@ -89,16 +85,6 @@ public:
 	bool						insert() const { return m_insert; }
 	/// Notifies us that the current key event should be recycled (i.e. handled again).
 	void						reinterpretCurrentKeyEvent() { m_reinterpretCurrentKeyEvent = true; }
-	
-	// Bracketing code.
-	void						setBracketed(Position const& _p) { m_bracketed.append(_p); }
-	void						removeBracket(Position const& _p) { m_bracketed.removeAt(m_bracketed.lastIndexOf(_p)); }
-	bool						isBracketed(Position const& _p) const { return m_bracketed.contains(_p); }
-	Position				nearestBracket(Position const& _p) const;
-	
-	// For EditDelegateFace
-	void						forgetMe(EditDelegateFace* _me) { if (m_editDelegate == _me) m_editDelegate = 0; }
-	void						rememberMe(EditDelegateFace* _me) { M_ASSERT(!m_editDelegate); m_editDelegate = _me; }
 
 	// Hacks
 	void						silentlySetCurrent(Entity* _e);									/// Selects the focusable entity _e; this will do nothing unless you're leaving the edit.
@@ -148,9 +134,7 @@ private:
 	// State
 	Entity*				m_hover;
 	Entity*				m_lastRealCurrent;
-	EditDelegateFace*	m_editDelegate;
 
-	Hash<Entity*, ViewKeys>				m_viewKeys;
 	Hash<Entity*, QPicture>				m_pictures;
 	Hash<Entity*, QRectF>					m_bounds;
 	Hash<Entity*, List<Entity*> >			m_orders;
@@ -174,10 +158,6 @@ private:
 	EntityStylist*		m_stylist;
 	QPointF				m_borderOffset;
 	bool				m_ensureCurrentVisible;
-	
-	List<Position>	m_bracketed;
-	
-	static List<CodeScene*> s_allScenes;
 };
 
 }
