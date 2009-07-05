@@ -18,8 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include <QtXml>
-
 #include "StringLiteral.h"
 #include "EditDelegate.h"
 
@@ -39,24 +37,6 @@ bool StringLiteral::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 		return false;
 	return true;
 }
-
-void StringLiteral::importDom(QDomElement const& _element)
-{
-	Literal::importDom(_element);
-	m_value = _element.attribute("value");
-}
-
-void StringLiteral::exportDom(QDomElement& _element) const
-{
-	Literal::exportDom(_element);
-	_element.setAttribute("value", m_value);
-}
-// CODES!
-// Delete -> \x7f
-// Return -> \n
-// Backspace -> \b
-// Tab -> \t
-// Escape -> \x1b
 
 String StringLiteral::defineLayout(ViewKeys const&) const
 {

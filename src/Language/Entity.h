@@ -42,9 +42,6 @@ using MarttaSupport::String;
 #include "Position.h"
 #include "SafePointer.h"
 
-class QTextStream;
-class QDomElement;
-
 namespace Martta
 {
 
@@ -350,6 +347,8 @@ public:
 	inline Position						front() { return Position(this, 0); }
 	inline Position						back() { return Position(this, UndefinedIndex); }
 	inline Position						middle(int _at) { return Position(this, _at); }
+	Position							named(String const& _name);
+	
 	/**
 	 * Order of preference:
 	 * - A named position that requires us to be there.
@@ -366,8 +365,9 @@ public:
 	virtual int							definePreferedFor(Kind const&) const { return NonePrefered; }
 
 	// Save/load
-	virtual void						exportDom(QDomElement& _element) const;
-	virtual void						importDom(QDomElement const& _element);
+	virtual void						properties(Hash<String, String>&) const {}
+	virtual void						setProperties(Hash<String, String> const&) {}
+	virtual void						apresLoad() {}	// Called following a load after the model has been loaded.
 
 	// UI
 	/// 
@@ -381,6 +381,7 @@ public:
 	
 	String								indexName(int _i) const;
 	String								indexName() const { return m_parent ? m_parent->indexName(m_index) : "[Orphan]"; }
+	String								namedIndexId() const;		// number for static named, alpha for dynamic named, null for cardinal.
 	List<int>							knownNames() const;
 	
 	virtual String						defineLayout(ViewKeys const&) const;
@@ -430,9 +431,6 @@ public:
 
 	void								debugTree() const;
 	void								debugTree(String const& _i) const;
-	
-	/// Called directly following a load.
-	virtual void						apresLoad() {}
 	
 protected:
 	virtual ~Entity();

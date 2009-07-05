@@ -23,9 +23,9 @@
 namespace MarttaSupport
 {
 
-void assertFailed(int _line, char const* _file, char const* _function, char const* _failed)
+void assertFailed(int _line, char const* _file, char const* _function, char const* _failed, char const* _reason)
 {
-	DebugStream(DebugStream::FailedAssert) << _line << "@" << _file << "(" << _function << "): ASSERT(" << _failed << ")";
+	DebugStream(DebugStream::FailedAssert) << _line << "@" << _file << "(" << _function << "): ASSERT(" << _failed << ") " << _reason;
 	int i = 69;
 	i++;
 }

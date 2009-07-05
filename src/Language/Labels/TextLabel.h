@@ -43,13 +43,13 @@ public:
 	void								setText(String const& _t) { m_text = _t; changed(); }
 	
 protected:
-	virtual void						exportDom(QDomElement& _element) const;
-	virtual void						importDom(QDomElement const& _element);
 	virtual void						apresLoad();
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 	virtual String						defineLayout(ViewKeys const&) const;
 	virtual bool						keyPressed(KeyEvent const* _e);
 //	virtual void						decorate(DecorationContext const& _c) const;
+	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p["text"] = m_text.isEmpty() ? code() : m_text; }
+	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_text = _p["text"]; }
 	
 private:
 	String								m_text;

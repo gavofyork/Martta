@@ -18,13 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include <QtCore>
-#include <QtXml>
-
-// TODO REMOVE!
-#include "Namespace.h"
-#include "Class.h"
-
 #include "ModelPtrRegistrar.h"
 #include "Common.h"
 #include "TextLabel.h"
@@ -125,18 +118,6 @@ List<Declaration*> Declaration::utilised() const
 //	foreach (Declaration* i, ret)
 //		mDebug() << "    " << i->name() << "(" << i->kind().name() << ")";
 	return ret;
-}
-
-void Declaration::importDom(QDomElement const& _element)
-{
-	Identifiable::importDom(_element);
-	Super::importDom(_element);
-}
-
-void Declaration::exportDom(QDomElement& _element) const
-{
-	Identifiable::exportDom(_element);
-	Super::exportDom(_element);
 }
 
 }

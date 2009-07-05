@@ -18,8 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include <QtXml>
-
 #include "ConstLabel.h"
 
 namespace Martta
@@ -39,18 +37,6 @@ bool ConstLabel::keyPressed(KeyEvent const* _e)
 	else
 		return Super::keyPressed(_e);
 	return true;
-}
-	
-void ConstLabel::exportDom(QDomElement& _element) const
-{
-	Super::exportDom(_element);
-	_element.setAttribute("isConst", m_isConst);
-}
-
-void ConstLabel::importDom(QDomElement const& _element)
-{
-	Super::importDom(_element);
-	m_isConst = _element.attribute("isConst").toInt();
 }
 
 }

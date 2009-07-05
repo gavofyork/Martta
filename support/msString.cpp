@@ -492,8 +492,8 @@ String String::toUpper() const
 
 String& String::replace(t::uint _position, t::uint _n, String const& _after)
 {
-	ASSERT(_position < m_length);
-	ASSERT(_position + _n <= m_length);
+	ASSERT_NR(_position < m_length);
+	ASSERT_NR(_position + _n <= m_length);
 	if (_n == _after.m_length)
 		memcpy(m_data + _position, _after.m_data, _n * sizeof(wchar_t));
 	else if (m_length - _n + _after.m_length)
@@ -516,8 +516,8 @@ String& String::replace(t::uint _position, t::uint _n, String const& _after)
 
 String& String::replace(t::uint _position, t::uint _n, Char _after)
 {
-	ASSERT(_position < m_length);
-	ASSERT(_position + _n <= m_length);
+	ASSERT_NR(_position < m_length);
+	ASSERT_NR(_position + _n <= m_length);
 	if (_n == 1)
 		m_data[_position] = _after;
 	else if (m_length - _n + 1)
@@ -670,8 +670,8 @@ String String::simplified() const
 
 String String::mid(t::uint _i, t::uint _length) const
 {
-	ASSERT(_i <= m_length);
-	ASSERT(_i + _length <= m_length);
+	ASSERT_NR(_i <= m_length);
+	ASSERT_NR(_i + _length <= m_length);
 	String ret;
 	ret.resize(_length);
 	memcpy(ret.m_data, m_data + _i, _length * sizeof(wchar_t));
@@ -693,7 +693,7 @@ String String::number(unsigned long _n, int _base)
 {
 	static wchar_t s_format[] = L"%d";
 	static wchar_t s_result[128];
-	ASSERT(_base == 10 || _base == 8 || _base == 16);
+	ASSERT_NR(_base == 10 || _base == 8 || _base == 16);
 	s_format[1] = (_base == 10) ? L'u' : (_base == 16) ? L'x' : L'o';
 	int c = swprintf(s_result, 128, s_format, _n);
 	String ret;

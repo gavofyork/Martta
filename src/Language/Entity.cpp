@@ -48,6 +48,24 @@ String Entity::indexName(int _i) const
 	return AuxilliaryRegistrar::get()->nameOfArbitrary(_i);
 }
 
+String Entity::namedIndexId() const
+{
+	if (m_index >= 0)
+		return String::null;
+	if (m_parent && m_index < m_parent->virtualEndOfNamed())
+		return QString::number(m_index - INT_MIN);
+	return AuxilliaryRegistrar::get()->nameOfArbitrary(m_index);
+}
+
+Position Entity::named(String const& _name)
+{
+	if (_name.isEmpty())
+		return back();
+	if (_name[0].isNumber())
+		return middle(_name.toInt() + INT_MIN);
+	return middle(AuxilliaryRegistrar::get()->arbitraryOfName(_name));
+}
+
 List<int> Entity::knownNames() const
 {
 	List<int> ret = AuxilliaryRegistrar::get()->names();
@@ -265,43 +283,6 @@ void Entity::debugTree(String const& _i) const
 			i.value()->debugTree(_i + "|   [" + AuxilliaryRegistrar::get()->nameOfArbitrary(i.key()) + "] ");
 	foreach (Entity* i, m_cardinalChildren)
 		i->debugTree(_i + "|   ");
-}
-
-// I/O
-void Entity::exportDom(QDomElement& _element) const
-{
-	foreach (Entity* e, children())
-	{
-		QDomElement n = _element.ownerDocument().createElement("entity");
-		n.setAttribute("kind", e->kind().name().toCString());
-		if (e->index() < 0)
-		{	if (e->index() >= virtualEndOfNamed())	// proper name - store as name
-				n.setAttribute("childname", AuxilliaryRegistrar::get()->nameOfArbitrary(e->index()).toCString());
-			else
-				n.setAttribute("contextindex", e->index());
-		}
-		e->exportDom(n);
-		_element.appendChild(n);
-	}
-}
-void Entity::importDom(QDomElement const& _element)
-{
-	for (QDomNode i = _element.firstChild(); !i.isNull(); i = i.nextSibling())
-		if (i.isElement() && i.toElement().tagName() == "entity")
-		{
-			mDebug() << i.toElement().attribute("kind").toLatin1().data();
-			Entity* e = spawn(i.toElement().attribute("kind"));
-			if (i.toElement().hasAttribute("contextindex"))
-				e->silentMove(middle(i.toElement().attribute("contextindex").toInt()));
-			else if (i.toElement().hasAttribute("childname"))
-				e->silentMove(middle(AuxilliaryRegistrar::get()->arbitraryOfName(i.toElement().attribute("childname"))));
-			else
-				e->silentMove(back());
-			if (e)
-				e->importDom(i.toElement());
-			else
-				mCritical() << "Unknown element of kind" << i.toElement().attribute("kind");
-		}
 }
 
 // Navigation in CodeScene(s)

@@ -18,8 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include <QtXml>
-
 #include "TextLabel.h"
 #include "Compound.h"
 #include "Argument.h"
@@ -39,20 +37,6 @@ Kinds Function::allowedKinds(int _i) const
 	if (_i >= 0)
 		return Kind::of<Argument>();
 	return Super::allowedKinds(_i);
-}
-
-void Function::importDom(QDomElement const& _element)
-{
-	Super::importDom(_element);
-	m_qualifiers = (Qualifiers)_element.attribute("qualifiers").toInt();
-	m_ellipsis = (bool)_element.attribute("ellipsis").toInt();
-}
-
-void Function::exportDom(QDomElement& _element) const
-{
-	Super::exportDom(_element);
-	_element.setAttribute("qualifiers", m_qualifiers);
-	_element.setAttribute("ellipsis", m_ellipsis);
 }
 
 }

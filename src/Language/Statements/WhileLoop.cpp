@@ -18,8 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include <QtXml>
-
 #include "Typed.h"
 #include "Const.h"
 #include "Compound.h"

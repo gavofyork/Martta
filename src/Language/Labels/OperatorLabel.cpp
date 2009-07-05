@@ -37,14 +37,4 @@ bool OperatorLabel::keyPressed(KeyEvent const* _e)
 	return Super::keyPressed(_e);
 }
 
-void OperatorLabel::importDom(QDomElement const& _element)
-{
-	setSymbol((Operator::Symbol)_element.attribute("symbol").toInt());
-}
-
-void OperatorLabel::exportDom(QDomElement& _element) const
-{
-	_element.setAttribute("symbol", symbol());
-}
-
 }

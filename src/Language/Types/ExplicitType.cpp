@@ -18,8 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include <QtXml>
-
 #include "CodeScene.h"
 #include "Class.h"
 #include "Enumeration.h"
@@ -229,18 +227,6 @@ String ExplicitType::defineEditLayout(ViewKeys const&, TypeDefinition*) const
 EditDelegateFace* ExplicitType::newDelegate(CodeScene* _s)
 {
 	return new CompletionDelegate<ExplicitType, TypeDefinition*>(this, _s);
-}
-
-void ExplicitType::importDom(QDomElement const& _element)
-{
-	Super::importDom(_element);
-	m_subject.restoreFrom(_element.attribute("subject"));
-}
-
-void ExplicitType::exportDom(QDomElement& _element) const
-{
-	Super::exportDom(_element);
-	_element.setAttribute("subject", m_subject.key());
 }
 
 }

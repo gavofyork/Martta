@@ -18,8 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include <QtXml>
-
 #include "Argument.h"
 #include "Class.h"
 #include "Constructor.h"
@@ -73,18 +71,6 @@ String Construction::code() const
 	if (!m_subject.isUsable())
 		return String();
 	return m_subject->classType()->reference() + callList();
-}
-
-void Construction::importDom(QDomElement const& _element)
-{
-	Entity::importDom(_element);
-	m_subject.restoreFrom(_element.attribute("subject"));
-}
-
-void Construction::exportDom(QDomElement& _element) const
-{
-	Entity::exportDom(_element);
-	_element.setAttribute("subject", m_subject.key());
 }
 
 }

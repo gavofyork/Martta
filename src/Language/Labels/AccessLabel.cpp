@@ -18,8 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include <QtXml>
-
 #include "AccessLabel.h"
 
 namespace Martta
@@ -43,18 +41,6 @@ bool AccessLabel::keyPressed(KeyEvent const* _e)
 	else
 		return Super::keyPressed(_e);
 	return true;
-}
-
-void AccessLabel::importDom(QDomElement const& _element)
-{
-	Super::importDom(_element);
-	m_access = (Access)_element.attribute("access").toInt();
-}
-
-void AccessLabel::exportDom(QDomElement& _element) const
-{
-	Super::exportDom(_element);
-	_element.setAttribute("access", m_access);
 }
 
 };

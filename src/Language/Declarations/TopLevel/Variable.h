@@ -41,17 +41,17 @@ public:
 	
 protected:
 	virtual String						defineLayout(ViewKeys const& _k) const { return "^;" + VariableNamer::defineLayout(_k); }
-	virtual List<Declaration*>	utilised() const { return actualType()->utilised(); }
+	virtual List<Declaration*>			utilised() const { return actualType()->utilised(); }
 	
 	virtual bool						keyPressed(KeyEvent const* _e) { return VariableNamer::keyPressed(_e) ? true : Super::keyPressed(_e); }
 	virtual int							minRequired(int _i) const { return _i == OurType ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity*) { changed(); } 
-	virtual void						exportDom(QDomElement& _element) const;
-	virtual void						importDom(QDomElement const& _element);
 	virtual String						interfaceCode() const { return Martta::code(m_qualifiers & VariableMask) + VariableNamer::interfaceCode(); }
 	virtual String						implementationCode() const { return VariableNamer::implementationCode(); }
+	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p["qualifiers"] = String::number(m_qualifiers); }
+	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_qualifiers = (Qualifiers)_p["qualifiers"].toInt(); }
 	
 private:
 	Qualifiers							m_qualifiers;

@@ -18,8 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include <QtXml>
-
 #include "Const.h"
 #include "Reference.h"
 #include "TypeDefinition.h"
@@ -118,18 +116,6 @@ String SimpleUnaryOperation::operatorLayout() const
 		return L"ycode;'-';M-1;'-'";
 	else
 		return String("ycode;'%1'").arg(id().code());
-}
-
-void SimpleUnaryOperation::importDom(QDomElement const& _element)
-{
-	Super::importDom(_element);
-	m_operator = Operator((Operator::Symbol)_element.attribute("operator").toInt());
-}
-
-void SimpleUnaryOperation::exportDom(QDomElement& _element) const
-{
-	Super::exportDom(_element);
-	_element.setAttribute("operator", (int)m_operator.symbol());
 }
 
 }

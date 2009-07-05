@@ -317,7 +317,7 @@ int coreTests()
 		}
 		FAILED_IF(p);
 	}
-	TEST("Pointer archival/restoration")
+	/*TEST("Pointer archival/restoration")
 	{
 		Root* r = new Root;
 		Namespace* n = new Namespace;
@@ -369,7 +369,7 @@ int coreTests()
 		FAILED_IF(!r->child(0)->childOf<Class>()->childOf<Method>()->childOf<Compound>()->childAs<Referenced>(1)->subject());
 		
 		r->killAndDelete();
-	}
+	}*/
 	TEST("Pre-test")
 	{
 		Root* r = new Root;
@@ -423,7 +423,7 @@ int coreTests()
 		TEST_FOR("Negatives: 2nd validifyChildren() and still complete", a->isComplete());
 	}
 	mInfo() << "News/Deletes/Remaining = " << s_news << "/" << s_deletes << "/" << (s_news - s_deletes);
-	TEST("Negatives save/load")
+	/*TEST("Negatives save/load")
 	{
 		Root r;
 		SafePointer<TestNegativesB> a = new TestNegativesB;
@@ -449,7 +449,7 @@ int coreTests()
 		FAILED_IF(a->childCount(TestNegativesB::NamedChildB) != 1);
 		FAILED_IF(a->childCount(TestNegativesB::NamedChildC) != 2);
 		FAILED_IF(a->childCount(TestNegativesB::NamedChildC + 1) != 0);
-	}
+	}*/
 	
 	return failed;
 }

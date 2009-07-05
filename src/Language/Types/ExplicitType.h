@@ -59,8 +59,6 @@ protected:
 	virtual String						code(String const& _middle) const { return (m_subject ? m_subject->asKind<Identifiable>()->reference() : "") + _middle; }
 	virtual bool						contentsEquivalentTo(TypeEntity const* _t) const { return _t->asKind<ExplicitType>()->m_subject == m_subject; }
 	virtual Rgb							idColour() const;
-	virtual void						exportDom(QDomElement& _element) const;
-	virtual void						importDom(QDomElement const& _element);
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 	virtual TypeEntity*					newClone() const { return new ExplicitType(m_subject); }
 	virtual String						defineLayout(ViewKeys const&) const;
@@ -71,6 +69,8 @@ protected:
 	virtual bool						defineSimilarityFrom(TypeEntity const* _from, Castability _c) const;
 	virtual void						apresLoad() { addDependency(m_subject->self()); Super::apresLoad(); }
 	virtual List<Declaration*>			utilised() const;
+	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p["subject"] = m_subject.key(); }
+	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_subject.restoreFrom(_p["subject"]); }
 	
 	ModelPtr<TypeDefinition>			m_subject;
 };

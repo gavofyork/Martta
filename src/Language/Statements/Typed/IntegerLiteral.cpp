@@ -20,8 +20,6 @@
 
 #include <cmath>
 
-#include <QtXml>
-
 #include "IntegerLiteral.h"
 #include "EditDelegate.h"
 
@@ -67,20 +65,6 @@ String IntegerLiteral::defineLayout(ViewKeys const&) const
 	if (m_signed)
 		ret = (m_value < 0 ? "-" : "") + ret;
 	return String("^;ynormal;'%1';ycode;'%2';'%3'").arg(ret).arg(m_signed ? "" : "u").arg(m_range == ShortRange ? "s" : m_range == LongRange ? "l" : m_range == LonglongRange ? "ll" : "");
-}
-
-void IntegerLiteral::exportDom(QDomElement& _element) const
-{
-	Literal::exportDom(_element);
-	_element.setAttribute("value", m_value);
-	_element.setAttribute("range", (int)m_range);
-}
-
-void IntegerLiteral::importDom(QDomElement const& _element)
-{
-	Literal::importDom(_element);
-	m_value = _element.attribute("value").toDouble();
-	m_range = (Range)_element.attribute("range").toInt();
 }
 
 EditDelegateFace* IntegerLiteral::newDelegate(CodeScene* _s)

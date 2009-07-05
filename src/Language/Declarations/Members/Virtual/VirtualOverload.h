@@ -49,13 +49,14 @@ protected:
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 	
 	virtual void						apresLoad() { M_ASSERT(m_base.isUsable()); addDependency(m_base); Super::apresLoad(); }
-	virtual void						exportDom(QDomElement& _element) const;
-	virtual void						importDom(QDomElement const& _element);
 
 	virtual inline int					argumentCount() const { return m_base.isUsable() ? m_base->argumentCount() : 0; }
 	virtual inline Argument*			argument(int _index) const { M_ASSERT(_index < argumentCount()); return m_base.isUsable() ? m_base->argument(_index) : 0; }
 	virtual Type						returns() const;
 	virtual inline bool					isConst() const { return m_base.isUsable() ? m_base->isConst() : false; }
+	
+	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p["base"] = m_base.key(); }
+	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_base.restoreFrom(_p["base"]); }
 	
 private:
 	ModelPtr<VirtualMethod>				m_base;

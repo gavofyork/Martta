@@ -48,8 +48,8 @@ protected:
 	virtual String						code() const { String ret = String("%1").arg(m_value); if (!ret.contains(".")) ret += "."; ret += m_precision == SinglePrecision ? "f" : m_precision == DoublePrecision ? "" : "ld"; return ret; }
 	virtual String						defineLayout(ViewKeys const&) const;
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
-	virtual void						exportDom(QDomElement& _element) const;
-	virtual void						importDom(QDomElement const& _element);
+	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p["precision"] = String::number(m_precision); _p["value"] = String::number(m_value); }
+	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_precision = (Precision)_p["precision"].toInt(); m_value = _p["value"].toDouble(); }
 
 private:
 	double								m_value;

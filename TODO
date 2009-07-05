@@ -15,14 +15,15 @@ Small things:
 - CLEAN Move crap from ExplicitType to TypeDefinition.
 - CLEAN Slim down API of CodeScene.
 - OPTIMISE String (and List/Hash/Type perhaps) with copy on write.
-- Visual change system.
+- BRINGBACK Visual change system.
+- BRINGBACK Ser/Deser tests.
 Dynamic code-loading (plugins).
 - Move everything over so that plugins use Martta-specific data types.
-  - Get rid of XML dependencies.
-    - Creation code to be compiled?
+  
   - Move all decoration code into layout system and invent markup for it.
   - Timing code (Common.h) independent of Qt.
-  - Abstract CodeScene into CodeScene & CodeView.
+
+TODO _p[" -> _p[L"
 
 --------------------------------------------------------------------------------
 
@@ -230,6 +231,8 @@ Remove (or make useful) m_location?
 ================================================================================
 
 === WISH LIST ===
+
+Creation code (i.e. the file format) as C++ code that compiles to a function to create the program model?
 
 Singleton support:
 singleton Foo	// No non-default constructors allowed

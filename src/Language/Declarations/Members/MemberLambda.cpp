@@ -18,8 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "CommonGraphics.h"
-#include "DecorationContext.h"
 #include "Const.h"
 #include "Pointer.h"
 #include "ConstLabel.h"

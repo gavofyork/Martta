@@ -18,8 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include <QtXml>
-
 #include "BoolLiteral.h"
 
 namespace Martta
@@ -47,18 +45,6 @@ bool BoolLiteral::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 String BoolLiteral::defineLayout(ViewKeys const&) const
 {
 	return String("^;'%1'").arg(m_value ? "true" : "false");
-}
-
-void BoolLiteral::exportDom(QDomElement& _element) const
-{
-	Super::exportDom(_element);
-	_element.setAttribute("value", m_value);
-}
-
-void BoolLiteral::importDom(QDomElement const& _element)
-{
-	Super::importDom(_element);
-	m_value = _element.attribute("value").toInt();
 }
 
 }

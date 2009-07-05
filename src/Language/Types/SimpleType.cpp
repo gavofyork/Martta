@@ -18,8 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include <QtXml>
-
 #include "Type.h"
 #include "SimpleOperator.h"
 #include "Const.h"
@@ -115,18 +113,6 @@ bool SimpleType::defineSimilarityFrom(TypeEntity const* _f, Castability _c) cons
 String SimpleType::defineLayout(ViewKeys const&) const
 {
 	return typeLayout() + "^;'" + ((id() == -1) ? String("[]") : name(id())) + "'";
-}
-
-void SimpleType::importDom(QDomElement const& _element)
-{
-	Super::importDom(_element);
-	setId(_element.attribute("id").toInt());
-}
-
-void SimpleType::exportDom(QDomElement& _element) const
-{
-	Super::exportDom(_element);
-	_element.setAttribute("id", id());
 }
 
 template<>

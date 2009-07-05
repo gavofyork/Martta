@@ -18,11 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include <QtXml>
-
-#include <msString.h>
-using MarttaSupport::Char;
-
 #include "TypeDefinition.h"
 #include "Const.h"
 #include "Reference.h"
@@ -152,18 +147,6 @@ Type SimpleBinaryOperation::type() const
 		return typeOf(FirstOperand).strippedTo(protoReturn());
 	else
 		return protoReturn();
-}
-
-void SimpleBinaryOperation::importDom(QDomElement const& _element)
-{
-	Super::importDom(_element);
-	m_operator = Operator((Operator::Symbol)_element.attribute("operator").toInt());
-}
-
-void SimpleBinaryOperation::exportDom(QDomElement& _element) const
-{
-	Super::exportDom(_element);
-	_element.setAttribute("operator", (int)m_operator.symbol());
 }
 
 }

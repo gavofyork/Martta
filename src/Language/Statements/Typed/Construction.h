@@ -41,9 +41,9 @@ public:
 	virtual Type						type() const;
 	virtual String						code() const;
 
-	virtual void						exportDom(QDomElement& _element) const;
-	virtual void						importDom(QDomElement const& _element);
 	virtual void						apresLoad() { addDependency(m_subject); Super::apresLoad(); }
+	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p["subject"] = m_subject.key(); }
+	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_subject.restoreFrom(_p["subject"]); }
 
 protected:
 	ModelPtr<Constructor>				m_subject;

@@ -18,10 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include <QtXml>
-
-#include "DecorationContext.h"
-#include "CommonGraphics.h"
 #include "MemberLambda.h"
 #include "Namespace.h"
 #include "Invocation.h"
@@ -165,22 +161,6 @@ Type Referenced::type() const
 	return t;
 }
 
-void Referenced::importDom(QDomElement const& _element)
-{
-	Entity::importDom(_element);
-	m_subject.restoreFrom(_element.attribute("subject"));
-	m_specific = _element.attribute("specific").toInt();
-	m_lastSet = _element.attribute("lastSet").toInt();
-	// TODO: check if depend system needs reseting here.
-}
-
-void Referenced::exportDom(QDomElement& _element) const
-{
-	Entity::exportDom(_element);
-	_element.setAttribute("subject", m_subject.key());
-	_element.setAttribute("specific", m_specific);
-	_element.setAttribute("lastSet", m_lastSet);
-}
 /*
 void Referenced::decorate(DecorationContext const& _c) const
 {

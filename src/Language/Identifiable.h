@@ -24,8 +24,6 @@
 
 #include "Meta.h"
 
-class QDomElement;
-
 namespace Martta
 {
 
@@ -64,9 +62,9 @@ public:
 	virtual Identifiable*				lookupChild(String const& _key) const;
 	
 protected:
-	// These *MUST* be used by any final class in its export/import functions.
-	void								exportDom(QDomElement& _element) const;
-	void								importDom(QDomElement const& _element);
+	// These *MUST* be used by any final class in its property functions.
+	void								properties(Hash<String, String>& _p) const;
+	void								setProperties(Hash<String, String> const& _p);
 	
 	virtual ~Identifiable();
 };

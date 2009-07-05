@@ -42,11 +42,11 @@ public:
 protected:
 	virtual Type						type() const { return Type(Char).topWith(Const()).topWith(Pointer()); }
 	virtual String						code() const { return "\"" + String(m_value).replace("\"", "\\\"") + "\""; }
-	virtual void						exportDom(QDomElement& _element) const;
-	virtual void						importDom(QDomElement const& _element);
 	virtual String						defineLayout(ViewKeys const&) const;
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 	virtual bool						keyPressed(KeyEvent const* _e);
+	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p["value"] = m_value; }
+	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_value = _p["value"]; }
 
 private:
 	String								m_value;

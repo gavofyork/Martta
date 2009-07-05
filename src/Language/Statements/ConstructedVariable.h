@@ -42,8 +42,8 @@ private:
 	virtual void						onDependencyChanged(Entity*) { changed(); }
 	virtual String						defineLayout(ViewKeys const& _k) const { return (VariableNamer::defineLayout(_k) + ";Mi;^;ycode;'(';Mi;%1;Mi;')'").arg(OurConstruction); }
 	virtual bool						keyPressed(KeyEvent const* _e);
-	virtual void						exportDom(QDomElement& _element) const { VariableNamer::exportDom(_element); Super::exportDom(_element); }
-	virtual void						importDom(QDomElement const& _element) { VariableNamer::importDom(_element); Super::importDom(_element); }
+	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); Identifiable::properties(_p); }
+	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); Identifiable::setProperties(_p); }
 
 	// From Statement via BareTyped
 	virtual String						code() const;

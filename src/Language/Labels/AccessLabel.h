@@ -42,13 +42,13 @@ public:
 	inline static Rgb					idColour(Access _a) { return _a == Public ? Rgb(192, 192, 0) : _a == Protected ? Rgb(255, 127, 0) : _a == Private ? Rgb(255, 0, 0) : Rgb(0, 0, 0); }
 	
 protected:
-	virtual void						exportDom(QDomElement& _element) const;
-	virtual void						importDom(QDomElement const& _element);
 	virtual String						defineLayout(ViewKeys const&) const;
 	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual String						code() const { return Martta::code(m_access); }
 	virtual bool						onActivated(CodeScene*) { setAccess((Access)(((int)m_access + 1) % (int)AccessCount)); return true; }
-	
+	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p["access"] = String::number(m_access); }
+	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_access = (Access)_p["access"].toInt(); }
+
 private:
 	Access								m_access;
 };

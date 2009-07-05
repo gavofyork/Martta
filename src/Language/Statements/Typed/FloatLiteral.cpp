@@ -18,8 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include <QtXml>
-
 #include "IntegerLiteral.h"
 #include "EditDelegate.h"
 #include "FloatLiteral.h"
@@ -51,20 +49,6 @@ bool FloatLiteral::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 String FloatLiteral::defineLayout(ViewKeys const&) const
 {
 	return String(m_precision == SinglePrecision ? "^;'%1f'" : m_precision == DoublePrecision ? "^;'%1'" : "^;'%1ld'").arg(m_value);
-}
-
-void FloatLiteral::exportDom(QDomElement& _element) const
-{
-	Literal::exportDom(_element);
-	_element.setAttribute("value", m_value);
-	_element.setAttribute("precision", (int)m_precision);
-}
-
-void FloatLiteral::importDom(QDomElement const& _element)
-{
-	Literal::importDom(_element);
-	m_value = _element.attribute("value").toDouble();
-	m_precision = (Precision)_element.attribute("precision").toInt();
 }
 
 EditDelegateFace* FloatLiteral::newDelegate(CodeScene* _s)

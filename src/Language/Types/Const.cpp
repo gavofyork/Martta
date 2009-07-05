@@ -18,8 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "CommonGraphics.h"
-#include "DecorationContext.h"
 #include "Memberify.h"
 #include "AddressType.h"
 #include "ExplicitType.h"

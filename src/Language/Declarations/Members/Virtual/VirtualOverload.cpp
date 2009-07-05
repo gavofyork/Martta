@@ -18,8 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include <QtXml>
-
 #include "Class.h"
 #include "Compound.h"
 #include "LambdaNamer.h"
@@ -60,18 +58,6 @@ bool VirtualOverload::keyPressed(KeyEvent const* _e)
 	else
 		return Super::keyPressed(_e);
 	return true;
-}
-
-void VirtualOverload::exportDom(QDomElement& _element) const
-{
-	Super::exportDom(_element);
-	_element.setAttribute("base", m_base.key());
-}
-
-void VirtualOverload::importDom(QDomElement const& _element)
-{
-	Super::importDom(_element);
-	m_base.restoreFrom(_element.attribute("base"));
 }
 
 List<VirtualMethod*> VirtualOverload::possibilities() const

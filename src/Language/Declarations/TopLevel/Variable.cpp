@@ -18,8 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include <QtXml>
-
 #include "TypeEntity.h"
 #include "TextLabel.h"
 #include "Variable.h"
@@ -34,20 +32,6 @@ Kinds Variable::allowedKinds(int _i) const
 	if (_i == OurType)
 		return Kind::of<TypeEntity>();
 	return Super::allowedKinds(_i);
-}
-
-void Variable::importDom(QDomElement const& _element)
-{
-	Super::importDom(_element);
-
-	m_qualifiers = (Qualifiers)_element.attribute("qualifiers").toInt();
-}
-
-void Variable::exportDom(QDomElement& _element) const
-{
-	Super::exportDom(_element);
-
-	_element.setAttribute("qualifiers", m_qualifiers);
 }
 
 }

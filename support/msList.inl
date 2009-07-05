@@ -155,8 +155,8 @@ template<class T> List<T> List<T>::mid(int _pos, int _length) const
 
 template<class T> typename List<T>::Iterator List<T>::erase(typename List<T>::Iterator _pos)
 {
-	ASSERT(_pos.m_ptr >= m_data);
-	ASSERT(_pos.m_ptr < m_data + m_count);
+	ASSERT_NR(_pos.m_ptr >= m_data);
+	ASSERT_NR(_pos.m_ptr < m_data + m_count);
 	if (!isTrivial)
 		delete *(T**)_pos.m_ptr;
 	m_count--;
@@ -166,9 +166,9 @@ template<class T> typename List<T>::Iterator List<T>::erase(typename List<T>::It
 
 template<class T> typename List<T>::Iterator List<T>::erase(typename List<T>::Iterator _begin, typename List<T>::Iterator _end) 
 {
-	ASSERT(_end.m_ptr > _begin.m_ptr);
-	ASSERT(_begin.m_ptr >= m_data);
-	ASSERT(_end.m_ptr <= m_data + m_count);
+	ASSERT_NR(_end.m_ptr > _begin.m_ptr);
+	ASSERT_NR(_begin.m_ptr >= m_data);
+	ASSERT_NR(_end.m_ptr <= m_data + m_count);
 	if (!isTrivial)
 		for (ST* i = _begin.m_ptr; i != _end.m_ptr; i++)
 			delete *(T**)i;
@@ -189,7 +189,7 @@ template<class T> int List<T>::indexOf(const T& _value, int _from) const
 
 template<class T> void List<T>::insert(int _i, const T& _value)
 {
-	ASSERT(_i <= m_count);
+	ASSERT_NR(_i <= m_count);
 	if (m_reserved == m_count)
 		grow();
 	memmove(m_data + _i + 1, m_data + _i, (m_count - _i) * sizeof(ST)); 
@@ -202,8 +202,8 @@ template<class T> void List<T>::insert(int _i, const T& _value)
 
 template<class T> inline typename List<T>::Iterator List<T>::insert(typename List<T>::Iterator _before, const T& _value)
 {
-	ASSERT(_before.m_ptr >= m_data);
-	ASSERT(_before.m_ptr < m_data + m_count);
+	ASSERT_NR(_before.m_ptr >= m_data);
+	ASSERT_NR(_before.m_ptr < m_data + m_count);
 	int i = _before.m_ptr - m_data;
 	insert(i, _value);
 	return m_data + i;
@@ -211,7 +211,7 @@ template<class T> inline typename List<T>::Iterator List<T>::insert(typename Lis
 
 template<class T> int List<T>::lastIndexOf(const T& _value, int _from) const
 {
-	ASSERT(_from >= -1 && _from < m_count);
+	ASSERT_NR(_from >= -1 && _from < m_count);
 	ST* i = m_data + (_from < 0 ? m_count : (_from + 1));
 	while (i != m_data)
 		if (star(*--i) == _value)
@@ -221,8 +221,8 @@ template<class T> int List<T>::lastIndexOf(const T& _value, int _from) const
 
 template<class T> void List<T>::move(int _from, int _to)
 {
-	ASSERT(_from >= 0 && _from < m_count);
-	ASSERT(_to >= 0 && _to < m_count);
+	ASSERT_NR(_from >= 0 && _from < m_count);
+	ASSERT_NR(_to >= 0 && _to < m_count);
 	if (_from == _to)
 		return;
 	ST x = m_data[_from];
@@ -297,8 +297,8 @@ template<class T> List<int>& List<T>::reverse()
 
 template<class T> inline void List<T>::swap(int _i, int _j)
 {
-	ASSERT(_i >= 0 && _i < m_count);
-	ASSERT(_j >= 0 && _j < m_count);
+	ASSERT_NR(_i >= 0 && _i < m_count);
+	ASSERT_NR(_j >= 0 && _j < m_count);
 	if (_i == _j)
 		return;
 	ST x = m_data[_i];
@@ -308,7 +308,7 @@ template<class T> inline void List<T>::swap(int _i, int _j)
 
 template<class T> inline T List<T>::takeAt(int _i)
 {
-	ASSERT(_i >= 0 && _i < m_count);
+	ASSERT_NR(_i >= 0 && _i < m_count);
 	T ret = star(m_data[_i]);
 	erase(Iterator(m_data + _i));
 	return ret;

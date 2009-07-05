@@ -46,10 +46,10 @@ public:
 protected:
 	virtual Type						type() const { return Type(Int|(m_signed ? Signed : Unsigned)|((int)m_range)); }
 	virtual String						code() const { return String("%1").arg(m_value, 0, 'f', 0) + (m_signed ? "" : "U") + (m_range == ShortRange ? "" : m_range == LongRange ? "L" : m_range == LonglongRange ? "LL" : ""); }
-	virtual void						exportDom(QDomElement& _element) const;
-	virtual void						importDom(QDomElement const& _element);
 	virtual String						defineLayout(ViewKeys const&) const;
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
+	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p["range"] = String::number(m_range); _p["signed"] = String::number(m_signed); _p["value"] = String::number(m_value); }
+	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_range = (Range)_p["range"].toInt(); m_signed = _p["signed"].toBool(); m_value = _p["value"].toDouble(); }
 
 private:
 	double								m_value;

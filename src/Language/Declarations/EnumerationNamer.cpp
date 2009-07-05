@@ -18,8 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "CommonGraphics.h"
-#include "DecorationContext.h"
 #include "CodeScene.h"
 #include "Class.h"
 #include "TextLabel.h"

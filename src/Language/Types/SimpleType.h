@@ -94,13 +94,13 @@ protected:
 	virtual Rgb							idColour() const { return 0xffbb77; }
 	virtual TypeEntity*					newClone() const { return new SimpleType(m_id); }
 	virtual String						defineLayout(ViewKeys const&) const;
-	virtual void						exportDom(QDomElement& _element) const;
-	virtual void						importDom(QDomElement const& _element);
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 	virtual bool						isSuperfluous() const { return Super::isSuperfluous() && m_id == -1; }
 	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual bool						defineSimilarityFrom(TypeEntity const* _f, Castability _c) const;
 	virtual bool						defineSimilarityTo(TypeEntity const* _t, Castability _c) const;
+	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p["id"] = String::number(m_id); }
+	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_id = _p["id"].toInt(); }
 
 private:
 	int m_id;

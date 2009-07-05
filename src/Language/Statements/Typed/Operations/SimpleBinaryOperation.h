@@ -43,8 +43,6 @@ public:
 protected:
 	virtual Operator					id() const { return m_operator; }
 	virtual String						operatorLayout() const;
-	virtual void						exportDom(QDomElement& _element) const;
-	virtual void						importDom(QDomElement const& _element);
 	virtual Types						allowedTypes(int _index) const;
 	virtual Type						type() const;
 	virtual String						code() const;
@@ -61,6 +59,8 @@ private:
 	void								refreshOperation() { setOperation(m_operator, leftType(), rightType()); }
 	
 	static List<ValueDefiner*>			findOperators(Operator _o, Type const& _left = Type(), Type const& _right = Type());
+	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p["operator"] = String::number(m_operator.symbol()); }
+	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_operator = Operator((Operator::Symbol)_p["operator"].toInt()); }
 	
 	// Change to OperatorLabel?
 	Operator							m_operator;

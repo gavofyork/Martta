@@ -45,10 +45,10 @@ public:
 	void								setSymbol(Operator::Symbol _s) { m_operator.setSymbol(_s); }
 	
 protected:
-	virtual void						exportDom(QDomElement& _element) const;
-	virtual void						importDom(QDomElement const& _element);
 	virtual String						defineLayout(ViewKeys const&) const;
 	virtual bool						keyPressed(KeyEvent const* _e);
+	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p["symbol"] = String::number(symbol()); }
+	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); setSymbol((Operator::Symbol)_p["symbol"].toInt()); }
 
 private:
 	Operator							m_operator;

@@ -273,6 +273,26 @@ QString Project::executable()
 	return m_tempPath + "/" + exeName();
 }
 
+void importDom(QDomElement const& _el, Entity* _p)
+{
+	Entity* e = _p->spawn(_el.attribute("kind"));
+	ASSERT(e, "Spawn doesn't know anything about this kind, yet it did when exported.");
+	
+	Hash<String, String> h;
+	String index;
+	for (uint i = 0; i < _el.attributes().length(); i++)
+		if (_el.attributes().item(i).nodeName() == "index")
+			index = _el.attributes().item(i).nodeValue();
+		else
+			h.insert(_el.attributes().item(i).nodeName(), _el.attributes().item(i).nodeValue());
+	e->silentMove(_p->named(index));
+
+	e->setProperties(h);
+	for (QDomNode i = _el.firstChild(); !i.isNull(); i = i.nextSibling())
+		if (i.isElement() && i.toElement().tagName() == "entity")
+			importDom(i.toElement(), e);
+}
+
 void Project::deserialise(QDomDocument& _d)
 {
 	TIME_FUNCTION;
@@ -348,7 +368,7 @@ void Project::deserialise(QDomDocument& _d)
 //	M_ASSERT(orphans.isEmpty());
 
 	ChangeMan::get()->sleep();
-	TIME_STATEMENT(importDom) m_declarations.importDom(_d.documentElement());
+	TIME_STATEMENT(importDom) importDom(_d.documentElement().namedItem("entity").toElement(), &m_declarations);
 	TIME_STATEMENT(restorePtrs) m_declarations.restorePtrs();
 	ChangeMan::get()->wake();
 	
@@ -395,6 +415,22 @@ void Project::revert()
 		deserialise(doc);
 }
 
+void exportDom(QDomElement& _pe, Entity* _e)
+{
+	QDomElement n = _pe.ownerDocument().createElement("entity");
+	n.setAttribute("kind", _e->kind().name());
+	Hash<String, String> h;
+	_e->properties(h);
+	for (Hash<String, String>::Iterator i = h.begin(); i != h.end(); ++i)
+		n.setAttribute(i.key(), i.value());
+	String iId = _e->namedIndexId();
+	if (!iId.isEmpty())
+		n.setAttribute("index", iId);
+	_pe.appendChild(n);
+	foreach (Entity* e, _e->children())
+		exportDom(n, e);
+}
+
 void Project::serialise(QDomDocument& _d) const
 {
 	TIME_FUNCTION;
@@ -405,11 +441,8 @@ void Project::serialise(QDomDocument& _d) const
 	// Save include projects.
 	foreach (IncludeProject* i, cDepends())
 		i->exportDom(root);
-
-	QDomElement n = _d.createElement("entity");
-	n.setAttribute("kind", m_namespace->kind().name());
-	TIME_STATEMENT(exportDom) m_namespace->exportDom(n);
-	root.appendChild(n);
+	
+	TIME_STATEMENT(exportDom) exportDom(root, m_namespace);
 
 	// Save program.
 	if (m_program)

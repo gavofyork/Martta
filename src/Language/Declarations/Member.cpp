@@ -18,9 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-//#include "Class.h"
-#include "DecorationContext.h"
-#include "CommonGraphics.h"
 #include "Class.h"
 #include "AccessLabel.h"
 #include "Member.h"

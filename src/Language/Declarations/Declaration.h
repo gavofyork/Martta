@@ -53,14 +53,14 @@ public:
 	List<Declaration*>					utilisedSiblings() const;
 	virtual List<Declaration*>			utilised() const;
 
-	List<ValueDefiner*>				valuesKnown() const;
-	virtual List<ValueDefiner*>		valuesAdded() const { return List<ValueDefiner*>(); }
+	List<ValueDefiner*>					valuesKnown() const;
+	virtual List<ValueDefiner*>			valuesAdded() const { return List<ValueDefiner*>(); }
 	
 	virtual String						interfaceCode() const { return String(); }
 	virtual String						implementationCode() const { return String(); }
 
-	virtual void						exportDom(QDomElement& _element) const;
-	virtual void						importDom(QDomElement const& _element);
+	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); Identifiable::properties(_p); }
+	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); Identifiable::setProperties(_p); }
 	
 protected:
 	virtual int							minRequired(int _i) const { return _i == Identity ? 1 : 0; }

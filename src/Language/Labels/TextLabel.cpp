@@ -18,13 +18,10 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include <QtXml>
-
 #include <msString.h>
 using MarttaSupport::String;
 using MarttaSupport::Char;
 
-#include "CommonGraphics.h"
 #include "Variable.h"
 #include "Argument.h"
 #include "Namespace.h"
@@ -32,7 +29,6 @@ using MarttaSupport::Char;
 #include "MemberVariable.h"
 #include "LambdaNamer.h"
 #include "EditDelegate.h"
-#include "DecorationContext.h"
 #include "TextLabel.h"
 
 namespace Martta
@@ -67,18 +63,6 @@ String TextLabel::code() const
 			prefix = "";
 		return prefix + name();
 	}
-}
-	
-void TextLabel::importDom(QDomElement const& _element)
-{
-	Super::importDom(_element);
-	m_text = _element.toElement().attribute("text");
-}
-
-void TextLabel::exportDom(QDomElement& _element) const
-{
-	Super::exportDom(_element);
-	_element.setAttribute("text", m_text.isEmpty() ? code() : m_text);
 }
 
 void TextLabel::apresLoad()
