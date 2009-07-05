@@ -20,10 +20,8 @@
 
 #include <QtXml>
 
-#include "CullManager.h"		// Abstract away Qt stuff (just a callback?)
-#include "CommonGraphics.h"		// Move dependent logic into CodeScene.
-#include "DecorationContext.h"	// Remove
-#include "CodeScene.h"			// Abstract into Model & Scene
+#include "CullManager.h"
+#include "CodeScene.h"			// Abstract into Scene & View
 
 #include "EditDelegate.h"
 #include "Entity.h"
@@ -536,7 +534,7 @@ void Entity::keyPressEvent(KeyEvent* _e)
 bool Entity::keyPressed(KeyEvent const* _e)
 {
 	Position p = over();
-	if (_e->codeScene()->isCurrent(this) && (_e->text() == L"\x7f" && _e->modifiers() == Qt::ShiftModifier || _e->text() == L"\b" && isEditing(_e->codeScene())))
+	if (_e->codeScene()->isCurrent(this) && (_e->text() == L"\x7f" && _e->modifiers() == KeyEvent::ShiftModifier || _e->text() == L"\b" && isEditing(_e->codeScene())))
 	{
 //		p.parent()->debugTree();
 //		mDebug() << p.index();

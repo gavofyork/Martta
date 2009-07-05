@@ -5,6 +5,7 @@ src/Martta.xcodeproj/
 src/moc_*
 src/qrc_*
 src/ui_*
+src/*.moc
 support/build/
 support/libsupport.a
 support/support.xcodeproj/

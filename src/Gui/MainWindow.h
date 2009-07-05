@@ -24,12 +24,29 @@
 #include <QMainWindow>
 
 #include "ui_MainWindow.h"
+#include "CullManager.h"
 #include "ModelPtr.h"
 
 class QProcess;
 
 namespace Martta
 {
+
+class CullActor: public QObject, public DelayedActor
+{
+	Q_OBJECT
+
+public:
+	CullActor(QObject* _parent): QObject(_parent), m_primed(false) {}
+	
+	virtual void prime();
+	
+private slots:
+	void doCulling();
+	
+private:
+	bool m_primed;
+};
 
 class CodeScene;
 class Project;

@@ -349,7 +349,7 @@ bool ReferencedEdit::keyPressed(KeyEvent const* _e)
 		m_entityName += m_completion;
 	else if (_e->text() == L"\b" && m_entityName.length())
 	{
-		if (_e->modifiers() == Qt::ControlModifier)
+		if (_e->modifiers() == KeyEvent::ControlModifier)
 			m_entityName.chop(1);
 		else
 		{

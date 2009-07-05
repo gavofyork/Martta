@@ -67,10 +67,10 @@ bool EnumerationNamer::keyPressed(KeyEvent const* _e)
 	if (_e->text() == L"\n" && _e->codeScene()->viewKeys(self())["expanded"].toBool())
 	{
 		Position p = (_e->isFocused() || _e->focalIndex() == 0) ?
-		(/*_e->inserting() || */_e->modifiers() & Qt::ShiftModifier) ?
+		(/*_e->inserting() || */_e->modifiers() & KeyEvent::ShiftModifier) ?
 		self()->front() :
 		self()->back() :
-		self()->middle(_e->focalIndex() + ((/*_e->inserting() || */_e->modifiers() & Qt::ShiftModifier) ? 0 : 1));
+		self()->middle(_e->focalIndex() + ((/*_e->inserting() || */_e->modifiers() & KeyEvent::ShiftModifier) ? 0 : 1));
 		EnumValue* s = new EnumValue;
 		s->prepareChildren();
 		p.place(s);

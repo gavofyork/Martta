@@ -60,10 +60,10 @@ bool Compound::keyPressed(KeyEvent const* _e)
 	if (_e->text() == "\n")
 	{
 		Position p = (_e->isFocused()) ?
-		(/*_e->inserting() || */_e->modifiers() & Qt::ShiftModifier) ?
+		(/*_e->inserting() || */_e->modifiers() & KeyEvent::ShiftModifier) ?
 		front() :
 		back() :
-		middle(_e->focalIndex() + ((/*_e->inserting() || */_e->modifiers() & Qt::ShiftModifier) ? 0 : 1));
+		middle(_e->focalIndex() + ((/*_e->inserting() || */_e->modifiers() & KeyEvent::ShiftModifier) ? 0 : 1));
 		Statement* s = new Statement;
 		p.place(s);
 		s->setCurrent();

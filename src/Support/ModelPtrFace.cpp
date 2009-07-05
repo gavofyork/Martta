@@ -18,8 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include <QtCore>
-
 #include "Common.h"
 #include "Declaration.h"
 #include "ModelPtrRegistrar.h"

@@ -24,6 +24,7 @@
 // CHANGE PRECOMPILED HEADER SO IT INCLUDES QString BEFORE msString.
 // NO NEED TO DO THAT OUTSIDE THE MARTTA GUI THOUGH (i.e. IN THE LANGUAGE GENERALLY).
 
+#include "CullManager.h"
 #include "ChangeMan.h"
 #include "Project.h"
 #include "Artificial.h"
@@ -40,6 +41,21 @@ using namespace MarttaSupport;
 namespace Martta
 {
 
+void CullActor::doCulling()
+{
+	CullManager::get()->doCulling();
+	m_primed = false;
+}
+
+void CullActor::prime()
+{
+	if (!m_primed)
+	{
+		QTimer::singleShot(0, this, SLOT(doCulling()));
+		m_primed = true;
+	}
+}
+
 MainWindow::MainWindow(QWidget* _p, Qt::WindowFlags _f):
 	QMainWindow			(_p, _f),
 	m_program			(0),
@@ -47,6 +63,8 @@ MainWindow::MainWindow(QWidget* _p, Qt::WindowFlags _f):
 {
 	setupUi(this);
 	m_codeScene = codeView;
+
+	CullManager::get()->setDelayedActor(new CullActor(this));
 
 	QSettings s;
 	restoreState(s.value("mainwindow/state").toByteArray());
@@ -84,6 +102,8 @@ MainWindow::MainWindow(QWidget* _p, Qt::WindowFlags _f):
 
 MainWindow::~MainWindow()
 {
+	CullManager::get()->setDelayedActor(0);
+
 	confirmLose();
 	QSettings s;
 	s.setValue("mainwindow/state", saveState());

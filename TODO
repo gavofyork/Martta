@@ -1,4 +1,3 @@
-BUG QObject: Do not delete object, 'unnamed', during its event handler!
 BUG Moving is crazily slow over statements.
 - To fix change key press dispatch method:
   - All allowedKinds on Position and execute the Auxilliary's dispatchKeyPress.
@@ -20,8 +19,8 @@ Dynamic code-loading (plugins).
   - Get rid of XML dependencies.
     - Creation code to be compiled?
   - Optimise String (and List/Hash perhaps) with copy on write.
-  - Make EntityKeyEvent not depend on QKeyEvent. 
   - Move all decoration code into layout system and invent markup for it.
+  - Timing code (Common.h) independent of Qt.
   - Abstract CodeScene into CodeScene & CodeView.
 
 --------------------------------------------------------------------------------
