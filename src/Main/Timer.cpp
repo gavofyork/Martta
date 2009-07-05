@@ -18,39 +18,13 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "Common.h"
-
-void assertFailed(char const* _c)
-{
-	if (Martta::s_testing)
-	{
-		Martta::s_asserted = _c;
-		int a = 69;
-		(void)a;
-	}
-	else
-	{
-		qCritical("Assertion failed: %s", _c);
-		int a = 69;
-		(void)a;
-	}
-}
+#include "Timer.h"
 
 namespace Martta
 {
 
-bool s_testing = false;
-char const* s_asserted = 0;
-
-const Precedence NoPrecedence = log(0.0);
-
-String code(Qualifiers _q, WhitespacePosition _p)
-{
-	String ret;
-	for (uint i = 1; (uint)QualifierMask > i; i <<= 1)
-		if (_q & i)
-			ret += ((!ret.isEmpty() && _p == NoWhitespace || _p == AtStart) ? " " : "") + String(code((Qualifier)i)) + ((_p == AtEnd) ? " " : "");
-	return ret;
-}
+int s_timeTotals[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+int s_timeCount[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+QTime s_timeTimers[16];
 
 }

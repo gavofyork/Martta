@@ -21,6 +21,7 @@
 #include <QtSvg>
 #include <QtGui>
 
+#include "Timer.h"
 #include "CommonGraphics.h"
 //#include "DecorationContext.h"
 #include "EditDelegate.h"

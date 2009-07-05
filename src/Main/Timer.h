@@ -20,27 +20,33 @@
 
 #pragma once
 
-#include <QList>
-#include <QRectF>
+#include <QTime>
 
-class QPainter;
+#include <msDebug.h>
+#include <msString.h>
+using MarttaSupport::String;
 
 namespace Martta
 {
 
-class DecorationContext
+class Timer
 {
 public:
-	inline DecorationContext(QPainter* _p, QRectF const& _s, QList<QRectF> const& _c): m_p(_p), m_size(_s), m_captured(_c) {}
-	
-	inline QPainter*		operator->() const { return m_p; }
-	inline QRectF			operator()(int _i = 0) const { return cap(_i); }
-	inline QRectF			cap(int _i) const { return (_i && _i <= m_captured.size()) ? m_captured[_i - 1] : m_size; }
-	
-private:
-	QPainter*				m_p;
-	QRectF					m_size;
-	QList<QRectF>			m_captured;
+	Timer(String const& _name): m_name(_name), m_time(QTime::currentTime()) {}
+	~Timer() { mInfo() << m_name << ":" << m_time.elapsed() << "ms"; }
+	String m_name;
+	QTime m_time;
 };
+
+#define TIME_START(i) s_timeTimers[i].start()
+#define TIME_STOP(i) if (true) { s_timeTotals[i] += s_timeTimers[i].elapsed(); s_timeCount[i]++; } else void(0)
+#define TIME_TOTAL(i) s_timeTotals[i]
+#define TIME_COUNT(i) s_timeCount[i]
+#define TIME_FUNCTION Timer __x(__FUNCTION__)
+#define TIME_STATEMENT(N) for (int __i = 0; !__i;) for (Timer __x(#N); !__i; ++__i)
+
+extern int s_timeTotals[16];
+extern int s_timeCount[16];
+extern QTime s_timeTimers[16];
 
 }

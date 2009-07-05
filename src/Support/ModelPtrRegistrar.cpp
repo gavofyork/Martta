@@ -42,9 +42,8 @@ void ModelPtrRegistrar::restorePtrs(Declaration const* _root)
 {
 	mInfo() << "Restoring up to" << m_modelPtrs.size() << "pointers";
 	
-	TIME_STATEMENT(recurseOn)
-		foreach (Declaration* d, _root->childrenOf<Declaration>())
-			regDecs(d);
+	foreach (Declaration* d, _root->childrenOf<Declaration>())
+		regDecs(d);
 	
 	// NOTE: Some model pointers naturally depend on others further down the model pointer list to be understood and restored.
 	// For this reason we loop doing multiple passes until no more model pointers can be restored. This results in a worst-case
@@ -56,7 +55,7 @@ void ModelPtrRegistrar::restorePtrs(Declaration const* _root)
 	int restored = 0;
 	for (List<ModelPtrFace*>::Iterator i = m_modelPtrs.begin(); i != m_modelPtrs.end();)
 	{
-		TIME_STATEMENT(tryRestore) (*i)->tryRestore(_root);
+		(*i)->tryRestore(_root);
 		if ((*i)->isArchived())
 			++i;
 		else

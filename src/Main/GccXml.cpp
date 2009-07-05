@@ -21,6 +21,7 @@
 #include "TypeEntity.h"
 #include "DeclarationsHandler.h"
 #include "FilesExtractorHandler.h"
+#include "Timer.h"
 #include "GccXml.h"
 
 namespace Martta

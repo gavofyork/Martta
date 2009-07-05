@@ -42,6 +42,7 @@
 #include "Memberify.h"
 #include "Reference.h"
 #include "TextLabel.h"
+#include "Timer.h"
 #include "DeclarationsHandler.h"
 
 namespace Martta

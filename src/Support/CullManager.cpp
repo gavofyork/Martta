@@ -27,7 +27,6 @@ CullManager* CullManager::s_this = 0;
 
 void CullManager::doCulling()
 {
-	TIME_FUNCTION;
 	int checked = 0;
 	while (m_cullList.size())
 		if (Entity* e = m_cullList.takeLast())

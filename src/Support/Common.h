@@ -22,8 +22,6 @@
 
 #include <cmath>
 
-#include <QTime>
-
 #include <msDebug.h>
 #include <msString.h>
 #include <msHash.h>
@@ -49,26 +47,6 @@ template<class T> class SafePointer;
 #if _MSC_VER
 template<class T> inline T round(T const& x) { return ((x)>=0?(long)((x)+0.5):(long)((x)-0.5)); }
 #endif
-
-class Timer
-{
-public:
-	Timer(String const& _name): m_name(_name), m_time(QTime::currentTime()) {}
-	~Timer() { mInfo() << m_name << ":" << m_time.elapsed() << "ms"; }
-	String m_name;
-	QTime m_time;
-};
-
-#define TIME_START(i) s_timeTimers[i].start()
-#define TIME_STOP(i) if (true) { s_timeTotals[i] += s_timeTimers[i].elapsed(); s_timeCount[i]++; } else void(0)
-#define TIME_TOTAL(i) s_timeTotals[i]
-#define TIME_COUNT(i) s_timeCount[i]
-#define TIME_FUNCTION Timer __x(__FUNCTION__)
-#define TIME_STATEMENT(N) for (int __i = 0; !__i;) for (Timer __x(#N); !__i; ++__i)
-
-extern int s_timeTotals[16];
-extern int s_timeCount[16];
-extern QTime s_timeTimers[16];
 
 enum Access
 {

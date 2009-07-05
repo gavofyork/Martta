@@ -19,7 +19,7 @@ Small things:
 - BRINGBACK Ser/Deser tests.
 Dynamic code-loading (plugins).
 - Move everything over so that plugins use Martta-specific data types.
-  
+  - Move Assert over.
   - Move all decoration code into layout system and invent markup for it.
   - Timing code (Common.h) independent of Qt.
 

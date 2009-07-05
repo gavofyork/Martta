@@ -33,6 +33,7 @@
 #include "BareTyped.h"
 #include "IncludeProject.h"
 #include "CodeScene.h"
+#include "Timer.h"
 #include "MainWindow.h"
 
 #include <msSupport.h>
@@ -43,6 +44,7 @@ namespace Martta
 
 void CullActor::doCulling()
 {
+	TIME_FUNCTION;
 	CullManager::get()->doCulling();
 	m_primed = false;
 }

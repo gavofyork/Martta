@@ -39,8 +39,9 @@
 #include "IncludeProject.h"
 #include "Method.h"
 #include "TextLabel.h"
-#include "Project.h"
+#include "Timer.h"
 #include "DeclarationFile.h"
+#include "Project.h"
 
 namespace Martta
 {
