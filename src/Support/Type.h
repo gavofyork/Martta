@@ -46,7 +46,6 @@ class Type
 	template<class T> friend struct TypeConstructor;
 	
 public:
-	inline Type(TypeEntity const& _tree) { m_top = ((&_tree) ? _tree : *TypeEntity::null).clone(this); }
 	inline Type() { m_top = TypeEntity::null->clone(this); }
 	inline Type(Type const& _t): m_top(_t.m_top->clone(this)) {}
 	template<class T> inline Type(T const& _t) { TypeConstructor<T const&>::construct(this, _t); };
@@ -115,7 +114,6 @@ public:
 
 private:
 	void simpleConstruct(TypeEntity const& _tree) { m_top = ((&_tree) ? _tree : *TypeEntity::null).clone(this); }
-	void simpleConstruct(Type const& _t) { m_top = _t.m_top->clone(this); }
 
 	TypeEntity* m_top;
 };
@@ -135,6 +133,5 @@ inline void TypeConstructor<T>::construct(Type* _this, T _tree)
 {
 	_this->simpleConstruct(_tree);
 }
-
 
 }

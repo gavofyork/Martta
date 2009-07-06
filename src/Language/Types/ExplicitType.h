@@ -81,14 +81,8 @@ template<>
 template<class S>
 struct TypeConstructor<S*>
 {
+	static inline TypeDefinition* typeComb(S* _x) { return _x; }
 	static inline void construct(Type* _this, S* _subject) { _this->m_top = new ExplicitType(_subject); _this->m_top->setOwner(_this); }
-};
-
-template<>
-template<class S>
-struct TypeConstructor<S const*>
-{
-	static inline void construct(Type* _this, S const* _subject) { _this->m_top = new ExplicitType(_subject); _this->m_top->setOwner(_this); }
 };
 
 }
