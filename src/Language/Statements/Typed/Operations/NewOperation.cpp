@@ -21,7 +21,7 @@
 #include "AddressType.h"
 #include "ExplicitType.h"
 #include "FunctionType.h"
-#include "SimpleType.h"
+#include "BuiltinType.h"
 #include "Pointer.h"
 #include "Array.h"
 #include "NewOperation.h"
@@ -47,7 +47,7 @@ String NewOperation::code() const
 Kinds NewOperation::allowedKinds(int _index) const
 {
 	if (_index == TheOperand)
-		return Kind::of<Pointer>(), Kind::of<Array>(), Kind::of<ExplicitType>(), Kind::of<SimpleType>(), Kind::of<FunctionType>();
+		return Kind::of<Pointer>(), Kind::of<Array>(), Kind::of<ExplicitType>(), Kind::of<BuiltinType>(), Kind::of<FunctionType>();
 	return Super::allowedKinds(_index);
 }
 

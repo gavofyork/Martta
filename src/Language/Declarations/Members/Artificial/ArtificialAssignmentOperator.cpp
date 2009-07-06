@@ -21,6 +21,7 @@
 #include "Const.h"
 #include "Reference.h"
 #include "Class.h"
+#include "ExplicitType.h"
 #include "ArtificialAssignmentOperator.h"
 
 namespace Martta

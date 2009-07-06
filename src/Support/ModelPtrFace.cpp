@@ -18,7 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "Common.h"
 #include "Declaration.h"
 #include "ModelPtrRegistrar.h"
 #include "ModelPtr.h"

@@ -19,7 +19,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "Type.h"
-#include "Typed.h"
+#include "TypeNamer.h"
 #include "TypedOwner.h"
 
 namespace Martta
@@ -39,9 +39,9 @@ Types TypedOwner::deniedTypes(int) const
 
 Type TypedOwner::effectiveType(int _i) const
 {
-	if (!self()->childIs<Typed>(_i))
+	if (!self()->childIs<TypeNamer>(_i))
 		return Type();
-	Type p(self()->childAs<Typed>(_i)->type());
+	Type p(self()->childAs<TypeNamer>(_i)->type());
 	foreach (Type t, allowedTypes(_i))
 		if (p.isSimilarTo(t, TypeEntity::Convertible))
 //		{
@@ -54,32 +54,32 @@ Type TypedOwner::effectiveType(int _i) const
 
 Type TypedOwner::nominalType(int _i) const
 {
-	if (!self()->childIs<Typed>(_i))
+	if (!self()->childIs<TypeNamer>(_i))
 		return Type();
-	return self()->childAs<Typed>(_i)->type();
+	return self()->childAs<TypeNamer>(_i)->type();
 }
 
 bool TypedOwner::isChildInValidState(int _i) const
 {
 //	child(_i)->debugTree();
 	// Nothing to say about it as it's not typed. If it's supposed to be typed, then the allowed kinds system should pick up the error.
-	if (!self()->childIs<Typed>(_i))
+	if (!self()->childIs<TypeNamer>(_i))
 		return true;
 	foreach (Type i, deniedTypes(_i))
-		if (self()->childAs<Typed>(_i)->type() == i)
+		if (self()->childAs<TypeNamer>(_i)->type() == i)
 			return false;
 	foreach (Type i, allowedTypes(_i))
-		if (!self()->childIs<Typed>(_i))
+		if (!self()->childIs<TypeNamer>(_i))
 		{
 			self()->debugTree();
 			AssertNR(false);
 		}
 		else
-			if (self()->childAs<Typed>(_i)->type().isSimilarTo(i, TypeEntity::Convertible))
+			if (self()->childAs<TypeNamer>(_i)->type().isSimilarTo(i, TypeEntity::Convertible))
 				return true;
 			else
 			{
-				mDebug() << self()->childAs<Typed>(_i)->type()->code() << " != " << i->code();
+				mDebug() << self()->childAs<TypeNamer>(_i)->type()->code() << " != " << i->code();
 			}
 	return false;
 }

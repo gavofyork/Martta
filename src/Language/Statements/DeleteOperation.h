@@ -20,12 +20,10 @@
 
 #pragma once
 
+#include "BuiltinType.h"
 #include "Const.h"
 #include "Pointer.h"
-#include "Common.h"
 #include "UnaryOperation.h"
-
-class QSvgRenderer;
 
 namespace Martta
 {

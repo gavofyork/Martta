@@ -206,18 +206,18 @@ bool StringType::defineSimilarityTo(TypeEntity const* _t, Castability _c) const
 {
 	return _t->isKind<StringType>() ||
 		isAnyConvertible(_c) && _t->isKind<Pointer>() &&
-		_t->asKind<Pointer>()->original()->isType<SimpleType>() &&
-			(_t->asKind<Pointer>()->original()->asType<SimpleType>()->id() == Char ||
-			_t->asKind<Pointer>()->original()->asType<SimpleType>()->id() == Wchar) ||
+		_t->asKind<Pointer>()->original()->isType<BuiltinType>() &&
+			(_t->asKind<Pointer>()->original()->asType<BuiltinType>()->id() == Char ||
+			_t->asKind<Pointer>()->original()->asType<BuiltinType>()->id() == Wchar) ||
 		Super::defineSimilarityTo(_t, _c);
 }
 
 bool StringType::defineSimilarityFrom(TypeEntity const* _f, Castability _c) const
 {
 	return isAnyConvertible(_c) && _f->isKind<Pointer>() &&
-		_f->asKind<Pointer>()->original()->isType<SimpleType>() &&
-			(_f->asKind<Pointer>()->original()->asType<SimpleType>()->id() == Char ||
-			_f->asKind<Pointer>()->original()->asType<SimpleType>()->id() == Wchar) ||
+		_f->asKind<Pointer>()->original()->isType<BuiltinType>() &&
+			(_f->asKind<Pointer>()->original()->asType<BuiltinType>()->id() == Char ||
+			_f->asKind<Pointer>()->original()->asType<BuiltinType>()->id() == Wchar) ||
 		Super::defineSimilarityFrom(_f, _c);
 }
 

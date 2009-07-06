@@ -28,8 +28,6 @@
 #include <QPicture>
 #include <QFontMetrics>
 
-#include "Common.h"
-
 namespace Martta
 {
 	

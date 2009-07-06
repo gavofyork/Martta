@@ -36,7 +36,7 @@
 #include "Array.h"
 #include "Const.h"
 #include "Pointer.h"
-#include "SimpleType.h"
+#include "BuiltinType.h"
 #include "ExplicitType.h"
 #include "FunctionType.h"
 #include "Memberify.h"
@@ -377,7 +377,7 @@ TypeEntity* DeclarationsHandler::resolveType(QString const& _typeId)
 	}
 	else if (m_simples.contains(_typeId))
 	{
-		return new SimpleType(m_simples[_typeId]);
+		return new BuiltinType(m_simples[_typeId]);
 	}
 	else if (m_functionTypes.contains(_typeId))
 	{

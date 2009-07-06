@@ -18,13 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "CodeScene.h"
-#include "SimpleType.h"
-#include "ExplicitType.h"
-#include "Pointer.h"
-#include "Reference.h"
-#include "Array.h"
-#include "Const.h"
 #include "Type.h"
 #include "TypeEntity.h"
 
@@ -78,17 +71,18 @@ TypeEntity* TypeEntity::newClone(Type* _o) const
 	return ret;
 }
 
-void TypeEntity::knitIn(ModifyingType* _t)
+// Consider moving to ModifyingType & inverting?
+void TypeEntity::knitIn(TypeEntity* _t)
 {
-	if (owner())
+	if (m_owner)
 	{
-		_t->setOwner(owner());
-		if (&**owner() == this)
-			owner()->m_top = _t;
+		_t->setOwner(m_owner);
+		if (&**m_owner == this)
+			m_owner->m_top = _t;
 	}
-	if (_t->child(ModifyingType::Original) && _t->child(ModifyingType::Original)->isPlaceholder())
-		_t->child(ModifyingType::Original)->killAndDelete();
-	insert(_t, ModifyingType::Original);
+	if (_t->child(Default) && _t->child(Default)->isPlaceholder())
+		_t->child(Default)->killAndDelete();
+	insert(_t, Default);
 }
 
 bool TypeEntity::defineEquivalenceTo(TypeEntity const* _t) const

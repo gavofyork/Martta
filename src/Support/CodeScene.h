@@ -28,8 +28,6 @@ using MarttaSupport::String;
 using MarttaSupport::Hash;
 using MarttaSupport::List;
 
-#include "Common.h"
-
 namespace Martta
 {
 

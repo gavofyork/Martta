@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "Type.h"
 #include "TypeEntity.h"
 
 namespace Martta
@@ -37,16 +38,14 @@ class SimpleOperator;
  * The Ptr value exists only for referencing into m_fundamentalOperators the fundamental pointer operations.
  * In these cases the operators in question use a null QualifiedType value to signify a placeholder for any type.
  */
-enum
-{
+static const uint
 	Void = 0x0000, Ptr = Void,
 	Signed = 0x0000, Unsigned = 0x0001, Simple = 0x0000, Complex = 0x0001,
 	Natural = 0x0000, Short = 0x0002, Long = 0x0004, Longlong = 0x0006,
 	Bool = 0x0008, Int = 0x0010, Char = 0x0020, Float = 0x0040, Double = 0x0080,
-	Wchar = Char|Long
-};
+	Wchar = Char|Long;
 
-class SimpleType: public TypeEntity
+class BuiltinType: public TypeEntity
 {
 	MARTTA_OBJECT(TypeEntity)
 
@@ -56,17 +55,17 @@ public:
 	static void initialiseClass();
 	static void finaliseClass();
 
-	SimpleType(int _d = -1): m_id(_d) {}
+	BuiltinType(uint _d = (uint)-1): m_id(_d) {}
 
-	int id() const { return m_id; }
-	void setId(int _d) { m_id = _d; changed(); }
+	uint id() const { return m_id; }
+	void setId(uint _d) { m_id = _d; changed(); }
 	void committed();
 
 	virtual String code(String const& _middle) const;
 
-	static inline String name(int _d)
+	static inline String name(uint _d)
 	{
-		return (_d == -1) ? String() : (_d == Wchar) ? String("wchar_t") : (String((_d & Unsigned) ? (_d & Float || _d & Double) ? "c" : "u" : "") +
+		return (_d == (uint)-1) ? String() : (_d == Wchar) ? String("wchar_t") : (String((_d & Unsigned) ? (_d & Float || _d & Double) ? "c" : "u" : "") +
 				(((_d & Longlong) == Longlong) ? "ll" : (_d & Short) ? "s" : (_d & Long) ? "l" : "") +
 				((_d & Float) ? "float" : (_d & Bool) ? "bool" : (_d & Double) ? "double" : (_d & Char) ? "char" : (_d & Int) ? "int" : "void"));
 	}
@@ -76,26 +75,26 @@ public:
 		for (int i = 0; i < s_simpleIdsCount; i++)
 			if (name(s_simpleIds[i]) == _n)
 				return s_simpleIds[i];
-		return -1;
+		return (uint)-1;
 	}
 
 	List<int>							possibilities();
 	virtual String						defineEditLayout(ViewKeys const&, int) const;
 	int									get() const { return m_id; }
-	void								set(int _m) { setId(_m); }
-	virtual bool						isNull() const { return m_id == -1; }
+	void								set(uint _m) { setId(_m); }
+	virtual bool						isNull() const { return m_id == (uint)-1; }
 	
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 
 protected:
 	virtual bool						hasDefaultConstructor() const { return true; }
 	virtual Types						assignableTypes() const;
-	virtual bool						contentsEquivalentTo(TypeEntity const* _t) const { return _t->asKind<SimpleType>()->m_id == m_id; }
+	virtual bool						contentsEquivalentTo(TypeEntity const* _t) const { return _t->asKind<BuiltinType>()->m_id == m_id; }
 	virtual Rgb							idColour() const { return 0xffbb77; }
-	virtual TypeEntity*					newClone() const { return new SimpleType(m_id); }
+	virtual TypeEntity*					newClone() const { return new BuiltinType(m_id); }
 	virtual String						defineLayout(ViewKeys const&) const;
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
-	virtual bool						isSuperfluous() const { return Super::isSuperfluous() && m_id == -1; }
+	virtual bool						isSuperfluous() const { return Super::isSuperfluous() && m_id == (uint)-1; }
 	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual bool						defineSimilarityFrom(TypeEntity const* _f, Castability _c) const;
 	virtual bool						defineSimilarityTo(TypeEntity const* _t, Castability _c) const;
@@ -103,8 +102,14 @@ protected:
 	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_id = _p[L"id"].toInt(); }
 
 private:
-	int m_id;
+	uint m_id;
 	static List<SimpleOperator*> s_nonMembers;
+};
+
+template<>
+struct TypeConstructor<uint const&>
+{
+	static inline void construct(Type* _this, uint const& _builtin) { _this->m_top = new BuiltinType(_builtin); _this->m_top->setOwner(_this); }
 };
 
 }

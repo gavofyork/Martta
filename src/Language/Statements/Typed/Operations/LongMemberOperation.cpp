@@ -18,7 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "Common.h"
 #include "AddressType.h"
 #include "Reference.h"
 #include "Const.h"

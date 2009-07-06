@@ -137,7 +137,7 @@ void Project::resetAsNew()
 	c->back().place(m_program = new Method);
 	m_program->prepareChildren();
 	m_program->childAs<TextLabel>(Identifiable::Identity)->setText("main");
-	m_program->childOf<TypeEntity>()->over().place(new SimpleType(Void));
+	m_program->childOf<TypeEntity>()->over().place(new BuiltinType(Void));
 	
 	emit subjectInvalid();
 	emit nameChanged();

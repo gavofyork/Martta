@@ -18,6 +18,9 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+// Just to prevent the annoying visibility warnings that Qt throws if included after MS.
+#include <QString>
+
 #include "TypeEntity.h"
 
 #include "Root.h"

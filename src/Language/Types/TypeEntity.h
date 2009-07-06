@@ -20,6 +20,9 @@
 
 #pragma once
 
+#include <msRgb.h>
+using namespace MarttaSupport;
+
 #include "TypedOwner.h"
 #include "Entity.h"
 
@@ -29,6 +32,9 @@ namespace Martta
 class Declaration;
 class ModifyingType;
 class ValueDefiner;
+class Type;
+class TypeEntity;
+template<class T> class TypeConstructor;
 
 class TypeEntity: public Entity, public_interface TypedOwner
 {
@@ -36,6 +42,7 @@ class TypeEntity: public Entity, public_interface TypedOwner
 	MARTTA_INHERITS(TypedOwner, 0)
 
 	friend class Type;
+	template<class T> friend class TypeConstructor;
 	friend class ModifyingType;
 
 public:
@@ -101,7 +108,7 @@ public:
 	/// 
 	template<class T> inline T*			knit() { T* ret = new T; knitIn(ret); return ret; }
 	/// _t goes in our place, and we are a child of _t
-	void								knitIn(ModifyingType* _t);
+	void								knitIn(TypeEntity* _t);
 	
 	TypeEntity*							setOwned() { m_owner = (Type*)1; return this; }
 	static TypeEntity*					null;
@@ -158,7 +165,7 @@ private:
 	/// Unowned nodes are copied.
 	inline TypeEntity*					clone(Type* _owner) const { return newClone(_owner); }
 
-	Type*								m_owner;
+	Type*							m_owner;
 };
 
 }

@@ -18,11 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "AddressType.h"
-#include "ExplicitType.h"
-#include "SimpleType.h"
-#include "FunctionType.h"
-#include "Memberify.h"
 #include "ModifyingType.h"
 
 namespace Martta
@@ -33,11 +28,14 @@ MARTTA_OBJECT_CPP(ModifyingType);
 void ModifyingType::unknit()
 {
 	AssertNR(original());
-	if (owner() && &**owner() == this)
+	if (owner())
 	{
 		AssertNR(original()->owner() == owner());
-		AssertNR(!parent());
-		owner()->m_top = original();
+		if (&**owner() == this)
+		{
+			AssertNR(!parent());
+			owner()->m_top = original();
+		}
 	}
 	//	P -i-> this -0-> original    BECOMES    P -i-> original
 	replace(original());

@@ -18,8 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include <QtXml>
-
 #include "ModelPtrRegistrar.h"
 #include "IdLabel.h"
 #include "TextLabel.h"

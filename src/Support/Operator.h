@@ -20,16 +20,16 @@
 
 #pragma once
 
+#include <limits>
+
 #include <msSupport.h>
 using namespace MarttaSupport;
-
-#include "Common.h"
 
 namespace Martta
 {
 
 typedef double Precedence;
-static const Precedence NoPrecedence = log(0.0);
+static const Precedence NoPrecedence = std::numeric_limits<double>::quiet_NaN();
 
 enum Associativity
 {

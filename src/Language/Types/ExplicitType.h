@@ -22,6 +22,7 @@
 
 #include "TypeDefinition.h"
 #include "ModelPtr.h"
+#include "Type.h"
 #include "TypeEntity.h"
 
 namespace Martta
@@ -73,6 +74,21 @@ protected:
 	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_subject.restoreFrom(_p[L"subject"]); }
 	
 	ModelPtr<TypeDefinition>			m_subject;
+};
+
+// S is a TypeDefinition;
+template<>
+template<class S>
+struct TypeConstructor<S*>
+{
+	static inline void construct(Type* _this, S* _subject) { _this->m_top = new ExplicitType(_subject); _this->m_top->setOwner(_this); }
+};
+
+template<>
+template<class S>
+struct TypeConstructor<S const*>
+{
+	static inline void construct(Type* _this, S const* _subject) { _this->m_top = new ExplicitType(_subject); _this->m_top->setOwner(_this); }
 };
 
 }

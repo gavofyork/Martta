@@ -19,6 +19,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "Type.h"
+#include "BuiltinType.h"
 #include "ExplicitType.h"
 #include "Typed.h"
 #include "TextLabel.h"

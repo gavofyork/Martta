@@ -257,9 +257,9 @@ void ReferencedEdit::leavingEditIntact()
 		{
 			e->prepareChildren();
 			int x;
-			if ((x = SimpleType::id(m_entityName)) != -1)
+			if ((x = BuiltinType::id(m_entityName)) != -1)
 			{
-				e->childOf<TypeEntity>()->replace(new SimpleType(x));
+				e->childOf<TypeEntity>()->replace(new BuiltinType(x));
 				codeScene()->silentlySetCurrent(e->child(Identifiable::Identity));	// set to the place where the user expects the cursor to be (silently, sicne we might (possibly) already be in a setCurrent!).
 			}
 			else if (m_entityName == "string")

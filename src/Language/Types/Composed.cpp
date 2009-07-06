@@ -1,6 +1,7 @@
 // Composed source file for directory Language/Types
 #include "Language/Types/AddressType.cpp"
 #include "Language/Types/Array.cpp"
+#include "Language/Types/BuiltinType.cpp"
 #include "Language/Types/Const.cpp"
 #include "Language/Types/ExplicitType.cpp"
 #include "Language/Types/FunctionType.cpp"
@@ -11,7 +12,6 @@
 #include "Language/Types/ModifyingType.cpp"
 #include "Language/Types/Pointer.cpp"
 #include "Language/Types/Reference.cpp"
-#include "Language/Types/SimpleType.cpp"
 #include "Language/Types/StringType.cpp"
 #include "Language/Types/TypeEntity.cpp"
 #include "Language/Types/UndefinedArray.cpp"

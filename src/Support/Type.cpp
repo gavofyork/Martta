@@ -20,21 +20,13 @@
 
 #include "CodeScene.h"
 #include "TypeEntity.h"
-#include "Reference.h"
-#include "Pointer.h"
-#include "Const.h"
 #include "ExplicitType.h"
-#include "SimpleType.h"
+#include "BuiltinType.h"
+#include "ModifyingType.h"
 #include "Type.h"
 
 namespace Martta
 {
-
-Type::Type(TypeDefinition* _subject):
-	m_top(new ExplicitType(_subject))
-{
-	m_top->m_owner = this;
-}
 
 Type& Type::operator=(Type const& _t)
 {
@@ -96,15 +88,6 @@ bool Type::isUltimatelyNull() const
 	while (t->isKind<ModifyingType>())
 		t = t->asKind<ModifyingType>()->original();
 	return t->isPlaceholder();
-}
-
-int Type::id(int _def) const
-{
-	if (m_top->isType<SimpleType>())
-		return m_top->asType<SimpleType>()->id();
-	if (m_top->isType<Pointer>())
-		return Ptr;
-	return _def;
 }
 
 }

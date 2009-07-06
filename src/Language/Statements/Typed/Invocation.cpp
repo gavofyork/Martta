@@ -21,7 +21,7 @@
 #include "Reference.h"
 #include "FunctionType.h"
 #include "Pointer.h"
-#include "SimpleType.h"
+#include "BuiltinType.h"
 #include "Memberify.h"
 #include "Const.h"
 #include "Invocation.h"

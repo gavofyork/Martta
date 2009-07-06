@@ -23,26 +23,34 @@
 #include <msTextStream.h>
 using MarttaSupport::TextStream;
 
-#include "Common.h"
-#include "SimpleType.h"
 #include "TypeEntity.h"
 
 namespace Martta
 {
 
 class TypeDefinition;
+class ModifyingType;
+class TypeEntity;
+
+// We, for the general case, assume T is a TypeEntity const&
+template<class T>
+struct TypeConstructor
+{
+	static void construct(Type* _this, T _tree);
+};
 
 class Type
 {
 	friend class ModifyingType;
 	friend class TypeEntity;
+	template<class T> friend struct TypeConstructor;
 	
 public:
 	inline Type(TypeEntity const& _tree) { m_top = ((&_tree) ? _tree : *TypeEntity::null).clone(this); }
 	inline Type() { m_top = TypeEntity::null->clone(this); }
 	inline Type(Type const& _t): m_top(_t.m_top->clone(this)) {}
-	Type(int _simple) : m_top(new SimpleType(_simple)) { m_top->setOwner(this); }
-	Type(TypeDefinition* _subject);
+	template<class T> inline Type(T const& _t) { TypeConstructor<T const&>::construct(this, _t); };
+	template<class T> inline Type(T* _t) { TypeConstructor<T*>::construct(this, _t); };
 	inline ~Type() { m_top->killAndDelete(); }
 
 	bool isNull() const { return m_top->isPlaceholder(); }
@@ -54,7 +62,6 @@ public:
 	bool isSimilarTo(Type const& _to, TypeEntity::Castability _c) const;
 	inline bool valueSimilarity(Type const& _to) const { return m_top->isSimilarTo(_to.m_top, TypeEntity::Convertible); }
 	Type strippedTo(Type const& _t) const;
-	int id(int _def = -1) const;
 
 	Type& operator=(Type const& _t);
 
@@ -107,6 +114,9 @@ public:
 	inline Type tailedWith(TypeEntity const& _newChild, int _at = TypeEntity::Default) const { return Type(*this).tailWith(_newChild, _at); }
 
 private:
+	void simpleConstruct(TypeEntity const& _tree) { m_top = ((&_tree) ? _tree : *TypeEntity::null).clone(this); }
+	void simpleConstruct(Type const& _t) { m_top = _t.m_top->clone(this); }
+
 	TypeEntity* m_top;
 };
 
@@ -119,5 +129,12 @@ inline TextStream& operator<<(TextStream& _out, Martta::Type const& _item)
 {
 	return _out << _item->code();
 }
+
+template<class T>
+inline void TypeConstructor<T>::construct(Type* _this, T _tree)
+{
+	_this->simpleConstruct(_tree);
+}
+
 
 }

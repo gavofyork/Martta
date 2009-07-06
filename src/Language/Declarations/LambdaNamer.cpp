@@ -159,14 +159,14 @@ Type LambdaNamer::returns() const
 {
 	if (TypeEntity* t = self()->tryChild<TypeEntity>(Returned))
 		return *t;
-	return 0;
+	return Type();
 }
 
 Type LambdaNamer::argumentType(int _index) const
 {
 	if (Argument* v = argument(_index))
 		return *v->actualType();
-	return 0;
+	return Type();
 }
 
 String LambdaNamer::argumentName(int _index) const

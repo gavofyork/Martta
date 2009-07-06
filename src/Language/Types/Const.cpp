@@ -21,7 +21,7 @@
 #include "Memberify.h"
 #include "AddressType.h"
 #include "ExplicitType.h"
-#include "SimpleType.h"
+#include "BuiltinType.h"
 #include "FunctionType.h"
 #include "Reference.h"
 #include "Const.h"

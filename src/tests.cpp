@@ -41,8 +41,10 @@ char const* s_asserted;
 #if defined(DEBUG)
 namespace MarttaTest
 {
-void assertFailed(int, char const*, char const*, char const* _failed, char const*)
+void assertFailed(int _line, char const* _file, char const* _function, char const* _failed, char const* _reason)
 {
+	fprintf(stderr, "ASSERTION FAILED: line %d of %s in %s: %s\n", _line, _file, _function, _reason);
+	__asm{int 3};
 	s_asserted = _failed;
 }
 }

@@ -23,8 +23,6 @@
 #include "Operator.h"
 #include "IdLabel.h"
 
-class QDomElement;
-
 namespace Martta
 {
 

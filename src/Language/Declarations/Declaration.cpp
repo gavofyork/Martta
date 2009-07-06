@@ -19,7 +19,6 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "ModelPtrRegistrar.h"
-#include "Common.h"
 #include "TextLabel.h"
 #include "OperatorLabel.h"
 #include "ValueDefiner.h"

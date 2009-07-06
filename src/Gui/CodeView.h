@@ -20,6 +20,10 @@
 
 #pragma once
 
+#include <msStringList.h>
+#include <msString.h>
+using namespace MarttaSupport;
+
 #include <QSet>
 #include <QWidget>
 #include <QPicture>

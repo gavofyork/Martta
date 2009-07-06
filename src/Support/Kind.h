@@ -27,7 +27,6 @@ using namespace MarttaSupport;
 
 #include "AuxilliaryRegistrar.h"
 #include "AuxilliaryFace.h"
-#include "Common.h"
 
 namespace Martta
 {

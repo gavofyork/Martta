@@ -18,7 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "Common.h"
 #include "CodeScene.h"
 #include "LambdaNamer.h"	// For determining look of compound.
 #include "Compound.h"

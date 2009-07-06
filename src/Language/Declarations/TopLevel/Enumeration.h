@@ -46,7 +46,7 @@ protected:
 	virtual String						defineLayout(ViewKeys const& _k) const { return "^;" + EnumerationNamer::defineLayout(_k); }
 	virtual String						interfaceCode() const { return EnumerationNamer::interfaceCode(); }
 	virtual bool						hasDefaultConstructor() const { return EnumerationNamer::hasDefaultConstructor(); }
-	virtual List<ValueDefiner*>		valuesAdded() const { return EnumerationNamer::valuesAdded(); }
+	virtual List<ValueDefiner*>			valuesAdded() const { return EnumerationNamer::valuesAdded(); }
 	virtual Types						assignableTypes() const { return Type(const_cast<Enumeration*>(this)); }
 
 	virtual bool						keyPressed(KeyEvent const* _e) { AssertNR(isComplete()); return EnumerationNamer::keyPressed(_e) ? true : Super::keyPressed(_e); }

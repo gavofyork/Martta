@@ -18,6 +18,9 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include <msStringList.h>
+using namespace MarttaSupport;
+
 #include "Type.h"
 #include "SimpleOperator.h"
 #include "Const.h"
@@ -26,7 +29,7 @@
 #include "CodeScene.h"
 #include "CompletionDelegate.h"
 #include "StringType.h"
-#include "SimpleType.h"
+#include "BuiltinType.h"
 
 namespace Martta
 {
@@ -34,16 +37,16 @@ namespace Martta
 const int s_simpleIds[] = { Char, Int, Short|Int, Long|Int, Longlong|Int, Unsigned|Char, Unsigned|Int, Unsigned|Short|Int, Unsigned|Long|Int, Unsigned|Longlong|Int, Float, Double, Long|Double, Complex|Float, Complex|Double, Complex|Long|Double, Bool, Wchar, Void };
 const int s_simpleIdsCount = sizeof(s_simpleIds) / sizeof(s_simpleIds[0]);
 
-MARTTA_OBJECT_CPP(SimpleType);
+MARTTA_OBJECT_CPP(BuiltinType);
 
-List<SimpleOperator*> SimpleType::s_nonMembers;
+List<SimpleOperator*> BuiltinType::s_nonMembers;
 
-bool SimpleType::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
+bool BuiltinType::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
 	if (_p.exists() && _p->isPlaceholder() && _e->text().length() == 1 && _e->text()[0].isLower())
 	{
 		_e->reinterpretLater();
-		SimpleType* s = new SimpleType;
+		BuiltinType* s = new BuiltinType;
 		_p.place(s);
 		s->setEditing(_e->codeScene());
 	}
@@ -52,7 +55,7 @@ bool SimpleType::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 	return true;
 }
 
-bool SimpleType::keyPressed(KeyEvent const* _e)
+bool BuiltinType::keyPressed(KeyEvent const* _e)
 {
 	if (_e->text().length() == 1 && (_e->text()[0].isLower() || _e->text()[0] == L':'))
 	{
@@ -64,26 +67,26 @@ bool SimpleType::keyPressed(KeyEvent const* _e)
 	return true;
 }
 
-String SimpleType::code(String const& _middle) const
+String BuiltinType::code(String const& _middle) const
 {
-	if (m_id == -1) return String();
+	if (m_id == (uint)-1) return String();
 	if (m_id == Wchar) return "wchar_t";
 	return String((m_id & Unsigned) ? (m_id & Float || m_id & Double) ? "complex " : "unsigned " : "") +
 			(((m_id & Longlong) == Longlong) ? "long long " : (m_id & Short) ? "short " : (m_id & Long) ? "long " : "") +
 			((m_id & Float) ? "float" : (m_id & Bool) ? "bool" : (m_id & Double) ? "double" : (m_id & Char) ? "char" : (m_id & Int) ? "int" : "void") + _middle;
 }
 
-Types SimpleType::assignableTypes() const
+Types BuiltinType::assignableTypes() const
 {
 	return Type(*this);
 }
 
-bool SimpleType::defineSimilarityTo(TypeEntity const* _t, Castability _c) const
+bool BuiltinType::defineSimilarityTo(TypeEntity const* _t, Castability _c) const
 {
-	if (_t->isKind<SimpleType>())
+	if (_t->isKind<BuiltinType>())
 	{
-		int tId = _t->asKind<SimpleType>()->m_id;
-		if (tId != -1)
+		uint tId = _t->asKind<BuiltinType>()->m_id;
+		if (tId != (uint)-1)
 		{
 			if (tId == m_id)
 				return true;
@@ -104,15 +107,15 @@ bool SimpleType::defineSimilarityTo(TypeEntity const* _t, Castability _c) const
 	return Super::defineSimilarityTo(_t, _c);
 }
 
-bool SimpleType::defineSimilarityFrom(TypeEntity const* _f, Castability _c) const
+bool BuiltinType::defineSimilarityFrom(TypeEntity const* _f, Castability _c) const
 {
 	return m_id == Void && !_f->isKind<ModifyingType>() ||
 		Super::defineSimilarityFrom(_f, _c);
 }
 
-String SimpleType::defineLayout(ViewKeys const&) const
+String BuiltinType::defineLayout(ViewKeys const&) const
 {
-	return typeLayout() + "^;'" + ((id() == -1) ? String("[]") : name(id())) + "'";
+	return typeLayout() + "^;'" + ((id() == (uint)-1) ? String("[]") : name(id())) + "'";
 }
 
 template<>
@@ -120,10 +123,10 @@ class NameTrait<int>
 {
 public:
 	enum { StringId = 0xff00 };
-	static String name(int _val) { return (_val == StringId) ? "string" : SimpleType::name(_val); }
+	static String name(int _val) { return (_val == StringId) ? "string" : BuiltinType::name(_val); }
 };
 
-List<int> SimpleType::possibilities()
+List<int> BuiltinType::possibilities()
 {
 	List<int> ret;
 	for (int i = 0; i < s_simpleIdsCount; i++)
@@ -132,17 +135,17 @@ List<int> SimpleType::possibilities()
 	return ret;
 }
 
-String SimpleType::defineEditLayout(ViewKeys const&, int) const
+String BuiltinType::defineEditLayout(ViewKeys const&, int) const
 {
 	return "^;c;s" + idColour().name() + ";fb;%1";
 }
 
-EditDelegateFace* SimpleType::newDelegate(CodeScene* _s)
+EditDelegateFace* BuiltinType::newDelegate(CodeScene* _s)
 {
-	return new CompletionDelegate<SimpleType, int>(this, _s);
+	return new CompletionDelegate<BuiltinType, int>(this, _s);
 }
 
-void SimpleType::committed()
+void BuiltinType::committed()
 {
 	// Switch to string if necessary...
 	if (m_id == NameTrait<int>::StringId)
@@ -151,82 +154,82 @@ void SimpleType::committed()
 	}
 }
 
-void SimpleType::initialiseClass()
+void BuiltinType::initialiseClass()
 {
-	List<int> integral;
+	List<uint> integral;
 	integral << Char << (Short|Int) << Int << (Long|Int) << (Longlong|Int) << (Unsigned|Char) << (Unsigned|Short|Int) << (Unsigned|Int) << (Unsigned|Long|Int) << (Unsigned|Longlong|Int);
-	List<int> scalar;
+	List<uint> scalar;
 	scalar << integral << Float << Double << (Long|Double);
-	List<int> numeric;
+	List<uint> numeric;
 	numeric << scalar << (Complex|Float) << (Complex|Double) << (Complex|Long|Double);
 	
 	// integral types
-	foreach (int d, integral)
+	foreach (uint d, integral)
 	{
 		// unit inc/decrement operators.
 		foreach (String s, String("++,--").split(","))
-		{	SimpleOperator::create<SimpleType>(Operator(s, Operator::UnaryPrefix), Type(d)/*.topWith(Reference())*/, Type(d).topWith(Reference()));
-			SimpleOperator::create<SimpleType>(Operator(s, Operator::UnaryPostfix), Type(d)/*.topWith(Reference())*/, Type(d).topWith(Reference()));
+		{	SimpleOperator::create<BuiltinType>(Operator(s, Operator::UnaryPrefix), Type(d)/*.topWith(Reference())*/, Type(d).topWith(Reference()));
+			SimpleOperator::create<BuiltinType>(Operator(s, Operator::UnaryPostfix), Type(d)/*.topWith(Reference())*/, Type(d).topWith(Reference()));
 		}
 		// modulo/logical operators
 		foreach (String s, String("%,&,|,^").split(","))
-			SimpleOperator::create<SimpleType>(Operator(s), Type(d), (Type(d), Type(d)));
+			SimpleOperator::create<BuiltinType>(Operator(s), Type(d), (Type(d), Type(d)));
 		foreach (String s, String(">>,<<").split(","))
-			SimpleOperator::create<SimpleType>(Operator(s), Type(d), (Type(d), Type(Int)));
+			SimpleOperator::create<BuiltinType>(Operator(s), Type(d), (Type(d), Type(Int)));
 		foreach (String s, String("%=,&=,|=,^=").split(","))
-			SimpleOperator::create<SimpleType>(Operator(s), Type(d).topWith(Reference()), (Type(d).topWith(Reference()), Type(d)));
+			SimpleOperator::create<BuiltinType>(Operator(s), Type(d).topWith(Reference()), (Type(d).topWith(Reference()), Type(d)));
 		foreach (String s, String(">>=,<<=").split(","))
-			SimpleOperator::create<SimpleType>(Operator(s), Type(d).topWith(Reference()), (Type(d).topWith(Reference()), Type(Int)));
+			SimpleOperator::create<BuiltinType>(Operator(s), Type(d).topWith(Reference()), (Type(d).topWith(Reference()), Type(Int)));
 		foreach (String s, String("~").split(","))
-			SimpleOperator::create<SimpleType>(Operator(s), Type(d), Type(d));
+			SimpleOperator::create<BuiltinType>(Operator(s), Type(d), Type(d));
 	}
 
 	// all scalar types
-	foreach (int d, scalar)
+	foreach (uint d, scalar)
 	{
 		// comparison
 		foreach (String s, String("<,>,<=,>=").split(","))
-			SimpleOperator::create<SimpleType>(Operator(s), Type(Bool), (Type(d), Type(d)));
+			SimpleOperator::create<BuiltinType>(Operator(s), Type(Bool), (Type(d), Type(d)));
 		// simple arithmetic
 		foreach (String s, String("+,-,*,/").split(","))
-			SimpleOperator::create<SimpleType>(Operator(s, Operator::Binary), Type(d), (Type(d), Type(d)));
+			SimpleOperator::create<BuiltinType>(Operator(s, Operator::Binary), Type(d), (Type(d), Type(d)));
 		// increment
 		foreach (String s, String("+=,-=,*=,/=").split(","))
-			SimpleOperator::create<SimpleType>(Operator(s), Type(d).topWith(Reference()), (Type(d).topWith(Reference()), Type(d)));
+			SimpleOperator::create<BuiltinType>(Operator(s), Type(d).topWith(Reference()), (Type(d).topWith(Reference()), Type(d)));
 		// signing
 		foreach (String s, String("+,-").split(","))
-			SimpleOperator::create<SimpleType>(Operator(s, Operator::UnaryPrefix), Type(d), Type(d));
+			SimpleOperator::create<BuiltinType>(Operator(s, Operator::UnaryPrefix), Type(d), Type(d));
 	}
 
 	// boolean
 	foreach (String s, String("||,&&").split(","))
-		SimpleOperator::create<SimpleType>(Operator(s), Type(Bool), (Type(Bool), Type(Bool)));
+		SimpleOperator::create<BuiltinType>(Operator(s), Type(Bool), (Type(Bool), Type(Bool)));
 	foreach (String s, String("!").split(","))
-		SimpleOperator::create<SimpleType>(Operator(s), Type(Bool), Type(Bool));
+		SimpleOperator::create<BuiltinType>(Operator(s), Type(Bool), Type(Bool));
 
 	// all types
-	foreach (int d, List<int>(numeric) << Bool << Wchar)
+	foreach (uint d, List<uint>(numeric) << Bool << Wchar)
 	{
 		// (in)equality
 		foreach (String s, String("==,!=").split(","))
-			SimpleOperator::create<SimpleType>(Operator(s), Type(Bool), (Type(d), Type(d)));
+			SimpleOperator::create<BuiltinType>(Operator(s), Type(Bool), (Type(d), Type(d)));
 	}
 
 	// pointer types (we use Ptr for them in the lookup)
 	foreach (String s, String("++,--").split(","))
 	{
-		SimpleOperator::create<SimpleType>(Operator(s, Operator::UnaryPrefix), Type().topWith(Pointer()), Type(Void).topWith(Const()).topWith(Pointer()).topWith(Reference()));
-		SimpleOperator::create<SimpleType>(Operator(s, Operator::UnaryPostfix), Type().topWith(Pointer()), Type(Void).topWith(Const()).topWith(Pointer()).topWith(Reference()));
+		SimpleOperator::create<BuiltinType>(Operator(s, Operator::UnaryPrefix), Type().topWith(Pointer()), Type(Void).topWith(Const()).topWith(Pointer()).topWith(Reference()));
+		SimpleOperator::create<BuiltinType>(Operator(s, Operator::UnaryPostfix), Type().topWith(Pointer()), Type(Void).topWith(Const()).topWith(Pointer()).topWith(Reference()));
 	}
 	foreach (String s, String("<,>,<=,>=,==,!=").split(","))
-		SimpleOperator::create<SimpleType>(Operator(s), Type(Bool), (Type(Void).topWith(Const()).topWith(Pointer()), Type().topWith(Pointer())));
+		SimpleOperator::create<BuiltinType>(Operator(s), Type(Bool), (Type(Void).topWith(Const()).topWith(Pointer()), Type().topWith(Pointer())));
 	foreach (String s, String("+,-").split(","))
-		SimpleOperator::create<SimpleType>(Operator(s, Operator::Binary), Type().topWith(Pointer()), (Type(Void).topWith(Const()).topWith(Pointer()), Type(Int)));
+		SimpleOperator::create<BuiltinType>(Operator(s, Operator::Binary), Type().topWith(Pointer()), (Type(Void).topWith(Const()).topWith(Pointer()), Type(Int)));
 	foreach (String s, String("+=,-=").split(","))
-		SimpleOperator::create<SimpleType>(Operator(s), Type().topWith(Pointer()).topWith(Reference()), (Type(Void).topWith(Const()).topWith(Pointer()).topWith(Reference()), Type(Int)));
+		SimpleOperator::create<BuiltinType>(Operator(s), Type().topWith(Pointer()).topWith(Reference()), (Type(Void).topWith(Const()).topWith(Pointer()).topWith(Reference()), Type(Int)));
 }
 
-void SimpleType::finaliseClass()
+void BuiltinType::finaliseClass()
 {
 	while (s_nonMembers.size())
 		s_nonMembers.takeLast()->destruct();

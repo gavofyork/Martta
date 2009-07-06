@@ -33,7 +33,7 @@
 #include "Reference.h"
 #include "Array.h"
 #include "Memberify.h"
-#include "SimpleType.h"
+#include "BuiltinType.h"
 #include "ExplicitType.h"
 #include "FunctionType.h"
 #include "ModifyingType.h"
@@ -339,7 +339,7 @@ int coreTests()
 		M->prepareChildren();
 		X->back().place(M);
 		M->childAs<TextLabel>(Identifiable::Identity)->setText("foo");
-		M->child(LambdaNamer::Returned)->replace(new SimpleType(Void));
+		M->child(LambdaNamer::Returned)->replace(new BuiltinType(Void));
 		
 		Argument* v = new Argument;
 		v->middle(Identifiable::Identity).place(new TextLabel("a"));

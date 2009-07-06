@@ -19,7 +19,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "AddressType.h"
-#include "SimpleType.h"
+#include "BuiltinType.h"
 
 namespace Martta
 {
@@ -29,7 +29,7 @@ MARTTA_OBJECT_CPP(AddressType);
 bool AddressType::defineSimilarityTo(TypeEntity const* _t, Castability _c) const
 {
 	return _t->isKind<AddressType>() && original()->isSimilarTo(_t->asKind<AddressType>()->original(), Physical) ||
-		isAnyConvertible(_c) && _t->isKind<SimpleType>() && _t->asKind<SimpleType>()->id() == Bool || 
+		isAnyConvertible(_c) && _t->isKind<BuiltinType>() && _t->asKind<BuiltinType>()->id() == Bool || 
 		Super::defineSimilarityTo(_t, _c);
 }
 

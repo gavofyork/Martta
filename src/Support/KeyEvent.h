@@ -20,7 +20,6 @@
 
 #pragma once
 
-#include "Common.h"
 #include "SafePointer.h"
 
 namespace Martta

@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "BuiltinType.h"
 #include "Literal.h"
 
 namespace Martta

@@ -18,7 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "Common.h"
 #include "Operator.h"
 
 namespace Martta

@@ -18,6 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "BuiltinType.h"
 #include "OperatorLabel.h"
 #include "ConstLabel.h"
 #include "Compound.h"

@@ -26,7 +26,7 @@
 #include "Reference.h"
 #include "Array.h"
 #include "Memberify.h"
-#include "SimpleType.h"
+#include "BuiltinType.h"
 #include "ExplicitType.h"
 #include "FunctionType.h"
 #include "ModifyingType.h"
@@ -81,7 +81,7 @@ int typeTests()
 	TEST("Complex type construction non-adoption")
 	{
 		SafePointer<TypeEntity> p = new Reference;
-		SafePointer<TypeEntity> q = new SimpleType(Void);
+		SafePointer<TypeEntity> q = new BuiltinType(Void);
 		p->back().insertSilent(q);
 		{
 			Type t(*q);
@@ -93,7 +93,7 @@ int typeTests()
 	TEST("Type assignment non-adoption")
 	{
 		SafePointer<TypeEntity> p = new Reference;
-		SafePointer<TypeEntity> q = new SimpleType(Void);
+		SafePointer<TypeEntity> q = new BuiltinType(Void);
 		p->back().insertSilent(q);
 		{
 			Type t;
@@ -105,7 +105,7 @@ int typeTests()
 	}
 	TEST("Type construction value non-adoption")
 	{
-		SafePointer<TypeEntity> p = new SimpleType(Void);
+		SafePointer<TypeEntity> p = new BuiltinType(Void);
 		{
 			Type t(*p);
 		}
@@ -114,7 +114,7 @@ int typeTests()
 		if (!failed)
 			TEST("Type creation syntax")
 			{
-				Type t = Type(SimpleType(Void));
+				Type t = Type(BuiltinType(Void));
 			}
 	}
 	
@@ -144,9 +144,9 @@ int typeTests()
 		// ? (t1)(?)
 		Type f = Type(FunctionType(false, true));
 		// void (t2)()
-		Type fv = Type(FunctionType()).place(SimpleType(Void), FunctionType::Returned);
+		Type fv = Type(FunctionType()).place(BuiltinType(Void), FunctionType::Returned);
 		// int (t3)()
-		Type fi = Type(FunctionType()).place(SimpleType(Int), FunctionType::Returned);
+		Type fi = Type(FunctionType()).place(BuiltinType(Int), FunctionType::Returned);
 		CAST_TEST(f, f, Logical);
 		CAST_TEST(f, fv, Unrelated);
 		CAST_TEST(f, fi, Unrelated);
@@ -159,7 +159,7 @@ int typeTests()
 #undef CAST_TEST
 	}
 	{
-#define CAST_TEST(F, T, R) TEST("SimpleType Conversion casting... " #F "->" #T) TEST_THIS_CAST(F, T, R)
+#define CAST_TEST(F, T, R) TEST("BuiltinType Conversion casting... " #F "->" #T) TEST_THIS_CAST(F, T, R)
 		Type b = Type(Bool);
 		Type bc = Type(Bool).topWith(Const());
 		Type i = Type(Int);
@@ -298,13 +298,13 @@ int typeTests()
 		D->back().place(b);
 		{
 		// void (B:: b)()
-		Type b = Type(FunctionType()).place(SimpleType(Void), FunctionType::Returned).topWith(Memberify(Type(B)));
+		Type b = Type(FunctionType()).place(BuiltinType(Void), FunctionType::Returned).topWith(Memberify(Type(B)));
 		// void (B:: bc)() const
-		Type bc = Type(FunctionType()).place(SimpleType(Void), FunctionType::Returned).topWith(Memberify(Type(B).topWith(Const())));
+		Type bc = Type(FunctionType()).place(BuiltinType(Void), FunctionType::Returned).topWith(Memberify(Type(B).topWith(Const())));
 		// void (D:: d)()
-		Type d = Type(FunctionType()).place(SimpleType(Void), FunctionType::Returned).topWith(Memberify(Type(D)));
+		Type d = Type(FunctionType()).place(BuiltinType(Void), FunctionType::Returned).topWith(Memberify(Type(D)));
 		// void (D:: dc)() const
-		Type dc = Type(FunctionType()).place(SimpleType(Void), FunctionType::Returned).topWith(Memberify(Type(D).topWith(Const())));
+		Type dc = Type(FunctionType()).place(BuiltinType(Void), FunctionType::Returned).topWith(Memberify(Type(D).topWith(Const())));
 		CAST_TEST(b, b, Logical);
 		CAST_TEST(b, bc, Unrelated);
 		CAST_TEST(b, d, Logical);
