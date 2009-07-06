@@ -18,6 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "Entity.h"
 #include "Depender.h"
 #include "Dependee.h"
 #include "ChangeMan.h"

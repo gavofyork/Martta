@@ -73,6 +73,10 @@ void assertFailed(int, char const*, char const*, char const*, char const*);
 
 #define AssertNR(X) Assert(X, "");
 
+#if _MSC_VER
+template<class T> inline T round(T const& x) { return ((x)>=0?(long)((x)+0.5):(long)((x)-0.5)); }
+#endif
+
 template<typename T>
 inline T max(T const& _a, T const& _b) { return (_a < _b) ? _b : _a; }
 

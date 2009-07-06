@@ -31,6 +31,7 @@
 #include "Memberify.h"
 #include "Const.h"
 #include "EditDelegate.h"
+#include "CompletionDelegate.h"
 #include "Reference.h"
 #include "CodeScene.h"
 #include "TextLabel.h"

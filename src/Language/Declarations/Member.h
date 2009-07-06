@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "AccessLabel.h"
 #include "Declaration.h"
 
 namespace Martta

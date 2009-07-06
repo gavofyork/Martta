@@ -23,18 +23,4 @@
 namespace Martta
 {
 
-bool s_testing = false;
-char const* s_asserted = 0;
-
-const Precedence NoPrecedence = log(0.0);
-
-String code(Qualifiers _q, WhitespacePosition _p)
-{
-	String ret;
-	for (uint i = 1; (uint)QualifierMask > i; i <<= 1)
-		if (_q & i)
-			ret += ((!ret.isEmpty() && _p == NoWhitespace || _p == AtStart) ? " " : "") + String(code((Qualifier)i)) + ((_p == AtEnd) ? " " : "");
-	return ret;
-}
-
 }

@@ -16,4 +16,5 @@
 #include "Support/ModelPtrRegistrar.cpp"
 #include "Support/Operator.cpp"
 #include "Support/Position.cpp"
+#include "Support/Stylist.cpp"
 #include "Support/Type.cpp"

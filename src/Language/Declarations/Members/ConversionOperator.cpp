@@ -31,7 +31,7 @@ MARTTA_OBJECT_CPP(ConversionOperator);
 
 String ConversionOperator::basicCode(FunctionCodeScope _ref) const
 {
-	return Martta::code(qualifiers() & MethodMask) + callingCode(_ref) + (isConst() ? " const" : "");
+	return Martta::code(qualifiers() & FunctionMask) + callingCode(_ref) + (isConst() ? " const" : "");
 }
 
 bool ConversionOperator::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)

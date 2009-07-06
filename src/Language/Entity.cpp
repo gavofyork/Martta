@@ -18,8 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include <QtXml>
-
 #include "CullManager.h"
 #include "CodeScene.h"
 #include "EditDelegate.h"
@@ -774,7 +772,7 @@ bool Entity::validifyChildren()
 {
 	bool ret = false;
 	int added = INT_MAX - 1;
-	for (int i = 0; i < qMax(minRequired(Cardinals), m_cardinalChildren.size()); i++)
+	for (int i = 0; i < max(minRequired(Cardinals), m_cardinalChildren.size()); i++)
 	{
 		if (i >= m_cardinalChildren.size())
 		{

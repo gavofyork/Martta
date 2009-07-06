@@ -21,12 +21,32 @@
 #pragma once
 
 #include <msRgb.h>
-using MarttaSupport::Rgb;
+using namespace MarttaSupport;
 
 #include "Label.h"
 
 namespace Martta
 {
+
+enum Access
+{
+	Public = 0,
+	Protected,
+	Private,
+	AccessCount,
+	NoAccess
+};
+
+inline char const* code(Access _i)
+{
+	switch (_i)
+	{
+		case Public: return "public";
+		case Protected: return "protected";
+		case Private: return "private";
+		default: return "";
+	}
+}
 
 class AccessLabel: public Label
 {

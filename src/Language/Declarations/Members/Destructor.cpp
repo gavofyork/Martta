@@ -51,7 +51,7 @@ String Destructor::codeName() const
 
 String Destructor::basicCode(FunctionCodeScope _ref) const
 {
-	return Martta::code(qualifiers() & MethodMask) + callingCode(_ref);
+	return Martta::code(qualifiers() & FunctionMask) + callingCode(_ref);
 }
 
 }

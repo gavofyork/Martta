@@ -20,21 +20,11 @@
 
 #pragma once
 
-#include <msSupport.h>
-#include <msRgb.h>
-#include <msList.h>
-#include <msHash.h>
-#include <msString.h>
-using MarttaSupport::Rgb;
-using MarttaSupport::Hash;
-using MarttaSupport::MultiHash;
-using MarttaSupport::List;
-using MarttaSupport::String;
-
+#include "Common.h"
+#include "EntitySupport.h"
 #include "ChildValidifier.h"
 #include "Depender.h"
 #include "Dependee.h"
-#include "Serialisable.h"
 #include "KeyEvent.h"
 #include "Dier.h"
 #include "Meta.h"
@@ -56,13 +46,12 @@ class CodeScene;
  * scene. This applies even if the situation is temporary, since the check/changes happen at move
  * time.
  */
-class Entity: public Nothing, public SafePointerTarget, virtual public Dier, public_interface ChildValidifier, public_interface Depender, public_interface Dependee, public_interface Serialisable
+class Entity: public Nothing, public SafePointerTarget, virtual public Dier, public_interface ChildValidifier, public_interface Depender, public_interface Dependee
 {
 	MARTTA_COMMON(Nothing)
 	MARTTA_INHERITS(ChildValidifier, 0)
 	MARTTA_INHERITS(Dependee, 1)
 	MARTTA_INHERITS(Depender, 2)
-	MARTTA_INHERITS(Serialisable, 3)
 	
 	friend class Stylist;
 	friend class EditDelegateFace;
@@ -80,8 +69,8 @@ public:
 	inline void							operator delete(void* p);
 	
 	/// Copy constructor which doesn't do anything. Have to have it so a derived class can use it.
-	inline Entity(): Dier(), ChildValidifier(), Depender(), Dependee(), Serialisable(), SafePointerTarget(), m_parent(0), m_index(UndefinedIndex) {}
-	inline Entity(Entity const&): Dier(), ChildValidifier(), Familial(), Depender(), Dependee(), Serialisable(), SafePointerTarget() { AssertNR(false); }
+	inline Entity(): Dier(), ChildValidifier(), Depender(), Dependee(), SafePointerTarget(), m_parent(0), m_index(UndefinedIndex) {}
+	inline Entity(Entity const&): Dier(), ChildValidifier(), Familial(), Depender(), Dependee(), SafePointerTarget() { AssertNR(false); }
 	
 	static void							initialiseClass() {}
 	static void							finaliseClass() {}

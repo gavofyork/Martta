@@ -36,6 +36,6 @@ DEPENDPATH += .
 INCLUDEPATH += .
 
 # Input
-HEADERS += msSupport.h msList.h msString.h msList.inl msHash.h msHash.inl msRgb.h msTextStream.h msDebug.h msStringList.h
-SOURCES += msSupport.cpp msString.cpp msRgb.cpp msTextStream.cpp msDebug.cpp msStringList.cpp
+HEADERS += msSupport.h msList.h msString.h msList.inl msHash.h msHash.inl msRgb.h msTextStream.h msDebug.h msStringList.h msFlags.h
+SOURCES += msSupport.cpp msString.cpp msRgb.cpp msTextStream.cpp msDebug.cpp msStringList.cpp msFlags.cpp
 

@@ -28,6 +28,16 @@ using namespace MarttaSupport;
 namespace Martta
 {
 
+typedef double Precedence;
+static const Precedence NoPrecedence = log(0.0);
+
+enum Associativity
+{
+	NoAssociativity = 0,
+	LeftAssociativity,
+	RightAssociativity
+};
+
 class Operator
 {
 	friend inline uint hashOf(Operator const&);

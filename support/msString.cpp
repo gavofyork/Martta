@@ -803,4 +803,30 @@ void String::checkCache() const
 	}
 }
 
+String times(int _s, int _omte, String const& _btwn)
+{
+	String r;
+	if (_omte <= _s)
+		return r;
+	r = String::number(_s);
+	for (int i = _s + 1; i < _omte; i++)
+		r += _btwn + String::number(i);
+	return r;
+}
+
+String camelCase(String const& _t)
+{
+	if (!_t.size())
+		return _t;
+	String t = _t.simplified();
+	String ret;
+	ret.reserve(t.size());
+	for(int i = 0; i < t.size(); i++)
+		if (t[i] == ' ')
+			ret += String("%1").arg(t[++i]).toUpper()[0];
+		else
+			ret += t[i];
+	return ret;
+}
+
 }

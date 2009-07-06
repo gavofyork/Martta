@@ -79,7 +79,7 @@ String MemberLambda::basicCode(FunctionCodeScope _ref) const
 {
 	if (!isComplete())
 		return String();
-	return Martta::code(qualifiers() & MethodMask) + returns()->code(" " + callingCode(_ref)) + (isConst() ? " const" : "");
+	return Martta::code(qualifiers() & FunctionMask) + returns()->code(" " + callingCode(_ref)) + (isConst() ? " const" : "");
 }
 
 List<Declaration*> MemberLambda::utilised() const

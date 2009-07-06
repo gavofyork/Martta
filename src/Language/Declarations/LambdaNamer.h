@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include <String>
+#include "CQualifiers.h"
 #include "Type.h"
 #include "ValueDefiner.h"
 

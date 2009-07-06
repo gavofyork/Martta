@@ -551,6 +551,30 @@ public:
 	inline ImplicitMultiHash& operator=(typename GeneralHash<Key, T, Min2, AlwaysMulti2, true>::Box const& _b) { GeneralHash<Key, T, Min, true, true>::operator=(_b); return *this; }*/
 };
 
+template<class T> List<T> solve(List<T> const& _q, MultiHash<T, T> const& _deps)
+{
+	List<T> q = _q;
+	List<T> ret;
+	MultiHash<T, T> deps = _deps;
+	MultiHash<T, T> depees = _deps.inverted();
+	while (!q.isEmpty())
+	{
+		T n = q.takeLast();
+		ret << n;
+		foreach (T m, depees.values(n))	// go through all that depend on n
+		{
+			depees.removeOne(n, m);
+			deps.removeOne(m, n);
+			if (!deps.count(m))			// if they themselves don't depend on anything else, whack them in q.
+				q << m;
+		}
+	}
+	
+	if (deps.size())
+		return List<T>();
+	return ret;
+}
+
 }
 
 #include "msHash.inl"

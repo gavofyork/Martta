@@ -615,8 +615,9 @@ bool Project::CDepends::setData(QModelIndex const& _i, QVariant const& _v, int _
 
 Qt::ItemFlags Project::CDepends::flags(QModelIndex const& _i) const
 {
-	if (checkProject(_i)) return Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
-	return Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+	if (checkProject(_i))
+		return (Qt::ItemFlag)(Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+	return (Qt::ItemFlag)(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 }
 
 int Project::CDepends::rowCount(QModelIndex const& _i) const
@@ -727,8 +728,8 @@ bool Project::Classes::setData(QModelIndex const& _i, QVariant const&, int _r)
 Qt::ItemFlags Project::Classes::flags(QModelIndex const& _i) const
 {
 	if (!checkRoot(_i))
-		return /*Qt::ItemIsEditable | */Qt::ItemIsSelectable | Qt::ItemIsEnabled;
-	return Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+		return (Qt::ItemFlag)(/*Qt::ItemIsEditable | */Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+	return (Qt::ItemFlag)(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 }
 
 int Project::Classes::rowCount(QModelIndex const& _i) const

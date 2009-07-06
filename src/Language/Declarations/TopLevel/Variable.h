@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "CQualifiers.h"
 #include "VariableNamer.h"
 #include "Location.h"
 #include "TopLevel.h"
@@ -50,8 +51,8 @@ protected:
 	virtual void						onDependencyChanged(Entity*) { changed(); } 
 	virtual String						interfaceCode() const { return Martta::code(m_qualifiers & VariableMask) + VariableNamer::interfaceCode(); }
 	virtual String						implementationCode() const { return VariableNamer::implementationCode(); }
-	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p[L"qualifiers"] = String::number(m_qualifiers); }
-	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_qualifiers = (Qualifiers)_p[L"qualifiers"].toInt(); }
+	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p[L"qualifiers"] = String::number((uint)m_qualifiers); }
+	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_qualifiers = Qualifiers(_p[L"qualifiers"].toUint()); }
 	
 private:
 	Qualifiers							m_qualifiers;

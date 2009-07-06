@@ -370,6 +370,9 @@ inline const String operator+(char _ch, String const& _s) { return String(_s).pr
 inline const String operator+(String const& _s, wchar_t _ch) { return String(_s) += _ch; }
 inline const String operator+(wchar_t _ch, String const& _s) { return String(_s).prepend(_ch); }
 
+String times(int _s, int _omte, String const& _btwn);
+String camelCase(String const& _t);
+
 }
 
 #if defined(QT_DEBUG) || defined(QT_NO_DEBUG)

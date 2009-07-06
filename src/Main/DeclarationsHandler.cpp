@@ -96,8 +96,8 @@ public:
 	{
 		m_type = _a.value("type");
 		m_const = _a.value("const") == "1";
-		setFlag(m_qualifiers, Restrict, _a.value("restrict") == "1");
-		setFlag(m_qualifiers, Volatile, _a.value("volatile") == "1");
+		m_qualifiers.set(Restrict, _a.value("restrict") == "1");
+		m_qualifiers.set(Volatile, _a.value("volatile") == "1");
 	}
 
 private:
@@ -302,7 +302,7 @@ VariableResolver::VariableResolver(Variable* _s, QXmlAttributes const& _a):
 	m_subject(_s)
 {
 	_s->middle(Identifiable::Identity).place(new TextLabel(qs(properName(_a))));
-	setFlag(m_subject->m_qualifiers, Extern, _a.value("extern") == "1");
+	m_subject->m_qualifiers.set(Extern, _a.value("extern") == "1");
 	m_subject->m_location.m_lineNumber = _a.value("line").toInt();
 
 	m_typeId = _a.value("type");

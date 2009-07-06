@@ -34,7 +34,7 @@ MARTTA_OBJECT_CPP(Constructor);
 
 String Constructor::basicCode(FunctionCodeScope _ref) const
 {
-	return Martta::code(qualifiers() & MethodMask) + callingCode(_ref);
+	return Martta::code(qualifiers() & FunctionMask) + callingCode(_ref);
 }
 
 bool Constructor::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)

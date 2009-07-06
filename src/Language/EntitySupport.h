@@ -22,19 +22,39 @@
 
 #include <msSupport.h>
 #include <msString.h>
+#include <msHash.h>
+#include <msList.h>
 using namespace MarttaSupport;
-
-#include "EntitySupport.h"
 
 namespace Martta
 {
 
-class Stylist
+class Entity;
+class Stylist;
+class EditDelegateFace;
+class CodeScene;
+class KeyEvent;
+class Dier;
+class Position;
+template<class T> class SafePointer;
+
+typedef Hash<String, String> ViewKeys;
+
+template<class T, class F> inline List<T*> castEntities(List<F*> _f)
 {
-public:
-	virtual ~Stylist() {}
-	
-	virtual String defineLayout(Entity* _e, ViewKeys const& _k);
-};
+	List<T*> ret;
+	foreach (F* i, _f)
+		ret << static_cast<T*>(i);
+	return ret;
+}
+
+template<class T, class F> inline List<T*> filterEntities(List<F*> _f)
+{
+	List<T*> ret;
+	foreach (F* i, _f)
+		if (i->template isKind<T>())
+			ret << i->template asKind<T>();
+	return ret;
+}
 
 }

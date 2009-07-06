@@ -8,6 +8,5 @@
 #include "Language/Entity.cpp"
 #include "Language/Familial.cpp"
 #include "Language/Identifiable.cpp"
-#include "Language/Serialisable.cpp"
 #include "Language/TypedOwner.cpp"
 #include "Language/VirtualBase.cpp"

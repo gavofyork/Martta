@@ -18,19 +18,15 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#pragma once
-
-#include "Meta.h"
+#include "Entity.h"
+#include "Stylist.h"
 
 namespace Martta
 {
 
-class Serialisable
+String Stylist::defineLayout(Entity* _e, ViewKeys const& _k)
 {
-	MARTTA_INTERFACE
-
-public:
-	virtual ~Serialisable() {}
-};
+	return _e->defineLayout(_k);
+}
 
 }
