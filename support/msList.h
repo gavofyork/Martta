@@ -252,6 +252,14 @@ private:
 	int m_reserved;
 };
 
+template<class T, class F> inline List<T> list_cast(List<F> _f)
+{
+	List<T> ret;
+	foreach (F i, _f)
+		ret << static_cast<T>(i);
+	return ret;
+}
+
 }
 
 #include "msList.inl"

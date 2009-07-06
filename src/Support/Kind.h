@@ -20,8 +20,10 @@
 
 #pragma once
 
+#include <msSupport.h>
 #include <msList.h>
-using MarttaSupport::List;
+using namespace MarttaSupport;
+//using MarttaSupport::List;
 
 #include "AuxilliaryRegistrar.h"
 #include "AuxilliaryFace.h"

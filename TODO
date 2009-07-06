@@ -17,10 +17,14 @@ Small things:
 - BRINGBACK Visual change system.
 - BRINGBACK Ser/Deser tests.
 - BRINGBACK decoration code into layout system and markup for it.
-Dynamic code-loading (plugins).
-- Move everything over so that plugins use Martta-specific data types.
+- CLEAN Move crap from Common
+  - Split into General (nameStarts, times, solve, camelCase, round)
+  - Move non-general to supports Qualifier, Access, Assoc., W.S.Pos.
+  - Move to MS: setFlag & Q_DECLARE_FLAGS (make relevant or kill).
 
-TODO _p[" -> _p[L"
+Dynamic code-loading (plugins).
+- Split support off with Entity to form Entity library.
+ 
 
 --------------------------------------------------------------------------------
 

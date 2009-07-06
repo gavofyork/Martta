@@ -39,9 +39,12 @@ int changeTests();
 char const* s_asserted;
 
 #if defined(DEBUG)
+namespace MarttaTest
+{
 void assertFailed(int, char const*, char const*, char const* _failed, char const*)
 {
 	s_asserted = _failed;
+}
 }
 #endif
 
@@ -50,7 +53,7 @@ int test()
 	int failed = 0;
 
 #if defined(DEBUG)	
-	MarttaSupport::s_alternativeAssertionHandler = &assertFailed;
+	MarttaSupport::s_alternativeAssertionHandler = &MarttaTest::assertFailed;
 	TEST("Asserting")
 	{
 		bool testHasActuallySucceeded = true;

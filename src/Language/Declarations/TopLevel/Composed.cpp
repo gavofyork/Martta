@@ -1,0 +1,11 @@
+// Composed source file for directory Language/Declarations/TopLevel
+#include "Language/Declarations/TopLevel/Class.cpp"
+#include "Language/Declarations/TopLevel/Enumeration.cpp"
+#include "Language/Declarations/TopLevel/Function.cpp"
+#include "Language/Declarations/TopLevel/Namespace.cpp"
+#include "Language/Declarations/TopLevel/Struct.cpp"
+#include "Language/Declarations/TopLevel/TopLevelType.cpp"
+#include "Language/Declarations/TopLevel/TypeDefinition.cpp"
+#include "Language/Declarations/TopLevel/Typedef.cpp"
+#include "Language/Declarations/TopLevel/Union.cpp"
+#include "Language/Declarations/TopLevel/Variable.cpp"

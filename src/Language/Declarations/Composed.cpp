@@ -1,0 +1,13 @@
+// Composed source file for directory Language/Declarations
+#include "Language/Declarations/Argument.cpp"
+#include "Language/Declarations/Declaration.cpp"
+#include "Language/Declarations/EnumValue.cpp"
+#include "Language/Declarations/EnumerationNamer.cpp"
+#include "Language/Declarations/LambdaNamer.cpp"
+#include "Language/Declarations/Member.cpp"
+#include "Language/Declarations/Root.cpp"
+#include "Language/Declarations/Simple.cpp"
+#include "Language/Declarations/TopLevel.cpp"
+#include "Language/Declarations/TypeNamer.cpp"
+#include "Language/Declarations/ValueDefiner.cpp"
+#include "Language/Declarations/VariableNamer.cpp"

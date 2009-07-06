@@ -143,9 +143,9 @@ void Project::resetAsNew()
 	emit nameChanged();
 }
 
-String Project::code() const
+QString Project::code() const
 {
-	String ret;
+	QString ret;
 
 	ret += "#include \"" + m_supportPath + "msList.h\"\n";
 	ret += "#include \"" + m_supportPath + "msString.h\"\n";
@@ -157,12 +157,12 @@ String Project::code() const
 
 	if (m_namespace)
 	{
-		String ic = m_namespace->interfaceCode();
+		QString ic = qs(m_namespace->interfaceCode());
 		if (ic.isEmpty())
 			return QString();
-		ret += ic + "\n" + m_namespace->implementationCode() + "\n";
+		ret += ic + "\n" + qs(m_namespace->implementationCode()) + "\n";
 		if (m_program && m_program->parentIs<Declaration>())
-			ret += "int main(int, char**)\n{\n" + m_program->parentAs<Declaration>()->reference() + " p;\np." + m_program->codeName() + "();\n}\n";
+			ret += "int main(int, char**)\n{\n" + qs(m_program->parentAs<Declaration>()->reference()) + " p;\np." + qs(m_program->codeName()) + "();\n}\n";
 	}
 
 	return ret;
@@ -276,16 +276,16 @@ QString Project::executable()
 
 void importDom(QDomElement const& _el, Entity* _p)
 {
-	Entity* e = _p->spawn(_el.attribute("kind"));
+	Entity* e = _p->spawn(qs(_el.attribute("kind")));
 	Assert(e, "Spawn doesn't know anything about this kind, yet it did when exported.");
 	
 	Hash<String, String> h;
 	String index;
 	for (uint i = 0; i < _el.attributes().length(); i++)
 		if (_el.attributes().item(i).nodeName() == "index")
-			index = _el.attributes().item(i).nodeValue();
+			index = qs(_el.attributes().item(i).nodeValue());
 		else
-			h.insert(_el.attributes().item(i).nodeName(), _el.attributes().item(i).nodeValue());
+			h.insert(qs(_el.attributes().item(i).nodeName()), qs(_el.attributes().item(i).nodeValue()));
 	e->silentMove(_p->named(index));
 
 	e->setProperties(h);
@@ -381,7 +381,7 @@ void Project::deserialise(QDomDocument& _d)
 	// Load "program"
 	QString k = _d.documentElement().namedItem("program").toElement().attribute("key");
 	
-	if (Identifiable* e = m_declarations.findEntity(k))
+	if (Identifiable* e = m_declarations.findEntity(qs(k)))
 		m_program = e->self()->tryKind<Method>();
 	else
 		m_program = 0;
@@ -419,14 +419,14 @@ void Project::revert()
 void exportDom(QDomElement& _pe, Entity* _e)
 {
 	QDomElement n = _pe.ownerDocument().createElement("entity");
-	n.setAttribute("kind", _e->kind().name());
+	n.setAttribute("kind", qs(_e->kind().name()));
 	Hash<String, String> h;
 	_e->properties(h);
 	for (Hash<String, String>::Iterator i = h.begin(); i != h.end(); ++i)
-		n.setAttribute(i.key(), i.value());
+		n.setAttribute(qs(i.key()), qs(i.value()));
 	String iId = _e->namedIndexId();
 	if (!iId.isEmpty())
-		n.setAttribute("index", iId);
+		n.setAttribute("index", qs(iId));
 	_pe.appendChild(n);
 	foreach (Entity* e, _e->children())
 		exportDom(n, e);
@@ -449,7 +449,7 @@ void Project::serialise(QDomDocument& _d) const
 	if (m_program)
 	{
 		QDomElement p = _d.createElement("program");
-		p.setAttribute("key", m_program->key());
+		p.setAttribute("key", qs(m_program->key()));
 		root.appendChild(p);
 	}
 }
@@ -478,8 +478,8 @@ void Project::reloadHeaders()
 	doc.save(t, 4);
 	deserialise(doc);
 	
-#if DEBUG
-	QList<Entity*> es = QList<Entity*>() << m_namespace;
+#if defined(DEBUG)
+	List<Entity*> es = List<Entity*>() << m_namespace;
 	while (es.size())
 	{
 		Entity* e = es.takeLast();
@@ -572,9 +572,9 @@ QVariant Project::CDepends::data(QModelIndex const& _i, int _r) const
 			if (checkHeading(_i, Functions)) return "Functions";
 			if (checkHeading(_i, Variables)) return "Variables";
 			if (checkHeading(_i, Includes)) return "Includes";
-			if (checkItem(_i, Types)) return checkItem(_i, All)->types()[_i.row()]->code().toQString();
-			if (checkItem(_i, Functions)) return checkItem(_i, All)->functions()[_i.row()]->basicCode(LambdaNamer::InsideScope).toQString();
-			if (checkItem(_i, Variables)) return checkItem(_i, All)->variables()[_i.row()]->basicCode().toQString();
+			if (checkItem(_i, Types)) return qs(checkItem(_i, All)->types()[_i.row()]->code());
+			if (checkItem(_i, Functions)) return qs(checkItem(_i, All)->functions()[_i.row()]->basicCode(LambdaNamer::InsideScope));
+			if (checkItem(_i, Variables)) return qs(checkItem(_i, All)->variables()[_i.row()]->basicCode());
 			if (checkItem(_i, Includes)) return checkItem(_i, All)->includes()[_i.row()];
 			AssertNR(false);
 		case HeadingRole:
@@ -701,7 +701,7 @@ QVariant Project::Classes::data(QModelIndex const& _i, int _r) const
 			if (checkRoot(_i))
 				return QVariant();
 			else
-				return at(_i.row())->name().toQString();
+				return qs(at(_i.row())->name());
 		case OwnerRole:
 			if (!checkRoot(_i)) return QVariant::fromValue<void*>(at(_i.row()));
 			return QVariant();

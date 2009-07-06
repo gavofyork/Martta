@@ -21,10 +21,11 @@
 #include <QtSvg>
 #include <QtGui>
 
+#include "Stylist.h"
+#include "EditDelegate.h"
+
 #include "Timer.h"
 #include "CommonGraphics.h"
-//#include "DecorationContext.h"
-#include "EditDelegate.h"
 #include "CodeView.h"
 
 namespace Martta
@@ -50,7 +51,7 @@ CodeView::CodeView(QWidget* _p):
 	m_insertLock		(false),
 	m_lastDefiniteX		(-1.f),
 	m_reinterpretCurrentKeyEvent(false),
-	m_stylist			(new EntityStylist),
+	m_stylist			(new Stylist),
 	m_borderOffset		(8.f, 8.f),
 	m_ensureCurrentVisible(false)
 {
@@ -1170,7 +1171,7 @@ public:
 		{
 			if (!s_picCache.contains(e.mid(1)))
 			{
-				s_picCache[e.mid(1)] = new QSvgRenderer(e.mid(1).toQString());
+				s_picCache[e.mid(1)] = new QSvgRenderer(qs(e.mid(1)));
 			}
 			if (!s_imgCache.contains(e.mid(1)))
 			{
@@ -1186,7 +1187,7 @@ public:
 		else if (e.startsWith("'"))
 		{
 			String t = e.mid(1, e.length() - 2);
-			QSizeF br = textSize(t, curFont);
+			QSizeF br = textSize(qs(t), curFont);
 			textsToBe << TextToBe(QRectF(QPointF(nextX, nextY), br), t, curCol, curShadow, curEmboss, curFont);
 			nextX += br.width();
 			maxHeight = qMax<float>(br.height(), maxHeight);

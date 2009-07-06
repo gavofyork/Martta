@@ -18,8 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include <QDebug>
-
 #include "msList.h"
 #include "msString.h"
 #include "msHash.h"
@@ -29,13 +27,13 @@ using namespace MarttaSupport;
 #include "TestHelper.h"
 using namespace Martta;
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Box returnMeBox(GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey> const& _me)
 {
 	return _me;
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey> const returnMe(GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey> const& _me)
 {
 	return _me;
@@ -265,6 +263,9 @@ int supportTests()
 		String s("Hello world!");
 		FAILED_IF(s.length() != 12);
 		FAILED_IF(strlen(s.toCString()) != 12);
+		mDebug() << s;
+		mDebug() << s.toCString();
+		mDebug() << strcmp(s.toCString(), "Hello world!");
 		FAILED_IF(strcmp(s.toCString(), "Hello world!"));
 	}
 	TEST("String copy construction")

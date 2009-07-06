@@ -20,6 +20,9 @@
 
 #pragma once
 
+#include <msSupport.h>
+using namespace MarttaSupport;
+
 #include "Common.h"
 
 namespace Martta

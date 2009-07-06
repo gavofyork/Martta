@@ -329,7 +329,7 @@ int typeTests()
 		{
 		Type s = Type(StringType());
 		Type scr = Type(StringType()).topWith(Const()).topWith(Reference());
-		Type ccs = Type(Char).topWith(Const()).topWith(Pointer());
+		Type ccs = Type(Martta::Char).topWith(Const()).topWith(Pointer());
 		CAST_TEST(s, s, Logical);
 		CAST_TEST(s, scr, Convertible);
 		CAST_TEST(s, ccs, Convertible);

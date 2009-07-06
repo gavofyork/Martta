@@ -35,7 +35,6 @@ using MarttaSupport::String;
 #include "Depender.h"
 #include "Dependee.h"
 #include "Serialisable.h"
-
 #include "KeyEvent.h"
 #include "Dier.h"
 #include "Meta.h"
@@ -45,7 +44,7 @@ using MarttaSupport::String;
 namespace Martta
 {
 
-class EntityStylist;
+class Stylist;
 class EditDelegateFace;
 class CodeScene;
 
@@ -65,7 +64,7 @@ class Entity: public Nothing, public SafePointerTarget, virtual public Dier, pub
 	MARTTA_INHERITS(Depender, 2)
 	MARTTA_INHERITS(Serialisable, 3)
 	
-	friend class EntityStylist;
+	friend class Stylist;
 	friend class EditDelegateFace;
 	friend class CodeScene;
 
@@ -506,17 +505,6 @@ private:
 	int									m_index;
 	List<Entity*>						m_cardinalChildren;
 	Hash<int, Entity*>					m_namedChildren;
-};
-
-class EntityStylist
-{
-public:
-	virtual ~EntityStylist() {}
-	
-	virtual String defineLayout(Entity* _e, ViewKeys const& _k)
-	{
-		return _e->defineLayout(_k);
-	}
 };
 
 extern int s_news;

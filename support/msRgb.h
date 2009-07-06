@@ -36,7 +36,7 @@ class Rgb
 {
 public:
 	inline Rgb(): m_value(0xff000000) {}
-	inline Rgb(t::uint _v, uchar _a = 255): m_value((_v & 0xffffff) + (t::uint)(((t::uint)_a) << 24ul)) {}
+	inline Rgb(uint _v, uchar _a = 255): m_value((_v & 0xffffff) + (uint)(((uint)_a) << 24ul)) {}
 	inline Rgb(uchar _r, uchar _g, uchar _b, uchar _a = 255): m_value(fromRgb(_r, _g, _b, _a)) {}
 	inline Rgb(Rgb _colour, uchar _a): m_value(fromRgb(_colour.r(), _colour.g(), _colour.b(), _a)) {}
 	inline explicit Rgb(String const& _name)
@@ -59,8 +59,8 @@ public:
 	inline void setB(uchar _v) { m_value = fromRgb(r(), g(), _v, a()); }
 	inline void setA(uchar _v) { m_value = fromRgb(r(), g(), b(), _v); }
 	
-	String name() const { return String(L"#%1").arg((t::uint)(((t::uint)m_value << 8ul) + a()), 8, 16, L'0'); }
-	String name(uchar _alpha) const { return String(L"#%1").arg((t::uint)(((t::uint)m_value << 8ul) + (t::uint)_alpha), 8, 16, L'0'); }
+	String name() const { return String(L"#%1").arg((uint)(((uint)m_value << 8ul) + a()), 8, 16, L'0'); }
+	String name(uchar _alpha) const { return String(L"#%1").arg((uint)(((uint)m_value << 8ul) + (uint)_alpha), 8, 16, L'0'); }
 	
 	inline Rgb interpolated(int _percent, Rgb _c = black) const
 	{
@@ -86,12 +86,12 @@ public:
 	static const Rgb cyan;
 
 private:
-	static inline t::uint fromRgb(uchar _r, uchar _g, uchar _b, uchar _a) { t::uint ret = _a; return (((((ret <<= 8) += _r) <<= 8) += _g) <<= 8) += _b; }
-	static inline uchar toRed(t::uint _v) { return (_v >> 16) & 255; }
-	static inline uchar toGreen(t::uint _v) { return (_v >> 8) & 255; }
-	static inline uchar toBlue(t::uint _v) { return _v & 255; }
-	static inline uchar toAlpha(t::uint _v) { return (_v >> 24) & 255; }
-	static inline t::uint fromName(String const& _name)
+	static inline uint fromRgb(uchar _r, uchar _g, uchar _b, uchar _a) { uint ret = _a; return (((((ret <<= 8) += _r) <<= 8) += _g) <<= 8) += _b; }
+	static inline uchar toRed(uint _v) { return (_v >> 16) & 255; }
+	static inline uchar toGreen(uint _v) { return (_v >> 8) & 255; }
+	static inline uchar toBlue(uint _v) { return _v & 255; }
+	static inline uchar toAlpha(uint _v) { return (_v >> 24) & 255; }
+	static inline uint fromName(String const& _name)
 	{
 #define NOTE_NAMED(n) if (_name == L ## #n) return n.m_value
 		NOTE_NAMED(black);
@@ -106,7 +106,7 @@ private:
 		return 0xff000000;
 	}
 	
-	t::uint m_value;
+	uint m_value;
 };
 
 }

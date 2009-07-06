@@ -36,7 +36,7 @@ namespace Martta
 class EditDelegateFace;
 class Position;
 class Entity;
-class EntityStylist;
+class Stylist;
 
 class CodeScene
 {
@@ -50,8 +50,8 @@ public:
 	virtual void				setSubject(Entity* _subject) = 0;
 	
 	// Stylist
-	virtual EntityStylist*		stylist() const = 0;
-	virtual void				setStylist(EntityStylist* _s) = 0;
+	virtual Stylist*		stylist() const = 0;
+	virtual void				setStylist(Stylist* _s) = 0;
 
 	// What's happening?
 	virtual Entity*				current() const = 0;

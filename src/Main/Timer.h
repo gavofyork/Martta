@@ -21,6 +21,7 @@
 #pragma once
 
 #include <QTime>
+#include <QString>
 
 #include <msDebug.h>
 #include <msString.h>
@@ -28,6 +29,21 @@ using MarttaSupport::String;
 
 namespace Martta
 {
+
+inline String qs(QString const& _qs)
+{
+	String ret;
+	ret.resize(_qs.length());
+	wchar_t* d = ret.data();
+	_qs.toWCharArray(d);
+	ret.dataChanged(d);
+	return ret;
+}
+
+inline QString qs(String const& _s)
+{
+	return QString::fromWCharArray(_s.data(), _s.length());
+}
 
 class Timer
 {

@@ -21,8 +21,7 @@
 #include <QtXml>
 
 #include "CullManager.h"
-#include "CodeScene.h"			// Abstract into Scene & View
-
+#include "CodeScene.h"
 #include "EditDelegate.h"
 #include "Entity.h"
 
@@ -53,7 +52,7 @@ String Entity::namedIndexId() const
 	if (m_index >= 0)
 		return String::null;
 	if (m_parent && m_index < m_parent->virtualEndOfNamed())
-		return QString::number(m_index - INT_MIN);
+		return String::number(m_index - INT_MIN);
 	return AuxilliaryRegistrar::get()->nameOfArbitrary(m_index);
 }
 

@@ -22,24 +22,117 @@
 
 #include <cmath>
 
+#include <msSupport.h>
 #include <msDebug.h>
 #include <msString.h>
+#include <msStringList.h>
 #include <msHash.h>
 #include <msList.h>
-using MarttaSupport::Hash;
-using MarttaSupport::MultiHash;
-using MarttaSupport::List;
-using MarttaSupport::String;
-using MarttaSupport::StringList;
+using namespace MarttaSupport;
+
+#if 0&&!defined(QT_DEBUG) && !defined(QT_NO_DEBUG)
+typedef unsigned int uint;
+#endif
 
 namespace Martta
 {
 
-template<class T> class SafePointer;
-
 #if _MSC_VER
 template<class T> inline T round(T const& x) { return ((x)>=0?(long)((x)+0.5):(long)((x)-0.5)); }
 #endif
+
+inline String times(int _s, int _omte, String const& _btwn)
+{
+	String r;
+	if (_omte <= _s)
+		return r;
+	r = String::number(_s);
+	for (int i = _s + 1; i < _omte; i++)
+		r += _btwn + String::number(i);
+	return r;
+}
+
+inline String camelCase(String const& _t)
+{
+	if (!_t.size())
+		return _t;
+	String t = _t.simplified();
+	String ret;
+	ret.reserve(t.size());
+	for(int i = 0; i < t.size(); i++)
+		if (t[i] == ' ')
+			ret += String("%1").arg(t[++i]).toUpper()[0];
+		else
+			ret += t[i];
+	return ret;
+}
+
+template<class T> List<T> solve(List<T> const& _q, MultiHash<T, T> const& _deps)
+{
+	List<T> q = _q;
+	List<T> ret;
+	MultiHash<T, T> deps = _deps;
+	MultiHash<T, T> depees = _deps.inverted();
+	while (!q.isEmpty())
+	{
+		T n = q.takeLast();
+		ret << n;
+		foreach (T m, depees.values(n))	// go through all that depend on n
+		{
+			depees.removeOne(n, m);
+			deps.removeOne(m, n);
+			if (!deps.count(m))			// if they themselves don't depend on anything else, whack them in q.
+				q << m;
+		}
+	}
+	
+	if (deps.size())
+		return List<T>();
+	return ret;
+}
+
+template<class T>
+class NameTrait
+{
+public:
+	static String name(T _val) { return _val ? _val->name() : String(); }
+};
+
+template<class S> inline List<S> nameStarts(List<S> const& _l, String const& _s)
+{
+	List<S> ret;
+	foreach (S i, _l)
+		if (NameTrait<S>::name(i).toLower().startsWith(_s.toLower()))
+			ret << i;
+	return ret;
+}
+
+/* 
+// TODO: Move to MS.
+template<class E>
+class Flags
+{
+public:
+	Flags(): m_value(0) {}
+	Flags(E _v): m_value(_v) {}
+	
+	inline Flags& set(E _f, bool _v = true) { m_value = (test(_f) != _v) ? m_value ^ _f : m_value; return *this; }
+	inline bool test(E _f) const { return m_value & _f; }
+	
+	Qualifiers operator|(Qualifier _q) const { return m_value
+	
+private:
+	Flags(int _f) {
+	
+	int m_value;
+};
+#define MS_DECLARE_FLAGS(Flag) \
+typedef Flags<Flag> Flag ## s; \
+Flag ## s operator|(Flag _a, Flag _b) { return Flag ## s(_a|_b); }
+*/
+
+
+// -> Various Entity class's support libs.
 
 enum Access
 {
@@ -50,8 +143,6 @@ enum Access
 	NoAccess
 };
 
-typedef Hash<String, String> ViewKeys;
-
 typedef double Precedence;
 extern const Precedence NoPrecedence;
 
@@ -61,7 +152,7 @@ enum Associativity
 	LeftAssociativity,
 	RightAssociativity
 };
-	
+
 enum Qualifier
 {
 	NoQualifiers = 0,
@@ -78,7 +169,8 @@ enum Qualifier
 	MethodMask = FunctionMask|Virtual,
  	QualifierMask = Static|Extern|Mutable|Volatile|Virtual|Restrict|Inline|Explicit
 };
-Q_DECLARE_FLAGS(Qualifiers, Qualifier)
+typedef int Qualifiers;
+inline void setFlag(Qualifiers& _qs, Qualifier _f, bool _v = true) { _qs = ((_qs&_f) != _v) ? _qs ^ _f : _qs; }
 
 inline char const* code(Access _i)
 {
@@ -116,76 +208,11 @@ enum WhitespacePosition
 
 String code(Qualifiers _q, WhitespacePosition _p = AtEnd);
 
-template<class T> inline void setFlag(QFlags<T>& _s, T _f, bool _v = true)
-{
-	_s = (_s.testFlag(_f) != _v) ? _s ^ _f : _s;
-}
 
-template<class T> inline List<T> reversed(List<T> const& _l)
-{
-	List<T> ret;
-	foreach (T i, _l) ret.prepend(i);
-	return ret;
-}
 
-template<class T>
-class NameTrait
-{
-public:
-	static String name(T _val) { return _val ? _val->name() : String(); }
-};
+// -> Entity's support.
 
-template<class S> inline List<S> nameStarts(List<S> const& _l, String const& _s)
-{
-	List<S> ret;
-	foreach (S i, _l)
-		if (NameTrait<S>::name(i).toLower().startsWith(_s.toLower()))
-			ret << i;
-	return ret;
-}
-
-inline String times(int _s, int _omte, String const& _btwn)
-{
-	String r;
-	if (_omte <= _s)
-		return r;
-	r = String::number(_s);
-	for (int i = _s + 1; i < _omte; i++)
-		r += _btwn + String::number(i);
-	return r;
-}
-
-inline String camelCase(String const& _t)
-{
-	if (!_t.size())
-		return _t;
-	String t = _t.simplified();
-	String ret;
-	ret.reserve(t.size());
-	for(int i = 0; i < t.size(); i++)
-		if (t[i] == ' ')
-			ret += String("%1").arg(t[++i]).toUpper()[0];
-		else
-			ret += t[i];
-	return ret;
-}
-
-inline StringList startsWith(StringList const& _l, String const& _s)
-{
-	StringList ret;
-	foreach (String i, _l)
-		if (i.toLower().startsWith(_s.toLower()))
-			ret << i;
-	return ret;
-}
-
-template<class T, class F> inline List<T> qlist_cast(List<F> _f)
-{
-	List<T> ret;
-	foreach (F i, _f)
-		ret << static_cast<T>(i);
-	return ret;
-}
+typedef Hash<String, String> ViewKeys;
 
 template<class T, class F> inline List<T*> castEntities(List<F*> _f)
 {
@@ -201,38 +228,6 @@ template<class T, class F> inline List<T*> filterEntities(List<F*> _f)
 	foreach (F* i, _f)
 		if (i->template isKind<T>())
 			ret << i->template asKind<T>();
-	return ret;
-}
-
-template<class T, class S> inline MultiHash<S, T> inverted(MultiHash<T, S> const& _m)
-{
-	MultiHash<S, T> ret;
-	for (typename MultiHash<T, S>::ConstIterator i = _m.begin(); i != _m.end(); ++i)
-		ret.insert(i.value(), i.key());
-	return ret;
-}
-
-template<class T> List<T> solve(List<T> const& _q, MultiHash<T, T> const& _deps)
-{
-	List<T> q = _q;
-	List<T> ret;
-	MultiHash<T, T> deps = _deps;
-	MultiHash<T, T> depees = inverted(_deps);
-	while (!q.isEmpty())
-	{
-		T n = q.takeLast();
-		ret << n;
-		foreach (T m, depees.values(n))	// go through all that depend on n
-		{
-			depees.removeOne(n, m);
-			deps.removeOne(m, n);
-			if (!deps.count(m))			// if they themselves don't depend on anything else, whack them in q.
-				q << m;
-		}
-	}
-	
-	if (deps.size())
-		return List<T>();
 	return ret;
 }
 

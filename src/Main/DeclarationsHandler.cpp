@@ -264,13 +264,13 @@ QString properName(QXmlAttributes const& _a)
 
 EnumValueResolver::EnumValueResolver(EnumValue* _s, QXmlAttributes const& _a)
 {
-	_s->middle(Identifiable::Identity).place(new TextLabel(properName(_a)));
+	_s->middle(Identifiable::Identity).place(new TextLabel(qs(properName(_a))));
 }
 
 FunctionResolver::FunctionResolver(Function* _s, QXmlAttributes const& _a):
 	m_subject(_s)
 {
-	_s->middle(Identifiable::Identity).place(new TextLabel(properName(_a)));
+	_s->middle(Identifiable::Identity).place(new TextLabel(qs(properName(_a))));
 //	setFlag(m_subject->m_qualifiers, Extern, _a.value("extern") == "1");
 	m_subject->m_location.m_lineNumber = _a.value("line").toInt();
 
@@ -285,7 +285,7 @@ void FunctionResolver::addArgument(QXmlAttributes const& _a)
 	m_argIds << _a.value("type");
 	Argument* v = new Argument;
 	m_subject->back().place(v);
-	v->middle(Identifiable::Identity).place(new TextLabel(_a.value("name")));
+	v->middle(Identifiable::Identity).place(new TextLabel(qs(_a.value("name"))));
 }
 
 void FunctionResolver::resolve(DeclarationsHandler* _h)
@@ -295,13 +295,13 @@ void FunctionResolver::resolve(DeclarationsHandler* _h)
 
 	for (int i = 0; i < m_argIds.size(); i++)
 		m_subject->argument(i)->middle(VariableNamer::OurType).place(_h->resolveType(m_argIds[i]));
-	m_subject->m_location.m_file = _h->commitToFile(m_fileId, m_subject);
+	m_subject->m_location.m_file = qs(_h->commitToFile(m_fileId, m_subject));
 }
 
 VariableResolver::VariableResolver(Variable* _s, QXmlAttributes const& _a):
 	m_subject(_s)
 {
-	_s->middle(Identifiable::Identity).place(new TextLabel(properName(_a)));
+	_s->middle(Identifiable::Identity).place(new TextLabel(qs(properName(_a))));
 	setFlag(m_subject->m_qualifiers, Extern, _a.value("extern") == "1");
 	m_subject->m_location.m_lineNumber = _a.value("line").toInt();
 
@@ -314,7 +314,7 @@ void VariableResolver::resolve(DeclarationsHandler* _h)
 {
 	m_subject->middle(VariableNamer::OurType).place(_h->resolveType(m_typeId));
 	if (!m_subject->parent()->parent())
-		m_subject->m_location.m_file = _h->commitToFile(m_fileId, m_subject);
+		m_subject->m_location.m_file = qs(_h->commitToFile(m_fileId, m_subject));
 }
 
 void TypeResolver::init(QXmlAttributes const& _a)
@@ -324,7 +324,7 @@ void TypeResolver::init(QXmlAttributes const& _a)
 		// Don't do anything - we're an anonymous enum.
 	}
 	else
-		subject()->middle(Identifiable::Identity).place(new TextLabel(properName(_a)));
+		subject()->middle(Identifiable::Identity).place(new TextLabel(qs(properName(_a))));
 	subject()->m_location.m_lineNumber = _a.value("line").toInt();
 
 	m_id = _a.value("id");
@@ -337,7 +337,7 @@ void TypeResolver::init(QXmlAttributes const& _a)
 void TypeResolver::resolve(DeclarationsHandler* _h)
 {
 	if (!subject()->parent()->parent())
-		subject()->m_location.m_file = _h->commitToFile(m_fileId, subject());
+		subject()->m_location.m_file = qs(_h->commitToFile(m_fileId, subject()));
 }
 
 void TypedefResolver::init(QXmlAttributes const& _a)

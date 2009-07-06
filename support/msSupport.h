@@ -33,6 +33,12 @@
 #define inline MS_EXPORT inline
 #endif
 
+// Fairly horrible, but seems like Qt will clash with us otherwise.
+typedef unsigned char uchar;
+typedef unsigned short ushort;
+typedef unsigned int uint;
+typedef unsigned long ulong;
+
 namespace MarttaSupport
 {
 
@@ -45,7 +51,7 @@ class String;
 template<class> class List;
 template<class, class, int> class Hash;
 template<class, class, int> class MultiHash;
-typedef List<String> StringList;
+class StringList;
 
 #if defined(DEBUG)
 
@@ -70,14 +76,6 @@ void assertFailed(int, char const*, char const*, char const*, char const*);
 template<typename T>
 inline T max(T const& _a, T const& _b) { return (_a < _b) ? _b : _a; }
 
-typedef unsigned char uchar;
-typedef unsigned short ushort;
-namespace t
-{
-typedef unsigned int uint;
-}
-typedef unsigned long ulong;
-
 template<typename T>
 inline T min(T const& _a, T const& _b) { return (_b < _a) ? _b : _a; }
 
@@ -98,14 +96,14 @@ template<typename T>
 inline T nextHigher(T _k)
 {
 	_k--;
-	for (t::uint i = 1; i < sizeof(T) * 8; i = i * 2)
+	for (uint i = 1; i < sizeof(T) * 8; i = i * 2)
 		_k = _k | _k >> i;
 	return _k + 1;
 }
 
-inline t::uint floorLog2(t::uint _a) 
+inline uint floorLog2(uint _a) 
 {
-	t::uint rett;
+	uint rett;
 #ifdef _MSC_VER
 	_asm
 	{

@@ -6,7 +6,7 @@ TEMPLATE = lib
 CONFIG -= release debug stl qt
 
 # SET THE CONFIG HERE!
-CONFIG += profile warn_on thread staticlib
+CONFIG += debug warn_on thread staticlib
 
 profile {
 DEFINES += PROFILE
@@ -36,6 +36,6 @@ DEPENDPATH += .
 INCLUDEPATH += .
 
 # Input
-HEADERS += msSupport.h msList.h msString.h msList.inl msHash.h msHash.inl msRgb.h msTextStream.h msDebug.h
-SOURCES += msSupport.cpp msString.cpp msRgb.cpp msTextStream.cpp msDebug.cpp
+HEADERS += msSupport.h msList.h msString.h msList.inl msHash.h msHash.inl msRgb.h msTextStream.h msDebug.h msStringList.h
+SOURCES += msSupport.cpp msString.cpp msRgb.cpp msTextStream.cpp msDebug.cpp msStringList.cpp
 

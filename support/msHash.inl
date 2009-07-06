@@ -27,7 +27,7 @@
 namespace MarttaSupport
 {
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Box::Box(GeneralHash const& _h):
 	m_nodes		(_h.m_nodes),
 	m_capacity	(_h.m_capacity),
@@ -37,12 +37,12 @@ GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Box::Box(GeneralHash const& 
 	const_cast<GeneralHash&>(_h).m_count = 0;
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Box::~Box()
 {
 	if (m_nodes)
 	{
-		for (t::uint i = 0; i < m_capacity; i++)
+		for (uint i = 0; i < m_capacity; i++)
 			if (m_nodes[i])
 				for (Node* j = m_nodes[i].m_next, *nj = m_nodes[i].m_next ? m_nodes[i].m_next->m_next : 0; j != m_nodes + i; j = nj, nj = j->m_next)
 					delete j;
@@ -50,17 +50,17 @@ GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Box::~Box()
 	}
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::~GeneralHash()
 {
-	for (t::uint i = 0; i < m_capacity; i++)
+	for (uint i = 0; i < m_capacity; i++)
 		if (m_nodes[i])
 			for (Node* j = m_nodes[i].m_next, *nj = m_nodes[i].m_next ? m_nodes[i].m_next->m_next : 0; j != m_nodes + i; j = nj, nj = j->m_next)
 				delete j;
 	deallocate(m_nodes);
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator&
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator::operator++()
 {
@@ -78,7 +78,7 @@ GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator::operator++()
 	return *this;
 }
 		
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator&
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator::operator--()
 {
@@ -109,7 +109,7 @@ GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator::operator--()
 	return *this;
 }
 		
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::ConstIterator&
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::ConstIterator::operator++()
 {
@@ -127,7 +127,7 @@ GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::ConstIterator::operator++()
 	return *this;
 }
 		
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::ConstIterator&
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::ConstIterator::operator--()
 {
@@ -158,7 +158,7 @@ GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::ConstIterator::operator--()
 	return *this;
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 T const GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::value(const Key& _key) const
 {
 	Node* n = findNode(_key);
@@ -167,7 +167,7 @@ T const GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::value(const Key& _ke
 	return n->value();
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 T const GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::value(const Key& _key, T const& _defaultValue) const
 {
 	Node* n = findNode(_key);
@@ -176,7 +176,7 @@ T const GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::value(const Key& _ke
 	return n->value();
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::ConstIterator
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::constFind(Key const& _key) const
 {
@@ -185,7 +185,7 @@ GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::constFind(Key const& _key) c
 	return n ? ConstIterator(n, m) : constEnd();
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::find(Key const& _key)
 {
@@ -194,7 +194,7 @@ GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::find(Key const& _key)
 	return n ? Iterator(n, m) : end();
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::ConstIterator
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::constFind(Key const& _key, T const& _value) const
 {
@@ -203,7 +203,7 @@ GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::constFind(Key const& _key, T
 	return n ? ConstIterator(n, m) : constEnd();
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::find(Key const& _key, T const& _value)
 {
@@ -212,8 +212,8 @@ GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::find(Key const& _key, T cons
 	return n ? Iterator(n, m) : end();
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
-template<t::uint Min2, bool AlwaysMulti2>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<uint Min2, bool AlwaysMulti2>
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>&
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::moveFromBox(typename GeneralHash<Key, T, Min2, AlwaysMulti2, ImplicitKey>::Box const& _b)
 {
@@ -234,7 +234,7 @@ GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::moveFromBox(typename General
 	return *this;
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Node*
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::findNode(Node* _m, Key const& _key) const
 {
@@ -248,7 +248,7 @@ GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::findNode(Node* _m, Key const
 	return 0;
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Node*
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::findNode(Node* _m, Key const& _key, T const& _value) const
 {
@@ -262,8 +262,8 @@ GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::findNode(Node* _m, Key const
 	return 0;
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
-void GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::allocate(t::uint _s)
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
+void GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::allocate(uint _s)
 {
 	AssertNR(_s >= Min);
 	m_nodes = new Node[_s + 2] + 1;
@@ -272,14 +272,14 @@ void GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::allocate(t::uint _s)
 	m_nodes[_s].setBackSentinel();
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 void GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::deallocate(Node*& _n)
 {
 	delete [] (_n - 1);
 	_n = 0;
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 void GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::checkSize()
 {
 	if (m_autoGrow && m_count > m_capacity / 2)
@@ -288,15 +288,15 @@ void GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::checkSize()
 		resizeToPowerOfTwo(m_capacity / 2);
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Node*
-GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::freshNode(t::uint _index)
+GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::freshNode(uint _index)
 { 	
 	AssertNR(_index < m_capacity);
 	return freshNode(m_nodes + _index);
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Node*
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::freshNode(Node* _m)
 { 	
@@ -306,15 +306,15 @@ GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::freshNode(Node* _m)
 	return _m;
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Node*
-GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::staleNode(t::uint _index)
+GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::staleNode(uint _index)
 { 	
 	AssertNR(_index < m_capacity);
 	return freshNode(m_nodes + _index);
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Node*
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::staleNode(Node* _m)
 { 	
@@ -324,7 +324,7 @@ GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::staleNode(Node* _m)
 	return _m;
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Node*
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::appendNode(Node* _after)
 {
@@ -334,7 +334,7 @@ GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::appendNode(Node* _after)
 	return nn;
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Node*
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::insertNode(Node* _before)
 {
@@ -345,7 +345,7 @@ GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::insertNode(Node* _before)
 	return _before;
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 int GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::count(Key const& _key) const
 {
 	Node* m = m_nodes + indexOf(_key);
@@ -362,7 +362,7 @@ int GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::count(Key const& _key) c
 	return ret;
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 int GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::remove(Key const& _key)
 {
 	checkSize();
@@ -408,7 +408,7 @@ int GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::remove(Key const& _key)
 	return ret;
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 int GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::removeOne(Key const& _key)
 {
 	checkSize();
@@ -447,7 +447,7 @@ int GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::removeOne(Key const& _ke
 	return 1;
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 int GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::removeOne(Key const& _key, T const& _value)
 {
 	checkSize();
@@ -486,7 +486,7 @@ int GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::removeOne(Key const& _ke
 	return 1;
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::erase(Iterator _pos)
 {
 
@@ -552,7 +552,7 @@ typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator GeneralHas
 	}
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 T GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::take(Key const& _key)
 {
 	checkSize();
@@ -592,19 +592,19 @@ T GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::take(Key const& _key)
 	return ret;
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 inline bool GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator::operator==(ConstIterator const& _i)
 {
 	return m_node == _i.m_node;
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 inline bool GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator::operator!=(ConstIterator const& _i)
 {
 	return m_node != _i.m_node;
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 void GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::clear()
 {
 	this->~GeneralHash();
@@ -612,13 +612,13 @@ void GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::clear()
 	m_count = 0;
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::insert(Key const& _key, T const& _value)
 {
 	if (AlwaysMulti)
 		return insertMulti(_key, _value);
 	checkSize();
-	t::uint index = indexOf(_key);
+	uint index = indexOf(_key);
 	Node* nn = findNode(m_nodes + index, _key);
 	if (nn)
 		nn->value() = _value;
@@ -631,11 +631,11 @@ typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator GeneralHas
 	return Iterator(nn, m_nodes + index);
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::insertMulti(Key const& _key, T const& _value)
 {
 	checkSize();
-	t::uint index = indexOf(_key);
+	uint index = indexOf(_key);
 	Node* nn = findNode(m_nodes + index, _key);
 	if (nn)
 		nn = insertNode(nn);
@@ -646,11 +646,11 @@ typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator GeneralHas
 	return Iterator(nn, m_nodes + index);
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 List<T> GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::values() const
 {
 	List<T> ret;
-	for (t::uint i = 0; i < m_capacity; i++)
+	for (uint i = 0; i < m_capacity; i++)
 		if (m_nodes[i])
 		{
 			Node* m = m_nodes + i;
@@ -662,12 +662,12 @@ List<T> GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::values() const
 	return ret;
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
-template<t::uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
 void GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::copy(GeneralHash<Key, T, Min2, AlwaysMulti2, ImplicitKey2> const& _other)
 {
 	allocate(_other.m_capacity);
-	for (t::uint i = 0; i < _other.m_capacity; i++)
+	for (uint i = 0; i < _other.m_capacity; i++)
 		if (_other.m_nodes[i])
 		{
 			Node* l = m_nodes + i;
@@ -684,12 +684,12 @@ void GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::copy(GeneralHash<Key, T
 	m_count = _other.m_count;
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
-template<t::uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>& GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::unite(GeneralHash<Key, T, Min2, AlwaysMulti2, ImplicitKey2> const& _other)
 {
 	reserve(1 << (floorLog2((m_count + _other.m_count) * 2) + 1));
-	for (t::uint i = 0; i < _other.m_capacity; i++)
+	for (uint i = 0; i < _other.m_capacity; i++)
 		if (_other.m_nodes[i])
 		{
 			Node* m = _other.m_nodes + i;
@@ -697,7 +697,7 @@ GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>& GeneralHash<Key, T, Min, Alw
 			do
 			{
 				Key const& key = j->key();
-				t::uint index = indexOf(key);
+				uint index = indexOf(key);
 				Node* nn = findNode(m_nodes + index, key);
 				if (nn)
 					nn = insertNode(nn);
@@ -716,10 +716,10 @@ GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>& GeneralHash<Key, T, Min, Alw
 	return *this;
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 Key const GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::key(T const& _value) const
 {
-	for (t::uint i = 0; i < m_capacity; i++)
+	for (uint i = 0; i < m_capacity; i++)
 		if (m_nodes[i])
 		{
 			Node* m = m_nodes + i;
@@ -732,10 +732,10 @@ Key const GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::key(T const& _valu
 	return Key();
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 Key const GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::key(T const& _value, Key const& _defaultKey) const
 {
-	for (t::uint i = 0; i < m_capacity; i++)
+	for (uint i = 0; i < m_capacity; i++)
 		if (m_nodes[i])
 		{
 			Node* m = m_nodes + i;
@@ -748,11 +748,11 @@ Key const GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::key(T const& _valu
 	return _defaultKey;
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 List<Key> GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::keys(T const& _value) const
 {
 	List<Key> ret;
-	for (t::uint i = 0; i < m_capacity; i++)
+	for (uint i = 0; i < m_capacity; i++)
 		if (m_nodes[i])
 		{
 			Node* m = m_nodes + i;
@@ -770,7 +770,7 @@ List<Key> GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::keys(T const& _val
 	return ret;
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 List<T> GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::values(Key const& _key) const
 {
 	List<T> ret;
@@ -787,11 +787,11 @@ List<T> GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::values(Key const& _k
 	return ret;
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 List<Key> GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::keys() const
 {
 	List<Key> ret;
-	for (t::uint i = 0; i < m_capacity; i++)
+	for (uint i = 0; i < m_capacity; i++)
 		if (m_nodes[i])
 		{
 			Node* m = m_nodes + i;
@@ -803,7 +803,7 @@ List<Key> GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::keys() const
 	return ret;
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 bool GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::contains(Key const& _key, T const& _value) const
 {
 	Node* m = m_nodes + indexOf(_key);
@@ -823,13 +823,13 @@ bool GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::contains(Key const& _ke
 	return false;
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
-template<t::uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
 bool GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::operator==(GeneralHash<Key, T, Min2, AlwaysMulti2, ImplicitKey2> const& _other) const
 {
 	if (m_count != _other.m_count)
 		return false;
-	for (t::uint i = 0; i < m_capacity; i++)
+	for (uint i = 0; i < m_capacity; i++)
 		if (m_nodes[i])
 		{
 			Node* m = m_nodes + i;
@@ -842,11 +842,11 @@ bool GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::operator==(GeneralHash<
 	return true;
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 List<Key> GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::uniqueKeys() const
 {
 	List<Key> ret;
-	for (t::uint i = 0; i < m_capacity; i++)
+	for (uint i = 0; i < m_capacity; i++)
 		if (m_nodes[i])
 		{
 			Node* m = m_nodes + i;
@@ -863,8 +863,8 @@ List<Key> GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::uniqueKeys() const
 	return ret;
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
-void GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::resizeToPowerOfTwo(t::uint _size)
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
+void GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::resizeToPowerOfTwo(uint _size)
 {
 	AssertNR(isPOT(_size));
 	AssertNR(_size >= Min);
@@ -877,14 +877,14 @@ void GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::resizeToPowerOfTwo(t::u
 		moveAndDelete(oldNodes, oldCapacity);
 }
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
-void GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::moveAndDelete(Node* _n, t::uint _c)
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
+void GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::moveAndDelete(Node* _n, uint _c)
 {
 	if (m_capacity > _c)
 	{	
 		// capacity increasing; don't know the index off hand (one of (m_capacity / _c) though).
-		t::uint lowerBits = floorLog2(_c);
-		for (t::uint ii = 0; ii < _c; ii++)
+		uint lowerBits = floorLog2(_c);
+		for (uint ii = 0; ii < _c; ii++)
 		{
 			Node** ls = new Node*[m_capacity / _c];
 			memset(ls, 0, sizeof(Node*) * m_capacity / _c);
@@ -896,7 +896,7 @@ void GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::moveAndDelete(Node* _n,
 				do
 				{
 					x = j->m_next;
-					t::uint i = indexOf(j->key());
+					uint i = indexOf(j->key());
 					Node* l = ls[i >> lowerBits];
 					if (l)				// If there's already one in destination bucket and the source is not a master node
 					{
@@ -926,11 +926,11 @@ void GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::moveAndDelete(Node* _n,
 	{
 		// capacity decreasing; 
 		// go through new buckets, then iterate over possible old buckets.
-		for (t::uint i = 0; i < m_capacity; i++)
+		for (uint i = 0; i < m_capacity; i++)
 		{
 			AssertNR(!m_nodes[i]);
 			Node* l = 0;
-			for (t::uint ii = i; ii < _c; ii += m_capacity)
+			for (uint ii = i; ii < _c; ii += m_capacity)
 				if (_n[ii])
 				{
 					Node* m = _n + ii;
@@ -967,10 +967,10 @@ void GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::moveAndDelete(Node* _n,
 	deallocate(_n);
 }
 	
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey> void GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::reinsertNode(Node* _n, bool _pleaseDelete)
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey> void GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::reinsertNode(Node* _n, bool _pleaseDelete)
 {
 	// appends the node to the list.
-	t::uint index = indexOf(_n->key());
+	uint index = indexOf(_n->key());
 	if (m_nodes[index] && _pleaseDelete)
 	{
 		// go to end...
@@ -990,13 +990,23 @@ template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitK
 	}
 }
 
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
+GeneralHash<T, Key, Min, AlwaysMulti, ImplicitKey> 
+GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::inverted() const
+{
+	GeneralHash<T, Key, Min, AlwaysMulti, ImplicitKey> ret;
+	for (ConstIterator i = begin(); i != end(); ++i)
+		ret.insert(i.value(), i.key());
+	return ret;
+}
+
 #if defined(QT_DEBUG)
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 QDebug GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::streamToDebug(QDebug _stream) const
 {
 	_stream << "#{";
 	bool first = true;
-	for (t::uint i = 0; i < m_capacity; i++)
+	for (uint i = 0; i < m_capacity; i++)
 		if (m_nodes[i])
 		{
 			Node* m = m_nodes + i;
@@ -1019,12 +1029,12 @@ QDebug GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::streamToDebug(QDebug 
 }
 #endif
 
-template<typename Key, typename T, t::uint Min, bool AlwaysMulti, bool ImplicitKey>
+template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 TextStream& GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::streamToDebug(TextStream& _stream) const
 {
 	_stream << "#{";
 	bool first = true;
-	for (t::uint i = 0; i < m_capacity; i++)
+	for (uint i = 0; i < m_capacity; i++)
 		if (m_nodes[i])
 		{
 			Node* m = m_nodes + i;

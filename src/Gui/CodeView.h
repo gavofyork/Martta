@@ -47,8 +47,8 @@ public:
 	void						setShowOneChange(bool _on) { if (m_showOneChange == _on) return; m_showOneChange = _on; update(); }
 	
 	// Stylist
-	EntityStylist*				stylist() const { return m_stylist; }
-	void						setStylist(EntityStylist* _s) { m_stylist = _s; } 
+	Stylist*				stylist() const { return m_stylist; }
+	void						setStylist(Stylist* _s) { m_stylist = _s; } 
 
 	// What's happening?
 	inline Entity*				current() const { return m_current ? (Entity*)m_current : m_subject; }
@@ -156,7 +156,7 @@ private:
 	bool				m_insertLock;
 	float				m_lastDefiniteX;
 	bool				m_reinterpretCurrentKeyEvent;
-	EntityStylist*		m_stylist;
+	Stylist*		m_stylist;
 	QPointF				m_borderOffset;
 	bool				m_ensureCurrentVisible;
 };

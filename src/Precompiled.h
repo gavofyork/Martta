@@ -18,7 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include <QString>
+//#include <QString>
 
 #include "Entity.h"
 

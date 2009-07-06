@@ -20,38 +20,18 @@
 
 #pragma once
 
-#include "SafePointer.h"
-#include "Entity.h"
-
 namespace Martta
 {
 
-class DelayedActor
+class Stylist
 {
 public:
-	virtual ~DelayedActor() {}
-
-	virtual void						prime() = 0;
-};
-
-class CullManager
-{
-public:
-	static inline CullManager*			get() { return s_this ? s_this : (s_this = new CullManager); } 
+	virtual ~Stylist() {}
 	
-	CullManager(): m_actor(0) {}
-	virtual ~CullManager() {}
-
-	void								setDelayedActor(DelayedActor* _a = 0) { m_actor = _a; }
-
-	inline void							checkCull(Entity* _e) { if (m_actor) m_actor->prime(); m_cullList << _e; }
-	void								doCulling();
-
-private:
-	// List of entities to check and possibly delete at next opportunity when nothing else happening.
-	List<SafePointer<Entity> >			m_cullList;
-	DelayedActor*						m_actor;
-	static CullManager*					s_this;
+	virtual String defineLayout(Entity* _e, ViewKeys const& _k)
+	{
+		return _e->defineLayout(_k);
+	}
 };
 
 }

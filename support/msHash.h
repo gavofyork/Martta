@@ -66,27 +66,27 @@ private:
 	S m_second;
 };
 
-inline t::uint hashOf(char _key) { return (t::uint)_key; }
-template<typename T1, typename T2> inline t::uint hashOf(Pair<T1, T2> const& _key) { t::uint fh = hashOf(_key.first()); return (fh << 16 | fh >> 16) ^ hashOf(_key.second()); }
-inline t::uint hashOf(uchar _key) {  return (t::uint)_key; }
-inline t::uint hashOf(signed char _key) {  return (t::uint)_key; }
-inline t::uint hashOf(ushort _key) { return (t::uint)_key; }
-inline t::uint hashOf(short _key) { return (t::uint)_key; }
-inline t::uint hashOf(unsigned int _key) { return (t::uint)_key; }
-inline t::uint hashOf(int _key) { return (t::uint)_key; }
-inline t::uint hashOf(ulong _key) { return (t::uint)_key; }
-inline t::uint hashOf(long _key) { return (t::uint)_key; }
+inline uint hashOf(char _key) { return (uint)_key; }
+template<typename T1, typename T2> inline uint hashOf(Pair<T1, T2> const& _key) { uint fh = hashOf(_key.first()); return (fh << 16 | fh >> 16) ^ hashOf(_key.second()); }
+inline uint hashOf(uchar _key) {  return (uint)_key; }
+inline uint hashOf(signed char _key) {  return (uint)_key; }
+inline uint hashOf(ushort _key) { return (uint)_key; }
+inline uint hashOf(short _key) { return (uint)_key; }
+inline uint hashOf(unsigned int _key) { return (uint)_key; }
+inline uint hashOf(int _key) { return (uint)_key; }
+inline uint hashOf(ulong _key) { return (uint)_key; }
+inline uint hashOf(long _key) { return (uint)_key; }
 #ifndef _MSC_VER
-inline t::uint hashOf(wchar_t _key) { return (t::uint)_key; }
+inline uint hashOf(wchar_t _key) { return (uint)_key; }
 #endif
-inline t::uint hashOf(char const* _key)
+inline uint hashOf(char const* _key)
 {
 	int r = 0;
 	for (char const* i = _key; *i; i++)
 		r = (((r << 16) ^ *i) + ((r >> 16) ^ *i));
 	return r;
 }
-template<typename T> inline t::uint hashOf(T const* _key) { return (t::uint)_key; }
+template<typename T> inline uint hashOf(T const* _key) { return (uint)_key; }
 
 template<typename T, typename S>
 inline Pair<T, S> makePair(T const& _first, S const& _second)
@@ -231,12 +231,12 @@ private:
 	T* m_value;
 };
 
-template<typename Key, typename T, t::uint Min = 32, bool AlwaysMulti = true, bool ImplicitKey = false>
+template<typename Key, typename T, uint Min = 32, bool AlwaysMulti = true, bool ImplicitKey = false>
 class /*MS_EXPORT*/ GeneralHash
 {
 	friend class Iterator;
 	friend class ConstIterator;
-	template<typename Key2, typename T2, t::uint Min2, bool AlwaysMulti2, bool ImplicitKey2> friend class GeneralHash;
+	template<typename Key2, typename T2, uint Min2, bool AlwaysMulti2, bool ImplicitKey2> friend class GeneralHash;
 
 #if defined(QT_DEBUG)
 	friend inline QDebug operator<<(QDebug _stream, ::MarttaSupport::GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey> const& _me) { return _me.streamToDebug(_stream); }
@@ -313,7 +313,7 @@ public:
 
 	class /*MS_EXPORT*/ Box
 	{
-		template<typename Key2, typename T2, t::uint Min2, bool AlwaysMulti2, bool ImplicitKey2> friend class GeneralHash;
+		template<typename Key2, typename T2, uint Min2, bool AlwaysMulti2, bool ImplicitKey2> friend class GeneralHash;
 
 	public:
 		inline Box(): m_nodes(0), m_capacity(0), m_count(0) {}
@@ -325,8 +325,8 @@ public:
 	
 	private:
 		Node* m_nodes;
-		t::uint m_capacity;
-		t::uint m_count;
+		uint m_capacity;
+		uint m_count;
 	};
 	
 	typedef Iterator iterator;
@@ -340,23 +340,23 @@ public:
 	inline GeneralHash& operator=(GeneralHash const& _other) { liveCopy(_other); return *this; }
 
 	// Templated CC/AO.
-	template<t::uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
+	template<uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
 	inline GeneralHash(GeneralHash<Key, T, Min2, AlwaysMulti2, ImplicitKey2> const& _other): m_count(0), m_autoGrow(true), m_autoShrink(true) { copy(_other); }
-	template<t::uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
+	template<uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
 	inline GeneralHash& operator=(GeneralHash<Key, T, Min2, AlwaysMulti2, ImplicitKey2> const& _other) { liveCopy(_other); return *this; }
 	
 	// Box CC/AO.
-	template<t::uint Min2, bool AlwaysMulti2>
+	template<uint Min2, bool AlwaysMulti2>
 	inline GeneralHash(typename GeneralHash<Key, T, Min2, AlwaysMulti2, ImplicitKey>::Box const& _b): m_nodes(0) { moveFromBox(_b); }
-	template<t::uint Min2, bool AlwaysMulti2>
+	template<uint Min2, bool AlwaysMulti2>
 	inline GeneralHash& operator=(typename GeneralHash<Key, T, Min2, AlwaysMulti2, ImplicitKey>::Box const& _b) { return moveFromBox(_b); }
 	inline GeneralHash(Box const& _b): m_nodes(0) { moveFromBox<Min, AlwaysMulti>(_b); }
 	inline GeneralHash& operator=(Box const& _b) { return moveFromBox<Min, AlwaysMulti>(_b); }
 	
-	template<t::uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
+	template<uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
 	inline bool operator!=(GeneralHash<Key, T, Min2, AlwaysMulti2, ImplicitKey2> const& _other) const { return !operator==(_other); }
 	
-	template<t::uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
+	template<uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
 	bool operator==(GeneralHash<Key, T, Min2, AlwaysMulti2, ImplicitKey2> const& _other) const;
 
 	inline bool autoGrow() const { return m_autoGrow; }
@@ -364,10 +364,10 @@ public:
 	inline void setAutoGrow(bool _on = true) { m_autoGrow = _on; }
 	inline void setAutoShrink(bool _on = true) { m_autoShrink = _on; }
 	inline void setAutoResize(bool _on = true) { m_autoGrow = m_autoShrink = _on; }
-	inline void reserve(t::uint _size) { if (m_capacity >= _size) return; resize(_size); }
+	inline void reserve(uint _size) { if (m_capacity >= _size) return; resize(_size); }
 	inline int capacity() const { return m_capacity; }
 	inline void squeeze() { resizeToPowerOfTwo(max(Min, nextHigher(m_count))); }
-	inline void resize(t::uint _newSize) { resizeToPowerOfTwo(nextHigher(max(Min, _newSize) - 1)); }
+	inline void resize(uint _newSize) { resizeToPowerOfTwo(nextHigher(max(Min, _newSize) - 1)); }
 
 	inline T& operator[](Key const& _key) { Node* n = findNode(_key); if (!n) return *insert(_key, T()); return n->value(); }
 	inline T const operator[](Key const& _key) const { return value(_key); }
@@ -398,6 +398,9 @@ public:
 	inline T const value(const Key& _key, T const& _defaultValue) const;
 	List<T> values() const;
 	List<T> values(Key const& _key) const;
+	
+
+	inline GeneralHash<T, Key, Min, AlwaysMulti, ImplicitKey> inverted() const;
 
 	inline ConstIterator constBegin() const { Node* n = m_nodes; while (n != m_nodes + m_capacity && !n->isActive()) ++n; return ConstIterator(n, n); }
 	inline ConstIterator begin() const { return constBegin(); }
@@ -413,43 +416,43 @@ public:
 	inline Iterator find(Key const& _key, T const& _value);
 	Iterator erase(Iterator _pos);
 
-	template<t::uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
+	template<uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
 	GeneralHash& unite(GeneralHash<Key, T, Min2, AlwaysMulti2, ImplicitKey2> const& _other);
 
 protected:
 	// useful for assignment operators.
-	template<t::uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
+	template<uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
 	inline void liveCopy(GeneralHash<Key, T, Min2, AlwaysMulti2, ImplicitKey2> const& _other) { this->~GeneralHash(); copy(_other); }
 
-	template<t::uint Min2, bool AlwaysMulti2>
+	template<uint Min2, bool AlwaysMulti2>
 	inline GeneralHash& moveFromBox(typename GeneralHash<Key, T, Min2, AlwaysMulti2, ImplicitKey>::Box const& _b);
 
 private:
 	// Finds or creates the next available node for the appropriate _index.
 	// The node will be considered most recent.
-	privateinline Node* freshNode(t::uint _index);
+	privateinline Node* freshNode(uint _index);
 	privateinline Node* freshNode(Node* _m);
 	// Finds or creates the next available node for the appropriate _index.
 	// The node will be considered least recent.
-	privateinline Node* staleNode(t::uint _index);
+	privateinline Node* staleNode(uint _index);
 	privateinline Node* staleNode(Node* _m);
 	privateinline Node* appendNode(Node* _after);
 	privateinline Node* insertNode(Node* _before);
 	
 	// copy will call allocate() first, so if you're not in a constructor you probably want liveCopy().
-	template<t::uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
+	template<uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
 	void copy(GeneralHash<Key, T, Min2, AlwaysMulti2, ImplicitKey2> const& _other);
 	
-	void moveAndDelete(Node* _n, t::uint _c);
+	void moveAndDelete(Node* _n, uint _c);
 	void reinsertNode(Node* _n, bool _pleaseDelete);	
 	privateinline int indexOf(Key const& _key) const { return hashOf(_key) & (m_capacity - 1); }
-	void resizeToPowerOfTwo(t::uint _size);
+	void resizeToPowerOfTwo(uint _size);
 	// Find most recent node of key _key.
 	privateinline Node* findNode(Key const& _key) const { return findNode(m_nodes + indexOf(_key), _key); }
 	// Find most recent node of key _key, given the master node _m. Slightly faster if master node is provided.
 	Node* findNode(Node* _m, Key const& _key) const;
 	Node* findNode(Node* _m, Key const& _key, T const& _value) const;
-	void allocate(t::uint _s);
+	void allocate(uint _s);
 	void deallocate(Node*& _n);
 
 	// Resizes the hash if necessary
@@ -461,8 +464,8 @@ private:
 	TextStream& streamToDebug(TextStream& _stream) const;
 	
 	Node* m_nodes;
-	t::uint m_capacity;
-	t::uint m_count;
+	uint m_capacity;
+	uint m_count;
 	bool m_autoGrow;
 	bool m_autoShrink;
 };
@@ -474,11 +477,11 @@ public:
 	inline Hash(): GeneralHash<Key, T, Min, false, false>() {}
 	
 	inline Hash(Hash const& _other): GeneralHash<Key, T, Min, false, false>(_other) {}
-	template<t::uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
+	template<uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
 	inline Hash(GeneralHash<Key, T, Min2, AlwaysMulti2, ImplicitKey2> const& _other): GeneralHash<Key, T, Min, false, false>(_other) {}
 	
 	inline Hash& operator=(Hash<Key, T, Min> const& _other) { liveCopy(_other); return *this; }
-	template<t::uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
+	template<uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
 	inline Hash& operator=(GeneralHash<Key, T, Min2, AlwaysMulti2, ImplicitKey2> const& _other) { liveCopy(_other); return *this; }
 
 	inline Hash(typename Hash<Key, T, Min>::Box const& _b): GeneralHash<Key, T, Min, false, false>(_b) {}
@@ -491,18 +494,18 @@ class MultiHash: public GeneralHash<Key, T, Min, true, false>
 public:
 	inline MultiHash(): GeneralHash<Key, T, Min, true, false>() {}
 	inline MultiHash(MultiHash<Key, T, Min> const& _other): GeneralHash<Key, T, Min, true, false>(_other) {}
-	template<t::uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
+	template<uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
 	inline MultiHash(GeneralHash<Key, T, Min2, AlwaysMulti2, ImplicitKey2> const& _other): GeneralHash<Key, T, Min, true, false>(_other) {}
 
 	inline MultiHash& operator=(MultiHash<Key, T, Min> const& _other) { liveCopy(_other); return *this; }
-	template<t::uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
+	template<uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
 	inline MultiHash& operator=(GeneralHash<Key, T, Min2, AlwaysMulti2, ImplicitKey2> const& _other) { liveCopy(_other); return *this; }
 
 	inline MultiHash(typename MultiHash<Key, T, Min>::Box const& _b): GeneralHash<Key, T, Min, true, false>(_b) {}
 	inline MultiHash& operator=(typename MultiHash<Key, T, Min>::Box const& _b) { GeneralHash<Key, T, Min, true, false>::operator=((typename GeneralHash<Key, T, Min, true, false>::Box const&)_b); return *this; }
-/*	template<t::uint Min2, bool AlwaysMulti2>
+/*	template<uint Min2, bool AlwaysMulti2>
 	inline MultiHash(typename GeneralHash<Key, T, Min2, AlwaysMulti2, false>::Box const& _b): GeneralHash<Key, T, Min, true, false>(_b) {}
-	template<t::uint Min2, bool AlwaysMulti2>
+	template<uint Min2, bool AlwaysMulti2>
 	inline MultiHash& operator=(typename GeneralHash<Key, T, Min2, AlwaysMulti2, false>::Box const& _b) { GeneralHash<Key, T, Min, true, false>::operator=(_b); return *this; }*/
 };
 
@@ -512,18 +515,18 @@ class ImplicitHash: public GeneralHash<Key, T, Min, false, true>
 public:
 	inline ImplicitHash(): GeneralHash<Key, T, Min, false, true>() {}
 	inline ImplicitHash(ImplicitHash<Key, T, Min> const& _other): GeneralHash<Key, T, Min, false, true>(_other) {}
-	template<t::uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
+	template<uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
 	inline ImplicitHash(GeneralHash<Key, T, Min2, AlwaysMulti2, ImplicitKey2> const& _other): GeneralHash<Key, T, Min, false, true>(_other) {}
 
 	inline ImplicitHash& operator=(ImplicitHash<Key, T, Min> const& _other) { liveCopy(_other); return *this; }
-	template<t::uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
+	template<uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
 	inline ImplicitHash& operator=(GeneralHash<Key, T, Min2, AlwaysMulti2, ImplicitKey2> const& _other) { liveCopy(_other); return *this; }
 
 	inline ImplicitHash(typename ImplicitHash<Key, T, Min>::Box const& _b): GeneralHash<Key, T, Min, false, true>(_b) {}
 	inline ImplicitHash& operator=(typename ImplicitHash<Key, T, Min>::Box const& _b) { GeneralHash<Key, T, Min, false, true>::operator=(_b); return *this; }
-/*	template<t::uint Min2, bool AlwaysMulti2>
+/*	template<uint Min2, bool AlwaysMulti2>
 	inline ImplicitHash(typename GeneralHash<Key, T, Min2, AlwaysMulti2, true>::Box const& _b): GeneralHash<Key, T, Min, false, true>(_b) {}
-	template<t::uint Min2, bool AlwaysMulti2>
+	template<uint Min2, bool AlwaysMulti2>
 	inline ImplicitHash& operator=(typename GeneralHash<Key, T, Min2, AlwaysMulti2, true>::Box const& _b) { GeneralHash<Key, T, Min, false, true>::operator=(_b); return *this; }*/
 };
 
@@ -533,18 +536,18 @@ class ImplicitMultiHash: public GeneralHash<Key, T, Min, true, true>
 public:
 	inline ImplicitMultiHash(): GeneralHash<Key, T, Min, true, true>() {}
 	inline ImplicitMultiHash(ImplicitMultiHash<Key, T, Min> const& _other): GeneralHash<Key, T, Min, true, true>(_other) {}
-	template<t::uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
+	template<uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
 	inline ImplicitMultiHash(GeneralHash<Key, T, Min2, AlwaysMulti2, ImplicitKey2> const& _other): GeneralHash<Key, T, Min, true, true>(_other) {}
 
 	inline ImplicitMultiHash& operator=(ImplicitMultiHash<Key, T, Min> const& _other) { liveCopy(_other); return *this; }
-	template<t::uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
+	template<uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
 	inline ImplicitMultiHash& operator=(GeneralHash<Key, T, Min2, AlwaysMulti2, ImplicitKey2> const& _other) { liveCopy(_other); return *this; }
 
 	inline ImplicitMultiHash(typename ImplicitMultiHash<Key, T, Min>::Box const& _b): GeneralHash<Key, T, Min, true, true>(_b) {}
 	inline ImplicitMultiHash& operator=(typename ImplicitMultiHash<Key, T, Min>::Box const& _b) { GeneralHash<Key, T, Min, true, true>::operator=(_b); return *this; }
-/*	template<t::uint Min2, bool AlwaysMulti2>
+/*	template<uint Min2, bool AlwaysMulti2>
 	inline ImplicitMultiHash(typename GeneralHash<Key, T, Min2, AlwaysMulti2, true>::Box const& _b): GeneralHash<Key, T, Min, true, true>(_b) {}
-	template<t::uint Min2, bool AlwaysMulti2>
+	template<uint Min2, bool AlwaysMulti2>
 	inline ImplicitMultiHash& operator=(typename GeneralHash<Key, T, Min2, AlwaysMulti2, true>::Box const& _b) { GeneralHash<Key, T, Min, true, true>::operator=(_b); return *this; }*/
 };
 

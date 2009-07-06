@@ -63,11 +63,11 @@ public:
 	Char toLower() const;
 	Char toUpper() const;
 	
-	inline int toInt(bool* _ok = 0, t::uint _base = 10)
+	inline int toInt(bool* _ok = 0, uint _base = 10)
 	{
 		bool ok;
 		_ok = _ok ? _ok : &ok;
-		t::uint r = m_value - L'0';
+		uint r = m_value - L'0';
 		if (r < 10)
 			ok = (r < _base);
 		else if ((r = m_value - L'A') < 26u)
@@ -121,8 +121,8 @@ public:
 		
 	private:
 		wchar_t*				m_data;
-		t::uint					m_length;
-		t::uint					m_allocated;
+		uint					m_length;
+		uint					m_allocated;
 		mutable char*			m_cache;
 	};
 	
@@ -134,7 +134,7 @@ public:
 	inline String(char const* _latin1): m_data(0), m_length(0), m_allocated(0), m_cache(0) { operator=(_latin1); }
 	inline String(wchar_t const* _unicode): m_data(0), m_length(0), m_allocated(0), m_cache(0) { operator=(_unicode); }
 	inline String(int _size, wchar_t _ch): m_data(0), m_length(0), m_allocated(0), m_cache(0) { fill(_ch, _size); }
-#if defined(QT_DEBUG) || defined(QT_NO_DEBUG)
+#if 0//defined(QT_DEBUG) || defined(QT_NO_DEBUG)
 	inline String(QString const& _q): m_data(0), m_length(0), m_allocated(0), m_cache(0) { operator=(_q); }
 #endif
 	inline ~String() { delete [] m_data; }
@@ -146,12 +146,12 @@ public:
 	inline String&			operator=(Char _ch) { reserve(1); m_data[0] = _ch; m_data[1] = 0; m_length = 1; return *this; }
 	String&					operator=(char const* _latin1);
 	String&					operator=(wchar_t const* _unicode);
-#if defined(QT_DEBUG) || defined(QT_NO_DEBUG)
-	inline String&			operator=(QString const& _q) { resize(_q.length()); _q.toWCharArray(m_data); return *this; }
+#if 0//defined(QT_DEBUG) || defined(QT_NO_DEBUG)
+	inline String&			operator=(QString const& _q) { sizeto(_q.length()); _q.toWCharArray(m_data); changed(); return *this; }
 #endif
 	inline					operator wchar_t const*() const { return m_data; }
 	inline					operator char const*() const { return toCString(); }
-#if defined(QT_DEBUG) || defined(QT_NO_DEBUG)
+#if 0//defined(QT_DEBUG) || defined(QT_NO_DEBUG)
 	inline					operator QString() const { return toQString(); }
 #endif
 	inline Char&			operator[](int _i) { changed(); return *(Char*)(m_data + _i); }
@@ -191,32 +191,33 @@ public:
 	String&					append(char const* _str);
 	String&					append(Char _ch);
 	
-	inline Char				at(t::uint _i) const { AssertNR(_i < m_length); return m_data[_i]; }
-	inline Char				value(t::uint _i, Char _default = Char()) const { if (_i < m_length) return m_data[_i]; else return _default; }
+	inline Char				at(uint _i) const { AssertNR(_i < m_length); return m_data[_i]; }
+	inline Char				value(uint _i, Char _default = Char()) const { if (_i < m_length) return m_data[_i]; else return _default; }
 	inline char const*		toCString() const { checkCache(); return m_cache; }
-#if defined(QT_DEBUG) || defined(QT_NO_DEBUG)
+#if 0//defined(QT_DEBUG) || defined(QT_NO_DEBUG)
 	inline QString			toQString() const { return QString::fromWCharArray(m_data, m_length); }
 #endif
-	inline wchar_t*			data() { changed(); return m_data; }
+	inline wchar_t*			data() { return m_data; } // If you changed the data at the pointer returned, call dataChanged() with the pointer returned.
+	inline void				dataChanged(wchar_t* _d) { Assert(_d == m_data, "Passed pointer that is not our own data pointer"); (void)(_d); changed(); }
 	inline wchar_t const*	data() const { return m_data; }
 	inline wchar_t const*	constData() const { return m_data; }
 	
-	void					reserve(t::uint _len);
+	void					reserve(uint _len);
 	inline void				clear() { delete [] m_data; m_data = 0; m_length = m_allocated = 0; changed(); }
-	inline void				chop(t::uint _i) { m_length -= min(m_length, _i); m_data[m_length] = 0; changed(); }
-	inline void				truncate(t::uint _i) { m_length = min(m_length, _i); m_data[m_length] = 0; changed(); }
+	inline void				chop(uint _i) { m_length -= min(m_length, _i); m_data[m_length] = 0; changed(); }
+	inline void				truncate(uint _i) { m_length = min(m_length, _i); m_data[m_length] = 0; changed(); }
 	
 	inline bool				isEmpty() const { return !m_length; }
 	inline int				length() const { return m_length; }
 	inline int				size() const { return m_length; }
-	inline void				resize(t::uint _nl) { reserve(_nl); m_length = _nl; if (m_data) m_data[_nl] = 0; changed(); }
+	inline void				resize(uint _nl) { sizeto(_nl); changed(); }
 	
 	String					trimmed() const;
 	String					simplified() const;
-	String					mid(t::uint _i, t::uint _length) const;
-	inline String			mid(t::uint _i) const { AssertNR(_i <= m_length); return mid(_i, m_length - _i); }
-	inline String			left(t::uint _len) const { AssertNR(_len <= m_length); return mid(0, _len); }
-	inline String			right(t::uint _len) const { AssertNR(_len <= m_length); return mid(m_length - _len, _len); }
+	String					mid(uint _i, uint _length) const;
+	inline String			mid(uint _i) const { return mid(_i, m_length - min(m_length, _i)); }
+	inline String			left(uint _len) const { return mid(0, min(m_length, _len)); }
+	inline String			right(uint _len) const { return mid(m_length - min(m_length, _len), min(m_length, _len)); }
 
 	bool					contains(String const& _str) const;
 	bool					contains(Char _ch) const;
@@ -228,10 +229,10 @@ public:
 	int						indexOf(Char _ch, int _from = 0) const;
 	int						lastIndexOf(String const& _str, int _from = -1) const;
 	int						lastIndexOf(Char _ch, int _from = -1) const;
-	int						indexOfNth(String const& _str, t::uint _th) const;
-	int						indexOfNth(Char _ch, t::uint _th) const;
-	int						lastIndexOfNth(String const& _str, t::uint _th) const;
-	int						lastIndexOfNth(Char _ch, t::uint _th) const;
+	int						indexOfNth(String const& _str, uint _th) const;
+	int						indexOfNth(Char _ch, uint _th) const;
+	int						lastIndexOfNth(String const& _str, uint _th) const;
+	int						lastIndexOfNth(Char _ch, uint _th) const;
 
 	bool					endsWith(String const& _str) const;
 	bool					endsWith(Char _ch) const { return m_length && m_data[m_length - 1] == _ch; }
@@ -248,13 +249,13 @@ public:
 	String					toLower() const;
 	String					toUpper() const;
 
-	String&					replace(t::uint _position, t::uint _n, String const& _after);
-	String&					replace(t::uint _position, t::uint _n, Char _after);
+	String&					replace(uint _position, uint _n, String const& _after);
+	String&					replace(uint _position, uint _n, Char _after);
 	String&					replace(String const& _before, String const& _after);
 	String&					replace(Char _ch, String const& _after);
 	String&					replace(Char _before, Char _after);
-	inline String&			insert(t::uint _position, String const& _str) { return replace(_position, 0, _str); }
-	inline String&			insert(t::uint _position, Char _ch) { return replace(_position, 0, _ch); }
+	inline String&			insert(uint _position, String const& _str) { return replace(_position, 0, _str); }
+	inline String&			insert(uint _position, Char _ch) { return replace(_position, 0, _ch); }
 	inline String&			prepend(String const& _str) { return replace(0, 0, _str); }
 	inline String&			prepend(Char _ch) { return replace(0, 0, _ch); }
 	inline String&			prepend(const char* _str) { return replace(0, 0, String(_str)); }
@@ -264,7 +265,7 @@ public:
 
 	bool					toBool(bool* _ok = 0) const { if (_ok) *_ok = true; if (operator==(s_true)) return true; else if (operator==(s_false)) return false; if (_ok) *_ok = false; return false; }
 	int						toInt(bool* _ok = 0, int _base = 10) const;
-	t::uint					toUint(bool* _ok = 0, int _base = 10) const;
+	uint					toUint(bool* _ok = 0, int _base = 10) const;
 	double					toDouble(bool* _ok = 0) const;
 	inline float			toFloat(bool* _ok = 0) const { return (float)toDouble(_ok); }
 
@@ -281,7 +282,7 @@ public:
 	String					arg(String const& _a, int _fieldWidth = 0, Char _fillChar = L' ') const;
 	inline String			arg(wchar_t const* _a, int _fieldWidth = 0, Char _fillChar = L' ') const { return arg(String(_a), _fieldWidth, _fillChar); }
 	inline String			arg(char const* _a, int _fieldWidth = 0, Char _fillChar = L' ') const { return arg(String(_a), _fieldWidth, _fillChar); }
-	inline String			arg(void* _a) const { return arg(number((t::uint)_a, 16)); }
+	inline String			arg(void* _a) const { return arg(number((uint)_a, 16)); }
 	inline String			arg(bool _a) const { return arg(number(_a)); }
 	inline String			arg(double _a, int _fieldWidth = 0, char _format = 'g', int _precision = -1, Char _fillChar = L' ') const { return arg(String::number(_a, _format, _precision), _fieldWidth, _fillChar); }
 	inline String			arg(long _a, int _fieldWidth = 0, wchar_t _fillChar = L' ') const { return arg(String::number(_a), _fieldWidth, Char(_fillChar)); }
@@ -311,6 +312,13 @@ public:
 	static String const		s_false;
 
 private:
+	privateinline void		sizeto(int _nl)	// DONT FORGET TO CALL CHANGED AFTER USING THIS!
+	{
+		reserve(_nl);
+		m_length = _nl;
+		if (m_data)
+			m_data[_nl] = 0; 
+	}
 	privateinline void		changed()
 	{
 		delete [] m_cache;
@@ -323,15 +331,15 @@ private:
 	int						findNextPlaceholder(wchar_t const** _token) const;
 		
 	wchar_t*				m_data;
-	t::uint					m_length;
-	t::uint					m_allocated;
+	uint					m_length;
+	uint					m_allocated;
 	
 	mutable char*			m_cache;
 };
 
-inline t::uint hashOf(String const& _s)
+inline uint hashOf(String const& _s)
 {
-	t::uint ret = 5381;
+	uint ret = 5381;
 	wchar_t const* i = _s.constData() + _s.length();
 	while (i-- != _s.constData())
 		ret = ((ret << 5) + ret) ^ *i;
@@ -363,47 +371,6 @@ inline const String operator+(String const& _s, wchar_t _ch) { return String(_s)
 inline const String operator+(wchar_t _ch, String const& _s) { return String(_s).prepend(_ch); }
 
 }
-
-#if defined(QT_DEBUG)// || defined(QT_NO_DEBUG)
-/*inline QDataStream& operator<<(QDataStream& _stream, MarttaSupport::String const& _string)
-{
-	_stream << _string.length();
-	wchar_t const* d = _string.data() + _string.length();
-	while (d-- != _string.data())
-		if (sizeof(wchar_t) == 1)
-			_stream << (uint8_t const&)*d;
-		else if (sizeof(wchar_t) == 2)
-			_stream << (uint16_t const&)*d;
-		else if (sizeof(wchar_t) == 4)
-			_stream << (uint32_t const&)*d;
-		else if (sizeof(wchar_t) == 8)
-			_stream << (uint64_t const&)*d;
-	return _stream;
-}
-
-inline QDataStream& operator>>(QDataStream& _stream, MarttaSupport::String& _string)
-{
-	unsigned l;
-	_stream >> l;
-	_string.resize(l);
-	wchar_t* d = _string.data() + _string.length();
-	while (d-- != _string.data())
-		if (sizeof(wchar_t) == 1)
-			_stream >> (quint8&)*d;
-		else if (sizeof(wchar_t) == 2)
-			_stream >> (quint16&)*d;
-		else if (sizeof(wchar_t) == 4)
-			_stream >> (quint32&)*d;
-		else if (sizeof(wchar_t) == 8)
-			_stream >> (quint64&)*d;
-	return _stream;
-}
-
-inline QDebug operator<<(QDebug _stream, MarttaSupport::String const& _string)
-{
-	return _stream << _string.toQString();
-}*/
-#endif
 
 #if defined(QT_DEBUG) || defined(QT_NO_DEBUG)
 inline unsigned int qHash(MarttaSupport::String const& _s)
