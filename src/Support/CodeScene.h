@@ -28,6 +28,8 @@ using MarttaSupport::String;
 using MarttaSupport::Hash;
 using MarttaSupport::List;
 
+#include "EntitySupport.h"
+
 namespace Martta
 {
 
@@ -48,7 +50,7 @@ public:
 	virtual void				setSubject(Entity* _subject) = 0;
 	
 	// Stylist
-	virtual Stylist*		stylist() const = 0;
+	virtual Stylist*			stylist() const = 0;
 	virtual void				setStylist(Stylist* _s) = 0;
 
 	// What's happening?
@@ -112,7 +114,7 @@ public:
 	virtual void				resetLayoutCache(Entity* _e) = 0;
 	/// For when an entity has changed in the scene.
 	virtual void				relayoutLater(Entity* _e) = 0;
-	inline void					leaving(Entity* _e) { leaving(_e, _e->over()); }
+	void						leaving(Entity* _e);
 	virtual void				leaving(Entity* _e, Position const& _grave) = 0;
 
 	virtual void				killStrobe() = 0;

@@ -39,6 +39,11 @@ CodeScene::~CodeScene()
 	s_allScenes.removeAll(this);
 }
 
+void CodeScene::leaving(Entity* _e)
+{
+	leaving(_e, _e->over());
+}
+
 void CodeScene::notifyOfStrobe(Entity* _child, Entity* _creation)
 {
 	_child->notifyOfStrobe(_creation);

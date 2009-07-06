@@ -20,8 +20,6 @@
 
 #include "CodeScene.h"
 #include "TypeEntity.h"
-#include "ExplicitType.h"
-#include "BuiltinType.h"
 #include "ModifyingType.h"
 #include "Type.h"
 
