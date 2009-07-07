@@ -33,27 +33,6 @@ Declaration::~Declaration()
 {
 }
 
-// Identification, search & location.
-// TODO: move to Identifiable, make recursive?.
-Identifiable* Declaration::findEntity(String const& _key) const
-{
-//	mDebug() << *this << "Seaching for" << _key;
-	if (_key.startsWith("::"))
-	{
-		Identifiable const* i = this;
-		String k = _key;
-		while (i && !k.isEmpty())
-		{
-			String s = k.section("::", 1, 1);
-			k = k.mid(s.size() + 2);
-			i = i->lookupChild(s);
-//			mDebug() << "Key" << s << "gives" << (i ? i->self() : 0);
-		}
-		return const_cast<Identifiable*>(i);
-	}
-	return 0;
-}
-
 void Declaration::archivePtrs(bool) const
 {
 }

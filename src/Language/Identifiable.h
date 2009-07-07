@@ -55,11 +55,15 @@ public:
 	/// Default value to returns the parent is addressable or zero if not (e.g. Statement-derived parent).
 	virtual Identifiable*				addressableContext() const;
 
+	virtual int							registerAnonymous(Identifiable const* _e) const;
+	virtual void						registerAnonymous(Identifiable const* _e, int _k);
+
 	/// @returns true if the entity cannot be explicitly referenced in the CPP code. This is the case in code
 	/// like class {} x; or typedef struct {} y; or enum { z };
 	virtual bool						isHidden() const { return codeName().startsWith(".") || name().isEmpty(); }				///< true for anonymous enums.
 
-	virtual Identifiable*				lookupChild(String const& _key) const;
+	virtual Identifiable*				lookupChild(String const& _subkey) const;
+	Identifiable*						find(String const& _key) const;	// Treats this entity as root scope and looks for (scoped) _key in it. 
 	
 protected:
 	// These *MUST* be used by any final class in its property functions.

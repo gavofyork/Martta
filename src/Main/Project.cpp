@@ -381,7 +381,7 @@ void Project::deserialise(QDomDocument& _d)
 	// Load "program"
 	QString k = _d.documentElement().namedItem("program").toElement().attribute("key");
 	
-	if (Identifiable* e = m_declarations.findEntity(qs(k)))
+	if (Identifiable* e = m_declarations.find(qs(k)))
 		m_program = e->self()->tryKind<Method>();
 	else
 		m_program = 0;

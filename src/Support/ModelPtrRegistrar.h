@@ -25,7 +25,7 @@
 #include <msString.h>
 using namespace MarttaSupport;
 
-#include "Declaration.h"
+#include "Identifiable.h"
 
 namespace Martta
 {
@@ -41,7 +41,7 @@ public:
 	static ModelPtrRegistrar*			get() { return s_this ? s_this : new ModelPtrRegistrar; }
 
 	void								toBeRestored(ModelPtrFace* _p);
-	void								restorePtrs(Declaration const* _root);
+	void								restorePtrs(Identifiable const* _root);
 
 	void								registerTemp(Identifiable const* _e, String const& _key) { AssertNR(!m_registered.contains(_key)); m_tempRegistered[_key] = const_cast<Identifiable*>(_e); }
 	void								registerDeclaration(Identifiable* _e) { AssertNR(!m_registered.contains(_e->key())); m_registered[_e->key()] = _e; }

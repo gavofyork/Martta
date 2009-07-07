@@ -22,7 +22,6 @@
 #include "IdLabel.h"
 #include "TextLabel.h"
 #include "Entity.h"
-#include "Declaration.h"
 #include "Identifiable.h"
 
 namespace Martta
@@ -68,10 +67,39 @@ Identifiable* Identifiable::lookupChild(String const& _key) const
 	return 0;
 }
 
+Identifiable* Identifiable::find(String const& _key) const
+{
+//	mDebug() << *this << "Seaching for" << _key;
+	if (_key.startsWith("::"))
+	{
+		Identifiable const* i = this;
+		String k = _key;
+		while (i && !k.isEmpty())
+		{
+			String s = k.section("::", 1, 1);
+			k = k.mid(s.size() + 2);
+			i = i->lookupChild(s);
+//			mDebug() << "Key" << s << "gives" << (i ? i->self() : 0);
+		}
+		return const_cast<Identifiable*>(i);
+	}
+	return 0;
+}
+
+int Identifiable::registerAnonymous(Identifiable const* _e) const
+{
+	return self()->ancestor<Identifiable>()->registerAnonymous(_e);
+}
+
+void Identifiable::registerAnonymous(Identifiable const* _e, int _k)
+{
+	self()->ancestor<Identifiable>()->registerAnonymous(_e, _k);
+}
+
 void Identifiable::properties(Hash<String, String>& _p) const
 {
 	if (!addressableContext())
-		_p[L"identity"] = String::number(self()->ancestor<Declaration>()->registerAnonymous(this));
+		_p[L"identity"] = String::number(self()->ancestor<Identifiable>()->registerAnonymous(this));
 	_p[L"generalkey"] = key();
 }
 

@@ -24,7 +24,6 @@ namespace Martta
 {
 
 class Identifiable;
-class Declaration;
 class ModelPtrRegistrar;
 
 class ModelPtrFace
@@ -55,7 +54,7 @@ public:
 	String key() const;
 
 	void restoreFrom(String const& _key) { set(_key); }
-	void tryRestore(Declaration const* _root);
+	void tryRestore(Identifiable const* _root);
 
 protected:
 	void set(Identifiable* _e);

@@ -18,20 +18,20 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "Declaration.h"
+#include "Identifiable.h"
 #include "ModelPtrRegistrar.h"
 #include "ModelPtr.h"
 
 namespace Martta
 {
 
-void ModelPtrFace::tryRestore(Declaration const* _root)
+void ModelPtrFace::tryRestore(Identifiable const* _root)
 {
 	if (isArchived())
 	{
 		m_cache = ModelPtrRegistrar::get()->find(m_key);
 		if (!m_cache)
-			m_cache = _root->findEntity(m_key);
+			m_cache = _root->find(m_key);
 		// Note; m_cache is allowed to be zero, since it just means that the entity we're
 		// pointing at was deleted while we were archived. What we get back is naturally a
 		// null pointer.

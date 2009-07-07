@@ -43,12 +43,11 @@ public:
 	/// From Identifiable (default implementations).
 	virtual String						key() const;
 	virtual Identifiable*				lookupChild(String const& _key) const;
-	Identifiable*						findEntity(String const& _key) const;	// Treats this entity as root scope and looks for (scoped) _key in it. 
 	void								archivePtrs(bool _clear = false) const;
 	void								restorePtrs() const;
 	
-	int									registerAnonymous(Identifiable const* _e) const { if (m_anonyma.contains(_e)) return m_anonyma.indexOf(_e); m_anonyma << _e; return m_anonyma.size() - 1; }
-	void								registerAnonymous(Identifiable const* _e, int _k) { while (m_anonyma.size() <= _k) m_anonyma << 0; m_anonyma[_k] = _e; }
+	virtual int							registerAnonymous(Identifiable const* _e) const { if (m_anonyma.contains(_e)) return m_anonyma.indexOf(_e); m_anonyma << _e; return m_anonyma.size() - 1; }
+	virtual void						registerAnonymous(Identifiable const* _e, int _k) { while (m_anonyma.size() <= _k) m_anonyma << 0; m_anonyma[_k] = _e; }
 
 	List<Declaration*>					utilisedSiblings() const;
 	virtual List<Declaration*>			utilised() const;

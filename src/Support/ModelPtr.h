@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include "Declaration.h"
+#include "Identifiable.h"
 #include "ModelPtrFace.h"
 
 namespace Martta

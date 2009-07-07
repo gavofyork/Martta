@@ -31,18 +31,18 @@ void ModelPtrRegistrar::toBeRestored(ModelPtrFace* _p)
 	m_modelPtrs << _p;
 }
 
-void regDecs(Declaration* _d)
+void regDecs(Identifiable* _d)
 {
 	ModelPtrRegistrar::get()->registerTemp(_d, _d->key());
-	foreach (Declaration* i, _d->childrenOf<Declaration>())
+	foreach (Identifiable* i, _d->self()->childrenOf<Identifiable>())
 		regDecs(i);
 }
 
-void ModelPtrRegistrar::restorePtrs(Declaration const* _root)
+void ModelPtrRegistrar::restorePtrs(Identifiable const* _root)
 {
 	mInfo() << "Restoring up to" << m_modelPtrs.size() << "pointers";
 	
-	foreach (Declaration* d, _root->childrenOf<Declaration>())
+	foreach (Identifiable* d, _root->self()->childrenOf<Identifiable>())
 		regDecs(d);
 	
 	// NOTE: Some model pointers naturally depend on others further down the model pointer list to be understood and restored.
