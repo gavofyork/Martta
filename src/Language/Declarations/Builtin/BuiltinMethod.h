@@ -18,11 +18,35 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "SimpleMethod.h"
+#pragma once
+
+#include "BuiltinDeclaration.h"
 
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(SimpleMethod);
+class BuiltinMethod: public BuiltinDeclaration
+{
+	MARTTA_OBJECT(BuiltinDeclaration)
+
+public:
+	template<class T> inline static BuiltinMethod* create(String const& _name, bool _isConst, Type const& _returns, Types const& _args)
+	{
+		BuiltinMethod* s = new BuiltinMethod;
+		s->m_name = _name;
+		T t;
+		s->construct(&t, T::s_members.count(), _isConst, _returns, _args, T::staticAuxilliary()->name());
+		T::s_members.append(s);
+		return s;
+	}
+	virtual String						name() const { return m_name; }
+	virtual String						codeName() const { return m_name; }
+	virtual String						reference() const { return m_name; }
+	virtual String						key() const { return "@" + m_key + "@" + String::number(m_myId); }
+	
+private:
+	String								m_name;
+};
 
 }
+

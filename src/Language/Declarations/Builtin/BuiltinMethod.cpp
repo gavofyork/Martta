@@ -18,31 +18,11 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#pragma once
-
-#include "ValueDefiner.h"
-#include "Declaration.h"
+#include "BuiltinMethod.h"
 
 namespace Martta
 {
 
-class Simple: public Declaration, public_interface ValueDefiner
-{
-	MARTTA_OBJECT(Declaration)
-	MARTTA_INHERITS(ValueDefiner, 0)
-	
-public:
-	virtual Type						type() const { return *childAs<TypeEntity>(0); }
-
-	// Use this instead of deleting it or you'll have to unregister them explicitly.
-	virtual void						destruct();
-	virtual Kinds						allowedKinds(int _i) const;
-
-protected:
-	void								construct(TypeEntity const* _scope, int _id, bool _isConst, Type const& _returns, Types const& _args, char const* _key);
-	
-	String								m_key;
-	int									m_myId;
-};
+MARTTA_OBJECT_CPP(BuiltinMethod);
 
 }

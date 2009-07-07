@@ -25,8 +25,8 @@
 #include "Const.h"
 #include "Pointer.h"
 #include "Memberify.h"
-#include "SimpleMethod.h"
-#include "SimpleOperator.h"
+#include "BuiltinMethod.h"
+#include "BuiltinOperator.h"
 #include "ListType.h"
 #include "StringType.h"
 
@@ -35,8 +35,8 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(StringType);
 
-List<SimpleMethod*> StringType::s_members;
-List<SimpleOperator*> StringType::s_nonMembers;
+List<BuiltinMethod*> StringType::s_members;
+List<BuiltinOperator*> StringType::s_nonMembers;
 
 void StringType::initialiseClass()
 {
@@ -57,127 +57,127 @@ void StringType::initialiseClass()
 	// TODO: Give parameters some names!
 	// TODO: Handle defaults.
 	
-	SimpleMethod::create<StringType>("append", false, sr, c);
-	SimpleMethod::create<StringType>("append", false, sr, w);
-	SimpleMethod::create<StringType>("append", false, sr, ccs);
-	SimpleMethod::create<StringType>("append", false, sr, scr);
+	BuiltinMethod::create<StringType>("append", false, sr, c);
+	BuiltinMethod::create<StringType>("append", false, sr, w);
+	BuiltinMethod::create<StringType>("append", false, sr, ccs);
+	BuiltinMethod::create<StringType>("append", false, sr, scr);
 	
-	SimpleMethod::create<StringType>("at", true, w, u);
-	SimpleMethod::create<StringType>("value", true, w, (u, w));	// 0
-	SimpleMethod::create<StringType>("toCString", true, ccs, n);
-	SimpleMethod::create<StringType>("data", false, ws, n);
-	SimpleMethod::create<StringType>("data", true, wcs, n);
-	SimpleMethod::create<StringType>("constData", true, wcs, n);
+	BuiltinMethod::create<StringType>("at", true, w, u);
+	BuiltinMethod::create<StringType>("value", true, w, (u, w));	// 0
+	BuiltinMethod::create<StringType>("toCString", true, ccs, n);
+	BuiltinMethod::create<StringType>("data", false, ws, n);
+	BuiltinMethod::create<StringType>("data", true, wcs, n);
+	BuiltinMethod::create<StringType>("constData", true, wcs, n);
 	
-	SimpleMethod::create<StringType>("reserve", false, v, u);
-	SimpleMethod::create<StringType>("clear", false, v, n);
-	SimpleMethod::create<StringType>("chop", false, v, u);
-	SimpleMethod::create<StringType>("truncate", false, v, u);
+	BuiltinMethod::create<StringType>("reserve", false, v, u);
+	BuiltinMethod::create<StringType>("clear", false, v, n);
+	BuiltinMethod::create<StringType>("chop", false, v, u);
+	BuiltinMethod::create<StringType>("truncate", false, v, u);
 	
-	SimpleMethod::create<StringType>("isEmpty", true, b, n);
-	SimpleMethod::create<StringType>("length", true, i, n);
-	SimpleMethod::create<StringType>("size", true, i, n);
-	SimpleMethod::create<StringType>("resize", false, v, u);
+	BuiltinMethod::create<StringType>("isEmpty", true, b, n);
+	BuiltinMethod::create<StringType>("length", true, i, n);
+	BuiltinMethod::create<StringType>("size", true, i, n);
+	BuiltinMethod::create<StringType>("resize", false, v, u);
 	
-	SimpleMethod::create<StringType>("trimmed", true, s, n);
-	SimpleMethod::create<StringType>("simplified", true, s, n);
-	SimpleMethod::create<StringType>("mid", true, s, (u, u));
-	SimpleMethod::create<StringType>("mid", true, s, u);
-	SimpleMethod::create<StringType>("left", true, s, u);
-	SimpleMethod::create<StringType>("right", true, s, u);
+	BuiltinMethod::create<StringType>("trimmed", true, s, n);
+	BuiltinMethod::create<StringType>("simplified", true, s, n);
+	BuiltinMethod::create<StringType>("mid", true, s, (u, u));
+	BuiltinMethod::create<StringType>("mid", true, s, u);
+	BuiltinMethod::create<StringType>("left", true, s, u);
+	BuiltinMethod::create<StringType>("right", true, s, u);
 	
-	SimpleMethod::create<StringType>("contains", true, b, scr);
-	SimpleMethod::create<StringType>("contains", true, b, w);
-	SimpleMethod::create<StringType>("count", true, i, n);
-	SimpleMethod::create<StringType>("count", true, i, scr);
-	SimpleMethod::create<StringType>("count", true, i, w);
-	SimpleMethod::create<StringType>("indexOf", true, i, (w, i));		// 0
-	SimpleMethod::create<StringType>("indexOf", true, i, (wcs, i));		// 0
-	SimpleMethod::create<StringType>("indexOf", true, i, (scr, i));		// 0
-	SimpleMethod::create<StringType>("lastIndexOf", true, i, (w, i));		// -1
-	SimpleMethod::create<StringType>("lastIndexOf", true, i, (scr, i));		// -1
-	SimpleMethod::create<StringType>("indexOfNth", true, i, (w, u));
-	SimpleMethod::create<StringType>("indexOfNth", true, i, (scr, u));
-	SimpleMethod::create<StringType>("lastIndexOfNth", true, i, (w, u));
-	SimpleMethod::create<StringType>("lastIndexOfNth", true, i, (scr, u));
+	BuiltinMethod::create<StringType>("contains", true, b, scr);
+	BuiltinMethod::create<StringType>("contains", true, b, w);
+	BuiltinMethod::create<StringType>("count", true, i, n);
+	BuiltinMethod::create<StringType>("count", true, i, scr);
+	BuiltinMethod::create<StringType>("count", true, i, w);
+	BuiltinMethod::create<StringType>("indexOf", true, i, (w, i));		// 0
+	BuiltinMethod::create<StringType>("indexOf", true, i, (wcs, i));		// 0
+	BuiltinMethod::create<StringType>("indexOf", true, i, (scr, i));		// 0
+	BuiltinMethod::create<StringType>("lastIndexOf", true, i, (w, i));		// -1
+	BuiltinMethod::create<StringType>("lastIndexOf", true, i, (scr, i));		// -1
+	BuiltinMethod::create<StringType>("indexOfNth", true, i, (w, u));
+	BuiltinMethod::create<StringType>("indexOfNth", true, i, (scr, u));
+	BuiltinMethod::create<StringType>("lastIndexOfNth", true, i, (w, u));
+	BuiltinMethod::create<StringType>("lastIndexOfNth", true, i, (scr, u));
 
-	SimpleMethod::create<StringType>("startsWith", true, b, w);
-	SimpleMethod::create<StringType>("startsWith", true, b, scr);
-	SimpleMethod::create<StringType>("endsWith", true, b, w);
-	SimpleMethod::create<StringType>("endsWith", true, b, scr);
+	BuiltinMethod::create<StringType>("startsWith", true, b, w);
+	BuiltinMethod::create<StringType>("startsWith", true, b, scr);
+	BuiltinMethod::create<StringType>("endsWith", true, b, w);
+	BuiltinMethod::create<StringType>("endsWith", true, b, scr);
 	
-	SimpleMethod::create<StringType>("fill", false, sr, (w, i));	// -1
+	BuiltinMethod::create<StringType>("fill", false, sr, (w, i));	// -1
 	
-	SimpleMethod::create<StringType>("split", true, ls, w);
-	SimpleMethod::create<StringType>("split", true, ls, scr);
-	SimpleMethod::create<StringType>("section", true, s, (w, i, i));	// -1
-	SimpleMethod::create<StringType>("section", true, s, (scr, i, i));	// -1
+	BuiltinMethod::create<StringType>("split", true, ls, w);
+	BuiltinMethod::create<StringType>("split", true, ls, scr);
+	BuiltinMethod::create<StringType>("section", true, s, (w, i, i));	// -1
+	BuiltinMethod::create<StringType>("section", true, s, (scr, i, i));	// -1
 
-	SimpleMethod::create<StringType>("toUpper", true, s, n);
-	SimpleMethod::create<StringType>("toLower", true, s, n);
+	BuiltinMethod::create<StringType>("toUpper", true, s, n);
+	BuiltinMethod::create<StringType>("toLower", true, s, n);
 
-	SimpleMethod::create<StringType>("replace", false, sr, (u, u, scr));
-	SimpleMethod::create<StringType>("replace", false, sr, (u, u, w));
-	SimpleMethod::create<StringType>("replace", false, sr, (w, scr));
-	SimpleMethod::create<StringType>("replace", false, sr, (w, w));
-	SimpleMethod::create<StringType>("replace", false, sr, (scr, scr));
-	SimpleMethod::create<StringType>("insert", false, sr, (u, w));
-	SimpleMethod::create<StringType>("insert", false, sr, (u, scr));
-	SimpleMethod::create<StringType>("prepend", false, sr, ccs);
-	SimpleMethod::create<StringType>("prepend", false, sr, w);
-	SimpleMethod::create<StringType>("prepend", false, sr, scr);
-	SimpleMethod::create<StringType>("remove", false, sr, (i, i));
-	SimpleMethod::create<StringType>("remove", false, sr, w);
-	SimpleMethod::create<StringType>("remove", false, sr, scr);
+	BuiltinMethod::create<StringType>("replace", false, sr, (u, u, scr));
+	BuiltinMethod::create<StringType>("replace", false, sr, (u, u, w));
+	BuiltinMethod::create<StringType>("replace", false, sr, (w, scr));
+	BuiltinMethod::create<StringType>("replace", false, sr, (w, w));
+	BuiltinMethod::create<StringType>("replace", false, sr, (scr, scr));
+	BuiltinMethod::create<StringType>("insert", false, sr, (u, w));
+	BuiltinMethod::create<StringType>("insert", false, sr, (u, scr));
+	BuiltinMethod::create<StringType>("prepend", false, sr, ccs);
+	BuiltinMethod::create<StringType>("prepend", false, sr, w);
+	BuiltinMethod::create<StringType>("prepend", false, sr, scr);
+	BuiltinMethod::create<StringType>("remove", false, sr, (i, i));
+	BuiltinMethod::create<StringType>("remove", false, sr, w);
+	BuiltinMethod::create<StringType>("remove", false, sr, scr);
 
-	SimpleMethod::create<StringType>("toInt", true, i, (Type(Bool).topWith(Pointer()), i));	// 0,10
-	SimpleMethod::create<StringType>("toUint", true, u, (Type(Bool).topWith(Pointer()), i));	// 0,10
-	SimpleMethod::create<StringType>("toDouble", true, Type(Double), (Type(Bool).topWith(Pointer())));	// 0
-	SimpleMethod::create<StringType>("toFloat", true, Type(Float), (Type(Bool).topWith(Pointer())));	// 0
+	BuiltinMethod::create<StringType>("toInt", true, i, (Type(Bool).topWith(Pointer()), i));	// 0,10
+	BuiltinMethod::create<StringType>("toUint", true, u, (Type(Bool).topWith(Pointer()), i));	// 0,10
+	BuiltinMethod::create<StringType>("toDouble", true, Type(Double), (Type(Bool).topWith(Pointer())));	// 0
+	BuiltinMethod::create<StringType>("toFloat", true, Type(Float), (Type(Bool).topWith(Pointer())));	// 0
 	
 	// static methods... TODO.
 //	SimpleStaticMethod::create<StringType>("number", s, i);	
 //	SimpleStaticMethod::create<StringType>("number", s, (u, i));	
 //	SimpleStaticMethod::create<StringType>("number", s, (Type(Double), c, i));	
 	
-	SimpleMethod::create<StringType>("arg", false, s, (scr, i, w));	// 0,L' '
-	SimpleMethod::create<StringType>("arg", false, s, (u, i, i, w));	// 0,10,L' '
-	SimpleMethod::create<StringType>("arg", false, s, (w, i, w));	// 0,L' '
-	SimpleMethod::create<StringType>("arg", false, s, (c, i, w));	// 0,'g',-1,L' '
-	SimpleMethod::create<StringType>("arg", false, s, (Type(Double), i, c, i, w));
-	SimpleMethod::create<StringType>("arg", false, s, (i, i, w));	// 0,L' '
+	BuiltinMethod::create<StringType>("arg", false, s, (scr, i, w));	// 0,L' '
+	BuiltinMethod::create<StringType>("arg", false, s, (u, i, i, w));	// 0,10,L' '
+	BuiltinMethod::create<StringType>("arg", false, s, (w, i, w));	// 0,L' '
+	BuiltinMethod::create<StringType>("arg", false, s, (c, i, w));	// 0,'g',-1,L' '
+	BuiltinMethod::create<StringType>("arg", false, s, (Type(Double), i, c, i, w));
+	BuiltinMethod::create<StringType>("arg", false, s, (i, i, w));	// 0,L' '
 
-	SimpleOperator::create<StringType>(Operator::PlusEquals, sr, (sr, scr));
-	SimpleOperator::create<StringType>(Operator::PlusEquals, sr, (sr, ccs));
-	SimpleOperator::create<StringType>(Operator::PlusEquals, sr, (sr, c));
-	SimpleOperator::create<StringType>(Operator::PlusEquals, sr, (sr, w));
+	BuiltinOperator::create<StringType>(Operator::PlusEquals, sr, (sr, scr));
+	BuiltinOperator::create<StringType>(Operator::PlusEquals, sr, (sr, ccs));
+	BuiltinOperator::create<StringType>(Operator::PlusEquals, sr, (sr, c));
+	BuiltinOperator::create<StringType>(Operator::PlusEquals, sr, (sr, w));
 
-	SimpleOperator::create<StringType>(Operator::EqualsEquals, b, (scr, ccs));
-	SimpleOperator::create<StringType>(Operator::BangEquals, b, (scr, ccs));
-	SimpleOperator::create<StringType>(Operator::LessThan, b, (scr, ccs));
-	SimpleOperator::create<StringType>(Operator::GreaterThan, b, (scr, ccs));
-	SimpleOperator::create<StringType>(Operator::LessThanEquals, b, (scr, ccs));
-	SimpleOperator::create<StringType>(Operator::GreaterThanEquals, b, (scr, ccs));
+	BuiltinOperator::create<StringType>(Operator::EqualsEquals, b, (scr, ccs));
+	BuiltinOperator::create<StringType>(Operator::BangEquals, b, (scr, ccs));
+	BuiltinOperator::create<StringType>(Operator::LessThan, b, (scr, ccs));
+	BuiltinOperator::create<StringType>(Operator::GreaterThan, b, (scr, ccs));
+	BuiltinOperator::create<StringType>(Operator::LessThanEquals, b, (scr, ccs));
+	BuiltinOperator::create<StringType>(Operator::GreaterThanEquals, b, (scr, ccs));
 	
-	SimpleOperator::create<StringType>(Operator::EqualsEquals, b, (scr, scr));
-	SimpleOperator::create<StringType>(Operator::BangEquals, b, (scr, scr));
-	SimpleOperator::create<StringType>(Operator::LessThan, b, (scr, scr));
-	SimpleOperator::create<StringType>(Operator::GreaterThan, b, (scr, scr));
-	SimpleOperator::create<StringType>(Operator::LessThanEquals, b, (scr, scr));
-	SimpleOperator::create<StringType>(Operator::GreaterThanEquals, b, (scr, scr));
+	BuiltinOperator::create<StringType>(Operator::EqualsEquals, b, (scr, scr));
+	BuiltinOperator::create<StringType>(Operator::BangEquals, b, (scr, scr));
+	BuiltinOperator::create<StringType>(Operator::LessThan, b, (scr, scr));
+	BuiltinOperator::create<StringType>(Operator::GreaterThan, b, (scr, scr));
+	BuiltinOperator::create<StringType>(Operator::LessThanEquals, b, (scr, scr));
+	BuiltinOperator::create<StringType>(Operator::GreaterThanEquals, b, (scr, scr));
 	
-	SimpleOperator::create<StringType>(Operator::EqualsEquals, b, (ccs, scr));
-	SimpleOperator::create<StringType>(Operator::BangEquals, b, (ccs, scr));
-	SimpleOperator::create<StringType>(Operator::LessThan, b, (ccs, scr));
-	SimpleOperator::create<StringType>(Operator::GreaterThan, b, (ccs, scr));
-	SimpleOperator::create<StringType>(Operator::LessThanEquals, b, (ccs, scr));
-	SimpleOperator::create<StringType>(Operator::GreaterThanEquals, b, (ccs, scr));
+	BuiltinOperator::create<StringType>(Operator::EqualsEquals, b, (ccs, scr));
+	BuiltinOperator::create<StringType>(Operator::BangEquals, b, (ccs, scr));
+	BuiltinOperator::create<StringType>(Operator::LessThan, b, (ccs, scr));
+	BuiltinOperator::create<StringType>(Operator::GreaterThan, b, (ccs, scr));
+	BuiltinOperator::create<StringType>(Operator::LessThanEquals, b, (ccs, scr));
+	BuiltinOperator::create<StringType>(Operator::GreaterThanEquals, b, (ccs, scr));
 	
-	SimpleOperator::create<StringType>(Operator::Plus, s, (scr, scr));
-	SimpleOperator::create<StringType>(Operator::Plus, s, (scr, ccs));
-	SimpleOperator::create<StringType>(Operator::Plus, s, (ccs, scr));
-	SimpleOperator::create<StringType>(Operator::Plus, s, (scr, c));
-	SimpleOperator::create<StringType>(Operator::Plus, s, (c, scr));
+	BuiltinOperator::create<StringType>(Operator::Plus, s, (scr, scr));
+	BuiltinOperator::create<StringType>(Operator::Plus, s, (scr, ccs));
+	BuiltinOperator::create<StringType>(Operator::Plus, s, (ccs, scr));
+	BuiltinOperator::create<StringType>(Operator::Plus, s, (scr, c));
+	BuiltinOperator::create<StringType>(Operator::Plus, s, (c, scr));
 }
 
 void StringType::finaliseClass()
@@ -196,7 +196,7 @@ Types StringType::assignableTypes() const
 List<ValueDefiner*> StringType::applicableMembers(Entity*, bool _isConst) const
 {
 	List<ValueDefiner*> ret;
-	foreach (SimpleMethod* i, s_members)
+	foreach (BuiltinMethod* i, s_members)
 		if (i->type()->asType<Memberify>()->isConst() || !_isConst)
 			ret += i;
 	return ret;

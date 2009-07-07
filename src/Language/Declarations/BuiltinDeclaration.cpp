@@ -22,25 +22,46 @@
 #include "Memberify.h"
 #include "Type.h"
 #include "Reference.h"
-#include "Operation.h"
-#include "SimpleOperator.h"
+#include "ModelPtrRegistrar.h"
+#include "BuiltinDeclaration.h"
 
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(SimpleOperator);
+MARTTA_OBJECT_CPP(BuiltinDeclaration);
 
-void SimpleOperator::construct(int _id, Operator _o, Type const& _returns, Types const& _args, char const* _key)
+void BuiltinDeclaration::construct(TypeEntity const* _scope, int _id, bool _isConst, Type const& _returns, Types const& _args, char const* _key)
 {
-	m_operator = _o;
-	Simple::construct(0, _id, false, _returns, _args, _key);
-	Operation::registerOperator(_o, this);
+	m_key = _key;
+	m_myId = _id;
+	
+	Type t = FunctionType();
+	t.place(_returns, FunctionType::Returned);
+	foreach (Type i, _args)
+		t.append(i);
+	if (_scope)
+	{
+		Memberify m = Memberify(Type().topWith(*_scope));
+		m.setConst(_isConst);
+		t.topWith(m);
+	}
+	t.topWith(Reference());
+	t.placeCopy(back());
+
+	ModelPtrRegistrar::get()->registerDeclaration(this);
 }
 
-void SimpleOperator::destruct()
+void BuiltinDeclaration::destruct()
 {
-	Operation::unregisterOperator(m_operator, this);
-	Super::destruct();
+	ModelPtrRegistrar::get()->unregisterDeclaration(this);
+	delete this;
+}
+
+Kinds BuiltinDeclaration::allowedKinds(int _i) const
+{
+	if (_i >= 0)
+		return Kind::of<TypeEntity>();
+	return Super::allowedKinds(_i);
 }
 
 }

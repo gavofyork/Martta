@@ -25,16 +25,16 @@
 namespace Martta
 {
 
-class SimpleMethod;
-class Simple;
-class SimpleOperator;
+class BuiltinMethod;
+class BuiltinDeclaration;
+class BuiltinOperator;
 
 class StringType: public TypeEntity
 {
 	MARTTA_OBJECT(TypeEntity)
 	
-	friend class SimpleMethod;
-	friend class SimpleOperator;
+	friend class BuiltinMethod;
+	friend class BuiltinOperator;
 
 public:
 	static void							initialiseClass();
@@ -55,8 +55,8 @@ protected:
 
 	virtual TypeEntity*					newClone() const { return new StringType; }
 	
-	static List<SimpleMethod*>			s_members;	
-	static List<SimpleOperator*>		s_nonMembers;	
+	static List<BuiltinMethod*>			s_members;	
+	static List<BuiltinOperator*>		s_nonMembers;	
 };
 
 }

@@ -20,33 +20,29 @@
 
 #pragma once
 
-#include "Simple.h"
+#include "ValueDefiner.h"
+#include "Declaration.h"
 
 namespace Martta
 {
 
-class SimpleMethod: public Simple
+class BuiltinDeclaration: public Declaration, public_interface ValueDefiner
 {
-	MARTTA_OBJECT(Simple)
-
-public:
-	template<class T> inline static SimpleMethod* create(String const& _name, bool _isConst, Type const& _returns, Types const& _args)
-	{
-		SimpleMethod* s = new SimpleMethod;
-		s->m_name = _name;
-		T t;
-		s->construct(&t, T::s_members.count(), _isConst, _returns, _args, T::staticAuxilliary()->name());
-		T::s_members.append(s);
-		return s;
-	}
-	virtual String						name() const { return m_name; }
-	virtual String						codeName() const { return m_name; }
-	virtual String						reference() const { return m_name; }
-	virtual String						key() const { return "@" + m_key + "@" + String::number(m_myId); }
+	MARTTA_OBJECT(Declaration)
+	MARTTA_INHERITS(ValueDefiner, 0)
 	
-private:
-	String								m_name;
+public:
+	virtual Type						type() const { return *childAs<TypeEntity>(0); }
+
+	// Use this instead of deleting it or you'll have to unregister them explicitly.
+	virtual void						destruct();
+	virtual Kinds						allowedKinds(int _i) const;
+
+protected:
+	void								construct(TypeEntity const* _scope, int _id, bool _isConst, Type const& _returns, Types const& _args, char const* _key);
+	
+	String								m_key;
+	int									m_myId;
 };
 
 }
-

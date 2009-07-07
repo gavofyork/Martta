@@ -25,15 +25,15 @@
 namespace Martta
 {
 
-class SimpleOperator;
-class SimpleMethod;
+class BuiltinOperator;
+class BuiltinMethod;
 
 class ListType: public ModifyingType
 {
 	MARTTA_OBJECT(ModifyingType)
 	
-	friend class SimpleMethod;
-	friend class SimpleOperator;
+	friend class BuiltinMethod;
+	friend class BuiltinOperator;
 
 public:
 	enum { Length = FirstNamed, EndOfNamed };
@@ -57,8 +57,8 @@ protected:
 	virtual bool						defineSimilarityFrom(TypeEntity const* _f, Castability _c) const;
 	virtual Rgb							idColour() const { return 0x77ffbb; }
 	
-	static List<SimpleMethod*>			s_members;
-	static List<SimpleOperator*>		s_nonMembers;
+	static List<BuiltinMethod*>			s_members;
+	static List<BuiltinOperator*>		s_nonMembers;
 };
 
 }

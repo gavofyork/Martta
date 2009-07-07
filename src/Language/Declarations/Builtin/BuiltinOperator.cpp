@@ -18,35 +18,29 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#pragma once
-
-#include "Operator.h"
-#include "Simple.h"
+#include "FunctionType.h"
+#include "Memberify.h"
+#include "Type.h"
+#include "Reference.h"
+#include "Operation.h"
+#include "BuiltinOperator.h"
 
 namespace Martta
 {
 
-class SimpleOperator: public Simple
-{
-	MARTTA_OBJECT(Simple)
-	
-public:
-	template<class T> static SimpleOperator* create(Operator _o, Type const& _returns, Types const& _args)
-	{
-		SimpleOperator* s = new SimpleOperator;
-		s->construct(T::s_nonMembers.count(), _o, _returns, _args, T::staticAuxilliary()->name());
-		T::s_nonMembers.append(s);
-		return s;
-	}
-	virtual Operator					id() const { return m_operator; }
-	virtual String						key() const { return "@" + m_key + "@N" + String::number(m_myId); }
-	
-	virtual void						destruct();
+MARTTA_OBJECT_CPP(BuiltinOperator);
 
-private:
-	void								construct(int _id, Operator _o, Type const& _returns, Types const& _args, char const* _key);
-	
-	Operator							m_operator;
-};
+void BuiltinOperator::construct(int _id, Operator _o, Type const& _returns, Types const& _args, char const* _key)
+{
+	m_operator = _o;
+	BuiltinDeclaration::construct(0, _id, false, _returns, _args, _key);
+	Operation::registerOperator(_o, this);
+}
+
+void BuiltinOperator::destruct()
+{
+	Operation::unregisterOperator(m_operator, this);
+	Super::destruct();
+}
 
 }

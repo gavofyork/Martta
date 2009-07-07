@@ -18,50 +18,35 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "FunctionType.h"
-#include "Memberify.h"
-#include "Type.h"
-#include "Reference.h"
-#include "ModelPtrRegistrar.h"
-#include "Simple.h"
+#pragma once
+
+#include "Operator.h"
+#include "BuiltinDeclaration.h"
 
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(Simple);
-
-void Simple::construct(TypeEntity const* _scope, int _id, bool _isConst, Type const& _returns, Types const& _args, char const* _key)
+class BuiltinOperator: public BuiltinDeclaration
 {
-	m_key = _key;
-	m_myId = _id;
+	MARTTA_OBJECT(BuiltinDeclaration)
 	
-	Type t = FunctionType();
-	t.place(_returns, FunctionType::Returned);
-	foreach (Type i, _args)
-		t.append(i);
-	if (_scope)
+public:
+	template<class T> static BuiltinOperator* create(Operator _o, Type const& _returns, Types const& _args)
 	{
-		Memberify m = Memberify(Type().topWith(*_scope));
-		m.setConst(_isConst);
-		t.topWith(m);
+		BuiltinOperator* s = new BuiltinOperator;
+		s->construct(T::s_nonMembers.count(), _o, _returns, _args, T::staticAuxilliary()->name());
+		T::s_nonMembers.append(s);
+		return s;
 	}
-	t.topWith(Reference());
-	t.placeCopy(back());
+	virtual Operator					id() const { return m_operator; }
+	virtual String						key() const { return "@" + m_key + "@N" + String::number(m_myId); }
+	
+	virtual void						destruct();
 
-	ModelPtrRegistrar::get()->registerDeclaration(this);
-}
-
-void Simple::destruct()
-{
-	ModelPtrRegistrar::get()->unregisterDeclaration(this);
-	delete this;
-}
-
-Kinds Simple::allowedKinds(int _i) const
-{
-	if (_i >= 0)
-		return Kind::of<TypeEntity>();
-	return Super::allowedKinds(_i);
-}
+private:
+	void								construct(int _id, Operator _o, Type const& _returns, Types const& _args, char const* _key);
+	
+	Operator							m_operator;
+};
 
 }

@@ -25,8 +25,8 @@
 #include "Const.h"
 #include "Memberify.h"
 #include "MemberTemplateType.h"
-#include "SimpleMethod.h"
-#include "SimpleOperator.h"
+#include "BuiltinMethod.h"
+#include "BuiltinOperator.h"
 #include "ListType.h"
 
 namespace Martta
@@ -34,8 +34,8 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(ListType);
 
-List<SimpleMethod*> ListType::s_members;
-List<SimpleOperator*> ListType::s_nonMembers;
+List<BuiltinMethod*> ListType::s_members;
+List<BuiltinOperator*> ListType::s_nonMembers;
 
 void ListType::initialiseClass()
 {
@@ -48,48 +48,48 @@ void ListType::initialiseClass()
 	Type it = Type(Void);	// should be Iterator.
 	Type b = Type(Bool);
 	// TODO: Give parameters some names!
-	SimpleMethod::create<ListType>("append", false, Type(Void), tcr);
-	SimpleMethod::create<ListType>("at", false, tcr, Type(Int));
-	SimpleMethod::create<ListType>("clear", false, Type(Void), Types());
-	SimpleMethod::create<ListType>("contains", true, b, tcr);
-	SimpleMethod::create<ListType>("count", true, Type(Int), tcr);
-	SimpleMethod::create<ListType>("count", true, Type(Int), Types());
-	SimpleMethod::create<ListType>("first", false, tr, Types());
-	SimpleMethod::create<ListType>("first", true, tcr, Types());
-	SimpleMethod::create<ListType>("indexOf", true, Type(Int), (tcr, Type(Int)));		// 0
-	SimpleMethod::create<ListType>("insert", false, it, (Type(Int), tcr));
-	SimpleMethod::create<ListType>("isEmpty", true, b, Types());
-	SimpleMethod::create<ListType>("last", false, tr, Types());
-	SimpleMethod::create<ListType>("last", true, tcr, Types());
-	SimpleMethod::create<ListType>("lastIndexOf", true, Type(Int), (tcr, Type(Int)));	// -1
-	SimpleMethod::create<ListType>("mid", true, lt, (Type(Int), Type(Int)));			// -1
-	SimpleMethod::create<ListType>("move", false, Type(Void), (Type(Int), Type(Int)));
-	SimpleMethod::create<ListType>("prepend", false, Type(Void), tcr);
-	SimpleMethod::create<ListType>("removeAll", false, Type(Int), tcr);
-	SimpleMethod::create<ListType>("removeAt", false, Type(Void), Type(Int));
-	SimpleMethod::create<ListType>("removeFirst", false, Type(Void), Types());
-	SimpleMethod::create<ListType>("removeLast", false, Type(Void), Types());
-	SimpleMethod::create<ListType>("removeOne", false, b, tcr);
-	SimpleMethod::create<ListType>("replace", false, Type(Int), tcr);
-	SimpleMethod::create<ListType>("reserve", false, Type(Void), Type(Int));
-	SimpleMethod::create<ListType>("reversed", true, lt, Types());
-	SimpleMethod::create<ListType>("reverse", false, ltr, Types());
-	SimpleMethod::create<ListType>("swap", false, Type(Void), (Type(Int), Type(Int)));
-	SimpleMethod::create<ListType>("takeAt", false, t, Type(Int));
-	SimpleMethod::create<ListType>("takeFirst", false, t, Types());
-	SimpleMethod::create<ListType>("takeLast", false, t, Types());
-	SimpleMethod::create<ListType>("value", false, t, Type(Int));
-	SimpleMethod::create<ListType>("value", false, t, (Type(Int), tcr));
+	BuiltinMethod::create<ListType>("append", false, Type(Void), tcr);
+	BuiltinMethod::create<ListType>("at", false, tcr, Type(Int));
+	BuiltinMethod::create<ListType>("clear", false, Type(Void), Types());
+	BuiltinMethod::create<ListType>("contains", true, b, tcr);
+	BuiltinMethod::create<ListType>("count", true, Type(Int), tcr);
+	BuiltinMethod::create<ListType>("count", true, Type(Int), Types());
+	BuiltinMethod::create<ListType>("first", false, tr, Types());
+	BuiltinMethod::create<ListType>("first", true, tcr, Types());
+	BuiltinMethod::create<ListType>("indexOf", true, Type(Int), (tcr, Type(Int)));		// 0
+	BuiltinMethod::create<ListType>("insert", false, it, (Type(Int), tcr));
+	BuiltinMethod::create<ListType>("isEmpty", true, b, Types());
+	BuiltinMethod::create<ListType>("last", false, tr, Types());
+	BuiltinMethod::create<ListType>("last", true, tcr, Types());
+	BuiltinMethod::create<ListType>("lastIndexOf", true, Type(Int), (tcr, Type(Int)));	// -1
+	BuiltinMethod::create<ListType>("mid", true, lt, (Type(Int), Type(Int)));			// -1
+	BuiltinMethod::create<ListType>("move", false, Type(Void), (Type(Int), Type(Int)));
+	BuiltinMethod::create<ListType>("prepend", false, Type(Void), tcr);
+	BuiltinMethod::create<ListType>("removeAll", false, Type(Int), tcr);
+	BuiltinMethod::create<ListType>("removeAt", false, Type(Void), Type(Int));
+	BuiltinMethod::create<ListType>("removeFirst", false, Type(Void), Types());
+	BuiltinMethod::create<ListType>("removeLast", false, Type(Void), Types());
+	BuiltinMethod::create<ListType>("removeOne", false, b, tcr);
+	BuiltinMethod::create<ListType>("replace", false, Type(Int), tcr);
+	BuiltinMethod::create<ListType>("reserve", false, Type(Void), Type(Int));
+	BuiltinMethod::create<ListType>("reversed", true, lt, Types());
+	BuiltinMethod::create<ListType>("reverse", false, ltr, Types());
+	BuiltinMethod::create<ListType>("swap", false, Type(Void), (Type(Int), Type(Int)));
+	BuiltinMethod::create<ListType>("takeAt", false, t, Type(Int));
+	BuiltinMethod::create<ListType>("takeFirst", false, t, Types());
+	BuiltinMethod::create<ListType>("takeLast", false, t, Types());
+	BuiltinMethod::create<ListType>("value", false, t, Type(Int));
+	BuiltinMethod::create<ListType>("value", false, t, (Type(Int), tcr));
 
-	SimpleOperator::create<ListType>(Operator::PlusEquals, ltr, (ltr, ltcr));
-	SimpleOperator::create<ListType>(Operator::PlusEquals, ltr, (ltr, tcr));
-	SimpleOperator::create<ListType>(Operator::LeftShift, ltr, (ltr, ltcr));
-	SimpleOperator::create<ListType>(Operator::LeftShift, ltr, (ltr, tcr));
+	BuiltinOperator::create<ListType>(Operator::PlusEquals, ltr, (ltr, ltcr));
+	BuiltinOperator::create<ListType>(Operator::PlusEquals, ltr, (ltr, tcr));
+	BuiltinOperator::create<ListType>(Operator::LeftShift, ltr, (ltr, ltcr));
+	BuiltinOperator::create<ListType>(Operator::LeftShift, ltr, (ltr, tcr));
 
-	SimpleOperator::create<ListType>(Operator::EqualsEquals, b, (ltcr, ltcr));
-	SimpleOperator::create<ListType>(Operator::BangEquals, b, (ltcr, ltcr));
+	BuiltinOperator::create<ListType>(Operator::EqualsEquals, b, (ltcr, ltcr));
+	BuiltinOperator::create<ListType>(Operator::BangEquals, b, (ltcr, ltcr));
 	
-	SimpleOperator::create<ListType>(Operator::Plus, lt, (ltcr, ltcr));
+	BuiltinOperator::create<ListType>(Operator::Plus, lt, (ltcr, ltcr));
 }
 
 void ListType::finaliseClass()
@@ -108,7 +108,7 @@ Types ListType::assignableTypes() const
 List<ValueDefiner*> ListType::applicableMembers(Entity*, bool _isConst) const
 {
 	List<ValueDefiner*> ret;
-	foreach (SimpleMethod* i, s_members)
+	foreach (BuiltinMethod* i, s_members)
 		if (i->type()->asType<Memberify>()->isConst() || !_isConst)
 			ret += i;
 	return ret;

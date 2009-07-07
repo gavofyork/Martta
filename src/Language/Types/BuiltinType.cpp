@@ -22,7 +22,7 @@
 using namespace MarttaSupport;
 
 #include "Type.h"
-#include "SimpleOperator.h"
+#include "BuiltinOperator.h"
 #include "Const.h"
 #include "Pointer.h"
 #include "Reference.h"
@@ -39,7 +39,7 @@ const int s_simpleIdsCount = sizeof(s_simpleIds) / sizeof(s_simpleIds[0]);
 
 MARTTA_OBJECT_CPP(BuiltinType);
 
-List<SimpleOperator*> BuiltinType::s_nonMembers;
+List<BuiltinOperator*> BuiltinType::s_nonMembers;
 
 bool BuiltinType::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
@@ -168,20 +168,20 @@ void BuiltinType::initialiseClass()
 	{
 		// unit inc/decrement operators.
 		foreach (String s, String("++,--").split(","))
-		{	SimpleOperator::create<BuiltinType>(Operator(s, Operator::UnaryPrefix), Type(d)/*.topWith(Reference())*/, Type(d).topWith(Reference()));
-			SimpleOperator::create<BuiltinType>(Operator(s, Operator::UnaryPostfix), Type(d)/*.topWith(Reference())*/, Type(d).topWith(Reference()));
+		{	BuiltinOperator::create<BuiltinType>(Operator(s, Operator::UnaryPrefix), Type(d)/*.topWith(Reference())*/, Type(d).topWith(Reference()));
+			BuiltinOperator::create<BuiltinType>(Operator(s, Operator::UnaryPostfix), Type(d)/*.topWith(Reference())*/, Type(d).topWith(Reference()));
 		}
 		// modulo/logical operators
 		foreach (String s, String("%,&,|,^").split(","))
-			SimpleOperator::create<BuiltinType>(Operator(s), Type(d), (Type(d), Type(d)));
+			BuiltinOperator::create<BuiltinType>(Operator(s), Type(d), (Type(d), Type(d)));
 		foreach (String s, String(">>,<<").split(","))
-			SimpleOperator::create<BuiltinType>(Operator(s), Type(d), (Type(d), Type(Int)));
+			BuiltinOperator::create<BuiltinType>(Operator(s), Type(d), (Type(d), Type(Int)));
 		foreach (String s, String("%=,&=,|=,^=").split(","))
-			SimpleOperator::create<BuiltinType>(Operator(s), Type(d).topWith(Reference()), (Type(d).topWith(Reference()), Type(d)));
+			BuiltinOperator::create<BuiltinType>(Operator(s), Type(d).topWith(Reference()), (Type(d).topWith(Reference()), Type(d)));
 		foreach (String s, String(">>=,<<=").split(","))
-			SimpleOperator::create<BuiltinType>(Operator(s), Type(d).topWith(Reference()), (Type(d).topWith(Reference()), Type(Int)));
+			BuiltinOperator::create<BuiltinType>(Operator(s), Type(d).topWith(Reference()), (Type(d).topWith(Reference()), Type(Int)));
 		foreach (String s, String("~").split(","))
-			SimpleOperator::create<BuiltinType>(Operator(s), Type(d), Type(d));
+			BuiltinOperator::create<BuiltinType>(Operator(s), Type(d), Type(d));
 	}
 
 	// all scalar types
@@ -189,44 +189,44 @@ void BuiltinType::initialiseClass()
 	{
 		// comparison
 		foreach (String s, String("<,>,<=,>=").split(","))
-			SimpleOperator::create<BuiltinType>(Operator(s), Type(Bool), (Type(d), Type(d)));
+			BuiltinOperator::create<BuiltinType>(Operator(s), Type(Bool), (Type(d), Type(d)));
 		// simple arithmetic
 		foreach (String s, String("+,-,*,/").split(","))
-			SimpleOperator::create<BuiltinType>(Operator(s, Operator::Binary), Type(d), (Type(d), Type(d)));
+			BuiltinOperator::create<BuiltinType>(Operator(s, Operator::Binary), Type(d), (Type(d), Type(d)));
 		// increment
 		foreach (String s, String("+=,-=,*=,/=").split(","))
-			SimpleOperator::create<BuiltinType>(Operator(s), Type(d).topWith(Reference()), (Type(d).topWith(Reference()), Type(d)));
+			BuiltinOperator::create<BuiltinType>(Operator(s), Type(d).topWith(Reference()), (Type(d).topWith(Reference()), Type(d)));
 		// signing
 		foreach (String s, String("+,-").split(","))
-			SimpleOperator::create<BuiltinType>(Operator(s, Operator::UnaryPrefix), Type(d), Type(d));
+			BuiltinOperator::create<BuiltinType>(Operator(s, Operator::UnaryPrefix), Type(d), Type(d));
 	}
 
 	// boolean
 	foreach (String s, String("||,&&").split(","))
-		SimpleOperator::create<BuiltinType>(Operator(s), Type(Bool), (Type(Bool), Type(Bool)));
+		BuiltinOperator::create<BuiltinType>(Operator(s), Type(Bool), (Type(Bool), Type(Bool)));
 	foreach (String s, String("!").split(","))
-		SimpleOperator::create<BuiltinType>(Operator(s), Type(Bool), Type(Bool));
+		BuiltinOperator::create<BuiltinType>(Operator(s), Type(Bool), Type(Bool));
 
 	// all types
 	foreach (uint d, List<uint>(numeric) << Bool << Wchar)
 	{
 		// (in)equality
 		foreach (String s, String("==,!=").split(","))
-			SimpleOperator::create<BuiltinType>(Operator(s), Type(Bool), (Type(d), Type(d)));
+			BuiltinOperator::create<BuiltinType>(Operator(s), Type(Bool), (Type(d), Type(d)));
 	}
 
 	// pointer types (we use Ptr for them in the lookup)
 	foreach (String s, String("++,--").split(","))
 	{
-		SimpleOperator::create<BuiltinType>(Operator(s, Operator::UnaryPrefix), Type().topWith(Pointer()), Type(Void).topWith(Const()).topWith(Pointer()).topWith(Reference()));
-		SimpleOperator::create<BuiltinType>(Operator(s, Operator::UnaryPostfix), Type().topWith(Pointer()), Type(Void).topWith(Const()).topWith(Pointer()).topWith(Reference()));
+		BuiltinOperator::create<BuiltinType>(Operator(s, Operator::UnaryPrefix), Type().topWith(Pointer()), Type(Void).topWith(Const()).topWith(Pointer()).topWith(Reference()));
+		BuiltinOperator::create<BuiltinType>(Operator(s, Operator::UnaryPostfix), Type().topWith(Pointer()), Type(Void).topWith(Const()).topWith(Pointer()).topWith(Reference()));
 	}
 	foreach (String s, String("<,>,<=,>=,==,!=").split(","))
-		SimpleOperator::create<BuiltinType>(Operator(s), Type(Bool), (Type(Void).topWith(Const()).topWith(Pointer()), Type().topWith(Pointer())));
+		BuiltinOperator::create<BuiltinType>(Operator(s), Type(Bool), (Type(Void).topWith(Const()).topWith(Pointer()), Type().topWith(Pointer())));
 	foreach (String s, String("+,-").split(","))
-		SimpleOperator::create<BuiltinType>(Operator(s, Operator::Binary), Type().topWith(Pointer()), (Type(Void).topWith(Const()).topWith(Pointer()), Type(Int)));
+		BuiltinOperator::create<BuiltinType>(Operator(s, Operator::Binary), Type().topWith(Pointer()), (Type(Void).topWith(Const()).topWith(Pointer()), Type(Int)));
 	foreach (String s, String("+=,-=").split(","))
-		SimpleOperator::create<BuiltinType>(Operator(s), Type().topWith(Pointer()).topWith(Reference()), (Type(Void).topWith(Const()).topWith(Pointer()).topWith(Reference()), Type(Int)));
+		BuiltinOperator::create<BuiltinType>(Operator(s), Type().topWith(Pointer()).topWith(Reference()), (Type(Void).topWith(Const()).topWith(Pointer()).topWith(Reference()), Type(Int)));
 }
 
 void BuiltinType::finaliseClass()

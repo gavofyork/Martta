@@ -29,7 +29,7 @@ namespace Martta
 extern const int s_simpleIds[];
 extern const int s_simpleIdsCount;
 
-class SimpleOperator;
+class BuiltinOperator;
 
 /**
  * Enumeration of fundamental types.
@@ -40,7 +40,7 @@ class SimpleOperator;
  */
 static const uint
 	Void = 0x0000, Ptr = Void,
-	Signed = 0x0000, Unsigned = 0x0001, Simple = 0x0000, Complex = 0x0001,
+	Signed = 0x0000, Unsigned = 0x0001, BuiltinDeclaration = 0x0000, Complex = 0x0001,
 	Natural = 0x0000, Short = 0x0002, Long = 0x0004, Longlong = 0x0006,
 	Bool = 0x0008, Int = 0x0010, Char = 0x0020, Float = 0x0040, Double = 0x0080,
 	Wchar = Char|Long;
@@ -49,7 +49,7 @@ class BuiltinType: public TypeEntity
 {
 	MARTTA_OBJECT(TypeEntity)
 
-	friend class SimpleOperator;	// For use of s_nonMembers. QUICK Should probably use an interface for this.
+	friend class BuiltinOperator;	// For use of s_nonMembers. QUICK Should probably use an interface for this.
 	
 public:
 	static void initialiseClass();
@@ -103,7 +103,7 @@ protected:
 
 private:
 	uint m_id;
-	static List<SimpleOperator*> s_nonMembers;
+	static List<BuiltinOperator*> s_nonMembers;
 };
 
 template<>

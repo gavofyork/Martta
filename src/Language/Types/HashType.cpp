@@ -25,8 +25,8 @@
 #include "Const.h"
 #include "Memberify.h"
 #include "MemberTemplateType.h"
-#include "SimpleMethod.h"
-#include "SimpleOperator.h"
+#include "BuiltinMethod.h"
+#include "BuiltinOperator.h"
 #include "ListType.h"
 #include "HashType.h"
 
@@ -35,8 +35,8 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(HashType);
 
-List<SimpleMethod*> HashType::s_members;
-List<SimpleOperator*> HashType::s_nonMembers;
+List<BuiltinMethod*> HashType::s_members;
+List<BuiltinOperator*> HashType::s_nonMembers;
 
 bool HashType::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
@@ -68,40 +68,40 @@ void HashType::initialiseClass()
 	// TODO: Give parameters some names!
 	// TODO: Handle defaults.
 	
-	SimpleMethod::create<HashType>("reserve", false, v, u);
-	SimpleMethod::create<HashType>("capacity", true, i, n);
-	SimpleMethod::create<HashType>("squeeze", false, v, n);
-	SimpleMethod::create<HashType>("resize", false, v, u);
+	BuiltinMethod::create<HashType>("reserve", false, v, u);
+	BuiltinMethod::create<HashType>("capacity", true, i, n);
+	BuiltinMethod::create<HashType>("squeeze", false, v, n);
+	BuiltinMethod::create<HashType>("resize", false, v, u);
 
-	SimpleMethod::create<HashType>("contains", true, b, kcr);
-	SimpleMethod::create<HashType>("contains", true, b, kcr);
-	SimpleMethod::create<HashType>("count", true, i, n);
-	SimpleMethod::create<HashType>("isEmpty", true, b, n);
-	SimpleMethod::create<HashType>("size", true, i, n);
-	SimpleMethod::create<HashType>("count", true, i, kcr);
+	BuiltinMethod::create<HashType>("contains", true, b, kcr);
+	BuiltinMethod::create<HashType>("contains", true, b, kcr);
+	BuiltinMethod::create<HashType>("count", true, i, n);
+	BuiltinMethod::create<HashType>("isEmpty", true, b, n);
+	BuiltinMethod::create<HashType>("size", true, i, n);
+	BuiltinMethod::create<HashType>("count", true, i, kcr);
 
-	SimpleMethod::create<HashType>("clear", false, v, n);
-	SimpleMethod::create<HashType>("insert", false, it, (kcr, tcr));
-	SimpleMethod::create<HashType>("insertMulti", false, it, (kcr, tcr));
-	SimpleMethod::create<HashType>("remove", false, i, kcr);
-	SimpleMethod::create<HashType>("removeOne", false, i, kcr);
-	SimpleMethod::create<HashType>("take", false, t, kcr);
+	BuiltinMethod::create<HashType>("clear", false, v, n);
+	BuiltinMethod::create<HashType>("insert", false, it, (kcr, tcr));
+	BuiltinMethod::create<HashType>("insertMulti", false, it, (kcr, tcr));
+	BuiltinMethod::create<HashType>("remove", false, i, kcr);
+	BuiltinMethod::create<HashType>("removeOne", false, i, kcr);
+	BuiltinMethod::create<HashType>("take", false, t, kcr);
 
-	SimpleMethod::create<HashType>("key", true, kc, tcr);
-	SimpleMethod::create<HashType>("key", true, kc, (tcr, kcr));
-	SimpleMethod::create<HashType>("keys", true, lk, tcr);
-	SimpleMethod::create<HashType>("keys", true, lk, n);
-	SimpleMethod::create<HashType>("uniqueKeys", true, lk, n);
+	BuiltinMethod::create<HashType>("key", true, kc, tcr);
+	BuiltinMethod::create<HashType>("key", true, kc, (tcr, kcr));
+	BuiltinMethod::create<HashType>("keys", true, lk, tcr);
+	BuiltinMethod::create<HashType>("keys", true, lk, n);
+	BuiltinMethod::create<HashType>("uniqueKeys", true, lk, n);
 
-	SimpleMethod::create<HashType>("value", true, tc, kcr);
-	SimpleMethod::create<HashType>("value", true, tc, (kcr, tcr));
-	SimpleMethod::create<HashType>("values", true, lt, kcr);
-	SimpleMethod::create<HashType>("values", true, lt, n);
+	BuiltinMethod::create<HashType>("value", true, tc, kcr);
+	BuiltinMethod::create<HashType>("value", true, tc, (kcr, tcr));
+	BuiltinMethod::create<HashType>("values", true, lt, kcr);
+	BuiltinMethod::create<HashType>("values", true, lt, n);
 	
-	SimpleMethod::create<HashType>("unite", false, hr, hcr);
+	BuiltinMethod::create<HashType>("unite", false, hr, hcr);
 
-	SimpleOperator::create<HashType>(Operator::EqualsEquals, b, (hcr, hcr));
-	SimpleOperator::create<HashType>(Operator::BangEquals, b, (hcr, hcr));
+	BuiltinOperator::create<HashType>(Operator::EqualsEquals, b, (hcr, hcr));
+	BuiltinOperator::create<HashType>(Operator::BangEquals, b, (hcr, hcr));
 }
 
 void HashType::finaliseClass()
@@ -120,7 +120,7 @@ Types HashType::assignableTypes() const
 List<ValueDefiner*> HashType::applicableMembers(Entity*, bool _isConst) const
 {
 	List<ValueDefiner*> ret;
-	foreach (SimpleMethod* i, s_members)
+	foreach (BuiltinMethod* i, s_members)
 		if (i->type()->asType<Memberify>()->isConst() || !_isConst)
 			ret += i;
 	return ret;
