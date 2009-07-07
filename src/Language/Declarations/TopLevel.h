@@ -28,6 +28,10 @@ namespace Martta
 class TopLevel: public Declaration
 {
 	MARTTA_PLACEHOLDER(Declaration)
+	
+public:
+	virtual int		minRequired(int _i) const { return _i == Identity ? 1 : Super::minRequired(_i); }
+	virtual Kinds	allowedKinds(int _i) const;
 };
 
 }

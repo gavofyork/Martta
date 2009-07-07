@@ -19,7 +19,9 @@ Small things:
 - BRINGBACK decoration code into layout system and markup for it.
 Dynamic code-loading (plugins).
 - Clean up TextLabel - far too many dependencies.
+- Split StringType apart from BuiltinType
 - Split support off with Entity to form Entity library.
+- CHECK TypeDefinition - needed before ExplicitType?
 
 --------------------------------------------------------------------------------
 

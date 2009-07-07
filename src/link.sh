@@ -27,3 +27,17 @@ DEST=../new_src/OperatorLabel
 mkdir -p $DEST $DEST/Support
 $LINK Language/Labels/OperatorLabel.* $DEST/
 $LINK Support/Operator.* $DEST/Support/
+
+DEST=../new_src/ValueDefiner
+mkdir -p $DEST
+$LINK Language/Declarations/ValueDefiner.* $DEST/
+
+DEST=../new_src/Declaration
+mkdir -p $DEST
+$LINK Language/Declarations/Declaration.* $DEST/
+
+DEST=../new_src/Types
+mkdir -p $DEST
+$LINK Language/Types/AddressType.* Language/Types/Pointer.* Language/Types/Const.* Language/Types/Reference.* Language/Types/BuiltinType.* Language/Types/ExplicitType.* $DEST/
+#TODO Invent an interface to put this apart from BuiltinType
+$LINK Language/Types/StringType.* $DEST/

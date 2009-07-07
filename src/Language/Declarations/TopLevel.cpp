@@ -18,11 +18,19 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "TextLabel.h"
 #include "TopLevel.h"
 
 namespace Martta
 {
 
 MARTTA_OBJECT_CPP(TopLevel);
+
+Kinds TopLevel::allowedKinds(int _i) const
+{
+	if (_i == Identity)
+		return Kind::of<TextLabel>();
+	return Super::allowedKinds(_i);
+}
 
 }

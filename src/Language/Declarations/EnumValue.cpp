@@ -33,6 +33,8 @@ MARTTA_OBJECT_CPP(EnumValue);
 
 Kinds EnumValue::allowedKinds(int _i) const
 {
+	if (_i == Identity)
+		return Kind::of<TextLabel>();
 	if (_i == Definition)
 		return Kind::of<Typed>();
 	else

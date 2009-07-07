@@ -34,6 +34,8 @@ bool Argument::isSuperfluous() const
 
 Kinds Argument::allowedKinds(int _i) const
 {
+	if (_i == Identity)
+		return Kind::of<TextLabel>();
 	if (_i == OurType)
 		return Kind::of<TypeEntity>();
 	return Super::allowedKinds(_i);

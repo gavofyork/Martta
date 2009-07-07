@@ -19,6 +19,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "Class.h"
+#include "TextLabel.h"
 #include "AccessLabel.h"
 #include "Member.h"
 
@@ -39,6 +40,8 @@ Class* Member::classType() const
 
 Kinds Member::allowedKinds(int _i) const
 {
+	if (_i == Identity)
+		return Kind::of<TextLabel>();
 	if (_i == Accessibility)
 		return Kind::of<AccessLabel>();
 	else

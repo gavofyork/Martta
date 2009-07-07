@@ -18,16 +18,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "VirtualPure.h"
-#include "Constructor.h"
-#include "ConversionOperator.h"
-#include "Enumeration.h"
-#include "Class.h"
-#include "Base.h"
 #include "TypeDefinition.h"
-
 #include "ExplicitType.h"
-
 #include "CodeScene.h"
 #include "CompletionDelegate.h"
 

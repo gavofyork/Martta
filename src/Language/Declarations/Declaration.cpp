@@ -19,9 +19,6 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "ModelPtrRegistrar.h"
-#include "TextLabel.h"
-#include "OperatorLabel.h"
-#include "ValueDefiner.h"
 #include "Declaration.h"
 
 namespace Martta
@@ -56,13 +53,6 @@ String Declaration::key() const
 		return addressableContext()->key() + "::" + identity();
 	else
 		return Identifiable::key();
-}
-
-Kinds Declaration::allowedKinds(int _i) const
-{
-	if (_i == Identity)
-		return Kind::of<TextLabel>();
-	return Super::allowedKinds(_i);
 }
 
 Identifiable* Declaration::lookupChild(String const& _key) const

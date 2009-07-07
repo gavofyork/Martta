@@ -51,7 +51,7 @@ protected:
 	virtual String						memberDefineLayout(ViewKeys const&) const { return String::null; }
 	
 	// Old virtuals.
-	virtual int							minRequired(int _i) const { return _i == Accessibility ? 1 : Super::minRequired(_i); }
+	virtual int							minRequired(int _i) const { return _i == Accessibility || _i == Identity ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
 //	virtual void						decorate(DecorationContext const& _p) const;
 	virtual bool						keyPressed(KeyEvent const* _e);

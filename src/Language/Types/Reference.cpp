@@ -18,10 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "AddressType.h"
-#include "ExplicitType.h"
-#include "BuiltinType.h"
-#include "FunctionType.h"
 #include "Const.h"
 #include "Type.h"
 #include "Reference.h"

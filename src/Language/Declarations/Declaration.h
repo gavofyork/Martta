@@ -60,10 +60,6 @@ public:
 
 	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); Identifiable::properties(_p); }
 	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); Identifiable::setProperties(_p); }
-	
-protected:
-	virtual int							minRequired(int _i) const { return _i == Identity ? 1 : 0; }
-	virtual Kinds						allowedKinds(int _i) const;
 
 private:
 	mutable List<Identifiable const*>	m_anonyma;
