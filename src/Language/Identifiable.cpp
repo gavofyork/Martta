@@ -20,7 +20,6 @@
 
 #include "ModelPtrRegistrar.h"
 #include "IdLabel.h"
-#include "TextLabel.h"
 #include "Entity.h"
 #include "Identifiable.h"
 
@@ -36,7 +35,7 @@ Identifiable::~Identifiable()
 
 String Identifiable::name() const
 {
-	if (TextLabel* l = self()->tryChild<TextLabel>(Identity))
+	if (IdLabel* l = self()->tryChild<IdLabel>(Identity))
 		return l->name();
 	return String::null;
 }
@@ -50,8 +49,10 @@ String Identifiable::codeName() const
 
 String Identifiable::key() const
 {
-	AssertNR(self()->hasAncestor<Declaration>());
-	return self()->ancestor<Declaration>()->key() + "::" + String::number(self()->ancestor<Declaration>()->registerAnonymous(this));
+	Identifiable const* _registrar = 0;
+	int i = self()->ancestor<Identifiable>()->registerAnonymous(this, &_registrar);
+	AssertNR(_registrar);
+	return _registrar->key() + "::" + String::number(i);
 }
 
 Identifiable* Identifiable::addressableContext() const
@@ -86,13 +87,15 @@ Identifiable* Identifiable::find(String const& _key) const
 	return 0;
 }
 
-int Identifiable::registerAnonymous(Identifiable const* _e) const
+int Identifiable::registerAnonymous(Identifiable const* _e, Identifiable const** _registrar) const
 {
-	return self()->ancestor<Identifiable>()->registerAnonymous(_e);
+	AssertNR(self()->ancestor<Identifiable>());
+	return self()->ancestor<Identifiable>()->registerAnonymous(_e, _registrar);
 }
 
 void Identifiable::registerAnonymous(Identifiable const* _e, int _k)
 {
+	AssertNR(self()->ancestor<Identifiable>());
 	self()->ancestor<Identifiable>()->registerAnonymous(_e, _k);
 }
 
@@ -106,7 +109,7 @@ void Identifiable::properties(Hash<String, String>& _p) const
 void Identifiable::setProperties(Hash<String, String> const& _p)
 {
 	if (_p.contains("identity"))
-		self()->ancestor<Declaration>()->registerAnonymous(this, _p[L"identity"].toInt());
+		self()->ancestor<Identifiable>()->registerAnonymous(this, _p[L"identity"].toInt());
 	ModelPtrRegistrar::get()->registerTemp(this, _p[L"generalkey"]);
 }
 

@@ -21,14 +21,14 @@
 #include <msStringList.h>
 using namespace MarttaSupport;
 
-#include "Type.h"
-#include "BuiltinOperator.h"
 #include "Const.h"
 #include "Pointer.h"
 #include "Reference.h"
-#include "CodeScene.h"
-#include "CompletionDelegate.h"
 #include "StringType.h"
+
+#include "CodeScene.h"
+#include "BuiltinOperator.h"
+#include "CompletionDelegate.h"
 #include "BuiltinType.h"
 
 namespace Martta

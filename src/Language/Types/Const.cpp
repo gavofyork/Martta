@@ -18,11 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "Memberify.h"
-#include "AddressType.h"
 #include "ExplicitType.h"
-#include "BuiltinType.h"
-#include "FunctionType.h"
 #include "Reference.h"
 #include "Const.h"
 
@@ -42,7 +38,7 @@ bool Const::defineSimilarityTo(TypeEntity const* _t, Castability _c) const
 {
 	// Convertible means that a Reference to it will render it Unrelated.
 	return isAnyConvertible(_c) && _c != ConstPerfectConvertible && original()->isSimilarTo(_t, _c) || 
-		_c == Convertible && original()->isKind<ExplicitType>() && original()->asKind<ExplicitType>()->haveSingleCastOperator(_t, true) ||
+		_c == Convertible && original()->isKind<ExplicitType>() && original()->asKind<ExplicitType>()->hasSingleCastOperator(_t, true) ||
 		Super::defineSimilarityTo(_t, _c);
 }
 

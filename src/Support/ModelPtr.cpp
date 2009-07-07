@@ -18,8 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include <ModelPtr.h>
-
 namespace Martta
 {
 }

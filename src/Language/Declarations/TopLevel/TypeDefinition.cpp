@@ -25,4 +25,21 @@ namespace Martta
 
 MARTTA_INTERFACE_CPP(TypeDefinition);	
 
+bool TypeDefinition::hasSingleCastOperator(TypeEntity const* _t, bool) const
+{
+	return Type(*_t) == Type(const_cast<TypeDefinition*>(this));
+}
+
+bool TypeDefinition::defineSimilarityTo(TypeEntity const* _t, TypeEntity::Castability _c) const
+{
+	if (_c == TypeEntity::Convertible && hasSingleCastOperator(_t, false))
+		return true;
+	return false;
+}
+
+List<ValueDefiner*> TypeDefinition::applicableMembers(Entity*, bool) const
+{
+	return List<ValueDefiner*>();
+}
+
 }

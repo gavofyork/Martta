@@ -18,8 +18,8 @@ Small things:
 - BRINGBACK Ser/Deser tests.
 - BRINGBACK decoration code into layout system and markup for it.
 Dynamic code-loading (plugins).
+- Clean up TextLabel - far too many dependencies.
 - Split support off with Entity to form Entity library.
- 
 
 --------------------------------------------------------------------------------
 

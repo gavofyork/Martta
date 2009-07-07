@@ -18,15 +18,17 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "CodeScene.h"
-#include "Class.h"
-#include "Enumeration.h"
-#include "Const.h"
-#include "Constructor.h"
-#include "Base.h"
-#include "ConversionOperator.h"
 #include "VirtualPure.h"
+#include "Constructor.h"
+#include "ConversionOperator.h"
+#include "Enumeration.h"
+#include "Class.h"
+#include "Base.h"
+#include "TypeDefinition.h"
+
 #include "ExplicitType.h"
+
+#include "CodeScene.h"
 #include "CompletionDelegate.h"
 
 namespace Martta
@@ -55,43 +57,16 @@ Types ExplicitType::assignableTypes() const
 
 List<ValueDefiner*> ExplicitType::applicableMembers(Entity* _s, bool _isConst) const
 {
-	Access a = Public;
-	if (_s->ancestor<Class>() && _s->ancestor<Class>() == m_subject)
-		a = Private;
-	else if (m_subject && m_subject->isKind<Class>() && m_subject->asKind<Class>()->baseAccess(_s->ancestor<Class>()) <= Protected)
-		a = Protected;
-	if (Class* c = m_subject ? m_subject->tryKind<Class>() : 0)
-		return c->membersOf<ValueDefiner>(_isConst, a);
+	if (m_subject)
+		return m_subject->applicableMembers(_s, _isConst);
 	return List<ValueDefiner*>();
 }
 
-bool ExplicitType::haveSingleCastOperator(TypeEntity const* _t, bool _const) const
+bool ExplicitType::hasSingleCastOperator(TypeEntity const* _t, bool _const) const
 {
 	if (!m_subject)
 		return false;
-	
-	bool gotOne = false;
-	bool dupe = false;
-
-	if (Class* c = m_subject->isKind<Class>() ? m_subject->asKind<Class>() : 0)
-	{
-		bool whackedConstForBest = false;
-		foreach (MemberLambda* i, c->membersOf<ConversionOperator>(_const, Public))
-		{	
-			bool b = i->returns()->isSimilarTo(_t, FairlyConvertible);
-			if (b && (!gotOne || gotOne && (i->isConst() == _const) && whackedConstForBest))
-				gotOne = true, dupe = false, whackedConstForBest = (i->isConst() != _const);
-			else if (b && gotOne)
-				dupe = true;
-		}
-	}
-	else
-	{
-		gotOne = Type(*_t) == Type(*this);
-	}
-	if (gotOne && !dupe)
-		return true;
-	return false;
+	return m_subject->hasSingleCastOperator(_t, _const);
 }
 
 bool ExplicitType::hasDefaultConstructor() const
@@ -101,74 +76,27 @@ bool ExplicitType::hasDefaultConstructor() const
 	return subject()->hasDefaultConstructor();
 }
 
-bool ExplicitType::haveSingleConversionConstructor(TypeEntity const* _f) const
+bool ExplicitType::hasSingleConversionConstructor(TypeEntity const* _f) const
 {
 	if (!m_subject)
 		return Unrelated;
-	
-	Class* c = m_subject->isKind<Class>() ? m_subject->asKind<Class>() : 0;
-
-	if (c)
-	{
-		bool gotOne = false;
-		foreach (MemberLambda* i, c->membersOf<Constructor>(false, Public))
-			if (i->argumentCount() == 1 && i->isValid())
-				if (_f->isSimilarTo(&*i->argumentType(0), FairlyConvertible))
-				{
-					if (!gotOne)
-						gotOne = true;
-					else
-						return false;
-				}
-		if (gotOne)
-			return true;
-	}
-	return false;
+	return subject()->hasSingleConversionConstructor(_f);
 }
 
 bool ExplicitType::defineSimilarityTo(TypeEntity const* _t, Castability _c) const
 {
 	if (m_subject)
-	{
-		if (_c == Convertible && haveSingleCastOperator(_t))
+		if (_t->isKind<ExplicitType>() && m_subject == _t->asKind<ExplicitType>()->m_subject
+			|| m_subject->defineSimilarityTo(_t, _c))
 			return true;
-	
-		if (Class* c = m_subject->tryKind<Class>())
-		{
-			if (_c == Physical && _t->isKind<ExplicitType>())
-			{
-				TypeDefinition* ts = _t->asKind<ExplicitType>()->m_subject;
-				if (c == ts)
-					return true;
-				// Note Physical attribute should be tested last.
-				List<Base*> bases = c->cardinalChildrenOf<Base>();
-				while (bases.size())
-				{
-					Base* b = bases.takeLast();
-					if (ts && b->classType() == ts)
-						return true;
-					else if (b->classType())
-						bases += b->classType()->cardinalChildrenOf<Base>();
-				}
-			}
-		}
-		else if (Enumeration* e = m_subject->tryKind<Enumeration>())
-		{
-			if (_t->isKind<ExplicitType>())
-			{
-				TypeDefinition* ts = _t->asKind<ExplicitType>()->m_subject;
-				if (e == ts)
-					return true;
-			}
-		}
-	}
+		
 	return Super::defineSimilarityTo(_t, _c);
 }
 
 bool ExplicitType::defineSimilarityFrom(TypeEntity const* _f, Castability _c) const
 {
 	// TODO: only non-explicit
-	return m_subject && _c == Convertible && haveSingleConversionConstructor(_f) ||
+	return m_subject && _c == Convertible && hasSingleConversionConstructor(_f) ||
 			Super::defineSimilarityFrom(_f, _c);
 }
 
@@ -179,7 +107,7 @@ Rgb ExplicitType::idColour() const
 
 bool ExplicitType::canStandAlone() const
 {
-	return m_subject.isUsable() && m_subject->isKind<Class>() ? !m_subject->self()->childCountOf<VirtualPure>() : true;
+	return m_subject && m_subject->canStandAlone();
 }
 
 bool ExplicitType::keyPressed(KeyEvent const* _e)

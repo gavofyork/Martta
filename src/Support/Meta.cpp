@@ -18,9 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "Meta.h"
-
 namespace Martta
 {
-
 }

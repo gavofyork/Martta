@@ -30,7 +30,10 @@ class Label: public Entity
 	MARTTA_PLACEHOLDER(Entity)
 	
 public:
+	// Potentially queries the parent's isChildInValidState() to check if we're valid.
+	// @note NEVER call them from the parent's isChildInValidState() function.
 	inline virtual String				code() const { return String(); }
+	
 	virtual int							familyDependencies() const { return DependsOnNothing; }
 };
 

@@ -18,7 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "Memberify.h"
 #include "AddressType.h"
 #include "ExplicitType.h"
 #include "BuiltinType.h"

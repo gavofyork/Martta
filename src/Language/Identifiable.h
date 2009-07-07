@@ -55,7 +55,7 @@ public:
 	/// Default value to returns the parent is addressable or zero if not (e.g. Statement-derived parent).
 	virtual Identifiable*				addressableContext() const;
 
-	virtual int							registerAnonymous(Identifiable const* _e) const;
+	virtual int							registerAnonymous(Identifiable const* _e, Identifiable const** _registrar = 0) const;
 	virtual void						registerAnonymous(Identifiable const* _e, int _k);
 
 	/// @returns true if the entity cannot be explicitly referenced in the CPP code. This is the case in code

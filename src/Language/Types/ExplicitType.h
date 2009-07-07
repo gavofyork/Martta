@@ -46,8 +46,8 @@ public:
 	List<TypeDefinition*>				possibilities();
 	virtual String						defineEditLayout(ViewKeys const&, TypeDefinition*) const;
 	
-	bool								haveSingleCastOperator(TypeEntity const* _t, bool _const = false) const;
-	bool								haveSingleConversionConstructor(TypeEntity const* _f) const;
+	bool								hasSingleCastOperator(TypeEntity const* _t, bool _const = false) const;
+	bool								hasSingleConversionConstructor(TypeEntity const* _f) const;
 
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 	

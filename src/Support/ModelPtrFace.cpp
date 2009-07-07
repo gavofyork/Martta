@@ -18,6 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "Entity.h"
 #include "Identifiable.h"
 #include "ModelPtrRegistrar.h"
 #include "ModelPtr.h"

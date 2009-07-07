@@ -55,8 +55,13 @@ protected:
 	virtual void						onDependencySwitched(Entity* _e, Entity*) { onDependencyAdded(_e); }
 	virtual void						onChildrenInitialised();
 	virtual bool						hasDefaultConstructor() const;
+	virtual bool						hasSingleCastOperator(TypeEntity const* _t, bool _const) const;
+	virtual bool						hasSingleConversionConstructor(TypeEntity const* _f) const;
+	virtual bool						defineSimilarityTo(TypeEntity const* _t, TypeEntity::Castability _c) const;
 	virtual Types						assignableTypes() const;
 	virtual Entity*						isExpander() const;
+	virtual List<ValueDefiner*>			applicableMembers(Entity* _s, bool _isConst) const;
+	virtual bool						canStandAlone() const;
 	
 private:
 	bool								checkImplicitConstructors();

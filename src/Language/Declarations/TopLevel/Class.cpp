@@ -26,6 +26,7 @@
 #include "Method.h"
 #include "ExplicitType.h"
 #include "MemberVariable.h"
+#include "VirtualPure.h"	// < interface away to VirtualPure::whacksParent() const { return true; } from Member::whacksParent() const { return false; }?
 #include "Base.h"
 #include "MethodOperator.h"
 #include "ArtificialAssignmentOperator.h"
@@ -255,6 +256,59 @@ bool Class::hasDefaultConstructor() const
 	return count == 1;
 }
 
+bool Class::hasSingleCastOperator(TypeEntity const* _t, bool _const) const
+{
+	bool gotOne = false;
+	bool dupe = false;
+	bool whackedConstForBest = false;
+	foreach (MemberLambda* i, membersOf<ConversionOperator>(_const, Public))
+	{	
+		bool b = i->returns()->isSimilarTo(_t, TypeEntity::FairlyConvertible);
+		if (b && (!gotOne || gotOne && (i->isConst() == _const) && whackedConstForBest))
+			gotOne = true, dupe = false, whackedConstForBest = (i->isConst() != _const);
+		else if (b && gotOne)
+			dupe = true;
+	}
+	if (gotOne && !dupe)
+		return true;
+	return false;
+}
+
+
+bool Class::hasSingleConversionConstructor(TypeEntity const* _f) const
+{
+	bool gotOne = false;
+	foreach (MemberLambda* i, membersOf<Constructor>(false, Public))
+		if (i->argumentCount() == 1 && i->isValid())
+			if (_f->isSimilarTo(&*i->argumentType(0), TypeEntity::FairlyConvertible))
+			{
+				if (!gotOne)
+					gotOne = true;
+				else
+					return false;
+			}
+	return gotOne;
+}
+
+bool Class::defineSimilarityTo(TypeEntity const* _t, TypeEntity::Castability _c) const
+{
+	if (_c == TypeEntity::Physical && _t->isKind<ExplicitType>())
+	{
+		TypeDefinition* ts = _t->asKind<ExplicitType>()->subject();
+		// Note Physical attribute should be tested last.
+		List<Base*> bases = cardinalChildrenOf<Base>();
+		while (bases.size())
+		{
+			Base* b = bases.takeLast();
+			if (ts && b->classType() == ts)
+				return true;
+			else if (b->classType())
+				bases += b->classType()->cardinalChildrenOf<Base>();
+		}
+	}
+	return Super::defineSimilarityTo(_t, _c);
+}
+
 Types Class::assignableTypes() const
 {
 	Types ret;
@@ -262,6 +316,22 @@ Types Class::assignableTypes() const
 		if (i->id() == Operator::Equals)
 			ret << i->asKind<LambdaNamer>()->argumentType(0);
 	return ret;
+}
+
+List<ValueDefiner*> Class::applicableMembers(Entity* _s, bool _isConst) const
+{
+	Access a = Public;
+	Class* classScope = _s->ancestor<Class>();
+	if (classScope == this)
+		a = Private;
+	else if (baseAccess(classScope) <= Protected)
+		a = Protected;
+	return membersOf<ValueDefiner>(_isConst, a);
+}
+
+bool Class::canStandAlone() const
+{
+	return !childCountOf<VirtualPure>();
 }
 
 bool Class::keyPressed(KeyEvent const* _e)

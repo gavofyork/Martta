@@ -20,8 +20,6 @@
 
 #pragma once
 
-#include "Meta.h"
-
 namespace Martta
 {
 

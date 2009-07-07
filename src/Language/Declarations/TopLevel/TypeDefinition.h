@@ -20,11 +20,16 @@
 
 #pragma once
 
+#include <msList.h>
+using namespace MarttaSupport;
+
+#include "TypeEntity.h"
 #include "Identifiable.h"
 
 namespace Martta
 {
 
+class ValueDefiner;
 class Declaration;
 class Type;
 typedef List<Type> Types;
@@ -41,12 +46,16 @@ class TypeDefinition: public_interface Identifiable
 
 public:
 	virtual String						code() const = 0;
-	virtual bool						hasDefaultConstructor() const = 0;
 	virtual Types						assignableTypes() const = 0;
 	virtual List<Declaration*>			utilisedInUse() const = 0;
-	
+	virtual bool						hasDefaultConstructor() const = 0;
+	virtual bool						hasSingleCastOperator(TypeEntity const* _t, bool _const) const;
+	virtual inline bool					hasSingleConversionConstructor(TypeEntity const*) const { return false; }
+	virtual bool						defineSimilarityTo(TypeEntity const* _t, TypeEntity::Castability _c) const;
+	virtual List<ValueDefiner*>			applicableMembers(Entity* _s, bool _isConst) const;
+	virtual inline bool					canStandAlone() const { return true; }
+
 	virtual ~TypeDefinition() {}
-	// TODO: implicit-cast/conversion information
 };
 
 }

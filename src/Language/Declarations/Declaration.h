@@ -46,7 +46,7 @@ public:
 	void								archivePtrs(bool _clear = false) const;
 	void								restorePtrs() const;
 	
-	virtual int							registerAnonymous(Identifiable const* _e) const { if (m_anonyma.contains(_e)) return m_anonyma.indexOf(_e); m_anonyma << _e; return m_anonyma.size() - 1; }
+	virtual int							registerAnonymous(Identifiable const* _e, Identifiable const** _registrar) const { if (_registrar) *_registrar = this; if (m_anonyma.contains(_e)) return m_anonyma.indexOf(_e); m_anonyma << _e; return m_anonyma.size() - 1; }
 	virtual void						registerAnonymous(Identifiable const* _e, int _k) { while (m_anonyma.size() <= _k) m_anonyma << 0; m_anonyma[_k] = _e; }
 
 	List<Declaration*>					utilisedSiblings() const;

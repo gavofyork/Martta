@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "Entity.h"
 #include "Kind.h"
 #include "Dependee.h"
 #include "Familial.h"

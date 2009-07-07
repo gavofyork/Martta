@@ -18,6 +18,9 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include <msString.h>
+using namespace MarttaSupport;
+
 #include "Operator.h"
 
 namespace Martta
