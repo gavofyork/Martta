@@ -49,7 +49,7 @@ template<class S> inline List<S> nameStarts(List<S> const& _l, String const& _s)
 // Exists: void T::set(R)
 // Exists: R T::get()
 // Works: NameTrait<R>::name(R)
-// Exists: QString T::defineEditLayout(ViewKeys const&, R); should contain %1 for where the editing is to be.
+// Exists: String T::defineEditLayout(ViewKeys const&, R); should contain %1 for where the editing is to be.
 // Might exist: T::committed()
 
 template<class T, class R>

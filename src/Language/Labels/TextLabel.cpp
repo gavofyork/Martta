@@ -22,12 +22,7 @@
 using MarttaSupport::String;
 using MarttaSupport::Char;
 
-#include "Variable.h"
-#include "Argument.h"
-#include "Namespace.h"
-#include "TypeDefinition.h"
-#include "MemberVariable.h"
-#include "LambdaNamer.h"
+#include "Labelled.h"
 #include "EditDelegate.h"
 #include "TextLabel.h"
 
@@ -44,25 +39,7 @@ String TextLabel::code() const
 		else
 			return String::null;
 	else
-	{
-		String prefix = "";
-		if (parent()->hasAncestor<Namespace>())
-		{
-			if (parentIs<Argument>())
-				prefix = "a_";
-			else if (parentIs<MemberVariable>())
-				prefix = "m_";
-			else if (parentIs<VariableNamer>())
-				prefix = "l_";
-			else
-				prefix = "";
-		}
-		else if (parent()->isKind<Namespace>() && name().size() && name()[0].isNumber())
-			prefix = "_";
-		else
-			prefix = "";
-		return prefix + name();
-	}
+		return tryParent<Labelled>()->labelCode(m_text);
 }
 
 void TextLabel::apresLoad()
@@ -77,23 +54,16 @@ String TextLabel::name() const
 		return String("_ANON%1").arg((int)this);//return "foo";	// TODO: make it proper.
 	else if (m_text.isEmpty())
 		return String::null;
-	else if (parentIs<TypeDefinition>() || parentIs<Namespace>())
-		return m_text.left(1).toUpper() + camelCase(m_text.mid(1));
-	else
-		return camelCase(m_text);
+	else 
+		return tryParent<Labelled>()->labelName(m_text);
 }
 
-String TextLabel::defineLayout(ViewKeys const&) const
+String TextLabel::defineLayout(ViewKeys const& _k) const
 {
-	String key = "";
-	if (parent()->hasAncestor<Namespace>())
-	{
-		if (parentIs<Argument>())
-			key = "(;M4;[[[;fs-2;fb;c#777;e#fff;'_';]]];);";
-		else if (parentIs<MemberVariable>())
-			key = "(;M4;[[[;fs-2;fb;c#777;e#fff;'M';]]];);";
-	}
-	return "^;" + key + (name().isEmpty() ? "yminor;'[ANONYMOUS]'" : (String(isNamed() ? "c#000" : "c#aaa") + ";'" + name() + "'"));
+	if (name().isEmpty())
+		return L"^;yminor;'[ANONYMOUS]'";
+	
+	return "^;" + tryParent<Labelled>()->labelLayout(String(isNamed() ? "c#000" : "c#aaa") + ";'" + name() + "'", _k);
 }
 /*
 void TextLabel::decorate(DecorationContext const& _c) const
@@ -173,17 +143,10 @@ public:
 	{
 		return true;//!m_text.isEmpty();
 	}
-	virtual String defineLayout(ViewKeys const&) const
+	virtual String defineLayout(ViewKeys const& _k) const
 	{
-		String key = "";
-		if (subject()->parent()->hasAncestor<Namespace>())
-		{
-			if (subject()->parentIs<Argument>())
-				key = "(;M4;[[[;fs-2;fb;c#777;e#fff;'_';]]];)";
-			else if (subject()->parentIs<MemberVariable>())
-				key = "(;M4;[[[;fs-2;fb;c#777;e#fff;'M';]]];)";
-		}
-		return "^;" + (m_text.isEmpty() ? String("yminor;'ANONYMOUS'") : (key + ";'" + m_text + "'"));
+		// The tryParent()-> should be safe since Labelled checks for a null this-pointer.
+		return "^;" + (m_text.isEmpty() ? String("yminor;'ANONYMOUS'") : subject()->tryParent<Labelled>()->labelLayout("'" + m_text + "'", _k));
 	}
 	String m_text;
 };

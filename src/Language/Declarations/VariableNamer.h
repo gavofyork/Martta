@@ -20,16 +20,18 @@
 
 #pragma once
 
+#include "Labelled.h"
 #include "ValueDefiner.h"
 
 namespace Martta
 {
 
-class VariableNamer: public_interface ValueDefiner
+class VariableNamer: public_interface ValueDefiner, public_interface Labelled
 {
 	MARTTA_INTERFACE
 	MARTTA_INHERITS(ValueDefiner, 0)
-	
+	MARTTA_INHERITS(Labelled, 1)
+		
 public:	
 	MARTTA_NAMED(OurType)
 	
@@ -38,6 +40,7 @@ public:
 	
 protected:
 	virtual Type						type() const;
+	virtual inline String				defineLabelCode(String const& _text) const { return L"l_" + camelCase(_text); }	// Overridden in MemberVariable & Argument
 	
 	inline String						interfaceCode() const { return basicCode() + ";\n"; }
 	inline String						implementationCode() const { return String::null; }

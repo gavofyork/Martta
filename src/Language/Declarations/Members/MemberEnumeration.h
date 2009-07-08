@@ -21,15 +21,17 @@
 #pragma once
 
 #include "EnumerationNamer.h"
+#include "Labelled.h"
 #include "Member.h"
 
 namespace Martta
 {
 
-class MemberEnumeration: public Member, public_interface EnumerationNamer
+class MemberEnumeration: public Member, public_interface EnumerationNamer, public_interface Labelled
 {
 	MARTTA_OBJECT(Member)
 	MARTTA_INHERITS(EnumerationNamer, 0)
+	MARTTA_INHERITS(Labelled, 1)
 	
 public:
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
@@ -44,10 +46,10 @@ protected:
 	virtual bool						hasDefaultConstructor() const { return EnumerationNamer::hasDefaultConstructor(); }
 	virtual Types						assignableTypes() const { return Type(const_cast<MemberEnumeration*>(this)); }
 	virtual String						code() const { return codeName(); }
-	virtual List<Declaration*>	utilisedInUse() const { return List<Declaration*>() << const_cast<MemberEnumeration*>(this); }
+	virtual List<Declaration*>			utilisedInUse() const { return List<Declaration*>() << const_cast<MemberEnumeration*>(this); }
 	
 	// From Declaration
-	virtual List<ValueDefiner*>		valuesAdded() const { return EnumerationNamer::valuesAdded(); }
+	virtual List<ValueDefiner*>			valuesAdded() const { return EnumerationNamer::valuesAdded(); }
 
 	// From Entity
 	virtual int							minRequired(int _i) const { return _i == Cardinals ? 1 : _i == Identity ? 0 : Super::minRequired(_i); }
@@ -58,6 +60,8 @@ protected:
 	virtual void						onDependencyRemoved(Entity* _e, int) { EnumerationNamer::onDependencyRemoved(_e); }
 	virtual bool						keyPressed(KeyEvent const* _e) { AssertNR(isComplete()); return EnumerationNamer::keyPressed(_e) ? true : Super::keyPressed(_e); }
 	virtual Entity*						isExpander() const { return EnumerationNamer::isExpander(); }
+	virtual inline String				defineLabelName(String const& _text) const { return camelCase(_text, true); }
+	
 };
 
 }

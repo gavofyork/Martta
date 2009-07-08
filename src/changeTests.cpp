@@ -39,7 +39,7 @@ class NewEntity: public Entity, public_interface Depender, public_interface Depe
 	MARTTA_INHERITS(Dependee, 1)
 
 public:
-	NewEntity(String _id = String::null, int _fd = Depender::DependsOnNothing, Kinds const& _ad = Kinds()): m_id(_id), m_familyDependencies(_fd), m_ancestralDependencies(_ad) {}
+	NewEntity(String const& _id = String::null, int _fd = Depender::DependsOnNothing, Kinds const& _ad = Kinds()): m_id(_id), m_familyDependencies(_fd), m_ancestralDependencies(_ad) {}
 
 	virtual bool						botherNotifying() const { return true; }
 	virtual int							familyDependencies() const { return m_familyDependencies; }
@@ -84,7 +84,7 @@ class NewEntity2: public NewEntity
 	MARTTA_OBJECT(NewEntity)
 	
 public:
-	NewEntity2(String _id = String::null, int _fd = Depender::DependsOnNothing, Kinds const& _ad = Kinds()): NewEntity(_id, _fd, _ad) {}
+	NewEntity2(String const& _id = String::null, int _fd = Depender::DependsOnNothing, Kinds const& _ad = Kinds()): NewEntity(_id, _fd, _ad) {}
 };
 MARTTA_OBJECT_CPP(NewEntity2);
 
@@ -93,7 +93,7 @@ class NewEntitySilly: public NewEntity
 	MARTTA_OBJECT(NewEntity)
 	
 public:
-	NewEntitySilly(String _id = String::null, int _fd = Depender::DependsOnNothing, Kinds const& _ad = Kinds()): NewEntity(_id, _fd, _ad) {}
+	NewEntitySilly(String const& _id = String::null, int _fd = Depender::DependsOnNothing, Kinds const& _ad = Kinds()): NewEntity(_id, _fd, _ad) {}
 	
 	virtual void						onDependencyChanged(int _aspect, Entity* _e) { Super::onDependencyChanged(_aspect, _e); if (changed(1)) activity += m_id + "*1 "; }
 };

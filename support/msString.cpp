@@ -814,7 +814,7 @@ String times(int _s, int _omte, String const& _btwn)
 	return r;
 }
 
-String camelCase(String const& _t)
+String camelCase(String const& _t, bool _upperFirst)
 {
 	if (!_t.size())
 		return _t;
@@ -825,7 +825,7 @@ String camelCase(String const& _t)
 		if (t[i] == ' ')
 			ret += String("%1").arg(t[++i]).toUpper()[0];
 		else
-			ret += t[i];
+			ret += _upperFirst && !i ? t[i].toUpper() : t[i].toLower();
 	return ret;
 }
 

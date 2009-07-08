@@ -35,6 +35,7 @@ void ModelPtrRegistrar::toBeRestored(ModelPtrFace* _p)
 void regDecs(Identifiable* _d)
 {
 	ModelPtrRegistrar::get()->registerTemp(_d, _d->key());
+	mDebug() << "Got" << _d->key();
 	foreach (Identifiable* i, _d->self()->childrenOf<Identifiable>())
 		regDecs(i);
 }

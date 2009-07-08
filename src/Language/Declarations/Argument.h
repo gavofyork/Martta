@@ -33,7 +33,7 @@ class Argument: public Declaration, public_interface VariableNamer
 	
 protected:
 	virtual String						defineLayout(ViewKeys const& _k) const { return VariableNamer::defineLayout(_k); }
-	virtual List<Declaration*>	utilised() const { return actualType()->utilised(); }
+	virtual List<Declaration*>			utilised() const { return actualType()->utilised(); }
 
 	virtual Identifiable*				addressableContext() const { return 0; }
 	virtual bool						keyPressed(KeyEvent const* _e) { return VariableNamer::keyPressed(_e) ? true : Super::keyPressed(_e); }
@@ -44,6 +44,8 @@ protected:
 	virtual String						interfaceCode() const { return VariableNamer::interfaceCode(); }
 	virtual String						implementationCode() const { return VariableNamer::implementationCode(); }
 	virtual bool						isSuperfluous() const;
+	virtual String						defineLabelLayout(String const& _text, ViewKeys const&) const { return String(L"(;M4;[[[;fs-2;fb;c#777;e#fff;'_';]]];);%1").arg(_text); }
+	virtual String						defineLabelCode(String const& _text) const { return L"_" + camelCase(_text); }
 };
 
 }

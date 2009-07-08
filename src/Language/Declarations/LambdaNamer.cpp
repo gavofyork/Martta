@@ -76,7 +76,7 @@ String LambdaNamer::defineBodyLayout(ViewKeys const& _viewKeys) const
 	return ret;
 }
 
-String LambdaNamer::defineLayout(ViewKeys const& _k, String _middle) const
+String LambdaNamer::defineLayout(ViewKeys const& _k, String const& _middle) const
 {
 	// TODO handle ellipsis here so we can put one in/take one out
 	return definePreLayout(_k) + ";" + defineReturnLayout(_k) + ";>name;" + defineNameLayout(_k) + ";" + defineArgListLayout(_k) + ";" + defineMidLayout(_k, _middle) + ";" + defineBodyLayout(_k) + ";" + definePostLayout(_k);

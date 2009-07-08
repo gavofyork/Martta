@@ -20,36 +20,46 @@
 
 #pragma once
 
-#include "TypeDefinition.h"
-#include "Location.h"
-#include "TopLevel.h"
+#include "Meta.h"
 
 namespace Martta
 {
 
-class TypeResolver;
-
-class TopLevelType: public TopLevel, public_interface TypeDefinition
+class Labelled
 {
-	MARTTA_PLACEHOLDER(TopLevel)
-	MARTTA_INHERITS(TypeDefinition, 0)
+	MARTTA_INTERFACE
 
-	friend class TypeResolver;
-	
 public:
+	virtual ~Labelled() {}
+	
+	inline String labelLayout(String const& _middle, ViewKeys const& _k) const
+	{
+		if (!this)
+			return Labelled::defineLabelLayout(_middle, _k);
+		else
+			return defineLabelLayout(_middle, _k);
+	}
+	
+	inline String labelCode(String const& _text) const
+	{
+		if (!this)
+			return Labelled::defineLabelCode(_text);
+		else
+			return defineLabelCode(_text);
+	}
+	
+	inline String labelName(String const& _text) const
+	{
+		if (!this)
+			return Labelled::defineLabelName(_text);
+		else
+			return defineLabelName(_text);
+	}
 	
 protected:
-	// From SubAddressable
-	virtual int							familyDependencies() const { return DependsOnChildren; }
-	
-	// From TypeDefinition
-	virtual String						code() const { return codeName(); }
-	virtual bool						hasDefaultConstructor() const { return false; }
-	virtual Types						assignableTypes() const;
-	virtual List<Declaration*>			utilisedInUse() const { return List<Declaration*>() << const_cast<TopLevelType*>(this); }
-	virtual inline String				defineLabelName(String const& _text) const { return camelCase(_text, true); }
-	
-	Location							m_location;
+	virtual inline String defineLabelLayout(String const& _middle, ViewKeys const&) const { return _middle; }
+	virtual inline String defineLabelCode(String const& _text) const { return labelName(_text); }
+	virtual inline String defineLabelName(String const& _text) const { return camelCase(_text); }
 };
 
 }

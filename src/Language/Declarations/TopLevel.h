@@ -21,17 +21,19 @@
 #pragma once
 
 #include "Declaration.h"
+#include "Labelled.h"
 
 namespace Martta
 {
 
-class TopLevel: public Declaration
+class TopLevel: public Declaration, public_interface Labelled
 {
 	MARTTA_PLACEHOLDER(Declaration)
+	MARTTA_INHERITS(Labelled, 0)
 	
 public:
-	virtual int		minRequired(int _i) const { return _i == Identity ? 1 : Super::minRequired(_i); }
-	virtual Kinds	allowedKinds(int _i) const;
+	virtual int							minRequired(int _i) const { return _i == Identity ? 1 : Super::minRequired(_i); }
+	virtual Kinds						allowedKinds(int _i) const;
 };
 
 }

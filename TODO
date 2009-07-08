@@ -314,3 +314,8 @@ Debugger
 
 Variable initialisers should use same system as enum value?
 - Not right now, anyway, since an initialised (default or not) variable declaration is not equivalent to a simple variable declaration (inside a class).
+
+Duck typing
+- Allow duck typing for development/prototyping.
+- Provide tool to turn duck-typed code into proper virtual-inheritance-based valid C++ style code with interfaces etc.
+  - Uses heuristics to guess optimum type hierarchy.

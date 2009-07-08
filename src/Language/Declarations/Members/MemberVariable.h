@@ -38,13 +38,15 @@ protected:
 	virtual bool						keyPressed(KeyEvent const* _e) { return VariableNamer::keyPressed(_e) ? true : Super::keyPressed(_e); }
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity*) { changed(); }
-	virtual List<Declaration*>	utilised() const { return actualType()->utilised(); }
+	virtual List<Declaration*>			utilised() const { return actualType()->utilised(); }
 	virtual String						memberInterfaceCode() const { return VariableNamer::interfaceCode(); }
 	virtual String						memberImplementationCode() const { return VariableNamer::implementationCode(); }
 	virtual String						memberDefineLayout(ViewKeys const& _k) const { return VariableNamer::defineLayout(_k); }
 	virtual int							minRequired(int _i) const { return _i == OurType ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual Type						type() const { return MemberValue::memberifiedType(VariableNamer::type()); }
+	virtual String						defineLabelLayout(String const& _text, ViewKeys const&) const { return String("(;M4;[[[;fs-2;fb;c#777;e#fff;'M';]]];);%1").arg(_text); }
+	virtual String						defineLabelCode(String const& _text) const { return L"m_" + camelCase(_text); }
 };
 
 }

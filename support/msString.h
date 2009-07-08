@@ -371,7 +371,7 @@ inline const String operator+(String const& _s, wchar_t _ch) { return String(_s)
 inline const String operator+(wchar_t _ch, String const& _s) { return String(_s).prepend(_ch); }
 
 String times(int _s, int _omte, String const& _btwn);
-String camelCase(String const& _t);
+String camelCase(String const& _t, bool _upperFirst = false);
 
 }
 
