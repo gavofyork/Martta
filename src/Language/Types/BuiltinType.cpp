@@ -24,7 +24,6 @@ using namespace MarttaSupport;
 #include "Const.h"
 #include "Pointer.h"
 #include "Reference.h"
-#include "StringType.h"
 
 #include "CodeScene.h"
 #include "BuiltinOperator.h"
@@ -40,6 +39,7 @@ const int s_simpleIdsCount = sizeof(s_simpleIds) / sizeof(s_simpleIds[0]);
 MARTTA_OBJECT_CPP(BuiltinType);
 
 List<BuiltinOperator*> BuiltinType::s_nonMembers;
+Hash<String, Kind> BuiltinType::s_recognisedExtras;
 
 bool BuiltinType::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
@@ -109,7 +109,8 @@ bool BuiltinType::defineSimilarityTo(TypeEntity const* _t, Castability _c) const
 
 bool BuiltinType::defineSimilarityFrom(TypeEntity const* _f, Castability _c) const
 {
-	return m_id == Void && !_f->isKind<ModifyingType>() ||
+	return	m_id == Void && !_f->isKind<ModifyingType>() ||
+			isAnyConvertible(_c) && m_id == Bool && _f->isKind<AddressType>() || 
 		Super::defineSimilarityFrom(_f, _c);
 }
 
@@ -122,8 +123,19 @@ template<>
 class NameTrait<int>
 {
 public:
-	enum { StringId = 0xff00 };
-	static String name(int _val) { return (_val == StringId) ? "string" : BuiltinType::name(_val); }
+	enum { ExtraIds = 0xff00 };
+	static String name(int _val)
+	{
+		if (_val < ExtraIds)
+			return BuiltinType::name(_val);
+			
+		int i = ExtraIds;
+		foreach (String s, BuiltinType::s_recognisedExtras.keys())
+			if (_val == i++)
+				return s;
+				
+		return String::null;
+	}
 };
 
 List<int> BuiltinType::possibilities()
@@ -131,7 +143,8 @@ List<int> BuiltinType::possibilities()
 	List<int> ret;
 	for (int i = 0; i < s_simpleIdsCount; i++)
 		ret << s_simpleIds[i];
-	ret << NameTrait<int>::StringId;
+	for (int i = 0; i < s_recognisedExtras.count(); i++)
+		ret << NameTrait<int>::ExtraIds + i;
 	return ret;
 }
 
@@ -147,10 +160,16 @@ EditDelegateFace* BuiltinType::newDelegate(CodeScene* _s)
 
 void BuiltinType::committed()
 {
-	// Switch to string if necessary...
-	if (m_id == NameTrait<int>::StringId)
+	// Switch if necessary...
+	if (m_id >= NameTrait<int>::ExtraIds)
 	{
-		replace(new StringType);
+		uint i = NameTrait<int>::ExtraIds;
+		foreach (Kind k, s_recognisedExtras)
+			if (m_id == i++)
+			{
+				replace(k.spawnPrepared());
+				break;
+			}
 	}
 }
 

@@ -31,6 +31,8 @@ extern const int s_simpleIdsCount;
 
 class BuiltinOperator;
 
+template<class T> class NameTrait;
+
 /**
  * Enumeration of fundamental types.
  *
@@ -50,10 +52,14 @@ class BuiltinType: public TypeEntity
 	MARTTA_OBJECT(TypeEntity)
 
 	friend class BuiltinOperator;	// For use of s_nonMembers. QUICK Should probably use an interface for this.
+	friend class NameTrait<int>;
 	
 public:
 	static void initialiseClass();
 	static void finaliseClass();
+	
+	static inline void registerExtra(String const& _name, Kind const& _k) { s_recognisedExtras.insert(_name, _k); }
+	static inline void unregisterExtra(String const& _name) { s_recognisedExtras.remove(_name); }
 
 	BuiltinType(uint _d = (uint)-1): m_id(_d) {}
 
@@ -80,8 +86,8 @@ public:
 
 	List<int>							possibilities();
 	virtual String						defineEditLayout(ViewKeys const&, int) const;
-	int									get() const { return m_id; }
-	void								set(uint _m) { setId(_m); }
+	inline int							get() const { return m_id; }
+	inline void							set(uint _m) { setId(_m); }
 	virtual bool						isNull() const { return m_id == (uint)-1; }
 	
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
@@ -103,7 +109,9 @@ protected:
 
 private:
 	uint m_id;
-	static List<BuiltinOperator*> s_nonMembers;
+
+	static Hash<String, Kind>			s_recognisedExtras;
+	static List<BuiltinOperator*>		s_nonMembers;
 };
 
 template<>

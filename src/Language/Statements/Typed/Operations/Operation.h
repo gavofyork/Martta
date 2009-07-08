@@ -42,9 +42,6 @@ public:
 	virtual Precedence					precedence() const { return id().precedence(); }
 	virtual Operator					id() const { return Operator(); }
 
-	static void							registerOperator(Operator _o, ValueDefiner* _v) { s_operatorCatalogue.insert(_o, _v); }
-	static void							unregisterOperator(Operator _o, ValueDefiner* _v) { s_operatorCatalogue.removeOne(_o, _v); }
-
 protected:
 	virtual bool						isSlidable(int) const { return false; }
 	virtual Entity*						lastOperand() const { return child(SecondOperand) ? child(SecondOperand) : child(FirstOperand); }	// QUICK optimise into overrides
@@ -57,8 +54,6 @@ protected:
 	static Type							prototypeOf(Type const& _t, int _index = UndefinedIndex);
 	static bool							prototypeHasArgumentAt(Type const& _t, int _cardinal);
 	static List<ValueDefiner*>			findBestOverload(Types const& _actual, List<ValueDefiner*> const _candidates);
-	
-	static MultiHash<Operator, ValueDefiner*>	s_operatorCatalogue;
 };
 
 }

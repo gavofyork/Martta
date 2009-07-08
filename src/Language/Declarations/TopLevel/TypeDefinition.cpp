@@ -18,6 +18,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "Type.h"
+#include "ExplicitType.h"
 #include "TypeDefinition.h"
 
 namespace Martta

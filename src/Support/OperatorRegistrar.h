@@ -18,17 +18,33 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "AddressType.h"
+#pragma once
+
+#include <msHash.h>
+using namespace MarttaSupport;
+
+#include "Operator.h"
 
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(AddressType);
+class ValueDefiner;
 
-bool AddressType::defineSimilarityTo(TypeEntity const* _t, Castability _c) const
+class OperatorRegistrar
 {
-	return _t->isKind<AddressType>() && original()->isSimilarTo(_t->asKind<AddressType>()->original(), Physical) ||
-		Super::defineSimilarityTo(_t, _c);
-}
+
+public:
+	static OperatorRegistrar*			get() { return s_this ? s_this : (s_this = new OperatorRegistrar); }
+
+	inline List<ValueDefiner*>::Box		operators(Operator _o) const { return m_operatorCatalogue.values(_o); }
+	
+	inline void							registerOperator(Operator _o, ValueDefiner* _v) { m_operatorCatalogue.insert(_o, _v); }
+	inline void							unregisterOperator(Operator _o, ValueDefiner* _v) { m_operatorCatalogue.removeOne(_o, _v); }
+	
+private:
+	MultiHash<Operator, ValueDefiner*>	m_operatorCatalogue;
+	
+	static OperatorRegistrar*			s_this;
+};
 
 }

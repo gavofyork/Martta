@@ -18,7 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "Typed.h"
 #include "ValueDefiner.h"
 #include "FunctionType.h"
 #include "Reference.h"
@@ -178,10 +177,14 @@ void StringType::initialiseClass()
 	BuiltinOperator::create<StringType>(Operator::Plus, s, (ccs, scr));
 	BuiltinOperator::create<StringType>(Operator::Plus, s, (scr, c));
 	BuiltinOperator::create<StringType>(Operator::Plus, s, (c, scr));
+	
+	BuiltinType::registerExtra(L"string", staticKind);
 }
 
 void StringType::finaliseClass()
 {
+	BuiltinType::unregisterExtra(L"string");
+	
 	while (s_members.size())
 		s_members.takeLast()->destruct();
 	while (s_nonMembers.size())

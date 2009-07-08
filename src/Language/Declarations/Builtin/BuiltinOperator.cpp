@@ -18,11 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "FunctionType.h"
-#include "Memberify.h"
-#include "Type.h"
-#include "Reference.h"
-#include "Operation.h"
+#include "OperatorRegistrar.h"
 #include "BuiltinOperator.h"
 
 namespace Martta
@@ -34,12 +30,12 @@ void BuiltinOperator::construct(int _id, Operator _o, Type const& _returns, Type
 {
 	m_operator = _o;
 	BuiltinDeclaration::construct(0, _id, false, _returns, _args, _key);
-	Operation::registerOperator(_o, this);
+	OperatorRegistrar::get()->registerOperator(_o, this);
 }
 
 void BuiltinOperator::destruct()
 {
-	Operation::unregisterOperator(m_operator, this);
+	OperatorRegistrar::get()->unregisterOperator(m_operator, this);
 	Super::destruct();
 }
 

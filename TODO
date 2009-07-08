@@ -3,6 +3,7 @@ BUG Moving is crazily slow over statements.
   - All allowedKinds on Position and execute the Auxilliary's dispatchKeyPress.
   - Do recursively but prune on denied Kinds.
   - Remove all allowedToBeKind (or other Kind-checking) in handlers.
+BUG 'Mstr'-> doesn't move away (only stops editing).
 
 Small things:
 - Special EntryMethod.

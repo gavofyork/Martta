@@ -19,8 +19,10 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include <msSupport.h>
+using namespace MarttaSupport;
 
 #include "CodeScene.h"
+#include "OperatorRegistrar.h"
 #include "FunctionType.h"
 #include "Reference.h"
 #include "Memberify.h"
@@ -31,8 +33,6 @@ namespace Martta
 {
 
 MARTTA_OBJECT_CPP(Operation);
-
-MultiHash<Operator, ValueDefiner*> Operation::s_operatorCatalogue;
 
 Type Operation::prototypeOf(Type const& _t, int _index)
 {
@@ -167,7 +167,7 @@ Position Operation::slideOnPrecedence(Position _p, Precedence _d, Associativity 
 
 List<ValueDefiner*> Operation::allOperators(Operator _o)
 {
-	List<ValueDefiner*> ret = s_operatorCatalogue.values(_o);
+	List<ValueDefiner*> ret = OperatorRegistrar::get()->operators(_o);
 	// TODO: Search classes etc.
 	return ret;
 }

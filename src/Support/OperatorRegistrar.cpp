@@ -18,17 +18,12 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "AddressType.h"
+#include "OperatorRegistrar.h"
 
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(AddressType);
-
-bool AddressType::defineSimilarityTo(TypeEntity const* _t, Castability _c) const
-{
-	return _t->isKind<AddressType>() && original()->isSimilarTo(_t->asKind<AddressType>()->original(), Physical) ||
-		Super::defineSimilarityTo(_t, _c);
-}
+OperatorRegistrar* OperatorRegistrar::s_this = 0;
 
 }
+

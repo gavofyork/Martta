@@ -21,6 +21,7 @@
 #include "Typed.h"
 #include "UndefinedArray.h"
 #include "Array.h"
+#include "BuiltinType.h"
 #include "Type.h"
 
 namespace Martta

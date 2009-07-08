@@ -11,8 +11,12 @@ $LINK Language/Entity.* $DEST/
 DEST=../new_src/TypeEntity
 mkdir -p $DEST $DEST/Support $DEST/Interfaces
 $LINK Language/Types/TypeEntity.* Language/Types/ModifyingType.* $DEST/
-$LINK Language/TypedOwner.* Language/Declarations/TypeNamer.* Language/Declarations/TopLevel/TypeDefinition.* $DEST/Interfaces/
+$LINK Language/TypedOwner.* Language/Declarations/TypeNamer.* $DEST/Interfaces/
 $LINK Support/Type.* $DEST/Support/
+
+DEST=../new_src/AddressTypes
+mkdir -p $DEST
+$LINK Language/Types/AddressType.* Language/Types/Pointer.* Language/Types/UndefinedArray.* $DEST/
 
 DEST=../new_src/Identifiable
 mkdir -p $DEST $DEST/Support
@@ -23,10 +27,10 @@ DEST=../new_src/Label
 mkdir -p $DEST
 $LINK Language/Labels/Label.* Language/Labels/IdLabel.* $DEST/
 
-DEST=../new_src/OperatorLabel
+DEST=../new_src/Operator
 mkdir -p $DEST $DEST/Support
 $LINK Language/Labels/OperatorLabel.* $DEST/
-$LINK Support/Operator.* $DEST/Support/
+$LINK Support/Operator.* Support/OperatorRegistrar.* $DEST/Support/
 
 DEST=../new_src/ValueDefiner
 mkdir -p $DEST
@@ -36,12 +40,28 @@ DEST=../new_src/Declaration
 mkdir -p $DEST
 $LINK Language/Declarations/Declaration.* $DEST/
 
+DEST=../new_src/BasicTypes
+mkdir -p $DEST $DEST/Interfaces
+$LINK Language/Types/FunctionType.* Language/Types/ExplicitType.* Language/Types/Const.* Language/Types/Reference.* $DEST/
+$LINK Language/Declarations/TopLevel/TypeDefinition.* $DEST/Interfaces/
+
+DEST=../new_src/Memberify
+mkdir -p $DEST
+$LINK Language/Types/Memberify.* $DEST/
+
 DEST=../new_src/BuiltinDeclarations
 mkdir -p $DEST
-$LINK Language/Declarations/BuiltinDeclaration.* Language/Declarations/Builtin/* $DEST/
+$LINK Language/Declarations/BuiltinDeclaration.* Language/Declarations/Builtin/Builtin* $DEST/
 
-DEST=../new_src/Types
+DEST=../new_src/BuiltinTypes
 mkdir -p $DEST
-$LINK Language/Types/AddressType.* Language/Types/Pointer.* Language/Types/Const.* Language/Types/Reference.* Language/Types/BuiltinType.* Language/Types/ExplicitType.* $DEST/
-#TODO Invent an interface to put this apart from BuiltinType
-$LINK Language/Types/StringType.* $DEST/
+$LINK Language/Types/BuiltinType.* $DEST/
+
+DEST=../new_src/Array
+mkdir -p $DEST
+$LINK Language/Types/Array.* $DEST/
+
+DEST=../new_src/ExtendedTypes
+mkdir -p $DEST
+$LINK Language/Types/HashType.* $DEST/
+$LINK Language/Types/StringType.* Language/Types/ListType.* $DEST/
