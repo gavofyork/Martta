@@ -1,67 +1,139 @@
 #!/bin/bash
 
-LINK="rsync -t"
+if [[ "x$1" == "x" ]]; then
+	root="/tmp/src"
+	if [[ -e $root ]]; then
+		mv $root /tmp/old
+		mkdir -p $root
+		mv /tmp/old /root
+	fi
+else
+	root="$1"
+#	if [[ -e $root ]]; then
+#		rm -r $root
+#	fi
+fi
 
-DEST=../new_src/Entity
-mkdir -p $DEST $DEST/Support $DEST/Interfaces
-$LINK Support/Auxilliary.h Support/AuxilliaryFace.h Support/AuxilliaryRegistrar.cpp Support/AuxilliaryRegistrar.h Support/ChangeMan.cpp Support/ChangeMan.h Support/CodeScene.cpp Support/CodeScene.h Support/CompletionDelegate.cpp Support/CompletionDelegate.h Support/CullManager.cpp Support/CullManager.h Support/Dier.cpp Support/Dier.h Support/EditDelegate.cpp Support/EditDelegate.h Support/EntitySupport.h Support/KeyEvent.cpp Support/KeyEvent.h Support/Kind.cpp Support/Kind.h Support/Meta.cpp Support/Meta.h Support/Position.cpp Support/Position.h Support/SafePointer.h Support/Stylist.cpp Support/Stylist.h $DEST/Support/
-$LINK Language/ChildValidifier.* Language/Depende* Language/Familial.* $DEST/Interfaces/
-$LINK Language/Entity.* $DEST/
+if [[ "x$2" == "x" ]]; then
+	support="../../support"
+else
+	support="$2"
+fi
 
-DEST=../new_src/TypeEntity
-mkdir -p $DEST $DEST/Support $DEST/Interfaces
-$LINK Language/Types/TypeEntity.* Language/Types/ModifyingType.* $DEST/
-$LINK Language/TypedOwner.* Language/Declarations/TypeNamer.* $DEST/Interfaces/
-$LINK Support/Type.* $DEST/Support/
+echo "Preparing Martta language build tree."
+echo "Root: $root"
 
-DEST=../new_src/AddressTypes
-mkdir -p $DEST
-$LINK Language/Types/AddressType.* Language/Types/Pointer.* Language/Types/UndefinedArray.* $DEST/
+function prepare()
+{
+local name="$1"	
+local files="$2"
+local depends="$3"
 
-DEST=../new_src/Identifiable
-mkdir -p $DEST $DEST/Support
-$LINK Language/Identifiable.* $DEST/
-$LINK Support/ModelPtr* $DEST/Support/
+echo "Preparing plugin $name..."
 
-DEST=../new_src/Label
-mkdir -p $DEST
-$LINK Language/Labels/Label.* Language/Labels/IdLabel.* $DEST/
+local dest="$root/$name"
+local ffile="*/"
+local fpath="/*"
+local sources=""
+local headers=""
+local paths=""
 
-DEST=../new_src/Operator
-mkdir -p $DEST $DEST/Support
-$LINK Language/Labels/OperatorLabel.* $DEST/
-$LINK Support/Operator.* Support/OperatorRegistrar.* $DEST/Support/
+mkdir -p $dest
 
-DEST=../new_src/ValueDefiner
-mkdir -p $DEST
-$LINK Language/Declarations/ValueDefiner.* $DEST/
+for f in $files; do
+	# split into path/filename
+	path=${f/$fpath}
+	file=${f/$ffile}
+	if [[ $path == $f ]]; then path="."; fi
+	paths="$paths $path"
+	local header=$(find . -name $file.h)
+	local source=$(find . -name $file.cpp)
+	mkdir -p $dest/$path
+	if [[ -e $header ]]; then
+		rsync -t $header $dest/$path/
+		headers="$headers $path/$file.h"
+	fi
+	if [[ -e $source ]]; then
+		rsync -t $source $dest/$path/
+		sources="$sources $path/$file.cpp"
+	fi
+done
 
-DEST=../new_src/Declaration
-mkdir -p $DEST
-$LINK Language/Declarations/Declaration.* $DEST/
+cat > $dest/$name.pro << EOF
+include(../martta.prf)
+TARGET = $name
+include($name.pri)
+SOURCES += $sources
+HEADERS += $headers
+EOF
 
-DEST=../new_src/BasicTypes
-mkdir -p $DEST $DEST/Interfaces
-$LINK Language/Types/FunctionType.* Language/Types/ExplicitType.* Language/Types/Const.* Language/Types/Reference.* $DEST/
-$LINK Language/Declarations/TopLevel/TypeDefinition.* $DEST/Interfaces/
+cat > $dest/$name.pri << EOF
+$(for i in $depends; do echo include\(../$i/$i.pri\); done)
+OURDIRS=$(for i in $paths; do echo $i; done | sort | uniq | xargs)
+TWD = \$\$PWD
+include(../dep.pri)
+EOF
 
-DEST=../new_src/Memberify
-mkdir -p $DEST
-$LINK Language/Types/Memberify.* $DEST/
+echo " $name \\" >> $root/Language.pro
+}
 
-DEST=../new_src/BuiltinDeclarations
-mkdir -p $DEST
-$LINK Language/Declarations/BuiltinDeclaration.* Language/Declarations/Builtin/Builtin* $DEST/
+mkdir -p $root
 
-DEST=../new_src/BuiltinTypes
-mkdir -p $DEST
-$LINK Language/Types/BuiltinType.* $DEST/
+echo "Main project file..."
+cat > "$root/Language.pro" << EOF
+TEMPLATE = subdirs
+SUBDIRS = \\
+EOF
 
-DEST=../new_src/Array
-mkdir -p $DEST
-$LINK Language/Types/Array.* $DEST/
+echo "Features file..."
+cat > "$root/martta.prf" << EOF
+CONFIG -= debug release qt stl exceptions rtti
+CONFIG *= debug shared plugin thread
+TEMPLATE = lib
+VERSION = 0.1.0
+BASE = \$\$PWD
+OBJECTS_DIR = \$\$BASE/build
+DEPENDPATH += $support
+INCLUDEPATH += $support
+QMAKE_LIBDIR += $support
+LIBS += -lsupport
+EOF
 
-DEST=../new_src/ExtendedTypes
-mkdir -p $DEST
-$LINK Language/Types/HashType.* $DEST/
-$LINK Language/Types/StringType.* Language/Types/ListType.* $DEST/
+echo "Support file..."
+cat > "$root/dep.pri" << EOF
+QMAKE_FEATURES *= \$\$PWD
+QMAKE_LIBDIR *= \$\$TWD
+DEPENDPATH *= \$\$join(OURDIRS, " \$\$TWD/", "\$\$TWD/")
+INCLUDEPATH *= \$\$join(OURDIRS, " \$\$TWD/", "\$\$TWD/")
+!contains(TARGET, \$\$basename(TWD)): LIBS *= -l\$\$basename(TWD)
+EOF
+
+prepare Entity "Support/Auxilliary Support/AuxilliaryFace Support/AuxilliaryRegistrar Support/ChangeMan Support/CodeScene Support/CompletionDelegate Support/CullManager Support/Dier Support/EditDelegate Support/EntitySupport Support/KeyEvent Support/Kind Support/Meta Support/Position Support/SafePointer Support/Stylist Interfaces/ChildValidifier Interfaces/Dependee Interfaces/Depender Interfaces/Familial Entity" 
+
+prepare Operator "Operator Support/OperatorRegistrar" 
+
+prepare Label Label Entity
+prepare MiscLabels "ConstLabel AccessLabel" Label
+prepare IdLabel IdLabel Label
+prepare TextLabel "TextLabel Interfaces/Labelled" IdLabel
+prepare OperatorLabel OperatorLabel "IdLabel Operator"
+prepare Labels "" "TextLabel MiscLabels OperatorLabel"
+
+prepare Identifiable "Identifiable Support/ModelPtr Support/ModelPtrFace Support/ModelPtrRegistrar" IdLabel
+
+prepare TypeEntity "TypeEntity ModifyingType Interfaces/TypedOwner Interfaces/TypeNamer Support/Type" Entity
+prepare AddressType "AddressType Pointer UndefinedArray" TypeEntity
+prepare BasicTypes "FunctionType ExplicitType Const Reference Interfaces/TypeDefinition" "TypeEntity Identifiable"
+prepare Memberify "Memberify" BasicTypes
+prepare MemberTemplateType MemberTemplateType Memberify
+
+prepare ValueDefiner "ValueDefiner" "TypeEntity Identifiable"
+prepare Statement "Statement Primary BareTyped Typed Untyped" "TypeEntity ValueDefiner"
+prepare Compound Compound Statement
+prepare Declaration "Declaration" "Identifiable"
+
+prepare BuiltinDeclarations "BuiltinDeclaration BuiltinMethod BuiltinOperator" "ValueDefiner Declaration Memberify Operator"
+prepare BuiltinType "BuiltinType" "BasicTypes AddressType BuiltinDeclarations"
+prepare Array Array "AddressType Statement BuiltinType"
+prepare ExtendedTypes "HashType ListType StringType" "MemberTemplateType BuiltinType Statement"
+prepare Types "" "AddressType BasicTypes Memberify MemberTemplateType Array BuiltinType ExtendedTypes" 

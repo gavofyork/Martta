@@ -41,4 +41,12 @@ protected:
 	virtual void						appendDefinedUptoHere(int _i, List<ValueDefiner*>* _list) const;
 };
 
+class HardCompound: public Compound
+{
+	MARTTA_OBJECT(Compound)
+	
+protected:
+	virtual String						defineLayout(ViewKeys const&) const;
+};
+
 }

@@ -31,7 +31,7 @@ MARTTA_OBJECT_CPP(Function);
 Kinds Function::allowedKinds(int _i) const
 {
 	if (_i == Body)
-		return Kind::of<Compound>();
+		return Kind::of<HardCompound>();
 	if (_i == Returned)
 		return Kind::of<TypeEntity>();
 	if (_i >= 0)

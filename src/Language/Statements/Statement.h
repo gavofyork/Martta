@@ -39,7 +39,7 @@ public:
 	virtual String						code() const { return "(void)0;"; }
 	virtual String						codeAsStatement() const { return code(); }
 
-	virtual List<ValueDefiner*>		valuesInLocalScope() const;
+	virtual List<ValueDefiner*>			valuesInLocalScope() const;
 
 	List<Statement*>					statements() const { return cardinalChildrenOf<Statement>(); }
 	bool			 					isStatement(int _i) const { return childIs<Statement>(_i); }

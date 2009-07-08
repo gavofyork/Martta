@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "EntitySupport.h"
 #include "Meta.h"
 
 namespace Martta

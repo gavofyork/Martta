@@ -18,8 +18,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "Position.h"
 #include "Entity.h"
+#include "Position.h"
 
 namespace Martta
 {

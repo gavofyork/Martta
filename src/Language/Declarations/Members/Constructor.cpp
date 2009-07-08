@@ -57,7 +57,7 @@ Kinds Constructor::allowedKinds(int _i) const
 	if (_i == Identity || _i == Constness || _i == Returned)
 		return Kinds();
 	else if (_i == Body)
-		return Kind::of<Compound>();
+		return Kind::of<HardCompound>();
 	else if (_i >= 0)
 		return Kind::of<Argument>();
 	return Super::allowedKinds(_i);

@@ -19,14 +19,15 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "CodeScene.h"
-#include "LambdaNamer.h"	// For determining look of compound.
+#include "ValueDefiner.h"
 #include "Compound.h"
 
 namespace Martta
 {
 
 MARTTA_OBJECT_CPP(Compound);	
-	
+MARTTA_OBJECT_CPP(HardCompound);	
+
 String Compound::code() const
 {
 	String ret = "{\n";
@@ -38,20 +39,9 @@ String Compound::code() const
 
 void Compound::appendDefinedUptoHere(int _i, List<ValueDefiner*>* _list) const
 {
-	if (_i >= 0)
-		for(int i = 0; i < _i; ++i)
-			if (childIs<ValueDefiner>(i))
-				*_list += childAs<ValueDefiner>(i);
-}
-
-String Compound::defineLayout(ViewKeys const&) const
-{
-	if (statements().size() > 1 || parentIs<LambdaNamer>())
-		return "ycode;-i;'{';n;" + times(0, cardinalChildCount(), ";n;") + ";n;-i;'}'";
-	else if (statements().size())
-		return "ycode;0";
-	else
-		return "ycode;'{}'";
+	for(int i = 0; i < _i; ++i)
+		if (ValueDefiner* v = tryChild<ValueDefiner>(i))
+			*_list += v;
 }
 
 bool Compound::keyPressed(KeyEvent const* _e)
@@ -78,6 +68,21 @@ bool Compound::keyPressed(KeyEvent const* _e)
 	else
 		return Super::keyPressed(_e);
 	return true;
+}
+
+String Compound::defineLayout(ViewKeys const&) const
+{
+	if (statements().size() > 1)
+		return "ycode;-i;'{';n;" + times(0, cardinalChildCount(), ";n;") + ";n;-i;'}'";
+	else if (statements().size())
+		return "ycode;0";
+	else
+		return "ycode;'{}'";
+}
+
+String HardCompound::defineLayout(ViewKeys const&) const
+{
+	return "ycode;-i;'{';n;" + times(0, cardinalChildCount(), ";n;") + ";n;-i;'}'";
 }
 
 }
