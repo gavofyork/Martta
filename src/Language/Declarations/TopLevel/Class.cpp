@@ -18,23 +18,26 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "VirtualPure.h"	// < interface away to VirtualPure::whacksParent() const { return true; } from Member::whacksParent() const { return false; }?
+
+#include "MemberVariable.h"
 #include "MemberEnumeration.h"
+#include "Method.h"
+#include "Base.h"
+
 #include "Constructor.h"
+#include "Destructor.h"
+#include "MethodOperator.h"
+#include "ConversionOperator.h"
 #include "ArtificialDefaultConstructor.h"
 #include "ArtificialCopyConstructor.h"
-#include "Destructor.h"
-#include "Method.h"
-#include "ExplicitType.h"
-#include "MemberVariable.h"
-#include "VirtualPure.h"	// < interface away to VirtualPure::whacksParent() const { return true; } from Member::whacksParent() const { return false; }?
-#include "Base.h"
-#include "MethodOperator.h"
 #include "ArtificialAssignmentOperator.h"
+
 #include "TextLabel.h"
 #include "AccessLabel.h"
 #include "Const.h"
 #include "Reference.h"
-#include "ConversionOperator.h"
+#include "ExplicitType.h"
 #include "Class.h"
 
 namespace Martta
@@ -353,6 +356,7 @@ String Class::defineLayout(ViewKeys const& _keys) const
 	
 	if (_keys["expanded"].toBool())
 	{
+		__asm {int 3}
 		foreach (Base* i, cardinalChildrenOf<Base>())
 			ret += String(";n;i;%1").arg(i->index());
 		

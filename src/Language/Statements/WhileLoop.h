@@ -20,18 +20,16 @@
 
 #pragma once
 
-#include "Corporal.h"
 #include "Conditional.h"
-#include "Untyped.h"
+#include "Loop.h"
 
 namespace Martta
 {
 
-class WhileLoop: public Untyped, public_interface Corporal, public_interface Conditional
+class WhileLoop: public Loop, public_interface Conditional
 {
-	MARTTA_OBJECT(Untyped)
-	MARTTA_INHERITS(Corporal, 0)
-	MARTTA_INHERITS(Conditional, 1)
+	MARTTA_OBJECT(Loop)
+	MARTTA_INHERITS(Conditional, 0)
 
 public:
 	inline static bool					keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePlaceholderKeyPressHandler<WhileLoop>(_p, _e, "W"); }
@@ -40,11 +38,10 @@ protected:
 	virtual Kinds						allowedKinds(int _index) const;
 	
 private:
-	virtual int							minRequired(int _i) const { return _i == Condition || _i == Body ? 1 : Super::minRequired(_i); }
+	virtual int							minRequired(int _i) const { return _i == Condition ? 1 : Super::minRequired(_i); }
 	virtual Types						allowedTypes(int _index) const;
 	virtual String						code() const;
 	virtual String						defineLayout(ViewKeys const&) const;
-	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual List<int> const&			defineDeclarationOrder() const { static const List<int> r = List<int>() << Condition << Body; return r; }
 };
 

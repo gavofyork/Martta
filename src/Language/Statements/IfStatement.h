@@ -43,7 +43,19 @@ protected:
 	virtual int							minRequired(int _i) const { return _i == Condition || _i == Body ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _index) const;
 	virtual Types						allowedTypes(int _index) const;
-	virtual List<int> const&			defineDeclarationOrder() const { static const List<int> r = List<int>() << Condition << Body; return r; }
+	virtual List<int> const&			defineDeclarationOrder() const { static const List<int> r = List<int>() << Condition << Body << AltBody; return r; }
+};
+
+class UnlessStatement: public IfStatement
+{
+	MARTTA_OBJECT(IfStatement)
+	
+public:
+	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
+	
+protected:
+	virtual String						code() const;
+	virtual String						defineLayout(ViewKeys const&) const;
 };
 
 }

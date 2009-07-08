@@ -20,31 +20,26 @@
 
 #pragma once
 
-#include "Conditional.h"
-#include "Loop.h"
+#include "Corporal.h"
+#include "Untyped.h"
 
 namespace Martta
 {
 
-class ForLoop: public Loop, public_interface Conditional
+class Loop: public Untyped, public_interface Corporal
 {
 	MARTTA_OBJECT(Untyped)
-	MARTTA_INHERITS(Conditional, 0)
-
-public:
-	enum { Initialiser = FirstNamed, Ticker, EndOfNamed };
+	MARTTA_INHERITS(Corporal, 0)
 	
-	virtual int							minRequired(int _i) const { return _i == Initialiser || _i == Condition || _i == Ticker ? 1 : Super::minRequired(_i); }
+public:
+	virtual int							minRequired(int _i) const { return _i == Body ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _index) const;
-	virtual Types						allowedTypes(int _index) const;
 
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 	
 	virtual String						code() const;
 
 private:
-	virtual List<int> const&			defineDeclarationOrder() const { static const List<int> r = List<int>() << Initialiser << Condition << Ticker << Body; return r; }
-//	virtual void						decorate(DecorationContext const& _c) const;
 	virtual String						defineLayout(ViewKeys const&) const;
 	virtual bool						keyPressed(KeyEvent const* _e);
 };

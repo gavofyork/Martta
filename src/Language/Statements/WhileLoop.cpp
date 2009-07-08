@@ -19,8 +19,10 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "Typed.h"
+#include "BuiltinType.h"
 #include "Const.h"
 #include "Compound.h"
+#include "BreakStatement.h"
 #include "WhileLoop.h"
 
 namespace Martta
@@ -33,8 +35,6 @@ Kinds WhileLoop::allowedKinds(int _index) const
 {
 	if (_index == Condition)
 		return Kind::of<BareTyped>();
-	if (_index == Body)
-		return Kind::of<Compound>();
 	return Super::allowedKinds(_index);
 }
 
@@ -56,15 +56,6 @@ String WhileLoop::code() const
 String WhileLoop::defineLayout(ViewKeys const& _k) const
 {
 	return ("ycode;^;'while (';%1;')'" + Corporal::defineLayout(_k, true)).arg(Condition);
-}
-
-bool WhileLoop::keyPressed(KeyEvent const* _e)
-{
-	if (Corporal::keyPressed(_e))
-		return true;
-	else
-		return Super::keyPressed(_e);
-	return true;
 }
 
 Kinds UntilLoop::allowedKinds(int _index) const

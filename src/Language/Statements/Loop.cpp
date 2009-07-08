@@ -18,28 +18,50 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "Entity.h"
-#include "KeyEvent.h"
-#include "Corporal.h"
+#include "Compound.h"
+#include "BreakStatement.h"
+#include "Loop.h"
 
 namespace Martta
 {
 
-MARTTA_INTERFACE_CPP(Corporal);
-MARTTA_NAMED_CPP(Corporal, Body);
+MARTTA_OBJECT_CPP(Loop);
 
-String Corporal::defineLayout(ViewKeys const&, bool _shrink) const
+bool Loop::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
-	return (String(!_shrink || self()->child(Body) && self()->child(Body)->cardinalChildCount() ? ";n;i;%2" : ";%2")).arg(Body);
+	return simplePlaceholderKeyPressHandler<Loop>(_p, _e, "...");
 }
 
-bool Corporal::keyPressed(KeyEvent const* _e)
+Kinds Loop::allowedKinds(int _index) const
 {
-	if ((_e->text() == ")" || _e->text() == "{") && _e->focalIndex() != Body && self()->child(Body))
-		self()->child(Body)->navigateOnto(_e->codeScene());
+	if (_index == Body)
+		return Kind::of<Compound>();
+	return Super::allowedKinds(_index);
+}
+
+bool Loop::keyPressed(KeyEvent const* _e)
+{
+	if (Corporal::keyPressed(_e))
+	{}
+	else if (_e->text() == "B" && _e->focus()->isPlaceholder() && _e->focus()->isAllowed<BreakStatement>())
+	{
+		Entity* e = new BreakStatement;
+		_e->focus()->replace(e);
+		e->setCurrent();
+	}
 	else
-		return false;
+		return Super::keyPressed(_e);
 	return true;
+}
+
+String Loop::defineLayout(ViewKeys const& _k) const
+{
+	return ("Hfull;ycode;^;'forever'" + Corporal::defineLayout(_k, true));
+}
+
+String Loop::code() const
+{
+	return String(L"while (true)\n") + (asStatement(Body) ? asStatement(Body)->codeAsStatement() : "");
 }
 
 }

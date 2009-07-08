@@ -4,6 +4,8 @@ BUG Moving is crazily slow over statements.
   - Do recursively but prune on denied Kinds.
   - Remove all allowedToBeKind (or other Kind-checking) in handlers.
 BUG 'Mstr'-> doesn't move away (only stops editing).
+BUG Assertion on '!?'.
+BUG Space in string stops editing.
 
 Small things:
 - Special EntryMethod.
@@ -19,8 +21,6 @@ Small things:
 - BRINGBACK Ser/Deser tests.
 - BRINGBACK decoration code into layout system and markup for it.
 Dynamic code-loading (plugins).
-- CHECK TypeDefinition - needed before ExplicitType?
-- Split Compound from LambdaNamer
 
 --------------------------------------------------------------------------------
 

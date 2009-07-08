@@ -129,6 +129,8 @@ prepare MemberTemplateType MemberTemplateType Memberify
 
 prepare ValueDefiner "ValueDefiner" "TypeEntity Identifiable"
 prepare Statement "Statement Primary BareTyped Typed Untyped" "TypeEntity ValueDefiner"
+prepare Corporal Corporal Entity
+prepare Conditional Conditional Entity
 prepare Compound Compound Statement
 prepare Declaration "Declaration" "Identifiable"
 
@@ -136,4 +138,6 @@ prepare BuiltinDeclarations "BuiltinDeclaration BuiltinMethod BuiltinOperator" "
 prepare BuiltinType "BuiltinType" "BasicTypes AddressType BuiltinDeclarations"
 prepare Array Array "AddressType Statement BuiltinType"
 prepare ExtendedTypes "HashType ListType StringType" "MemberTemplateType BuiltinType Statement"
-prepare Types "" "AddressType BasicTypes Memberify MemberTemplateType Array BuiltinType ExtendedTypes" 
+prepare Types "" "AddressType BasicTypes Memberify MemberTemplateType Array BuiltinType ExtendedTypes"
+
+prepare ProgramFlow "IfStatement Loop ForLoop WhileLoop BreakStatement" "Compound BuiltinType Corporal Conditional"

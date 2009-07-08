@@ -8,6 +8,7 @@
 #include "Language/Statements/DeleteOperation.cpp"
 #include "Language/Statements/ForLoop.cpp"
 #include "Language/Statements/IfStatement.cpp"
+#include "Language/Statements/Loop.cpp"
 #include "Language/Statements/Primary.cpp"
 #include "Language/Statements/ReturnStatement.cpp"
 #include "Language/Statements/Statement.cpp"

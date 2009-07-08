@@ -26,8 +26,9 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(IfStatement);	
-	
+MARTTA_OBJECT_CPP(IfStatement);
+MARTTA_OBJECT_CPP(UnlessStatement);
+
 bool IfStatement::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
 	return simplePlaceholderKeyPressHandler<IfStatement>(_p, _e, "?");
@@ -76,6 +77,26 @@ bool IfStatement::keyPressed(KeyEvent const* _e)
 String IfStatement::defineLayout(ViewKeys const& _k) const
 {
 	return String("ycode;^;'if (';%1;')'").arg(Condition) + Corporal::defineLayout(_k, true) +
+			(child(AltBody) ? ";n;'else'" + String(child(AltBody)->cardinalChildCount() ? ";n;i;%1" : ";%1").arg(AltBody) : String());
+}
+
+bool UnlessStatement::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
+{
+	return simplePlaceholderKeyPressHandler<UnlessStatement>(_p, _e, "!?");
+}
+
+String UnlessStatement::code() const
+{
+	String ret;
+	ret += "if (" + (isStatement(Condition) ? asStatement(Condition)->code() : "");
+	ret += ")\n" + (isStatement(AltBody) ? asStatement(AltBody)->codeAsStatement() : "{}");
+	ret += "else\n" + (isStatement(Body) ? asStatement(Body)->codeAsStatement() : "");
+	return ret;
+}
+
+String UnlessStatement::defineLayout(ViewKeys const& _k) const
+{
+	return String("ycode;^;'unless (';%1;')'").arg(Condition) + Corporal::defineLayout(_k, true) +
 			(child(AltBody) ? ";n;'else'" + String(child(AltBody)->cardinalChildCount() ? ";n;i;%1" : ";%1").arg(AltBody) : String());
 }
 

@@ -40,8 +40,6 @@ Kinds ForLoop::allowedKinds(int _index) const
 		return Kind::of<BareTyped>();
 	if (_index == Ticker)
 		return Kind::of<Typed>();
-	if (_index == Body)
-		return Kind::of<Compound>();
 	return Super::allowedKinds(_index);
 }
 
@@ -63,18 +61,10 @@ bool ForLoop::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 
 bool ForLoop::keyPressed(KeyEvent const* _e)
 {
-	if (Corporal::keyPressed(_e))
-	{}
-	else if (_e->text() == ";" && _e->focalIndex() == Initialiser)
+	if (_e->text() == ";" && _e->focalIndex() == Initialiser)
 		child(Condition)->setCurrent();
 	else if (_e->text() == ";" && _e->focalIndex() == Condition)
 		child(Ticker)->setCurrent();
-	else if (_e->text() == "B" && _e->focus()->isPlaceholder() && _e->focus()->isAllowed<BreakStatement>())
-	{
-		Entity* e = new BreakStatement;
-		_e->focus()->replace(e);
-		e->setCurrent();
-	}
 	else
 		return Super::keyPressed(_e);
 	return true;
