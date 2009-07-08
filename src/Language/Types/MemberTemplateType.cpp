@@ -26,7 +26,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(MemberTemplateType);
 
-void MemberTemplateType::substitute()
+void MemberTemplateType::rejig()
 {
 	if (hasAncestor<Memberify>())
 	{

@@ -36,6 +36,10 @@ DEST=../new_src/Declaration
 mkdir -p $DEST
 $LINK Language/Declarations/Declaration.* $DEST/
 
+DEST=../new_src/BuiltinDeclarations
+mkdir -p $DEST
+$LINK Language/Declarations/BuiltinDeclaration.* Language/Declarations/Builtin/* $DEST/
+
 DEST=../new_src/Types
 mkdir -p $DEST
 $LINK Language/Types/AddressType.* Language/Types/Pointer.* Language/Types/Const.* Language/Types/Reference.* Language/Types/BuiltinType.* Language/Types/ExplicitType.* $DEST/

@@ -20,13 +20,12 @@
 
 #pragma once
 
+#include "Const.h"
+#include "ExplicitType.h"
 #include "ModifyingType.h"
-#include "Class.h"
 
 namespace Martta
 {
-
-class Class;
 
 class Memberify: public ModifyingType
 {
@@ -34,23 +33,24 @@ class Memberify: public ModifyingType
 
 public:
 	enum { Scope = FirstNamed, EndOfNamed };
-
-	Memberify(Class* _scope = 0, bool _isConst = true) { if (_scope) setScopeClass(_scope, _isConst); }
+	
+	inline Memberify() {}
+	Memberify(TypeDefinition* _scope, bool _isConst = true);
 	Memberify(Type const& _object);
 	
 	bool								isConst() const;
 	void								setConst(bool _c);
 	TypeEntity*							scope() const { return tryChild<TypeEntity>(Scope); }
 	TypeEntity*							scopeType() const;
-	Class*								scopeClass(bool* _isConst = 0) const;
+	template<class T> T*				scope(bool* _isConst = 0) const;
 	void								setScope(Type const& _newScope);
-	void								setScopeClass(Class* _scope, bool _isConst = false);
+	void								setScopeClass(TypeDefinition* _scope, bool _isConst = false);
 	virtual String						code(String const& _middle) const;
 	virtual bool						isWellDefined() const { return Super::isWellDefined() && scope(); }
 	
 protected:
 	virtual Types						assignableTypes() const;
-	virtual TypeEntity*					newClone() const;
+	virtual inline TypeEntity*			newClone() const { return new Memberify; }
 	virtual String						modifierLayout() const;
 	virtual bool						isSuperfluous() const { return !childIs<TypeEntity>(Scope) || Super::isSuperfluous(); }
 	virtual bool						canStandAlone() const { return false; }
@@ -59,3 +59,20 @@ protected:
 };
 
 }
+
+template<class T>
+T* Martta::Memberify::scope(bool* _isConst) const
+{
+	TypeEntity* te = scope();
+	if (!te)
+		return 0;
+	if (ExplicitType* et = te->ignore<Const>()->tryType<ExplicitType>())
+	{
+		if (_isConst)
+			*_isConst = te->isType<Const>();
+		return et->subject()->tryKind<T>();
+	}
+	return 0;
+}
+
+

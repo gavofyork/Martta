@@ -102,6 +102,8 @@ public:
 	template<class T> inline bool		isType() { return isType(Kind::of<T>()); }
 	virtual TypeEntity*					asType(Kind _typeKind) { (void)(_typeKind); AssertNR(isType(_typeKind)); return this; }
 	template<class T> inline T*			asType() { return static_cast<T*>(asType(Kind::of<T>())); }
+	inline TypeEntity*					tryType(Kind _typeKind) { return isType(_typeKind) ? asType(_typeKind) : 0; }
+	template<class T> inline T*			tryType() { return isType<T>() ? asType<T>() : 0; }
 	
 	template<class T> inline TypeEntity*ignore() { return isKind<T>() ? childAs<TypeEntity>(Default) : this; }
 
@@ -117,6 +119,8 @@ public:
 	static TypeEntity*					cloneOf(TypeEntity const* _t, Type* _owner) { return _t->newClone(_owner); }
 	
 	virtual List<Declaration*>			utilised() const { return List<Declaration*>(); }
+	
+	virtual void						rejig() const {}
 	
 protected:
 	/// This newClone is the simple one; it doesn't have to change the ownership or duplicate the children.

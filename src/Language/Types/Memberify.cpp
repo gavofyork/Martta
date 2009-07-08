@@ -18,18 +18,23 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "Class.h"
-#include "Const.h"
 #include "FunctionType.h"
-#include "ExplicitType.h"
-#include "Type.h"
-#include "MemberTemplateType.h"
 #include "Memberify.h"
 
 namespace Martta
 {
 
 MARTTA_OBJECT_CPP(Memberify);
+
+Memberify::Memberify(TypeDefinition* _scope, bool _isConst)
+{
+	prepareChildren();
+	if (child(Scope))
+		child(Scope)->killAndDelete();
+	middle(Scope).place(new ExplicitType(_scope));
+	if (_isConst)
+		child(Scope)->insert(new Const);
+}
 
 Memberify::Memberify(Type const& _object)
 {
@@ -74,37 +79,8 @@ void Memberify::setScope(Type const& _newScope)
 	{
 		TypeEntity* t = l.takeLast();
 		l << t->childrenOf<TypeEntity>();
-		if (t->isKind<MemberTemplateType>())
-			t->asKind<MemberTemplateType>()->substitute();
+		t->rejig();	// Should really be done through Class since it knows about MemberTmplType and Memberify
 	}
-}
-
-Class* Memberify::scopeClass(bool* _isConst) const
-{
-	TypeEntity* te = scope();
-	if (te && te->isType<ExplicitType>() && te->asType<ExplicitType>()->subject()->isKind<Class>())
-	{
-		if (_isConst)
-			*_isConst = false;
-		return te->asType<ExplicitType>()->subject()->asKind<Class>();
-	}
-	else if (te && te->isType<Const>() && te->ignore<Const>()->isType<ExplicitType>() && te->ignore<Const>()->asType<ExplicitType>()->subject()->isKind<Class>())
-	{
-		if (_isConst)
-			*_isConst = true;
-		return te->ignore<Const>()->asType<ExplicitType>()->subject()->asKind<Class>();
-	}
-	return 0;
-}
-
-void Memberify::setScopeClass(Class* _scope, bool _isConst)
-{
-	prepareChildren();
-	if (child(Scope))
-		child(Scope)->killAndDelete();
-	middle(Scope).place(new ExplicitType(_scope));
-	if (_isConst)
-		child(Scope)->insert(new Const);
 }
 
 Kinds Memberify::allowedKinds(int _i) const
@@ -148,14 +124,9 @@ bool Memberify::defineSimilarityFrom(TypeEntity const* _f, Castability _c) const
 
 String Memberify::modifierLayout() const
 {
-	if (!scopeClass())
+	if (!scopeType())
 		return String();
-	return "ycode;'" + scopeClass()->name() + "'";
-}
-
-TypeEntity* Memberify::newClone() const
-{
-	return new Memberify;
+	return "ycode;'" + scopeType()->code() + "'";
 }
 
 }

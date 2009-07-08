@@ -34,8 +34,8 @@ public:
 	
 	virtual String						code(String) const { return String("<%1>").arg(m_index); }
 
-	/// After calling substitute, this object may no longer exist.
-	void								substitute();
+	/// After calling rejig, this object may no longer exist.
+	virtual void						rejig();
 	virtual bool						isWellDefined() const { return true; }
 	
 protected:
