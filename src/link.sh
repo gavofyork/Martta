@@ -71,6 +71,9 @@ cat > $dest/$name.pri << EOF
 $(for i in $depends; do echo include\(../$i/$i.pri\); done)
 OURDIRS=$(for i in $paths; do echo $i; done | sort | uniq | xargs)
 TWD = \$\$PWD
+defineTest(hasSources) {
+$(if [[ "x$sources" != "x" ]]; then echo return\(true\); else echo return\(false\); fi)
+}
 include(../dep.pri)
 EOF
 
@@ -105,7 +108,7 @@ QMAKE_FEATURES *= \$\$PWD
 QMAKE_LIBDIR *= \$\$TWD
 DEPENDPATH *= \$\$join(OURDIRS, " \$\$TWD/", "\$\$TWD/")
 INCLUDEPATH *= \$\$join(OURDIRS, " \$\$TWD/", "\$\$TWD/")
-!contains(TARGET, \$\$basename(TWD)): LIBS *= -l\$\$basename(TWD)
+!contains(TARGET, \$\$basename(TWD)):hasSources(): LIBS *= -l\$\$basename(TWD)
 EOF
 
 prepare Entity "Support/Auxilliary Support/AuxilliaryFace Support/AuxilliaryRegistrar Support/ChangeMan Support/CodeScene Support/CompletionDelegate Support/CullManager Support/Dier Support/EditDelegate Support/EntitySupport Support/KeyEvent Support/Kind Support/Meta Support/Position Support/SafePointer Support/Stylist Interfaces/ChildValidifier Interfaces/Dependee Interfaces/Depender Interfaces/Familial Entity" 
@@ -125,10 +128,16 @@ prepare Labels "" "TextLabel MiscLabels OperatorLabel"
 prepare Identifiable "Identifiable Support/ModelPtr Support/ModelPtrFace Support/ModelPtrRegistrar" IdLabel
 
 prepare TypeEntity "TypeEntity ModifyingType Interfaces/TypedOwner Interfaces/TypeNamer Support/Type" Entity
-prepare QualifierTypes "Const Reference" TypeEntity
-prepare AddressType "AddressType Pointer UndefinedArray" "TypeEntity QualifierTypes"
-prepare BasicTypes "FunctionType ExplicitType Interfaces/TypeDefinition" "TypeEntity Identifiable QualifierTypes"
-prepare Memberify "Memberify" BasicTypes
+
+prepare Subscriptable "Subscriptable Support/SubscriptableRegistrar" TypeEntity
+
+prepare PhysicalType PhysicalType TypeEntity 
+prepare FunctionType FunctionType PhysicalType
+
+prepare ExplicitType "ExplicitType Interfaces/TypeDefinition" "PhysicalType Identifiable"
+prepare QualifierTypes "Const Reference" ExplicitType
+prepare AddressType "AddressType Pointer UndefinedArray" "QualifierTypes Subscriptable"
+prepare Memberify Memberify "FunctionType AddressType"
 prepare MemberTemplateType MemberTemplateType Memberify
 
 prepare ValueDefiner "ValueDefiner" "TypeEntity Identifiable"
@@ -137,19 +146,21 @@ prepare Compound Compound Statement
 prepare Declaration "Declaration" "Identifiable"
 
 prepare BuiltinDeclarations "BuiltinDeclaration BuiltinMethod BuiltinOperator" "ValueDefiner Declaration Memberify Operator"
-prepare BuiltinType "BuiltinType" "BasicTypes AddressType BuiltinDeclarations"
+prepare BuiltinType "BuiltinType" "PhysicalType AddressType BuiltinDeclarations"
 prepare Array Array "AddressType Statement BuiltinType"
-prepare ExtendedTypes "HashType ListType StringType" "MemberTemplateType BuiltinType Statement"
-prepare Types "" "AddressType BasicTypes Memberify MemberTemplateType Array BuiltinType ExtendedTypes"
+prepare ExtendedTypes "HashType ListType StringType" "MemberTemplateType BuiltinType Statement Subscriptable"
+prepare Types "" "AddressType QualifierTypes ExplicitType FunctionType Memberify MemberTemplateType Array BuiltinType ExtendedTypes"
 
 prepare ProgramFlow "IfStatement Loop ForLoop WhileLoop BreakStatement" "Compound BuiltinType Corporal Conditional"
 prepare Literals "Literal BoolLiteral StringLiteral IntegerLiteral FloatLiteral" "Statement BuiltinType"
 prepare Evaluation Evaluation Statement
 prepare Invocation Invocation "Evaluation BuiltinType"
-prepare Operation Operation "Operator Evaluation ValueDefiner Memberify BasicTypes"
+prepare Operation Operation "Operator Evaluation ValueDefiner Memberify BuiltinType"
 prepare UnaryOperation UnaryOperation Operation
 prepare AddressOperations "ReferenceOperation DereferenceOperation" "UnaryOperation AddressType"
-prepare SimpleUnaryOperation SimpleUnaryOperation "UnaryOperation BasicTypes ValueDefiner"
+prepare SimpleUnaryOperation SimpleUnaryOperation "UnaryOperation BuiltinType ValueDefiner"
 prepare BinaryOperation BinaryOperation Operation
-prepare AssignmentOperation AssignmentOperation "BinaryOperation BasicTypes"
-prepare SimpleBinaryOperation SimpleBinaryOperation "BinaryOperation BasicTypes ValueDefiner"
+prepare AssignmentOperation AssignmentOperation "BinaryOperation BuiltinType"
+prepare SimpleBinaryOperation SimpleBinaryOperation "BinaryOperation BuiltinType ValueDefiner"
+prepare SubscriptOperation SubscriptOperation "BinaryOperation BuiltinType Subscriptable"
+prepare LifeOperations "NewOperation DeleteOperation" "UnaryOperation PhysicalType AddressType Array"

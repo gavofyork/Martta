@@ -21,7 +21,7 @@
 #pragma once
 
 #include "Type.h"
-#include "TypeEntity.h"
+#include "PhysicalType.h"
 
 namespace Martta
 {
@@ -47,9 +47,9 @@ static const uint
 	Bool = 0x0008, Int = 0x0010, Char = 0x0020, Float = 0x0040, Double = 0x0080,
 	Wchar = Char|Long;
 
-class BuiltinType: public TypeEntity
+class BuiltinType: public PhysicalType
 {
-	MARTTA_INITIALISED_OBJECT(TypeEntity)
+	MARTTA_INITIALISED_OBJECT(PhysicalType)
 
 	friend class BuiltinOperator;	// For use of s_nonMembers. QUICK Should probably use an interface for this.
 	friend class NameTrait<int>;

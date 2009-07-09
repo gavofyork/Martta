@@ -17,6 +17,8 @@ Small things:
 - CLEAN Move crap from ExplicitType to TypeDefinition.
 - CLEAN Slim down API of CodeScene.
 - OPTIMISE String (and List/Hash/Type perhaps) with copy on write.
+- Interfacify ModifyingType (clashes with PhysicalType over ListType etc.)
+  - NewOperation/DeleteOperation - interface with Type classes.
 - BRINGBACK Visual change system.
 - BRINGBACK Ser/Deser tests.
 - BRINGBACK decoration code into layout system and markup for it.

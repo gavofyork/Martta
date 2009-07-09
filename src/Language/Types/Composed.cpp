@@ -10,6 +10,7 @@
 #include "Language/Types/MemberTemplateType.cpp"
 #include "Language/Types/Memberify.cpp"
 #include "Language/Types/ModifyingType.cpp"
+#include "Language/Types/PhysicalType.cpp"
 #include "Language/Types/Pointer.cpp"
 #include "Language/Types/Reference.cpp"
 #include "Language/Types/StringType.cpp"

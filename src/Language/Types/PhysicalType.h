@@ -18,43 +18,16 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "PhysicalType.h"
-#include "Pointer.h"
-#include "Array.h"
-#include "NewOperation.h"
+#pragma once
+
+#include "TypeEntity.h"
 
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(NewOperation);	
-
-bool NewOperation::isValidState() const
+class PhysicalType: public TypeEntity
 {
-	AssertNR(isComplete());
-	return childAs<TypeEntity>(TheOperand)->canStandAlone();
-}
-	
-String NewOperation::code() const
-{
-	if (!isComplete())
-		return String();
-	return parenthesise("new " + childAs<TypeEntity>(TheOperand)->code());
-}
-
-Kinds NewOperation::allowedKinds(int _index) const
-{
-	if (_index == TheOperand)
-		return Kind::of<Pointer>(), Kind::of<Array>(), Kind::of<PhysicalType>();
-	return Super::allowedKinds(_index);
-}
-
-Type NewOperation::type() const
-{
-	if (!isComplete())
-		return Type();
-	if (Array* a = tryChild<Array>(TheOperand))
-		return *a;
-	return Type(*childAs<TypeEntity>(TheOperand)).topWith(Pointer());
-}
+	MARTTA_PLACEHOLDER(TypeEntity)
+};
 
 }

@@ -18,6 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "SubscriptableRegistrar.h"
 #include "Typed.h"
 #include "ValueDefiner.h"
 #include "BuiltinType.h"

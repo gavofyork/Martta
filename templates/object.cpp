@@ -18,7 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "Entity.h"
 #include "_NAME_.h"
 
 namespace Martta

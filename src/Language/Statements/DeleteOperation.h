@@ -20,7 +20,6 @@
 
 #pragma once
 
-#include "BuiltinType.h"
 #include "Const.h"
 #include "Pointer.h"
 #include "UnaryOperation.h"
@@ -36,8 +35,8 @@ public:
 	inline static bool					keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePlaceholderKeyPressHandler<DeleteOperation>(_p, _e, "~"); }
 	
 protected:
-	virtual Types						allowedTypes(int) const { return Type(Void).topWith(Const()).topWith(Pointer()); }
-	virtual Type						type() const { return Type(Void); }
+	virtual Types						allowedTypes(int) const { return Type().topWith(Const()).topWith(Pointer()); }
+	virtual Type						type() const { return Type(); }
 	virtual String						code() const { return "delete " + childAs<Statement>(TheOperand)->code(); }	
 	virtual String						defineLayout(ViewKeys const&) const { return String("p:/delete.svg;^;%d;p:/delete.svg").arg(TheOperand); }
 };

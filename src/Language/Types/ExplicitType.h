@@ -23,14 +23,14 @@
 #include "TypeDefinition.h"
 #include "ModelPtr.h"
 #include "Type.h"
-#include "TypeEntity.h"
+#include "PhysicalType.h"
 
 namespace Martta
 {
 
-class ExplicitType: public TypeEntity
+class ExplicitType: public PhysicalType
 {
-	MARTTA_OBJECT(TypeEntity)
+	MARTTA_OBJECT(PhysicalType)
 
 	friend class TypeDefinition;
 

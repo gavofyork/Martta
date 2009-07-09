@@ -21,7 +21,7 @@
 #pragma once
 
 #include "Type.h"
-#include "TypeEntity.h"
+#include "PhysicalType.h"
 
 namespace Martta
 {
@@ -30,9 +30,9 @@ namespace Martta
 // child(Returned) is return type.
 // child(n) is argument n
 // For ... functions, m_ellipsis is set.
-class FunctionType: public TypeEntity
+class FunctionType: public PhysicalType
 {
-	MARTTA_OBJECT(TypeEntity)
+	MARTTA_OBJECT(PhysicalType)
 
 public:
 	enum { Returned = FirstNamed, EndOfNamed };
