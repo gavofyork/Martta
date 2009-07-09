@@ -121,6 +121,39 @@ inline uint floorLog2(uint _a)
 	return rett;
 }
 
+template<typename T> class isSimple { public: enum { value = false }; typedef T* StorageType; };
+template<typename T> class isSimple<T*> { public: enum { value = true }; typedef T* StorageType; };
+#define DECLARE_SIMPLE_TYPE(T) template<> class isSimple<T> { public: enum { value = true }; typedef T StorageType; };
+template<> class isSimple<bool> { public: enum { value = true }; typedef bool StorageType; };
+template<> class isSimple<wchar_t> { public: enum { value = true }; typedef wchar_t StorageType; };
+template<> class isSimple<signed char> { public: enum { value = true }; typedef signed char StorageType; };
+template<> class isSimple<unsigned char> { public: enum { value = true }; typedef unsigned char StorageType; };
+template<> class isSimple<signed short> { public: enum { value = true }; typedef signed short StorageType; };
+template<> class isSimple<unsigned short> { public: enum { value = true }; typedef unsigned short StorageType; };
+template<> class isSimple<signed int> { public: enum { value = true }; typedef signed int StorageType; };
+template<> class isSimple<unsigned int> { public: enum { value = true }; typedef unsigned int StorageType; };
+template<> class isSimple<signed long> { public: enum { value = true }; typedef signed long StorageType; };
+template<> class isSimple<unsigned long> { public: enum { value = true }; typedef unsigned long StorageType; };
+template<> class isSimple<signed long long> { public: enum { value = true }; typedef signed long long StorageType; };
+template<> class isSimple<unsigned long long> { public: enum { value = true }; typedef unsigned long long StorageType; };
+template<> class isSimple<float> { public: enum { value = true }; typedef float StorageType; };
+template<> class isSimple<double> { public: enum { value = true }; typedef double StorageType; };
+template<> class isSimple<long double> { public: enum { value = true }; typedef long double StorageType; };
+
+// star; use instead of * operator on a item of T. 
+template<class T> inline T& refFor(typename isSimple<T>::StorageType& _d) { if (isSimple<T>::value) return *(T*)&_d; else return **(T**)&_d; }
+template<class T> inline T const& refFor(typename isSimple<T>::StorageType const& _d) { if (isSimple<T>::value) return *(T const*)&_d; else return **(T const**)&_d; }
+template<class T> inline bool refIsGood(typename isSimple<T>::StorageType const& _d) { return isSimple<T>::value || *(T**)&_d; }
+template<class T> inline void initRef(typename isSimple<T>::StorageType& _d) { if (!isSimple<T>::value) *(T**)&_d = 0; }
+template<class T> inline void finRef(typename isSimple<T>::StorageType& _d) { if (!isSimple<T>::value) delete &refFor<T>(_d); }
+template<class T> inline void setRef(typename isSimple<T>::StorageType& _d, T const& _src)
+{
+	if (refIsGood<T>(_d))
+		refFor<T>(_d) = _src;
+	else
+		*(T**)&_d = new T(_src);
+}
+
 struct MethodExistsTrue { enum { c_val = 1 }; };
 struct MethodExistsFalse { enum { c_val = 0 }; };
 template<class T, void (T::*)()> struct MethodExistsStruct {};

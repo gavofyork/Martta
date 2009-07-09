@@ -101,46 +101,20 @@ template<typename Key, typename T, bool IK>
 class PNode
 {
 public:
-	privateinline PNode(): m_next(0) { if (sizeof(Key) > sizeof(Key*)) m_key = 0; if (sizeof(T) > sizeof(T*)) m_value = 0; }
-	privateinline ~PNode() { if (sizeof(Key) > sizeof(Key*)) delete m_key; if (sizeof(T) > sizeof(T*)) delete m_value; }
-
-	// Both set() and swap() methods must be called on inActive() nodes.
+	privateinline PNode(): m_next(0) { initRef<Key>(m_key); initRef<T>(m_value); }
+	privateinline ~PNode() { finRef<Key>(m_key); finRef<T>(m_value); }
+	
+	// Both set() and swap() methods must be called on isActive() nodes.
 	privateinline void set(Key const& _key, T const& _value)
 	{
 		AssertNR(isActive());
-		if (sizeof(Key) > sizeof(Key*))
-			if (m_key)
-				*m_key = _key;
-			else
-				m_key = new Key(_key);
-		else
-			*(Key*)&m_key = _key;
-		if (sizeof(T) > sizeof(T*))
-			if (m_value)
-				*m_value = _value;
-			else
-				m_value = new T(_value);
-		else
-			*(T*)&m_value = _value;
+		setRef(m_key, _key);
+		setRef(m_value, _value);
 	}
 	template<bool IK2>
 	privateinline void copy(PNode<Key, T, IK2> const& _n)
 	{
-		AssertNR(isActive());
-		if (sizeof(Key) > sizeof(Key*))
-			if (m_key)
-				*m_key = _n.key();
-			else
-				m_key = new Key(_n.key());
-		else
-			*(Key*)&m_key = _n.key();
-		if (sizeof(T) > sizeof(T*))
-			if (m_value)
-				*m_value = _n.value();
-			else
-				m_value = new T(_n.value());
-		else
-			*(T*)&m_value = _n.value();
+		set(_n.key(), _n.value());
 	}
 	privateinline void swap(PNode& _n)
 	{
@@ -149,9 +123,9 @@ public:
 		MarttaSupport::swap(m_value, _n.m_value);
 	}
 		
-	privateinline Key const& key() const { if (sizeof(Key) > sizeof(Key*)) return *m_key; else return *(Key const*)&m_key; }
-	privateinline T const& value() const { if (sizeof(T) > sizeof(T*)) return *m_value; else return *(T const*)&m_value; }
-	privateinline T& value() { if (sizeof(T) > sizeof(T*)) return *m_value; else return *(T*)&m_value; }
+	privateinline Key const& key() const { return refFor<Key>(m_key); }
+	privateinline T const& value() const { return refFor<T>(m_value); }
+	privateinline T& value() { return refFor<T>(m_value); }
 	
 	// If there's no m_next or m_previous, then we're inactive.
 	privateinline operator bool() const { return isActive(); }
@@ -168,40 +142,27 @@ public:
 	PNode* m_next;
 		
 private:
-	Key* m_key;
-	T* m_value;
+	typename isSimple<Key>::StorageType m_key;
+	typename isSimple<T>::StorageType m_value;
 };
 
 template<typename Key, typename T>
 class PNode<Key, T, true>
 {
 public:
-	PNode(): m_next(0) { if (sizeof(T) > sizeof(T*)) m_value = 0; }
-	~PNode() { if (sizeof(T) > sizeof(T*)) delete m_value; }
-
-	// Both set() and usurp() methods must be called on inActive() nodes.
+	privateinline PNode(): m_next(0) { initRef<T>(m_value); }
+	privateinline ~PNode() { finRef<T>(m_value); }
+	
+	// Both set() and swap() methods must be called on isActive() nodes.
 	privateinline void set(T const& _value)
 	{
 		AssertNR(isActive());
-		if (sizeof(T) > sizeof(T*))
-			if (m_value)
-				*m_value = _value;
-			else
-				m_value = new T(_value);
-		else
-			*(T*)&m_value = _value;
+		setRef(m_value, _value);
 	}
 	template<bool IK2>
 	privateinline void copy(PNode<Key, T, IK2> const& _n)
 	{
-		AssertNR(isActive());
-		if (sizeof(T) > sizeof(T*))
-			if (m_value)
-				*m_value = _n.value();
-			else
-				m_value = new T(_n.value());
-		else
-			*(T*)&m_value = _n.value();
+		set(_n.value());
 	}
 	privateinline void swap(PNode& _n)
 	{
@@ -210,9 +171,9 @@ public:
 	}
 	
 	privateinline Key const& key() const { return keyOf<T>(value()); }
-	privateinline T const& value() const { if (sizeof(T) > sizeof(T*)) return *m_value; else return *(T const*)&m_value; }
-	privateinline T& value() { if (sizeof(T) > sizeof(T*)) return *m_value; else return *(T*)&m_value; }
-		
+	privateinline T const& value() const { return refFor<T>(m_value); }
+	privateinline T& value() { return refFor<T>(m_value); }
+
 	// If there's no m_next or m_previous, then we're inactive.
 	privateinline operator bool() const { return isActive(); }
 	privateinline bool isActive() const { return m_next && m_next != (PNode*)1 && m_next != (PNode*)2; }

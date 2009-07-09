@@ -36,27 +36,6 @@
 namespace MarttaSupport
 {
 
-template<typename T> class isSimple { public: enum { value = false }; typedef T* StorageType; };
-template<typename T> class isSimple<T*> { public: enum { value = true }; typedef T* StorageType; };
-#define DECLARE_SIMPLE_TYPE(T) template<> class isSimple<T> { public: enum { value = true }; typedef T StorageType; };
-template<> class isSimple<bool> { public: enum { value = true }; typedef bool StorageType; };
-#ifndef _MSC_VER
-template<> class isSimple<wchar_t> { public: enum { value = true }; typedef wchar_t StorageType; };
-#endif
-template<> class isSimple<signed char> { public: enum { value = true }; typedef signed char StorageType; };
-template<> class isSimple<unsigned char> { public: enum { value = true }; typedef unsigned char StorageType; };
-template<> class isSimple<signed short> { public: enum { value = true }; typedef signed short StorageType; };
-template<> class isSimple<unsigned short> { public: enum { value = true }; typedef unsigned short StorageType; };
-template<> class isSimple<signed int> { public: enum { value = true }; typedef signed int StorageType; };
-template<> class isSimple<unsigned int> { public: enum { value = true }; typedef unsigned int StorageType; };
-template<> class isSimple<signed long> { public: enum { value = true }; typedef signed long StorageType; };
-template<> class isSimple<unsigned long> { public: enum { value = true }; typedef unsigned long StorageType; };
-template<> class isSimple<signed long long> { public: enum { value = true }; typedef signed long long StorageType; };
-template<> class isSimple<unsigned long long> { public: enum { value = true }; typedef unsigned long long StorageType; };
-template<> class isSimple<float> { public: enum { value = true }; typedef float StorageType; };
-template<> class isSimple<double> { public: enum { value = true }; typedef double StorageType; };
-template<> class isSimple<long double> { public: enum { value = true }; typedef long double StorageType; };
-
 template<typename T>
 class /*MS_EXPORT*/ List
 {
@@ -217,6 +196,7 @@ public:
 	void removeLast() { AssertNR(m_count); erase(Iterator(m_data + m_count - 1)); }
 	bool removeOne(T const& _value);
 	inline void replace(int _i, T const& _value) { AssertNR(_i >= 0 && _i < m_count); star(m_data[_i]) = _value; }
+	inline void replace(T const& _from, T const& _to) { int i = indexOf(_from); if (i > -1) star(m_data[i]) = _to; }
 	void reserve(int _n);
 	inline List<int> reversed() const { return List<int>(*this).reverse(); }
 	List<int>& reverse();
