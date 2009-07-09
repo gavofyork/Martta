@@ -42,6 +42,9 @@ public:
 	/// @returns the program-wide reference used for this declaration in the CPP code (calls codeName()).
 	/// (e.g. "::MyClass::m_foo", "::MyClass::bar", "::MyClass")
 	virtual String						reference() const { return addressableContext() ? addressableContext()->reference() + "::" + codeName() : codeName(); }
+	/// @returns the program-wide non-specific reference (i.e. for free-scoping calls that may be answered by
+	/// a virtual overload). (e.g "m_foo", "::Namespace::Class")
+	virtual String						nonSpecificReference() const { return reference(); }
 	/// @returns the Martta-identity for this entity. Defaults to the codeName().
 	/// (e.g. "m_foo", "void bar(int), "MyClass")
 	virtual String						identity() const { return codeName(); }

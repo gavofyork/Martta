@@ -18,12 +18,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "Argument.h"
-#include "Class.h"
-#include "Constructor.h"
 #include "ExplicitType.h"
 #include "Reference.h"
-#include "Const.h"
 #include "Construction.h"
 
 namespace Martta
@@ -70,7 +66,7 @@ String Construction::code() const
 {
 	if (!m_subject.isUsable())
 		return String();
-	return m_subject->classType()->reference() + callList();
+	return m_subject->parentAs<Identifiable>()->reference() + callList();	// parentAs<>() actually gives the class.
 }
 
 }

@@ -164,3 +164,5 @@ prepare AssignmentOperation AssignmentOperation "BinaryOperation BuiltinType"
 prepare SimpleBinaryOperation SimpleBinaryOperation "BinaryOperation BuiltinType ValueDefiner"
 prepare SubscriptOperation SubscriptOperation "BinaryOperation BuiltinType Subscriptable"
 prepare LifeOperations "NewOperation DeleteOperation" "UnaryOperation PhysicalType AddressType Array"
+
+prepare MemberOperations "GenericMemberOperation MemberOperation LongMemberOperation" "BinaryOperation QualifierTypes ExplicitType FunctionType AddressType Memberify"

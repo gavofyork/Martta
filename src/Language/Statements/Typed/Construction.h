@@ -20,9 +20,9 @@
 
 #pragma once
 
-#include "Invocation.h"
 #include "ModelPtr.h"
 #include "Constructor.h"
+#include "Invocation.h"
 
 namespace Martta
 {

@@ -35,6 +35,7 @@ public:
 	virtual bool						isConst() const { return false; }
 	
 protected:
+	virtual String						nonSpecificReference() const { return codeName(); }
 	Type								memberifiedType(Type const& _t) const;
 };
 

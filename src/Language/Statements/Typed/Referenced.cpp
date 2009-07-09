@@ -18,28 +18,27 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "Class.h"
 #include "MemberLambda.h"
-#include "Namespace.h"
-#include "Invocation.h"
-#include "MemberVariable.h"
-#include "MemberOperation.h"
-#include "LongMemberOperation.h"
-#include "AssignmentOperation.h"
-#include "Function.h"
-#include "FunctionType.h"
+#include "Argument.h"
+
+#include "GenericMemberOperation.h"
+
+// For the 'int i' hack - deps could be switched or jettisoned with a registrar, but no immediate advantage. 
+#include "DefaultConstructedVariable.h"
+#include "AssignedVariable.h"
 #include "StringType.h"
+#include "TextLabel.h"
+
 #include "Memberify.h"
+#include "FunctionType.h"
 #include "Const.h"
+#include "Reference.h"
+
+#include "Labelled.h"
+#include "CodeScene.h"
 #include "EditDelegate.h"
 #include "CompletionDelegate.h"
-#include "Reference.h"
-#include "CodeScene.h"
-#include "TextLabel.h"
-#include "DefaultConstructedVariable.h"
-#include "Argument.h"
-#include "AssignedVariable.h"
-#include "TextLabel.h"
-#include "Member.h"
 #include "Referenced.h"
 
 namespace Martta
@@ -95,11 +94,13 @@ bool Referenced::isSuperfluous() const
 
 String Referenced::code() const
 {
-	if (!m_subject.isNull() && !m_specific && m_subject->isKind<Member>())
-		return m_subject->codeName();
 	if (!m_subject.isNull())
-		return m_subject->reference();
-	return String();
+		if (m_specific)
+			return m_subject->reference();
+		else
+			return m_subject->nonSpecificReference();
+	else
+		return String::null;
 }
 
 Kinds Referenced::ancestralDependencies() const
@@ -194,14 +195,12 @@ void Referenced::decorate(DecorationContext const& _c) const
 	Super::decorate(_c);
 }*/
 
-String Referenced::defineLayout(ViewKeys const&) const
+String Referenced::defineLayout(ViewKeys const& _k) const
 {
 	String ret = String(m_lastSet&GlobalSet ? "p:/global.svg;" : "");
-	if (m_subject && m_subject->isKind<MemberVariable>())
-		ret += "(;M4;[[[;fs-2;fb;c#777;e#fff;'M';]]];);";
-	else if (m_subject && m_subject->isKind<Argument>())
-		ret += "(;M4;[[[;fs-2;fb;c#777;e#fff;'_';]]];);";
 	ret += "^;s" + (m_subject ? m_subject->type()->idColour() : TypeEntity::null->idColour()).name() + ";c;'" + (m_subject ? m_subject->name() : String()) + "'";
+	if (m_subject)
+		ret = m_subject->tryKind<Labelled>()->labelLayout(ret, _k);
 	return ret;
 }
 
@@ -226,7 +225,7 @@ private:
 	ValueDefiner*				m_entity;
 
 	// Actual scope the symbol will be in
-	List<ValueDefiner*>		m_valuesInScope;
+	List<ValueDefiner*>			m_valuesInScope;
 	bool						m_immediateCommits;
 };
 
