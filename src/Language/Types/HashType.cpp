@@ -44,6 +44,19 @@ bool HashType::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 	return simplePositionKeyPressHandler<HashType>(_p, _e, "#");
 }
 
+Types HashType::subscriptTypes() const
+{
+	return Type(*key()).topWith(Const()).topWith(Reference());
+}
+
+Type HashType::subscriptsTo(Type const&) const
+{
+	if (parent()->isKind<Const>())
+		return Type(*value());
+	else
+		return Type(*value()).topWith(Reference());
+}
+
 void HashType::initialiseClass()
 {
 	Type k = Type(MemberTemplateType(KeyType));
@@ -103,10 +116,14 @@ void HashType::initialiseClass()
 
 	BuiltinOperator::create<HashType>(Operator::EqualsEquals, b, (hcr, hcr));
 	BuiltinOperator::create<HashType>(Operator::BangEquals, b, (hcr, hcr));
+	
+	SubscriptableRegistrar::get()->registerKind<HashType>();
 }
 
 void HashType::finaliseClass()
 {
+	SubscriptableRegistrar::get()->unregisterKind<HashType>();
+	
 	while (s_members.size())
 		s_members.takeLast()->destruct();
 	while (s_nonMembers.size())

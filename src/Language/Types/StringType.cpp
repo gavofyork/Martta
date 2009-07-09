@@ -18,6 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "SubscriptableRegistrar.h"
 #include "ValueDefiner.h"
 #include "BuiltinType.h"
 #include "FunctionType.h"
@@ -37,6 +38,19 @@ MARTTA_OBJECT_CPP(StringType);
 
 List<BuiltinMethod*> StringType::s_members;
 List<BuiltinOperator*> StringType::s_nonMembers;
+
+Types StringType::subscriptTypes() const
+{
+	return Type(Unsigned|Int);
+}
+
+Type StringType::subscriptsTo(Type const&) const
+{
+	if (parent()->isKind<Const>())
+		return Type(Wchar);
+	else
+		return Type(Wchar).topWith(Reference());
+}
 
 void StringType::initialiseClass()
 {
@@ -180,10 +194,12 @@ void StringType::initialiseClass()
 	BuiltinOperator::create<StringType>(Operator::Plus, s, (c, scr));
 	
 	BuiltinType::registerExtra(L"string", staticKind);
+	SubscriptableRegistrar::get()->registerKind<StringType>();
 }
 
 void StringType::finaliseClass()
 {
+	SubscriptableRegistrar::get()->unregisterKind<StringType>();
 	BuiltinType::unregisterExtra(L"string");
 	
 	while (s_members.size())

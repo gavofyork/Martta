@@ -18,29 +18,12 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#pragma once
-
-#include "BinaryOperation.h"
+#include "Entity.h"
+#include "Subscriptable.h"
 
 namespace Martta
 {
 
-class SubscriptOperation: public BinaryOperation
-{
-	MARTTA_OBJECT(BinaryOperation)
-
-public:
-	inline static bool					keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
-
-private:
-	virtual String						defineLayout(ViewKeys const&) const { return String("%1;Mi;^;'[';%2;']'").arg(FirstOperand).arg(SecondOperand); }
-	virtual Types						allowedTypes(int _index) const;
-//	virtual Types						deniedTypes(int _index) const;
-	virtual Type						type() const;
-	virtual String						code() const;
-	virtual bool						isValidState() const;
-	virtual bool						keyPressed(KeyEvent const* _e);
-	virtual int							familyDependencies() const { return DependsOnChildren; }
-};
+MARTTA_INTERFACE_CPP(Subscriptable);
 
 }

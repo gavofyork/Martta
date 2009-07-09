@@ -21,6 +21,7 @@
 #include "BareTyped.h"
 #include "Const.h"
 #include "Compound.h"
+#include "BuiltinType.h"
 #include "IfStatement.h"
 
 namespace Martta

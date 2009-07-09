@@ -27,9 +27,6 @@
 namespace Martta
 {
 
-class BasicOperator;
-class MethodOperator;
-	
 class SimpleUnaryOperation: public UnaryOperation
 {
 	MARTTA_OBJECT(UnaryOperation)

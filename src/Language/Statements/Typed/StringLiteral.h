@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "BuiltinType.h"
 #include "Const.h"
 #include "Pointer.h"
 #include "Literal.h"

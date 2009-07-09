@@ -22,7 +22,7 @@
 #include "Const.h"
 #include "Reference.h"
 #include "FunctionType.h"
-#include "MethodOperator.h"
+#include "ValueDefiner.h"
 #include "SimpleBinaryOperation.h"
 
 namespace Martta

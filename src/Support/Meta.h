@@ -88,7 +88,7 @@ public: \
 	typedef S Super; \
 	MARTTA_BASIC
 
-#define MARTTA_OBJECT(S) \
+#define MARTTA_INITIALISED_OBJECT(S) \
 public: \
 	Entity::asKind; \
 	Entity::tryKind; \
@@ -99,7 +99,7 @@ public: \
 	inline virtual bool					isPlaceholder() const { return false; } \
 	MARTTA_COMMON(S)
 
-#define MARTTA_PLACEHOLDER(S) \
+#define MARTTA_INITIALISED_PLACEHOLDER(S) \
 public: \
 	Entity::asKind; \
 	Entity::tryKind; \
@@ -109,6 +109,18 @@ public: \
 	static const bool					IsPlaceholder = true; \
 	inline virtual bool					isPlaceholder() const { return true; } \
 	MARTTA_COMMON(S)
+
+#define MARTTA_OBJECT(S) \
+public: \
+	static inline void					initialiseClass() {} \
+	static inline void					finaliseClass() {} \
+	MARTTA_INITIALISED_OBJECT(S);
+
+#define MARTTA_PLACEHOLDER(S) \
+public: \
+	static inline void					initialiseClass() {} \
+	static inline void					finaliseClass() {} \
+	MARTTA_INITIALISED_PLACEHOLDER(S);
 
 #define MARTTA_NAMED(X) static const int X;
 #define MARTTA_NAMED_CPP(E, X) const int E::X = registerName(-((int)(((unsigned)&X) / sizeof(X))), #E "::" #X);

@@ -25,6 +25,8 @@
 #include "Const.h"
 #include "AddressType.h"
 #include "StringType.h"
+#include "Subscriptable.h"
+#include "SubscriptableRegistrar.h"
 #include "SubscriptOperation.h"
 
 namespace Martta
@@ -49,25 +51,34 @@ Types SubscriptOperation::allowedTypes(int _index) const
 {
 	if (_index == FirstOperand)
 	{
-		Types ret;
+		return SubscriptableRegistrar::get()->m_acceptable.values();
+/*		Types ret;
 		foreach (Type t, BareTyped::ourAllowedTypes())
-			ret << t.toppedWith(HashType()).topWith(Reference()) << t.toppedWith(HashType()).topWith(Reference()).topWith(Const())
-				<< t.toppedWith(ListType()).topWith(Reference()) << t.toppedWith(ListType()).topWith(Reference()).topWith(Const())
+			ret << t.toppedWith(HashType()) //.topWith(Reference()) << t.toppedWith(HashType()).topWith(Reference()).topWith(Const())
+				<< t.toppedWith(ListType()) //.topWith(Reference()) << t.toppedWith(ListType()).topWith(Reference()).topWith(Const())
 				<< t.toppedWith(AddressType());
 			// TODO: All ExplicitTypes in scope with operator[]
-		ret << Type(StringType()).topWith(Reference());
-		return ret;
+		ret << Type(StringType());//.topWith(Reference());
+		return ret;*/
 	}
 	else if (_index == SecondOperand)
 	{
-		if (leftType()->isType<HashType>())
+		Type lt = leftType();
+		if (Subscriptable* s = lt->tryType<Subscriptable>())
+		{
+			Types ts = s->subscriptTypes();
+			ts.replace(Type(), Type(Unsigned|Int));
+			return ts;
+		}
+		return Types();
+/*		if (leftType()->isType<HashType>())
 			return Type(*leftType()->asType<HashType>()->key());
 		return Type(Int);
-	}
+*/	}
 	return Super::allowedTypes(_index);
 }
 
-Types SubscriptOperation::deniedTypes(int _index) const
+/*Types SubscriptOperation::deniedTypes(int _index) const
 {
 	if (_index == FirstOperand)
 	{
@@ -82,16 +93,19 @@ Types SubscriptOperation::deniedTypes(int _index) const
 		return Types();
 	}
 	return Super::deniedTypes(_index);
-}
+}*/
 
 Type SubscriptOperation::type() const
 {
+	Type lt = leftType();
+	if (Subscriptable* s = lt->tryType<Subscriptable>())
+		return s->subscriptsTo(rightType());
+	return Type();
+	/*
 	if (leftType()->isType<StringType>())
 		return Type(Wchar).topWith(Reference());
 	else if (leftType()->isType<Const>() && leftType()->asType<Const>()->original()->isType<StringType>())
 		return Type(Wchar);
-	else if (leftType()->isType<AddressType>())
-		return Type(*leftType()->asType<AddressType>()->original()).topWith(Reference());
 	else if (leftType()->isType<Const>() && leftType()->asType<Const>()->original()->isType<ListType>())
 		return Type(*leftType()->asType<Const>()->original()->asType<ListType>()->original()).topWith(Const()).topWith(Reference());
 	else if (leftType()->isType<ListType>())
@@ -100,7 +114,7 @@ Type SubscriptOperation::type() const
 		return Type(*leftType()->asType<Const>()->original()->asType<HashType>()->value()).topWith(Const()).topWith(Reference());
 	else if (leftType()->isType<HashType>())
 		return Type(*leftType()->asType<HashType>()->value()).topWith(Reference());
-	return Type();
+	return Type();*/
 }
 
 bool SubscriptOperation::keyPressed(KeyEvent const* _e)
@@ -114,10 +128,10 @@ bool SubscriptOperation::keyPressed(KeyEvent const* _e)
 
 bool SubscriptOperation::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
-	if (_p.exists() && !_p->isPlaceholder() && _p->isKind<Typed>() &&
-		(	_p->asKind<Typed>()->type()->isType<ListType>() ||
+	if (_p.exists() && !_p->isPlaceholder()/* && _p->isKind<Typed>() && SubscriptableRegistrar::get()->m_acceptable.values().contains(_p->asKind<Typed>()->type())*/)
+/*		(	_p->asKind<Typed>()->type()->isType<ListType>() ||
 			_p->asKind<Typed>()->type()->isType<AddressType>() ||
-			_p->asKind<Typed>()->type()->isType<HashType>()))
+			_p->asKind<Typed>()->type()->isType<HashType>()))*/
 		return simpleKeyPressedOnPositionHandler<SubscriptOperation>(_p, _e, "[", 2, LeftAssociativity);
 	else
 		return false;

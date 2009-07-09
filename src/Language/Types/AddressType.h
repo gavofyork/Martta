@@ -20,20 +20,28 @@
 
 #pragma once
 
+#include "Subscriptable.h"
 #include "ModifyingType.h"
 
 namespace Martta
 {
 
-class AddressType: public ModifyingType
+class AddressType: public ModifyingType, public_interface Subscriptable
 {
-	MARTTA_PLACEHOLDER(ModifyingType)
+	MARTTA_INITIALISED_PLACEHOLDER(ModifyingType)
+	MARTTA_INHERITS(Subscriptable, 0)
 
+public:
+	static void							initialiseClass();
+	static void							finaliseClass();
+	
 private:
 	virtual TypeEntity*					newClone() const { return new AddressType; }
 	virtual bool						defineSimilarityTo(TypeEntity const* _t, Castability _c) const;
 	virtual String						modifierLayout() const { return "ycode;'@'"; }
 	virtual String						code(String const& _middle) const { return original()->code("@" + _middle); }
+	virtual Types						subscriptTypes() const;
+	virtual Type						subscriptsTo(Type const&) const;
 };
 
 }

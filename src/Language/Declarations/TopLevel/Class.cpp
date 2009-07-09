@@ -356,7 +356,6 @@ String Class::defineLayout(ViewKeys const& _keys) const
 	
 	if (_keys["expanded"].toBool())
 	{
-		__asm {int 3}
 		foreach (Base* i, cardinalChildrenOf<Base>())
 			ret += String(";n;i;%1").arg(i->index());
 		

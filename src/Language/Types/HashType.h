@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "Subscriptable.h"
 #include "ModifyingType.h"
 
 namespace Martta
@@ -28,9 +29,10 @@ namespace Martta
 class BuiltinMethod;
 class BuiltinOperator;
 
-class HashType: public ModifyingType
+class HashType: public ModifyingType, public_interface Subscriptable
 {
-	MARTTA_OBJECT(ModifyingType)
+	MARTTA_INITIALISED_OBJECT(ModifyingType)
+	MARTTA_INHERITS(Subscriptable, 0)
 
 	friend class BuiltinMethod;
 	friend class BuiltinOperator;
@@ -58,6 +60,8 @@ protected:
 	virtual String						defineLayout(ViewKeys const&) const;
 	virtual bool						defineSimilarityTo(TypeEntity const* _t, Castability _c) const;
 	virtual Rgb							idColour() const { return 0xbbff77; }
+	virtual Types						subscriptTypes() const;
+	virtual Type						subscriptsTo(Type const&) const;
 	
 	static List<BuiltinMethod*>			s_members;	
 	static List<BuiltinOperator*>		s_nonMembers;	

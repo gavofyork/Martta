@@ -101,7 +101,7 @@ public:
 	virtual bool						isType(Kind _typeKind) { return Entity::isKind(_typeKind); }
 	template<class T> inline bool		isType() { return isType(Kind::of<T>()); }
 	virtual TypeEntity*					asType(Kind _typeKind) { (void)(_typeKind); AssertNR(isType(_typeKind)); return this; }
-	template<class T> inline T*			asType() { return static_cast<T*>(asType(Kind::of<T>())); }
+	template<class T> inline T*			asType() { return asType(Kind::of<T>())->asKind<T>(); }
 	inline TypeEntity*					tryType(Kind _typeKind) { return isType(_typeKind) ? asType(_typeKind) : 0; }
 	template<class T> inline T*			tryType() { return isType<T>() ? asType<T>() : 0; }
 	

@@ -18,12 +18,38 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "SubscriptableRegistrar.h"
+#include "Const.h"
+#include "Reference.h"
 #include "AddressType.h"
 
 namespace Martta
 {
 
 MARTTA_OBJECT_CPP(AddressType);
+
+void AddressType::initialiseClass()
+{
+	SubscriptableRegistrar::get()->registerKind<AddressType>();
+}
+
+void AddressType::finaliseClass()
+{
+	SubscriptableRegistrar::get()->unregisterKind<AddressType>();
+}
+
+Types AddressType::subscriptTypes() const
+{
+	return Type();	// Magically replaced with Uint in SubscriptOperation to prevent dependency this early on in Language Tree.
+}
+
+Type AddressType::subscriptsTo(Type const&) const
+{
+	if (parent()->isKind<Const>())
+		return Type(*original()).topWith(Const()).topWith(Reference());
+	else
+		return Type(*original()).topWith(Reference());
+}
 
 bool AddressType::defineSimilarityTo(TypeEntity const* _t, Castability _c) const
 {

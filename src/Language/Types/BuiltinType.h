@@ -49,7 +49,7 @@ static const uint
 
 class BuiltinType: public TypeEntity
 {
-	MARTTA_OBJECT(TypeEntity)
+	MARTTA_INITIALISED_OBJECT(TypeEntity)
 
 	friend class BuiltinOperator;	// For use of s_nonMembers. QUICK Should probably use an interface for this.
 	friend class NameTrait<int>;

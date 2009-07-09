@@ -23,7 +23,6 @@
 #include <msSupport.h>
 #include <msList.h>
 using namespace MarttaSupport;
-//using MarttaSupport::List;
 
 #include "AuxilliaryRegistrar.h"
 #include "AuxilliaryFace.h"
@@ -93,11 +92,11 @@ private:
 	AuxilliaryFace const* m_mo;
 };
 
+inline uint hashOf(Kind const& _k)
+{
+	return MarttaSupport::hashOf((void const*)_k.auxilliary());
 }
 
-inline uint qHash(Martta::Kind const& _k)
-{
-	return qHash(_k.auxilliary());
 }
 
 inline bool Martta::Kind::isKind(Kinds const& _bases) const

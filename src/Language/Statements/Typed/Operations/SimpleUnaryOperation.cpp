@@ -21,10 +21,8 @@
 #include "Const.h"
 #include "Reference.h"
 #include "TypeDefinition.h"
-#include "MethodOperator.h"
+#include "ValueDefiner.h"
 #include "SimpleUnaryOperation.h"
-
-#include "Referenced.h"
 
 namespace Martta
 {

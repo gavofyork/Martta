@@ -112,6 +112,9 @@ prepare Entity "Support/Auxilliary Support/AuxilliaryFace Support/AuxilliaryRegi
 
 prepare Operator "Operator Support/OperatorRegistrar" 
 
+prepare Corporal Corporal Entity
+prepare Conditional Conditional Entity
+
 prepare Label Label Entity
 prepare MiscLabels "ConstLabel AccessLabel" Label
 prepare IdLabel IdLabel Label
@@ -122,15 +125,14 @@ prepare Labels "" "TextLabel MiscLabels OperatorLabel"
 prepare Identifiable "Identifiable Support/ModelPtr Support/ModelPtrFace Support/ModelPtrRegistrar" IdLabel
 
 prepare TypeEntity "TypeEntity ModifyingType Interfaces/TypedOwner Interfaces/TypeNamer Support/Type" Entity
-prepare AddressType "AddressType Pointer UndefinedArray" TypeEntity
-prepare BasicTypes "FunctionType ExplicitType Const Reference Interfaces/TypeDefinition" "TypeEntity Identifiable"
+prepare QualifierTypes "Const Reference" TypeEntity
+prepare AddressType "AddressType Pointer UndefinedArray" "TypeEntity QualifierTypes"
+prepare BasicTypes "FunctionType ExplicitType Interfaces/TypeDefinition" "TypeEntity Identifiable QualifierTypes"
 prepare Memberify "Memberify" BasicTypes
 prepare MemberTemplateType MemberTemplateType Memberify
 
 prepare ValueDefiner "ValueDefiner" "TypeEntity Identifiable"
 prepare Statement "Statement Primary BareTyped Typed Untyped" "TypeEntity ValueDefiner"
-prepare Corporal Corporal Entity
-prepare Conditional Conditional Entity
 prepare Compound Compound Statement
 prepare Declaration "Declaration" "Identifiable"
 
@@ -141,3 +143,13 @@ prepare ExtendedTypes "HashType ListType StringType" "MemberTemplateType Builtin
 prepare Types "" "AddressType BasicTypes Memberify MemberTemplateType Array BuiltinType ExtendedTypes"
 
 prepare ProgramFlow "IfStatement Loop ForLoop WhileLoop BreakStatement" "Compound BuiltinType Corporal Conditional"
+prepare Literals "Literal BoolLiteral StringLiteral IntegerLiteral FloatLiteral" "Statement BuiltinType"
+prepare Evaluation Evaluation Statement
+prepare Invocation Invocation "Evaluation BuiltinType"
+prepare Operation Operation "Operator Evaluation ValueDefiner Memberify BasicTypes"
+prepare UnaryOperation UnaryOperation Operation
+prepare AddressOperations "ReferenceOperation DereferenceOperation" "UnaryOperation AddressType"
+prepare SimpleUnaryOperation SimpleUnaryOperation "UnaryOperation BasicTypes ValueDefiner"
+prepare BinaryOperation BinaryOperation Operation
+prepare AssignmentOperation AssignmentOperation "BinaryOperation BasicTypes"
+prepare SimpleBinaryOperation SimpleBinaryOperation "BinaryOperation BasicTypes ValueDefiner"

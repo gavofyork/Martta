@@ -20,7 +20,6 @@
 
 #pragma once
 
-#include "ValueDefiner.h"
 #include "Operator.h"
 #include "ModelPtr.h"
 #include "BinaryOperation.h"
@@ -28,8 +27,7 @@
 namespace Martta
 {
 
-class MethodOperator;
-class BasicOperator;
+class ValueDefiner;
 	
 class SimpleBinaryOperation: public BinaryOperation
 {

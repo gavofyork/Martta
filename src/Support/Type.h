@@ -46,8 +46,11 @@ class Type
 	template<class T> friend struct TypeConstructor;
 	
 public:
+	enum Aadl { AdoptAndDeleteLater };
+
 	inline Type() { m_top = TypeEntity::null->clone(this); }
 	inline Type(Type const& _t): m_top(_t.m_top->clone(this)) {}
+	inline Type(TypeEntity* _te, Aadl): m_top(_te) { m_top->setOwner(this); }
 	template<class T> inline Type(T const& _t) { TypeConstructor<T const&>::construct(this, _t); };
 	template<class T> inline Type(T* _t) { TypeConstructor<T*>::construct(this, _t); };
 	inline ~Type() { m_top->killAndDelete(); }

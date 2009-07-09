@@ -18,13 +18,11 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "ValueDefiner.h"
 #include "Primary.h"
 #include "BareTyped.h"
 #include "Typed.h"
-#include "Compound.h"
 #include "Const.h"
-#include "BreakStatement.h"
+#include "BuiltinType.h"
 #include "ForLoop.h"
 
 namespace Martta

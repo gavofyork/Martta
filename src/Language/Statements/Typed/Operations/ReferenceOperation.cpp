@@ -44,7 +44,10 @@ Types ReferenceOperation::allowedTypes(int _i) const
 			if (t->isType<AddressType>())
 				ret << Type(*t->asType<AddressType>()->original()).topWith(Reference());
 			else
-				ret << Type(Void).topWith(Const()).topWith(Reference());
+			{
+				ret << Type().topWith(Reference());
+//				ret << Type(Void).topWith(Const()).topWith(Reference());	
+			}
 		return ret;
 	}
 	return Super::allowedTypes(_i);

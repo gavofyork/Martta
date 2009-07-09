@@ -11,4 +11,6 @@
 #include "Language/Statements/Typed/Operations/SimpleBinaryOperation.cpp"
 #include "Language/Statements/Typed/Operations/SimpleUnaryOperation.cpp"
 #include "Language/Statements/Typed/Operations/SubscriptOperation.cpp"
+#include "Language/Statements/Typed/Operations/Subscriptable.cpp"
+#include "Language/Statements/Typed/Operations/SubscriptableRegistrar.cpp"
 #include "Language/Statements/Typed/Operations/UnaryOperation.cpp"

@@ -20,27 +20,33 @@
 
 #pragma once
 
-#include "BinaryOperation.h"
+#include <msHash.h>
+using namespace MarttaSupport;
+
+#include "Kind.h"
+#include "Type.h"
 
 namespace Martta
 {
 
-class SubscriptOperation: public BinaryOperation
+class SubscriptOperation;
+
+class SubscriptableRegistrar
 {
-	MARTTA_OBJECT(BinaryOperation)
-
+	friend class SubscriptOperation;
+	
 public:
-	inline static bool					keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
-
+	static SubscriptableRegistrar*			get() { return s_this ? s_this : (s_this = new SubscriptableRegistrar); }
+	
+	template<class T> void					registerKind() { m_acceptable.insert(T::staticKind, Type(T())); }
+	template<class T> void					unregisterKind() { m_acceptable.remove(T::staticKind); }
+	template<class T> void					registerType(Type const& _t) { m_acceptable.insert(T::staticKind, _t); }
+	template<class T> void					unregisterType(Type const& _t) { m_acceptable.remove(T::staticKind, _t); }
+	
 private:
-	virtual String						defineLayout(ViewKeys const&) const { return String("%1;Mi;^;'[';%2;']'").arg(FirstOperand).arg(SecondOperand); }
-	virtual Types						allowedTypes(int _index) const;
-//	virtual Types						deniedTypes(int _index) const;
-	virtual Type						type() const;
-	virtual String						code() const;
-	virtual bool						isValidState() const;
-	virtual bool						keyPressed(KeyEvent const* _e);
-	virtual int							familyDependencies() const { return DependsOnChildren; }
+	MultiHash<Kind, Type>					m_acceptable;
+	
+	static SubscriptableRegistrar*			s_this;
 };
 
 }

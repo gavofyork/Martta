@@ -38,6 +38,19 @@ MARTTA_OBJECT_CPP(ListType);
 List<BuiltinMethod*> ListType::s_members;
 List<BuiltinOperator*> ListType::s_nonMembers;
 
+Types ListType::subscriptTypes() const
+{
+	return Type(Unsigned|Int);
+}
+
+Type ListType::subscriptsTo(Type const&) const
+{
+	if (parent()->isKind<Const>())
+		return Type(*original());
+	else
+		return Type(*original()).topWith(Reference());
+}
+
 void ListType::initialiseClass()
 {
 	Type t = MemberTemplateType(Original);
@@ -91,10 +104,14 @@ void ListType::initialiseClass()
 	BuiltinOperator::create<ListType>(Operator::BangEquals, b, (ltcr, ltcr));
 	
 	BuiltinOperator::create<ListType>(Operator::Plus, lt, (ltcr, ltcr));
+
+	SubscriptableRegistrar::get()->registerKind<ListType>();
 }
 
 void ListType::finaliseClass()
 {
+	SubscriptableRegistrar::get()->unregisterKind<ListType>();
+	
 	while (s_members.size())
 		s_members.takeLast()->destruct();
 	while (s_nonMembers.size())
