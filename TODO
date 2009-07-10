@@ -27,12 +27,14 @@ Dynamic code-loading (plugins).
 - ThisPointer (MemberLambda)
 - Construction (Constructor, Class?)
 - Referenced as placeholder (no key press handling)
-  - NormalReferenced (a-z)
-    - Works from a registrable list of currently-visible VDs.
+  - Identifier (a-z)
+    - Works from a registrable list of strings (symbols) & handlers for the strings.
     - What things default to be accepted (e.g. MemberLambdas, Locals) can be configured.
   - GlobalReferenced (:)
+    - [Registers with NormalReferenced to provide the list it would provide it it were active]
   - LocalReferenced (L)
   - MemberReferenced (M)
+  - NonspecificMemberReferenced (MN)
   - ArgumentReferenced (_)
   - SearchReferenced (\)
     - All possible (including scoped exterals).

@@ -124,7 +124,7 @@ Types ListType::assignableTypes() const
 	return Type(*this);
 }
 
-List<ValueDefiner*> ListType::applicableMembers(Entity*, bool _isConst) const
+List<ValueDefiner*> ListType::applicableMembers(Entity const*, bool _isConst) const
 {
 	List<ValueDefiner*> ret;
 	foreach (BuiltinMethod* i, s_members)

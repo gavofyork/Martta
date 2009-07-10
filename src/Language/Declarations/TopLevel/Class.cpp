@@ -45,6 +45,38 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(Class);
 
+/*
+void Referenced::decorate(DecorationContext const& _c) const
+{
+	//TODO: Check!
+	if (Entity* e = m_subject ? m_subject->self() : 0)
+	{
+		bool dec = false;
+		if (e->hasAncestor<Namespace>())
+		{
+			if (e->isKind<MemberVariable>())
+				dec = true;
+			else if (e->isKind<Argument>())
+				dec = true;
+		}
+		if (dec)
+		{
+			QRectF r(alignedForUnitPen(_c(1)));
+			r.setWidth(qMin(_c(0).width(), r.height() * 2));
+
+			QRgb c = qRgb(0, 0, 0);
+		
+			QRadialGradient go(_c(1).center(), r.height() * 2);
+			go.setColorAt(0.f, qRgba(c, 32));
+			go.setColorAt(1.f, qRgba(c, 0));
+			_c->setPen(Qt::NoPen);
+			_c->setBrush(go);
+			_c->drawRoundRect(r, 50, 100);
+		}
+	}
+	Super::decorate(_c);
+}*/
+
 Access Class::baseAccess(Class* _c) const
 {
 	if (_c == this)
@@ -321,7 +353,7 @@ Types Class::assignableTypes() const
 	return ret;
 }
 
-List<ValueDefiner*> Class::applicableMembers(Entity* _s, bool _isConst) const
+List<ValueDefiner*> Class::applicableMembers(Entity const* _s, bool _isConst) const
 {
 	Access a = Public;
 	Class* classScope = _s->ancestor<Class>();

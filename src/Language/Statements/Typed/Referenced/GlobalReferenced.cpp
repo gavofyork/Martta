@@ -18,30 +18,23 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "Type.h"
-#include "ExplicitType.h"
-#include "TypeDefinition.h"
+#include "GlobalReferenced.h"
 
 namespace Martta
 {
 
-MARTTA_INTERFACE_CPP(TypeDefinition);	
+MARTTA_OBJECT_CPP(GlobalReferenced);
 
-bool TypeDefinition::hasSingleCastOperator(TypeEntity const* _t, bool) const
+Kinds GlobalReferenced::allowedKinds(int _i) const
 {
-	return Type(*_t) == Type(const_cast<TypeDefinition*>(this));
+	return Super::allowedKinds(_i);
 }
 
-bool TypeDefinition::defineSimilarityTo(TypeEntity const* _t, TypeEntity::Castability _c) const
+String GlobalReferenced::defineLayout(ViewKeys& _k) const
 {
-	if (_c == TypeEntity::Convertible && hasSingleCastOperator(_t, false))
-		return true;
-	return false;
+	return L"p:/global.svg;" + Super::defineLayout(_k);
 }
-
-List<ValueDefiner*> TypeDefinition::applicableMembers(Entity const*, bool) const
-{
-	return List<ValueDefiner*>();
-}
-
+/*
+	m_valuesInScope << subject()->root()->childrenOf<ValueDefiner>();
+*/
 }

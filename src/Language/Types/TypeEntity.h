@@ -93,7 +93,7 @@ public:
 	virtual bool						hasDefaultConstructor() const { return false; }
 	/// Types that assignment operator may take on right hand side, assuming left hand side is a reference to this type.
 	virtual Types						assignableTypes() const;
-	virtual List<ValueDefiner*>			applicableMembers(Entity* /*_s*/ = 0, bool /*_isConst*/ = false) const { return List<ValueDefiner*>(); }
+	virtual List<ValueDefiner*>			applicableMembers(Entity const* /*_s*/ = 0, bool /*_isConst*/ = false) const { return List<ValueDefiner*>(); }
 	
 	/// isType/asType: They ignore qualifiers and test for/identify the physical type stored.
 	/// In terms of C++, Reference and Const are considered physically transparent (though

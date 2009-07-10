@@ -18,30 +18,30 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "Type.h"
-#include "ExplicitType.h"
-#include "TypeDefinition.h"
+#pragma once
+
+#include "Referenced.h"
 
 namespace Martta
 {
 
-MARTTA_INTERFACE_CPP(TypeDefinition);	
-
-bool TypeDefinition::hasSingleCastOperator(TypeEntity const* _t, bool) const
+class MemberReferenced: public Referenced
 {
-	return Type(*_t) == Type(const_cast<TypeDefinition*>(this));
-}
+	MARTTA_OBJECT(Referenced)
+	
+public:
+	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 
-bool TypeDefinition::defineSimilarityTo(TypeEntity const* _t, TypeEntity::Castability _c) const
-{
-	if (_c == TypeEntity::Convertible && hasSingleCastOperator(_t, false))
-		return true;
-	return false;
-}
+	List<ValueDefiner*>					possibilities() const;
+	String								defineEditLayout(ViewKeys const&, ValueDefiner* _v);
+	void								committed();
 
-List<ValueDefiner*> TypeDefinition::applicableMembers(Entity const*, bool) const
-{
-	return List<ValueDefiner*>();
-}
+protected:
+	virtual String						code() const;
+	
+	virtual Kinds						ancestralDependencies() const;
+	virtual bool						isInValidState() const;
+	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
+};
 
 }

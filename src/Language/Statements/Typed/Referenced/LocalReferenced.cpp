@@ -18,30 +18,25 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "Type.h"
-#include "ExplicitType.h"
-#include "TypeDefinition.h"
+#include "LocalReferenced.h"
 
 namespace Martta
 {
 
-MARTTA_INTERFACE_CPP(TypeDefinition);	
+MARTTA_OBJECT_CPP(LocalReferenced);
 
-bool TypeDefinition::hasSingleCastOperator(TypeEntity const* _t, bool) const
+Kinds LocalReferenced::allowedKinds(int _i) const
 {
-	return Type(*_t) == Type(const_cast<TypeDefinition*>(this));
+	return Super::allowedKinds(_i);
 }
 
-bool TypeDefinition::defineSimilarityTo(TypeEntity const* _t, TypeEntity::Castability _c) const
+String LocalReferenced::defineLayout(ViewKeys& _k) const
 {
-	if (_c == TypeEntity::Convertible && hasSingleCastOperator(_t, false))
-		return true;
-	return false;
+	return Super::defineLayout(_k);
 }
-
-List<ValueDefiner*> TypeDefinition::applicableMembers(Entity const*, bool) const
-{
-	return List<ValueDefiner*>();
-}
+/*
+		m_valuesInScope << castEntities<ValueDefiner>(subject()->valuesInLocalScope());	// TODO: Change over
+		m_valuesInScope << castEntities<ValueDefiner>(subject()->ancestor<Declaration>()->valuesKnown());
+*/
 
 }

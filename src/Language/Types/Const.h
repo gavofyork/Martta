@@ -36,7 +36,7 @@ public:
 	
 protected:
 	virtual bool						hasDefaultConstructor() const { return original() && original()->hasDefaultConstructor(); }
-	virtual List<ValueDefiner*>			applicableMembers(Entity* _s = 0, bool = false) const { return original() ? original()->applicableMembers(_s, true) : Super::applicableMembers(_s); }
+	virtual List<ValueDefiner*>			applicableMembers(Entity const* _s = 0, bool = false) const { return original() ? original()->applicableMembers(_s, true) : Super::applicableMembers(_s); }
 	virtual bool						isType(Kind _typeKind) { return Entity::isKind(_typeKind) || original()->isType(_typeKind); }
 	virtual TypeEntity*					asType(Kind _typeKind) { if (Entity::isKind(_typeKind)) return this; AssertNR(original()->isType(_typeKind)); return original()->asType(_typeKind); }
 	virtual String						code(String const& _middle) const;

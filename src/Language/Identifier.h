@@ -18,30 +18,21 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "Type.h"
-#include "ExplicitType.h"
-#include "TypeDefinition.h"
+#pragma once
+
+#include "Entity.h"
 
 namespace Martta
 {
 
-MARTTA_INTERFACE_CPP(TypeDefinition);	
-
-bool TypeDefinition::hasSingleCastOperator(TypeEntity const* _t, bool) const
+class Identifier: public Entity
 {
-	return Type(*_t) == Type(const_cast<TypeDefinition*>(this));
-}
-
-bool TypeDefinition::defineSimilarityTo(TypeEntity const* _t, TypeEntity::Castability _c) const
-{
-	if (_c == TypeEntity::Convertible && hasSingleCastOperator(_t, false))
-		return true;
-	return false;
-}
-
-List<ValueDefiner*> TypeDefinition::applicableMembers(Entity const*, bool) const
-{
-	return List<ValueDefiner*>();
-}
+	MARTTA_OBJECT(Entity)
+	
+protected:
+	virtual int							minRequired(int _i) const { return Super::minRequired(_i); }
+	virtual Kinds						allowedKinds(int _i) const;
+	virtual String						defineLayout(ViewKeys&) const;
+};
 
 }
