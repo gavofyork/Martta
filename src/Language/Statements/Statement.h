@@ -21,6 +21,7 @@
 #pragma once
 
 #include "Type.h"
+#include "NameEntryPoint.h"
 #include "TypedOwner.h"
 #include "Entity.h"
 
@@ -30,10 +31,11 @@ namespace Martta
 class ValueDefiner;
 class Typed;
 
-class Statement: public Entity, public_interface TypedOwner
+class Statement: public Entity, public_interface TypedOwner, public_interface NameEntryPoint
 {
 	MARTTA_PLACEHOLDER(Entity)
 	MARTTA_INHERITS(TypedOwner, 0)
+	MARTTA_INHERITS(NameEntryPoint, 1)
 
 public:
 	virtual String						code() const { return "(void)0;"; }
@@ -56,9 +58,13 @@ public:
 		Super::changed(_aspect);
 	}
 	
+	void								committed(Named* _n) { NameEntryPoint::committed(_n); }
+	
 protected:
 	virtual List<int> const&			defineDeclarationOrder() const { static const List<int> r; return r; }
 	virtual void						appendDefinedUptoHere(int, List<ValueDefiner*>*) const;
+	virtual EditDelegateFace*			newDelegate(CodeScene* _s) { return NameEntryPoint::newDelegate<Statement>(_s); }
+	virtual bool						keyPressed(KeyEvent const* _e) { return NameEntryPoint::keyPressed(_e) ? true : Super::keyPressed(_e); }
 };
 
 }

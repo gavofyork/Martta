@@ -20,21 +20,28 @@
 
 #pragma once
 
+#include "CompletionDelegate.h"
+#include "Meta.h"
+
 namespace Martta
 {
 
 class Named;
-class Position;
 
-// Declare a single static instance of the derived class in its CPP file to register it.
-class IdentifierSet
+class NameEntryPoint
 {
+	MARTTA_INTERFACE
+
 public:
-	IdentifierSet();
-	virtual ~IdentifierSet();
+	Named*								get() const { return 0; }
+	void								set(Named*) const {}
+	void								committed(Named*);
+	List<Named*>						possibilities();
+	String								defineEditLayout(ViewKeys const&, Named* _subject);
+	template<class T> EditDelegateFace*	newDelegate(CodeScene* _s) { return new CompletionDelegate<T, Named*>(self()->asKind<T>(), _s); }
+	bool								keyPressed(KeyEvent const*);
 	
-	virtual List<Named*>				identifiableAt(Position const&) { return List<Named*>(); }
-	virtual void						acceptAt(Position const&, Named*) {}
+	virtual ~NameEntryPoint() {}
 };
 
 }

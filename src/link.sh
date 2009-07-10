@@ -111,12 +111,16 @@ INCLUDEPATH *= \$\$join(OURDIRS, " \$\$TWD/", "\$\$TWD/")
 !contains(TARGET, \$\$basename(TWD)):hasSources(): LIBS *= -l\$\$basename(TWD)
 EOF
 
-prepare Entity "Support/Auxilliary Support/AuxilliaryFace Support/AuxilliaryRegistrar Support/ChangeMan Support/CodeScene Support/CompletionDelegate Support/CullManager Support/Dier Support/EditDelegate Support/EntitySupport Support/KeyEvent Support/Kind Support/Meta Support/Position Support/SafePointer Support/Stylist Interfaces/ChildValidifier Interfaces/Dependee Interfaces/Depender Interfaces/Familial Entity" 
-
+prepare IdentifierSet "IdentifierSet Support/IdentifierSetRegistrar" 
 prepare Operator "Operator Support/OperatorRegistrar" 
 
+prepare Entity "Support/Auxilliary Support/AuxilliaryFace Support/AuxilliaryRegistrar Support/ChangeMan Support/CodeScene Support/CompletionDelegate Support/CullManager Support/Dier Support/EditDelegate Support/EntitySupport Support/KeyEvent Support/Kind Support/Meta Support/Position Support/SafePointer Support/Stylist Interfaces/ChildValidifier Interfaces/Dependee Interfaces/Depender Interfaces/Familial Entity" 
+
+prepare Named Named Entity
 prepare Corporal Corporal Entity
 prepare Conditional Conditional Entity
+
+prepare NameEntryPoint NameEntryPoint "Entity Named IdentifierSet"
 
 prepare Label Label Entity
 prepare MiscLabels "ConstLabel AccessLabel" Label
@@ -125,7 +129,7 @@ prepare TextLabel "TextLabel Interfaces/Labelled" IdLabel
 prepare OperatorLabel OperatorLabel "IdLabel Operator"
 prepare Labels "" "TextLabel MiscLabels OperatorLabel"
 
-prepare Identifiable "Identifiable Support/ModelPtr Support/ModelPtrFace Support/ModelPtrRegistrar" IdLabel
+prepare Identifiable "Identifiable Support/ModelPtr Support/ModelPtrFace Support/ModelPtrRegistrar" "Named IdLabel"
 
 prepare TypeEntity "TypeEntity ModifyingType Interfaces/TypedOwner Interfaces/TypeNamer Support/Type" Entity
 
@@ -141,7 +145,7 @@ prepare Memberify Memberify "FunctionType AddressType"
 prepare MemberTemplateType MemberTemplateType Memberify
 
 prepare ValueDefiner "ValueDefiner" "TypeEntity Identifiable"
-prepare Statement "Statement Primary BareTyped Typed Untyped" "TypeEntity ValueDefiner"
+prepare Statement "Statement Primary BareTyped Typed Untyped" "NameEntryPoint TypeEntity ValueDefiner"
 prepare Compound Compound Statement
 prepare Declaration "Declaration" "Identifiable"
 
@@ -166,3 +170,8 @@ prepare SubscriptOperation SubscriptOperation "BinaryOperation BuiltinType Subsc
 prepare LifeOperations "NewOperation DeleteOperation" "UnaryOperation PhysicalType AddressType Array"
 
 prepare MemberOperations "GenericMemberOperation MemberOperation LongMemberOperation" "BinaryOperation QualifierTypes ExplicitType FunctionType AddressType Memberify"
+
+prepare Referenced Referenced "Typed IdentifierSet"
+prepare LocalReferenced LocalReferenced Referenced
+prepare InScopeReferenced InScopeReferenced Referenced
+prepare GlobalReferenced GlobalReferenced Referenced

@@ -18,6 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "IdentifierSetRegistrar.h"
 #include "IdentifierSet.h"
 
 namespace Martta

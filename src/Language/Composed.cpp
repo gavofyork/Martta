@@ -9,6 +9,7 @@
 #include "Language/Familial.cpp"
 #include "Language/Identifiable.cpp"
 #include "Language/IdentifierSet.cpp"
+#include "Language/NameEntryPoint.cpp"
 #include "Language/Named.cpp"
 #include "Language/TypedOwner.cpp"
 #include "Language/VirtualBase.cpp"

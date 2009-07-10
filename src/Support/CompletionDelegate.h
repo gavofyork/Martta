@@ -23,6 +23,7 @@
 #include <msSupport.h>
 using namespace MarttaSupport;
 
+#include "CodeScene.h"
 #include "EditDelegate.h"
 
 MS_TEST_METHOD_EXISTANCE_1(committed)

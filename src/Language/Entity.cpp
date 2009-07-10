@@ -21,8 +21,6 @@
 #include <msSupport.h>
 using namespace MarttaSupport;
 
-#include "IdentifierSetRegistrar.h"
-#include "IdentifierSet.h"
 #include "CullManager.h"
 #include "CodeScene.h"
 #include "EditDelegate.h"
@@ -368,34 +366,6 @@ EditDelegateFace* Entity::editDelegate(CodeScene* _s)
 {
 	return _s->editDelegate();
 }
-EditDelegateFace* Entity::newDelegate(CodeScene* _s)
-{
-	return new CompletionDelegate<Entity, Named*>(this, _s);
-}
-List<Named*> Entity::possibilities()
-{
-	List<Named*> ret;
-	foreach (IdentifierSet* i, IdentifierSetRegistrar::get()->allSets())
-		ret << i->identifiableAt(over());
-	return ret;
-}
-String Entity::defineEditLayout(ViewKeys const&, Named*)
-{
-	return L"%1";	//TODO user IdentifierSet
-}
-void Entity::committed(Named* _i)
-{
-	if (_i)
-		foreach (IdentifierSet* i, IdentifierSetRegistrar::get()->allSets())
-			if (i->identifiableAt(over()).contains(_i))
-			{
-				Position p = over();
-				i->acceptAt(over(), _i);
-				p->dropCursor();
-				// NOTE: We may not exist at this point!
-				return;
-			}
-}
 
 // Drawing
 void Entity::resetLayoutCache()
@@ -572,11 +542,6 @@ bool Entity::keyPressed(KeyEvent const* _e)
 		_e->codeScene()->setViewKey(this, "expanded", false);
 		relayout(_e->codeScene());
 		setCurrent();
-	}
-	else if (isPlaceholder() && _e->text().length() == 1 && _e->text()[0].isLower())
-	{
-		_e->codeScene()->setEditing(this);
-		_e->reinterpretLater();
 	}
 	else
 		return false;
