@@ -88,7 +88,14 @@ public:
 	virtual bool keyPressed(KeyEvent const* _e)
 	{
 		if (_e->text() == L"\b" && m_name.size() > 1)
-			m_name.chop(1);
+			if (_e->modifiers() == KeyEvent::ControlModifier)
+				m_name.chop(1);
+			else
+			{
+				int potentials = nameStarts(m_possibilities, m_name).size();
+				while (nameStarts(m_possibilities, m_name).size() == potentials && m_name.length())
+					m_name.chop(1);
+			}
 		else if (_e->text().length() == 1 && _e->text()[0].isLetter())
 			m_name += _e->text();
 		else if (_e->text() == L"\t")
