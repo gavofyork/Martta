@@ -41,7 +41,7 @@ Type TypedOwner::effectiveType(int _i) const
 {
 	if (!self()->childIs<TypeNamer>(_i))
 		return Type();
-	Type p(self()->childAs<TypeNamer>(_i)->type());
+	Type p(self()->childAs<TypeNamer>(_i)->apparentType());
 	foreach (Type t, allowedTypes(_i))
 		if (p.isSimilarTo(t, TypeEntity::Convertible))
 //		{
@@ -66,7 +66,7 @@ bool TypedOwner::isChildInValidState(int _i) const
 	if (!self()->childIs<TypeNamer>(_i))
 		return true;
 	foreach (Type i, deniedTypes(_i))
-		if (self()->childAs<TypeNamer>(_i)->type() == i)
+		if (self()->childAs<TypeNamer>(_i)->apparentType() == i)
 			return false;
 	foreach (Type i, allowedTypes(_i))
 		if (!self()->childIs<TypeNamer>(_i))
@@ -75,11 +75,11 @@ bool TypedOwner::isChildInValidState(int _i) const
 			AssertNR(false);
 		}
 		else
-			if (self()->childAs<TypeNamer>(_i)->type().isSimilarTo(i, TypeEntity::Convertible))
+			if (self()->childAs<TypeNamer>(_i)->apparentType().isSimilarTo(i, TypeEntity::Convertible))
 				return true;
 			else
 			{
-				mDebug() << self()->childAs<TypeNamer>(_i)->type()->code() << " != " << i->code();
+				mDebug() << self()->childAs<TypeNamer>(_i)->apparentType()->code() << " != " << i->code();
 			}
 	return false;
 }

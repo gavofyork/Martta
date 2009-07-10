@@ -39,7 +39,7 @@ Typed* Statement::asTyped(int _i) const
 
 Type Statement::typeOf(int _i) const
 {
-	return childIs<Typed>(_i) ? childAs<Typed>(_i)->type() : Type();
+	return childIs<Typed>(_i) ? childAs<Typed>(_i)->apparentType() : Type();
 }
 
 void Statement::appendDefinedUptoHere(int _index, List<ValueDefiner*>* _list) const

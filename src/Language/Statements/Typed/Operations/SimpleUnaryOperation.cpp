@@ -44,10 +44,10 @@ bool SimpleUnaryOperation::keyPressedOnPosition(Position const& _p, KeyEvent con
 	
 	Operator o(_e->text(), pre ? Operator::UnaryPrefix : Operator::UnaryPostfix);
 	Position p = slideOnPrecedence(_p, o.precedence(), o.associativity(), _e->nearestBracket(_p));
-	bool b = findOperators(o, p->isKind<Typed>() ? p->asKind<Typed>()->type() : Type()).size();
+	bool b = findOperators(o, p->isKind<Typed>() ? p->asKind<Typed>()->apparentType() : Type()).size();
 	if (b && !isTemporary(p.entity()))
 	{
-		SimpleUnaryOperation* n = new SimpleUnaryOperation(o, p->isKind<Typed>() ? p->asKind<Typed>()->type() : Type());
+		SimpleUnaryOperation* n = new SimpleUnaryOperation(o, p->isKind<Typed>() ? p->asKind<Typed>()->apparentType() : Type());
 		_e->noteStrobeCreation(n, &*p);
 		p->insert(n, TheOperand);
 		n->validifyChildren();

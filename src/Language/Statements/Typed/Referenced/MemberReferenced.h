@@ -37,6 +37,7 @@ public:
 
 protected:
 	virtual String						code() const;
+	virtual Type						apparentType() const;
 	
 	virtual Kinds						ancestralDependencies() const;
 	virtual bool						isInValidState() const;

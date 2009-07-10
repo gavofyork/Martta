@@ -71,8 +71,8 @@ bool LongMemberOperation::keyPressedOnPosition(Position const& _p, KeyEvent cons
 		}
 	}*/
 	if (_p.exists() && !_p->isPlaceholder() && _p->isKind<Typed>() &&
-		_p->asKind<Typed>()->type()->isType<AddressType>() &&
-		_p->asKind<Typed>()->type()->asType<AddressType>()->original()->isType<ExplicitType>())
+		_p->asKind<Typed>()->apparentType()->isType<AddressType>() &&
+		_p->asKind<Typed>()->apparentType()->asType<AddressType>()->original()->isType<ExplicitType>())
 		return simpleKeyPressedOnPositionHandler<LongMemberOperation>(_p, _e, Operator::XArrow);
 	else
 		return false;

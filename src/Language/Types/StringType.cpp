@@ -217,7 +217,7 @@ List<ValueDefiner*> StringType::applicableMembers(Entity const*, bool _isConst) 
 {
 	List<ValueDefiner*> ret;
 	foreach (BuiltinMethod* i, s_members)
-		if (i->type()->asType<Memberify>()->isConst() || !_isConst)
+		if (i->apparentType()->asType<Memberify>()->isConst() || !_isConst)
 			ret += i;
 	return ret;
 }

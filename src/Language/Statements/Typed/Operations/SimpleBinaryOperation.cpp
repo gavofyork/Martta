@@ -39,15 +39,15 @@ bool SimpleBinaryOperation::keyPressedOnPosition(Position const& _p, KeyEvent co
 	bool ok = false;
 	Position p = slideOnPrecedence(_p, o.precedence(), o.associativity(), _e->nearestBracket(_p));
 	AssertNR(!p.entity()->isEditing());
-	if (p->isKind<Typed>() && findOperators(o, p->asKind<Typed>()->type()).size())
+	if (p->isKind<Typed>() && findOperators(o, p->asKind<Typed>()->apparentType()).size())
 		ok = true;
 	if (!ok)
 		p = _p;
-	if (p->isKind<Typed>() && findOperators(o, p->asKind<Typed>()->type()).size())
+	if (p->isKind<Typed>() && findOperators(o, p->asKind<Typed>()->apparentType()).size())
 		ok = true;
 	if (ok)
 	{
-		SimpleBinaryOperation* n = new SimpleBinaryOperation(o, p->asKind<Typed>()->type());
+		SimpleBinaryOperation* n = new SimpleBinaryOperation(o, p->asKind<Typed>()->apparentType());
 		_e->noteStrobeCreation(n, &*p);
 		p->insert(n, FirstOperand);
 		n->validifyChildren();

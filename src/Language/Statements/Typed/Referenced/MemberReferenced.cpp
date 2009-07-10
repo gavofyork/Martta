@@ -109,6 +109,39 @@ List<ValueDefiner*> MemberReferenced::possibilities() const
 	return ret;
 }
 
+Type MemberReferenced::apparentType() const
+{
+	Type ret = type();
+	// If we're not in a member operation, check if there's some memberification that we can silently discard; 
+	if (!parentIs<GenericMemberOperation>() && ret->isType<Memberify>() && hasAncestor<MemberLambda>())
+	{
+		// switch in params, put in registrable iface....
+		AssertNR(hasAncestor<Class>());
+		// There is; check to see if we can remove it (by being in a scoped parent and assuming the "this->" precedent).
+		Memberify* m = ret->asType<Memberify>();
+		if (ancestor<Class>()->baseAccess(m->scope<Class>()) <= Protected)
+		{
+			bool memberIsCallable = m->original()->isType<FunctionType>();
+			bool constScope = ancestor<MemberLambda>()->isConst();
+			bool constMember = memberIsCallable ? m->isConst() : m->original()->isType<Const>();
+			if (constMember || !constMember && !constScope)
+			{
+				// Member Variable/FunctionType inside a method. Either enclosing method is non-const or FunctionType is const.
+				// Allowed.
+				m->unknit();
+			}
+			else if (!memberIsCallable && constScope && !constMember)
+			{
+				// Member Variable referenced inside a const method
+				// Allowed but made const.
+				m->original()->knit<Const>();
+				m->unknit();
+			}
+		}
+	}
+	return ret;
+}
+
 void MemberReferenced::committed()
 {
 /*	else if (_e->text() == " " || _e->text() == "[" || _e->text() == "#")

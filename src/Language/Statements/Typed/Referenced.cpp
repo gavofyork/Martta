@@ -18,6 +18,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "ReferencedTypeMutatorRegistrar.h"
+#include "ReferencedTypeMutator.h"
 #include "Labelled.h"
 #include "CodeScene.h"
 #include "EditDelegate.h"
@@ -61,9 +63,6 @@ Type Referenced::type() const
 	// If we're not referencing anything yet, return null.
 	if (!m_subject.isUsable())
 		return Type();
-	
-	// TODO: use whichever mutation (or current) fits situation best. Favour mutation.
-	
 	return m_subject->type();
 }
 

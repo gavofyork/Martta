@@ -60,7 +60,7 @@ bool EnumValue::isChildInValidState(int _i) const
 	if (childIs<Typed>(_i))
 	{
 		foreach (Type i, Types() << Type(Int))
-			if (childAs<Typed>(_i)->type().isSimilarTo(i, TypeEntity::BasicallyConvertible))
+			if (childAs<Typed>(_i)->apparentType().isSimilarTo(i, TypeEntity::BasicallyConvertible))
 				return true;
 		return false;
 	}
