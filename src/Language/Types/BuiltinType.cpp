@@ -158,7 +158,7 @@ EditDelegateFace* BuiltinType::newDelegate(CodeScene* _s)
 	return new CompletionDelegate<BuiltinType, int>(this, _s);
 }
 
-void BuiltinType::committed()
+void BuiltinType::committed(int)
 {
 	// Switch if necessary...
 	if (m_id >= NameTrait<int>::ExtraIds)

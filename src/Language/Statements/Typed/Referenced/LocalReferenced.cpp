@@ -26,6 +26,8 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(LocalReferenced);
 
+static ReferencedValueSet<LocalReferenced> s_localReferencedRegistrand;
+
 bool LocalReferenced::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
 	if (_p.exists() && _p->isPlaceholder() && _e->text() == L"L")

@@ -30,6 +30,8 @@ class InScopeReferenced: public Referenced
 	MARTTA_OBJECT(Referenced)
 	
 public:
+	InScopeReferenced(ValueDefiner* _subject = 0): Referenced(_subject) {}
+
 	static List<ValueDefiner*>			possibilities(Position const& _p);
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 

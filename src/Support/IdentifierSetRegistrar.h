@@ -20,31 +20,27 @@
 
 #pragma once
 
-#include "Entity.h"
+#include <msList.h>
+using namespace MarttaSupport;
 
 namespace Martta
 {
 
-// REPOT
-class IdentifierSet
+class IdentifierSet;
+
+class IdentifierSetRegistrar
 {
 public:
-	virtual List<Identifiable*>			identifiableAt(Position const&) { return List<Identifiable*>(); }
-	virtual void						acceptAt(Position const&, Identifiable*) {}
-	virtual ~IdentifierSet() {}
-};
-
-class Identifier: public Entity
-{
-	MARTTA_OBJECT(Entity)
+	static IdentifierSetRegistrar*				get() { return s_this ? s_this : (s_this = new IdentifierSetRegistrar); }
 	
-protected:
-	virtual int							minRequired(int _i) const { return Super::minRequired(_i); }
-	virtual Kinds						allowedKinds(int _i) const;
-	virtual String						defineLayout(ViewKeys&) const;
+	List<IdentifierSet*> const&					allSets() const { return m_allSets; }
+	void										registerSet(IdentifierSet* _s) { m_allSets.append(_s); }
+	void										unregisterSet(IdentifierSet* _s) { m_allSets.removeAll(_s); }
+	
+private:
+	List<IdentifierSet*>						m_allSets;
+	
+	static IdentifierSetRegistrar*				s_this;
 };
-
-
-
 
 }

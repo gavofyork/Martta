@@ -36,6 +36,7 @@ namespace Martta
 class Stylist;
 class EditDelegateFace;
 class CodeScene;
+class Named;
 
 /**
  * Note regarding rootEntity/null-Context: You can never depend on something which does not share the
@@ -359,7 +360,13 @@ public:
 	// UI
 	/// 
 //	virtual void						decorate(DecorationContext const&) const;
-	virtual EditDelegateFace*			newDelegate(CodeScene*) { return 0; }
+
+	Named*								get() const { return 0; }
+	void								set(Named*) const {}
+	void								committed(Named*);
+	List<Named*>						possibilities();
+	String								defineEditLayout(ViewKeys const&, Named* _subject);
+	virtual EditDelegateFace*			newDelegate(CodeScene*);
 	// We've been double-clicked.
 	bool								activated(CodeScene* _s);
 	virtual bool						onActivated(CodeScene*) { return false; }
@@ -405,7 +412,6 @@ public:
 	void								resetLayoutCache();
 	
 	static void							keyPressEventStarter(KeyEvent* _e, bool _abortive = false);
-	void								keyPressEvent(KeyEvent* _e);
 	void								activateEvent(CodeScene* _s);
 	
 	/// Static helpers.

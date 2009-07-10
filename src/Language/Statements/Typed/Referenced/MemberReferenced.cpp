@@ -120,15 +120,12 @@ Type MemberReferenced::apparentType() const
 	return ret;
 }
 
-void MemberReferenced::committed()
-{
 /*	else if (_e->text() == " " || _e->text() == "[" || _e->text() == "#")
 	{
 		codeScene()->leaveEdit();
 		_e->reinterpretLater();	// since we may have been deleted and replaced with e.g. a variable, we want appropriately.
 		return true;
 	}*/
-}
 
 bool FloatingMemberReferenced::keyPressed(KeyEvent const* _e)
 {

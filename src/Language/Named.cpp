@@ -18,24 +18,12 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#pragma once
-
-#include "Referenced.h"
+#include "Entity.h"
+#include "Named.h"
 
 namespace Martta
 {
 
-class LocalReferenced: public Referenced
-{
-	MARTTA_OBJECT(Referenced)
-	
-public:
-	LocalReferenced(ValueDefiner* _subject = 0): Referenced(_subject) {}
-
-	static List<ValueDefiner*>			possibilities(Position const& _p);
-	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
-
-	virtual List<ValueDefiner*>			possibilities() const { return possibilities(over()); }
-};
+MARTTA_INTERFACE_CPP(Named);
 
 }

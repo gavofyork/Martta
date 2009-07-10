@@ -20,22 +20,20 @@
 
 #pragma once
 
-#include "Referenced.h"
-
 namespace Martta
 {
 
-class LocalReferenced: public Referenced
+class Named;
+
+// Declare a single static instance of the derived class in its CPP file to register it.
+class IdentifierSet
 {
-	MARTTA_OBJECT(Referenced)
-	
 public:
-	LocalReferenced(ValueDefiner* _subject = 0): Referenced(_subject) {}
-
-	static List<ValueDefiner*>			possibilities(Position const& _p);
-	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
-
-	virtual List<ValueDefiner*>			possibilities() const { return possibilities(over()); }
+	IdentifierSet();
+	virtual ~IdentifierSet();
+	
+	virtual List<Named*>				identifiableAt(Position const&) { return List<Named*>(); }
+	virtual void						acceptAt(Position const&, Named*) {}
 };
 
 }

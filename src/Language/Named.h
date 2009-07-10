@@ -20,22 +20,21 @@
 
 #pragma once
 
-#include "Referenced.h"
+#include <msString.h>
+using namespace MarttaSupport;
+
+#include "Meta.h"
 
 namespace Martta
 {
 
-class LocalReferenced: public Referenced
+class Named
 {
-	MARTTA_OBJECT(Referenced)
-	
+	MARTTA_INTERFACE
+
 public:
-	LocalReferenced(ValueDefiner* _subject = 0): Referenced(_subject) {}
-
-	static List<ValueDefiner*>			possibilities(Position const& _p);
-	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
-
-	virtual List<ValueDefiner*>			possibilities() const { return possibilities(over()); }
+	virtual String								name() const { return String::null; }
+	virtual ~Named() {}
 };
 
 }

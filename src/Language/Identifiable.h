@@ -20,17 +20,16 @@
 
 #pragma once
 
-#include <String>
-
-#include "Meta.h"
+#include "Named.h"
 
 namespace Martta
 {
 
 // Don't forget to use import/export functions!
-class Identifiable
+class Identifiable: public_interface Named
 {
 	MARTTA_INTERFACE
+	MARTTA_INHERITS(Named, 0)
 
 public:
 	MARTTA_NAMED(Identity)

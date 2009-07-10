@@ -32,7 +32,6 @@ class MemberReferenced: public Referenced
 public:
 	MemberReferenced(ValueDefiner* _subject = 0): Referenced(_subject) {}
 	
-	void								committed();
 	virtual List<ValueDefiner*>			possibilities() const { return possibilities(over()); }
 	static List<ValueDefiner*>			possibilities(Position const& _p);
 

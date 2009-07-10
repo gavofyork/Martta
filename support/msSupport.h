@@ -154,21 +154,25 @@ template<class T> inline void setRef(typename isSimple<T>::StorageType& _d, T co
 		*(T**)&_d = new T(_src);
 }
 
-struct MethodExistsTrue { enum { c_val = 1 }; };
-struct MethodExistsFalse { enum { c_val = 0 }; };
-template<class T, void (T::*)()> struct MethodExistsStruct {};
-template<class T> MethodExistsFalse& IfMethodExists(...) { return *(MethodExistsFalse*)0; }
+#define MS_TEST_METHOD_EXISTANCE(bar)\
+enum bar##MethodExistsTrue {};\
+enum bar##MethodExistsFalse {};\
+template<class T, void (T::*)()> struct bar##MethodExistsStruct {};\
+template<class T> bar##MethodExistsFalse& bar##IfMethodExists(...) { return *(bar##MethodExistsFalse*)0; }\
+template<class T> bar##MethodExistsTrue& bar##IfMethodExists(bar##MethodExistsStruct<T, &T::bar>*) { return *(bar##MethodExistsTrue*)0; }\
+template<class T> inline void __TEST_##bar(T& _a, bar##MethodExistsTrue&) { _a.bar(); }\
+template<class T> inline void __TEST_##bar(T&, bar##MethodExistsFalse&){}\
+template<class T> inline void bar(T& _a) { __TEST_##bar(_a, bar##IfMethodExists<T>(0)); }
 
-// Must be used in global namespace
-#define MS_TEST_METHOD_EXISTANCE(M) \
-namespace MarttaSupport \
-{ \
-template<class T> MethodExistsTrue& IfMethodExists(MethodExistsStruct<T, &T::M>*) { return *(MethodExistsTrue*)0; } \
-template<class T> inline void M(T& _a, MethodExistsTrue&) { _a.M(); } \
-template<class T> inline void M(T&, MethodExistsFalse&){} \
-template<class T> inline void M(T& _a) { M(_a, IfMethodExists<T>(0)); } \
-}
-
+#define MS_TEST_METHOD_EXISTANCE_1(bar)\
+enum bar##MethodExistsTrue1 {};\
+enum bar##MethodExistsFalse1 {};\
+template<class T, class A, void (T::*)(A)> struct bar##MethodExistsStruct1 {};\
+template<class T, class A> bar##MethodExistsFalse1& bar##IfMethodExists1(...) { return *(bar##MethodExistsFalse1*)0; }\
+template<class T, class A> bar##MethodExistsTrue1& bar##IfMethodExists1(bar##MethodExistsStruct1<T, A, &T::bar>*) { return *(bar##MethodExistsTrue1*)0; }\
+template<class T, class A> inline void __TEST_1##bar(T& _a, A _arg, bar##MethodExistsTrue1&) { _a.bar(_arg); }\
+template<class T, class A> inline void __TEST_1##bar(T&, A, bar##MethodExistsFalse1&){}\
+template<class T, class A> inline void bar(T& _a, A _arg) { __TEST_1##bar(_a, _arg, bar##IfMethodExists1<T, A>(0)); }
 
 // Taken from Qt 4.4, Copyright Nokia. Used under licence (GPL).
 #if defined(__GNUC__) && !defined(__INTEL_COMPILER)

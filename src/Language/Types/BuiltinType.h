@@ -65,7 +65,7 @@ public:
 
 	uint id() const { return m_id; }
 	void setId(uint _d) { m_id = _d; changed(); }
-	void committed();
+	void committed(int);
 
 	virtual String code(String const& _middle) const;
 

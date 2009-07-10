@@ -164,6 +164,10 @@ protected:
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity*) { changed(); }
 	
+	// TypeEntity should not defer to Entity for [a-z] keypress. Instead it should attempting to insert a specific TypeEntity
+	// (actually a BuiltType, but we're not to know). This might be changed in the future.
+	virtual bool						keyPressed(KeyEvent const*_e) { return attemptInsert(_e); }
+	
 private:
 	/// Returns an exact copy of this tree, except that the top is owned by _t.
 	/// Unowned nodes are copied.

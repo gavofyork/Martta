@@ -18,23 +18,20 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "Identifier.h"
+#include "IdentifierSet.h"
 
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(Identifier);
-
-Kinds Identifier::allowedKinds(int _i) const
+IdentifierSet::IdentifierSet()
 {
-	return Super::allowedKinds(_i);
+	IdentifierSetRegistrar::get()->registerSet(this);
 }
 
-String Identifier::defineLayout(ViewKeys& _k) const
+IdentifierSet::~IdentifierSet()
 {
-	return Super::defineLayout(_k);
+	IdentifierSetRegistrar::get()->unregisterSet(this);
 }
-
 
 /*		Entity* e = 0;
 		if (m_subject->over().allowedToBeKind<DefaultConstructedVariable>())

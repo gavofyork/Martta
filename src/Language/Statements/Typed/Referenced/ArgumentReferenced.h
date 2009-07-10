@@ -30,6 +30,8 @@ class ArgumentReferenced: public Referenced
 	MARTTA_OBJECT(Referenced)
 	
 public:
+	ArgumentReferenced(ValueDefiner* _subject = 0): Referenced(_subject) {}
+
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 
 	virtual List<ValueDefiner*>			possibilities() const { return possibilities(over()); }

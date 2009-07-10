@@ -21,10 +21,11 @@
 #pragma once
 
 #include <msSupport.h>
+using namespace MarttaSupport;
 
 #include "EditDelegate.h"
 
-MS_TEST_METHOD_EXISTANCE(committed)
+MS_TEST_METHOD_EXISTANCE_1(committed)
 
 namespace Martta
 {
@@ -64,7 +65,8 @@ public:
 	}
 	virtual void leavingEditIntact()
 	{
-		::MarttaSupport::committed<T>(*EditDelegate<T>::subject());
+		mDebug() << "leaving edit intact with " << m_selection;
+		committed<T, R>(*EditDelegate<T>::subject(), m_selection);
 	}
 	virtual void commit()
 	{

@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include "Identifier.h"
+#include "IdentifierSet.h"
 #include "ModelPtr.h"
 #include "ValueDefiner.h"
 #include "Typed.h"
@@ -62,8 +62,8 @@ template<class T>
 class ReferencedValueSet: public IdentifierSet
 {
 public:
-	virtual List<Identifiable*>			identifiableAt(Position const& _p) { return castEntities<Identifiable>(T::possibilities(_p)); }
-	virtual void						acceptAt(Position const& _p, Identifiable* _i) { ValueDefiner* v = _i->asKind<ValueDefiner>(); _p.place(new T(v)); }
+	virtual List<Named*>				identifiableAt(Position const& _p) { return castEntities<Named>(T::possibilities(_p)); }
+	virtual void						acceptAt(Position const& _p, Named* _i) { ValueDefiner* v = _i->asKind<ValueDefiner>(); _p.place(new T(v)); }
 };
 
 }
