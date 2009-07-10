@@ -84,43 +84,6 @@ String MemberReferenced::code() const
 		return String::null;
 }
 
-/*
-// x => this->x mutator
-void ClassMutator::listPossibleMutations(Position const& _p, Type const& _original, Types& _mutations)
-{
-	// If we're not in a member operation, check if there's some memberification that we can silently discard; 
-	if (!_p->parentIs<GenericMemberOperation>() && _original->isType<Memberify>() && _p->hasAncestor<MemberLambda>())
-	{
-		// switch in params, put in registrable iface....
-		AssertNR(_p->hasAncestor<Class>());
-		// There is; check to see if we can remove it (by being in a scoped parent and assuming the "this->" precedent).
-		Type ret = _original;
-		Memberify* m = ret->asType<Memberify>();
-		if (_p->ancestor<Class>()->baseAccess(m->scope<Class>()) <= Protected)
-		{
-			bool memberIsCallable = m->original()->isType<FunctionType>();
-			bool constScope = _p->ancestor<MemberLambda>()->isConst();
-			bool constMember = memberIsCallable ? m->isConst() : m->original()->isType<Const>();
-			if (constMember || !constMember && !constScope)
-			{
-				// Member Variable/FunctionType inside a method. Either enclosing method is non-const or FunctionType is const.
-				// Allowed.
-				m->unknit();
-				_mutations << ret;
-			}
-			else if (!memberIsCallable && constScope && !constMember)
-			{
-				// Member Variable referenced inside a const method
-				// Allowed but made const.
-				m->original()->knit<Const>();
-				m->unknit();
-				_mutations << ret;
-			}
-		}
-	}
-}
-*/
-
 EditDelegateFace* MemberReferenced::newDelegate(CodeScene* _s)
 {
 	return new CompletionDelegate<MemberReferenced, ValueDefiner*>(this, _s);
@@ -143,14 +106,6 @@ List<ValueDefiner*> MemberReferenced::possibilities() const
 			appMems = filterTypeds<ValueDefiner>(method, appMems);
 		ret << appMems;
 	}
-	return ret;
-}
-
-String MemberReferenced::defineEditLayout(ViewKeys const& _k, ValueDefiner* _v)
-{
-	String ret = L"^;s" + (_v ? _v->type()->idColour() : TypeEntity::null->idColour()).name() + L";c;%1";
-	if (_v)
-		ret = _v->tryKind<Labelled>()->labelLayout(ret, _k);
 	return ret;
 }
 

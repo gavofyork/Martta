@@ -40,8 +40,8 @@ public:
 	void								setSubject(ValueDefiner* _e) { setDependency(m_subject, _e); }
 	ModelPtr<ValueDefiner>				get() const { return m_subject; }
 	void								set(ValueDefiner* _e) { setDependency(m_subject, _e); }
-	Entity*								subjectSelf() const { return m_subject ? m_subject->self() : 0; }
-
+	String								defineEditLayout(ViewKeys const&, ValueDefiner* _v);
+	
 protected:
 	virtual bool						isInValidState() const;
 	virtual String						defineLayout(ViewKeys const&) const;

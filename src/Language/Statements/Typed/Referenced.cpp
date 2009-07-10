@@ -75,4 +75,12 @@ String Referenced::defineLayout(ViewKeys const& _k) const
 	return ret;
 }
 
+String Referenced::defineEditLayout(ViewKeys const& _k, ValueDefiner* _v)
+{
+	String ret = L"^;s" + (_v ? _v->type()->idColour() : TypeEntity::null->idColour()).name() + L";c;%1";
+	if (_v)
+		ret = _v->tryKind<Labelled>()->labelLayout(ret, _k);
+	return ret;
+}
+
 }

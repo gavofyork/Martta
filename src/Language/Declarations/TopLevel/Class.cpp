@@ -45,37 +45,44 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(Class);
 
-/*
-void Referenced::decorate(DecorationContext const& _c) const
-{
-	//TODO: Check!
-	if (Entity* e = m_subject ? m_subject->self() : 0)
-	{
-		bool dec = false;
-		if (e->hasAncestor<Namespace>())
-		{
-			if (e->isKind<MemberVariable>())
-				dec = true;
-			else if (e->isKind<Argument>())
-				dec = true;
-		}
-		if (dec)
-		{
-			QRectF r(alignedForUnitPen(_c(1)));
-			r.setWidth(qMin(_c(0).width(), r.height() * 2));
 
-			QRgb c = qRgb(0, 0, 0);
-		
-			QRadialGradient go(_c(1).center(), r.height() * 2);
-			go.setColorAt(0.f, qRgba(c, 32));
-			go.setColorAt(1.f, qRgba(c, 0));
-			_c->setPen(Qt::NoPen);
-			_c->setBrush(go);
-			_c->drawRoundRect(r, 50, 100);
+/*
+// x => this->x mutator
+void ClassMutator::listPossibleMutations(Position const& _p, Type const& _original, Types& _mutations)
+{
+	// If we're not in a member operation, check if there's some memberification that we can silently discard; 
+	if (!_p->parentIs<GenericMemberOperation>() && _original->isType<Memberify>() && _p->hasAncestor<MemberLambda>())
+	{
+		// switch in params, put in registrable iface....
+		AssertNR(_p->hasAncestor<Class>());
+		// There is; check to see if we can remove it (by being in a scoped parent and assuming the "this->" precedent).
+		Type ret = _original;
+		Memberify* m = ret->asType<Memberify>();
+		if (_p->ancestor<Class>()->baseAccess(m->scope<Class>()) <= Protected)
+		{
+			bool memberIsCallable = m->original()->isType<FunctionType>();
+			bool constScope = _p->ancestor<MemberLambda>()->isConst();
+			bool constMember = memberIsCallable ? m->isConst() : m->original()->isType<Const>();
+			if (constMember || !constMember && !constScope)
+			{
+				// Member Variable/FunctionType inside a method. Either enclosing method is non-const or FunctionType is const.
+				// Allowed.
+				m->unknit();
+				_mutations << ret;
+			}
+			else if (!memberIsCallable && constScope && !constMember)
+			{
+				// Member Variable referenced inside a const method
+				// Allowed but made const.
+				m->original()->knit<Const>();
+				m->unknit();
+				_mutations << ret;
+			}
 		}
 	}
-	Super::decorate(_c);
-}*/
+}
+*/
+
 
 Access Class::baseAccess(Class* _c) const
 {

@@ -108,7 +108,7 @@ void Project::resetAsNew()
 	m_namespace->prepareChildren();
 	m_declarations.back().place(m_namespace);
 
-/*	IncludeProject* sc = new IncludeProject("Standard C");
+	IncludeProject* sc = new IncludeProject("Standard C");
 #ifdef Q_WS_WIN
 	// TODO: Use .bat file to output & read proper paths for chosen compiler.
 //	sc->addInclude("C:/Program Files/Microsoft Visual Studio .NET 2003/Vc7/include/stdlib.h");
@@ -122,7 +122,7 @@ void Project::resetAsNew()
 
 	m_cDepends.append(sc);
 	reloadHeaders();
-*/
+
 	m_namespace->killAndDelete();
 	m_namespace = new Namespace;
 	m_declarations.back().place(m_namespace);

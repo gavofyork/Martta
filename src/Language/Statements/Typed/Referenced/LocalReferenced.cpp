@@ -18,6 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "CompletionDelegate.h"
 #include "LocalReferenced.h"
 
 namespace Martta
@@ -25,18 +26,27 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(LocalReferenced);
 
-Kinds LocalReferenced::allowedKinds(int _i) const
+bool LocalReferenced::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
-	return Super::allowedKinds(_i);
+	if (_p.exists() && _p->isPlaceholder() && _e->text() == L"L")
+	{
+		LocalReferenced* r = new LocalReferenced;
+		_p.place(r);
+		r->setEditing(_e->codeScene());
+	}
+	else
+		return false;
+	return true;
 }
 
-String LocalReferenced::defineLayout(ViewKeys& _k) const
+List<ValueDefiner*> LocalReferenced::possibilities() const
 {
-	return Super::defineLayout(_k);
+	return castEntities<ValueDefiner>(valuesInLocalScope());
 }
-/*
-		m_valuesInScope << castEntities<ValueDefiner>(subject()->valuesInLocalScope());	// TODO: Change over
-		m_valuesInScope << castEntities<ValueDefiner>(subject()->ancestor<Declaration>()->valuesKnown());
-*/
+
+EditDelegateFace* LocalReferenced::newDelegate(CodeScene* _s)
+{
+	return new CompletionDelegate<LocalReferenced, ValueDefiner*>(this, _s);
+}
 
 }

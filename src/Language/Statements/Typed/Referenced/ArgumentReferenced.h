@@ -29,10 +29,13 @@ class ArgumentReferenced: public Referenced
 {
 	MARTTA_OBJECT(Referenced)
 	
+public:
+	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
+
+	List<ValueDefiner*>					possibilities() const;
+	
 protected:
-	virtual int							minRequired(int _i) const { return Super::minRequired(_i); }
-	virtual Kinds						allowedKinds(int _i) const;
-	virtual String						defineLayout(ViewKeys&) const;
+	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 };
 
 }

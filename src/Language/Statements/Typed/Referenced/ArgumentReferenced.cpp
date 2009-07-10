@@ -18,6 +18,9 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "LambdaNamer.h"
+#include "Argument.h"
+#include "CompletionDelegate.h"
 #include "ArgumentReferenced.h"
 
 namespace Martta
@@ -25,18 +28,31 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(ArgumentReferenced);
 
-Kinds ArgumentReferenced::allowedKinds(int _i) const
+bool ArgumentReferenced::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
-	return Super::allowedKinds(_i);
+	if (_p.exists() && _p->isPlaceholder() && _e->text() == L"_")
+	{
+		ArgumentReferenced* r = new ArgumentReferenced;
+		_p.place(r);
+		r->setEditing(_e->codeScene());
+	}
+	else
+		return false;
+	return true;
 }
 
-String ArgumentReferenced::defineLayout(ViewKeys& _k) const
+List<ValueDefiner*> ArgumentReferenced::possibilities() const
 {
-	return Super::defineLayout(_k);
+	List<ValueDefiner*> ret;
+	if (LambdaNamer* ln = ancestor<LambdaNamer>())
+		for (int i = 0; i < ln->argumentCount(); i++)
+			ret << ln->argument(i);
+	return ret;
 }
-/*
-	if (subject()->hasAncestor<LambdaNamer>())
-		for (int i = 0; i < subject()->ancestor<LambdaNamer>()->argumentCount(); i++)
-			m_valuesInScope << subject()->ancestor<LambdaNamer>()->argument(i);
-*/
+
+EditDelegateFace* ArgumentReferenced::newDelegate(CodeScene* _s)
+{
+	return new CompletionDelegate<ArgumentReferenced, ValueDefiner*>(this, _s);
+}
+
 }

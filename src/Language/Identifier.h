@@ -35,4 +35,9 @@ protected:
 	virtual String						defineLayout(ViewKeys&) const;
 };
 
+// To be put in the bast of whatever interface Identifier uses.
+//	castEntities<ValueDefiner>(ancestor<Declaration>()->valuesKnown());
+
+
+
 }

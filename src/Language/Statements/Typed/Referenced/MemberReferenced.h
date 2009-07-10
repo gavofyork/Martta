@@ -33,7 +33,6 @@ public:
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 
 	List<ValueDefiner*>					possibilities() const;
-	String								defineEditLayout(ViewKeys const&, ValueDefiner* _v);
 	void								committed();
 
 protected:

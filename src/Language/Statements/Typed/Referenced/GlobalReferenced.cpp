@@ -18,6 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "CompletionDelegate.h"
 #include "GlobalReferenced.h"
 
 namespace Martta
@@ -25,16 +26,37 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(GlobalReferenced);
 
-Kinds GlobalReferenced::allowedKinds(int _i) const
+bool GlobalReferenced::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
-	return Super::allowedKinds(_i);
+	if (_p.exists() && _p->isPlaceholder() && _e->text() == L":")
+	{
+		GlobalReferenced* r = new GlobalReferenced;
+		_p.place(r);
+		r->setEditing(_e->codeScene());
+	}
+	else
+		return false;
+	return true;
 }
 
-String GlobalReferenced::defineLayout(ViewKeys& _k) const
+String GlobalReferenced::defineLayout(ViewKeys const& _k) const
 {
 	return L"p:/global.svg;" + Super::defineLayout(_k);
 }
-/*
-	m_valuesInScope << subject()->root()->childrenOf<ValueDefiner>();
-*/
+
+String GlobalReferenced::defineEditLayout(ViewKeys const& _k, ValueDefiner* _v)
+{
+	return L"p:/global.svg;" + Super::defineEditLayout(_k, _v);
+}
+
+List<ValueDefiner*> GlobalReferenced::possibilities() const
+{
+	return root()->childrenOf<ValueDefiner>();
+}
+
+EditDelegateFace* GlobalReferenced::newDelegate(CodeScene* _s)
+{
+	return new CompletionDelegate<GlobalReferenced, ValueDefiner*>(this, _s);
+}
+
 }
