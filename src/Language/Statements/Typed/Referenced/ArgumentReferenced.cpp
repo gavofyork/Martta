@@ -41,18 +41,13 @@ bool ArgumentReferenced::keyPressedOnPosition(Position const& _p, KeyEvent const
 	return true;
 }
 
-List<ValueDefiner*> ArgumentReferenced::possibilities() const
+List<ValueDefiner*> ArgumentReferenced::possibilities(Position const& _p)
 {
 	List<ValueDefiner*> ret;
-	if (LambdaNamer* ln = ancestor<LambdaNamer>())
+	if (LambdaNamer* ln = _p->ancestor<LambdaNamer>())
 		for (int i = 0; i < ln->argumentCount(); i++)
 			ret << ln->argument(i);
 	return ret;
-}
-
-EditDelegateFace* ArgumentReferenced::newDelegate(CodeScene* _s)
-{
-	return new CompletionDelegate<ArgumentReferenced, ValueDefiner*>(this, _s);
 }
 
 }

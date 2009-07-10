@@ -28,14 +28,18 @@ MARTTA_OBJECT_CPP(GlobalReferenced);
 
 bool GlobalReferenced::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
-	if (_p.exists() && _p->isPlaceholder() && _e->text() == L":")
+	return simplePositionKeyPressHandler<GlobalReferenced>(_p, _e, L":");
+}
+
+bool GlobalReferenced::keyPressed(KeyEvent const* _e)
+{
+	if (_e->text().length() == 1 && _e->text()[0].isLetter())
 	{
-		GlobalReferenced* r = new GlobalReferenced;
-		_p.place(r);
-		r->setEditing(_e->codeScene());
+		setEditing(_e->codeScene());
+		_e->reinterpretLater();
 	}
 	else
-		return false;
+		return Super::keyPressed(_e);
 	return true;
 }
 
@@ -49,14 +53,9 @@ String GlobalReferenced::defineEditLayout(ViewKeys const& _k, ValueDefiner* _v)
 	return L"p:/global.svg;" + Super::defineEditLayout(_k, _v);
 }
 
-List<ValueDefiner*> GlobalReferenced::possibilities() const
+List<ValueDefiner*> GlobalReferenced::possibilities(Position const& _p)
 {
-	return root()->childrenOf<ValueDefiner>();
-}
-
-EditDelegateFace* GlobalReferenced::newDelegate(CodeScene* _s)
-{
-	return new CompletionDelegate<GlobalReferenced, ValueDefiner*>(this, _s);
+	return _p->root()->childrenOf<ValueDefiner>();
 }
 
 }

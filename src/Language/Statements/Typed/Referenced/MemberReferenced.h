@@ -32,8 +32,9 @@ class MemberReferenced: public Referenced
 public:
 	MemberReferenced(ValueDefiner* _subject = 0): Referenced(_subject) {}
 	
-	List<ValueDefiner*>					possibilities() const;
 	void								committed();
+	virtual List<ValueDefiner*>			possibilities() const { return possibilities(over()); }
+	static List<ValueDefiner*>			possibilities(Position const& _p);
 
 protected:
 	virtual Type						apparentType() const;
@@ -41,7 +42,6 @@ protected:
 	
 	virtual Kinds						ancestralDependencies() const;
 	virtual bool						isInValidState() const;
-	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 };
 
 class FloatingMemberReferenced: public MemberReferenced

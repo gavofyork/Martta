@@ -32,10 +32,8 @@ class ArgumentReferenced: public Referenced
 public:
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 
-	List<ValueDefiner*>					possibilities() const;
-	
-protected:
-	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
+	virtual List<ValueDefiner*>			possibilities() const { return possibilities(over()); }
+	static List<ValueDefiner*>			possibilities(Position const& _p);
 };
 
 }

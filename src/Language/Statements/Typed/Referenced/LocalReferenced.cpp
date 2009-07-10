@@ -39,14 +39,11 @@ bool LocalReferenced::keyPressedOnPosition(Position const& _p, KeyEvent const* _
 	return true;
 }
 
-List<ValueDefiner*> LocalReferenced::possibilities() const
+List<ValueDefiner*> LocalReferenced::possibilities(Position const& _p)
 {
-	return castEntities<ValueDefiner>(valuesInLocalScope());
-}
-
-EditDelegateFace* LocalReferenced::newDelegate(CodeScene* _s)
-{
-	return new CompletionDelegate<LocalReferenced, ValueDefiner*>(this, _s);
+	if (Statement* s = _p->tryKind<Statement>())
+		return castEntities<ValueDefiner>(s->valuesInLocalScope());
+	return List<ValueDefiner*>();
 }
 
 }

@@ -81,7 +81,7 @@ String EnumValue::defineLayout(ViewKeys const&) const
 
 bool EnumValue::isSuperfluous() const
 {
-	return childAs<TextLabel>(Identity)->text().isEmpty();
+	return childAs<TextLabel>(Identity)->text().isEmpty() && !isNecessary() || Super::isSuperfluous();
 }
 
 String EnumValue::code() const

@@ -20,31 +20,20 @@
 
 #pragma once
 
-#include "Entity.h"
+#include "Referenced.h"
 
 namespace Martta
 {
 
-// REPOT
-class IdentifierSet
+class InScopeReferenced: public Referenced
 {
-public:
-	virtual List<Identifiable*>			identifiableAt(Position const&) { return List<Identifiable*>(); }
-	virtual void						acceptAt(Position const&, Identifiable*) {}
-	virtual ~IdentifierSet() {}
-};
-
-class Identifier: public Entity
-{
-	MARTTA_OBJECT(Entity)
+	MARTTA_OBJECT(Referenced)
 	
-protected:
-	virtual int							minRequired(int _i) const { return Super::minRequired(_i); }
-	virtual Kinds						allowedKinds(int _i) const;
-	virtual String						defineLayout(ViewKeys&) const;
+public:
+	static List<ValueDefiner*>			possibilities(Position const& _p);
+	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
+
+	virtual List<ValueDefiner*>			possibilities() const { return possibilities(over()); }
 };
-
-
-
 
 }

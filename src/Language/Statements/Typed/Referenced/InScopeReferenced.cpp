@@ -18,33 +18,29 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#pragma once
-
-#include "Entity.h"
+#include "InScopeReferenced.h"
 
 namespace Martta
 {
 
-// REPOT
-class IdentifierSet
+MARTTA_OBJECT_CPP(InScopeReferenced);
+
+List<ValueDefiner*> InScopeReferenced::possibilities(Position const& _p)
 {
-public:
-	virtual List<Identifiable*>			identifiableAt(Position const&) { return List<Identifiable*>(); }
-	virtual void						acceptAt(Position const&, Identifiable*) {}
-	virtual ~IdentifierSet() {}
-};
+	return _p->ancestor<Declaration>()->valuesKnown();
+}
 
-class Identifier: public Entity
+bool InScopeReferenced::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
-	MARTTA_OBJECT(Entity)
-	
-protected:
-	virtual int							minRequired(int _i) const { return Super::minRequired(_i); }
-	virtual Kinds						allowedKinds(int _i) const;
-	virtual String						defineLayout(ViewKeys&) const;
-};
-
-
-
+	if (_p.exists() && _p->isPlaceholder() && _e->text() == L"$")
+	{
+		InScopeReferenced* r = new InScopeReferenced;
+		_p.place(r);
+		r->setEditing(_e->codeScene());
+	}
+	else
+		return false;
+	return true;
+}
 
 }

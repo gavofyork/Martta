@@ -6,6 +6,7 @@ BUG Moving is crazily slow over statements.
 BUG 'Mstr'-> doesn't move away (only stops editing).
 BUG Assertion on '!?'.
 BUG Space in string stops editing.
+CRASH delete a Referenced EnumValue. 
 
 Small things:
 - Special EntryMethod.

@@ -66,28 +66,24 @@ bool MemberReferenced::isInValidState() const
 	return Super::isInValidState();
 }
 
-EditDelegateFace* MemberReferenced::newDelegate(CodeScene* _s)
-{
-	return new CompletionDelegate<MemberReferenced, ValueDefiner*>(this, _s);
-}
-
-List<ValueDefiner*> MemberReferenced::possibilities() const
+List<ValueDefiner*> MemberReferenced::possibilities(Position const& _p)
 {
 	List<ValueDefiner*> ret;
 	Type method = Type(FunctionType(false, true)).topWith(Memberify()).topWith(Reference());
-	foreach (Type t, ourAllowedTypes())
-	{
-		List<ValueDefiner*> appMems;
-		if (t->isType<Memberify>() && t->asType<Memberify>()->scope())
-			appMems = t->asType<Memberify>()->scope()->applicableMembers(this, t->asType<Memberify>()->isConst());
-		else if (hasAncestor<Class>())
-			appMems = castEntities<ValueDefiner>(ancestor<Class>()->membersOf<MemberValue>(hasAncestor<MemberLambda>() ? ancestor<MemberLambda>()->isConst() : false));
-		if (false)
-			appMems = filterTypedsInv<ValueDefiner>(method, appMems);
-		else if (false)
-			appMems = filterTypeds<ValueDefiner>(method, appMems);
-		ret << appMems;
-	}
+	if (TypeNamer* s = _p->tryKind<TypeNamer>())
+		foreach (Type t, s->ourAllowedTypes())
+		{
+			List<ValueDefiner*> appMems;
+			if (t->isType<Memberify>() && t->asType<Memberify>()->scope())
+				appMems = t->asType<Memberify>()->scope()->applicableMembers(s->self(), t->asType<Memberify>()->isConst());
+			else if (_p->hasAncestor<Class>())
+				appMems = castEntities<ValueDefiner>(_p->ancestor<Class>()->membersOf<MemberValue>(_p->hasAncestor<MemberLambda>() ? _p->ancestor<MemberLambda>()->isConst() : false));
+			if (false)
+				appMems = filterTypedsInv<ValueDefiner>(method, appMems);
+			else if (false)
+				appMems = filterTypeds<ValueDefiner>(method, appMems);
+			ret << appMems;
+		}
 	return ret;
 }
 

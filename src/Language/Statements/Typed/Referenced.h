@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "Identifier.h"
 #include "ModelPtr.h"
 #include "ValueDefiner.h"
 #include "Typed.h"
@@ -40,7 +41,8 @@ public:
 	void								setSubject(ValueDefiner* _e) { setDependency(m_subject, _e); }
 	ModelPtr<ValueDefiner>				get() const { return m_subject; }
 	void								set(ValueDefiner* _e) { setDependency(m_subject, _e); }
-	String								defineEditLayout(ViewKeys const&, ValueDefiner* _v);
+	virtual String						defineEditLayout(ViewKeys const&, ValueDefiner* _v);
+	virtual List<ValueDefiner*>			possibilities() const { return List<ValueDefiner*>(); }
 	
 protected:
 	virtual bool						isInValidState() const;
@@ -51,8 +53,17 @@ protected:
 	virtual void						onDependencyChanged(Entity*) {  if (m_subject) changed(); }
 	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p[L"subject"] = m_subject.key(); }
 	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_subject.restoreFrom(_p[L"subject"]); }
+	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 	
 	ModelPtr<ValueDefiner>				m_subject;
+};
+
+template<class T>
+class ReferencedValueSet: public IdentifierSet
+{
+public:
+	virtual List<Identifiable*>			identifiableAt(Position const& _p) { return castEntities<Identifiable>(T::possibilities(_p)); }
+	virtual void						acceptAt(Position const& _p, Identifiable* _i) { ValueDefiner* v = _i->asKind<ValueDefiner>(); _p.place(new T(v)); }
 };
 
 }

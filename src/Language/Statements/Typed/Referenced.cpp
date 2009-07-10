@@ -18,8 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "ReferencedTypeMutatorRegistrar.h"
-#include "ReferencedTypeMutator.h"
 #include "Labelled.h"
 #include "CodeScene.h"
 #include "EditDelegate.h"
@@ -72,6 +70,11 @@ String Referenced::defineLayout(ViewKeys const& _k) const
 	if (m_subject)
 		ret = m_subject->tryKind<Labelled>()->labelLayout(ret, _k);
 	return ret;
+}
+
+EditDelegateFace* Referenced::newDelegate(CodeScene* _s)
+{
+	return new CompletionDelegate<Referenced, ValueDefiner*>(this, _s);
 }
 
 String Referenced::defineEditLayout(ViewKeys const& _k, ValueDefiner* _v)

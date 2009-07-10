@@ -16,7 +16,5 @@
 #include "Support/Operator.cpp"
 #include "Support/OperatorRegistrar.cpp"
 #include "Support/Position.cpp"
-#include "Support/ReferencedTypeMutator.cpp"
-#include "Support/ReferencedTypeMutatorRegistrar.cpp"
 #include "Support/Stylist.cpp"
 #include "Support/Type.cpp"

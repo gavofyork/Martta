@@ -30,14 +30,15 @@ class GlobalReferenced: public Referenced
 	MARTTA_OBJECT(Referenced)
 	
 public:
+	static List<ValueDefiner*>			possibilities(Position const& _p);
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 
-	List<ValueDefiner*>					possibilities() const;
-	String								defineEditLayout(ViewKeys const& _k, ValueDefiner* _v);
+	virtual List<ValueDefiner*>			possibilities() const { return possibilities(over()); }
+	virtual String						defineEditLayout(ViewKeys const& _k, ValueDefiner* _v);
 	
 protected:
 	virtual String						defineLayout(ViewKeys const& _k) const;
-	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
+	virtual bool						keyPressed(KeyEvent const* _e);
 };
 
 }
