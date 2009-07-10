@@ -25,7 +25,6 @@ using namespace MarttaSupport;
 #include "CodeScene.h"
 #include "EditDelegate.h"
 #include "CompletionDelegate.h"
-#include "Named.h"
 #include "Entity.h"
 
 namespace Martta
