@@ -30,18 +30,32 @@ class MemberReferenced: public Referenced
 	MARTTA_OBJECT(Referenced)
 	
 public:
-	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
-
+	MemberReferenced(ValueDefiner* _subject = 0): Referenced(_subject) {}
+	
 	List<ValueDefiner*>					possibilities() const;
 	void								committed();
 
 protected:
-	virtual String						code() const;
 	virtual Type						apparentType() const;
+	virtual bool						keyPressed(KeyEvent const* _e);
 	
 	virtual Kinds						ancestralDependencies() const;
 	virtual bool						isInValidState() const;
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
+};
+
+class FloatingMemberReferenced: public MemberReferenced
+{
+	MARTTA_OBJECT(MemberReferenced)
+	
+public:
+	FloatingMemberReferenced(ValueDefiner* _subject = 0): MemberReferenced(_subject) {}
+	
+	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
+
+protected:
+	virtual bool						keyPressed(KeyEvent const* _e);
+	virtual String						code() const;
 };
 
 }

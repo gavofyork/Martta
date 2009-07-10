@@ -35,26 +35,16 @@ namespace Martta
 {
 
 MARTTA_OBJECT_CPP(MemberReferenced);
+MARTTA_OBJECT_CPP(FloatingMemberReferenced);
 
-bool MemberReferenced::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
+bool MemberReferenced::keyPressed(KeyEvent const* _e)
 {
-	if (_p.exists() && _p->isPlaceholder() && _e->text().length() == 1 && _e->text()[0].isLower() &&
-		_p->isKind<Typed>() && _p->asKind<Typed>()->ourAllowedTypes().size() && _p->asKind<Typed>()->ourAllowedTypes()[0]->isType<Memberify>())
+	if (_e->text() == L"!")
 	{
-		_e->reinterpretLater();
-		MemberReferenced* r = new MemberReferenced;
-		_p.place(r);
-		r->setEditing(_e->codeScene());
+		replace(new FloatingMemberReferenced(m_subject))->setCurrent();
+		return true;
 	}
-	else if (_p.exists() && _p->isPlaceholder() && _e->text() == L"M")
-	{
-		MemberReferenced* r = new MemberReferenced;
-		_p.place(r);
-		r->setEditing(_e->codeScene());
-	}
-	else
-		return false;
-	return true;
+	return Super::keyPressed(_e);
 }
 
 Kinds MemberReferenced::ancestralDependencies() const
@@ -74,14 +64,6 @@ bool MemberReferenced::isInValidState() const
 			return false;
 	}
 	return Super::isInValidState();
-}
-
-String MemberReferenced::code() const
-{
-	if (!m_subject.isNull())
-		return m_subject->nonSpecificReference();
-	else
-		return String::null;
 }
 
 EditDelegateFace* MemberReferenced::newDelegate(CodeScene* _s)
@@ -150,6 +132,45 @@ void MemberReferenced::committed()
 		_e->reinterpretLater();	// since we may have been deleted and replaced with e.g. a variable, we want appropriately.
 		return true;
 	}*/
+}
+
+bool FloatingMemberReferenced::keyPressed(KeyEvent const* _e)
+{
+	if (_e->text() == L"!")
+	{
+		replace(new MemberReferenced(m_subject))->setCurrent();
+		return true;
+	}
+	return Super::keyPressed(_e);
+}
+
+String FloatingMemberReferenced::code() const
+{
+	if (!m_subject.isNull())
+		return m_subject->nonSpecificReference();
+	else
+		return String::null;
+}
+
+bool FloatingMemberReferenced::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
+{
+	if (_p.exists() && _p->isPlaceholder() && _e->text().length() == 1 && _e->text()[0].isLower() &&
+		_p->isKind<Typed>() && _p->asKind<Typed>()->ourAllowedTypes().size() && _p->asKind<Typed>()->ourAllowedTypes()[0]->isType<Memberify>())
+	{
+		_e->reinterpretLater();
+		FloatingMemberReferenced* r = new FloatingMemberReferenced;
+		_p.place(r);
+		r->setEditing(_e->codeScene());
+	}
+	else if (_p.exists() && _p->isPlaceholder() && _e->text() == L"M")
+	{
+		FloatingMemberReferenced* r = new FloatingMemberReferenced;
+		_p.place(r);
+		r->setEditing(_e->codeScene());
+	}
+	else
+		return false;
+	return true;
 }
 
 }
