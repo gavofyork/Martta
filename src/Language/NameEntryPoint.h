@@ -21,12 +21,11 @@
 #pragma once
 
 #include "CompletionDelegate.h"
+#include "Named.h"
 #include "Meta.h"
 
 namespace Martta
 {
-
-class Named;
 
 class NameEntryPoint
 {

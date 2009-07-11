@@ -20,6 +20,10 @@
 
 #pragma once
 
+#include <msSupport.h>
+#include <msList.h>
+using namespace MarttaSupport;
+
 namespace Martta
 {
 

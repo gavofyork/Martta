@@ -18,6 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "Declaration.h"
 #include "InScopeReferenced.h"
 
 namespace Martta

@@ -171,7 +171,7 @@ prepare LifeOperations "NewOperation DeleteOperation" "UnaryOperation PhysicalTy
 
 prepare MemberOperations "GenericMemberOperation MemberOperation LongMemberOperation" "BinaryOperation QualifierTypes ExplicitType FunctionType AddressType Memberify"
 
-prepare Referenced Referenced "Typed IdentifierSet"
+prepare Referenced Referenced "Statement TextLabel IdentifierSet"
 prepare LocalReferenced LocalReferenced Referenced
-prepare InScopeReferenced InScopeReferenced Referenced
 prepare GlobalReferenced GlobalReferenced Referenced
+prepare InScopeReferenced InScopeReferenced "Referenced Declaration"

@@ -23,6 +23,7 @@
 #include <msSupport.h>
 using namespace MarttaSupport;
 
+#include "KeyEvent.h"
 #include "CodeScene.h"
 #include "EditDelegate.h"
 
