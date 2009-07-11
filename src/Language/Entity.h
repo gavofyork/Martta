@@ -359,7 +359,7 @@ public:
 	// UI
 	/// 
 //	virtual void						decorate(DecorationContext const&) const;
-	virtual EditDelegateFace*			newDelegate(CodeScene*) { return 0; }
+
 	// We've been double-clicked.
 	bool								activated(CodeScene* _s);
 	virtual bool						onActivated(CodeScene*) { return false; }
@@ -384,6 +384,7 @@ public:
 	bool								isEditing() const;
 	bool								isEditing(CodeScene* _s) const;
 	EditDelegateFace*					editDelegate(CodeScene* _s);
+	virtual EditDelegateFace*			newDelegate(CodeScene*) { return 0; }
 	void								clearEditing();
 	void								navigateInto(CodeScene* _s);
 	void								navigateOnto(CodeScene* _s);
@@ -405,7 +406,6 @@ public:
 	void								resetLayoutCache();
 	
 	static void							keyPressEventStarter(KeyEvent* _e, bool _abortive = false);
-	void								keyPressEvent(KeyEvent* _e);
 	void								activateEvent(CodeScene* _s);
 	
 	/// Static helpers.

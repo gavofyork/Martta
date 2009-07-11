@@ -6,6 +6,7 @@ src/moc_*
 src/qrc_*
 src/ui_*
 src/*.moc
+new_src/
 support/build/
 support/libsupport.a
 support/support.xcodeproj/

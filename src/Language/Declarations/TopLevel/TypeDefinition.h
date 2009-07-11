@@ -52,7 +52,7 @@ public:
 	virtual bool						hasSingleCastOperator(TypeEntity const* _t, bool _const) const;
 	virtual inline bool					hasSingleConversionConstructor(TypeEntity const*) const { return false; }
 	virtual bool						defineSimilarityTo(TypeEntity const* _t, TypeEntity::Castability _c) const;
-	virtual List<ValueDefiner*>			applicableMembers(Entity* _s, bool _isConst) const;
+	virtual List<ValueDefiner*>			applicableMembers(Entity const* _s, bool _isConst) const;
 	virtual inline bool					canStandAlone() const { return true; }
 
 	virtual ~TypeDefinition() {}

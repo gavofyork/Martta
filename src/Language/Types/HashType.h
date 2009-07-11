@@ -51,7 +51,7 @@ public:
 protected:
 	virtual bool						hasDefaultConstructor() const { return true; }
 	virtual Types						assignableTypes() const;
-	virtual List<ValueDefiner*>			applicableMembers(Entity* _s = 0, bool _isConst = false) const;
+	virtual List<ValueDefiner*>			applicableMembers(Entity const* _s = 0, bool _isConst = false) const;
 	
 	virtual int							minRequired(int _i) const { return _i == KeyType ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;

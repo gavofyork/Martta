@@ -56,7 +56,7 @@ public:
 protected:
 	virtual bool						hasDefaultConstructor() const;
 	virtual Types						assignableTypes() const;
-	virtual List<ValueDefiner*>			applicableMembers(Entity* _s = 0, bool _isConst = false) const;
+	virtual List<ValueDefiner*>			applicableMembers(Entity const* _s = 0, bool _isConst = false) const;
 	virtual String						code(String const& _middle) const { return (m_subject ? m_subject->asKind<Identifiable>()->reference() : "") + _middle; }
 	virtual bool						contentsEquivalentTo(TypeEntity const* _t) const { return _t->asKind<ExplicitType>()->m_subject == m_subject; }
 	virtual Rgb							idColour() const;

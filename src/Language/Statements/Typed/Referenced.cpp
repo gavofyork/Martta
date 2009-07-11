@@ -18,23 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "Class.h"
-#include "MemberLambda.h"
-#include "Argument.h"
-
-#include "GenericMemberOperation.h"
-
-// For the 'int i' hack - deps could be switched or jettisoned with a registrar, but no immediate advantage. 
-#include "DefaultConstructedVariable.h"
-#include "AssignedVariable.h"
-#include "StringType.h"
-#include "TextLabel.h"
-
-#include "Memberify.h"
-#include "FunctionType.h"
-#include "Const.h"
-#include "Reference.h"
-
 #include "Labelled.h"
 #include "CodeScene.h"
 #include "EditDelegate.h"
@@ -44,71 +27,25 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(Referenced);	
+MARTTA_PLACEHOLDER_CPP(Referenced);	
 
-#define JOIN(X, Y) X ## Y
-#define SET(X) JOIN(X, Set) = JOIN(X, Variables) | JOIN(X, Lambdas)
-
-enum { LocalVariables = 1<<0, LocalLambdas = 1<<1, SET(Local),
-		ArgumentVariables = 1<<2, ArgumentLambdas = 1<<3, SET(Argument),
-  		MemberVariables = 1<<4, MemberLambdas = 1<<5, SET(Member),
-		ScopedVariables = 1<<6, ScopedLambdas = 1<<7, SET(Scoped),
-		GlobalVariables = 1U<<14, GlobalLambdas = 1U<<15, SET(Global) };
-#undef SET
-#undef JOIN
-
-bool Referenced::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
-{
-	if (_p.exists() && _p->isPlaceholder() && _e->text().length() == 1 && _e->text()[0].isLower() && _p->isKind<Typed>() && _p->asKind<Typed>()->ourAllowedTypes().size() && _p->asKind<Typed>()->ourAllowedTypes()[0]->isType<Memberify>())
-	{
-		_e->reinterpretLater();
-		Referenced* r = new Referenced;
-		_p.place(r);
-		r->m_lastSet = MemberLambdas;
-		r->setEditing(_e->codeScene());
-	}
-	else if (_p.exists() && _p->isPlaceholder() && _e->text().length() == 1 && (_e->text()[0].isLower() || _e->text()[0] == L'M' || _e->text()[0] == L'L' || _e->text()[0] == L':' || _e->text()[0] == L'_'))
-	{
-		_e->reinterpretLater();
-		Referenced* r = new Referenced;
-		_p.place(r);
-		r->setEditing(_e->codeScene());
-	}
-	else
-		return false;
-	return true;
-}
-
-Referenced::Referenced(ValueDefiner* _v, bool _specific):
-	m_subject	(0),
-	m_specific	(_specific),
-	m_lastSet	(LocalSet|MemberLambdas|ScopedSet)
+Referenced::Referenced(ValueDefiner* _v):
+	m_subject	(0)
 {
 	setSubject(_v);
 }
 
 bool Referenced::isSuperfluous() const
 {
-	return m_subject.isNull() || Super::isSuperfluous();
+	return !m_subject.isUsable() || Super::isSuperfluous();
 }
 
 String Referenced::code() const
 {
-	if (!m_subject.isNull())
-		if (m_specific)
-			return m_subject->reference();
-		else
-			return m_subject->nonSpecificReference();
+	if (m_subject.isUsable())
+		return m_subject->reference();
 	else
 		return String::null;
-}
-
-Kinds Referenced::ancestralDependencies() const
-{
-	Kinds ret = Kind::of<MemberLambda>();
-	if (!m_subject.isNull() && !parentIs<GenericMemberOperation>() && m_subject->isKind<MemberValue>() && hasAncestor<MemberLambda>() && ancestor<Class>() != m_subject->asKind<MemberValue>()->classType())
-		ret << Kind::of<Class>();
-	return ret;
 }
 
 bool Referenced::isInValidState() const
@@ -116,13 +53,6 @@ bool Referenced::isInValidState() const
 	// If we're not referencing anything yet, return null.
 	if (!m_subject.isUsable())
 		return false;
-		
-	if (!parentIs<GenericMemberOperation>() && m_subject->isKind<MemberValue>() && hasAncestor<MemberLambda>())
-	{
-		AssertNR(hasAncestor<Class>());
-		if (!ancestor<Class>()->membersOf<MemberValue>(ancestor<MemberLambda>()->isConst()).contains(m_subject->asKind<MemberValue>()))
-			return false;
-	}
 	return Super::isInValidState();
 }
 
@@ -131,262 +61,28 @@ Type Referenced::type() const
 	// If we're not referencing anything yet, return null.
 	if (!m_subject.isUsable())
 		return Type();
-	
-	Type t = m_subject->type();
-	// If we're not in a member operation, check if there's some memberification that we can silently discard; 
-	if (!parentIs<GenericMemberOperation>() && t->isType<Memberify>() && hasAncestor<MemberLambda>())
-	{
-		AssertNR(hasAncestor<Class>());
-		// There is; check to see if we can remove it (by being in a scoped parent and assuming the "this->" precedent).
-		Memberify* m = t->asType<Memberify>();
-		AssertNR(m->isKind<Memberify>());
-		if (ancestor<Class>()->baseAccess(m->scope<Class>()) <= Protected)
-		{
-			bool memberIsCallable = m->original()->isType<FunctionType>();
-			bool constScope = ancestor<MemberLambda>()->isConst();
-			bool constMember = memberIsCallable ? m->isConst() : m->original()->isType<Const>();
-			if (constMember || !constMember && !constScope)
-			{
-				// Member Variable/FunctionType inside a method. Either enclosing method is non-const or FunctionType is const.
-				// Allowed.
-				m->unknit();
-			}
-			else if (!memberIsCallable && constScope && !constMember)
-			{
-				// Member Variable referenced inside a const method
-				// Allowed but made const.
-				m->original()->knit<Const>();
-				m->unknit();
-			}
-		}
-	}
-	return t;
+	return m_subject->type();
 }
-
-/*
-void Referenced::decorate(DecorationContext const& _c) const
-{
-	//TODO: Check!
-	if (Entity* e = m_subject ? m_subject->self() : 0)
-	{
-		bool dec = false;
-		if (e->hasAncestor<Namespace>())
-		{
-			if (e->isKind<MemberVariable>())
-				dec = true;
-			else if (e->isKind<Argument>())
-				dec = true;
-		}
-		if (dec)
-		{
-			QRectF r(alignedForUnitPen(_c(1)));
-			r.setWidth(qMin(_c(0).width(), r.height() * 2));
-
-			QRgb c = qRgb(0, 0, 0);
-		
-			QRadialGradient go(_c(1).center(), r.height() * 2);
-			go.setColorAt(0.f, qRgba(c, 32));
-			go.setColorAt(1.f, qRgba(c, 0));
-			_c->setPen(Qt::NoPen);
-			_c->setBrush(go);
-			_c->drawRoundRect(r, 50, 100);
-		}
-	}
-	Super::decorate(_c);
-}*/
 
 String Referenced::defineLayout(ViewKeys const& _k) const
 {
-	String ret = String(m_lastSet&GlobalSet ? "p:/global.svg;" : "");
-	ret += "^;s" + (m_subject ? m_subject->type()->idColour() : TypeEntity::null->idColour()).name() + ";c;'" + (m_subject ? m_subject->name() : String()) + "'";
+	String ret = L"^;s" + (m_subject ? m_subject->type()->idColour() : TypeEntity::null->idColour()).name() + L";c;'" + (m_subject ? m_subject->name() : String()) + L"'";
 	if (m_subject)
 		ret = m_subject->tryKind<Labelled>()->labelLayout(ret, _k);
 	return ret;
 }
 
-class ReferencedEdit: public EditDelegate<Referenced>
-{
-public:
-	ReferencedEdit(Referenced* _e, CodeScene* _s);
-
-	virtual void				leavingEditIntact();
-	virtual void				commit();
-	virtual bool				keyPressed(KeyEvent const* _e);
-	virtual bool				isValid() const;
-	virtual String				defineLayout(ViewKeys const&) const;
-	
-private:
-	void						setSubset(uint _s) { subject()->m_lastSet = _s; updateSubset(); } 
-	void						updateSubset();
-	void						updateCompletion();
-
-	String						m_completion;
-	String						m_entityName;
-	ValueDefiner*				m_entity;
-
-	// Actual scope the symbol will be in
-	List<ValueDefiner*>			m_valuesInScope;
-	bool						m_immediateCommits;
-};
-
 EditDelegateFace* Referenced::newDelegate(CodeScene* _s)
 {
-	return new ReferencedEdit(this, _s);
+	return new CompletionDelegate<Referenced, ValueDefiner*>(this, _s);
 }
 
-ReferencedEdit::ReferencedEdit(Referenced* _e, CodeScene* _s): EditDelegate<Referenced>(_e, _s)
+String Referenced::defineEditLayout(ViewKeys const& _k, ValueDefiner* _v)
 {
-	m_immediateCommits = !_e->isPlaceholder();
-	m_entity = subject()->subject();
-	m_entityName = m_entity ? m_entity->name() : "";
-	tryCommit();
-	updateSubset();
-}
-
-void ReferencedEdit::leavingEditIntact()
-{
-	if (m_subject && m_subject->isInModel() && !isValid() && !m_entityName.isEmpty())
-	{
-		Entity* e = 0;
-		if (m_subject->over().allowedToBeKind<DefaultConstructedVariable>())
-			e = new DefaultConstructedVariable;
-		else if (m_subject->over().allowedToBeKind<AssignedVariable>())
-			e = new AssignedVariable;
-		if (e)
-		{
-			e->prepareChildren();
-			int x;
-			if ((x = BuiltinType::id(m_entityName)) != -1)
-			{
-				e->childOf<TypeEntity>()->replace(new BuiltinType(x));
-				codeScene()->silentlySetCurrent(e->child(Identifiable::Identity));	// set to the place where the user expects the cursor to be (silently, sicne we might (possibly) already be in a setCurrent!).
-			}
-			else if (m_entityName == "string")
-			{
-				e->childOf<TypeEntity>()->replace(new StringType);
-				codeScene()->silentlySetCurrent(e->child(Identifiable::Identity));	// set to the place where the user expects the cursor to be (silently, sicne we might (possibly) already be in a setCurrent!).
-			}
-			else
-			{
-				AssertNR(e->childIs<TextLabel>(Identifiable::Identity));
-				e->childAs<TextLabel>(Identifiable::Identity)->setText(m_entityName);
-				codeScene()->silentlySetCurrent(e->childOf<TypeEntity>());							// set to the place where the user expects the cursor to be (silently, sicne we might (possibly) already be in a setCurrent!).
-			}
-			
-			// set subject to zero so we don't go through this again when the kill()ed subject gets removed from the scene.
-			Entity* s = m_subject;
-			m_subject = 0;
-			s->replace(e);
-			// We have now been deleted.
-		}
-	}
-}
-
-String ReferencedEdit::defineLayout(ViewKeys const&) const
-{
-	return String(subject()->m_lastSet&GlobalSet ? "p:/global.svg;" : "") + "^;s" + (subject()->m_subject ? subject()->m_subject->type()->idColour() : TypeEntity::null->idColour()).name() + ";'" + m_entityName + "';s;ygrayed;'" + m_completion + "'";
-}
-
-void ReferencedEdit::updateSubset()
-{
-	m_valuesInScope.clear();
-	if (subject()->m_lastSet & LocalSet)
-		m_valuesInScope << castEntities<ValueDefiner>(subject()->valuesInLocalScope());	// TODO: Change over
-	if (subject()->m_lastSet & ScopedSet)
-		m_valuesInScope << castEntities<ValueDefiner>(subject()->ancestor<Declaration>()->valuesKnown());
-	if (subject()->m_lastSet & GlobalSet)
-		m_valuesInScope << subject()->root()->childrenOf<ValueDefiner>();
-	if (subject()->m_lastSet & ArgumentSet && subject()->hasAncestor<LambdaNamer>())
-		for (int i = 0; i < subject()->ancestor<LambdaNamer>()->argumentCount(); i++)
-			m_valuesInScope << subject()->ancestor<LambdaNamer>()->argument(i);
-	if (subject()->m_lastSet & MemberSet)
-	{
-		Type method = Type(FunctionType(false, true)).topWith(Memberify()).topWith(Reference());
-		foreach (Type t, subject()->ourAllowedTypes())
-		{
-			List<ValueDefiner*> appMems;
-			if (t->isType<Memberify>() && t->asType<Memberify>()->scope())
-				appMems = t->asType<Memberify>()->scope()->applicableMembers(subject(), t->asType<Memberify>()->isConst());
-			else if (subject()->hasAncestor<Class>())
-				appMems = castEntities<ValueDefiner>(subject()->ancestor<Class>()->membersOf<MemberValue>(subject()->hasAncestor<MemberLambda>() ? subject()->ancestor<MemberLambda>()->isConst() : false));
-			if (subject()->m_lastSet & MemberSet == MemberVariables)
-				appMems = filterTypedsInv<ValueDefiner>(method, appMems);
-			else if (subject()->m_lastSet & MemberSet == MemberLambdas)
-				appMems = filterTypeds<ValueDefiner>(method, appMems);
-			m_valuesInScope << appMems;
-		}
-	}
-}
-
-void ReferencedEdit::commit()
-{
-	subject()->setSubject(m_entity);
-}
-
-bool ReferencedEdit::keyPressed(KeyEvent const* _e)
-{
-	if (_e->text() == L"\t")
-		m_entityName += m_completion;
-	else if (_e->text() == L"\b" && m_entityName.length())
-	{
-		if (_e->modifiers() == KeyEvent::ControlModifier)
-			m_entityName.chop(1);
-		else
-		{
-			int potentials = nameStarts(m_valuesInScope, m_entityName).size();
-			while (nameStarts(m_valuesInScope, m_entityName).size() == potentials && m_entityName.length())
-				m_entityName.chop(1);
-		}
-	}
-	else if (_e->text() == L"\b" && !m_entityName.length())
-		setSubset(LocalSet|MemberLambdas);
-	else if (_e->text() == "_" && !m_entityName.length())
-		setSubset(ArgumentSet);
-	else if (_e->text() == "M" && !m_entityName.length())
-		setSubset(MemberVariables);
-	else if (_e->text() == "L" && !m_entityName.length())
-		setSubset(LocalSet);
-	else if (_e->text() == ":" && !m_entityName.length())
-		setSubset(GlobalSet);
-	else if (_e->text().length() == 1 && (_e->text()[0].isLower() || (_e->text()[0].isAlphaNumeric() || _e->text()[0] == L'_') && m_entityName.length()))
-		m_entityName += _e->text().toLower();
-	else if (_e->text() == " " || _e->text() == "[" || _e->text() == "#")
-	{
-		codeScene()->leaveEdit();
-		_e->reinterpretLater();	// since we may have been deleted and replaced with e.g. a variable, we want appropriately.
-		return true;
-	}
-	else
-		return false;
-	updateCompletion();
-	m_entity = 0;
-	if (!(m_entityName + m_completion).isEmpty())
-		foreach (ValueDefiner* t, m_valuesInScope)
-			if (t->name() == m_entityName + m_completion)
-				m_entity = t;
-	return true;
-}
-
-bool ReferencedEdit::isValid() const
-{
-	return m_entity;
-}
-
-void ReferencedEdit::updateCompletion()
-{
-	m_completion = "";
-	List<ValueDefiner*> potentials = nameStarts(m_valuesInScope, m_entityName);
-	if (potentials.size() == 1)
-	{
-		m_completion = potentials[0]->name().mid(m_entityName.size());
-		m_entityName = potentials[0]->name().left(m_entityName.size());
-	}
-	else if (potentials.size())
-	{
-		while (nameStarts(m_valuesInScope, m_entityName + m_completion).size() == potentials.size())
-			m_completion += potentials[0]->name()[m_entityName.size() + m_completion.size()];
-		m_completion.chop(1);
-	}
+	String ret = L"^;s" + (_v ? _v->type()->idColour() : TypeEntity::null->idColour()).name() + L";c;%1";
+	if (_v)
+		ret = _v->tryKind<Labelled>()->labelLayout(ret, _k);
+	return ret;
 }
 
 }

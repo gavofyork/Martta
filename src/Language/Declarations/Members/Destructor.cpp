@@ -18,7 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "Class.h"
+#include "TypeDefinition.h"
 #include "Compound.h"
 #include "Destructor.h"
 
@@ -41,12 +41,12 @@ Kinds Destructor::allowedKinds(int _i) const
 
 String Destructor::name() const
 {
-	return "~" + classType()->name();
+	return "~" + typeDefinition()->name();
 }
 
 String Destructor::codeName() const
 {
-	return "~" + classType()->codeName();
+	return "~" + typeDefinition()->codeName();
 }
 
 String Destructor::basicCode(FunctionCodeScope _ref) const

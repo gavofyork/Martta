@@ -60,7 +60,7 @@ protected:
 	virtual bool						defineSimilarityTo(TypeEntity const* _t, TypeEntity::Castability _c) const;
 	virtual Types						assignableTypes() const;
 	virtual Entity*						isExpander() const;
-	virtual List<ValueDefiner*>			applicableMembers(Entity* _s, bool _isConst) const;
+	virtual List<ValueDefiner*>			applicableMembers(Entity const* _s, bool _isConst) const;
 	virtual bool						canStandAlone() const;
 	
 private:

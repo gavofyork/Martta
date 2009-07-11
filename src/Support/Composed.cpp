@@ -6,6 +6,7 @@
 #include "Support/CullManager.cpp"
 #include "Support/Dier.cpp"
 #include "Support/EditDelegate.cpp"
+#include "Support/IdentifierSetRegistrar.cpp"
 #include "Support/KeyEvent.cpp"
 #include "Support/Kind.cpp"
 #include "Support/Location.cpp"

@@ -93,7 +93,7 @@ public:
 	virtual bool						hasDefaultConstructor() const { return false; }
 	/// Types that assignment operator may take on right hand side, assuming left hand side is a reference to this type.
 	virtual Types						assignableTypes() const;
-	virtual List<ValueDefiner*>			applicableMembers(Entity* /*_s*/ = 0, bool /*_isConst*/ = false) const { return List<ValueDefiner*>(); }
+	virtual List<ValueDefiner*>			applicableMembers(Entity const* /*_s*/ = 0, bool /*_isConst*/ = false) const { return List<ValueDefiner*>(); }
 	
 	/// isType/asType: They ignore qualifiers and test for/identify the physical type stored.
 	/// In terms of C++, Reference and Const are considered physically transparent (though
@@ -163,6 +163,10 @@ protected:
 	
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity*) { changed(); }
+	
+	// TypeEntity should not defer to Entity for [a-z] keypress. Instead it should attempting to insert a specific TypeEntity
+	// (actually a BuiltType, but we're not to know). This might be changed in the future.
+	virtual bool						keyPressed(KeyEvent const*_e) { return attemptInsert(_e); }
 	
 private:
 	/// Returns an exact copy of this tree, except that the top is owned by _t.

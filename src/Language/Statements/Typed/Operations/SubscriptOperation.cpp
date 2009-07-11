@@ -81,7 +81,7 @@ bool SubscriptOperation::keyPressed(KeyEvent const* _e)
 
 bool SubscriptOperation::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
-	if (_p.exists() && !_p->isPlaceholder()/* && _p->isKind<Typed>() && SubscriptableRegistrar::get()->m_acceptable.values().contains(_p->asKind<Typed>()->type())*/)
+	if (_p.exists() && !_p->isPlaceholder()/* && _p->isKind<Typed>() && SubscriptableRegistrar::get()->m_acceptable.values().contains(_p->asKind<Typed>()->apparentType())*/)
 		return simpleKeyPressedOnPositionHandler<SubscriptOperation>(_p, _e, "[", 2, LeftAssociativity);
 	else
 		return false;

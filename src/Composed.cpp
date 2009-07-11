@@ -3,7 +3,6 @@
 #include "./coreTests.cpp"
 #include "./main.cpp"
 #include "./moc_CodeView.cpp"
-#include "./moc_CullManager.cpp"
 #include "./moc_MainWindow.cpp"
 #include "./moc_Project.cpp"
 #include "./qrc_Operators.cpp"

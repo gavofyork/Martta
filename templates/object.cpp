@@ -25,7 +25,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(_NAME_);
 
-bool _NAME_::keyPressed(EntityKeyEvent const* _e)
+bool _NAME_::keyPressed(KeyEvent const* _e)
 {
 	return Super::keyPressed(_e);
 }
@@ -35,7 +35,7 @@ Kinds _NAME_::allowedKinds(int _i) const
 	return Super::allowedKinds(_i);
 }
 
-QString _NAME_::defineLayout(ViewKeys& _k) const
+String _NAME_::defineLayout(ViewKeys& _k) const
 {
 	return Super::defineLayout(_k);
 }

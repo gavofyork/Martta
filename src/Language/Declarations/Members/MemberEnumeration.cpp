@@ -19,6 +19,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "TextLabel.h"
+#include "ExplicitType.h"
 #include "EnumValue.h"
 #include "MemberEnumeration.h"
 

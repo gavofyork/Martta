@@ -213,11 +213,11 @@ Types StringType::assignableTypes() const
 	return Type(*this).topWith(Const()).topWith(Reference()), Type(Char).topWith(Const()).topWith(Pointer()), Type(Char), Type(Wchar);
 }
 
-List<ValueDefiner*> StringType::applicableMembers(Entity*, bool _isConst) const
+List<ValueDefiner*> StringType::applicableMembers(Entity const*, bool _isConst) const
 {
 	List<ValueDefiner*> ret;
 	foreach (BuiltinMethod* i, s_members)
-		if (i->type()->asType<Memberify>()->isConst() || !_isConst)
+		if (i->apparentType()->asType<Memberify>()->isConst() || !_isConst)
 			ret += i;
 	return ret;
 }

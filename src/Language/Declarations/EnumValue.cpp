@@ -23,7 +23,8 @@
 #include "ExplicitType.h"
 #include "Typed.h"
 #include "TextLabel.h"
-#include "Enumeration.h"
+
+#include "EnumerationNamer.h"
 #include "EnumValue.h"
 
 namespace Martta
@@ -60,7 +61,7 @@ bool EnumValue::isChildInValidState(int _i) const
 	if (childIs<Typed>(_i))
 	{
 		foreach (Type i, Types() << Type(Int))
-			if (childAs<Typed>(_i)->type().isSimilarTo(i, TypeEntity::BasicallyConvertible))
+			if (childAs<Typed>(_i)->apparentType().isSimilarTo(i, TypeEntity::BasicallyConvertible))
 				return true;
 		return false;
 	}
@@ -81,7 +82,7 @@ String EnumValue::defineLayout(ViewKeys const&) const
 
 bool EnumValue::isSuperfluous() const
 {
-	return childAs<TextLabel>(Identity)->text().isEmpty();
+	return childAs<TextLabel>(Identity)->text().isEmpty() && !isNecessary() || Super::isSuperfluous();
 }
 
 String EnumValue::code() const

@@ -39,7 +39,7 @@ bool TypeDefinition::defineSimilarityTo(TypeEntity const* _t, TypeEntity::Castab
 	return false;
 }
 
-List<ValueDefiner*> TypeDefinition::applicableMembers(Entity*, bool) const
+List<ValueDefiner*> TypeDefinition::applicableMembers(Entity const*, bool) const
 {
 	return List<ValueDefiner*>();
 }

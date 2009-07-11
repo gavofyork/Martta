@@ -38,6 +38,16 @@ int changeTests();
 
 char const* s_asserted;
 
+#define MS_TEST_EXISTANCE_1(bar)\
+enum bar##MethodExistsTrue {};\
+enum bar##MethodExistsFalse {};\
+template<class T, class A, void (T::*)(A)> struct bar##MethodExistsStruct1 {};\
+template<class T, class A> bar##MethodExistsFalse& bar##IfMethodExists1(...) { return *(bar##MethodExistsFalse*)0; }\
+template<class T, class A> bar##MethodExistsTrue& bar##IfMethodExists1(bar##MethodExistsStruct1<T, A, &T::bar>*) { return *(bar##MethodExistsTrue*)0; }\
+template<class T, class A> inline void __TEST_##bar(T& _a, A _arg, bar##MethodExistsTrue&) { _a.bar(_arg); }\
+template<class T, class A> inline void __TEST_##bar(T&, A, bar##MethodExistsFalse&){}\
+template<class T, class A> inline void bar(T& _a, A _arg) { __TEST_##bar(_a, _arg, bar##IfMethodExists1<T, A>(0)); }
+
 #if defined(DEBUG)
 namespace MarttaTest
 {
@@ -49,6 +59,8 @@ void assertFailed(int _line, char const* _file, char const* _function, char cons
 }
 }
 #endif
+
+MS_TEST_EXISTANCE_1(resize)
 
 int test()
 {
@@ -65,6 +77,15 @@ int test()
 		s_asserted = 0;
 	}
 #endif
+	
+	TEST("Method existance")
+	{
+		String s = L"Hello world!";
+		resize(s, 5u);
+		FAILED_IF(s != L"Hello");
+		int i;
+		resize(i, 5);
+	}
 	
 	failed += supportTests();
 	TEST("Auxilliaries Initialisation")

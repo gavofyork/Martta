@@ -138,15 +138,19 @@ void CodeView::setEditing(Entity* _e)
 {
 	if (_e == editEntity())
 		return;
+		
+	mDebug() << "Changing editing...";
 	
 	if (m_editDelegate)
 	{
 		// If the edit delegate is half-way to destruction, we can allow it to have a null subject.
 		AssertNR(m_editDelegate->subject() == m_current || m_current->usurpsChild(m_editDelegate->subject()) || !m_editDelegate->subject());
+		mDebug() << "Leaving editing...";
 		if (m_visible.contains(m_editDelegate->subject()))
 		{
 			editDelegate()->tryCommit();
 			m_leavingEdit = true;
+			mDebug() << "Leaving editing intact...";
 			m_editDelegate->leavingEditIntact();
 			// at this point, m_editDelegate and m_current may no longer be valid.
 			m_leavingEdit = false;

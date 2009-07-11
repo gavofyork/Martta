@@ -47,7 +47,7 @@ Types ExplicitType::assignableTypes() const
 	return m_subject ? m_subject->assignableTypes() : Types();
 }
 
-List<ValueDefiner*> ExplicitType::applicableMembers(Entity* _s, bool _isConst) const
+List<ValueDefiner*> ExplicitType::applicableMembers(Entity const* _s, bool _isConst) const
 {
 	if (m_subject)
 		return m_subject->applicableMembers(_s, _isConst);

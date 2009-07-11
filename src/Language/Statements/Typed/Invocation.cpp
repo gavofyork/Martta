@@ -134,7 +134,7 @@ bool Invocation::keyPressed(KeyEvent const* _e)
 bool Invocation::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
 	if (_p.exists() && !_p->isPlaceholder() && _p->isKind<Typed>() && _e->text() == "(" &&
-		_p->asKind<Typed>()->type()->isType<FunctionType>() && !(_p->parentIs<Invocation>() && _p->index() == Callee) && !isTemporary(_p.entity()))
+		_p->asKind<Typed>()->apparentType()->isType<FunctionType>() && !(_p->parentIs<Invocation>() && _p->index() == Callee) && !isTemporary(_p.entity()))
 	{
 		Entity* n = new Invocation;
 		_p->insert(n, Callee);

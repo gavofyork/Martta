@@ -21,10 +21,13 @@
 #pragma once
 
 #include <msSupport.h>
+using namespace MarttaSupport;
 
+#include "KeyEvent.h"
+#include "CodeScene.h"
 #include "EditDelegate.h"
 
-MS_TEST_METHOD_EXISTANCE(committed)
+MS_TEST_METHOD_EXISTANCE_1(committed)
 
 namespace Martta
 {
@@ -64,7 +67,8 @@ public:
 	}
 	virtual void leavingEditIntact()
 	{
-		::MarttaSupport::committed<T>(*EditDelegate<T>::subject());
+		mDebug() << "leaving edit intact with " << m_selection;
+		committed<T, R>(*EditDelegate<T>::subject(), m_selection);
 	}
 	virtual void commit()
 	{
@@ -86,7 +90,14 @@ public:
 	virtual bool keyPressed(KeyEvent const* _e)
 	{
 		if (_e->text() == L"\b" && m_name.size() > 1)
-			m_name.chop(1);
+			if (_e->modifiers() == KeyEvent::ControlModifier)
+				m_name.chop(1);
+			else
+			{
+				int potentials = nameStarts(m_possibilities, m_name).size();
+				while (nameStarts(m_possibilities, m_name).size() == potentials && m_name.length())
+					m_name.chop(1);
+			}
 		else if (_e->text().length() == 1 && _e->text()[0].isLetter())
 			m_name += _e->text();
 		else if (_e->text() == L"\t")

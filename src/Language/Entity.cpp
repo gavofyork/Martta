@@ -18,13 +18,14 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include <msSupport.h>
+using namespace MarttaSupport;
+
 #include "CullManager.h"
 #include "CodeScene.h"
 #include "EditDelegate.h"
+#include "CompletionDelegate.h"
 #include "Entity.h"
-
-#include <msSupport.h>
-using namespace MarttaSupport;
 
 namespace Martta
 {
@@ -494,21 +495,7 @@ void Entity::keyPressEventStarter(KeyEvent* _e, bool _abortive)
 			return;
 	}
 }
-void Entity::keyPressEvent(KeyEvent* _e)
-{
-	if (keyPressed(_e) || attemptInsert(_e))
-	{
-		_e->accept();
-		return;
-	}
-	
-	if (parent())
-	{
-		_e->setIsFocused(false);
-		_e->setFocalIndex(index());
-		parent()->keyPressEvent(_e);
-	}
-}
+
 bool Entity::keyPressed(KeyEvent const* _e)
 {
 	Position p = over();

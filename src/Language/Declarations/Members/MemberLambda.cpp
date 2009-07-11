@@ -18,12 +18,12 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "TypeDefinition.h"
+#include "ExplicitType.h"
 #include "Const.h"
 #include "Pointer.h"
 #include "ConstLabel.h"
 #include "Compound.h"
-#include "Reference.h"
-#include "Memberify.h"
 #include "Argument.h"
 #include "MemberLambda.h"
 
@@ -85,13 +85,13 @@ String MemberLambda::basicCode(FunctionCodeScope _ref) const
 List<Declaration*> MemberLambda::utilised() const
 {
 	List<Declaration*> l = Super::utilised();
-	l.removeAll(ancestor<Class>());
+	l.removeAll(ancestor<TypeDefinition>()->tryKind<Declaration>());
 	return l;
 }
 
 Type MemberLambda::thisType() const
 {
-	Type t(classType());
+	Type t(typeDefinition());
 	if (isConst())
 		t.topWith(Const());
 	return t.topWith(Pointer());

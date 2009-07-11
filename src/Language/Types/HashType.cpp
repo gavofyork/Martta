@@ -136,7 +136,7 @@ Types HashType::assignableTypes() const
 	return Type(*this);
 }
 
-List<ValueDefiner*> HashType::applicableMembers(Entity*, bool _isConst) const
+List<ValueDefiner*> HashType::applicableMembers(Entity const*, bool _isConst) const
 {
 	List<ValueDefiner*> ret;
 	foreach (BuiltinMethod* i, s_members)

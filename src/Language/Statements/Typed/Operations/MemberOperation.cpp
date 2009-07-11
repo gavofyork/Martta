@@ -59,7 +59,7 @@ String MemberOperation::code() const
 bool MemberOperation::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
 	if (_p.exists() && !_p->isPlaceholder() && _p->isKind<Typed>() &&
-		_p->asKind<Typed>()->type()->isType<Reference>())
+		_p->asKind<Typed>()->apparentType()->isType<Reference>())
 		return simpleKeyPressedOnPositionHandler<MemberOperation>(_p, _e, ".", 2, LeftAssociativity);
 	else
 		return false;

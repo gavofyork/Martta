@@ -26,8 +26,6 @@
 namespace Martta
 {
 
-class Enumeration;
-
 class EnumValue: public Declaration, public_interface ValueDefiner
 {
 	MARTTA_OBJECT(Declaration)

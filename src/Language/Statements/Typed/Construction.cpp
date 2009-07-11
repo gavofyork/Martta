@@ -59,7 +59,7 @@ Type Construction::type() const
 {
 	if (!m_subject.isUsable())
 		return Type();
-	return Type(m_subject->classType()).topWith(Reference());
+	return Type(m_subject->typeDefinition()).topWith(Reference());
 }
 
 String Construction::code() const

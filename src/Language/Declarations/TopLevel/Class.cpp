@@ -321,7 +321,7 @@ Types Class::assignableTypes() const
 	return ret;
 }
 
-List<ValueDefiner*> Class::applicableMembers(Entity* _s, bool _isConst) const
+List<ValueDefiner*> Class::applicableMembers(Entity const* _s, bool _isConst) const
 {
 	Access a = Public;
 	Class* classScope = _s->ancestor<Class>();

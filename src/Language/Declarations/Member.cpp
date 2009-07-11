@@ -18,7 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "Class.h"
+#include "TypeDefinition.h"
 #include "TextLabel.h"
 #include "AccessLabel.h"
 #include "Member.h"
@@ -33,9 +33,9 @@ Access Member::access() const
 	return isComplete() ? childAs<AccessLabel>(Accessibility)->access() : NoAccess;
 }
 
-Class* Member::classType() const
+TypeDefinition* Member::typeDefinition() const
 {
-	return parentAs<Class>();
+	return parentAs<TypeDefinition>();
 }
 
 Kinds Member::allowedKinds(int _i) const
