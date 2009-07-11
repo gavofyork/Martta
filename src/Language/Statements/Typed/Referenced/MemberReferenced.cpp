@@ -50,7 +50,7 @@ bool MemberReferenced::keyPressed(KeyEvent const* _e)
 Kinds MemberReferenced::ancestralDependencies() const
 {
 	Kinds ret = Kind::of<MemberLambda>();
-	if (!m_subject.isNull() && !parentIs<GenericMemberOperation>() && m_subject->isKind<MemberValue>() && hasAncestor<MemberLambda>() && ancestor<Class>() != m_subject->asKind<MemberValue>()->classType())
+	if (!m_subject.isNull() && !parentIs<GenericMemberOperation>() && m_subject->isKind<MemberValue>() && hasAncestor<MemberLambda>() && ancestor<TypeDefinition>() != m_subject->asKind<MemberValue>()->typeDefinition())
 		ret << Kind::of<Class>();
 	return ret;
 }

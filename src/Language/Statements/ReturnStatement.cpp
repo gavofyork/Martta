@@ -19,11 +19,12 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include <msDebug.h>
+using namespace MarttaSupport;
 
 #include "Typed.h"
-#include "Function.h"
-#include "ReturnStatement.h"
 #include "Type.h"
+#include "BuiltinType.h"
+#include "ReturnStatement.h"
 
 namespace Martta
 {

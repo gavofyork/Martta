@@ -20,10 +20,10 @@
 
 #pragma once
 
-#include "Compound.h"
-#include "Variable.h"
 #include "LambdaNamer.h"
-#include "Declaration.h"
+#include "Location.h"
+#include "Compound.h"
+#include "TopLevel.h"
 
 namespace Martta
 {

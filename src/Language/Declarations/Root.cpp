@@ -18,7 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "TopLevelType.h"
+#include "TopLevel.h"
 #include "Root.h"
 
 namespace Martta

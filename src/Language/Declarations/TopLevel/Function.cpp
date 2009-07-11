@@ -18,7 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "TextLabel.h"
 #include "Compound.h"
 #include "Argument.h"
 #include "Function.h"

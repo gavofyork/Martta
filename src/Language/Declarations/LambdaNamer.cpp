@@ -18,13 +18,13 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "KeyEvent.h"
-#include "IdLabel.h"
+#include "Argument.h"
+#include "Compound.h"
 #include "Primary.h"
 #include "FunctionType.h"
 #include "Reference.h"
-#include "Argument.h"
-#include "Compound.h"
+#include "IdLabel.h"
+#include "KeyEvent.h"
 #include "LambdaNamer.h"
 
 namespace Martta

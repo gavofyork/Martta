@@ -25,6 +25,7 @@
 #include <QStringList>
 
 #include "Entity.h"
+#include "Variable.h"
 #include "Function.h"
 
 class QDomElement;

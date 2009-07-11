@@ -20,7 +20,7 @@
 
 #include "Const.h"
 #include "Reference.h"
-#include "Class.h"
+#include "ExplicitType.h"
 #include "ArtificialCopyConstructor.h"
 
 namespace Martta
@@ -30,7 +30,7 @@ MARTTA_OBJECT_CPP(ArtificialCopyConstructor);
 
 Type ArtificialCopyConstructor::argumentType(int) const
 {
-	return Type(classType()).topWith(Const()).topWith(Reference());
+	return Type(typeDefinition()).topWith(Const()).topWith(Reference());
 }
 
 }

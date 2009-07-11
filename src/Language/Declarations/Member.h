@@ -26,7 +26,7 @@
 namespace Martta
 {
 
-class Class;
+class TypeDefintion;
 
 /**
  * Class for any entity that can be found inside a class (i.e. with an access attribute).
@@ -39,7 +39,7 @@ public:
 	enum { Accessibility = FirstNamed, EndOfNamed };
 	
 	virtual Access						access() const;
-	Class*								classType() const;
+	TypeDefinition*						typeDefinition() const;
 	
 	virtual String						interfaceCode() const;
 	virtual String						implementationCode() const { return memberImplementationCode(); }

@@ -20,7 +20,6 @@
 
 #include "AccessLabel.h"
 #include "ExplicitType.h"
-#include "Class.h"
 #include "Compound.h"
 #include "Argument.h"
 #include "Reference.h"
@@ -44,12 +43,12 @@ bool Constructor::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 
 String Constructor::name() const
 {
-	return classType()->name();
+	return typeDefinition()->name();
 }
 
 String Constructor::codeName() const
 {
-	return classType()->codeName();
+	return typeDefinition()->codeName();
 }
 
 Kinds Constructor::allowedKinds(int _i) const
@@ -68,13 +67,13 @@ bool Constructor::isInValidState() const
 	if (!Super::isInValidState())
 		return false;
 	if (argumentCount() == 1)
-		return Type(*argumentType(0)->ignore<Const>()) != Type(classType());
+		return Type(*argumentType(0)->ignore<Const>()) != Type(typeDefinition());
 	return true;
 }
 
 Type Constructor::returns() const
 {
-	return Type(classType()).topWith(Reference());
+	return Type(typeDefinition()).topWith(Reference());
 }
 
 }

@@ -20,6 +20,8 @@ else
 	support="$2"
 fi
 
+only=$3
+
 echo "Preparing Martta language build tree."
 echo "Root: $root"
 
@@ -28,6 +30,13 @@ function prepare()
 local name="$1"	
 local files="$2"
 local depends="$3"
+
+if [[ "x$only" != "x" ]]; then
+if [[ "$only" != "$name" ]]; then
+return
+fi
+fi
+
 
 echo "Preparing plugin $name..."
 
@@ -175,3 +184,53 @@ prepare Referenced Referenced "Statement TextLabel IdentifierSet"
 prepare LocalReferenced LocalReferenced Referenced
 prepare GlobalReferenced GlobalReferenced Referenced
 prepare InScopeReferenced InScopeReferenced "Referenced Declaration"
+
+prepare TopLevel TopLevel "Declaration TextLabel"
+prepare Root Root "TopLevel Declaration"
+
+prepare VariableNamer VariableNamer "QualifierTypes IdLabel TextLabel ValueDefiner"
+prepare Argument Argument "VariableNamer TypeEntity TextLabel Declaration"
+prepare CQualifiers CQualifiers ""
+prepare LambdaNamer LambdaNamer "Argument Compound Statement FunctionType QualifierTypes IdLabel CQualifiers"
+prepare ReturnStatement ReturnStatement "LambdaNamer Statement BuiltinType"
+prepare StatementVariables "AssignedVariable DefaultConstructedVariable ConstructedVariable" "VariableNamer Statement TypeEntity"
+
+prepare ArgumentReferenced ArgumentReferenced "Referenced LambdaNamer Declaration"
+
+prepare EnumerationNamer "EnumerationNamer EnumValue" "TextLabel EnumValue ValueDefiner ExplicitType Declaration BuiltinType Statement"
+
+prepare Location Location ""
+prepare Variable Variable "CQualifiers Location VariableNamer TopLevel"
+prepare Function Function "CQualifiers Location LambdaNamer TopLevel"
+
+prepare TopLevelType TopLevelType "TypeEntity ExplicitType Location TopLevel"
+
+prepare Namespace Namespace "TopLevel TopLevelType"
+
+prepare Struct Struct TopLevelType
+prepare Typedef Typedef "TopLevelType Struct"
+prepare Union Union TopLevelType
+prepare Enumeration Enumeration "EnumerationNamer TopLevelType"
+
+prepare Member Member "Labels ExplicitType Declaration"
+prepare MemberEnumeration MemberEnumeration "Member EnumerationNamer"
+prepare MemberValue MemberValue "Member ValueDefiner QualiferTypes Memberify"
+prepare MemberVariable MemberVariable "MemberValue VariableNamer"
+prepare MemberLambda MemberLambda "ExplicitType AddressType QualiferTypes Compound Argument MemberValue LambdaNamer"
+
+prepare ThisPointer ThisPointer "Statement MemberLambda"
+
+prepare Method Method MemberLambda
+prepare MethodOperator MethodOperator "MemberLambda Operator Labels BuiltinType"
+prepare ConversionOperator ConversionOperator "MemberLambda Labels"
+prepare Constructor Constructor "MemberLambda ExplicitType Labels QualifierTypes"
+prepare Construction Construction "Invocation Constructor ExplicitType QualifierTypes"
+
+prepare Destructor Destructor MemberLambda
+
+
+prepare Artificials "Interfaces/Artificial ArtificialAssignmentOperator ArtificialCopyConstructor ArtificialDefaultConstructor" "Constructor MethodOperator QualifierTypes ExplicitType"
+
+prepare Class "Class Base VirtualBase Virtual VirtualMethod VirtualOverload VirtualPure" "TopLevelType Memberify Destructor Method MethodOperator ConversionOperator Constructor Destructor MemberEnumeration MemberVariable Artificials"
+
+prepare MemberReferenced MemberReferenced "Class Referenced MemberOperations"

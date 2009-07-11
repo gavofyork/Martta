@@ -21,7 +21,6 @@
 #include "TextLabel.h"
 #include "TypeEntity.h"
 #include "Reference.h"
-#include "Class.h"
 #include "MemberVariable.h"
 
 namespace Martta

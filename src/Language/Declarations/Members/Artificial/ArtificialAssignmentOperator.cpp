@@ -20,7 +20,6 @@
 
 #include "Const.h"
 #include "Reference.h"
-#include "Class.h"
 #include "ExplicitType.h"
 #include "ArtificialAssignmentOperator.h"
 
@@ -31,12 +30,12 @@ MARTTA_OBJECT_CPP(ArtificialAssignmentOperator);
 
 Type ArtificialAssignmentOperator::argumentType(int) const
 {
-	return Type(ancestor<Class>()).topWith(Const()).topWith(Reference());
+	return Type(ancestor<TypeDefinition>()).topWith(Const()).topWith(Reference());
 }
 
 Type ArtificialAssignmentOperator::returns() const
 {
-	return Type(ancestor<Class>()).topWith(Reference());
+	return Type(ancestor<TypeDefinition>()).topWith(Reference());
 }
 
 }

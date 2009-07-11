@@ -18,11 +18,11 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "CodeScene.h"
-#include "Class.h"
-#include "TextLabel.h"
 #include "EnumValue.h"
-#include "Enumeration.h"
+#include "ExplicitType.h"
+#include "TextLabel.h"
+#include "CodeScene.h"
+#include "EnumerationNamer.h"
 
 namespace Martta
 {
