@@ -25,9 +25,8 @@ Small things:
 - BRINGBACK decoration code into layout system and markup for it.
 - BRINGBACK GenericMemberOperation::isChildInValidState - do what it says.
 Dynamic code-loading (plugins).
-- ThisPointer (MemberLambda)
-- Construction (Constructor, Class?)
-- Referenced as placeholder (no key press handling)
+- Dependency-specifier files.
+- Referenced as placeholder (no key press handling)
   - QUICK Vim-style tab cycling of possibles.
   - BRINGBACK Colouring (layout) of possibles (Entity::defineEditLayout(ViewKeysC&, Named*)
   - BRINGBACK Method names register with IdentifierSet

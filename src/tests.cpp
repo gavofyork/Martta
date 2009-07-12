@@ -90,10 +90,25 @@ int test()
 	failed += supportTests();
 	TEST("Auxilliaries Initialisation")
 		AuxilliaryRegistrar::get()->jigCache();
+		
+	TEST("Entity evaluator")
+	{
+		Entity* e = Entity::evaluate(L"Root");
+		UNLESS(e->kind().name() == L"Martta::Root")("Couldn't create root entity through evaluation");
+		TypeEntity* te = Entity::evaluate(L"BuiltinType[id=0]")->asKind<TypeEntity>();
+		UNLESS(te->code() == L"void")("Couldn't create void type entity through evaluation");
+		delete te;
+		te = Entity::evaluate(L"Const{BuiltinType[id=16]}")->asKind<TypeEntity>();
+		UNLESS(te->code() == L"int const")("Couldn't create int const type entity through evaluation");
+		delete te;
+		e->back().place(Entity::evaluate(L"Namespace{TextLabel[text=project]}{Class{TextLabel[text=program]}{Method{TextLabel[text=main]}{BuiltinType[id=0]}}}"));
+		e->debugTree();
+		e->killAndDelete();
+	}
+
 	failed += coreTests();
 	failed += typeTests();
 	failed += changeTests();
-
 
 	{
 		Root r;

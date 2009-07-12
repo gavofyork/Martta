@@ -18,7 +18,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "TypeEntity.h"
 #include "DeclarationsHandler.h"
 #include "FilesExtractorHandler.h"
 #include "Timer.h"
@@ -64,7 +63,7 @@ void GccXml::extractHeaders(QString const& _c, QXmlContentHandler* _h)
 	delete _h;
 }
 
-QXmlContentHandler* GccXml::declarationsHandler(Declaration* _d, QList<DeclarationFile*>* _l)
+QXmlContentHandler* GccXml::declarationsHandler(Entity* _d, QList<DeclarationFile*>* _l)
 {
 	return new DeclarationsHandler(_d, _l);
 }

@@ -21,23 +21,14 @@
 #include <QtGui>
 #include <QtXml>
 
-// CHANGE PRECOMPILED HEADER SO IT INCLUDES QString BEFORE msString.
-// NO NEED TO DO THAT OUTSIDE THE MARTTA GUI THOUGH (i.e. IN THE LANGUAGE GENERALLY).
-
-#include "CullManager.h"
-#include "ChangeMan.h"
-#include "Project.h"
-#include "Artificial.h"
-#include "Function.h"
-#include "MemberVariable.h"
+#include "ValueDefiner.h"
 #include "BareTyped.h"
+#include "ChangeMan.h"
+
+#include "Project.h"
 #include "IncludeProject.h"
-#include "CodeScene.h"
 #include "Timer.h"
 #include "MainWindow.h"
-
-#include <msSupport.h>
-using namespace MarttaSupport;
 
 namespace Martta
 {
@@ -241,13 +232,13 @@ void MainWindow::delayedUpdate()
 			foreach (ValueDefiner* v, e->asKind<Statement>()->valuesInLocalScope())
 				new QTreeWidgetItem(l, QStringList() << qs(v->name()) << qs(v->type()->code()));
 		}
-		if (e->hasAncestor<Class>())
+/*		if (e->hasAncestor<Class>())
 		{
 			QTreeWidgetItem* m = new QTreeWidgetItem(typesVisible, QStringList() << QString("Members"));
 			QTreeWidgetItem* h = new QTreeWidgetItem(m, QStringList() << QString("Hidden"));
 			foreach (ValueDefiner* v, castEntities<ValueDefiner>(e->ancestor<Class>()->membersOf<MemberValue>(e->hasAncestor<MemberLambda>() ? e->ancestor<MemberLambda>()->isConst() : false)))
 				new QTreeWidgetItem(v->isKind<Artificial>() ? h : m, QStringList() << qs(v->name()) << qs(v->type()->code()));
-		}
+		}*/
 		QTreeWidgetItem* g = new QTreeWidgetItem(typesVisible, QStringList() << QString("General"));
 		foreach (ValueDefiner* v, e->ancestor<Declaration>()->valuesKnown())
 			new QTreeWidgetItem(g, QStringList() << qs(v->name()) << qs(v->type()->code()));
@@ -335,25 +326,6 @@ void MainWindow::on_actCastability_triggered()
 #if defined(DEBUG)
 	TypeEntity::s_debugCastability = actCastability->isChecked();
 #endif
-}
-
-void MainWindow::updateCode(Function* _f)
-{
-	TIME_FUNCTION;
-	if (_f == m_codeEditFunction)
-		return;
-
-	saveCode();
-
-	if (_f)
-	{
-//		m_codeView->setSubject(_f);
-	}
-	else
-	{
-//		m_codeView->setSubject(0);
-	}
-	m_codeEditFunction = _f;
 }
 
 void MainWindow::saveCode()

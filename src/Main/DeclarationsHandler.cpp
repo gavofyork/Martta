@@ -457,7 +457,7 @@ bool DeclarationsHandler::startElement(QString const&, QString const& _n, QStrin
 {
 	QString conId = _a.value("context");
 	AssertNR(conId.isEmpty() || m_contexts.contains(conId));
-	Declaration* con = m_contexts[conId];
+	Entity* con = m_contexts[conId];
 
 	if (false) {}
 	else if (_n == "PointerType")

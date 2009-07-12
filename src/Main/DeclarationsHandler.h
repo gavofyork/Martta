@@ -46,7 +46,7 @@ class Resolver;
 class DeclarationsHandler: public QXmlContentHandler
 {
 public:
-	DeclarationsHandler(Declaration* _d, QList<DeclarationFile*>* _l): m_d(_d), m_l(_l) {}
+	DeclarationsHandler(Entity* _d, QList<DeclarationFile*>* _l): m_d(_d), m_l(_l) {}
 	~DeclarationsHandler() { }
 
 	TypeEntity* resolveType(QString const& _typeId);
@@ -70,14 +70,14 @@ private:
 	virtual bool skippedEntity(QString const&) { return true; }
 	virtual bool startPrefixMapping(QString const&, QString const&) { return true; }
 
-	Declaration*							m_d;
+	Entity*									m_d;
 	QList<DeclarationFile*>*				m_l;
 
 	Enumeration*							m_lastEnum;
 	FunctionResolver*						m_lastFunction;
 	IncomingFunctionType*					m_lastIncomingFunctionType;
 
-	QHash<QString, Declaration*>			m_contexts;
+	QHash<QString, Entity*>					m_contexts;
 	QHash<QString, Function*>				m_functions;
 	QHash<QString, Variable*>				m_variables;
 	QHash<QString, TopLevelType*>			m_types;

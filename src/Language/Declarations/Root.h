@@ -43,6 +43,7 @@ public:
 	virtual String						reference() const { return ""; }
 	virtual String						key() const { return ""; }
 	virtual Kinds						allowedKinds(int) const;
+	virtual void						apresLoad() { restorePtrs(); }
 };
 
 }

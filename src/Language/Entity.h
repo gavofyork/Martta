@@ -187,6 +187,8 @@ public:
 	 * Create a new entity.
 	 */
 	inline static Entity*				spawn(String const& _kind) { AuxilliaryFace const* f = AuxilliaryRegistrar::get()->auxilliary(_kind); AssertNR(f); return f->create(); }
+	template<class T> inline static T*	evaluateAs(String const& _exp, int* _readUpto = 0) { return evaluate(_exp, _readUpto)->asKind<T>(); }
+	static Entity*						evaluate(String const& _exp, int* _readUpto = 0);
 
 	/**
 	 * Destructs the object. Use this before delete. It sets the parent to zero while the object is still

@@ -89,7 +89,6 @@ private slots:
 	void delayedUpdate();
 
 	void projectRenamed();
-	void updateCode(Function*);
 	void saveCode();
 	void resetSubject();
 
@@ -104,7 +103,6 @@ private slots:
 private:
 //	Workspace				m_workspace;
 	Project*				m_project;
-	ModelPtr<Function>		m_codeEditFunction;
 	QProcess*				m_program;
 	QString					m_outputOwed;
 	CodeView*				m_codeView;

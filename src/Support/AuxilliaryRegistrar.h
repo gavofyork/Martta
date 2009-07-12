@@ -47,7 +47,7 @@ public:
 	MarttaSupport::String const&						nameOfArbitrary(int _n) const;
 	int									arbitraryOfName(String const& _name) const;
 	
-	inline AuxilliaryFace const*		auxilliary(String const& _kindName) { return m_auxilliaries[_kindName]; }
+	inline AuxilliaryFace const*		auxilliary(String const& _kindName) { return m_auxilliaries.value(_kindName); }
 	void								registerAuxilliary(AuxilliaryFace const* _a);
 	inline List<AuxilliaryFace const*> const&	allInterfaces() const { return m_allInterfaces; }
 	

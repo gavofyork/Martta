@@ -24,17 +24,13 @@
 #include <QObject>
 #include <QAbstractItemModel>
 
-#include "Namespace.h"
-#include "Root.h"
-#include "Method.h"
-#include "Class.h"
-
 class QDomDocument;
 class QProcess;
 
 namespace Martta
 {
 
+class Entity;
 class ProjectIncludesModel;
 class IncludeProject;
 
@@ -42,7 +38,6 @@ class Project: public QObject
 {
 	Q_OBJECT
 
-	friend class Classes;
 	friend class ProjectIncludesModel;
 
 public:
@@ -60,19 +55,17 @@ public:
 #endif
 	QString						filename() const { return m_filename; }
 	QAbstractItemModel*			cDependsModel() { return &m_cDepends; }
-	QAbstractItemModel*			classesModel() { return &m_classes; }
 	List<IncludeProject*>		cDepends() const { return m_cDepends; }
-	List<Class*>				classes() const { return m_classes; }
 	void 						rename(QString const& _filename) { m_filename = _filename; nameChanged(); }
 
-	Namespace*					ns() { return m_namespace; }
-	Namespace const*			ns() const { return m_namespace; }
-	Method*						program() const { return m_program; }
-	Class*						programClass() const { return m_program->parent()->asKind<Class>(); }
+	Entity*						ns() { return m_namespace; }
+	Entity const*				ns() const { return m_namespace; }
+	Entity*						program() const { return m_program; }
 	QString						executable();
 	QString						lastCompileError() const { return m_lastCompileError; }
-	Root const*					root() const { return &m_declarations; }
-	Root*						root() { return &m_declarations; }
+	
+	Entity const*				root() const { return m_root; }
+	Entity*						root() { return m_root; }
 
 	void						serialise(QDomDocument& _d) const;
 	void						deserialise(QDomDocument& _d);
@@ -124,39 +117,12 @@ public:
 	} m_cDepends;
 	QString						m_filename;
 
-	// Our language entities. These may be found in the top level of this project's namespace. They
-	// do not include the classes internal to other classes or namespaces (although the latter is
-	// moot anyway since we're only allowing one namespace per project). These could be included
-	// (but scoped accordingly).
-	//
-	// NOTE: These can also be found in the program model (m_declarations), but that is a
-	// fully merged program model, and so combines them with other projects and include projects.
-	//
-	// These are for reference only; the real "owner" is the parent entity in the language
-	// model. It is used and maintained just to keep Qt's model/view system happy.
-	class Classes: public QAbstractItemModel, public List<Class*>
-	{
-	public:
-		void 					reset() { QAbstractItemModel::reset(); }
-	private:
-		virtual bool			insertRows(int _r, int _c, QModelIndex const& _p = QModelIndex());
-		virtual bool			removeRows(int _r, int _c, QModelIndex const& _p = QModelIndex());
-		virtual QVariant		headerData(int, Qt::Orientation, int = Qt::DisplayRole) const { return 0; }
-		virtual int				columnCount(QModelIndex const& = QModelIndex()) const { return 1; }
-		virtual QVariant		data(QModelIndex const& _i, int _r) const;
-		virtual bool			setData(QModelIndex const& _i, QVariant const& _v, int _r = Qt::EditRole);
-		virtual Qt::ItemFlags	flags(QModelIndex const& _i) const;
-		virtual int				rowCount(QModelIndex const& _i = QModelIndex()) const;
-		virtual QModelIndex		index(int _r, int _c, QModelIndex const& _p = QModelIndex()) const;
-		virtual QModelIndex		parent(QModelIndex const& _i) const;
-		bool					checkRoot(QModelIndex _i) const { return _i == QModelIndex(); }
-	} m_classes;
-	Method*						m_program;			///< Ptr to the program class.
+	Entity*						m_program;			///< Ptr to the program class.
 
 	// State
-	Root						m_declarations;		///< Our full program model. Merged with all other include/projects.
+	Entity*						m_root;				///< Our full program model. Merged with all other include/projects.
 
-	Namespace*					m_namespace;		///< Our namespace. All the project's stuff goes under here. Probably a better alternative to m_classes.
+	Entity*						m_namespace;		///< Our namespace. All the project's stuff goes under here. Probably a better alternative to m_classes.
 
 	// Temporaries
 	bool						m_alteringDepends;	///< True whenever we don't want changes to the CDepends model implicitly causing a reset (and thus ser./deser.).

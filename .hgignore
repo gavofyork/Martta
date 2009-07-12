@@ -6,7 +6,9 @@ src/moc_*
 src/qrc_*
 src/ui_*
 src/*.moc
-new_src/
+editor/
+Language/
+plugins/
 support/build/
 support/libsupport.a
 support/support.xcodeproj/

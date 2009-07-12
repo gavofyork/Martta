@@ -37,7 +37,7 @@ class GccXml
 public:
 	static void extractHeaders(QString const& _c, QXmlContentHandler* _h);
 
-	static QXmlContentHandler* declarationsHandler(Declaration* _d, QList<DeclarationFile*>* _l);
+	static QXmlContentHandler* declarationsHandler(Entity* _d, QList<DeclarationFile*>* _l);
 	static QXmlContentHandler* filesExtractorHandler(QStringList* _f);
 };
 

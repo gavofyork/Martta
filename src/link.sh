@@ -31,6 +31,13 @@ local name="$1"
 local files="$2"
 local depends="$3"
 
+for d in $depends; do
+	if [[ ! -e $root/$d ]]; then
+		echo "Dependency $d for plugin $name cannot be found."
+		exit;
+	fi
+done
+
 if [[ "x$only" != "x" ]]; then
 if [[ "$only" != "$name" ]]; then
 return
@@ -70,19 +77,16 @@ done
 
 cat > $dest/$name.pro << EOF
 include(../martta.prf)
-TARGET = $name
 include($name.pri)
 SOURCES += $sources
 HEADERS += $headers
 EOF
 
 cat > $dest/$name.pri << EOF
-$(for i in $depends; do echo include\(../$i/$i.pri\); done)
-OURDIRS=$(for i in $paths; do echo $i; done | sort | uniq | xargs)
+DEPS += $depends
+OURDIRS = $(for i in $paths; do echo $i; done | sort | uniq | xargs)
 TWD = \$\$PWD
-defineTest(hasSources) {
-$(if [[ "x$sources" != "x" ]]; then echo return\(true\); else echo return\(false\); fi)
-}
+$(if [[ "x$sources" == "x" ]]; then echo NO_SOURCES = 1; fi)
 include(../dep.pri)
 EOF
 
@@ -109,15 +113,22 @@ DEPENDPATH += $support
 INCLUDEPATH += $support
 QMAKE_LIBDIR += $support
 LIBS += -lsupport
+DESTDIR = \$\$BASE/../plugins
 EOF
 
 echo "Support file..."
 cat > "$root/dep.pri" << EOF
 QMAKE_FEATURES *= \$\$PWD
-QMAKE_LIBDIR *= \$\$TWD
+QMAKE_LIBDIR *= \$\$DESTDIR
 DEPENDPATH *= \$\$join(OURDIRS, " \$\$TWD/", "\$\$TWD/")
 INCLUDEPATH *= \$\$join(OURDIRS, " \$\$TWD/", "\$\$TWD/")
-!contains(TARGET, \$\$basename(TWD)):hasSources(): LIBS *= -l\$\$basename(TWD)
+contains(TARGET, \$\$basename(TWD)): QMAKE_POST_LINK += echo \$\${TARGET} \$\$DEPS > \$\${DESTDIR}/\$(TARGET).dep
+!contains(TARGET, \$\$basename(TWD)): !contains(NO_SOURCES, 1): LIBS *= -l\$\$basename(TWD)
+for(a, DEPS): !contains(DONE, \$\${a}) {
+	DONE += \$\${a}
+	NO_SOURCES = 0
+	include(\$\${BASE}/\$\${a}/\$\${a}.pri)
+}
 EOF
 
 prepare IdentifierSet "IdentifierSet Support/IdentifierSetRegistrar" 
@@ -193,11 +204,11 @@ prepare Argument Argument "VariableNamer TypeEntity TextLabel Declaration"
 prepare CQualifiers CQualifiers ""
 prepare LambdaNamer LambdaNamer "Argument Compound Statement FunctionType QualifierTypes IdLabel CQualifiers"
 prepare ReturnStatement ReturnStatement "LambdaNamer Statement BuiltinType"
-prepare StatementVariables "AssignedVariable DefaultConstructedVariable ConstructedVariable" "VariableNamer Statement TypeEntity"
+prepare StatementVariables "AssignedVariable DefaultConstructedVariable" "VariableNamer Statement TypeEntity"
 
 prepare ArgumentReferenced ArgumentReferenced "Referenced LambdaNamer Declaration"
 
-prepare EnumerationNamer "EnumerationNamer EnumValue" "TextLabel EnumValue ValueDefiner ExplicitType Declaration BuiltinType Statement"
+prepare EnumerationNamer "EnumerationNamer EnumValue" "TextLabel ValueDefiner ExplicitType Declaration BuiltinType Statement"
 
 prepare Location Location ""
 prepare Variable Variable "CQualifiers Location VariableNamer TopLevel"
@@ -214,9 +225,9 @@ prepare Enumeration Enumeration "EnumerationNamer TopLevelType"
 
 prepare Member Member "Labels ExplicitType Declaration"
 prepare MemberEnumeration MemberEnumeration "Member EnumerationNamer"
-prepare MemberValue MemberValue "Member ValueDefiner QualiferTypes Memberify"
+prepare MemberValue MemberValue "Member ValueDefiner QualifierTypes Memberify"
 prepare MemberVariable MemberVariable "MemberValue VariableNamer"
-prepare MemberLambda MemberLambda "ExplicitType AddressType QualiferTypes Compound Argument MemberValue LambdaNamer"
+prepare MemberLambda MemberLambda "ExplicitType AddressType QualifierTypes Compound Argument MemberValue LambdaNamer"
 
 prepare ThisPointer ThisPointer "Statement MemberLambda"
 
@@ -225,6 +236,7 @@ prepare MethodOperator MethodOperator "MemberLambda Operator Labels BuiltinType"
 prepare ConversionOperator ConversionOperator "MemberLambda Labels"
 prepare Constructor Constructor "MemberLambda ExplicitType Labels QualifierTypes"
 prepare Construction Construction "Invocation Constructor ExplicitType QualifierTypes"
+prepare ConstructedVariable ConstructedVariable "VariableNamer Statement TypeEntity Construction"
 
 prepare Destructor Destructor MemberLambda
 

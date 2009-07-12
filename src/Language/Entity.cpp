@@ -820,6 +820,60 @@ bool Entity::removeInvalidChildren()
 	return ret;
 }
 
+Entity* Entity::evaluate(String const& _exp, int* _readUpto)
+{
+	uint pe;
+	int eon = _exp.length();
+	if ((pe = _exp.indexOf(L'{')) < (uint)eon)
+		eon = pe;
+	if ((pe = _exp.indexOf(L'[')) < (uint)eon)
+		eon = pe;
+	if ((pe = _exp.indexOf(L'}')) < (uint)eon)
+		eon = pe;
+	String name = _exp.left(eon);
+	AuxilliaryFace const* af = AuxilliaryRegistrar::get()->auxilliary(name);
+	if (!af)
+		af = AuxilliaryRegistrar::get()->auxilliary("Martta::" + name);
+	Entity* ret = af ? af->create() : new Entity;
+	ret->prepareChildren();
+	
+	Hash<String, String> ps;
+	while (eon < _exp.length() && _exp[eon] != L'}' && _exp[eon] != L'@')
+		if (_exp[eon] == L'[')
+		{
+			int eq = _exp.indexOf(L'=', eon);
+			int end = _exp.indexOf(L']', eq);
+			ps.insert(_exp.mid(eon + 1, eq - (eon + 1)), _exp.mid(eq + 1, end - (eq + 1)));
+			eon = end + 1;
+		}
+		else if (_exp[eon] == L'{')
+		{
+			int eq;
+			Entity* e = evaluate(_exp.mid(eon + 1), &eq);
+			AssertNR(e);
+			eon += eq + 1;
+			if (_exp[eon] == L'@')
+			{
+				String at = _exp.mid(eon + 1, _exp.indexOf(L'}', eon + 1) - (eon + 1));
+				ret->named(at).place(e);
+				eon += at.length() + 2;
+			}
+			else if (_exp[eon] == L'}')
+			{
+				Position p = ret->firstFor(e->kind());
+				if (p == Nowhere)
+					delete e;
+				else
+					p.place(e);
+				eon++;
+			}
+		}
+	ret->setProperties(ps);
+	if (_readUpto)
+		*_readUpto = eon;
+	return ret;
+}
+
 void Entity::put(Position const& _newPosition)
 {
 	AssertNR(this);

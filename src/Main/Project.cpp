@@ -26,21 +26,14 @@
 #include <CoreFoundation/CoreFoundation.h>
 #endif
 
-#include "AccessLabel.h"
-#include "ConstLabel.h"
-#include "Typed.h"
-#include "Method.h"
+#include "BuiltinType.h"
 #include "Namespace.h"
-#include "Literal.h"
-#include "Referenced.h"
-#include "SimpleUnaryOperation.h"
-#include "SimpleBinaryOperation.h"
-#include "GccXml.h"
-#include "IncludeProject.h"
-#include "Method.h"
 #include "TextLabel.h"
+
+#include "GccXml.h"
 #include "Timer.h"
 #include "DeclarationFile.h"
+#include "IncludeProject.h"
 #include "Project.h"
 
 namespace Martta
@@ -67,15 +60,13 @@ Project::Project(QString const& _load):
 	m_supportPath = QCoreApplication::applicationDirPath() + "/../support/";
 #endif
 	AuxilliaryRegistrar::get()->initialiseClasses();
-	AuxilliaryRegistrar::get()->finaliseClasses();
-	AuxilliaryRegistrar::get()->initialiseClasses();
-		
+	
+	m_root = AuxilliaryRegistrar::get()->auxilliary("Martta::Root")->create();
+				
 	if (QFile::exists(m_filename))
 		revert();
 	else
 		resetAsNew();
-
-	m_classes.setParent(this);
 
 	connect(&m_cDepends, SIGNAL(modelReset()), SLOT(reloadHeadersAndUpdateSubject()));
 
@@ -96,17 +87,17 @@ Project::~Project()
 		QFile::remove(i.fileName());
 	QDir().rmdir(m_tempPath);
 	clear();
+	m_root->killAndDelete();
 	AuxilliaryRegistrar::get()->finaliseClasses();
 }
 
 void Project::resetAsNew()
 {
 	clear();
-	m_declarations.debugTree();
 	m_filename = QString();
-	m_namespace = new Namespace;
-	m_namespace->prepareChildren();
-	m_declarations.back().place(m_namespace);
+	
+	m_namespace = Entity::evaluate("Namespace");
+	m_root->back().place(m_namespace);
 
 	IncludeProject* sc = new IncludeProject("Standard C");
 #ifdef Q_WS_WIN
@@ -124,20 +115,8 @@ void Project::resetAsNew()
 	reloadHeaders();
 
 	m_namespace->killAndDelete();
-	m_namespace = new Namespace;
-	m_declarations.back().place(m_namespace);
-	m_namespace->prepareChildren();
-	m_namespace->childAs<TextLabel>(Identifiable::Identity)->setText("Project");
-	Class* c = new Class;
-	m_namespace->back().place(c);
-	c->prepareChildren();
-	c->childAs<TextLabel>(Identifiable::Identity)->setText("Program");
-	m_classes << c;
-
-	c->back().place(m_program = new Method);
-	m_program->prepareChildren();
-	m_program->childAs<TextLabel>(Identifiable::Identity)->setText("main");
-	m_program->childOf<TypeEntity>()->over().place(new BuiltinType(Void));
+	m_namespace = Entity::evaluate(L"Namespace{TextLabel[text=project]}{Class{TextLabel[text=program]}{Method{TextLabel[text=main]}{BuiltinType[id=0]}}}");
+	m_root->back().place(m_namespace);
 	
 	emit subjectInvalid();
 	emit nameChanged();
@@ -157,12 +136,12 @@ QString Project::code() const
 
 	if (m_namespace)
 	{
-		QString ic = qs(m_namespace->interfaceCode());
+		QString ic = qs(m_namespace->asKind<Declaration>()->interfaceCode());
 		if (ic.isEmpty())
 			return QString();
-		ret += ic + "\n" + qs(m_namespace->implementationCode()) + "\n";
+		ret += ic + "\n" + qs(m_namespace->asKind<Declaration>()->implementationCode()) + "\n";
 		if (m_program && m_program->parentIs<Declaration>())
-			ret += "int main(int, char**)\n{\n" + qs(m_program->parentAs<Declaration>()->reference()) + " p;\np." + qs(m_program->codeName()) + "();\n}\n";
+			ret += "int main(int, char**)\n{\n" + qs(m_program->parentAs<Declaration>()->reference()) + " p;\np." + qs(m_program->asKind<Declaration>()->codeName()) + "();\n}\n";
 	}
 
 	return ret;
@@ -173,10 +152,7 @@ void Project::clear()
 	m_alteringDepends = true;
 	m_program = 0;
 	m_namespace = 0;
-	m_declarations.clearEntities();
-//	AssertNR(m_declarations.modelPtrs().size() == 0);
-//	while (m_classes.size()) m_classes.takeLast()->killAndDelete();
-	m_classes.reset();
+	m_root->clearEntities();
 	while (m_cDepends.size()) delete m_cDepends.takeLast();
 	m_cDepends.reset();
 	m_alteringDepends = false;
@@ -317,7 +293,7 @@ void Project::deserialise(QDomDocument& _d)
 		}
 
 	QList<DeclarationFile*> files;
-	TIME_STATEMENT("Main extraction") GccXml::extractHeaders(c, GccXml::declarationsHandler(&m_declarations, &files));
+	TIME_STATEMENT("Main extraction") GccXml::extractHeaders(c, GccXml::declarationsHandler(m_root, &files));
 
 	List<DeclarationFile*> orphans;
 	foreach (DeclarationFile* i, files)
@@ -369,20 +345,18 @@ void Project::deserialise(QDomDocument& _d)
 //	AssertNR(orphans.isEmpty());
 
 	ChangeMan::get()->sleep();
-	TIME_STATEMENT(importDom) importDom(_d.documentElement().namedItem("entity").toElement(), &m_declarations);
-	TIME_STATEMENT(restorePtrs) m_declarations.restorePtrs();
+	TIME_STATEMENT(importDom) importDom(_d.documentElement().namedItem("entity").toElement(), m_root);
+	TIME_STATEMENT(restorePtrs) m_root->apresLoad();
 	ChangeMan::get()->wake();
 	
-	m_namespace = m_declarations.childOf<Namespace>();
+	m_namespace = m_root->childOf<Namespace>();
 	AssertNR(m_namespace);
-
-	m_classes << m_namespace->cardinalChildrenOf<Class>();
 
 	// Load "program"
 	QString k = _d.documentElement().namedItem("program").toElement().attribute("key");
 	
-	if (Identifiable* e = m_declarations.find(qs(k)))
-		m_program = e->self()->tryKind<Method>();
+	if (Identifiable* e = m_root->asKind<Identifiable>()->find(qs(k)))
+		m_program = e->self();
 	else
 		m_program = 0;
 
@@ -449,7 +423,7 @@ void Project::serialise(QDomDocument& _d) const
 	if (m_program)
 	{
 		QDomElement p = _d.createElement("program");
-		p.setAttribute("key", qs(m_program->key()));
+		p.setAttribute("key", qs(m_program->asKind<Identifiable>()->key()));
 		root.appendChild(p);
 	}
 }
@@ -483,7 +457,7 @@ void Project::reloadHeaders()
 	while (es.size())
 	{
 		Entity* e = es.takeLast();
-		AssertNR(e->root() == &m_declarations);
+		AssertNR(e->root() == m_root);
 		es << e->children();
 	}
 #endif
@@ -655,105 +629,6 @@ QModelIndex Project::CDepends::parent(QModelIndex const& _i) const
 		return index(id / Max, 0);
 	else											// Third-level; descriptor. parent is (V/T/F).
 		return index(id % Max, 0, index(id / Max, 0));
-}
-
-////////////////////
-// Project::Classes
-
-bool Project::Classes::insertRows(int _r, int _c, QModelIndex const& _p)
-{
-	bool ret = true;
-	AssertNR(_c == 1);
-	beginInsertRows(_p, _r, _r + _c - 1);
-	if (_p == QModelIndex())
-	{
-		AssertNR(_r == size());
-//		append(*qobject_cast<Project*>(QAbstractItemModel::parent())->m_namespace <<= new Class);
-	}
-	else
-		ret = false;
-	endInsertRows();
-	// No need to reset here since insertion on its own will not provide a valid model for updating.
-	return ret;
-}
-
-bool Project::Classes::removeRows(int _r, int _c, QModelIndex const& _p)
-{
-	AssertNR(_c == 1);
-	if (_p == QModelIndex())
-	{
-		AssertNR(_r < size());
-		beginRemoveRows(_p, _r, _r + _c - 1);
-		at(_r)->killAndDelete();
-		erase(begin() + _r);
-		endRemoveRows();
-	}
-	else
-		return false;
-	return true;
-}
-
-QVariant Project::Classes::data(QModelIndex const& _i, int _r) const
-{
-	switch (_r)
-	{
-		case Qt::DisplayRole:
-		case Qt::EditRole:
-			if (checkRoot(_i))
-				return QVariant();
-			else
-				return qs(at(_i.row())->name());
-		case OwnerRole:
-			if (!checkRoot(_i)) return QVariant::fromValue<void*>(at(_i.row()));
-			return QVariant();
-		default: return QVariant();
-	}
-}
-
-bool Project::Classes::setData(QModelIndex const& _i, QVariant const&, int _r)
-{
-	(void)(_r);
-	AssertNR(_r == Qt::EditRole);
-	bool ret = true;
-	if (checkRoot(_i))
-		ret = false;
-	else
-	{
-//		at(_i.row())->setName(_v.toString());
-		emit dataChanged(_i, _i);
-	}
-	return ret;
-}
-
-Qt::ItemFlags Project::Classes::flags(QModelIndex const& _i) const
-{
-	if (!checkRoot(_i))
-		return (Qt::ItemFlag)(/*Qt::ItemIsEditable | */Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-	return (Qt::ItemFlag)(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-}
-
-int Project::Classes::rowCount(QModelIndex const& _i) const
-{
-	if (checkRoot(_i)) return size();
-	else return 0;
-	AssertNR(false);
-	return 0;
-}
-
-QModelIndex Project::Classes::index(int _r, int _c, QModelIndex const& _p) const
-{
-	uint i = 0;
-	if (_c || _p == QModelIndex())					// Top-level (a project) or not first column
-		i = 0;
-	return createIndex(_r, _c, i);
-}
-
-QModelIndex Project::Classes::parent(QModelIndex const& _i) const
-{
-	if (_i == QModelIndex() || !_i.internalId())	// Top-level (a file); no parent.
-		return QModelIndex();
-	AssertNR(0);
-	return QModelIndex();
 }
 
 }
