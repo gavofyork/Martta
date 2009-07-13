@@ -64,7 +64,7 @@ EditDelegateFace* StringLiteral::newDelegate(CodeScene* _s)
 		{
 			if (_e->text() == L"\b")
 				subject()->m_value.chop(1);
-			else if (_e->text()[0].isGraph() && _e->text() != L"\"")
+			else if (_e->text()[0].isGraph() && _e->text() != L"\"" || _e->text()[0] == L' ' || _e->text()[0] == L'\t')
 				subject()->m_value += _e->text();
 			else
 				return false;

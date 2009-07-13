@@ -23,10 +23,6 @@
 #include <QTime>
 #include <QString>
 
-#include <msDebug.h>
-#include <msString.h>
-using MarttaSupport::String;
-
 namespace Martta
 {
 

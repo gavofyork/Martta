@@ -21,6 +21,7 @@
 #pragma once
 
 #include "Type.h"
+#include "CTypes.h"
 #include "PhysicalType.h"
 
 namespace Martta
@@ -32,20 +33,6 @@ extern const int s_simpleIdsCount;
 class BuiltinOperator;
 
 template<class T> class NameTrait;
-
-/**
- * Enumeration of fundamental types.
- *
- * Because any (non-const) type is implicitly castable to Void, we can use this as the left argument in the ',' operator.
- * The Ptr value exists only for referencing into m_fundamentalOperators the fundamental pointer operations.
- * In these cases the operators in question use a null QualifiedType value to signify a placeholder for any type.
- */
-static const uint
-	Void = 0x0000, Ptr = Void,
-	Signed = 0x0000, Unsigned = 0x0001, BuiltinDeclaration = 0x0000, Complex = 0x0001,
-	Natural = 0x0000, Short = 0x0002, Long = 0x0004, Longlong = 0x0006,
-	Bool = 0x0008, Int = 0x0010, Char = 0x0020, Float = 0x0040, Double = 0x0080,
-	Wchar = Char|Long;
 
 class BuiltinType: public PhysicalType
 {

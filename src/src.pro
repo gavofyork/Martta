@@ -31,7 +31,7 @@ unix {
 #unix:RCC_DIR = /tmp
 #unix:UI_DIR = /tmp
 SUPPORT.version = Versions
-SUPPORT.files = $$SUPPORT_HEADERS
+SUPPORT.files = $$SUPPORT_HEADERS $$SUPPORT_INLINES
 SUPPORT.path = Support
 
 ICON = Martta.icns

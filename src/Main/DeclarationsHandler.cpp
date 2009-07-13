@@ -18,9 +18,9 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include <BuiltinType.h>	// TODO: Split out enum.
-#include <ExplicitType.h>	// TODO: Keys (as Entity* hex) in evaluate.
 #include <CQualifiers.h>
+#include <CTypes.h>
+#include <ExplicitType.h>	// TODO: Keys (as Entity* hex) in evaluate.
 
 #include "Timer.h"
 #include "DeclarationsHandler.h"
@@ -293,7 +293,7 @@ Entity* DeclarationsHandler::resolveType(QString const& _typeId)
 	}
 	else if (m_simples.contains(_typeId))
 	{
-		return new BuiltinType(m_simples[_typeId]);
+		return Entity::evaluate(String(L"BuiltinType[id=%1]").arg(m_simples[_typeId]));
 	}
 	else if (m_functionTypes.contains(_typeId))
 	{

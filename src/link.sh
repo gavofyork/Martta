@@ -133,6 +133,8 @@ EOF
 
 prepare IdentifierSet "IdentifierSet Support/IdentifierSetRegistrar" 
 prepare Operator "Operator Support/OperatorRegistrar" 
+prepare CQualifiers CQualifiers ""
+prepare CTypes CTypes ""
 
 prepare Entity "Support/Auxilliary Support/AuxilliaryFace Support/AuxilliaryRegistrar Support/ChangeMan Support/CodeScene Support/CompletionDelegate Support/CullManager Support/Dier Support/EditDelegate Support/EntitySupport Support/KeyEvent Support/Kind Support/Meta Support/Position Support/SafePointer Support/Stylist Interfaces/ChildValidifier Interfaces/Dependee Interfaces/Depender Interfaces/Familial Entity" 
 
@@ -170,7 +172,7 @@ prepare Compound Compound Statement
 prepare Declaration "Declaration" "Identifiable"
 
 prepare BuiltinDeclarations "BuiltinDeclaration BuiltinMethod BuiltinOperator" "ValueDefiner Declaration Memberify Operator"
-prepare BuiltinType "BuiltinType" "PhysicalType AddressType BuiltinDeclarations"
+prepare BuiltinType "BuiltinType" "PhysicalType AddressType BuiltinDeclarations CTypes"
 prepare Array Array "AddressType Statement BuiltinType"
 prepare ExtendedTypes "HashType ListType StringType" "MemberTemplateType BuiltinType Statement Subscriptable"
 prepare Types "" "AddressType QualifierTypes ExplicitType FunctionType Memberify MemberTemplateType Array BuiltinType ExtendedTypes"
@@ -202,7 +204,6 @@ prepare TopLevelType TopLevelType "TypeEntity ExplicitType TopLevel"
 
 prepare VariableNamer VariableNamer "QualifierTypes IdLabel TextLabel ValueDefiner"
 prepare Argument Argument "VariableNamer TypeEntity TextLabel Declaration"
-prepare CQualifiers CQualifiers ""
 prepare LambdaNamer LambdaNamer "Argument Compound Statement FunctionType QualifierTypes IdLabel CQualifiers"
 prepare ReturnStatement ReturnStatement "LambdaNamer Statement BuiltinType"
 prepare StatementVariables "AssignedVariable DefaultConstructedVariable" "VariableNamer Statement TypeEntity"
@@ -237,7 +238,6 @@ prepare Construction Construction "Invocation Constructor ExplicitType Qualifier
 prepare ConstructedVariable ConstructedVariable "VariableNamer Statement TypeEntity Construction"
 
 prepare Destructor Destructor MemberLambda
-
 
 prepare Artificials "Interfaces/Artificial ArtificialAssignmentOperator ArtificialCopyConstructor ArtificialDefaultConstructor" "Constructor MethodOperator QualifierTypes ExplicitType"
 
