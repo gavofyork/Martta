@@ -38,6 +38,14 @@ bool Namespace::keyPressed(KeyEvent const* _e)
 		return Super::keyPressed(_e);
 }
 
+String Namespace::finalCode() const
+{
+	String ic = interfaceCode();
+	if (ic.isEmpty())
+		return String::null;
+	return ic + L"\n" + implementationCode() + L"\n";
+}
+
 String Namespace::defineLayout(ViewKeys const&) const
 {
 	String ret = String("ycode;'namespace';Mi;%1;n;").arg(Identity);

@@ -172,6 +172,9 @@ public:
 	/// @note changed() called as appropriate.
 	Entity*								prepareChildren();
 	
+	virtual String						finalCode() const { return String::null; }
+	virtual String						summary() const { return kind().name(); }
+	
 	/**
 	 * Cull-check an object. If it is determined the object is superfluous (with the accoridng method), it will
 	 * be killed.
@@ -244,6 +247,13 @@ public:
 	 */
 	Entity*								insert(Entity* _e, int _preferedIndex = NonePrefered);
 	template<class T> inline T*			insert(int _preferedIndex = NonePrefered) { T* r = new T; insert(r, _preferedIndex); return r; }
+	
+	/**
+	 * Adopts a new child entity. Puts it in the best position according to firstFor().
+	 * 
+	 * To check if the child has been inserted, compare the child's parent() after this call.
+	 */
+	inline void							adopt(Entity* _ch) { firstFor(_ch->kind()).place(_ch); }
 	
 	/**
 	 * Attempts to make this the child of @a _e (at the first allowable place).

@@ -21,8 +21,8 @@
 #include <QtSvg>
 #include <QtGui>
 
-#include "Stylist.h"
-#include "EditDelegate.h"
+#include <Stylist.h>
+#include <EditDelegate.h>
 
 #include "Timer.h"
 #include "CommonGraphics.h"

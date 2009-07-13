@@ -26,9 +26,8 @@
 #include <CoreFoundation/CoreFoundation.h>
 #endif
 
-#include "BuiltinType.h"
-#include "Namespace.h"
-#include "TextLabel.h"
+#include <Identifiable.h>
+#include <Entity.h>
 
 #include "GccXml.h"
 #include "Timer.h"
@@ -136,12 +135,16 @@ QString Project::code() const
 
 	if (m_namespace)
 	{
-		QString ic = qs(m_namespace->asKind<Declaration>()->interfaceCode());
-		if (ic.isEmpty())
-			return QString();
-		ret += ic + "\n" + qs(m_namespace->asKind<Declaration>()->implementationCode()) + "\n";
-		if (m_program && m_program->parentIs<Declaration>())
-			ret += "int main(int, char**)\n{\n" + qs(m_program->parentAs<Declaration>()->reference()) + " p;\np." + qs(m_program->asKind<Declaration>()->codeName()) + "();\n}\n";
+		String fc = m_namespace->finalCode();
+		if (fc.isEmpty())
+			return QString::null;
+		ret += qs(fc);
+		// TODO: do this properly with a real (but hidden) Function defined in the model.
+		// OR provide a project with just a (visible) function.
+		// OR at least invent a way to deliver the main() code dynamically without having to include Declaration.
+		ret += "int main(int, char**)\n{\n ::Project::Program p;\np.main();\nreturn 0;\n}\n";
+//		if (m_program && m_program->parentIs<Declaration>())
+//			ret += "int main(int, char**)\n{\n" + qs(m_program->parentAs<Declaration>()->reference()) + " p;\np." + qs(m_program->asKind<Declaration>()->codeName()) + "();\n}\n";
 	}
 
 	return ret;
@@ -250,9 +253,9 @@ QString Project::executable()
 	return m_tempPath + "/" + exeName();
 }
 
-void importDom(QDomElement const& _el, Entity* _p)
+Entity* importDom(QDomElement const& _el, Entity* _p)
 {
-	Entity* e = _p->spawn(qs(_el.attribute("kind")));
+	Entity* e = Entity::spawn(qs(_el.attribute("kind")));
 	Assert(e, "Spawn doesn't know anything about this kind, yet it did when exported.");
 	
 	Hash<String, String> h;
@@ -268,6 +271,7 @@ void importDom(QDomElement const& _el, Entity* _p)
 	for (QDomNode i = _el.firstChild(); !i.isNull(); i = i.nextSibling())
 		if (i.isElement() && i.toElement().tagName() == "entity")
 			importDom(i.toElement(), e);
+	return e;
 }
 
 void Project::deserialise(QDomDocument& _d)
@@ -345,11 +349,10 @@ void Project::deserialise(QDomDocument& _d)
 //	AssertNR(orphans.isEmpty());
 
 	ChangeMan::get()->sleep();
-	TIME_STATEMENT(importDom) importDom(_d.documentElement().namedItem("entity").toElement(), m_root);
+	TIME_STATEMENT(importDom) m_namespace = importDom(_d.documentElement().namedItem("entity").toElement(), m_root);
 	TIME_STATEMENT(restorePtrs) m_root->apresLoad();
 	ChangeMan::get()->wake();
 	
-	m_namespace = m_root->childOf<Namespace>();
 	AssertNR(m_namespace);
 
 	// Load "program"
@@ -546,9 +549,9 @@ QVariant Project::CDepends::data(QModelIndex const& _i, int _r) const
 			if (checkHeading(_i, Functions)) return "Functions";
 			if (checkHeading(_i, Variables)) return "Variables";
 			if (checkHeading(_i, Includes)) return "Includes";
-			if (checkItem(_i, Types)) return qs(checkItem(_i, All)->types()[_i.row()]->code());
-			if (checkItem(_i, Functions)) return qs(checkItem(_i, All)->functions()[_i.row()]->basicCode(LambdaNamer::InsideScope));
-			if (checkItem(_i, Variables)) return qs(checkItem(_i, All)->variables()[_i.row()]->basicCode());
+			if (checkItem(_i, Types)) return qs(checkItem(_i, All)->types()[_i.row()]->summary());
+			if (checkItem(_i, Functions)) return qs(checkItem(_i, All)->functions()[_i.row()]->summary());
+			if (checkItem(_i, Variables)) return qs(checkItem(_i, All)->variables()[_i.row()]->summary());
 			if (checkItem(_i, Includes)) return checkItem(_i, All)->includes()[_i.row()];
 			AssertNR(false);
 		case HeadingRole:
@@ -590,8 +593,8 @@ bool Project::CDepends::setData(QModelIndex const& _i, QVariant const& _v, int _
 Qt::ItemFlags Project::CDepends::flags(QModelIndex const& _i) const
 {
 	if (checkProject(_i))
-		return (Qt::ItemFlag)(Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-	return (Qt::ItemFlag)(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+		return (Qt::ItemFlags)(Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+	return (Qt::ItemFlags)(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 }
 
 int Project::CDepends::rowCount(QModelIndex const& _i) const

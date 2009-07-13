@@ -24,16 +24,13 @@
 #include <QList>
 #include <QStringList>
 
-#include "Entity.h"
-#include "Variable.h"
-#include "Function.h"
-
 class QDomElement;
 
 namespace Martta
 {
 
 class DeclarationFile;
+class Entity;
 
 class IncludeProject
 {
@@ -59,9 +56,9 @@ public:
 	void							removeLib(int _i) { m_libs.erase(m_libs.begin() + _i); }
 
 	void							assimilate(DeclarationFile* _f);
-	QList<TypeDefinition*> const&	types() const { return m_types; }
-	QList<Function*> const&			functions() const { return m_functions; }
-	QList<Variable*> const&			variables() const { return m_variables; }
+	QList<Entity*> const&			types() const { return m_types; }
+	QList<Entity*> const&			functions() const { return m_functions; }
+	QList<Entity*> const&			variables() const { return m_variables; }
 
 	// Save/load
 	void							exportDom(QDomElement& _context) const;
@@ -72,9 +69,9 @@ private:
 	QStringList						m_includes;
 	QStringList						m_libs;
 
-	QList<TypeDefinition*>			m_types;
-	QList<Function*>				m_functions;
-	QList<Variable*>				m_variables;
+	QList<Entity*>					m_types;
+	QList<Entity*>					m_functions;
+	QList<Entity*>					m_variables;
 };
 
 }

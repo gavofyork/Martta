@@ -29,19 +29,14 @@
 namespace Martta
 {
 
-class Enumeration;
 class FunctionResolver;
 class IncomingFunctionType;
-
-class Declaration;
-class Function;
-class Variable;
-class TopLevelType;
-
 class ArrayType;
 class CvQualifiedType;
 class PointerType;
 class Resolver;
+
+class TypeDefinition;
 
 class DeclarationsHandler: public QXmlContentHandler
 {
@@ -49,11 +44,11 @@ public:
 	DeclarationsHandler(Entity* _d, QList<DeclarationFile*>* _l): m_d(_d), m_l(_l) {}
 	~DeclarationsHandler() { }
 
-	TypeEntity* resolveType(QString const& _typeId);
-	QString commitToFile(QString const& _fileId, Function* _f);
-	QString commitToFile(QString const& _fileId, Variable* _f);
-	QString commitToFile(QString const& _fileId, TopLevelType* _f);
-	void removeFromFile(TopLevelType* _f);
+	Entity* resolveType(QString const& _typeId);
+	QString commitFunctionToFile(QString const& _fileId, Entity* _f);
+	QString commitVariableToFile(QString const& _fileId, Entity* _f);
+	QString commitTypeToFile(QString const& _fileId, Entity* _f);
+	void removeFromFile(Entity* _f);
 
 private:
 	virtual bool startDocument();
@@ -73,14 +68,14 @@ private:
 	Entity*									m_d;
 	QList<DeclarationFile*>*				m_l;
 
-	Enumeration*							m_lastEnum;
+	Entity*									m_lastEnum;
 	FunctionResolver*						m_lastFunction;
 	IncomingFunctionType*					m_lastIncomingFunctionType;
 
 	QHash<QString, Entity*>					m_contexts;
-	QHash<QString, Function*>				m_functions;
-	QHash<QString, Variable*>				m_variables;
-	QHash<QString, TopLevelType*>			m_types;
+	QHash<QString, Entity*>					m_functions;
+	QHash<QString, Entity*>					m_variables;
+	QHash<QString, Entity*>					m_types;
 
 	QHash<QString, int>						m_simples;
 	QHash<QString, ArrayType*>				m_arrays;

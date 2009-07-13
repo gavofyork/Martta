@@ -22,20 +22,15 @@
 
 #include "CQualifiers.h"
 #include "VariableNamer.h"
-#include "Location.h"
 #include "TopLevel.h"
 
 namespace Martta
 {
 
-class VariableResolver;
-
 class Variable: public TopLevel, public_interface VariableNamer
 {
 	MARTTA_OBJECT(TopLevel)
 	MARTTA_INHERITS(VariableNamer, 0)
-
-	friend class VariableResolver;
 
 public:
 	Qualifiers							qualifiers() const { return m_qualifiers; }
@@ -56,7 +51,6 @@ protected:
 	
 private:
 	Qualifiers							m_qualifiers;
-	Location							m_location;
 };
 
 }

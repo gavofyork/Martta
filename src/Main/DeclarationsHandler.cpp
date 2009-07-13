@@ -18,35 +18,25 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "IntegerLiteral.h"
-#include "StringLiteral.h"
-#include "TypedOwner.h"
-#include "Compound.h"
-#include "Typedef.h"
-#include "Enumeration.h"
-#include "EnumValue.h"
-#include "Union.h"
-#include "Struct.h"
-#include "Class.h"
-#include "Variable.h"
-#include "Argument.h"
-#include "Function.h"
-#include "Namespace.h"
-#include "Type.h"
-#include "Array.h"
-#include "Const.h"
-#include "Pointer.h"
-#include "BuiltinType.h"
-#include "ExplicitType.h"
-#include "FunctionType.h"
-#include "Memberify.h"
-#include "Reference.h"
-#include "TextLabel.h"
+#include <BuiltinType.h>	// TODO: Split out enum.
+#include <ExplicitType.h>	// TODO: Keys (as Entity* hex) in evaluate.
+#include <CQualifiers.h>
+
 #include "Timer.h"
 #include "DeclarationsHandler.h"
 
 namespace Martta
 {
+
+QString properName(QXmlAttributes const& _a)
+{
+	QString ret;
+	ret = _a.value("mangled").isEmpty() ? _a.value("name") : _a.value("demangled").isEmpty() ? _a.value("mangled") : _a.value("demangled");
+	ret = ret.section("::", -1);
+	if (_a.value("name").isEmpty() && !ret.startsWith("."))
+		ret = "." + ret;
+	return ret;
+}
 
 class IncomingFunctionType
 {
@@ -126,39 +116,75 @@ private:
 class Resolver
 {
 public:
+	Resolver(Entity* _s, QXmlAttributes const& _a, bool _isNamed = true): m_subject(_s)
+	{
+		if (_isNamed)
+			m_subject->adopt(Entity::evaluate(String(L"TextLabel[text=%1]").arg(qs(properName(_a)))));
+	}
 	virtual ~Resolver() {}
-	virtual void resolve(DeclarationsHandler* _h) = 0;
-	virtual bool isType() const { return false; }
+
+	Entity*					subject() const { return m_subject; }
+	
+	virtual void			resolve(DeclarationsHandler*) {}
+	virtual bool			isType() const { return false; }
+	
+protected:
+	Entity*					m_subject;
 };
 
 class FunctionResolver: public Resolver
 {
 public:
-	FunctionResolver(Function* _s, QXmlAttributes const& _a);
-	void addArgument(QXmlAttributes const& _a);
-	void addEllipsis() { m_subject->setEllipsis(true); }
+	FunctionResolver::FunctionResolver(Entity** _s, QXmlAttributes const& _a):
+		Resolver	(*_s = Entity::evaluate(String(L"Function")), _a),
+		m_returnsId	(_a.value("returns")),
+		m_contextId (_a.value("context")),
+		m_fileId	(_a.value("file"))
+	{}
+	
+	void addArgument(QXmlAttributes const& _a)
+	{
+		// TODO: Will have to handle defaults for C++ stuff (i.e. know if it has a default).
+		m_argIds << _a.value("type");
+		m_subject->back().place(Entity::evaluate(String(L"Argument{TextLabel[name=%1]}").arg(qs(_a.value("name")))));
+	}
+	
+	void addEllipsis() { Hash<String, String> p; p[L"ellipsis"] = "true"; m_subject->setProperties(p); }
 
-	virtual void resolve(DeclarationsHandler* _h);
+	virtual void resolve(DeclarationsHandler* _h)
+	{
+		Entity* e = _h->resolveType(m_returnsId);
+		m_subject->firstFor(e->kind()).place(e);
+		for (int i = 0; i < m_argIds.size(); i++)
+			m_subject->child(i)->adopt(_h->resolveType(m_argIds[i]));
+		_h->commitFunctionToFile(m_fileId, m_subject);
+	}
 
 private:
-	Function*				m_subject;
-
 	QString					m_returnsId;
 	QString					m_contextId;
 	QString					m_fileId;
-	List<QString>			m_argIds;
+	QStringList				m_argIds;
 };
 
 class VariableResolver: public Resolver
 {
 public:
-	VariableResolver(Variable* _s, QXmlAttributes const& _a);
+	VariableResolver(Entity** _s, QXmlAttributes const& _a):
+		Resolver	(*_s = Entity::evaluate(String(L"Variable[extern=%1]").arg(_a.value("extern") == "1")), _a),
+		m_typeId	(_a.value("type")),
+		m_contextId (_a.value("context")),
+		m_fileId	(_a.value("file"))
+	{}
 
-	virtual void resolve(DeclarationsHandler* _h);
+	virtual void resolve(DeclarationsHandler* _h)
+	{
+		Entity* t = _h->resolveType(m_typeId);
+		m_subject->firstFor(t->kind()).place(t);
+		_h->commitVariableToFile(m_fileId, m_subject);
+	}
 
 protected:
-	Variable*			m_subject;
-
 	QString				m_typeId;
 	QString				m_contextId;
 	QString				m_fileId;
@@ -167,53 +193,70 @@ protected:
 class EnumValueResolver: public Resolver
 {
 public:
-	EnumValueResolver(EnumValue* _s, QXmlAttributes const& _a);
-
-	virtual void resolve(DeclarationsHandler*) {}
+	EnumValueResolver(Entity** _s, QXmlAttributes const& _a):
+		Resolver(*_s = Entity::evaluate(String(L"EnumValue")), _a)
+	{}
 };
 
 class TypeResolver: public Resolver
 {
 public:
-	virtual void init(QXmlAttributes const& _a);
-	virtual void resolve(DeclarationsHandler* _h);
+	TypeResolver(Entity* _s, QXmlAttributes const& _a, bool _isNamed = true):
+		Resolver	(_s, _a, _isNamed),
+		m_id		(_a.value("id")),
+		m_contextId	(_a.value("context")),
+		m_fileId	(_a.value("file"))
+	{
+		Assert(!m_fileId.isEmpty(), "fileId must be non-null for non-fundamental types");
+	}
+	
+	virtual void resolve(DeclarationsHandler* _h)
+	{
+		if (!subject()->parent()->parent())
+			_h->commitTypeToFile(m_fileId, subject());
+	}
+
 	virtual bool isType() const { return true; }
 	virtual bool isWithFields() const { return false; }
 
 	QString id() const { return m_id; }
 
 protected:
-	virtual TopLevelType*	subject() const = 0;
-
 	QString					m_id;
 	QString					m_contextId;
 	QString					m_fileId;
 };
 
-template<class T> // T must be TopLevelType-derived.
-class SimpleResolver: public TypeResolver
+class EnumerationResolver: public TypeResolver
 {
 public:
-	SimpleResolver(T* _s): m_subject(_s) {}
-
-protected:
-	virtual TopLevelType*	subject() const { return m_subject; }
-	T*		m_subject;
+	EnumerationResolver(Entity** _s, QXmlAttributes const& _a):
+		TypeResolver(*_s = Entity::evaluate("Enumeration"), _a, !properName(_a).startsWith("."))
+	{}
 };
 
-class EnumerationResolver: public SimpleResolver<Enumeration>
+class TypedefResolver: public TypeResolver
 {
 public:
-	EnumerationResolver(Enumeration* _s, QXmlAttributes const& _a): SimpleResolver<Enumeration>(_s) { init(_a); }
-};
+	TypedefResolver(Entity** _s, QXmlAttributes const& _a):
+		TypeResolver(*_s = Entity::evaluate("Typedef"), _a), m_typeId(_a.value("type"))
+	{}
 
-class TypedefResolver: public SimpleResolver<Typedef>
-{
-public:
-	TypedefResolver(Typedef* _s, QXmlAttributes const& _a): SimpleResolver<Typedef>(_s) { init(_a); }
-
-	virtual void init(QXmlAttributes const& _a);
-	virtual void resolve(DeclarationsHandler* _h);
+	virtual void resolve(DeclarationsHandler* _h)
+	{
+		TypeResolver::resolve(_h);
+		Entity* t = _h->resolveType(m_typeId);
+		m_subject->adopt(t);
+		
+		if (ExplicitType* e = t->tryKind<ExplicitType>())
+			if (TypeDefinition* s = e->subject())
+				if (s->codeName() == m_subject->asKind<TypeDefinition>()->codeName())
+				{
+					// Cloned struct name; make the structure anonymous.
+					m_subject->adopt(s->self());
+					_h->removeFromFile(s->self());
+				}
+	}
 
 private:
 	QString				m_typeId;
@@ -222,158 +265,31 @@ private:
 class WithFieldsResolver: public TypeResolver
 {
 public:
+	WithFieldsResolver(Entity* _s, QXmlAttributes const& _a): TypeResolver(_s, _a) {}
+	
 	virtual bool isWithFields() const { return true; }
 };
 
-template<class T> // T must have m_members member.
-class WithFieldsSimpleResolver: public WithFieldsResolver
+class UnionResolver: public WithFieldsResolver
 {
 public:
-	WithFieldsSimpleResolver(T* _s): m_subject(_s) {}
-
-	virtual void resolve(DeclarationsHandler* _h);
-
-protected:
-	virtual TopLevelType*	subject() const { return m_subject; }
-
-private:
-	T*			m_subject;
+	UnionResolver(Entity** _s, QXmlAttributes const& _a): WithFieldsResolver(*_s = Entity::evaluate("Union"), _a) {}
 };
 
-class UnionResolver: public WithFieldsSimpleResolver<Union>
+class StructResolver: public WithFieldsResolver
 {
 public:
-	UnionResolver(Union* _s, QXmlAttributes const& _a): WithFieldsSimpleResolver<Union>(_s) { init(_a); }
+	StructResolver(Entity** _s, QXmlAttributes const& _a): WithFieldsResolver(*_s = Entity::evaluate("Struct"), _a) {}
 };
-
-class StructResolver: public WithFieldsSimpleResolver<Struct>
-{
-public:
-	StructResolver(Struct* _s, QXmlAttributes const& _a): WithFieldsSimpleResolver<Struct>(_s) { init(_a); }
-};
-
-QString properName(QXmlAttributes const& _a)
-{
-	QString ret;
-	ret = _a.value("mangled").isEmpty() ? _a.value("name") : _a.value("demangled").isEmpty() ? _a.value("mangled") : _a.value("demangled");
-	ret = ret.section("::", -1);
-	if (_a.value("name").isEmpty() && !ret.startsWith("."))
-		ret = "." + ret;
-	return ret;
-}
-
-EnumValueResolver::EnumValueResolver(EnumValue* _s, QXmlAttributes const& _a)
-{
-	_s->middle(Identifiable::Identity).place(new TextLabel(qs(properName(_a))));
-}
-
-FunctionResolver::FunctionResolver(Function* _s, QXmlAttributes const& _a):
-	m_subject(_s)
-{
-	_s->middle(Identifiable::Identity).place(new TextLabel(qs(properName(_a))));
-//	setFlag(m_subject->m_qualifiers, Extern, _a.value("extern") == "1");
-	m_subject->m_location.m_lineNumber = _a.value("line").toInt();
-
-	m_returnsId = _a.value("returns");
-	m_contextId = _a.value("context");
-	m_fileId = _a.value("file");
-}
-
-void FunctionResolver::addArgument(QXmlAttributes const& _a)
-{
-	// TODO: Will have to handle defaults for C++ stuff (i.e. know if it has a default).
-	m_argIds << _a.value("type");
-	Argument* v = new Argument;
-	m_subject->back().place(v);
-	v->middle(Identifiable::Identity).place(new TextLabel(qs(_a.value("name"))));
-}
-
-void FunctionResolver::resolve(DeclarationsHandler* _h)
-{
-	// at position 2 it's just a placeholder so this will work ok.
-	m_subject->middle(Function::Returned).place(_h->resolveType(m_returnsId));
-
-	for (int i = 0; i < m_argIds.size(); i++)
-		m_subject->argument(i)->middle(VariableNamer::OurType).place(_h->resolveType(m_argIds[i]));
-	m_subject->m_location.m_file = qs(_h->commitToFile(m_fileId, m_subject));
-}
-
-VariableResolver::VariableResolver(Variable* _s, QXmlAttributes const& _a):
-	m_subject(_s)
-{
-	_s->middle(Identifiable::Identity).place(new TextLabel(qs(properName(_a))));
-	m_subject->m_qualifiers.set(Extern, _a.value("extern") == "1");
-	m_subject->m_location.m_lineNumber = _a.value("line").toInt();
-
-	m_typeId = _a.value("type");
-	m_contextId = _a.value("context");
-	m_fileId = _a.value("file");
-}
-
-void VariableResolver::resolve(DeclarationsHandler* _h)
-{
-	m_subject->middle(VariableNamer::OurType).place(_h->resolveType(m_typeId));
-	if (!m_subject->parent()->parent())
-		m_subject->m_location.m_file = qs(_h->commitToFile(m_fileId, m_subject));
-}
-
-void TypeResolver::init(QXmlAttributes const& _a)
-{
-	if (properName(_a).startsWith(".") && subject()->isKind<Enumeration>())
-	{
-		// Don't do anything - we're an anonymous enum.
-	}
-	else
-		subject()->middle(Identifiable::Identity).place(new TextLabel(qs(properName(_a))));
-	subject()->m_location.m_lineNumber = _a.value("line").toInt();
-
-	m_id = _a.value("id");
-	m_contextId = _a.value("context");
-	m_fileId = _a.value("file");
-	if (m_fileId.isEmpty())
-		qCritical("NULL fileId for non-fundamental type %s", subject()->name().toCString());
-}
-
-void TypeResolver::resolve(DeclarationsHandler* _h)
-{
-	if (!subject()->parent()->parent())
-		subject()->m_location.m_file = qs(_h->commitToFile(m_fileId, subject()));
-}
-
-void TypedefResolver::init(QXmlAttributes const& _a)
-{
-	TypeResolver::init(_a);
-	m_typeId = _a.value("type");
-}
-
-void TypedefResolver::resolve(DeclarationsHandler* _h)
-{
-	TypeResolver::resolve(_h);
-	m_subject->middle(Typedef::Aliased).place(_h->resolveType(m_typeId));
-	if (ExplicitType* e = m_subject->tryChild<ExplicitType>(Typedef::Aliased))
-		if (Struct* s = e->subject()->tryKind<Struct>())
-			if (s->codeName() == m_subject->codeName())
-			{
-				// Cloned struct name; make the structure anonymous.
-				s->silentMove(m_subject->middle(Typedef::ShadowedStruct));
-				_h->removeFromFile(s);
-			}
-}
-
-template<class T>
-void WithFieldsSimpleResolver<T>::resolve(DeclarationsHandler* _h)
-{
-	TypeResolver::resolve(_h);
-}
 
 //////////////////////
 // DeclarationsHandler
 
-TypeEntity* DeclarationsHandler::resolveType(QString const& _typeId)
+Entity* DeclarationsHandler::resolveType(QString const& _typeId)
 {
 	if (m_types.contains(_typeId))
 	{
-		return new ExplicitType(m_types[_typeId]);
+		return new ExplicitType(m_types[_typeId]->asKind<TypeDefinition>());
 	}
 	else if (m_simples.contains(_typeId))
 	{
@@ -381,64 +297,62 @@ TypeEntity* DeclarationsHandler::resolveType(QString const& _typeId)
 	}
 	else if (m_functionTypes.contains(_typeId))
 	{
-		FunctionType* q = new FunctionType;
-		q->middle(FunctionType::Returned).place(resolveType(m_functionTypes[_typeId]->m_returnsId));
+		bool ellipsis = !m_functionTypes[_typeId]->m_argIds.isEmpty() && m_functionTypes[_typeId]->m_argIds.last().isEmpty();
+		Entity* r = resolveType(m_functionTypes[_typeId]->m_returnsId);
+		r = r->insert(Entity::evaluate(String(L"FunctionType[ellipsis=%1][wild=false]").arg(ellipsis)));
 		foreach(QString i, m_functionTypes[_typeId]->m_argIds)
-			if (i.isEmpty())
-				q->setEllipsis();
-		else
-			q->back().place(resolveType(i));
-		return q;
+			if (!i.isEmpty())
+				r->back().place(resolveType(i));
+			else
+				AssertNR(r->cardinalChildCount() == m_functionTypes[_typeId]->m_argIds.count() - 1)
+		return r;
 	}
 	else if (m_pointers.contains(_typeId))
 	{
-		TypeEntity* r = new Pointer;
-		r->middle(ModifyingType::Original).place(resolveType(m_pointers[_typeId]->m_type));
-		return r;
+		return resolveType(m_pointers[_typeId]->m_type)->insert(Entity::evaluate(L"Pointer"));
 	}
 	else if (m_cvQualifieds.contains(_typeId))
 	{
-		TypeEntity* r;
+		Entity* r = resolveType(m_cvQualifieds[_typeId]->m_type);
 		if (m_cvQualifieds[_typeId]->m_const)
-			(r = new Const)->middle(ModifyingType::Original).place(resolveType(m_cvQualifieds[_typeId]->m_type));
-		else
-			r = resolveType(m_cvQualifieds[_typeId]->m_type);
+			r = r->insert(Entity::evaluate(L"Const"));
 		return r;
 	}
 	else if (m_arrays.contains(_typeId))
 	{
-		TypeEntity* r = new Array;
-		r->middle(ModifyingType::Original).place(resolveType(m_arrays[_typeId]->m_type));
+		Entity* r = resolveType(m_arrays[_typeId]->m_type);
 		if (m_arrays[_typeId]->m_length)
-			r->middle(Array::Length).place(new IntegerLiteral(m_arrays[_typeId]->m_length));
+			r = r->insert(Entity::evaluate(String(L"Array{IntegerLiteral[value=%1]}").arg(m_arrays[_typeId]->m_length)));
+		else
+			r = r->insert(Entity::evaluate(L"Array"));
 		return r;
 	}
 	qCritical("Couldn't resolve type (%s)!", _typeId.toLatin1().data());
 	return TypeEntity::null;
 }
 
-QString DeclarationsHandler::commitToFile(QString const& _fileId, Function* _f)
+QString DeclarationsHandler::commitFunctionToFile(QString const& _fileId, Entity* _f)
 {
 	AssertNR(m_files.contains(_fileId));
 	m_files[_fileId]->m_functions << _f;
 	return m_files[_fileId]->m_filename;
 }
 
-QString DeclarationsHandler::commitToFile(QString const& _fileId, Variable* _f)
+QString DeclarationsHandler::commitVariableToFile(QString const& _fileId, Entity* _f)
 {
 	AssertNR(m_files.contains(_fileId));
 	m_files[_fileId]->m_variables << _f;
 	return m_files[_fileId]->m_filename;
 }
 
-QString DeclarationsHandler::commitToFile(QString const& _fileId, TopLevelType* _f)
+QString DeclarationsHandler::commitTypeToFile(QString const& _fileId, Entity* _f)
 {
 	AssertNR(m_files.contains(_fileId));
 	m_files[_fileId]->m_types << _f;
 	return m_files[_fileId]->m_filename;
 }
 
-void DeclarationsHandler::removeFromFile(TopLevelType* _e)
+void DeclarationsHandler::removeFromFile(Entity* _e)
 {
 	foreach (DeclarationFile* f, m_files.values())
 		f->m_types.removeAll(_e);
@@ -449,7 +363,6 @@ bool DeclarationsHandler::startDocument()
 	m_lastEnum = 0;
 	m_lastFunction = 0;
 	m_lastIncomingFunctionType = 0;
-
 	return true;
 }
 
@@ -514,9 +427,9 @@ bool DeclarationsHandler::startElement(QString const&, QString const& _n, QStrin
 					bool iwf = tr->isWithFields();
 					(void)(iwf);
 					AssertNR(iwf);
-					Variable* m = new Variable;
+					Entity* m;
+					m_resolvers << new VariableResolver(&m, _a);
 					con->back().place(m);
-					m_resolvers << new VariableResolver(m, _a);
 					goto OK;
 				}
 			}
@@ -527,21 +440,20 @@ bool DeclarationsHandler::startElement(QString const&, QString const& _n, QStrin
 	else if (_n == "EnumValue")
 	{
 		AssertNR(m_lastEnum);
-		// TODO: refactor for consistency
-		EnumValue* v = new EnumValue;
+		Entity* v;
+		m_resolvers << new EnumValueResolver(&v, _a);
 		m_lastEnum->back().place(v);
-		m_resolvers << new EnumValueResolver(v, _a);
 	}
 	else if (_n == "Function" && (!_a.value("mangled").isEmpty() || !_a.value("name").startsWith("_")))
 	{
-		con->back().place(m_functions[_a.value("id")] = new Function);
-		m_lastFunction = new FunctionResolver(m_functions[_a.value("id")], _a);
-		m_resolvers << m_lastFunction;
+		m_resolvers << (m_lastFunction = new FunctionResolver(&m_functions[_a.value("id")], _a));
+		con->back().place(m_functions[_a.value("id")]);
 		m_contexts[_a.value("id")] = m_functions[_a.value("id")];
 	}
 	else if (_n == "FunctionType")
 	{
-		m_functionTypes[_a.value("id")] = new IncomingFunctionType(_a);
+		m_lastIncomingFunctionType = new IncomingFunctionType(_a);
+		m_functionTypes[_a.value("id")] = m_lastIncomingFunctionType;
 	}
 	else if (_n == "Ellipsis")
 	{
@@ -552,38 +464,32 @@ bool DeclarationsHandler::startElement(QString const&, QString const& _n, QStrin
 	}
 	else if (_n == "Typedef")
 	{
-		Typedef* t = new Typedef;
-		con->back().place(t);
-		m_types[_a.value("id")] = t;
-		m_resolvers << new TypedefResolver(t, _a);
-		m_contexts[_a.value("id")] = t;
+		m_resolvers << new TypedefResolver(&m_types[_a.value("id")], _a);
+		con->back().place(m_types[_a.value("id")]);
+		m_contexts[_a.value("id")] = m_types[_a.value("id")];
 	}
 	else if (_n == "Enumeration")
 	{
-		con->back().place(m_lastEnum = new Enumeration);
+		m_resolvers << new EnumerationResolver(&m_lastEnum, _a);
+		con->back().place(m_lastEnum);
 		m_types[_a.value("id")] = m_lastEnum;
-		m_resolvers << new EnumerationResolver(m_lastEnum, _a);
 	}
 	else if (_n == "Struct")
 	{
-		Struct* t = new Struct;
-		con->back().place(t);
-		m_types[_a.value("id")] = t;
-		m_resolvers << new StructResolver(t, _a);
-		m_contexts[_a.value("id")] = t;
+		m_resolvers << new StructResolver(&m_types[_a.value("id")], _a);
+		con->back().place(m_types[_a.value("id")]);
+		m_contexts[_a.value("id")] = m_types[_a.value("id")];
 	}
 	else if (_n == "Union")
 	{
-		Union* t = new Union;
-		con->back().place(t);
-		m_types[_a.value("id")] = t;
-		m_resolvers << new UnionResolver(t, _a);
-		m_contexts[_a.value("id")] = t;
+		m_resolvers << new UnionResolver(&m_types[_a.value("id")], _a);
+		con->back().place(m_types[_a.value("id")]);
+		m_contexts[_a.value("id")] = m_types[_a.value("id")];
 	}
 	else if (_n == "Variable" && (!_a.value("mangled").isEmpty() || !_a.value("name").startsWith("_")))
 	{
-		con->back().place(m_variables[_a.value("id")] = new Variable);
-		m_resolvers << new VariableResolver(m_variables[_a.value("id")], _a);
+		m_resolvers << new VariableResolver(&m_variables[_a.value("id")], _a);
+		con->back().place(m_variables[_a.value("id")]);
 		m_contexts[_a.value("id")] = m_variables[_a.value("id")];
 	}
 	else if (_n == "File")

@@ -21,9 +21,10 @@
 #include <QtGui>
 #include <QtXml>
 
-#include "ValueDefiner.h"
-#include "BareTyped.h"
-#include "ChangeMan.h"
+#include <ValueDefiner.h>
+#include <BareTyped.h>
+#include <Declaration.h>
+#include <ChangeMan.h>
 
 #include "Project.h"
 #include "IncludeProject.h"

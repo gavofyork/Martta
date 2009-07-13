@@ -21,21 +21,16 @@
 #pragma once
 
 #include "LambdaNamer.h"
-#include "Location.h"
 #include "Compound.h"
 #include "TopLevel.h"
 
 namespace Martta
 {
 
-class FunctionResolver;
-
 class Function: public TopLevel, public_interface LambdaNamer
 {
 	MARTTA_OBJECT(TopLevel)
 	MARTTA_INHERITS(LambdaNamer, 0)
-	
-	friend class FunctionResolver;
 	
 public:
 	Function(): m_qualifiers(NoQualifiers), m_ellipsis(false) {}
@@ -56,7 +51,6 @@ protected:
 	virtual bool						keyPressed(KeyEvent const* _e) { return LambdaNamer::keyPressed(_e) ? true : Super::keyPressed(_e); }
 	
 private:
-	Location							m_location;
 	Qualifiers							m_qualifiers;
 	bool								m_ellipsis;
 };

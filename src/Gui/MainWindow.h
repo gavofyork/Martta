@@ -23,9 +23,10 @@
 
 #include <QMainWindow>
 
+#include <CullManager.h>
+#include <ModelPtr.h>
+
 #include "ui_MainWindow.h"
-#include "CullManager.h"
-#include "ModelPtr.h"
 
 class QProcess;
 

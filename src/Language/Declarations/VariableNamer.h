@@ -36,6 +36,7 @@ public:
 	MARTTA_NAMED(OurType)
 	
 	TypeEntity*							actualType() const;
+	virtual String						summary() const { return basicCode(); }
 	String								basicCode() const;
 	
 protected:

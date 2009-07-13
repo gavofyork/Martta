@@ -27,18 +27,16 @@
 namespace Martta
 {
 
-class TypeDefinition;
-class Function;
-class Variable;
+class Entity;
 
 class DeclarationFile
 {
 public:
 	DeclarationFile(QString const& _name): m_filename(_name) {}
 	QString					m_filename;
-	QList<TypeDefinition*>	m_types;
-	QList<Function*>		m_functions;
-	QList<Variable*>		m_variables;
+	QList<Entity*>			m_types;
+	QList<Entity*>			m_functions;
+	QList<Entity*>			m_variables;
 };
 
 }

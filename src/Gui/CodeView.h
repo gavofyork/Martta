@@ -28,8 +28,8 @@ using namespace MarttaSupport;
 #include <QWidget>
 #include <QPicture>
 
-#include "Entity.h"
-#include "CodeScene.h"
+#include <Entity.h>
+#include <CodeScene.h>
 
 namespace Martta
 {

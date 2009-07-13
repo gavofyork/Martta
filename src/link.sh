@@ -198,6 +198,7 @@ prepare InScopeReferenced InScopeReferenced "Referenced Declaration"
 
 prepare TopLevel TopLevel "Declaration TextLabel"
 prepare Root Root "TopLevel Declaration"
+prepare TopLevelType TopLevelType "TypeEntity ExplicitType TopLevel"
 
 prepare VariableNamer VariableNamer "QualifierTypes IdLabel TextLabel ValueDefiner"
 prepare Argument Argument "VariableNamer TypeEntity TextLabel Declaration"
@@ -210,11 +211,8 @@ prepare ArgumentReferenced ArgumentReferenced "Referenced LambdaNamer Declaratio
 
 prepare EnumerationNamer "EnumerationNamer EnumValue" "TextLabel ValueDefiner ExplicitType Declaration BuiltinType Statement"
 
-prepare Location Location ""
-prepare Variable Variable "CQualifiers Location VariableNamer TopLevel"
-prepare Function Function "CQualifiers Location LambdaNamer TopLevel"
-
-prepare TopLevelType TopLevelType "TypeEntity ExplicitType Location TopLevel"
+prepare Variable Variable "CQualifiers VariableNamer TopLevel"
+prepare Function Function "CQualifiers LambdaNamer TopLevel"
 
 prepare Namespace Namespace "TopLevel TopLevelType"
 

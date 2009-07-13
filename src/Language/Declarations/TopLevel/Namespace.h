@@ -34,6 +34,7 @@ public:
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual String						defineLayout(ViewKeys const&) const;
 	
+	virtual String						finalCode() const;
 	String								interfaceCode() const;
 	String								implementationCode() const;
 

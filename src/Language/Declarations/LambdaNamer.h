@@ -66,6 +66,7 @@ public:
 	/// Basic code for this function call. Is essentially the interfaceCode without the final ';'.
 	/// A default implementation exists.
 	virtual String						basicCode(FunctionCodeScope _ref) const;
+	virtual String						summary() const { return basicCode(InsideScope); }
 	virtual String						definePreLayout(ViewKeys const&) const { return String::null; }
 	virtual String						defineMidLayout(ViewKeys const&, String const& _middle) const { return _middle; }
 	virtual String						definePostLayout(ViewKeys const&) const { return String::null; }

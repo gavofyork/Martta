@@ -60,6 +60,7 @@ private:
 	virtual bool						canStandAlone() const { return false; }
 	virtual bool						defineSimilarityTo(TypeEntity const* _t, Castability _c) const;
 	virtual List<Declaration*>			utilisedX() const;
+	virtual void						setProperties(Hash<String, String> const& _ps) { Super::setProperties(_ps); m_ellipsis = _ps[L"ellipsis"].toBool(); m_wild = _ps[L"wild"].toBool(); }
 
 	bool m_ellipsis;
 	bool m_wild;

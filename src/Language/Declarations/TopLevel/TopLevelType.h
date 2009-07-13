@@ -21,20 +21,15 @@
 #pragma once
 
 #include "TypeDefinition.h"
-#include "Location.h"
 #include "TopLevel.h"
 
 namespace Martta
 {
 
-class TypeResolver;
-
 class TopLevelType: public TopLevel, public_interface TypeDefinition
 {
 	MARTTA_PLACEHOLDER(TopLevel)
 	MARTTA_INHERITS(TypeDefinition, 0)
-
-	friend class TypeResolver;
 	
 public:
 	
@@ -44,12 +39,11 @@ protected:
 	
 	// From TypeDefinition
 	virtual String						code() const { return codeName(); }
+	virtual String						summary() const { return code(); }
 	virtual bool						hasDefaultConstructor() const { return false; }
 	virtual Types						assignableTypes() const;
 	virtual List<Declaration*>			utilisedInUse() const { return List<Declaration*>() << const_cast<TopLevelType*>(this); }
 	virtual inline String				defineLabelName(String const& _text) const { return camelCase(_text, true); }
-	
-	Location							m_location;
 };
 
 }

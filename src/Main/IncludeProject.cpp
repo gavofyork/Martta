@@ -20,6 +20,8 @@
 
 #include <QtXml>
 
+#include <Entity.h>
+
 #include "DeclarationFile.h"
 #include "IncludeProject.h"
 
