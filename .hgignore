@@ -1,8 +1,11 @@
 .DS_Store
+Makefile
 bin/
 Editor/build/
-Editor/Editor.xcodeproj/
-Editor/*_*
+Editor/Martta.app/
+Editor/ui_*
+Editor/qrc_*
+Editor/moc_*
 Editor/*.moc
 Language/build
 plugins/

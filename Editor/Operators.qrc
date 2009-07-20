@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/" >
+        <file>delete.svg</file>
+        <file>arrow.svg</file>
+        <file>dot.svg</file>
+        <file>global.svg</file>
+		<file>padlock.svg</file>
+		<file>snowflake.svg</file>
+		<file>fire.svg</file>
+    </qresource>
+</RCC>

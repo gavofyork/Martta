@@ -70,7 +70,14 @@ void ModelPtrFace::set(String const& _k)
 	m_cache = 0;
 	m_key = _k;
 	if (!_k.isEmpty())
-		ModelPtrRegistrar::get()->toBeRestored(this);
+	{
+		bool ok;
+		void* addr;
+		if (_k.startsWith("0x") && (addr = (void*)_k.mid(2).toUint(&ok, 16)) && ok)
+			m_cache = ((Entity*)addr)->asKind<Identifiable>();
+		else
+			ModelPtrRegistrar::get()->toBeRestored(this);
+	}
 }
 
 }
