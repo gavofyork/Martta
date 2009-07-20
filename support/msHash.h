@@ -27,6 +27,7 @@
 #pragma once
 
 #include "msSupport.h"
+#include "msDebug.h"
 #include "msList.h"
 
 namespace MarttaSupport
@@ -200,7 +201,7 @@ class /*MS_EXPORT*/ GeneralHash
 	template<typename Key2, typename T2, uint Min2, bool AlwaysMulti2, bool ImplicitKey2> friend class GeneralHash;
 
 #if defined(QT_DEBUG)
-	friend inline QDebug operator<<(QDebug _stream, ::MarttaSupport::GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey> const& _me) { return _me.streamToDebug(_stream); }
+//	friend inline QDebug operator<<(QDebug _stream, ::MarttaSupport::GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey> const& _me) { return _me.streamToDebug(_stream); }
 #endif
 	friend inline TextStream& operator<<(TextStream& _stream, ::MarttaSupport::GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey> const& _me) { return _me.streamToDebug(_stream); }
 

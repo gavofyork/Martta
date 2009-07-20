@@ -1,0 +1,17 @@
+CONFIG -= debug release qt stl exceptions rtti
+CONFIG *= debug shared plugin thread
+profile {
+DEFINES *= PROFILE
+CONFIG *= release
+}
+debug:DEFINES *= DEBUG
+release:DEFINES *= RELEASE
+TEMPLATE = lib
+VERSION = 0.1.0
+BASE = $$PWD
+OBJECTS_DIR = $$BASE/build
+DEPENDPATH += ../../support
+INCLUDEPATH += ../../support
+QMAKE_LIBDIR += ../../support
+LIBS += -lsupport
+DESTDIR = $$BASE/../plugins

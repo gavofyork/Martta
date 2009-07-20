@@ -17,6 +17,7 @@ release:DEFINES += RELEASE
 
 mac:QMAKE_LFLAGS += -Wl,-Sp
 unix {
+	QMAKE_CXXFLAGS_DEBUG += -fasm-blocks
 	debug {
 		message("Debug build")
 		QMAKE_CXXFLAGS_DEBUG += -O0 -g3

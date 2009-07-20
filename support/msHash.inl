@@ -1000,7 +1000,7 @@ GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::inverted() const
 	return ret;
 }
 
-#if defined(QT_DEBUG)
+#if defined(QT_DEBUG)&&0
 template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 QDebug GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::streamToDebug(QDebug _stream) const
 {

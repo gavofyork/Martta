@@ -2,14 +2,14 @@
  * Version: MarttaSupport License version 1.0
  *
  * The contents of this file are subject to the MarttaSupport License
- * version 1.0 (the "License"); you may not use this file except in 
- * compliance with the License. You should have received a copy of the 
+ * version 1.0 (the "License"); you may not use this file except in
+ * compliance with the License. You should have received a copy of the
  * MarttaSupport License "COPYING.MarttaSupport" along with Martta; if not
  * you may obtain a copy of the License at http://quidprocode.co.uk/Martta/
  *
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations under 
+ * License for the specific language governing rights and limitations under
  * the License.
  *
  * The Initial Developer of the code in this file is Gavin Wood.
@@ -46,7 +46,7 @@ class DebugStream
 {
 public:
 	enum Channel { Info = 0, Debug, Warning, Critical, FailedAssert };
-	
+
 	inline DebugStream(Channel _ch = Debug):
 		m_buffer	(_ch == Warning ? L"*** WARNING " : _ch == Critical ? L"!!! CRITICAL " : _ch == FailedAssert ? L"!!! Assert FAILED " : L""),
 		m_ts		(&m_buffer),
@@ -66,10 +66,10 @@ public:
 			m_buffer.append(L'\n');
 		debugOutput(m_buffer.data());
 	}
-	
+
 	template<typename T>
 	DebugStream& operator<<(T const& _t) { ensureSpace(); m_ts << _t; return *this; }
-	
+
 private:
 	inline void ensureSpace()
 	{
@@ -82,7 +82,11 @@ private:
 	int m_channel;
 };
 
-#define mInfo() MarttaSupport::DebugStream(MarttaSupport::DebugStream::Info) << ""
+#if defined(__GNUC__)
+#define mInfo() MarttaSupport::DebugStream(MarttaSupport::DebugStream::Info) << __PRETTY_FUNCTION__
+#else
+#define mInfo() MarttaSupport::DebugStream(MarttaSupport::DebugStream::Info) << __FUNCTION__
+#endif
 #define mDebug() MarttaSupport::DebugStream(MarttaSupport::DebugStream::Debug) << ""
 #define mWarning() MarttaSupport::DebugStream(MarttaSupport::DebugStream::Warning) << ""
 #define mCritical() MarttaSupport::DebugStream(MarttaSupport::DebugStream::Critical) << ""

@@ -5,7 +5,7 @@ BUG Moving is crazily slow over statements.
   - Remove all allowedToBeKind (or other Kind-checking) in handlers.
 BUG 'Mstr'-> doesn't move away (only stops editing).
 BUG Assertion on '!?'.
-CRASH delete a Referenced EnumValue. 
+CRASH delete a Referenced EnumValue.
 
 Small things:
 - Special EntryMethod.
@@ -24,7 +24,7 @@ Small things:
 - BRINGBACK decoration code into layout system and markup for it.
 - BRINGBACK GenericMemberOperation::isChildInValidState - do what it says.
 Dynamic code-loading (plugins).
-- Dependency-specifier files.
+- Check it in!
 - Referenced as placeholder (no key press handling)
   - QUICK Vim-style tab cycling of possibles.
   - BRINGBACK Colouring (layout) of possibles (Entity::defineEditLayout(ViewKeysC&, Named*)
