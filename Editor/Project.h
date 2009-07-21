@@ -82,7 +82,6 @@ public slots:
 	void build();
 
 	void clear();
-	void triggerChange() { changed(); }
 
 private slots:
 	void reloadHeaders();	// don't forget to update any subjects after this!
@@ -92,7 +91,6 @@ private slots:
 
 signals:
 	void subjectInvalid();
-	void changed();
 	void nameChanged();
 
 public:

@@ -3,10 +3,6 @@ Makefile
 bin/
 Editor/build/
 Editor/Martta.app/
-Editor/ui_*
-Editor/qrc_*
-Editor/moc_*
-Editor/*.moc
 Language/build
 plugins/
 plugin-loader/

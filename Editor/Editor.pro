@@ -9,6 +9,10 @@ BASE = ../Language
 TWD=$$PWD
 TARGET = Editor
 include(../Language/dep.pri)
+OBJECTS_DIR = build
+UI_DIR = build
+RCC_DIR = build
+MOC_DIR = build
 DEPENDS =
 TARGET = Martta
 QMAKE_LIBDIR += ../support ../plugins

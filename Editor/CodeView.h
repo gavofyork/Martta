@@ -22,6 +22,7 @@
 
 #include <msStringList.h>
 #include <msString.h>
+#undef inline
 using namespace MarttaSupport;
 
 #include <QSet>
