@@ -23,11 +23,25 @@
 #include <Entity.h>
 #undef inline
 
-#include "Timer.h"
 #include "DeclarationsHandler.h"
 
 namespace Martta
 {
+
+static inline String qs(QString const& _qs)
+{
+	String ret;
+	ret.resize(_qs.length());
+	wchar_t* d = ret.data();
+	_qs.toWCharArray(d);
+	ret.dataChanged(d);
+	return ret;
+}
+
+static inline QString qs(String const& _s)
+{
+	return QString::fromWCharArray(_s.data(), _s.length());
+}
 
 QString properName(QXmlAttributes const& _a)
 {
@@ -158,7 +172,6 @@ public:
 		m_subject->firstFor(e->kind()).place(e);
 		for (int i = 0; i < m_argIds.size(); i++)
 			m_subject->child(i)->adopt(_h->resolveType(m_argIds[i]));
-		_h->commitFunctionToFile(m_fileId, m_subject);
 	}
 
 private:
@@ -182,7 +195,6 @@ public:
 	{
 		Entity* t = _h->resolveType(m_typeId);
 		m_subject->firstFor(t->kind()).place(t);
-		_h->commitVariableToFile(m_fileId, m_subject);
 	}
 
 protected:
@@ -209,12 +221,6 @@ public:
 		m_fileId	(_a.value("file"))
 	{
 		Assert(!m_fileId.isEmpty(), "fileId must be non-null for non-fundamental types");
-	}
-
-	virtual void resolve(DeclarationsHandler* _h)
-	{
-		if (!subject()->parent()->parent())
-			_h->commitTypeToFile(m_fileId, subject());
 	}
 
 	virtual bool isType() const { return true; }
@@ -256,7 +262,6 @@ public:
 		{
 			// Cloned struct name; make the structure anonymous.
 			m_subject->adopt(td);
-			_h->removeFromFile(td);
 		}
 	}
 
@@ -334,33 +339,6 @@ Entity* DeclarationsHandler::resolveType(QString const& _typeId, Entity** _td)
 	}
 	qCritical("Couldn't resolve type (%s)!", _typeId.toLatin1().data());
 	return 0;
-}
-
-QString DeclarationsHandler::commitFunctionToFile(QString const& _fileId, Entity* _f)
-{
-	AssertNR(m_files.contains(_fileId));
-	m_files[_fileId]->m_functions << _f;
-	return m_files[_fileId]->m_filename;
-}
-
-QString DeclarationsHandler::commitVariableToFile(QString const& _fileId, Entity* _f)
-{
-	AssertNR(m_files.contains(_fileId));
-	m_files[_fileId]->m_variables << _f;
-	return m_files[_fileId]->m_filename;
-}
-
-QString DeclarationsHandler::commitTypeToFile(QString const& _fileId, Entity* _f)
-{
-	AssertNR(m_files.contains(_fileId));
-	m_files[_fileId]->m_types << _f;
-	return m_files[_fileId]->m_filename;
-}
-
-void DeclarationsHandler::removeFromFile(Entity* _e)
-{
-	foreach (DeclarationFile* f, m_files.values())
-		f->m_types.removeAll(_e);
 }
 
 bool DeclarationsHandler::startDocument()
@@ -501,10 +479,6 @@ bool DeclarationsHandler::startElement(QString const&, QString const& _n, QStrin
 		parent->adopt(m_variables[_a.value("id")]);
 		m_contexts[_a.value("id")] = m_variables[_a.value("id")];
 	}
-	else if (_n == "File")
-	{
-		m_files[_a.value("id")] = new DeclarationFile(_a.value("name"));
-	}
 	else if (_n == "Namespace")
 	{
 		if (_a.value("name") == "::")
@@ -534,14 +508,12 @@ bool DeclarationsHandler::endDocument()
 {
 	mInfo() << s_news << "total allocations" << s_deletes << "total deallocations.";
 	// Resolve all types.
-	TIME_STATEMENT(Resolving types)
 	foreach(Resolver* f, m_resolvers)
 	{
 		f->resolve(this);
 		delete f;
 	}
 
-	TIME_STATEMENT(Clean temps)
 	{
 		// Clean up all temporaries that the resolution process depended on.
 		foreach(ArrayType* i, m_arrays.values()) delete i;
@@ -552,8 +524,6 @@ bool DeclarationsHandler::endDocument()
 		m_pointers.clear();
 		foreach(IncomingFunctionType* i, m_functionTypes.values()) delete i;
 		m_functionTypes.clear();
-
-		(*m_l) = m_files.values();
 	}
 	return true;
 }

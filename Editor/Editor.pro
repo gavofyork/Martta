@@ -3,28 +3,31 @@
 ######################################################################
 
 DEPS = Entity CQualifiers CTypes
-QT       += svg webkit xml
+QT += svg webkit xml
 TEMPLATE = app
 BASE = ../Language
 TWD=$$PWD
 TARGET = Editor
 include(../Language/dep.pri)
+
 OBJECTS_DIR = build
 UI_DIR = build
 RCC_DIR = build
 MOC_DIR = build
 DEPENDS =
-TARGET = Martta
 QMAKE_LIBDIR += ../support ../plugins
 INCLUDEPATH *= ../support
 DEPENDPATH += .
+
+TARGET = Martta
+
 DISTFILES += ../TODO
 RESOURCES += Operators.qrc
+FORMS += MainWindow.ui
+mac:ICON = Martta.icns
 
-ICON = Martta.icns
-
-QMAKE_BUNDLE_DATA += SUPPORT
 include(files.pro)
+QMAKE_BUNDLE_DATA += SUPPORT
 SUPPORT.version = Versions
 SUPPORT.files = $$SUPPORT_HEADERS $$SUPPORT_INLINES
 SUPPORT.path = Support
@@ -36,7 +39,7 @@ unix {
 	 SUPPORT.files += ../support/libsupport.a
 	 LIBS += ../support/libsupport.a
 }
-FORMS += MainWindow.ui
+
 # Input
 HEADERS += CodeView.h \
 		   CommonGraphics.h \

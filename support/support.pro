@@ -35,6 +35,7 @@ unix {
 TARGET = support
 DEPENDPATH += .
 INCLUDEPATH += .
+OBJECTS_DIR = build
 
 # Input
 HEADERS += msSupport.h msList.h msString.h msList.inl msHash.h msHash.inl msRgb.h msTextStream.h msDebug.h msStringList.h msFlags.h

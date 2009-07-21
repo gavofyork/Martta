@@ -123,24 +123,27 @@ public: \
 	MARTTA_INITIALISED_PLACEHOLDER(S)
 
 #define MARTTA_NAMED(X) static const int X;
-#define MARTTA_NAMED_CPP(E, X) const int E::X = registerName(-((int)(((unsigned)&X) / sizeof(X))), #E "::" #X);
+#define MARTTA_NAMED_CPP(E, X) const int E::X = registerName(-((int)(((unsigned)&X) / sizeof(X))), #E "::" #X)
 
 #define FirstNamed Super::EndOfNamed
 
 #define MARTTA_CPP_BASIC(E) \
-	static AuxilliaryFace const* s_auxilliary_##E = 0; \
+	static AuxilliaryFace const* s_auxilliary_##E = 0;
+#define MARTTA_CPP_BASIC_END(E) \
 	Kind E::staticKind = Kind(E::staticAuxilliary());
 
 #define MARTTA_OBJECT_CPP(E) \
 	MARTTA_CPP_BASIC(E) \
 	AuxilliaryFace const* E::staticAuxilliary() { if (!s_auxilliary_##E) s_auxilliary_##E = new Auxilliary<E>("Martta::" #E); return s_auxilliary_##E; } \
-	void const* E::tryInterface(Kind _k) const { /*mDebug() << "tryInterface(Object): " << E::staticKind.name() << ", searching " << _k.name();*/ AssertNR(this); if (_k == staticKind) { /*mDebug() << "Shouldn't happen - object matched but wanted interface: Want " << _k.name() << ", got " << E::staticKind.name() << "!";*/ return (void const*)this; } /*mDebug() << "Trying ASTHelper " << GetCount<E>::Value << " interfaces";*/ if (void const* r = ASTHelper<GetCount<E>::Value, E>::altSupers(this, _k)) return r; /*mDebug() << "Moving to Super (" << Super::staticKind.name() << ")...";*/ return Super::tryInterface(_k); }
+	void const* E::tryInterface(Kind _k) const { /*mDebug() << "tryInterface(Object): " << E::staticKind.name() << ", searching " << _k.name();*/ AssertNR(this); if (_k == staticKind) { /*mDebug() << "Shouldn't happen - object matched but wanted interface: Want " << _k.name() << ", got " << E::staticKind.name() << "!";*/ return (void const*)this; } /*mDebug() << "Trying ASTHelper " << GetCount<E>::Value << " interfaces";*/ if (void const* r = ASTHelper<GetCount<E>::Value, E>::altSupers(this, _k)) return r; /*mDebug() << "Moving to Super (" << Super::staticKind.name() << ")...";*/ return Super::tryInterface(_k); } \
+	MARTTA_CPP_BASIC_END(E)
 
 #define MARTTA_PLACEHOLDER_CPP(E) MARTTA_OBJECT_CPP(E)
 
 #define MARTTA_INTERFACE_CPP(E) \
 	MARTTA_CPP_BASIC(E) \
 	AuxilliaryFace const* E::staticAuxilliary() { if (!s_auxilliary_##E) s_auxilliary_##E = new InterfaceAuxilliary<E>("Martta::" #E); return s_auxilliary_##E; } \
-	void const* E::tryInterface(Kind _k) const { /*mDebug() << "tryInterface: " << E::staticKind.name() << ", searching " << _k.name();*/ AssertNR(this); if (_k == staticKind) { /*mDebug() << "Matched: Want " << _k.name() << ", got " << E::staticKind.name() << "!"; */return (void const*)this; } /*mDebug() << "Trying ASTHelper " << GetCount<E>::Value << " interfaces";*/ if (void const* r = ASTHelper<GetCount<E>::Value, E>::altSupers(this, _k)) return r; /*mDebug() << "Failed";*/ return 0; }
+	void const* E::tryInterface(Kind _k) const { /*mDebug() << "tryInterface: " << E::staticKind.name() << ", searching " << _k.name();*/ AssertNR(this); if (_k == staticKind) { /*mDebug() << "Matched: Want " << _k.name() << ", got " << E::staticKind.name() << "!"; */return (void const*)this; } /*mDebug() << "Trying ASTHelper " << GetCount<E>::Value << " interfaces";*/ if (void const* r = ASTHelper<GetCount<E>::Value, E>::altSupers(this, _k)) return r; /*mDebug() << "Failed";*/ return 0; } \
+	MARTTA_CPP_BASIC_END(E)
 
 #define public_interface virtual public

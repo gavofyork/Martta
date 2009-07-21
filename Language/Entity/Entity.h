@@ -367,6 +367,7 @@ public:
 	virtual void						properties(Hash<String, String>&) const {}
 	virtual void						setProperties(Hash<String, String> const&) {}
 	virtual void						apresLoad() {}	// Called following a load after the model has been loaded.
+	virtual void						archive() { Hash<String, String> h; properties(h); setProperties(h); }	// Should (at least) force all ModelPtrs to revert to textual form.
 
 	// UI
 	///

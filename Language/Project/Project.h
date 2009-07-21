@@ -20,32 +20,23 @@
 
 #pragma once
 
-#include "Declaration.h"
+#include <msString.h>
+using namespace MarttaSupport;
+
+#include "Meta.h"
 
 namespace Martta
 {
 
-/**
- * The language root for an entire program.
- *
- * This encompasses everything required to compile a single program. It should include forward declarations of all
- * kinds from all dependencies (including C-style).
- *
- * Aside from that it should also encompass all the implementation of the project in question.
- */
-class Root: public Declaration
+class Project
 {
-	MARTTA_OBJECT(Declaration)
+	MARTTA_INTERFACE
 
 public:
-	enum { Included = FirstNamed, EndOfNamed };
+	virtual ~Project() {}
 
-	virtual String						name() const { return String(); }
-	virtual Entity*						parent() const { return 0; }
-	virtual String						reference() const { return ""; }
-	virtual String						key() const { return ""; }
-	virtual Kinds						allowedKinds(int) const;
-	virtual void						apresLoad() { restorePtrs(); }
+protected:
+	String const& supportPath() const;
 };
 
 }

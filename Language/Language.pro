@@ -15,3 +15,4 @@ SUBDIRS = \
  CStuff \
  Members \
  Class \
+ Projects \

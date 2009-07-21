@@ -20,32 +20,27 @@
 
 #pragma once
 
-#include "Declaration.h"
+#include "Solution.h"
+#include "Root.h"
 
 namespace Martta
 {
 
-/**
- * The language root for an entire program.
- *
- * This encompasses everything required to compile a single program. It should include forward declarations of all
- * kinds from all dependencies (including C-style).
- *
- * Aside from that it should also encompass all the implementation of the project in question.
- */
-class Root: public Declaration
+class CSolution: public Root, public_interface Solution
 {
-	MARTTA_OBJECT(Declaration)
+	MARTTA_OBJECT(Root)
+	MARTTA_INHERITS(Solution, 0)
 
 public:
-	enum { Included = FirstNamed, EndOfNamed };
+	virtual void						initialiseNew();
+	void								rejigIncludes();
 
-	virtual String						name() const { return String(); }
-	virtual Entity*						parent() const { return 0; }
-	virtual String						reference() const { return ""; }
-	virtual String						key() const { return ""; }
-	virtual Kinds						allowedKinds(int) const;
-	virtual void						apresLoad() { restorePtrs(); }
+protected:
+	virtual int							minRequired(int _i) const { return Super::minRequired(_i); }
+	virtual Kinds						allowedKinds(int _i) const;
+
+private:
+	String								includeCode() const;
 };
 
 }
