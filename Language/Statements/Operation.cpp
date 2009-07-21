@@ -32,7 +32,7 @@ using namespace MarttaSupport;
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(Operation);
+MARTTA_PLACEHOLDER_CPP(Operation);
 
 Type Operation::prototypeOf(Type const& _t, int _index)
 {

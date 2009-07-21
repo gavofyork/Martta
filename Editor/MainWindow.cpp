@@ -21,11 +21,13 @@
 #include <QtGui>
 #include <QtXml>
 
+#ifdef Q_WS_MAC
+#include <CoreFoundation/CoreFoundation.h>
+#endif
+
 #include <ChangeMan.h>
 #undef inline
 
-#include "Project.h"
-#include "IncludeProject.h"
 #include "Timer.h"
 #include "MainWindow.h"
 
@@ -94,17 +96,18 @@ void MainWindow::loadPlugins()
 
 	AuxilliaryRegistrar::get()->jigCache();
 	AuxilliaryRegistrar::get()->initialiseClasses();
+
+	updateLanguage();
 }
 
 MainWindow::MainWindow(QWidget* _p, Qt::WindowFlags _f):
 	QMainWindow			(_p, _f),
-	m_program			(0),
+	m_solution			(0),
 	m_updateTimer		(0)
 {
 	qApp->addLibraryPath("/Users/gav/Projects/Martta/plugins");
 
 	setupUi(this);
-	m_codeView = codeView;
 
 #ifdef Q_WS_MAC
 	setUnifiedTitleAndToolBarOnMac(true);
@@ -120,23 +123,14 @@ MainWindow::MainWindow(QWidget* _p, Qt::WindowFlags _f):
 	setCorner(Qt::BottomRightCorner, Qt::RightDockWidgetArea);
 
 	CullManager::get()->setDelayedActor(new CullActor(this));
-	dependencies->setHeader(0);
-	connect(dependencies, SIGNAL(customContextMenuRequested(const QPoint&)), SLOT(showDependenciesMenu(const QPoint&)));
-	connect(m_codeView, SIGNAL(currentChanged(Entity*)), SLOT(entityFocused(Entity*)));
+	connect(codeView, SIGNAL(currentChanged(Entity*)), SLOT(entityFocused(Entity*)));
 
 	loadPlugins();
-	m_project = new Project(s.value("mainwindow/lastproject").toString());
-	projectRenamed();
-	connect(m_project, SIGNAL(nameChanged()), SLOT(projectRenamed()));
-	connect(m_project, SIGNAL(subjectInvalid()), SLOT(resetSubject()));
-	dependencies->setModel(m_project->cDependsModel());
-
-
-//	classesView->setSubject(m_project->ns());
+//	if (QFile::exists(s.value("mainwindow/lastproject").toString()))
+//		openSolution(qs(s.value("mainwindow/lastproject").toString()));
 
 	resetSubject();
-	updateProgramCode();
-	updateLanguage();
+	ChangeMan::get()->setChanged();
 }
 
 MainWindow::~MainWindow()
@@ -147,18 +141,33 @@ MainWindow::~MainWindow()
 	QSettings s;
 	s.setValue("mainwindow/state", saveState());
 	s.setValue("mainwindow/geometry", saveGeometry());
-	s.setValue("mainwindow/lastproject", m_project->filename());
+	s.setValue("mainwindow/lastproject", qs(m_solution->filename()));
 
-	m_codeView->setSubject(0);
-	delete m_project;
-	m_project = 0;
-	delete m_program;
-	m_program = 0;
+	codeView->setSubject(0);
+	delete m_solution;
+	m_solution = 0;
 	delete m_updateTimer;
 	m_updateTimer = 0;
 
 #if defined(DEBUG)
-	mInfo() << "Type count:" << TypeEntity::s_typeCount;
+//	mInfo() << "Type count:" << TypeEntity::s_typeCount;
+#endif
+}
+
+void MainWindow::updateSolutionSupportPath()
+{
+#ifdef Q_WS_MAC
+	CFURLRef appUrlRef = CFBundleCopyBundleURL(CFBundleGetMainBundle());
+	CFStringRef macPath = CFURLCopyFileSystemPath(appUrlRef, kCFURLPOSIXPathStyle);
+	m_solution->setSupportPath(String(CFStringGetCStringPtr(macPath, CFStringGetSystemEncoding())) + L"/Support/");
+	CFRelease(appUrlRef);
+	CFRelease(macPath);
+#endif
+#ifdef Q_WS_WIN
+	m_solution->setSupportPath(qs(QCoreApplication::applicationDirPath() + "/Support/"));
+#endif
+#ifdef Q_WS_X11
+	m_solution->setSupportPath(qs(QCoreApplication::applicationDirPath() + "/../support/"));
 #endif
 }
 
@@ -186,14 +195,18 @@ void MainWindow::updateLanguage()
 
 void MainWindow::resetSubject()
 {
-	m_codeView->setSubject(m_project->ns());
-	AssertNR(!m_codeView->current() || m_codeView->current()->root() == m_project->root());
-	entityFocused(m_codeView->current());
+	if (projects().size())
+		codeView->setSubject(projects()[0]->self());
+	else
+		codeView->setSubject(0);
+
+	AssertNR(!codeView->current() || codeView->current()->root() == m_solution->self());
+	entityFocused(codeView->current());
 }
 
 void MainWindow::on_actAboutMartta_triggered()
 {
-	QMessageBox::about(this, "About Martta", "<center><font size=+4>Martta</font><br/><font size=-2><b>Technology Preview M0</b></font></center><font size=-2><p>Copyright (c) quid pro code Ltd. (UK)</p></font><font size=-1>Martta, the C++-based Extensible Quasi-Graphical Meta-Language.<br>This program is released according to the GNU GPL and is therefore Free Software: For details on how this program and derivatives thereof may be distributed, please see COPYING or visit <a href=\"http://quidprocode.co.uk/martta/\">quidprocode.co.uk/Martta</a>.</font>");
+	QMessageBox::about(this, "About Martta", "<center><font size=+4>Martta</font><br/><font size=-2><b>Technology Preview M1</b></font></center><font size=-2><p>Copyright (c) quid pro code Ltd. (UK)</p></font><font size=-1>Martta, the C++-based Extensible Quasi-Graphical Meta-Language.<br>This program is released according to the GNU GPL and is therefore Free Software: For details on how this program and derivatives thereof may be distributed, please see COPYING or visit <a href=\"http://quidprocode.co.uk/martta/\">quidprocode.co.uk/Martta</a>.</font>");
 }
 
 void MainWindow::on_actAboutQt_triggered()
@@ -207,16 +220,6 @@ static void addChild(QTreeWidgetItem* _p, Entity const* _c)
 	foreach (Entity* e, _c->children())
 		addChild(t, e);
 }
-/*
-String compileTypes(Types const& _t)
-{
-	String ret;
-	foreach (Type t, _t)
-		ret += t->code() + L", ";
-	if (ret.endsWith(L", "))
-		ret.chop(2);
-	return ret;
-}*/
 
 String compileKinds(Kinds const& _t)
 {
@@ -230,8 +233,8 @@ String compileKinds(Kinds const& _t)
 
 void MainWindow::entityFocused(Entity* _e)
 {
-	if (m_codeView->current() != _e)
-		m_codeView->setCurrent(_e);
+	if (codeView->current() != _e)
+		codeView->setCurrent(_e);
 
 	if (!m_updateTimer)
 	{
@@ -246,7 +249,7 @@ void MainWindow::delayedUpdate()
 {
 	m_updateTimer->deleteLater();
 	m_updateTimer = 0;
-	Entity* e = m_codeView->current();
+	Entity* e = codeView->current();
 	QString t;
 	if (e && e->parent())
 	TIME_STATEMENT("update"){
@@ -309,7 +312,7 @@ void MainWindow::delayedUpdate()
 				new QTreeWidgetItem(us, QStringList() << (u ? qs(u->name()) : QString("NULL?")) << (u ? qs(u->kind().name()) : QString("NULL?")));
 		}
 */
-		new QTreeWidgetItem(entityInfo, QStringList() << QString("Layout") << qs(e->defineLayout(m_codeView->viewKeys(e))));
+		new QTreeWidgetItem(entityInfo, QStringList() << QString("Layout") << qs(e->defineLayout(codeView->viewKeys(e))));
 
 		QTreeWidgetItem* rc = new QTreeWidgetItem(entityInfo, QStringList() << "Child restrictions");
 		foreach (int i, e->knownNames())
@@ -370,39 +373,47 @@ void MainWindow::on_actShowDeps_triggered()
 void MainWindow::on_actCastability_triggered()
 {
 #if defined(DEBUG)
-	TypeEntity::s_debugCastability = actCastability->isChecked();
+//	TypeEntity::s_debugCastability = actCastability->isChecked();
 #endif
 }
 
-void MainWindow::saveCode()
+void MainWindow::on_actNew_triggered()
 {
+	if (!confirmLose())
+		return;
+
+	codeView->setSubject(0);
+
+	delete m_solution;
+
+	// For now just assume the default:
+	Kinds solutions = Kind::of<Solution>().deriveds().onlyObjects();
+	if (solutions.size())
+	{
+		m_solution = solutions[0].spawnPrepared()->asKind<Solution>();
+		m_solution->initialiseNew();
+		updateSolutionSupportPath();
+	}
+	else
+		m_solution = 0;
+
+	resetSubject();
 }
 
-void MainWindow::projectRenamed()
+#if 0
+void compile()
 {
-	setWindowTitle(m_project->name() + " - Martta");
+	AssertNR(!m_compiler);
+	StringList buildLine;
+	m_compiler = new QProcess;
+	connect(m_compiler, SIGNAL(finished(int, QProcess::ExitStatus)), SLOT(compileFinished()));
+	m_compiler->start(5qs(buildLine[0]), qs(buildLine.mid(1)), QIODevice::ReadOnly);
 }
-
-void MainWindow::classSelected(QModelIndex const& _i)
-{
-	(void)_i;
-//	m_codeView->setSubject(reinterpret_cast<Class*>(_i.data(Project::OwnerRole).value<void*>()));
-}
-
-void MainWindow::on_actNewProject_triggered()
-{
-	if (!confirmLose()) return;
-
-	m_codeView->setSubject(0);
-	m_project->resetAsNew();
-	m_codeView->setSubject(m_project->ns());
-//	m_codeView->navigateOnto(m_project->ns());
-}
+#endif
 
 bool MainWindow::confirmLose()
 {
-	if (QFile::exists(m_project->filename()))
-		m_project->save();
+	m_solution->save();
 	return true;
 }
 
@@ -425,42 +436,15 @@ void MainWindow::on_actRemoveFirstChange_triggered()
 
 void MainWindow::on_actClearChanges_triggered()
 {
-	// Use it for something else for now...
-
-	confirmLose();
-	QString name = m_project->name();
-	m_codeView->setSubject(0);
-	delete m_project;
-
-	loadPlugins();
-	m_project = new Project(name);
-	projectRenamed();
-	connect(m_project, SIGNAL(nameChanged()), SLOT(projectRenamed()));
-	connect(m_project, SIGNAL(subjectInvalid()), SLOT(resetSubject()));
-	dependencies->setModel(m_project->cDependsModel());
-
-	resetSubject();
-	updateProgramCode();
-	updateLanguage();
-
 //	clearChanges();
 //	codeView->update();
 }
 
 void MainWindow::on_actNewCProject_triggered()
 {
-	QAbstractItemModel* m = m_project->cDependsModel();
-	int r = m->rowCount();
-	m->insertRow(r);
-	m->setData(m->index(r, 0), "New C Project", Qt::EditRole);
-	dependencies->edit(m->index(r, 0));
 }
 
-void MainWindow::on_actQuit_triggered()
-{
-	qApp->quit();
-}
-
+// Open solution
 void MainWindow::on_actOpen_triggered()
 {
 	if (!confirmLose()) return;
@@ -468,51 +452,27 @@ void MainWindow::on_actOpen_triggered()
 	QString f = QFileDialog::getOpenFileName(this, "Open Project", "/home/gav", "*.xml");
 	if (f.isEmpty()) return;
 
-	m_codeView->setSubject(0);
-	m_project->open(f);
-	m_codeView->setSubject(m_project->ns());
-//	m_codeView->setCurrent(m_project->program());
+	codeView->setSubject(0);
+/*	m_project->open(f);
+	codeView->setSubject(m_project->ns());*/
 }
 
 void MainWindow::on_actSave_triggered()
 {
-	saveCode();
+/*	saveCode();
 	if (m_project->filename().isEmpty())
 		m_project->rename(QFileDialog::getSaveFileName(this, "Save Project", "/home/gav", "*.xml"));
-	m_project->save();
+	m_project->save();*/
 }
 
-void MainWindow::showDependenciesMenu(QPoint const& _p)
+/*void MainWindow::saveProject(Project* _p)
 {
-	QModelIndex i = dependencies->indexAt(_p);
-	QAbstractItemModel* m = m_project->cDependsModel();
+	AssertNR(!_p->filename().isEmpty());
+}*/
 
-	QList<QAction*> actions;
-	if (!i.data(Project::ItemRole).isNull() && i.data(Project::ItemRole).toInt() == Project::All)
-		actions.append(actRemoveCDependency);
-	if (!i.data(Project::HeadingRole).isNull() && i.data(Project::HeadingRole).toInt() == Project::Includes)
-		actions.append(actIncludeHeader);
-	if (!i.data(Project::ItemRole).isNull() && i.data(Project::ItemRole).toInt() == Project::Includes)
-		actions.append(actRemoveHeader);
-
-	if (actions.count() > 0)
-	{
-		QAction* a = QMenu::exec(actions, dependencies->mapToGlobal(_p));
-		if (a == actIncludeHeader)
-		{
-			QString fn = QFileDialog::getOpenFileName(this, "Include File", "/usr/include", "*.h");
-			if (!fn.isEmpty())
-			{
-				int r = m->rowCount(i);
-				m->insertRow(r, i);
-				m->setData(m->index(r, 0, i), fn, Qt::EditRole);
-			}
-		}
-		else if (a == actRemoveCDependency || a == actRemoveHeader)
-		{
-			m->removeRow(i.row(), i.parent());
-		}
-	}
+void MainWindow::on_actQuit_triggered()
+{
+	qApp->quit();
 }
 
 void MainWindow::on_programIn_returnPressed()
@@ -552,12 +512,14 @@ void MainWindow::programFinished(int _exitCode)
 
 void MainWindow::updateProgramCode()
 {
-	programCode->setText(m_project->code());
+	if (Project* p = codeView->subject()->tryKind<Project>())
+		programCode->setText(qs(p->finalCode()));
 }
 
 void MainWindow::on_actExecute_triggered()
 {
-	m_codeView->setEditing(0);
+	// Assume current project is executable for now.
+	codeView->setEditing(0);
 	if (m_program)
 	{
 		// TODO: make sure you want to terminate current!
@@ -565,12 +527,12 @@ void MainWindow::on_actExecute_triggered()
 		m_program = 0;
 	}
 
-	saveCode();
+//	saveCode();
 
-	QString exe = m_project->executable();
+	QString exe;// = m_project->executable();
 	if (exe.isEmpty())
 	{
-		QMessageBox::critical(this, "Execution Failed", "Could not build executable. Compiler returned with: " + m_project->lastCompileError());
+		QMessageBox::critical(this, "Execution Failed", "Could not build executable. Compiler returned with: "/* + m_project->lastCompileError()*/);
 		return;
 	}
 	programOut->setText("");

@@ -35,8 +35,18 @@ class Project
 public:
 	virtual ~Project() {}
 
+	virtual void save() const;
+
+	String const& filename() const { return m_filename; }
+	void setFilename(String const& _fn) { m_filename = _fn; }
+
+	String const& finalCode() const { return String::null; }
+
 protected:
 	String const& supportPath() const;
+
+private:
+	String m_filename;
 };
 
 }

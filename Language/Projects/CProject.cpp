@@ -20,6 +20,8 @@
 
 #include <cstdio>
 
+#include <QtXml>
+
 #include <msList.h>
 #include <msStringList.h>
 using namespace MarttaSupport;
@@ -27,12 +29,28 @@ using namespace MarttaSupport;
 #include "Function.h"
 #include "CDependency.h"
 #include "CProject.h"
+#undef inline
 
 namespace Martta
 {
 
 MARTTA_OBJECT_CPP(CProject);
 MARTTA_OBJECT_CPP(CProjectDependency);
+
+static inline String qs(QString const& _qs)
+{
+	String ret;
+	ret.resize(_qs.length());
+	wchar_t* d = ret.data();
+	_qs.toWCharArray(d);
+	ret.dataChanged(d);
+	return ret;
+}
+
+static inline QString qs(String const& _s)
+{
+	return QString::fromWCharArray(_s.data(), _s.length());
+}
 
 CProject::CProject():
 	m_tempPath		(L"/tmp")
@@ -61,6 +79,82 @@ CProject::~CProject()
 	*/
 	if (!m_tempBatName.isEmpty())
 		remove(m_tempBatName.toCString());
+}
+
+QDomElement exportDom(QDomDocument& _doc, Entity const* _e)
+{
+	QDomElement n = _doc.createElement("entity");
+	n.setAttribute("kind", qs(_e->kind().name()));
+	Hash<String, String> h;
+	_e->properties(h);
+	for (Hash<String, String>::Iterator i = h.begin(); i != h.end(); ++i)
+		n.setAttribute(qs(i.key()), qs(i.value()));
+	String iId = _e->namedIndexId();
+	if (!iId.isEmpty())
+		n.setAttribute("index", qs(iId));
+	foreach (Entity* e, _e->children())
+		n.appendChild(exportDom(_doc, e));
+	return n;
+}
+
+void CProject::save() const
+{
+	QDomDocument doc("MarttaProject");
+	doc.appendChild(exportDom(doc, this));
+	QFile f(qs(filename()));
+	f.open(QFile::WriteOnly);
+	QTextStream fs(&f);
+	doc.save(fs, 4);
+}
+
+Entity* importDom(QDomElement const& _el, Entity* _p)
+{
+	Entity* e = Entity::spawn(qs(_el.attribute("kind")));
+	Assert(e, "Spawn doesn't know anything about this kind, yet it did when exported.");
+
+	Hash<String, String> h;
+	String index;
+	for (uint i = 0; i < _el.attributes().length(); i++)
+		if (_el.attributes().item(i).nodeName() == "index")
+			index = qs(_el.attributes().item(i).nodeValue());
+		else
+			h.insert(qs(_el.attributes().item(i).nodeName()), qs(_el.attributes().item(i).nodeValue()));
+
+	if (_p)
+		e->silentMove(_p->named(index));
+
+	e->setProperties(h);
+	for (QDomNode i = _el.firstChild(); !i.isNull(); i = i.nextSibling())
+		if (i.isElement() && i.toElement().tagName() == "entity")
+			importDom(i.toElement(), e);
+	return e;
+}
+
+Project* CProject::load(String const& _filename)
+{
+	QFile f(qs(_filename));
+	if (!f.open(QFile::ReadOnly | QFile::Text))
+	{
+//		QMessageBox::critical(0, tr("Load Project"), tr("File does not exist! (name is %1)").arg(f.fileName()));
+		return 0;
+	}
+
+	QString errorStr;
+	int errorLine;
+	int errorColumn;
+
+	QDomDocument doc;
+	if (!doc.setContent(&f, true, &errorStr, &errorLine, &errorColumn))
+	{
+//		QMessageBox::critical(0, tr("Load Project"), tr("Parse error at line %1, column %2:\n%3").arg(errorLine).arg(errorColumn).arg(errorStr));
+		return 0;
+	}
+	if (doc.doctype().name() != "MarttaProject")
+	{
+//		QMessageBox::critical(0, tr("Load Project"), tr("Invalid file format (%1)").arg(doc.documentType().name()));
+		return 0;
+	}
+	return importDom(doc.documentElement(), 0)->asKind<Project>();
 }
 
 Kinds CProject::allowedKinds(int _i) const
@@ -96,17 +190,6 @@ StringList CProject::libs() const
 		r.append(qs(i));
 	return r;
 }*/
-
-#if 0
-void compile()
-{
-	AssertNR(!m_compiler);
-	StringList buildLine;
-	m_compiler = new QProcess;
-	connect(m_compiler, SIGNAL(finished(int, QProcess::ExitStatus)), SLOT(compileFinished()));
-	m_compiler->start(5qs(buildLine[0]), qs(buildLine.mid(1)), QIODevice::ReadOnly);
-}
-#endif
 
 String CProject::finalCode() const
 {
@@ -155,7 +238,7 @@ List<StringList> CProject::buildCommands() const
 
 	mInfo() << "Compiling" << src;
 
-#ifdef Q_WS_WIN
+#ifdef WIN32
 	QStringList env = QProcess::systemEnvironment();
 	int index = env.lastIndexOf(QRegExp("VS..COMNTOOLS.*"));
 	QRegExp r("^([A-Z0-9]+)=(.*)$");

@@ -60,7 +60,7 @@ bool AssignedVariable::keyPressedOnPosition(Position const& _p, KeyEvent const* 
 		return false;
 }
 
-void AssignedVariable::onDependencyChanged(Entity* _e)
+void AssignedVariable::onDependencyChanged(Entity*)
 {
 //	mDebug() << this << ": Dependency Changed: " << _e;
 	//debugTree();

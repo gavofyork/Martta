@@ -2,14 +2,14 @@
  * Version: Martta License version 1.0
  *
  * The contents of this file are subject to the Martta License version 1.0
- * (the "License"); you may not use this file except in compliance with the 
- * License. You should have received a copy of the Martta License 
+ * (the "License"); you may not use this file except in compliance with the
+ * License. You should have received a copy of the Martta License
  * "COPYING.Martta" along with Martta; if not you may obtain a copy of the
  * License at http://quidprocode.co.uk/Martta/
  *
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations under 
+ * License for the specific language governing rights and limitations under
  * the License.
  *
  * The Initial Developer of the code in this file is Gavin Wood.
@@ -40,21 +40,26 @@ public:
 	Kinds(Kind const& _k) { append(_k); }
 	Kinds(List<Kind> const& _k): List<Kind>(_k) {}
 	inline Kinds(List<AuxilliaryFace const*> const& _k);
-	
+
 	inline Kinds operator,(Kind const& _c) const { return Kinds(*this) << _c; }
-	
+
 	inline Kinds& operator<<(Kind const& _k) { append(_k); return *this; }
 	inline Kinds& operator<<(Kinds const& _k) { this->List<Kind>::operator<<(_k); return *this; }
-	
+
 	inline bool containsBaseOf(Kind const& _derived) const;
 	inline bool containsKindOf(Kind const& _base) const;
 	inline Kind commonBase() const;
+
+	Kinds withoutInterfaces() const;
+	Kinds onlyInterfaces() const;
+	Kinds onlyPlaceholders() const;
+	Kinds onlyObjects() const;
 };
 
 class Kind
 {
 	friend class Entity;
-	
+
 public:
 	Kind(): m_mo(0) {}
 	Kind(AuxilliaryFace const* _mo): m_mo(_mo) {}
@@ -62,13 +67,16 @@ public:
 
 	inline Kind super() const { return m_mo ? Kind(m_mo->superAuxilliary()) : Kind(); }
 	Kinds deriveds() const;
-	Kinds immediateDeriveds() const { return m_mo ? AuxilliaryRegistrar::get()->immediateDeriveds(m_mo) : Kinds(); }
-	Kinds interfaces() const { return m_mo ? AuxilliaryRegistrar::get()->interfaces(m_mo) : Kinds(); }
-	Kinds immediateInterfaces() const { return m_mo ? AuxilliaryRegistrar::get()->immediateInterfaces(m_mo) : Kinds(); }
-	Kinds supers() const { return m_mo ? AuxilliaryRegistrar::get()->supers(m_mo) : Kinds(); }
+	inline Kinds immediateDeriveds() const { return m_mo ? AuxilliaryRegistrar::get()->immediateDeriveds(m_mo) : Kinds(); }
+	inline Kinds interfaces() const { return m_mo ? AuxilliaryRegistrar::get()->interfaces(m_mo) : Kinds(); }
+	inline Kinds immediateInterfaces() const { return m_mo ? AuxilliaryRegistrar::get()->immediateInterfaces(m_mo) : Kinds(); }
+	inline Kinds supers() const { return m_mo ? AuxilliaryRegistrar::get()->supers(m_mo) : Kinds(); }
 	inline String name() const { return m_mo ? m_mo->name() : 0; }
 	inline AuxilliaryFace const* auxilliary() const { return m_mo; }
 	Entity* spawnPrepared() const;
+
+	inline bool isInterface() const { return m_mo->isInterface(); }
+	inline bool isPlaceholder() const { return m_mo->isPlaceholder(); }
 
 	inline bool isKind(Kind _base) const { return _base.m_mo == m_mo || AuxilliaryRegistrar::get()->supers().contains(m_mo, _base.m_mo); }
 	inline bool isKind(Kinds const& _bases) const;

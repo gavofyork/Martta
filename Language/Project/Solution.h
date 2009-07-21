@@ -28,28 +28,7 @@ using namespace MarttaSupport;
 namespace Martta
 {
 
-/*
-#ifdef Q_WS_MAC
-#include <CoreFoundation/CoreFoundation.h>
-#endif
-
-void updateRootSupportPath()
-{
-#ifdef Q_WS_MAC
-	CFURLRef appUrlRef = CFBundleCopyBundleURL(CFBundleGetMainBundle());
-	CFStringRef macPath = CFURLCopyFileSystemPath(appUrlRef, kCFURLPOSIXPathStyle);
-	root->setSupportPath(String(CFStringGetCStringPtr(macPath, CFStringGetSystemEncoding())) + L"/Support/");
-	CFRelease(appUrlRef);
-	CFRelease(macPath);
-#endif
-#ifdef Q_WS_WIN
-	root->setSupportPath(qs(QCoreApplication::applicationDirPath() + "/Support/"));
-#endif
-#ifdef Q_WS_X11
-	root->setSupportPath(qs(QCoreApplication::applicationDirPath() + "/../support/"));
-#endif
-}
-*/
+class Project;
 
 class Solution
 {
@@ -57,12 +36,22 @@ class Solution
 
 public:
 	virtual ~Solution() {}
-	String const& supportPath() const { return m_supportPath; }
-	virtual void setSupportPath(String const& _p) { m_supportPath = _p; }
-	virtual void initialiseNew() {}
+
+	String const&						supportPath() const { return m_supportPath; }
+	void								setSupportPath(String const& _p) { m_supportPath = _p; }
+
+	virtual String const&				filename() const { return String::null; }
+
+	virtual void						initialiseNew() {}
+	virtual void						populateFrom(String const&) {}
+	virtual void						save() const {}
+	virtual void						save(String const&) const {}
+	virtual Project*					addProject(String const&) { return 0; }
+	virtual void						addProject(Project*) {}
+	virtual void						removeProject(Project*) {}
 
 protected:
-	String			m_supportPath;
+	String								m_supportPath;
 };
 
 }

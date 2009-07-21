@@ -11,6 +11,7 @@ Small things:
 - Special EntryMethod.
 - Join statements or tree insert.
   - 'J' -> Joins next line to last [] in current.
+- Unary operation should apply to climb Statement tree until it finds something.
 - Insertion of entities in, e.g. argument lists for function calls.
   - Just a comma?
 - FIX Page up & down.

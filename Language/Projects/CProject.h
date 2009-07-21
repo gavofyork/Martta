@@ -48,6 +48,11 @@ public:
 	CProject();
 	virtual ~CProject();
 
+	virtual void						save() const;
+	static Project*						load(String const& _filename);
+
+	virtual String						finalCode() const;
+
 	virtual String						target() const { return m_tempPath + "/" + targetName(); }
 	virtual String						targetName() const;
 
@@ -61,8 +66,6 @@ protected:
 	virtual Kinds						allowedKinds(int _i) const;
 
 private:
-	String								finalCode() const;
-
 	String								m_tempPath;
 	String								m_supportPath;
 	String								m_tempBatName;

@@ -204,7 +204,7 @@
     <property name="title">
      <string>&amp;File</string>
     </property>
-    <addaction name="actNewProject"/>
+    <addaction name="actNew"/>
     <addaction name="actOpen"/>
     <addaction name="actSave"/>
     <addaction name="separator"/>
@@ -221,8 +221,11 @@
    </widget>
    <widget class="QMenu" name="menu_Project_2">
     <property name="title">
-     <string>&amp;Project</string>
+     <string>&amp;Module</string>
     </property>
+    <addaction name="actOpenModule"/>
+    <addaction name="actSaveModule"/>
+    <addaction name="separator"/>
     <addaction name="actExecute"/>
    </widget>
    <addaction name="menu_Project"/>
@@ -767,6 +770,9 @@
    <property name="text">
     <string>&amp;Open...</string>
    </property>
+   <property name="toolTip">
+    <string>Open Project</string>
+   </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
    </property>
@@ -774,6 +780,9 @@
   <action name="actSave">
    <property name="text">
     <string>&amp;Save</string>
+   </property>
+   <property name="toolTip">
+    <string>Save Project</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
@@ -837,9 +846,12 @@
     <string>Show &amp;First Change</string>
    </property>
   </action>
-  <action name="actNewProject">
+  <action name="actNew">
    <property name="text">
     <string>&amp;New</string>
+   </property>
+   <property name="toolTip">
+    <string>New Project</string>
    </property>
   </action>
   <action name="actShowDeps">
@@ -871,6 +883,16 @@
   <action name="actAboutMartta">
    <property name="text">
     <string>About Martta...</string>
+   </property>
+  </action>
+  <action name="actSaveModule">
+   <property name="text">
+    <string>&amp;Save Module</string>
+   </property>
+  </action>
+  <action name="actOpenModule">
+   <property name="text">
+    <string>&amp;Open Module...</string>
    </property>
   </action>
  </widget>

@@ -34,4 +34,8 @@ String const& Project::supportPath() const
 	return String::null;
 }
 
+void Project::save() const
+{
+}
+
 }

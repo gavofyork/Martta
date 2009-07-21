@@ -100,6 +100,7 @@ public:
 	bool								haveDependency(Depender const* _der, Dependee const* _dee) const { return m_dependees.constFind(const_cast<Depender*>(_der), const_cast<Dependee*>(_dee)) != m_dependees.end(); }
 
 	bool								hasChanged() const { return m_hasChanged; }
+	void								setChanged() { m_hasChanged = true; }
 	void								resetChanged() { m_hasChanged = false; }
 
 private:

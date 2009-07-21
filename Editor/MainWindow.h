@@ -18,11 +18,12 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#ifndef MARTTAMAINWINDOW_H
-#define MARTTAMAINWINDOW_H
+#pragma once
 
 #include <QMainWindow>
 
+#include <Project.h>
+#include <Solution.h>
 #include <CullManager.h>
 #undef inline
 
@@ -51,9 +52,10 @@ private:
 };
 
 class CodeScene;
-class Project;
 class Function;
 class Entity;
+
+
 
 class MainWindow: public QMainWindow, public Ui::MainWindow
 {
@@ -63,37 +65,30 @@ public:
 	MainWindow(QWidget* _p = 0, Qt::WindowFlags _f = Qt::Window);
 	~MainWindow();
 
-	Project*				project() const { return m_project; }
-
-	bool confirmLose();
-
-	void loadPlugins();
-
 private slots:
-	void on_actNewCProject_triggered();
-	void on_actNewProject_triggered();
+	void on_actNew_triggered();
 	void on_actOpen_triggered();
 	void on_actSave_triggered();
+	void on_actQuit_triggered();
+
+	void on_actExecute_triggered();
+	void on_actNewCProject_triggered();
+
 	void on_actShowDeps_triggered();
 	void on_actShowChanges_triggered();
 	void on_actClearChanges_triggered();
 	void on_actShowFirstChange_triggered();
 	void on_actRemoveFirstChange_triggered();
-	void on_actQuit_triggered();
+	void on_actCastability_triggered();
+
 	void on_actAboutMartta_triggered();
 	void on_actAboutQt_triggered();
-	void showDependenciesMenu(QPoint const&_p);
-	void classSelected(QModelIndex const& _i);
-	void on_actExecute_triggered();
-	void on_actCastability_triggered();
 
 	void on_programIn_returnPressed();
 
 	void entityFocused(Entity* _e);
 	void delayedUpdate();
 
-	void projectRenamed();
-	void saveCode();
 	void resetSubject();
 
 	void programReadyOut();
@@ -102,18 +97,23 @@ private slots:
 
 	void updateProgramCode();
 
-	void updateLanguage();
-
 private:
-//	Workspace				m_workspace;
-	Project*				m_project;
+	void updateSolutionSupportPath();
+
+	void loadPlugins();
+	void updateLanguage();
+	bool confirmLose();
+
+	inline List<Project*>	projects() const { return m_solution ? m_solution->self()->cardinalChildrenAs<Project>() : List<Project*>(); }
+
+	QList<QLibrary*>		m_libraries;
+
+	Solution*				m_solution;
+
+	QTimer*					m_updateTimer;
+
 	QProcess*				m_program;
 	QString					m_outputOwed;
-	CodeView*				m_codeView;
-	QTimer*					m_updateTimer;
-	QList<QLibrary*>		m_libraries;
 };
 
 }
-
-#endif
