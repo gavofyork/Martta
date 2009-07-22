@@ -69,6 +69,7 @@ private slots:
 	void on_actNew_triggered();
 	void on_actOpen_triggered();
 	void on_actSave_triggered();
+	void on_actClose_triggered();
 	void on_actQuit_triggered();
 
 	void on_actExecute_triggered();

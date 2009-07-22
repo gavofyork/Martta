@@ -170,11 +170,27 @@ void MainWindow::on_actReloadPlugins_triggered()
 	deserialise(s);
 
 	resetSubject();
+	ChangeMan::get()->setChanged();
 }
 
 void MainWindow::on_actQuit_triggered()
 {
 	qApp->quit();
+}
+
+void MainWindow::on_actClose_triggered()
+{
+	if (!confirmLose())
+		return;
+
+	codeView->setSubject(0);
+
+	delete m_solution;
+	m_solution = 0;
+	m_projects.clear();
+	setFilename(QString::null);
+
+	resetSubject();
 }
 
 void MainWindow::on_actNew_triggered()

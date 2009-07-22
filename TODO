@@ -4,9 +4,9 @@ BUG Moving is crazily slow over statements.
   - Do recursively but prune on denied Kinds.
   - Remove all allowedToBeKind (or other Kind-checking) in handlers.
 BUG 'Mstr'-> doesn't move away (only stops editing).
+BUG 'Vi i'<-Del doesn't delete the int.
 BUG Assertion on '!?'.
 CRASH delete a Referenced EnumValue.
-BUG ',' on Invocation.
 
 Small things:
 - Special EntryMethod.

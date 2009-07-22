@@ -207,6 +207,7 @@
     <addaction name="actNew"/>
     <addaction name="actOpen"/>
     <addaction name="actSave"/>
+    <addaction name="actClose"/>
     <addaction name="separator"/>
     <addaction name="actOpenModule"/>
     <addaction name="actSaveModule"/>
@@ -908,6 +909,11 @@
   <action name="actReloadPlugins">
    <property name="text">
     <string>Reload</string>
+   </property>
+  </action>
+  <action name="actClose">
+   <property name="text">
+    <string>Close Solution</string>
    </property>
   </action>
  </widget>
