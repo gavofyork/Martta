@@ -21,12 +21,14 @@
 #pragma once
 
 #include <msString.h>
+#include <msList.h>
 #include <msDebug.h>
 #undef inline
 using namespace MarttaSupport;
 
 #include <QTime>
 #include <QString>
+#include <QStringList>
 
 namespace Martta
 {
@@ -44,6 +46,30 @@ inline String qs(QString const& _qs)
 inline QString qs(String const& _s)
 {
 	return QString::fromWCharArray(_s.data(), _s.length());
+}
+
+template<class T> inline QList<T> ql(List<T> const& _f)
+{
+	QList<T> ret;
+	foreach (T t, _f)
+		ret << t;
+	return ret;
+}
+
+template<class T> inline List<T> ql(QList<T> const& _f)
+{
+	List<T> ret;
+	foreach (T t, _f)
+		ret << t;
+	return ret;
+}
+
+inline QStringList qs(List<String> const& _f)
+{
+	QStringList ret;
+	foreach (String s, _f)
+		ret << qs(s);
+	return ret;
 }
 
 class Timer

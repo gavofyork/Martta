@@ -32,19 +32,15 @@ class CSolution: public Root, public_interface Solution
 	MARTTA_INHERITS(Solution, 0)
 
 public:
-	virtual String const&				filename() const { return m_filename; }
-
 	virtual void						initialiseNew();
-	virtual void						populateFrom(String const& _filename);
-	virtual void						save() const;
-	virtual void						save(String const& _filename);
-	virtual Project*					addProject(String const& _filename);
 	virtual void						addProject(Project* _p);
+	virtual void						initWithProjects(List<Project*> const& _ps);
 	virtual void						removeProject(Project* _p);
 
 protected:
 	virtual int							minRequired(int _i) const { return Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
+	virtual List<Entity*>				savedChildren() const { return cardinalChildren(); }
 
 private:
 	void								apresLoad(Project* _p = 0);
@@ -53,8 +49,6 @@ private:
 	void								rejigIncludes();
 
 	String								includeCode() const;
-
-	String								m_filename;
 };
 
 }

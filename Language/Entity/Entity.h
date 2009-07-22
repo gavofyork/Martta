@@ -145,6 +145,7 @@ public:
 	template<class T> T*				rootOf() const { T* r = tryKind<T>(); for (Entity* e = const_cast<Entity*>(this); e; e = e->m_parent) if (T* t = e->tryKind<T>()) r = t; return r; }
 
 	template<class T> List<T*>			selfAndAncestorsChildrenOf() const { List<T*> ret = childrenOf<T>(); return parent() ? ret + parent()->selfAndAncestorsChildrenOf<T>() : ret; }
+	template<class T> List<T*>			superChildrenOf() const { List<T*> ret; ret << childrenOf<T>(); foreach (Entity* e, children()) ret << e->superChildrenOf<T>(); return ret; }
 
 	inline int							nonPlaceholderCount() const { int ret = 0; foreach (Entity* i, m_cardinalChildren) if (!i->isPlaceholder()) ret++; return ret; }
 	inline List<Entity*>				nonPlaceholders() const { List<Entity*> ret; foreach (Entity* i, m_cardinalChildren) if (!i->isPlaceholder()) ret += i; return ret; }
@@ -360,6 +361,7 @@ public:
 	virtual int							definePreferedFor(Kind const&) const { return NonePrefered; }
 
 	// Save/load
+	virtual List<Entity*>				savedChildren() const { return children(); }
 	virtual void						properties(Hash<String, String>&) const {}
 	virtual void						setProperties(Hash<String, String> const&) {}
 	virtual void						apresLoad() {}	// Called following a load after the model has been loaded.

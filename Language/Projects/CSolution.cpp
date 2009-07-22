@@ -51,9 +51,7 @@ void CSolution::initialiseNew()
 {
 	clearEntities();
 	back().place(Entity::evaluate("CProject{TextLabel[text=project]}{Function{TextLabel[text=main]}{BuiltinType[id=0]}}{CDependency[libs=][includes=/usr/include/stdlib.h*/usr/include/stdio.h][name=Standard C]}"));
-	debugTree();
 	rejigIncludes();
-	debugTree();
 }
 
 static inline QString qs(String const& _s)
@@ -61,48 +59,16 @@ static inline QString qs(String const& _s)
 	return QString::fromWCharArray(_s.data(), _s.length());
 }
 
-void CSolution::populateFrom(String const& _filename)
+void CSolution::initWithProjects(List<Project*> const& _ps)
 {
-	clearEntities();
+	foreach (Project* p, _ps)
+		p->self()->move(back());
+
 	ChangeMan::get()->sleep();
-
-	FILE* f = fopen(_filename.toCString(), "r");
-	char line[1024];
-	while (fgets(line, 1024, f))
-		CProject::load(line)->self()->move(back());
-	fclose(f);
-
 	GccXml::extractHeaders(qs(includeCode()), GccXml::declarationsHandler(this));
 	ModelPtrRegistrar::get()->restorePtrs(this);
 	ChangeMan::get()->wake();
 	apresLoad();
-}
-
-void CSolution::save() const
-{
-	AssertNR(!m_filename.isEmpty());
-	FILE* f = fopen(m_filename.toCString(), "w");
-	foreach (Project* p, cardinalChildrenAs<Project>())
-	{
-		AssertNR(!p->filename().isEmpty());
-		fprintf(f, "%s\n", p->filename().toCString());
-		p->save();
-	}
-	fclose(f);
-}
-
-void CSolution::save(String const& _filename)
-{
-	AssertNR(!_filename.isEmpty());
-	m_filename = _filename;
-	save();
-}
-
-Project* CSolution::addProject(String const& _filename)
-{
-	Project* p = CProject::load(_filename);
-	addProject(p);
-	return p;
 }
 
 void CSolution::addProject(Project* _p)

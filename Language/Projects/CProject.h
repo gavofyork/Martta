@@ -48,9 +48,6 @@ public:
 	CProject();
 	virtual ~CProject();
 
-	virtual void						save() const;
-	static Project*						load(String const& _filename);
-
 	virtual String						finalCode() const;
 
 	virtual String						target() const { return m_tempPath + "/" + targetName(); }

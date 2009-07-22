@@ -208,7 +208,8 @@
     <addaction name="actOpen"/>
     <addaction name="actSave"/>
     <addaction name="separator"/>
-    <addaction name="actNewCProject"/>
+    <addaction name="actOpenModule"/>
+    <addaction name="actSaveModule"/>
     <addaction name="separator"/>
     <addaction name="actQuit"/>
    </widget>
@@ -221,10 +222,9 @@
    </widget>
    <widget class="QMenu" name="menu_Project_2">
     <property name="title">
-     <string>&amp;Module</string>
+     <string>&amp;Project</string>
     </property>
-    <addaction name="actOpenModule"/>
-    <addaction name="actSaveModule"/>
+    <addaction name="actNewCProject"/>
     <addaction name="separator"/>
     <addaction name="actExecute"/>
    </widget>
@@ -768,7 +768,7 @@
   </action>
   <action name="actOpen">
    <property name="text">
-    <string>&amp;Open...</string>
+    <string>&amp;Open Solution...</string>
    </property>
    <property name="toolTip">
     <string>Open Project</string>
@@ -779,7 +779,7 @@
   </action>
   <action name="actSave">
    <property name="text">
-    <string>&amp;Save</string>
+    <string>&amp;Save Solution</string>
    </property>
    <property name="toolTip">
     <string>Save Project</string>
@@ -848,10 +848,13 @@
   </action>
   <action name="actNew">
    <property name="text">
-    <string>&amp;New</string>
+    <string>&amp;New Solution</string>
    </property>
    <property name="toolTip">
     <string>New Project</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
    </property>
   </action>
   <action name="actShowDeps">

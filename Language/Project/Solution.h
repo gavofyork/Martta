@@ -21,6 +21,7 @@
 #pragma once
 
 #include <msString.h>
+#include <msList.h>
 using namespace MarttaSupport;
 
 #include "Meta.h"
@@ -40,14 +41,9 @@ public:
 	String const&						supportPath() const { return m_supportPath; }
 	void								setSupportPath(String const& _p) { m_supportPath = _p; }
 
-	virtual String const&				filename() const { return String::null; }
-
 	virtual void						initialiseNew() {}
-	virtual void						populateFrom(String const&) {}
-	virtual void						save() const {}
-	virtual void						save(String const&) const {}
-	virtual Project*					addProject(String const&) { return 0; }
 	virtual void						addProject(Project*) {}
+	virtual void						initWithProjects(List<Project*> const&) {}
 	virtual void						removeProject(Project*) {}
 
 protected:

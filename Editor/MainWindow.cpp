@@ -50,6 +50,63 @@ void CullActor::prime()
 	}
 }
 
+MainWindow::MainWindow(QWidget* _p, Qt::WindowFlags _f):
+	QMainWindow			(_p, _f),
+	m_solution			(0),
+	m_updateTimer		(0),
+	m_buildAndRun		(0)
+{
+	qApp->addLibraryPath("/Users/gav/Projects/Martta/plugins");
+
+	setupUi(this);
+
+#ifdef Q_WS_MAC
+	setUnifiedTitleAndToolBarOnMac(true);
+#endif
+
+	QSettings s;
+	restoreState(s.value("mainwindow/state").toByteArray());
+	restoreGeometry(s.value("mainwindow/geometry").toByteArray());
+
+	setCorner(Qt::TopLeftCorner, Qt::LeftDockWidgetArea);
+	setCorner(Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
+	setCorner(Qt::TopRightCorner, Qt::RightDockWidgetArea);
+	setCorner(Qt::BottomRightCorner, Qt::RightDockWidgetArea);
+
+	CullManager::get()->setDelayedActor(new CullActor(this));
+	connect(codeView, SIGNAL(currentChanged(Entity*)), SLOT(entityFocused(Entity*)));
+
+	loadPlugins();
+	if (QFile::exists(s.value("mainwindow/lastproject").toString()))
+		load(qs(s.value("mainwindow/lastproject").toString()));
+	else
+		setFilename(QString::null);
+
+	resetSubject();
+	ChangeMan::get()->setChanged();
+}
+
+MainWindow::~MainWindow()
+{
+	CullManager::get()->setDelayedActor(0);
+
+	confirmLose();
+	QSettings s;
+	s.setValue("mainwindow/state", saveState());
+	s.setValue("mainwindow/geometry", saveGeometry());
+	s.setValue("mainwindow/lastproject", m_filename);
+
+	codeView->setSubject(0);
+	delete m_solution;
+	m_solution = 0;
+	delete m_updateTimer;
+	m_updateTimer = 0;
+
+#if defined(DEBUG)
+//	mInfo() << "Type count:" << TypeEntity::s_typeCount;
+#endif
+}
+
 void MainWindow::loadPlugins()
 {
 	AuxilliaryRegistrar::get()->finaliseClasses();
@@ -100,59 +157,299 @@ void MainWindow::loadPlugins()
 	updateLanguage();
 }
 
-MainWindow::MainWindow(QWidget* _p, Qt::WindowFlags _f):
-	QMainWindow			(_p, _f),
-	m_solution			(0),
-	m_updateTimer		(0),
-	m_buildAndRun		(0)
+void MainWindow::on_actQuit_triggered()
 {
-	qApp->addLibraryPath("/Users/gav/Projects/Martta/plugins");
-
-	setupUi(this);
-
-#ifdef Q_WS_MAC
-	setUnifiedTitleAndToolBarOnMac(true);
-#endif
-
-	QSettings s;
-	restoreState(s.value("mainwindow/state").toByteArray());
-	restoreGeometry(s.value("mainwindow/geometry").toByteArray());
-
-	setCorner(Qt::TopLeftCorner, Qt::LeftDockWidgetArea);
-	setCorner(Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
-	setCorner(Qt::TopRightCorner, Qt::RightDockWidgetArea);
-	setCorner(Qt::BottomRightCorner, Qt::RightDockWidgetArea);
-
-	CullManager::get()->setDelayedActor(new CullActor(this));
-	connect(codeView, SIGNAL(currentChanged(Entity*)), SLOT(entityFocused(Entity*)));
-
-	loadPlugins();
-//	if (QFile::exists(s.value("mainwindow/lastproject").toString()))
-//		openSolution(qs(s.value("mainwindow/lastproject").toString()));
-
-	resetSubject();
-	ChangeMan::get()->setChanged();
+	qApp->quit();
 }
 
-MainWindow::~MainWindow()
+void MainWindow::on_actNew_triggered()
 {
-	CullManager::get()->setDelayedActor(0);
-
-	confirmLose();
-	QSettings s;
-	s.setValue("mainwindow/state", saveState());
-	s.setValue("mainwindow/geometry", saveGeometry());
-	s.setValue("mainwindow/lastproject", qs(m_solution->filename()));
+	if (!confirmLose())
+		return;
 
 	codeView->setSubject(0);
+
 	delete m_solution;
 	m_solution = 0;
-	delete m_updateTimer;
-	m_updateTimer = 0;
 
-#if defined(DEBUG)
-//	mInfo() << "Type count:" << TypeEntity::s_typeCount;
-#endif
+	// For now just assume the default:
+	Kinds solutions = Kind::of<Solution>().deriveds();
+	solutions = solutions.onlyObjects();
+	if (solutions.size())
+	{
+		m_solution = solutions[0].spawnPrepared()->asKind<Solution>();
+		m_solution->initialiseNew();
+		foreach (Project* p, m_solution->self()->superChildrenOf<Project>())
+			m_projects.insert(p, QString::null);
+		updateSolutionSupportPath();
+	}
+
+	setFilename(QString::null);
+	resetSubject();
+}
+
+void MainWindow::on_actExecute_triggered()
+{
+	if (!project())
+		return;
+
+	actExecute->setEnabled(false);
+
+	// Assume current project is executable for now.
+	codeView->setEditing(0);
+	if (m_buildAndRun)
+	{
+		// TODO: make sure you want to terminate current!
+		disconnect(m_buildAndRun, SIGNAL(finished(int, QProcess::ExitStatus)));
+		delete m_buildAndRun;
+		m_buildAndRun = 0;
+	}
+
+	m_buildAndRun = new QProcess;
+	m_steps = project()->steps();
+	connect(m_buildAndRun, SIGNAL(finished(int, QProcess::ExitStatus)), SLOT(stepFinished()));
+	executeNextStep();
+}
+
+void MainWindow::stepFinished()
+{
+	StringList step = m_steps.takeFirst();
+	if (m_buildAndRun->exitStatus() || m_buildAndRun->exitCode())
+	{
+		QMessageBox::critical(this, "Build failed", tr("Could not build executable. Build step '%1' returned with: '%2'").arg(qs(step.join(L' '))).arg(m_buildAndRun->readAllStandardError().data()));
+		delete m_buildAndRun;
+		m_buildAndRun = 0;
+		actExecute->setEnabled(true);
+		return;
+	}
+	executeNextStep();
+}
+
+void MainWindow::executeNextStep()
+{
+	if (m_steps.size())
+	{
+		if (m_steps.size() == 1)
+		{
+			// Build finished
+			actExecute->setEnabled(true);
+			programOut->setText("");
+			programIn->setEnabled(true);
+
+			connect(m_buildAndRun, SIGNAL(readyReadStandardOutput()), SLOT(programReadyOut()));
+			connect(m_buildAndRun, SIGNAL(readyReadStandardError()), SLOT(programReadyError()));
+		}
+		m_buildAndRun->start(qs(m_steps.first()[0]), qs(m_steps.first().mid(1)), QIODevice::ReadOnly);
+	}
+	else
+	{
+		// Program finished.
+		statusBar()->showMessage(QString("Program terminated with exit code %1").arg(m_buildAndRun->exitCode()));
+		actExecute->setEnabled(true);
+		programIn->setEnabled(false);
+		m_buildAndRun->deleteLater();
+		m_buildAndRun = 0;
+		m_outputOwed = "";
+	}
+}
+
+void MainWindow::programReadyOut()
+{
+	bool track = programOut->verticalScrollBar()->sliderPosition() == programOut->verticalScrollBar()->maximum();
+	QString n = m_outputOwed + QString::fromAscii(m_buildAndRun->readAllStandardOutput());
+	m_outputOwed = "";
+	if (n.endsWith("\n")) { n.chop(1); m_outputOwed = "\n"; }
+	programOut->setPlainText(programOut->toPlainText() + n);
+	if (track) programOut->verticalScrollBar()->setSliderPosition(programOut->verticalScrollBar()->maximum());
+}
+
+void MainWindow::programReadyError()
+{
+	bool track = programOut->verticalScrollBar()->sliderPosition() == programOut->verticalScrollBar()->maximum();
+	QString n = m_outputOwed + QString::fromAscii(m_buildAndRun->readAllStandardError());
+	m_outputOwed = "";
+	if (n.endsWith("\n")) { n.chop(1); m_outputOwed = "\n"; }
+	programOut->setPlainText(programOut->toPlainText() + n);
+	if (track) programOut->verticalScrollBar()->setSliderPosition(programOut->verticalScrollBar()->maximum());
+}
+
+void MainWindow::on_programIn_returnPressed()
+{
+	m_buildAndRun->write((programIn->text() + "\n").toAscii());
+	programIn->setText("");
+}
+
+void MainWindow::on_actOpen_triggered()
+{
+	if (!confirmLose())
+		return;
+
+	QString f = QFileDialog::getOpenFileName(this, "Open Solution", QDir::homePath(), "*.xml");
+	if (f.isEmpty())
+		return;
+
+	codeView->setSubject(0);
+	load(qs(f));
+	resetSubject();
+}
+
+void MainWindow::on_actSave_triggered()
+{
+	save();
+}
+
+void MainWindow::setFilename(QString const& _fn)
+{
+	m_filename = _fn;
+	if (m_solution)
+		if (m_filename.isEmpty())
+			setWindowTitle(tr("Martta - <New Solution>"));
+		else
+			setWindowTitle(tr("Martta - %1").arg(m_filename));
+	else
+		setWindowTitle("Martta");
+}
+
+bool MainWindow::save()
+{
+	if (m_filename.isEmpty())
+	{
+		QString fn = QFileDialog::getSaveFileName(this, "Save Solution", QDir::homePath(), "*.xml");
+		if (fn.isEmpty())
+			return false;
+		if (!fn.endsWith(".xml"))
+			fn.append(".xml");
+		setFilename(fn);
+	}
+
+	foreach (Project* p, projects())
+		if (!m_projects[p].isEmpty())
+			if (!saveProject(qs(m_projects[p]), p))
+				return false;
+	return saveSolution();
+}
+
+bool MainWindow::load(String const& _filename)
+{
+	QFile f(qs(_filename));
+	if (!f.open(QFile::ReadOnly | QFile::Text))
+	{
+		QMessageBox::critical(0, tr("Load Solution"), tr("File does not exist! (name is %1)").arg(f.fileName()));
+		return 0;
+	}
+
+	QString errorStr;
+	int errorLine;
+	int errorColumn;
+
+	QDomDocument doc;
+	if (!doc.setContent(&f, true, &errorStr, &errorLine, &errorColumn))
+	{
+		QMessageBox::critical(0, tr("Load Solution"), tr("Parse error at line %1, column %2:\n%3").arg(errorLine).arg(errorColumn).arg(errorStr));
+		return false;
+	}
+	if (doc.doctype().name() != "MarttaSolution")
+	{
+		QMessageBox::critical(0, tr("Load Solution"), tr("Invalid file format (%1)").arg(doc.doctype().name()));
+		return false;
+	}
+
+	QStringList projectFiles;
+	QList<Project*> projects;
+	Entity* e = importDom(doc.documentElement(), 0, &projectFiles, &projects);	// Expects to be able to write into m_projects.
+	if (!e->isKind<Solution>())
+	{
+		QMessageBox::critical(0, tr("Load Solution"), tr("Invalid file contents (unknown Solution entity %1---missing a plugin?)").arg(qs(e->kind().name())));
+		e->killAndDelete();
+		return false;
+	}
+
+	m_projects.clear();
+	foreach (Project* p, projects)
+		m_projects.insert(p, QString::null);
+	delete m_solution;
+	m_solution = e->asKind<Solution>();
+	setFilename(qs(_filename));
+
+	List<Project*> loadedProjects;
+	foreach (QString f, projectFiles)
+	{
+		Project* p = loadProject(qs(f));
+		if (p)
+		{
+			m_projects[p] = f;
+			loadedProjects << p;
+		}
+		else
+			QMessageBox::warning(0, tr("Load Solution"), tr("Project file not found (%1)").arg(f));
+	}
+
+
+	m_solution->initWithProjects(loadedProjects);
+	updateSolutionSupportPath();
+
+	return true;
+}
+
+bool MainWindow::saveSolution() const
+{
+	if (!m_solution || m_filename.isEmpty())
+		return false;
+
+	QDomDocument doc("MarttaSolution");
+	doc.appendChild(exportDom(doc, m_solution->self()));
+	QFile f(m_filename);
+	if (!f.open(QFile::WriteOnly))
+		return false;
+	QTextStream fs(&f);
+	doc.save(fs, 4);
+	return true;
+}
+
+bool MainWindow::saveProject(String const& _file, Project* _p) const
+{
+	QDomDocument doc("MarttaProject");
+	doc.appendChild(exportDom(doc, _p->self()));
+	QFile f(qs(_file));
+	if (!f.open(QFile::WriteOnly))
+		return false;
+	QTextStream fs(&f);
+	doc.save(fs, 4);
+	return true;
+}
+
+Project* MainWindow::loadProject(String const& _filename)
+{
+	QFile f(qs(_filename));
+	if (!f.open(QFile::ReadOnly | QFile::Text))
+	{
+		QMessageBox::critical(0, tr("Load Project"), tr("File does not exist! (name is %1)").arg(f.fileName()));
+		return 0;
+	}
+
+	QString errorStr;
+	int errorLine;
+	int errorColumn;
+
+	QDomDocument doc;
+	if (!doc.setContent(&f, true, &errorStr, &errorLine, &errorColumn))
+	{
+		QMessageBox::critical(0, tr("Load Project"), tr("Parse error at line %1, column %2:\n%3").arg(errorLine).arg(errorColumn).arg(errorStr));
+		return 0;
+	}
+	if (doc.doctype().name() != "MarttaProject")
+	{
+		QMessageBox::critical(0, tr("Load Project"), tr("Invalid file format (%1)").arg(doc.doctype().name()));
+		return 0;
+	}
+	return importDom(doc.documentElement(), 0)->asKind<Project>();
+}
+
+bool MainWindow::confirmLose()
+{
+	if (m_solution)
+		save();
+	return true;
 }
 
 void MainWindow::updateSolutionSupportPath()
@@ -170,6 +467,119 @@ void MainWindow::updateSolutionSupportPath()
 #ifdef Q_WS_X11
 	m_solution->setSupportPath(qs(QCoreApplication::applicationDirPath() + "/../support/"));
 #endif
+}
+
+QDomElement MainWindow::exportDom(QDomDocument& _doc, Entity const* _e) const
+{
+	QDomElement n = _doc.createElement("entity");
+	n.setAttribute("kind", qs(_e->kind().name()));
+	Hash<String, String> h;
+	_e->properties(h);
+	for (Hash<String, String>::Iterator i = h.begin(); i != h.end(); ++i)
+		n.setAttribute(qs(i.key()), qs(i.value()));
+	String iId = _e->namedIndexId();
+	if (!iId.isEmpty())
+		n.setAttribute("index", qs(iId));
+	foreach (Entity* e, _e->savedChildren())
+		if (e->isKind<Project>() && !m_projects.value(e->asKind<Project>()).isEmpty())
+		{
+			QDomElement pe = _doc.createElement("project");
+			pe.setAttribute("filename", m_projects.value(e->asKind<Project>()));
+			n.appendChild(pe);
+		}
+		else
+		{
+			n.appendChild(exportDom(_doc, e));
+		}
+	return n;
+}
+
+Entity* MainWindow::importDom(QDomElement const& _el, Entity* _p, QStringList* _unloadedProjects, QList<Project*>* _projects)
+{
+	Entity* e = Entity::spawn(qs(_el.attribute("kind")));
+	Assert(e, "Spawn doesn't know anything about this kind, yet it did when exported.");
+
+	if (e->isKind<Project>() && _projects)
+		*_projects << e->asKind<Project>();
+
+	Hash<String, String> h;
+	String index;
+	for (uint i = 0; i < _el.attributes().length(); i++)
+		if (_el.attributes().item(i).nodeName() == "index")
+			index = qs(_el.attributes().item(i).nodeValue());
+		else
+			h.insert(qs(_el.attributes().item(i).nodeName()), qs(_el.attributes().item(i).nodeValue()));
+
+	if (_p)
+		e->silentMove(_p->named(index));
+
+	e->setProperties(h);
+	for (QDomNode i = _el.firstChild(); !i.isNull(); i = i.nextSibling())
+		if (i.isElement() && i.toElement().tagName() == "entity")
+			importDom(i.toElement(), e, _unloadedProjects, _projects);
+		else if(i.isElement() && i.toElement().tagName() == "project" && _unloadedProjects)
+			*_unloadedProjects << i.namedItem("filename").nodeValue();
+	return e;
+}
+
+void MainWindow::on_actNewCProject_triggered()
+{
+}
+
+void MainWindow::on_actAboutMartta_triggered()
+{
+	QMessageBox::about(this, "About Martta", "<center><font size=+4>Martta</font><br/><font size=-2><b>Technology Preview M1</b></font></center><font size=-2><p>Copyright (c) quid pro code Ltd. (UK)</p></font><font size=-1>Martta, the C++-based Extensible Quasi-Graphical Meta-Language.<br>This program is released according to the GNU GPL and is therefore Free Software: For details on how this program and derivatives thereof may be distributed, please see COPYING or visit <a href=\"http://quidprocode.co.uk/martta/\">quidprocode.co.uk/Martta</a>.</font>");
+}
+
+void MainWindow::on_actAboutQt_triggered()
+{
+	QMessageBox::aboutQt(this);
+}
+
+void MainWindow::on_actShowDeps_triggered()
+{
+	codeView->setShowDependencyInfo(actShowDeps->isChecked());
+}
+
+void MainWindow::on_actCastability_triggered()
+{
+#if defined(DEBUG)
+//	TypeEntity::s_debugCastability = actCastability->isChecked();
+#endif
+}
+
+void MainWindow::on_actShowChanges_triggered()
+{
+	codeView->setShowChanges(actShowChanges->isChecked());
+}
+
+void MainWindow::on_actShowFirstChange_triggered()
+{
+	codeView->setShowOneChange(actShowFirstChange->isChecked());
+}
+
+void MainWindow::on_actRemoveFirstChange_triggered()
+{
+//	if (s_changes.size())
+//		s_changes.removeFirst();
+//	codeView->update();
+}
+
+void MainWindow::on_actClearChanges_triggered()
+{
+//	clearChanges();
+//	codeView->update();
+}
+
+void MainWindow::resetSubject()
+{
+	if (projects().size())
+		codeView->setSubject(projects()[0]->self());
+	else
+		codeView->setSubject(0);
+
+	AssertNR(!codeView->current() || codeView->current()->root() == m_solution->self());
+	entityFocused(codeView->current());
 }
 
 template<class T> void addToLanguage(Kind const& _k, T* _p)
@@ -192,27 +602,6 @@ void MainWindow::updateLanguage()
 	language->clear();
 	addToLanguage(Kind::of<Entity>(), language);
 	language->expandAll();
-}
-
-void MainWindow::resetSubject()
-{
-	if (projects().size())
-		codeView->setSubject(projects()[0]->self());
-	else
-		codeView->setSubject(0);
-
-	AssertNR(!codeView->current() || codeView->current()->root() == m_solution->self());
-	entityFocused(codeView->current());
-}
-
-void MainWindow::on_actAboutMartta_triggered()
-{
-	QMessageBox::about(this, "About Martta", "<center><font size=+4>Martta</font><br/><font size=-2><b>Technology Preview M1</b></font></center><font size=-2><p>Copyright (c) quid pro code Ltd. (UK)</p></font><font size=-1>Martta, the C++-based Extensible Quasi-Graphical Meta-Language.<br>This program is released according to the GNU GPL and is therefore Free Software: For details on how this program and derivatives thereof may be distributed, please see COPYING or visit <a href=\"http://quidprocode.co.uk/martta/\">quidprocode.co.uk/Martta</a>.</font>");
-}
-
-void MainWindow::on_actAboutQt_triggered()
-{
-	QMessageBox::aboutQt(this);
 }
 
 static void addChild(QTreeWidgetItem* _p, Entity const* _c)
@@ -244,6 +633,12 @@ void MainWindow::entityFocused(Entity* _e)
 	}
 	m_updateTimer->setSingleShot(true);
 	m_updateTimer->start(500);
+}
+
+void MainWindow::updateProgramCode()
+{
+	if (Project* p = codeView->subject()->tryKind<Project>())
+		programCode->setText(qs(p->finalCode()));
 }
 
 void MainWindow::delayedUpdate()
@@ -363,212 +758,6 @@ void MainWindow::delayedUpdate()
 	{
 		updateProgramCode();
 		ChangeMan::get()->resetChanged();
-	}
-}
-
-void MainWindow::on_actShowDeps_triggered()
-{
-	codeView->setShowDependencyInfo(actShowDeps->isChecked());
-}
-
-void MainWindow::on_actCastability_triggered()
-{
-#if defined(DEBUG)
-//	TypeEntity::s_debugCastability = actCastability->isChecked();
-#endif
-}
-
-void MainWindow::on_actNew_triggered()
-{
-	if (!confirmLose())
-		return;
-
-	codeView->setSubject(0);
-
-	delete m_solution;
-
-	// For now just assume the default:
-	Kinds solutions = Kind::of<Solution>().deriveds();
-	solutions = solutions.onlyObjects();
-	if (solutions.size())
-	{
-		m_solution = solutions[0].spawnPrepared()->asKind<Solution>();
-		m_solution->initialiseNew();
-		updateSolutionSupportPath();
-	}
-	else
-		m_solution = 0;
-
-	resetSubject();
-}
-
-bool MainWindow::confirmLose()
-{
-	if (m_solution)
-		m_solution->save();
-	return true;
-}
-
-void MainWindow::on_actShowChanges_triggered()
-{
-	codeView->setShowChanges(actShowChanges->isChecked());
-}
-
-void MainWindow::on_actShowFirstChange_triggered()
-{
-	codeView->setShowOneChange(actShowFirstChange->isChecked());
-}
-
-void MainWindow::on_actRemoveFirstChange_triggered()
-{
-//	if (s_changes.size())
-//		s_changes.removeFirst();
-//	codeView->update();
-}
-
-void MainWindow::on_actClearChanges_triggered()
-{
-//	clearChanges();
-//	codeView->update();
-}
-
-void MainWindow::on_actNewCProject_triggered()
-{
-}
-
-// Open solution
-void MainWindow::on_actOpen_triggered()
-{
-	if (!confirmLose()) return;
-
-	QString f = QFileDialog::getOpenFileName(this, "Open Project", "/home/gav", "*.xml");
-	if (f.isEmpty()) return;
-
-	codeView->setSubject(0);
-/*	m_project->open(f);
-	codeView->setSubject(m_project->ns());*/
-}
-
-void MainWindow::on_actSave_triggered()
-{
-/*	saveCode();
-	if (m_project->filename().isEmpty())
-		m_project->rename(QFileDialog::getSaveFileName(this, "Save Project", "/home/gav", "*.xml"));
-	m_project->save();*/
-}
-
-/*void MainWindow::saveProject(Project* _p)
-{
-	AssertNR(!_p->filename().isEmpty());
-}*/
-
-void MainWindow::on_actQuit_triggered()
-{
-	qApp->quit();
-}
-
-void MainWindow::on_programIn_returnPressed()
-{
-	m_buildAndRun->write((programIn->text() + "\n").toAscii());
-	programIn->setText("");
-}
-
-void MainWindow::programReadyOut()
-{
-	bool track = programOut->verticalScrollBar()->sliderPosition() == programOut->verticalScrollBar()->maximum();
-	QString n = m_outputOwed + QString::fromAscii(m_buildAndRun->readAllStandardOutput());
-	m_outputOwed = "";
-	if (n.endsWith("\n")) { n.chop(1); m_outputOwed = "\n"; }
-	programOut->setPlainText(programOut->toPlainText() + n);
-	if (track) programOut->verticalScrollBar()->setSliderPosition(programOut->verticalScrollBar()->maximum());
-}
-
-void MainWindow::programReadyError()
-{
-	bool track = programOut->verticalScrollBar()->sliderPosition() == programOut->verticalScrollBar()->maximum();
-	QString n = m_outputOwed + QString::fromAscii(m_buildAndRun->readAllStandardError());
-	m_outputOwed = "";
-	if (n.endsWith("\n")) { n.chop(1); m_outputOwed = "\n"; }
-	programOut->setPlainText(programOut->toPlainText() + n);
-	if (track) programOut->verticalScrollBar()->setSliderPosition(programOut->verticalScrollBar()->maximum());
-}
-
-void MainWindow::updateProgramCode()
-{
-	if (Project* p = codeView->subject()->tryKind<Project>())
-		programCode->setText(qs(p->finalCode()));
-}
-
-void MainWindow::on_actExecute_triggered()
-{
-	if (!project())
-		return;
-
-	actExecute->setEnabled(false);
-
-	// Assume current project is executable for now.
-	codeView->setEditing(0);
-	if (m_buildAndRun)
-	{
-		// TODO: make sure you want to terminate current!
-		disconnect(m_buildAndRun, SIGNAL(finished(int, QProcess::ExitStatus)));
-		delete m_buildAndRun;
-		m_buildAndRun = 0;
-	}
-
-	m_buildAndRun = new QProcess;
-	m_steps = project()->steps();
-	connect(m_buildAndRun, SIGNAL(finished(int, QProcess::ExitStatus)), SLOT(stepFinished()));
-	executeNextStep();
-}
-
-QStringList qs(List<String> const& _f)
-{
-	QStringList ret;
-	foreach (String s, _f)
-		ret << qs(s);
-	return ret;
-}
-
-void MainWindow::stepFinished()
-{
-	StringList step = m_steps.takeFirst();
-	if (m_buildAndRun->exitStatus() || m_buildAndRun->exitCode())
-	{
-		QMessageBox::critical(this, "Build failed", tr("Could not build executable. Build step '%1' returned with: '%2'").arg(qs(step.join(L' '))).arg(m_buildAndRun->readAllStandardError().data()));
-		delete m_buildAndRun;
-		m_buildAndRun = 0;
-		actExecute->setEnabled(true);
-		return;
-	}
-	executeNextStep();
-}
-
-void MainWindow::executeNextStep()
-{
-	if (m_steps.size())
-	{
-		if (m_steps.size() == 1)
-		{
-			// Build finished
-			actExecute->setEnabled(true);
-			programOut->setText("");
-			programIn->setEnabled(true);
-
-			connect(m_buildAndRun, SIGNAL(readyReadStandardOutput()), SLOT(programReadyOut()));
-			connect(m_buildAndRun, SIGNAL(readyReadStandardError()), SLOT(programReadyError()));
-		}
-		m_buildAndRun->start(qs(m_steps.first()[0]), qs(m_steps.first().mid(1)), QIODevice::ReadOnly);
-	}
-	else
-	{
-		// Program finished.
-		statusBar()->showMessage(QString("Program terminated with exit code %1").arg(m_buildAndRun->exitCode()));
-		actExecute->setEnabled(true);
-		programIn->setEnabled(false);
-		m_buildAndRun->deleteLater();
-		m_buildAndRun = 0;
-		m_outputOwed = "";
 	}
 }
 

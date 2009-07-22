@@ -30,6 +30,8 @@
 #include "ui_MainWindow.h"
 
 class QProcess;
+class QDomElement;
+class QDomDocument;
 class QLibrary;
 
 namespace Martta
@@ -54,8 +56,6 @@ private:
 class CodeScene;
 class Function;
 class Entity;
-
-
 
 class MainWindow: public QMainWindow, public Ui::MainWindow
 {
@@ -100,16 +100,43 @@ private slots:
 private:
 	void updateSolutionSupportPath();
 
+	void setFilename(QString const& _fn);
+
 	void executeNextStep();
 	void loadPlugins();
 	void updateLanguage();
 	bool confirmLose();
 
-	inline List<Project*>	projects() const { return m_solution ? m_solution->self()->cardinalChildrenAs<Project>() : List<Project*>(); }
+	// Simple load/save functions; doesn't record the filename.
+	Project*				loadProject(String const& _filename);
+	bool					saveProject(String const& _filename, Project* _p) const;
+
+	// Will save the solution, but not the projects---do that manually.
+	// Acts according to m_filename and m_solution.
+	// Does nothing is m_filename/m_solution is null.
+	// @returns true iff everything went ok.
+	bool					saveSolution() const;
+
+	// Loads the solution file @a _filename and any projects that it requires.
+	// Maintains correctness of m_projects, m_filename and m_solution accordingly.
+	// Doesn't do anything about the GUI though.
+	// @returns true iff everything went ok.
+	bool					load(String const& _filename);
+
+	// Proper save function---saves everything, prompting for filename if necessary.
+	// Maintains correctness of m_projects, m_filename and m_solution accordingly.
+	bool					save();
+
+	Entity*					importDom(QDomElement const& _el, Entity* _p, QStringList* _projects = 0, QList<Project*>* _projects = 0);
+	QDomElement				exportDom(QDomDocument& _doc, Entity const* _e) const;
+
+	inline QList<Project*>	projects() const { return m_projects.keys(); }
 	inline Project*			project() const { return codeView->subject()->tryKind<Project>(); }
 
 	QList<QLibrary*>		m_libraries;
 
+	QHash<Project*, QString>m_projects;
+	QString					m_filename;
 	Solution*				m_solution;
 
 	QTimer*					m_updateTimer;
