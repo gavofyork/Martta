@@ -30,14 +30,6 @@ Entity* Kind::spawnPrepared() const
 	return Entity::spawn(name())->prepareChildren();
 }
 
-Kinds Kind::deriveds() const
-{
-	Kinds ret;
-	foreach (Kind k, immediateDeriveds())
-		ret << k << k.deriveds();
-	return ret;
-}
-
 Kinds Kinds::withoutInterfaces() const
 {
 	Kinds ret;

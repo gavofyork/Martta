@@ -835,7 +835,6 @@ Entity* Entity::evaluate(String const& _exp, int* _readUpto)
 	if (!af)
 		af = AuxilliaryRegistrar::get()->auxilliary("Martta::" + name);
 	Entity* ret = af ? af->create() : new Entity;
-	ret->prepareChildren();
 
 	Hash<String, String> ps;
 	while (eon < _exp.length() && _exp[eon] != L'}' && _exp[eon] != L'@')
@@ -868,6 +867,7 @@ Entity* Entity::evaluate(String const& _exp, int* _readUpto)
 				eon++;
 			}
 		}
+	ret->validifyChildren();
 	ret->setProperties(ps);
 	if (_readUpto)
 		*_readUpto = eon;

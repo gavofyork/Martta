@@ -201,11 +201,11 @@ String CProject::finalCode() const
 	ret += includeCode();
 	ret += Super::finalCode();
 	if (childIs<Function>(0))
-		ret += "int main(int, char**)\n{\n" + childAs<Function>(0)->codeName() + "();\n}\n";
+		ret += "int main(int, char**)\n{\n" + childAs<Function>(0)->reference() + "();\n}\n";
 	return ret;
 }
 
-List<StringList> CProject::buildCommands() const
+List<StringList> CProject::steps() const
 {
 	String src = m_tempPath + "/" + name() + ".cpp";
 	String bin = m_tempPath + "/" + targetName();
@@ -237,6 +237,7 @@ List<StringList> CProject::buildCommands() const
 	}
 
 	mInfo() << "Compiling" << src;
+	List<StringList> ret;
 
 #ifdef WIN32
 	QStringList env = QProcess::systemEnvironment();
@@ -259,10 +260,13 @@ List<StringList> CProject::buildCommands() const
 	batArgs << L"/C";
 	batArgs << m_tempBatName;
 	QDir::setCurrent(QDir::tempPath());
-	return StringList() << L"cmd" << batArgs;
+	ret << (StringList(L"cmd") << batArgs);
 #else
-	return List<StringList>() << ccArgs;
+	ret << ccArgs;
 #endif
+
+	ret << StringList(bin);
+	return ret;
 }
 
 String CProject::targetName() const

@@ -21,6 +21,7 @@
 #pragma once
 
 #include <msString.h>
+#include <msStringList.h>
 using namespace MarttaSupport;
 
 #include "Meta.h"
@@ -35,18 +36,18 @@ class Project
 public:
 	virtual ~Project() {}
 
-	virtual void save() const;
+	String const&						filename() const { return m_filename; }
+	void								setFilename(String const& _fn) { m_filename = _fn; }
 
-	String const& filename() const { return m_filename; }
-	void setFilename(String const& _fn) { m_filename = _fn; }
-
-	String const& finalCode() const { return String::null; }
+	virtual void						save() const {}
+	virtual List<StringList>			steps() const;
+	virtual String						finalCode() const { return String::null; }
 
 protected:
-	String const& supportPath() const;
+	String const&						supportPath() const;
 
 private:
-	String m_filename;
+	String								m_filename;
 };
 
 }

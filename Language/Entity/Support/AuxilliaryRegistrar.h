@@ -2,14 +2,14 @@
  * Version: Martta License version 1.0
  *
  * The contents of this file are subject to the Martta License version 1.0
- * (the "License"); you may not use this file except in compliance with the 
- * License. You should have received a copy of the Martta License 
+ * (the "License"); you may not use this file except in compliance with the
+ * License. You should have received a copy of the Martta License
  * "COPYING.Martta" along with Martta; if not you may obtain a copy of the
  * License at http://quidprocode.co.uk/Martta/
  *
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations under 
+ * License for the specific language governing rights and limitations under
  * the License.
  *
  * The Initial Developer of the code in this file is Gavin Wood.
@@ -46,33 +46,36 @@ public:
 	inline List<int> const&			names() const { return m_names; }
 	MarttaSupport::String const&						nameOfArbitrary(int _n) const;
 	int									arbitraryOfName(String const& _name) const;
-	
+
 	inline AuxilliaryFace const*		auxilliary(String const& _kindName) { return m_auxilliaries.value(_kindName); }
 	void								registerAuxilliary(AuxilliaryFace const* _a);
 	inline List<AuxilliaryFace const*> const&	allInterfaces() const { return m_allInterfaces; }
-	
+
 	template<class T>
-	inline List<AuxilliaryFace const*> immediateInterfaces() const { return immediateInterfaces(T::staticAuxilliary()); } 
+	inline List<AuxilliaryFace const*> immediateInterfaces() const { return immediateInterfaces(T::staticAuxilliary()); }
 	inline List<AuxilliaryFace const*> immediateInterfaces(AuxilliaryFace const* _a) const { List<AuxilliaryFace const*> ret; for (int i = 0; i < _a->interfaceAuxilliaryCount(); i++) ret << _a->interfaceAuxilliary(i); return ret; }
 	template<class T>
-	inline List<AuxilliaryFace const*> immediateDeriveds() const { return immediateDeriveds(T::staticAuxilliary()); } 
-	inline List<AuxilliaryFace const*> immediateDeriveds(AuxilliaryFace const* _a) const { return m_immediateDerivedsMap.values(_a); } 
+	inline List<AuxilliaryFace const*> immediateDeriveds() const { return immediateDeriveds(T::staticAuxilliary()); }
+	inline List<AuxilliaryFace const*> immediateDeriveds(AuxilliaryFace const* _a) const { return m_immediateDerivedsMap.values(_a); }
 	template<class T>
-	inline List<AuxilliaryFace const*> interfaces() const { return interfaces(T::staticAuxilliary()); } 
+	inline List<AuxilliaryFace const*> deriveds() const { return deriveds(T::staticAuxilliary()); }
+	inline List<AuxilliaryFace const*> deriveds(AuxilliaryFace const* _a) const { return m_derivedsMap.values(_a); }
+	template<class T>
+	inline List<AuxilliaryFace const*> interfaces() const { return interfaces(T::staticAuxilliary()); }
 	inline List<AuxilliaryFace const*> interfaces(AuxilliaryFace const* _a) const { return m_interfacesMap.values(_a); }
 	template<class T>
-	inline List<AuxilliaryFace const*> supers() const { return supers(T::staticAuxilliary()); } 
+	inline List<AuxilliaryFace const*> supers() const { return supers(T::staticAuxilliary()); }
 	inline List<AuxilliaryFace const*> supers(AuxilliaryFace const* _a) const { return m_supersMap.values(_a); }
-	
+
 	inline MultiHash<AuxilliaryFace const*, AuxilliaryFace const*> const& immediateDeriveds() const { return m_immediateDerivedsMap; }
 	inline MultiHash<AuxilliaryFace const*, AuxilliaryFace const*> const& interfaces() const { return m_interfacesMap; }
 	inline MultiHash<AuxilliaryFace const*, AuxilliaryFace const*> const& supers() const { return m_supersMap; }
-	
+
 	void								recurseAux(AuxilliaryFace const* _face, String const& _indent) const;
 	void								initialiseClasses();
 	void								finaliseClasses();
 	void								jigCache();
-	
+
 private:
 	List<AuxilliaryFace const*>			calculateInterfaces(AuxilliaryFace const* _a) const;
 
@@ -86,6 +89,7 @@ private:
 	MultiHash<AuxilliaryFace const*, AuxilliaryFace const*> m_immediateDerivedsMap;	///< Immediately derived classes (only Entity-derived classes here).
 	MultiHash<AuxilliaryFace const*, AuxilliaryFace const*> m_interfacesMap;		///< All interfaces fulfilled (no Entity-derived classes in the values here).
 	MultiHash<AuxilliaryFace const*, AuxilliaryFace const*> m_supersMap;			///< All supers (way back to Entity together with interfaces).
+	MultiHash<AuxilliaryFace const*, AuxilliaryFace const*> m_derivedsMap;			///< All deriveds.
 };
 
 }

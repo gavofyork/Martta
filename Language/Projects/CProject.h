@@ -59,7 +59,7 @@ public:
 	virtual String						includeCode() const;
 	virtual StringList					libs() const;
 
-	virtual List<StringList>			buildCommands() const;
+	virtual List<StringList>			steps() const;
 
 protected:
 	virtual int							minRequired(int _i) const { return _i == 0 ? 1 : Super::minRequired(_i); }

@@ -91,20 +91,22 @@ private slots:
 
 	void resetSubject();
 
+	void stepFinished();
 	void programReadyOut();
 	void programReadyError();
-	void programFinished(int _exitCode);
 
 	void updateProgramCode();
 
 private:
 	void updateSolutionSupportPath();
 
+	void executeNextStep();
 	void loadPlugins();
 	void updateLanguage();
 	bool confirmLose();
 
 	inline List<Project*>	projects() const { return m_solution ? m_solution->self()->cardinalChildrenAs<Project>() : List<Project*>(); }
+	inline Project*			project() const { return codeView->subject()->tryKind<Project>(); }
 
 	QList<QLibrary*>		m_libraries;
 
@@ -112,7 +114,8 @@ private:
 
 	QTimer*					m_updateTimer;
 
-	QProcess*				m_program;
+	QProcess*				m_buildAndRun;
+	List<StringList>		m_steps;
 	QString					m_outputOwed;
 };
 

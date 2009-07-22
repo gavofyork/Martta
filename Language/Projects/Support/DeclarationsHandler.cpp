@@ -164,7 +164,7 @@ public:
 		m_subject->back().place(Entity::evaluate(String(L"Argument{TextLabel[name=%1]}").arg(qs(_a.value("name")))));
 	}
 
-	void addEllipsis() { Hash<String, String> p; p[L"ellipsis"] = "true"; m_subject->setProperties(p); }
+	void addEllipsis() { Hash<String, String> p; p[L"ellipsis"] = L"true"; m_subject->setProperties(p); }
 
 	virtual void resolve(DeclarationsHandler* _h)
 	{

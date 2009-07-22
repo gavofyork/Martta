@@ -66,7 +66,7 @@ public:
 	template<class T> inline static Kind of() { return Kind(T::staticAuxilliary()); }
 
 	inline Kind super() const { return m_mo ? Kind(m_mo->superAuxilliary()) : Kind(); }
-	Kinds deriveds() const;
+	inline Kinds deriveds() const { return m_mo ? AuxilliaryRegistrar::get()->deriveds(m_mo) : Kinds(); }
 	inline Kinds immediateDeriveds() const { return m_mo ? AuxilliaryRegistrar::get()->immediateDeriveds(m_mo) : Kinds(); }
 	inline Kinds interfaces() const { return m_mo ? AuxilliaryRegistrar::get()->interfaces(m_mo) : Kinds(); }
 	inline Kinds immediateInterfaces() const { return m_mo ? AuxilliaryRegistrar::get()->immediateInterfaces(m_mo) : Kinds(); }

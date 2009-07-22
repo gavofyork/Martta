@@ -50,8 +50,10 @@ String CSolution::includeCode() const
 void CSolution::initialiseNew()
 {
 	clearEntities();
-	back().place(Entity::evaluate("CProject{TextLabel[text=project]}{Function{TextLabel[text=main]}}{CDependency[libs=][includes=/usr/include/stdlib.h*/usr/include/stdio.h][name=Standard C]}"));
+	back().place(Entity::evaluate("CProject{TextLabel[text=project]}{Function{TextLabel[text=main]}{BuiltinType[id=0]}}{CDependency[libs=][includes=/usr/include/stdlib.h*/usr/include/stdio.h][name=Standard C]}"));
+	debugTree();
 	rejigIncludes();
+	debugTree();
 }
 
 static inline QString qs(String const& _s)

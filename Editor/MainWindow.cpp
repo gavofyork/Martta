@@ -103,7 +103,8 @@ void MainWindow::loadPlugins()
 MainWindow::MainWindow(QWidget* _p, Qt::WindowFlags _f):
 	QMainWindow			(_p, _f),
 	m_solution			(0),
-	m_updateTimer		(0)
+	m_updateTimer		(0),
+	m_buildAndRun		(0)
 {
 	qApp->addLibraryPath("/Users/gav/Projects/Martta/plugins");
 
@@ -387,7 +388,8 @@ void MainWindow::on_actNew_triggered()
 	delete m_solution;
 
 	// For now just assume the default:
-	Kinds solutions = Kind::of<Solution>().deriveds().onlyObjects();
+	Kinds solutions = Kind::of<Solution>().deriveds();
+	solutions = solutions.onlyObjects();
 	if (solutions.size())
 	{
 		m_solution = solutions[0].spawnPrepared()->asKind<Solution>();
@@ -400,20 +402,10 @@ void MainWindow::on_actNew_triggered()
 	resetSubject();
 }
 
-#if 0
-void compile()
-{
-	AssertNR(!m_compiler);
-	StringList buildLine;
-	m_compiler = new QProcess;
-	connect(m_compiler, SIGNAL(finished(int, QProcess::ExitStatus)), SLOT(compileFinished()));
-	m_compiler->start(5qs(buildLine[0]), qs(buildLine.mid(1)), QIODevice::ReadOnly);
-}
-#endif
-
 bool MainWindow::confirmLose()
 {
-	m_solution->save();
+	if (m_solution)
+		m_solution->save();
 	return true;
 }
 
@@ -477,14 +469,14 @@ void MainWindow::on_actQuit_triggered()
 
 void MainWindow::on_programIn_returnPressed()
 {
-	m_program->write((programIn->text() + "\n").toAscii());
+	m_buildAndRun->write((programIn->text() + "\n").toAscii());
 	programIn->setText("");
 }
 
 void MainWindow::programReadyOut()
 {
 	bool track = programOut->verticalScrollBar()->sliderPosition() == programOut->verticalScrollBar()->maximum();
-	QString n = m_outputOwed + QString::fromAscii(m_program->readAllStandardOutput());
+	QString n = m_outputOwed + QString::fromAscii(m_buildAndRun->readAllStandardOutput());
 	m_outputOwed = "";
 	if (n.endsWith("\n")) { n.chop(1); m_outputOwed = "\n"; }
 	programOut->setPlainText(programOut->toPlainText() + n);
@@ -494,20 +486,11 @@ void MainWindow::programReadyOut()
 void MainWindow::programReadyError()
 {
 	bool track = programOut->verticalScrollBar()->sliderPosition() == programOut->verticalScrollBar()->maximum();
-	QString n = m_outputOwed + QString::fromAscii(m_program->readAllStandardError());
+	QString n = m_outputOwed + QString::fromAscii(m_buildAndRun->readAllStandardError());
 	m_outputOwed = "";
 	if (n.endsWith("\n")) { n.chop(1); m_outputOwed = "\n"; }
 	programOut->setPlainText(programOut->toPlainText() + n);
 	if (track) programOut->verticalScrollBar()->setSliderPosition(programOut->verticalScrollBar()->maximum());
-}
-
-void MainWindow::programFinished(int _exitCode)
-{
-	programIn->setEnabled(false);
-	statusBar()->showMessage(QString("Program terminated with exit code %1").arg(_exitCode));
-	m_outputOwed = "";
-	m_program->deleteLater();
-	m_program = 0;
 }
 
 void MainWindow::updateProgramCode()
@@ -518,31 +501,75 @@ void MainWindow::updateProgramCode()
 
 void MainWindow::on_actExecute_triggered()
 {
+	if (!project())
+		return;
+
+	actExecute->setEnabled(false);
+
 	// Assume current project is executable for now.
 	codeView->setEditing(0);
-	if (m_program)
+	if (m_buildAndRun)
 	{
 		// TODO: make sure you want to terminate current!
-		delete m_program;
-		m_program = 0;
+		disconnect(m_buildAndRun, SIGNAL(finished(int, QProcess::ExitStatus)));
+		delete m_buildAndRun;
+		m_buildAndRun = 0;
 	}
 
-//	saveCode();
+	m_buildAndRun = new QProcess;
+	m_steps = project()->steps();
+	connect(m_buildAndRun, SIGNAL(finished(int, QProcess::ExitStatus)), SLOT(stepFinished()));
+	executeNextStep();
+}
 
-	QString exe;// = m_project->executable();
-	if (exe.isEmpty())
+QStringList qs(List<String> const& _f)
+{
+	QStringList ret;
+	foreach (String s, _f)
+		ret << qs(s);
+	return ret;
+}
+
+void MainWindow::stepFinished()
+{
+	StringList step = m_steps.takeFirst();
+	if (m_buildAndRun->exitStatus() || m_buildAndRun->exitCode())
 	{
-		QMessageBox::critical(this, "Execution Failed", "Could not build executable. Compiler returned with: "/* + m_project->lastCompileError()*/);
+		QMessageBox::critical(this, "Build failed", tr("Could not build executable. Build step '%1' returned with: '%2'").arg(qs(step.join(L' '))).arg(m_buildAndRun->readAllStandardError().data()));
+		delete m_buildAndRun;
+		m_buildAndRun = 0;
+		actExecute->setEnabled(true);
 		return;
 	}
-	programOut->setText("");
-	programIn->setEnabled(true);
+	executeNextStep();
+}
 
-	m_program = new QProcess(this);
-	connect(m_program, SIGNAL(readyReadStandardOutput()), SLOT(programReadyOut()));
-	connect(m_program, SIGNAL(readyReadStandardError()), SLOT(programReadyError()));
-	connect(m_program, SIGNAL(finished(int, QProcess::ExitStatus)), SLOT(programFinished(int)));
-	m_program->start(exe, QStringList());
+void MainWindow::executeNextStep()
+{
+	if (m_steps.size())
+	{
+		if (m_steps.size() == 1)
+		{
+			// Build finished
+			actExecute->setEnabled(true);
+			programOut->setText("");
+			programIn->setEnabled(true);
+
+			connect(m_buildAndRun, SIGNAL(readyReadStandardOutput()), SLOT(programReadyOut()));
+			connect(m_buildAndRun, SIGNAL(readyReadStandardError()), SLOT(programReadyError()));
+		}
+		m_buildAndRun->start(qs(m_steps.first()[0]), qs(m_steps.first().mid(1)), QIODevice::ReadOnly);
+	}
+	else
+	{
+		// Program finished.
+		statusBar()->showMessage(QString("Program terminated with exit code %1").arg(m_buildAndRun->exitCode()));
+		actExecute->setEnabled(true);
+		programIn->setEnabled(false);
+		m_buildAndRun->deleteLater();
+		m_buildAndRun = 0;
+		m_outputOwed = "";
+	}
 }
 
 }

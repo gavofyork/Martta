@@ -34,8 +34,9 @@ String const& Project::supportPath() const
 	return String::null;
 }
 
-void Project::save() const
+List<StringList> Project::steps() const
 {
+	return List<StringList>();
 }
 
 }
