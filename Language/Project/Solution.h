@@ -43,7 +43,7 @@ public:
 
 	virtual void						initialiseNew() {}
 	virtual void						addProject(Project*) {}
-	virtual void						initWithProjects(List<Project*> const&) {}
+	virtual void						initWithProjects(List<Project*> const& = List<Project*>()) {}
 	virtual void						removeProject(Project*) {}
 
 protected:

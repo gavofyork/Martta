@@ -74,6 +74,8 @@ private slots:
 	void on_actExecute_triggered();
 	void on_actNewCProject_triggered();
 
+	void on_actReloadPlugins_triggered();
+
 	void on_actShowDeps_triggered();
 	void on_actShowChanges_triggered();
 	void on_actClearChanges_triggered();
@@ -128,7 +130,11 @@ private:
 	bool					save();
 
 	Entity*					importDom(QDomElement const& _el, Entity* _p, QStringList* _projects = 0, QList<Project*>* _projects = 0);
-	QDomElement				exportDom(QDomDocument& _doc, Entity const* _e) const;
+	QDomElement				exportDom(QDomDocument& _doc, Entity const* _e, bool _dump = false) const;
+
+	// Serialises/deserialises the lot.
+	QString					serialise() const;
+	bool					deserialise(QString const& _s);
 
 	inline QList<Project*>	projects() const { return m_projects.keys(); }
 	inline Project*			project() const { return codeView->subject()->tryKind<Project>(); }

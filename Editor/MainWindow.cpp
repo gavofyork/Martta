@@ -157,6 +157,21 @@ void MainWindow::loadPlugins()
 	updateLanguage();
 }
 
+void MainWindow::on_actReloadPlugins_triggered()
+{
+	QString s = serialise();
+
+	codeView->setSubject(0);
+	delete m_solution;
+	m_solution = 0;
+	m_projects.clear();
+
+	loadPlugins();
+	deserialise(s);
+
+	resetSubject();
+}
+
 void MainWindow::on_actQuit_triggered()
 {
 	qApp->quit();
@@ -452,6 +467,50 @@ bool MainWindow::confirmLose()
 	return true;
 }
 
+QString MainWindow::serialise() const
+{
+	QDomDocument doc("MarttaSolution");
+	doc.appendChild(exportDom(doc, m_solution->self(), true));
+	QString ret;
+	QTextStream fs(&ret);
+	doc.save(fs, 4);
+	return ret;
+}
+
+bool MainWindow::deserialise(QString const& _s)
+{
+	QDomDocument doc;
+	AssertNR(doc.setContent(_s, true, 0, 0, 0));
+	AssertNR(doc.doctype().name() == "MarttaSolution");
+
+	QStringList projectFiles;
+	QList<Project*> projects;
+	Entity* e = importDom(doc.documentElement(), 0, &projectFiles, &projects);	// Expects to be able to write into m_projects.
+	AssertNR(projectFiles.isEmpty());
+	if (!e->isKind<Solution>())
+	{
+		QTemporaryFile f;
+		f.setAutoRemove(false);
+		f.open();
+		f.write(_s.toUtf8());
+		f.close();
+		QMessageBox::critical(0, tr("Load Solution"), tr("Document now invalid (unknown Solution entity %1---missing a plugin?). Solution contents dumped to %2.").arg(qs(e->kind().name())).arg(f.fileName()));
+		e->killAndDelete();
+		return false;
+	}
+
+	m_projects.clear();
+	foreach (Project* p, projects)
+		m_projects.insert(p, QString::null);
+	delete m_solution;
+	m_solution = e->asKind<Solution>();
+
+	m_solution->initWithProjects();
+	updateSolutionSupportPath();
+
+	return true;
+}
+
 void MainWindow::updateSolutionSupportPath()
 {
 #ifdef Q_WS_MAC
@@ -469,7 +528,7 @@ void MainWindow::updateSolutionSupportPath()
 #endif
 }
 
-QDomElement MainWindow::exportDom(QDomDocument& _doc, Entity const* _e) const
+QDomElement MainWindow::exportDom(QDomDocument& _doc, Entity const* _e, bool _dump) const
 {
 	QDomElement n = _doc.createElement("entity");
 	n.setAttribute("kind", qs(_e->kind().name()));
@@ -481,7 +540,7 @@ QDomElement MainWindow::exportDom(QDomDocument& _doc, Entity const* _e) const
 	if (!iId.isEmpty())
 		n.setAttribute("index", qs(iId));
 	foreach (Entity* e, _e->savedChildren())
-		if (e->isKind<Project>() && !m_projects.value(e->asKind<Project>()).isEmpty())
+		if (e->isKind<Project>() && !m_projects.value(e->asKind<Project>()).isEmpty() && !_dump)
 		{
 			QDomElement pe = _doc.createElement("project");
 			pe.setAttribute("filename", m_projects.value(e->asKind<Project>()));

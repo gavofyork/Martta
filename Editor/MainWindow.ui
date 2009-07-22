@@ -228,8 +228,15 @@
     <addaction name="separator"/>
     <addaction name="actExecute"/>
    </widget>
+   <widget class="QMenu" name="menuPlugins">
+    <property name="title">
+     <string>Plugins</string>
+    </property>
+    <addaction name="actReloadPlugins"/>
+   </widget>
    <addaction name="menu_Project"/>
    <addaction name="menu_Project_2"/>
+   <addaction name="menuPlugins"/>
    <addaction name="menu_About"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -664,7 +671,7 @@
        <property name="frameShadow">
         <enum>QFrame::Sunken</enum>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout_2c">
+       <layout class="QVBoxLayout" name="verticalLayout_3">
         <property name="margin">
          <number>0</number>
         </property>
@@ -896,6 +903,11 @@
   <action name="actOpenModule">
    <property name="text">
     <string>&amp;Open Module...</string>
+   </property>
+  </action>
+  <action name="actReloadPlugins">
+   <property name="text">
+    <string>Reload</string>
    </property>
   </action>
  </widget>
