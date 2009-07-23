@@ -27,7 +27,6 @@ using namespace MarttaSupport;
 #include "Function.h"
 #include "CDependency.h"
 #include "CProject.h"
-#undef inline
 
 namespace Martta
 {

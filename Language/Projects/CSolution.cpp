@@ -25,7 +25,6 @@
 #include "CDependency.h"
 #include "CProject.h"
 #include "CSolution.h"
-#undef inline
 
 namespace Martta
 {

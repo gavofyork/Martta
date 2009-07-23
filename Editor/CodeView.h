@@ -22,7 +22,6 @@
 
 #include <msStringList.h>
 #include <msString.h>
-#undef inline
 using namespace MarttaSupport;
 
 #include <QSet>
@@ -31,7 +30,6 @@ using namespace MarttaSupport;
 
 #include <Entity.h>
 #include <CodeScene.h>
-#undef inline
 
 namespace Martta
 {

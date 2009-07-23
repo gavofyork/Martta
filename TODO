@@ -4,7 +4,6 @@ BUG Moving is crazily slow over statements.
   - Do recursively but prune on denied Kinds.
   - Remove all allowedToBeKind (or other Kind-checking) in handlers.
 BUG 'Mstr'-> doesn't move away (only stops editing).
-BUG 'Vi i'<-Del doesn't delete the int.
 BUG Assertion on '!?'.
 CRASH delete a Referenced EnumValue.
 
@@ -28,7 +27,6 @@ Small things:
 Dynamic code-loading (plugins).
 - Get rid of #define inline
 - Referenced as placeholder (no key press handling)
-  - QUICK Vim-style tab cycling of possibles.
   - BRINGBACK Colouring (layout) of possibles (Entity::defineEditLayout(ViewKeysC&, Named*)
   - BRINGBACK Method names register with IdentifierSet
   - BRINGBACK int/string etc. IdentifierSet that creates variable if necessary.

@@ -49,6 +49,7 @@
   <valuemap type="QVariantMap" >
    <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString" >Debug</value>
    <value key="QtVersionId" type="int" >3</value>
+   <value key="addQDumper" type="" ></value>
   </valuemap>
  </data>
  <data>
@@ -56,16 +57,16 @@
   <valuemap type="QVariantMap" >
    <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString" >Debug</value>
    <valuelist key="abstractProcess.Environment" type="QVariantList" >
-    <value type="QString" >Apple_PubSub_Socket_Render=/tmp/launch-HEO8cy/Render</value>
+    <value type="QString" >Apple_PubSub_Socket_Render=/tmp/launch-eFDGRS/Render</value>
     <value type="QString" >COMMAND_MODE=legacy</value>
-    <value type="QString" >DISPLAY=/tmp/launch-OLiDiZ/:0</value>
+    <value type="QString" >DISPLAY=/tmp/launch-vO8JsS/:0</value>
     <value type="QString" >HOME=/Users/gav</value>
     <value type="QString" >LOGNAME=gav</value>
     <value type="QString" >PATH=/usr/local/Trolltech/Qt-4.5.2/bin:/usr/bin:/bin:/usr/sbin:/sbin</value>
     <value type="QString" >QTDIR=/usr/local/Trolltech/Qt</value>
-    <value type="QString" >SECURITYSESSIONID=9a6490</value>
+    <value type="QString" >SECURITYSESSIONID=6a67a0</value>
     <value type="QString" >SHELL=/bin/bash</value>
-    <value type="QString" >SSH_AUTH_SOCK=/tmp/launch-o9klp1/Listeners</value>
+    <value type="QString" >SSH_AUTH_SOCK=/tmp/launch-XLgorm/Listeners</value>
     <value type="QString" >TMPDIR=/var/folders/GQ/GQwz+Xc3FTC6NB3ArziT8++++yU/-Tmp-/</value>
     <value type="QString" >USER=gav</value>
     <value type="QString" >__CF_USER_TEXT_ENCODING=0x3E8:0:2</value>
@@ -87,16 +88,16 @@
   <valuemap type="QVariantMap" >
    <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString" >Debug</value>
    <valuelist key="abstractProcess.Environment" type="QVariantList" >
-    <value type="QString" >Apple_PubSub_Socket_Render=/tmp/launch-HEO8cy/Render</value>
+    <value type="QString" >Apple_PubSub_Socket_Render=/tmp/launch-eFDGRS/Render</value>
     <value type="QString" >COMMAND_MODE=legacy</value>
-    <value type="QString" >DISPLAY=/tmp/launch-OLiDiZ/:0</value>
+    <value type="QString" >DISPLAY=/tmp/launch-vO8JsS/:0</value>
     <value type="QString" >HOME=/Users/gav</value>
     <value type="QString" >LOGNAME=gav</value>
     <value type="QString" >PATH=/usr/local/Trolltech/Qt-4.5.2/bin:/usr/bin:/bin:/usr/sbin:/sbin</value>
     <value type="QString" >QTDIR=/usr/local/Trolltech/Qt</value>
-    <value type="QString" >SECURITYSESSIONID=9a6490</value>
+    <value type="QString" >SECURITYSESSIONID=6a67a0</value>
     <value type="QString" >SHELL=/bin/bash</value>
-    <value type="QString" >SSH_AUTH_SOCK=/tmp/launch-o9klp1/Listeners</value>
+    <value type="QString" >SSH_AUTH_SOCK=/tmp/launch-XLgorm/Listeners</value>
     <value type="QString" >TMPDIR=/var/folders/GQ/GQwz+Xc3FTC6NB3ArziT8++++yU/-Tmp-/</value>
     <value type="QString" >USER=gav</value>
     <value type="QString" >__CF_USER_TEXT_ENCODING=0x3E8:0:2</value>

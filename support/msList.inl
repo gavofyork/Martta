@@ -8,14 +8,14 @@
  * Version: MarttaSupport License version 1.0
  *
  * The contents of this file are subject to the MarttaSupport License
- * version 1.0 (the "License"); you may not use this file except in 
- * compliance with the License. You should have received a copy of the 
+ * version 1.0 (the "License"); you may not use this file except in
+ * compliance with the License. You should have received a copy of the
  * MarttaSupport License "COPYING.MarttaSupport" along with Martta; if not
  * you may obtain a copy of the License at http://quidprocode.co.uk/Martta/
  *
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations under 
+ * License for the specific language governing rights and limitations under
  * the License.
  *
  * The Initial Developer of the code in this file is Gavin Wood.
@@ -51,7 +51,7 @@ template<typename T> typename List<T>::Box& List<T>::Box::operator=(List<T> cons
 	r.m_count = r.m_reserved = 0;
 	return *this;
 }
-	
+
 template<typename T> typename List<T>::Box& List<T>::Box::operator=(Box const& _move)
 {
 	this->~Box();
@@ -102,7 +102,7 @@ template<class T> void List<T>::append(T const& _value)
 		star(m_data[m_count]) = _value;
 	m_count++;
 }
-	
+
 template<class T> void List<T>::clear()
 {
 	if (!isTrivial)
@@ -116,7 +116,7 @@ template<class T> void List<T>::clear()
 	m_count = 0;
 	m_reserved = 0;
 }
-	
+
 template<class T> bool List<T>::contains(T const& _value) const
 {
 	ST* i = m_data + m_count;
@@ -125,7 +125,7 @@ template<class T> bool List<T>::contains(T const& _value) const
 			return true;
 	return false;
 }
-	
+
 template<class T> int List<T>::count(T const& _value) const
 {
 	int ret = 0;
@@ -160,11 +160,11 @@ template<class T> typename List<T>::Iterator List<T>::erase(typename List<T>::It
 	if (!isTrivial)
 		delete *(T**)_pos.m_ptr;
 	m_count--;
-	memmove(_pos.m_ptr, _pos.m_ptr + 1, (m_count - (_pos.m_ptr - m_data)) * sizeof(ST)); 
+	memmove(_pos.m_ptr, _pos.m_ptr + 1, (m_count - (_pos.m_ptr - m_data)) * sizeof(ST));
 	return _pos;
 }
 
-template<class T> typename List<T>::Iterator List<T>::erase(typename List<T>::Iterator _begin, typename List<T>::Iterator _end) 
+template<class T> typename List<T>::Iterator List<T>::erase(typename List<T>::Iterator _begin, typename List<T>::Iterator _end)
 {
 	AssertNR(_end.m_ptr > _begin.m_ptr);
 	AssertNR(_begin.m_ptr >= m_data);
@@ -192,7 +192,7 @@ template<class T> void List<T>::insert(int _i, const T& _value)
 	AssertNR(_i <= m_count);
 	if (m_reserved == m_count)
 		grow();
-	memmove(m_data + _i + 1, m_data + _i, (m_count - _i) * sizeof(ST)); 
+	memmove(m_data + _i + 1, m_data + _i, (m_count - _i) * sizeof(ST));
 	m_count++;
 	if (!isTrivial)
 		*(T**)(m_data + _i) = new T(_value);
@@ -200,7 +200,7 @@ template<class T> void List<T>::insert(int _i, const T& _value)
 		star(m_data[_i]) = _value;
 }
 
-template<class T> inline typename List<T>::Iterator List<T>::insert(typename List<T>::Iterator _before, const T& _value)
+template<class T> m_inline typename List<T>::Iterator List<T>::insert(typename List<T>::Iterator _before, const T& _value)
 {
 	AssertNR(_before.m_ptr >= m_data);
 	AssertNR(_before.m_ptr < m_data + m_count);
@@ -295,7 +295,7 @@ template<class T> List<int>& List<T>::reverse()
 	return *this;
 }
 
-template<class T> inline void List<T>::swap(int _i, int _j)
+template<class T> m_inline void List<T>::swap(int _i, int _j)
 {
 	AssertNR(_i >= 0 && _i < m_count);
 	AssertNR(_j >= 0 && _j < m_count);
@@ -306,7 +306,7 @@ template<class T> inline void List<T>::swap(int _i, int _j)
 	m_data[_j] = x;
 }
 
-template<class T> inline T List<T>::takeAt(int _i)
+template<class T> m_inline T List<T>::takeAt(int _i)
 {
 	AssertNR(_i >= 0 && _i < m_count);
 	T ret = star(m_data[_i]);
@@ -377,32 +377,32 @@ template<class T> void List<T>::grow(int _minimum)
 	reserve(max(r, _minimum));
 }
 
-template<class T> inline bool List<T>::Iterator::operator==(ConstIterator const& _i)
+template<class T> m_inline bool List<T>::Iterator::operator==(ConstIterator const& _i)
 {
 	return m_ptr == _i.m_ptr;
 }
 
-template<class T> inline bool List<T>::Iterator::operator!=(ConstIterator const& _i)
+template<class T> m_inline bool List<T>::Iterator::operator!=(ConstIterator const& _i)
 {
 	return m_ptr == _i.m_ptr;
 }
 
-template<class T> inline bool List<T>::Iterator::operator<(ConstIterator const& _other) const
+template<class T> m_inline bool List<T>::Iterator::operator<(ConstIterator const& _other) const
 {
 	return m_ptr < _other.m_ptr;
 }
 
-template<class T> inline bool List<T>::Iterator::operator<=(ConstIterator const& _other) const
+template<class T> m_inline bool List<T>::Iterator::operator<=(ConstIterator const& _other) const
 {
 	return m_ptr <= _other.m_ptr;
 }
 
-template<class T> inline bool List<T>::Iterator::operator>(ConstIterator const& _other) const
+template<class T> m_inline bool List<T>::Iterator::operator>(ConstIterator const& _other) const
 {
 	return m_ptr > _other.m_ptr;
 }
 
-template<class T> inline bool List<T>::Iterator::operator>=(ConstIterator const& _other) const
+template<class T> m_inline bool List<T>::Iterator::operator>=(ConstIterator const& _other) const
 {
 	return m_ptr >= _other.m_ptr;
 }

@@ -30,7 +30,7 @@ namespace MarttaSupport
 
 struct NullOut
 {
-	template<class T> inline NullOut& operator<<(T) { return *(NullOut*)0; }
+	template<class T> m_inline NullOut& operator<<(T) { return *(NullOut*)0; }
 };
 
 #define mInfo() (*(MarttaSupport::NullOut*)0)
@@ -47,20 +47,20 @@ class DebugStream
 public:
 	enum Channel { Info = 0, Debug, Warning, Critical, FailedAssert };
 
-	inline DebugStream(Channel _ch = Debug):
+	m_inline DebugStream(Channel _ch = Debug):
 		m_buffer	(_ch == Warning ? L"*** WARNING " : _ch == Critical ? L"!!! CRITICAL " : _ch == FailedAssert ? L"!!! Assert FAILED " : L""),
 		m_ts		(&m_buffer),
 		m_channel	(_ch)
 	{
 	}
-	inline DebugStream(char const* _context, Channel _ch = Debug):
+	m_inline DebugStream(char const* _context, Channel _ch = Debug):
 		m_buffer	(_ch == Warning ? L"*** WARNING " : _ch == Critical ? L"!!! CRITICAL " : L""),
 		m_ts		(&m_buffer),
 		m_channel	(_ch)
 	{
 		m_buffer += _context;
 	}
-	inline ~DebugStream()
+	m_inline ~DebugStream()
 	{
 		if (!m_buffer.isEmpty() && !m_buffer.endsWith("\n"))
 			m_buffer.append(L'\n');
@@ -68,10 +68,10 @@ public:
 	}
 
 	template<typename T>
-	DebugStream& operator<<(T const& _t) { ensureSpace(); m_ts << _t; return *this; }
+	m_inline DebugStream& operator<<(T const& _t) { ensureSpace(); m_ts << _t; return *this; }
 
 private:
-	inline void ensureSpace()
+	m_inline void ensureSpace()
 	{
 		if (!m_buffer.isEmpty() && !m_buffer.endsWith(" "))
 			m_buffer.append(L' ');

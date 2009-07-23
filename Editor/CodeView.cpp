@@ -23,7 +23,6 @@
 
 #include <Stylist.h>
 #include <EditDelegate.h>
-#undef inline
 
 #include "Timer.h"
 #include "CommonGraphics.h"

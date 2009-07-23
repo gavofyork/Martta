@@ -25,7 +25,6 @@
 #include <Project.h>
 #include <Solution.h>
 #include <CullManager.h>
-#undef inline
 
 #include "ui_MainWindow.h"
 

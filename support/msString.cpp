@@ -38,7 +38,7 @@ String const String::null;
 String const String::s_true(L"true");
 String const String::s_false(L"false");
 
-/*inline void memcpy(void* _d, void const* _s, int _c)
+/*m_inline void memcpy(void* _d, void const* _s, int _c)
 {
 	char* d = (char*)_d + _c;
 	char const* s = (char const*)_s + _c;
@@ -46,7 +46,7 @@ String const String::s_false(L"false");
 		*(d--) = *(s--);
 }
 
-inline int strlen(char const* _s)
+m_inline int strlen(char const* _s)
 {
 	int ret = 0;
 	if (_s)

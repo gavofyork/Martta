@@ -21,7 +21,6 @@
 #include <CQualifiers.h>
 #include <CTypes.h>
 #include <Entity.h>
-#undef inline
 
 #include "DeclarationsHandler.h"
 

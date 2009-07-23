@@ -23,7 +23,6 @@
 #include <msString.h>
 #include <msList.h>
 #include <msDebug.h>
-#undef inline
 using namespace MarttaSupport;
 
 #include <QTime>

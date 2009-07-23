@@ -26,7 +26,6 @@
 #endif
 
 #include <ChangeMan.h>
-#undef inline
 
 #include "Timer.h"
 #include "MainWindow.h"
