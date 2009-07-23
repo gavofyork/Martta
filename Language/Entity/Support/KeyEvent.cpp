@@ -34,6 +34,7 @@ KeyEvent::KeyEvent(String const& _text, int _modifiers, Entity* _focus, bool _is
 	m_focusIsPlaceholder	(_focusIsPlaceholder),
 	m_focalIndex			(_focalIndex),
 	m_codeScene				(_codeScene),
+	m_strobed				(false),
 	m_strobeCreation		(0),
 	m_strobeChild			(0)
 {
@@ -57,45 +58,50 @@ KeyEvent::KeyEvent(String const& _text, int _modifiers, Entity* _focus, bool _is
 
 void KeyEvent::noteStrobeCreation(Entity* _creation, Entity* _old) const
 {
-	AssertNR(!m_strobeCreation);
+	AssertNR(!m_strobed);
 	m_strobeCreation = _creation;
 	m_strobeChild = _old;
+	const_cast<KeyEvent*>(this)->m_strobed = true;	// QUICK mutable.
+
+	// TODO: Move this stuff to the EKE's notifyStrobeCreation... This will avoid having to test the child for originality.
+	if (m_sCrPoint)
+		m_codeScene->strobeCreation()->commitMove(m_sCrPoint);	// Commit the move out of the model if there was a prior-creation to move away.
+
+	// If the child wasn't replaced by something else.
+	if (m_codeScene->strobeChild() == m_originalStrobeChild && m_sChPoint)	// && c because we only need to move the strobeChild if there was a strobe creation (before, anyways).
+		m_codeScene->strobeChild()->notifyOfStrobe(m_codeScene->strobeCreation());
+
+	if (m_codeScene->strobeCreation())
+	{
+		// Notifications?
+		m_codeScene->strobeCreation()->killAndDelete();
+	}
+
+	if (m_strobeChild)
+	{
+		m_codeScene->setStrobeCreation(m_strobeCreation);
+		m_codeScene->setStrobeChild(m_strobeChild);	// CRASH Could have been deleted - the case when you do 'i++' in an empty main().
+	}
+	else
+	{
+		// Strobe child died - cancel strobe and issue warning (can't strobe further now).
+		m_codeScene->killStrobe();
+		mCritical() << "ERROR: Strober killed strobe child so cannot continue strobing.";
+	}
 }
 
 void KeyEvent::executeStrobe()
 {
-	AssertNR(m_text.length() > 1);
-	if (isAccepted())
+	if (!m_strobed && m_text.length() > 1)
 	{
-		// TODO: Move this stuff to the EKE's notifyStrobeCreation... This will avoid having to test the child for originality.
-		if (m_sCrPoint)
-			m_codeScene->strobeCreation()->commitMove(m_sCrPoint);	// Commit the move out of the model if there was a prior-creation to move away.
-
-		// If the child wasn't replaced by something else.
-		if (m_codeScene->strobeChild() == m_originalStrobeChild && m_sChPoint)	// && c because we only need to move the strobeChild if there was a strobe creation (before, anyways).
+		if (m_sCrPoint.exists() && m_sCrPoint.entity() != m_originalStrobeChild)
 		{
-	//		m_codeScene->strobeChild()->commitMove(m_sChPoint);	// BROKEN: m_codeScene's m_strobeChild has already been moved to become the next creation's child - we should have commited it prior to that happening.
-			m_codeScene->strobeChild()->notifyOfStrobe(m_codeScene->strobeCreation());
-		}
-		if (m_codeScene->strobeCreation())
-		{
-			// Notifications?
-			m_codeScene->strobeCreation()->killAndDelete();
-		}
-
-		if (m_strobeChild)
-		{
-			m_codeScene->setStrobeCreation(m_strobeCreation);
-			m_codeScene->setStrobeChild(m_strobeChild);	// CRASH Could have been deleted - the case when you do 'i++' in an empty main().
-		}
-		else
-		{
-			// Strobe child died - cancel strobe and issue warning (can't strobe further now).
-			m_codeScene->killStrobe();
-			mCritical() << "ERROR: Strober killed strobe child so cannot continue strobing.";
+			// We strobed without saying anything
+			mInfo() << "Strobe with no noteStrobeCreation";
+			noteStrobeCreation(m_sCrPoint.entity(), m_codeScene->strobeChild());
 		}
 	}
-	else if (m_sCrPoint && m_sChPoint)
+	if (m_text.length() > 1 && m_sCrPoint && m_sChPoint)
 	{
 		m_codeScene->strobeChild()->prepareMove(m_sChPoint);
 		m_codeScene->strobeCreation()->prepareMove(m_sCrPoint);

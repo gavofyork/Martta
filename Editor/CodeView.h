@@ -129,6 +129,9 @@ protected:
 	virtual bool				event(QEvent* _e);
 
 private:
+	void						leavingWhoseParentLeft(Entity* _e);
+	void						cleanupLeaver(Entity* _e);
+
 	bool						keyPressedAsNavigation(QKeyEvent const* _e);
 	void						doRefreshLayout();
 	void						recacheLayoutList(Entity* _e, String const& _s);			///< @returns the layout list for the entity _e.
@@ -162,12 +165,13 @@ private:
 	SafePointer<Entity>	m_strobeChild;
 	SafePointer<Entity>	m_strobeFocus;
 	String				m_strobeText;
+	Position			m_activeStrobe;
 	bool				m_insert;
 	bool				m_doInsert;
 	bool				m_insertLock;
 	float				m_lastDefiniteX;
 	bool				m_reinterpretCurrentKeyEvent;
-	Stylist*		m_stylist;
+	Stylist*			m_stylist;
 	QPointF				m_borderOffset;
 	bool				m_ensureCurrentVisible;
 };

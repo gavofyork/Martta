@@ -73,6 +73,7 @@ private:
 	Entity*			m_originalStrobeChild;
 	Position		m_sCrPoint;
 	Position		m_sChPoint;
+	bool			m_strobed;
 	mutable Entity*	m_strobeCreation;
 	mutable SafePointer<Entity>	m_strobeChild;
 };

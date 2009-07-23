@@ -63,44 +63,8 @@ CodeView::~CodeScene()
 {
 }
 
-void CodeView::leaving(Entity* _e, Position const&)
+void CodeView::cleanupLeaver(Entity* _e)
 {
-	if (m_subject == _e)
-	{
-		mDebug() << "Gaa! Subject leaving! Don't know what to do!";
-		// TODO: Move to a safe (dormant) state, until we get told of a new subject.
-		int i = 9;
-		i++;
-	}
-
-//	mDebug() << "Removing from scene " << _e;
-
-	Entity* e = 0;
-	if (m_current == _e)
-	{
-		mDebug() << "Trying to calculate next...";
-		_e->debugTree();
-		Entity* n = next(_e);
-		AssertNR(!n || n->parent());
-		while (n && n->hasAncestor(_e)) n = next(n);
-		Entity* p = previous(_e);
-		AssertNR(!p || p->parent());
-		while (p && p->hasAncestor(_e)) p = previous(p);
-		/*{
-			mDebug() << "Leaving entity:";
-			_e->debugTree();
-			if (n) n->debugTree(); else mDebug() << "Nothing next";
-			if (p) p->debugTree(); else mDebug() << "Nothing previous";
-		}*/
-		if (n)
-			e = n;
-		if (p)
-			e = p;
-	}
-
-	foreach (Entity* i, _e->children())
-		leaving(i);
-
 	m_pictures.remove(_e);
 	m_viewKeys.remove(_e);
 	m_bounds.remove(_e);
@@ -116,6 +80,61 @@ void CodeView::leaving(Entity* _e, Position const&)
 		m_rightmostChild.remove(k);
 	m_listCache.remove(_e);
 	m_cacheKey.remove(_e);
+}
+
+void CodeView::leavingWhoseParentLeft(Entity* _e)
+{
+	cleanupLeaver(_e);
+	foreach (Entity* i, _e->children())
+	{
+		leavingWhoseParentLeft(i);
+		if (m_current == i)
+			m_current = _e;
+	}
+}
+
+void CodeView::leaving(Entity* _e, Position const&)
+{
+	if (m_subject == _e)
+	{
+		setSubject(0);
+		return;
+	}
+
+//	mDebug() << "Removing from scene " << _e;
+
+	Entity* e = 0;
+	if (m_current == _e)		// don't bother trying to find another current if there's a strobe active. the info is not guaranteed.
+	{
+		if (m_activeStrobe != Nowhere)
+		{
+			if (m_activeStrobe.exists())
+				e = m_activeStrobe.entity();
+		}
+		else
+		{
+			mDebug() << "Trying to calculate next...";
+			_e->debugTree();
+			Entity* n = next(_e);
+			AssertNR(!n || n->parent());
+			while (n && n->hasAncestor(_e)) n = next(n);
+			Entity* p = previous(_e);
+			AssertNR(!p || p->parent());
+			while (p && p->hasAncestor(_e)) p = previous(p);
+			/*{
+				mDebug() << "Leaving entity:";
+				_e->debugTree();
+				if (n) n->debugTree(); else mDebug() << "Nothing next";
+				if (p) p->debugTree(); else mDebug() << "Nothing previous";
+			}*/
+			if (n)
+				e = n;
+			if (p)
+				e = p;
+		}
+	}
+
+	leavingWhoseParentLeft(_e);
 
 	if (m_current == _e)
 		if (Entity* ne = e ? e : nearest(_e))
@@ -414,9 +433,11 @@ void CodeView::keyPressEvent(QKeyEvent* _e)
 
 	if (m_strobeFocus && !_e->text().isEmpty() && _e->text() != " ")
 	{
+		m_activeStrobe = m_strobeCreation ? m_strobeCreation->over() : m_strobeFocus->over();
 		e = KeyEvent(m_strobeText + String(_e->text().toLatin1().data()), translateMods(_e->modifiers()), &*m_strobeFocus, true, m_strobeFocus->isPlaceholder(), UndefinedIndex, this);
 		Entity::keyPressEventStarter(&e);
 		e.executeStrobe();
+		m_activeStrobe = Nowhere;
 	}
 
 	if (!e.isAccepted())
