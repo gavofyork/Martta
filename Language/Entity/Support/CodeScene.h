@@ -119,9 +119,13 @@ public:
 	virtual void				leaving(Entity* _e, Position const& _grave) = 0;
 
 	virtual void				killStrobe() = 0;
+	virtual void				setStrobeCreation(Entity*) = 0;
+	virtual void				setStrobeChild(Entity*) = 0;
+	virtual Entity*				strobeCreation() const = 0;
+	virtual Entity*				strobeChild() const = 0;
 
 protected:
-	void						notifyOfStrobe(Entity* _child, Entity* _creation);
+//	void						notifyOfStrobe(Entity* _child, Entity* _creation);
 
 	// State
 	Hash<Entity*, ViewKeys>		m_viewKeys;

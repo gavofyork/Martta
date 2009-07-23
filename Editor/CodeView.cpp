@@ -78,8 +78,8 @@ void CodeView::leaving(Entity* _e, Position const&)
 	Entity* e = 0;
 	if (m_current == _e)
 	{
-//		mDebug() << "Trying to calculate next...";
-//		_e->debugTree();
+		mDebug() << "Trying to calculate next...";
+		_e->debugTree();
 		Entity* n = next(_e);
 		AssertNR(!n || n->parent());
 		while (n && n->hasAncestor(_e)) n = next(n);
@@ -414,60 +414,10 @@ void CodeView::keyPressEvent(QKeyEvent* _e)
 
 	if (m_strobeFocus && !_e->text().isEmpty() && _e->text() != " ")
 	{
-		Entity* originalStrobeChild = m_strobeChild;
-		Position sCrPoint;
-		Position sChPoint;
-		if (m_strobeCreation)
-		{
-//			m_strobeCreation->debugTree();
-			AssertNR(m_strobeChild);
-			sCrPoint = m_strobeCreation->over();
-			sChPoint = m_strobeChild->over();
-			m_strobeCreation->prepareMove(Nowhere);
-			m_strobeChild->prepareMove(sCrPoint);
-		}
-		mDebug() << "strobeText: " << m_strobeText;
 		e = KeyEvent(m_strobeText + String(_e->text().toLatin1().data()), translateMods(_e->modifiers()), &*m_strobeFocus, true, m_strobeFocus->isPlaceholder(), UndefinedIndex, this);
 		Entity::keyPressEventStarter(&e);
-		if (e.isAccepted())
-		{
-			// TODO: Move this stuff to the EKE's notifyStrobeCreation... This will avoid having to test the child for originality.
-			if (sCrPoint)
-				m_strobeCreation->commitMove(sCrPoint);	// Commit the move out of the model if there was a prior-creation to move away.
-
-			// If the child wasn't replaced by something else.
-			if (m_strobeChild == originalStrobeChild && sChPoint)	// && c because we only need to move the strobeChild if there was a strobe creation (before, anyways).
-			{
-//				m_strobeChild->commitMove(sChPoint);	// BROKEN: m_strobeChild has already been moved to become the next creation's child - we should have commited it prior to that happening.
-				notifyOfStrobe(m_strobeChild, m_strobeCreation);
-			}
-			if (m_strobeCreation)
-			{
-				// Notifications?
-				m_strobeCreation->killAndDelete();
-			}
-
-			if (e.strobeChild())
-			{
-				m_strobeCreation = e.strobeCreation();
-				m_strobeChild = e.strobeChild();	// CRASH Could have been deleted - the case when you do 'i++' in an empty main().
-			}
-			else
-			{
-				// Strobe child died - cancel strobe and issue warning (can't strobe further now).
-				killStrobe();
-				mCritical() << "ERROR: Strober killed strobe child so cannot continue strobing.";
-			}
-		}
-		else if (sCrPoint && sChPoint)
-		{
-			m_strobeChild->prepareMove(sChPoint);
-			m_strobeCreation->prepareMove(sCrPoint);
-		}
+		e.executeStrobe();
 	}
-
-
-	// isAccepted no longer being referential between QKE & EKE may cause problems here?
 
 	if (!e.isAccepted())
 	{

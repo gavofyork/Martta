@@ -4,7 +4,7 @@ BUG Moving is crazily slow over statements.
   - Do recursively but prune on denied Kinds.
   - Remove all allowedToBeKind (or other Kind-checking) in handlers.
 BUG 'Mstr'-> doesn't move away (only stops editing).
-BUG Assertion on '!?', 'R-1'.
+BUG Assertion on '!?', '-1'.
 CRASH delete a Referenced EnumValue.
 
 UI:
@@ -13,8 +13,7 @@ UI:
 - FIX Page up & down.
 
 Small things:
-- QUICK safe exit out of reinterpretLater inf. recursion.
-- Special EntryMethod.
+- Get rpath stuff working.
 - Unary operation should apply to climb Statement tree until it finds something.
 - Insertion of entities in, e.g. argument lists for function calls.
   - Just a comma?

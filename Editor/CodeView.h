@@ -95,6 +95,11 @@ public:
 	// Hacks
 	void						silentlySetCurrent(Entity* _e);									/// Selects the focusable entity _e; this will do nothing unless you're leaving the edit.
 
+	virtual void				setStrobeChild(Entity* _e) { m_strobeChild = _e; }
+	virtual void				setStrobeCreation(Entity* _e) { m_strobeCreation = _e; }
+	virtual Entity*				strobeChild() const { return m_strobeChild; }
+	virtual Entity*				strobeCreation() const { return m_strobeCreation; }
+
 public slots:
 	/// Set the focused item to that which represents _e.
 	void						setEditing(Entity* _e);

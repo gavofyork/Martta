@@ -27,7 +27,7 @@ namespace Martta
 {
 
 List<CodeScene*> CodeScene::s_allScenes;
-	
+
 CodeScene::CodeScene():
 	m_editDelegate	(0)
 {
@@ -44,11 +44,11 @@ void CodeScene::leaving(Entity* _e)
 	leaving(_e, _e->over());
 }
 
-void CodeScene::notifyOfStrobe(Entity* _child, Entity* _creation)
+/*void CodeScene::notifyOfStrobe(Entity* _child, Entity* _creation)
 {
 	_child->notifyOfStrobe(_creation);
 }
-
+*/
 Position CodeScene::nearestBracket(Position const& _p) const
 {
 	int n = UndefinedIndex;

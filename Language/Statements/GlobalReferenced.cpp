@@ -18,6 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "Position.h"
 #include "CompletionDelegate.h"
 #include "GlobalReferenced.h"
 

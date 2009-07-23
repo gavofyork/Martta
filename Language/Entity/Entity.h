@@ -54,7 +54,7 @@ class Entity: public Nothing, public SafePointerTarget, virtual public Dier, pub
 
 	friend class Stylist;
 	friend class EditDelegateFace;
-	friend class CodeScene;
+	friend class KeyEvent;
 
 protected:
 	enum { EndOfNamed = INT_MIN, Cardinals = 0 };
