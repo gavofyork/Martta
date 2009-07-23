@@ -2,14 +2,14 @@
  * Version: MarttaSupport License version 1.0
  *
  * The contents of this file are subject to the MarttaSupport License
- * version 1.0 (the "License"); you may not use this file except in 
- * compliance with the License. You should have received a copy of the 
+ * version 1.0 (the "License"); you may not use this file except in
+ * compliance with the License. You should have received a copy of the
  * MarttaSupport License "COPYING.MarttaSupport" along with Martta; if not
  * you may obtain a copy of the License at http://quidprocode.co.uk/Martta/
  *
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations under 
+ * License for the specific language governing rights and limitations under
  * the License.
  *
  * The Initial Developer of the code in this file is Gavin Wood.
@@ -38,15 +38,15 @@ String const String::null;
 String const String::s_true(L"true");
 String const String::s_false(L"false");
 
-/*inline void memcpy(void* _d, void const* _s, int _c)
+/*m_inline void memcpy(void* _d, void const* _s, int _c)
 {
 	char* d = (char*)_d + _c;
 	char const* s = (char const*)_s + _c;
 	while (d != _d)
 		*(d--) = *(s--);
 }
-	
-inline int strlen(char const* _s)
+
+m_inline int strlen(char const* _s)
 {
 	int ret = 0;
 	if (_s)
@@ -78,17 +78,17 @@ Char::operator char() const
 
 bool Char::isNumber() const
 {
-	return iswdigit(m_value);
+	return m_value != L'\x7f' && iswdigit(m_value);
 }
 
 bool Char::isLetter() const
 {
-	return iswalpha(m_value);
+	return m_value != L'\x7f' && iswalpha(m_value);
 }
 
 bool Char::isAlphaNumeric() const
 {
-	return iswalnum(m_value);
+	return m_value != L'\x7f' && iswalnum(m_value);
 }
 
 bool Char::isSpace() const
@@ -98,17 +98,17 @@ bool Char::isSpace() const
 
 bool Char::isGraph() const
 {
-	return iswgraph(m_value);
+	return m_value == L'\x7f' || iswgraph(m_value);
 }
 
 bool Char::isLower() const
 {
-	return iswlower(m_value);
+	return m_value != L'\x7f' && iswlower(m_value);
 }
 
 bool Char::isUpper() const
 {
-	return iswupper(m_value);
+	return m_value != L'\x7f' && iswupper(m_value);
 }
 
 Char Char::toUpper() const
@@ -137,7 +137,7 @@ String& String::operator=(char const* _latin1)
 	changed();
 	return *this;
 }
-	
+
 String& String::operator=(wchar_t const* _unicode)
 {
 	sizeto(_unicode ? wcslen(_unicode) : 0);
@@ -586,7 +586,7 @@ String String::section(String const& _sep, int _start, int _end) const
 	int f = ((_start < 0) ? lastIndexOfNth(_sep, -_start) : indexOfNth(_sep, _start));
 	f += f == -1 ? 1 : _sep.length();
 	int t = (_end < 0) ? lastIndexOfNth(_sep, -_end - 1) : indexOfNth(_sep, _end + 1);
-	if (t == -1) 
+	if (t == -1)
 		t = m_length;
 	return f < t ? mid(f, t - f) : String();
 }
@@ -597,7 +597,7 @@ String String::section(Char _sep, int _start, int _end) const
 		return String();
 	int f = ((_start < 0) ? lastIndexOfNth(_sep, -_start) : indexOfNth(_sep, _start)) + 1;
 	int t = (_end < 0) ? lastIndexOfNth(_sep, -_end - 1) : indexOfNth(_sep, _end + 1);
-	if (t == -1) 
+	if (t == -1)
 		t = m_length;
 	return f < t ? mid(f, t - f) : String();
 }

@@ -33,13 +33,21 @@ class CSolution: public Root, public_interface Solution
 
 public:
 	virtual void						initialiseNew();
-	void								rejigIncludes();
+	virtual void						addProject(Project* _p);
+	virtual void						initWithProjects(List<Project*> const& _ps = List<Project*>());
+	virtual void						removeProject(Project* _p);
 
 protected:
 	virtual int							minRequired(int _i) const { return Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
+	virtual List<Entity*>				savedChildren() const { return cardinalChildren(); }
 
 private:
+	void								apresLoad(Project* _p = 0);
+	void								archiveModel();
+	void								killIncludeds();
+	void								rejigIncludes();
+
 	String								includeCode() const;
 };
 

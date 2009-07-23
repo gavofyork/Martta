@@ -56,7 +56,7 @@ void AuxilliaryRegistrar::jigCache()
 	m_interfacesMap.clear();
 	m_supersMap.clear();
 	m_immediateDerivedsMap.clear();
-	
+
 	foreach (AuxilliaryFace const* i, m_auxilliaries.values())
 	{
 		if (i->isInterface())
@@ -67,9 +67,13 @@ void AuxilliaryRegistrar::jigCache()
 		{
 			m_interfacesMap.insert(i, j);
 			m_supersMap.insert(i, j);
+			m_derivedsMap.insert(j, i);
 		}
 		for (AuxilliaryFace const* j = i->superAuxilliary(); j; j = j->superAuxilliary())
+		{
 			m_supersMap.insert(i, j);
+			m_derivedsMap.insert(j, i);
+		}
 	}
 //	recurseAux(m_immediateDerivedsMap.values(0)[0], "");
 }
@@ -78,10 +82,10 @@ void AuxilliaryRegistrar::initialiseClasses()
 {
 	if (m_isInitialised)
 		return;	// TODO: reinitialise?
-		
+
 	foreach (AuxilliaryFace const* i, m_auxilliaries.values())
 		i->initialise();
-		
+
 	m_isInitialised = true;
 }
 
@@ -89,10 +93,10 @@ void AuxilliaryRegistrar::finaliseClasses()
 {
 	if (!m_isInitialised)
 		return;
-		
+
 	foreach (AuxilliaryFace const* i, m_auxilliaries.values())
 		i->finalise();
-		
+
 	m_isInitialised = false;
 }
 
@@ -112,7 +116,7 @@ List<AuxilliaryFace const*> AuxilliaryRegistrar::calculateInterfaces(AuxilliaryF
 		if (yet.isEmpty())
 			break;
 	}
-	
+
 	if (_a->superAuxilliary())
 		foreach (AuxilliaryFace const* a, calculateInterfaces(_a->superAuxilliary()))
 			if (!ret.contains(a))
@@ -132,5 +136,5 @@ void AuxilliaryRegistrar::registerAuxilliary(AuxilliaryFace const* _a)
 //	mInfo() << "Registering" << _a->name();
 	m_auxilliaries[_a->name()] = _a;
 }
-	
+
 }

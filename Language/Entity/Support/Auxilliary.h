@@ -2,14 +2,14 @@
  * Version: Martta License version 1.0
  *
  * The contents of this file are subject to the Martta License version 1.0
- * (the "License"); you may not use this file except in compliance with the 
- * License. You should have received a copy of the Martta License 
+ * (the "License"); you may not use this file except in compliance with the
+ * License. You should have received a copy of the Martta License
  * "COPYING.Martta" along with Martta; if not you may obtain a copy of the
  * License at http://quidprocode.co.uk/Martta/
  *
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations under 
+ * License for the specific language governing rights and limitations under
  * the License.
  *
  * The Initial Developer of the code in this file is Gavin Wood.
@@ -37,8 +37,9 @@ template<class T>
 class Auxilliary: public AuxilliaryFace
 {
 public:
-	Auxilliary(char const* _name): m_name(_name) { AuxilliaryRegistrar::get()->registerAuxilliary(this); }
+	Auxilliary(char const* _name, bool _isPlaceholder): m_name(_name), m_isPlaceholder(_isPlaceholder) { AuxilliaryRegistrar::get()->registerAuxilliary(this); }
 	virtual bool						isInterface() const { return false; }
+	virtual bool						isPlaceholder() const { return m_isPlaceholder; }
 	virtual char const*					name() const { return m_name; }
 	virtual bool						dispatchKeyPress(Position const& _p, KeyEvent const* _e) const;
 	virtual void						initialise() const { T::initialiseClass(); }
@@ -49,6 +50,7 @@ public:
 	virtual Entity*						create() const { return new T; }
 private:
 	char const*							m_name;
+	bool								m_isPlaceholder;
 };
 
 template<class T>
@@ -57,6 +59,7 @@ class InterfaceAuxilliary: public AuxilliaryFace
 public:
 	InterfaceAuxilliary(char const* _name): m_name(_name) { AuxilliaryRegistrar::get()->registerAuxilliary(this); }
 	virtual bool						isInterface() const { return true; }
+	virtual bool						isPlaceholder() const { return false; }	// Undefined.
 	virtual char const*					name() const { return m_name; }
 	virtual bool						dispatchKeyPress(Position const&, KeyEvent const*) const { return false; }
 	virtual void						initialise() const {}

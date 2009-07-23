@@ -2,14 +2,14 @@
  * Version: Martta License version 1.0
  *
  * The contents of this file are subject to the Martta License version 1.0
- * (the "License"); you may not use this file except in compliance with the 
- * License. You should have received a copy of the Martta License 
+ * (the "License"); you may not use this file except in compliance with the
+ * License. You should have received a copy of the Martta License
  * "COPYING.Martta" along with Martta; if not you may obtain a copy of the
  * License at http://quidprocode.co.uk/Martta/
  *
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations under 
+ * License for the specific language governing rights and limitations under
  * the License.
  *
  * The Initial Developer of the code in this file is Gavin Wood.
@@ -90,7 +90,7 @@ List<ValueDefiner*> MemberReferenced::possibilities(Position const& _p)
 Type MemberReferenced::apparentType() const
 {
 	Type ret = type();
-	// If we're not in a member operation, check if there's some memberification that we can silently discard; 
+	// If we're not in a member operation, check if there's some memberification that we can silently discard;
 	if (!parentIs<GenericMemberOperation>() && ret->isType<Memberify>() && hasAncestor<MemberLambda>())
 	{
 		// switch in params, put in registrable iface....
@@ -150,10 +150,11 @@ bool FloatingMemberReferenced::keyPressedOnPosition(Position const& _p, KeyEvent
 	if (_p.exists() && _p->isPlaceholder() && _e->text().length() == 1 && _e->text()[0].isLower() &&
 		_p->isKind<Typed>() && _p->asKind<Typed>()->ourAllowedTypes().size() && _p->asKind<Typed>()->ourAllowedTypes()[0]->isType<Memberify>())
 	{
-		_e->reinterpretLater();
 		FloatingMemberReferenced* r = new FloatingMemberReferenced;
 		_p.place(r);
 		r->setEditing(_e->codeScene());
+		if (r->isEditing(_e->codeScene()))
+			_e->reinterpretLater();
 	}
 	else if (_p.exists() && _p->isPlaceholder() && _e->text() == L"M")
 	{

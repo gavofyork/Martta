@@ -2,14 +2,14 @@
  * Version: Martta License version 1.0
  *
  * The contents of this file are subject to the Martta License version 1.0
- * (the "License"); you may not use this file except in compliance with the 
- * License. You should have received a copy of the Martta License 
+ * (the "License"); you may not use this file except in compliance with the
+ * License. You should have received a copy of the Martta License
  * "COPYING.Martta" along with Martta; if not you may obtain a copy of the
  * License at http://quidprocode.co.uk/Martta/
  *
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations under 
+ * License for the specific language governing rights and limitations under
  * the License.
  *
  * The Initial Developer of the code in this file is Gavin Wood.
@@ -44,7 +44,7 @@ template<class T, class F> inline List<T*> castEntities(List<F*> _f)
 {
 	List<T*> ret;
 	foreach (F* i, _f)
-		ret << static_cast<T*>(i);
+		ret << i->template asKind<T>();
 	return ret;
 }
 
@@ -52,8 +52,8 @@ template<class T, class F> inline List<T*> filterEntities(List<F*> _f)
 {
 	List<T*> ret;
 	foreach (F* i, _f)
-		if (i->template isKind<T>())
-			ret << i->template asKind<T>();
+		if (T* t = i->template tryKind<T>())
+			ret << t;
 	return ret;
 }
 

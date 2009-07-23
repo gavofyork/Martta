@@ -30,11 +30,39 @@ Entity* Kind::spawnPrepared() const
 	return Entity::spawn(name())->prepareChildren();
 }
 
-Kinds Kind::deriveds() const
+Kinds Kinds::withoutInterfaces() const
 {
 	Kinds ret;
-	foreach (Kind k, immediateDeriveds())
-		ret << k << k.deriveds();
+	foreach (Kind k, *this)
+		if (!k.isInterface())
+			ret << k;
+	return ret;
+}
+
+Kinds Kinds::onlyInterfaces() const
+{
+	Kinds ret;
+	foreach (Kind k, *this)
+		if (k.isInterface())
+			ret << k;
+	return ret;
+}
+
+Kinds Kinds::onlyPlaceholders() const
+{
+	Kinds ret;
+	foreach (Kind k, *this)
+		if (!k.isInterface() && k.isPlaceholder())
+			ret << k;
+	return ret;
+}
+
+Kinds Kinds::onlyObjects() const
+{
+	Kinds ret;
+	foreach (Kind k, *this)
+		if (!k.isInterface() && !k.isPlaceholder())
+			ret << k;
 	return ret;
 }
 

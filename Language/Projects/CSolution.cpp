@@ -22,43 +22,21 @@
 
 #include "ModelPtrRegistrar.h"
 
+#include "CTypes.h"
 #include "CDependency.h"
 #include "CProject.h"
 #include "CSolution.h"
-#undef inline
 
 namespace Martta
 {
 
 MARTTA_OBJECT_CPP(CSolution);
 
-static inline String qs(QString const& _qs)
-{
-	String ret;
-	ret.resize(_qs.length());
-	wchar_t* d = ret.data();
-	_qs.toWCharArray(d);
-	ret.dataChanged(d);
-	return ret;
-}
-
-static inline QString qs(String const& _s)
-{
-	return QString::fromWCharArray(_s.data(), _s.length());
-}
-
 Kinds CSolution::allowedKinds(int _i) const
 {
 	if (_i >= 0)
 		return Kind::of<CProject>();
 	return Super::allowedKinds(_i);
-}
-
-void CSolution::initialiseNew()
-{
-	clearEntities();
-	back().place(Entity::evaluate("CProject{TextLabel[text=project]}{Function{TextLabel[text=main]}}{CDependency[libs=][includes=/usr/include/stdlib.h*/usr/include/stdio.h][name=Standard C]}"));
-	rejigIncludes();
 }
 
 String CSolution::includeCode() const
@@ -69,9 +47,58 @@ String CSolution::includeCode() const
 	return ret;
 }
 
+void CSolution::initialiseNew()
+{
+	clearEntities();
+	back().place(Entity::evaluate(String("CProject{TextLabel[text=project]}{MainFunction{TextLabel[text=main]}{BuiltinType[id=%1]}{Argument{BuiltinType[id=%1]}{TextLabel[text=argc]}}{Argument{Pointer{Pointer{BuiltinType[id=%2]}}}{TextLabel[text=argv]}}}{CDependency[libs=][includes=/usr/include/stdlib.h*/usr/include/stdio.h][name=Standard C]}").arg(Int).arg(Char)));
+	rejigIncludes();
+}
 
+static inline QString qs(String const& _s)
+{
+	return QString::fromWCharArray(_s.data(), _s.length());
+}
 
-void CSolution::rejigIncludes()
+void CSolution::initWithProjects(List<Project*> const& _ps)
+{
+	foreach (Project* p, _ps)
+		p->self()->move(back());
+
+	ChangeMan::get()->sleep();
+	GccXml::extractHeaders(qs(includeCode()), GccXml::declarationsHandler(this));
+	ModelPtrRegistrar::get()->restorePtrs(this);
+	ChangeMan::get()->wake();
+	apresLoad();
+}
+
+void CSolution::addProject(Project* _p)
+{
+	ChangeMan::get()->sleep();
+	archiveModel();
+	killIncludeds();
+
+	_p->self()->move(back());
+
+	GccXml::extractHeaders(qs(includeCode()), GccXml::declarationsHandler(this));
+	ModelPtrRegistrar::get()->restorePtrs(this);
+	ChangeMan::get()->wake();
+	apresLoad(_p);
+}
+
+void CSolution::removeProject(Project* _p)
+{
+	ChangeMan::get()->sleep();
+	archiveModel();
+	killIncludeds();
+
+	_p->self()->killAndDeleteWithNotification();
+
+	GccXml::extractHeaders(qs(includeCode()), GccXml::declarationsHandler(this));
+	ModelPtrRegistrar::get()->restorePtrs(this);
+	ChangeMan::get()->wake();
+}
+
+void CSolution::archiveModel()
 {
 	// Archive all model pointers
 	List<Entity*> es = cardinalChildren();
@@ -80,23 +107,24 @@ void CSolution::rejigIncludes()
 		es.last()->archive();
 		es << es.takeLast()->children();
 	}
+}
 
+void CSolution::killIncludeds()
+{
 	// Kill old declarations.
 	// May fsck up in here? (Had an alteringDepends flag protecting it originally.)
 	foreach (Entity* e, children(Included))
-		e->killAndDeleteWithNotification();
+		e->killAndDelete();
+}
 
-	// Import declarations.
-	GccXml::extractHeaders(qs(includeCode()), GccXml::declarationsHandler(this));
-
-	// De-archive pointers;
-	ModelPtrRegistrar::get()->restorePtrs(this);
-
-	// Call apresLoad()
-#if 0
+void CSolution::apresLoad(Project* _p)
+{
 	List<SafePointer<Entity> > uplist;
-	foreach (Entity* e, cardinalChildren())
-		uplist << e;
+	if (_p)
+		uplist << _p->self();
+	else
+		foreach (Project* p, cardinalChildrenAs<Project>())
+			uplist << p->self();
 	while (uplist.size())
 		if (Entity* e = uplist.takeLast())
 		{
@@ -104,7 +132,16 @@ void CSolution::rejigIncludes()
 				uplist << i;
 			e->apresLoad();
 		}
-#endif
+}
+
+void CSolution::rejigIncludes()
+{
+	archiveModel();
+	killIncludeds();
+	// Import declarations.
+	GccXml::extractHeaders(qs(includeCode()), GccXml::declarationsHandler(this));
+	// De-archive pointers;
+	ModelPtrRegistrar::get()->restorePtrs(this);
 }
 
 }

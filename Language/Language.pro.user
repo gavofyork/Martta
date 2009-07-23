@@ -58,16 +58,16 @@
   <valuemap type="QVariantMap" >
    <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString" >Debug</value>
    <valuelist key="abstractProcess.Environment" type="QVariantList" >
-    <value type="QString" >Apple_PubSub_Socket_Render=/tmp/launch-czINnr/Render</value>
+    <value type="QString" >Apple_PubSub_Socket_Render=/tmp/launch-PUb6D1/Render</value>
     <value type="QString" >COMMAND_MODE=legacy</value>
-    <value type="QString" >DISPLAY=/tmp/launch-07NyHs/:0</value>
+    <value type="QString" >DISPLAY=/tmp/launch-q7IvVn/:0</value>
     <value type="QString" >HOME=/Users/gav</value>
     <value type="QString" >LOGNAME=gav</value>
     <value type="QString" >PATH=/usr/local/Trolltech/Qt-4.5.2/bin:/usr/bin:/bin:/usr/sbin:/sbin</value>
     <value type="QString" >QTDIR=/usr/local/Trolltech/Qt</value>
-    <value type="QString" >SECURITYSESSIONID=635cf0</value>
+    <value type="QString" >SECURITYSESSIONID=9a6490</value>
     <value type="QString" >SHELL=/bin/bash</value>
-    <value type="QString" >SSH_AUTH_SOCK=/tmp/launch-cWhvtq/Listeners</value>
+    <value type="QString" >SSH_AUTH_SOCK=/tmp/launch-dCp786/Listeners</value>
     <value type="QString" >TMPDIR=/var/folders/GQ/GQwz+Xc3FTC6NB3ArziT8++++yU/-Tmp-/</value>
     <value type="QString" >USER=gav</value>
     <value type="QString" >__CF_USER_TEXT_ENCODING=0x3E8:0:2</value>
@@ -89,16 +89,16 @@
   <valuemap type="QVariantMap" >
    <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString" >Debug</value>
    <valuelist key="abstractProcess.Environment" type="QVariantList" >
-    <value type="QString" >Apple_PubSub_Socket_Render=/tmp/launch-czINnr/Render</value>
+    <value type="QString" >Apple_PubSub_Socket_Render=/tmp/launch-PUb6D1/Render</value>
     <value type="QString" >COMMAND_MODE=legacy</value>
-    <value type="QString" >DISPLAY=/tmp/launch-07NyHs/:0</value>
+    <value type="QString" >DISPLAY=/tmp/launch-q7IvVn/:0</value>
     <value type="QString" >HOME=/Users/gav</value>
     <value type="QString" >LOGNAME=gav</value>
     <value type="QString" >PATH=/usr/local/Trolltech/Qt-4.5.2/bin:/usr/bin:/bin:/usr/sbin:/sbin</value>
     <value type="QString" >QTDIR=/usr/local/Trolltech/Qt</value>
-    <value type="QString" >SECURITYSESSIONID=635cf0</value>
+    <value type="QString" >SECURITYSESSIONID=9a6490</value>
     <value type="QString" >SHELL=/bin/bash</value>
-    <value type="QString" >SSH_AUTH_SOCK=/tmp/launch-cWhvtq/Listeners</value>
+    <value type="QString" >SSH_AUTH_SOCK=/tmp/launch-dCp786/Listeners</value>
     <value type="QString" >TMPDIR=/var/folders/GQ/GQwz+Xc3FTC6NB3ArziT8++++yU/-Tmp-/</value>
     <value type="QString" >USER=gav</value>
     <value type="QString" >__CF_USER_TEXT_ENCODING=0x3E8:0:2</value>

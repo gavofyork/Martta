@@ -2,14 +2,14 @@
  * Version: Martta License version 1.0
  *
  * The contents of this file are subject to the Martta License version 1.0
- * (the "License"); you may not use this file except in compliance with the 
- * License. You should have received a copy of the Martta License 
+ * (the "License"); you may not use this file except in compliance with the
+ * License. You should have received a copy of the Martta License
  * "COPYING.Martta" along with Martta; if not you may obtain a copy of the
  * License at http://quidprocode.co.uk/Martta/
  *
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations under 
+ * License for the specific language governing rights and limitations under
  * the License.
  *
  * The Initial Developer of the code in this file is Gavin Wood.
@@ -18,29 +18,23 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#ifndef MARTAGCCXML_H
-#define MARTAGCCXML_H
+#pragma once
 
-#include <QString>
-#include <QStringList>
-
-class QXmlContentHandler;
+#include "Function.h"
 
 namespace Martta
 {
 
-class Declaration;
-class DeclarationFile;
-
-class GccXml
+class MainFunction: public Function
 {
-public:
-	static void extractHeaders(QString const& _c, QXmlContentHandler* _h);
+	MARTTA_OBJECT(Function)
 
-	static QXmlContentHandler* declarationsHandler(Entity* _d, QList<DeclarationFile*>* _l);
-	static QXmlContentHandler* filesExtractorHandler(QStringList* _f);
+protected:
+	virtual int							minRequired(int _i) const { return Super::minRequired(_i); }
+	virtual Kinds						allowedKinds(int _i) const;
+	virtual bool						defineChildFixed(int _i) const { return _i == Returned || _i >= 0; }
+	virtual String						defineMidLayout(ViewKeys&) const;
+	virtual bool						keyPressed(KeyEvent const* _e);
 };
 
 }
-
-#endif

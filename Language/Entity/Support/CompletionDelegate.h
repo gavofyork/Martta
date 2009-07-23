@@ -2,14 +2,14 @@
  * Version: Martta License version 1.0
  *
  * The contents of this file are subject to the Martta License version 1.0
- * (the "License"); you may not use this file except in compliance with the 
- * License. You should have received a copy of the Martta License 
+ * (the "License"); you may not use this file except in compliance with the
+ * License. You should have received a copy of the Martta License
  * "COPYING.Martta" along with Martta; if not you may obtain a copy of the
  * License at http://quidprocode.co.uk/Martta/
  *
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations under 
+ * License for the specific language governing rights and limitations under
  * the License.
  *
  * The Initial Developer of the code in this file is Gavin Wood.
@@ -21,10 +21,12 @@
 #pragma once
 
 #include <msSupport.h>
+#include <msStringList.h>
 using namespace MarttaSupport;
 
 #include "KeyEvent.h"
 #include "CodeScene.h"
+#include "Position.h"
 #include "EditDelegate.h"
 
 MS_TEST_METHOD_EXISTANCE_1(committed)
@@ -77,63 +79,85 @@ public:
 	}
 	virtual bool isValid() const
 	{
-		return (m_name + m_completion).toUpper() == NameTrait<R>::name(m_selection).toUpper();
+		return m_cycled > -1 || (m_name + m_completion).toUpper() == NameTrait<R>::name(m_selection).toUpper();
 	}
 	virtual String defineLayout(ViewKeys const& _v) const
 	{
 		String ret = EditDelegate<T>::subject()->defineEditLayout(_v, m_selection);
 		if (ret.contains("%1"))
-			return ret.arg("'" + m_name + "';s;ygrayed;'" + m_completion + "'");
+			return ret.arg("'" + m_name + "';s;ygrayed;'" + (m_cycled >= 0 && m_cycled < m_potentials.size() ? NameTrait<R>::name(m_potentials[m_cycled]).mid(m_name.length()) : m_completion) + "'");
 		else
 			return ret;
 	}
 	virtual bool keyPressed(KeyEvent const* _e)
 	{
-		if (_e->text() == L"\b" && m_name.size() > 1)
-			if (_e->modifiers() == KeyEvent::ControlModifier)
+		bool resetCycled = true;
+		if (_e->text() == L"\b" && _e->modifiers() == KeyEvent::ControlModifier && m_name.size() > 1)
+			m_name.chop(1);
+		else if (_e->text() == L"\b" && _e->modifiers() != KeyEvent::ControlModifier && nameStarts(m_possibilities, m_name.left(1)).size() != m_potentials.size())
+		{
+			int potentials = m_potentials.size();
+			while (nameStarts(m_possibilities, m_name).size() == potentials && m_name.length())
 				m_name.chop(1);
-			else
-			{
-				int potentials = nameStarts(m_possibilities, m_name).size();
-				while (nameStarts(m_possibilities, m_name).size() == potentials && m_name.length())
-					m_name.chop(1);
-			}
+		}
+		else if (_e->text() == L"\b")
+		{
+			CodeScene* cs = EditDelegate<T>::codeScene();
+			Position p = EditDelegate<T>::subject()->over();
+			EditDelegate<T>::subject()->deleteAndRefill();
+			if (p.exists())
+				cs->setCurrent(p.entity());
+			return true;
+		}
 		else if (_e->text().length() == 1 && _e->text()[0].isLetter())
 			m_name += _e->text();
 		else if (_e->text() == L"\t")
-			m_name += m_completion;
+			if (m_completion.isEmpty())
+				if (m_potentials.size() && m_cycled < m_potentials.size() - 1)
+					m_cycled++, resetCycled = false;
+				else{}
+			else
+				m_name += m_completion;
 		else
 			return EditDelegate<T>::keyPressed(_e);
 		updateCompletion();
+		if (resetCycled)
+			m_cycled = -1;
 
 		m_selection = 0;
-		foreach (R t, m_possibilities)
-			if (NameTrait<R>::name(t) == m_name + m_completion)
-				m_selection = t;
+		if (m_cycled > -1)
+			m_selection = m_potentials[m_cycled];
+		else
+			foreach (R t, m_possibilities)
+				if (NameTrait<R>::name(t) == m_name + m_completion)
+					m_selection = t;
 		return true;
 	}
 	void updateCompletion()
 	{
 		m_completion = "";
-		List<R> potentials = nameStarts(m_possibilities, m_name);
-		if (potentials.size() == 1)
+		m_potentials.clear();
+		m_potentials = nameStarts(m_possibilities, m_name);
+		if (m_potentials.size() == 1)
 		{
-			m_completion = NameTrait<R>::name(potentials[0]).mid(m_name.size());
-			m_name = NameTrait<R>::name(potentials[0]).left(m_name.size());
+			m_completion = NameTrait<R>::name(m_potentials[0]).mid(m_name.size());
+			m_name = NameTrait<R>::name(m_potentials[0]).left(m_name.size());
 		}
-		else if (potentials.size())
+		else if (m_potentials.size())
 		{
 			// This will reset any up/down selection should another character be typed; need to check that we have narrowed down the
 			// selection before auto-reselecting.
-			while (nameStarts(m_possibilities, m_name + m_completion).size() == potentials.size())
-				m_completion += NameTrait<R>::name(potentials[0])[m_name.size() + m_completion.size()];
+			while (nameStarts(m_possibilities, m_name + m_completion).size() == m_potentials.size())
+				m_completion += NameTrait<R>::name(m_potentials[0])[m_name.size() + m_completion.size()];
 			m_completion.chop(1);
 		}
 	}
 	R							m_selection;
 	String						m_name;
 	String						m_completion;
+	int							m_cycled;
 	List<R>						m_possibilities;
+	List<R>						m_potentials;
 	bool						m_immediateCommits;
 };
 

@@ -18,17 +18,19 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#ifndef MARTTAMAINWINDOW_H
-#define MARTTAMAINWINDOW_H
+#pragma once
 
 #include <QMainWindow>
 
+#include <Project.h>
+#include <Solution.h>
 #include <CullManager.h>
-#undef inline
 
 #include "ui_MainWindow.h"
 
 class QProcess;
+class QDomElement;
+class QDomDocument;
 class QLibrary;
 
 namespace Martta
@@ -51,7 +53,6 @@ private:
 };
 
 class CodeScene;
-class Project;
 class Function;
 class Entity;
 
@@ -63,57 +64,92 @@ public:
 	MainWindow(QWidget* _p = 0, Qt::WindowFlags _f = Qt::Window);
 	~MainWindow();
 
-	Project*				project() const { return m_project; }
-
-	bool confirmLose();
-
-	void loadPlugins();
-
 private slots:
-	void on_actNewCProject_triggered();
-	void on_actNewProject_triggered();
+	void on_actNew_triggered();
 	void on_actOpen_triggered();
 	void on_actSave_triggered();
+	void on_actClose_triggered();
+	void on_actQuit_triggered();
+
+	void on_actExecute_triggered();
+	void on_actNewCProject_triggered();
+
+	void on_actReloadPlugins_triggered();
+
 	void on_actShowDeps_triggered();
 	void on_actShowChanges_triggered();
 	void on_actClearChanges_triggered();
 	void on_actShowFirstChange_triggered();
 	void on_actRemoveFirstChange_triggered();
-	void on_actQuit_triggered();
+	void on_actCastability_triggered();
+
 	void on_actAboutMartta_triggered();
 	void on_actAboutQt_triggered();
-	void showDependenciesMenu(QPoint const&_p);
-	void classSelected(QModelIndex const& _i);
-	void on_actExecute_triggered();
-	void on_actCastability_triggered();
 
 	void on_programIn_returnPressed();
 
 	void entityFocused(Entity* _e);
 	void delayedUpdate();
 
-	void projectRenamed();
-	void saveCode();
 	void resetSubject();
 
+	void stepFinished();
 	void programReadyOut();
 	void programReadyError();
-	void programFinished(int _exitCode);
 
 	void updateProgramCode();
 
-	void updateLanguage();
-
 private:
-//	Workspace				m_workspace;
-	Project*				m_project;
-	QProcess*				m_program;
-	QString					m_outputOwed;
-	CodeView*				m_codeView;
-	QTimer*					m_updateTimer;
+	void updateSolutionSupportPath();
+
+	void setFilename(QString const& _fn);
+
+	void executeNextStep();
+	void loadPlugins();
+	void updateLanguage();
+	bool confirmLose();
+
+	// Simple load/save functions; doesn't record the filename.
+	Project*				loadProject(String const& _filename);
+	bool					saveProject(String const& _filename, Project* _p) const;
+
+	// Will save the solution, but not the projects---do that manually.
+	// Acts according to m_filename and m_solution.
+	// Does nothing is m_filename/m_solution is null.
+	// @returns true iff everything went ok.
+	bool					saveSolution() const;
+
+	// Loads the solution file @a _filename and any projects that it requires.
+	// Maintains correctness of m_projects, m_filename and m_solution accordingly.
+	// Doesn't do anything about the GUI though.
+	// @returns true iff everything went ok.
+	bool					load(String const& _filename);
+
+	// Proper save function---saves everything, prompting for filename if necessary.
+	// Maintains correctness of m_projects, m_filename and m_solution accordingly.
+	bool					save();
+
+	Entity*					importDom(QDomElement const& _el, Entity* _p, QStringList* _projects = 0, QList<Project*>* _projects = 0);
+	QDomElement				exportDom(QDomDocument& _doc, Entity const* _e, bool _dump = false) const;
+
+	// Serialises/deserialises the lot.
+	QString					serialise() const;
+	bool					deserialise(QString const& _s);
+
+	inline QList<Project*>	projects() const { return m_projects.keys(); }
+	inline Project*			project() const { return codeView->subject()->tryKind<Project>(); }
+
 	QList<QLibrary*>		m_libraries;
+
+	QHash<Project*, QString>m_projects;
+	QString					m_filename;
+	Solution*				m_solution;
+
+	QTimer*					m_updateTimer;
+
+	QProcess*				m_buildAndRun;
+	List<StringList>		m_steps;
+	QString					m_outputOwed;
 };
 
 }
-
-#endif

@@ -32,7 +32,6 @@ MARTTA_PLACEHOLDER_CPP(Referenced);
 Referenced::Referenced(ValueDefiner* _v):
 	m_subject	(0)
 {
-	mDebug() << "Boo!";
 	setSubject(_v);
 }
 

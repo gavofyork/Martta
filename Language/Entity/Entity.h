@@ -60,10 +60,6 @@ protected:
 	enum { EndOfNamed = INT_MIN, Cardinals = 0 };
 
 public:
-	static const bool					IsInterface = false;
-	static const bool					IsPlaceholder = true;
-	static const bool					IsObject = false;
-
 	inline void*						operator new(size_t _size);
 	inline void							operator delete(void* p);
 
@@ -149,6 +145,7 @@ public:
 	template<class T> T*				rootOf() const { T* r = tryKind<T>(); for (Entity* e = const_cast<Entity*>(this); e; e = e->m_parent) if (T* t = e->tryKind<T>()) r = t; return r; }
 
 	template<class T> List<T*>			selfAndAncestorsChildrenOf() const { List<T*> ret = childrenOf<T>(); return parent() ? ret + parent()->selfAndAncestorsChildrenOf<T>() : ret; }
+	template<class T> List<T*>			superChildrenOf() const { List<T*> ret; ret << childrenOf<T>(); foreach (Entity* e, children()) ret << e->superChildrenOf<T>(); return ret; }
 
 	inline int							nonPlaceholderCount() const { int ret = 0; foreach (Entity* i, m_cardinalChildren) if (!i->isPlaceholder()) ret++; return ret; }
 	inline List<Entity*>				nonPlaceholders() const { List<Entity*> ret; foreach (Entity* i, m_cardinalChildren) if (!i->isPlaceholder()) ret += i; return ret; }
@@ -274,8 +271,8 @@ public:
 
 	template<class T> inline T*			asInterface() { return const_cast<T*>(const_cast<Entity const*>(this)->asInterface<T>()); }
 	template<class T> inline T const*	asInterface() const { AssertNR(isKind<T>()); return reinterpret_cast<T const*>(toInterface(T::staticKind)); }
-	template<class T> inline T*			asKind() { AssertNR(this); AssertNR(isKind<T>()); return T::IsInterface ? asInterface<T>() : tryCast<T*>(this); }
-	template<class T> inline T const*	asKind() const { AssertNR(this); AssertNR(isKind<T>()); return T::IsInterface ? asInterface<T>() : tryCast<T const*>(this); }
+	template<class T> inline T*			asKind() { AssertNR(this); AssertNR(isKind<T>()); return T::staticKind.isInterface() ? asInterface<T>() : tryCast<T*>(this); }
+	template<class T> inline T const*	asKind() const { AssertNR(this); AssertNR(isKind<T>()); return T::staticKind.isInterface() ? asInterface<T>() : tryCast<T const*>(this); }
 	template<class T> inline T*			tryKind() { if (this && isKind<T>()) return asKind<T>(); return 0; }
 	template<class T> inline T const*	tryKind() const { if (this && isKind<T>()) return asKind<T>(); return 0; }
 
@@ -309,9 +306,11 @@ public:
 	virtual bool						doINeedParenthesising(Entity const* _child) const { (void)_child; return false; }
 	/// @returns true if this object isn't actually a real language entity.
 	/// Overrides automatically handled in derivations by MARTTA_OBJECT(_INTERFACE) macros. Do not reimplement.
-	virtual bool						isPlaceholder() const { return true; }
+	virtual bool						isPlaceholder() const { return kind().isPlaceholder(); }
 	/// Checked after change; if true is returned, this may be deleted.
 	virtual bool						isSuperfluous() const;
+	bool								isFixed() const { return over().isFixed(); }
+	virtual bool						defineChildFixed(int) const { return false; }
 
 	// Tests; these use the above information in order to determine the answer.
 
@@ -364,6 +363,7 @@ public:
 	virtual int							definePreferedFor(Kind const&) const { return NonePrefered; }
 
 	// Save/load
+	virtual List<Entity*>				savedChildren() const { return children(); }
 	virtual void						properties(Hash<String, String>&) const {}
 	virtual void						setProperties(Hash<String, String> const&) {}
 	virtual void						apresLoad() {}	// Called following a load after the model has been loaded.

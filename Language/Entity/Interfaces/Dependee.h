@@ -36,11 +36,15 @@ public:
 protected:
 	/// To be called when something about the object has changed. Notifies dependents.
 	/// If _aspect & Visually then it calls a relayoutLater().
-	bool								changed(int _aspect = Dependee::AllAspects) { return ChangeMan::get()->changed(this, _aspect); }
+	bool								changed(int _aspect = Dependee::AllAspects) { if (!m_isDeaf) return ChangeMan::get()->changed(this, _aspect); return false; }
 
-	virtual void						oneFootInTheGrave(Dependee* _replacement = 0) { ChangeMan::get()->oneFootInTheGrave(this, _replacement); }
+	virtual void						oneFootInTheGrave(Dependee* _replacement = 0) { if (!m_isDeaf) ChangeMan::get()->oneFootInTheGrave(this, _replacement); }
 
-	virtual ~Dependee() { ChangeMan::get()->dead(this); }
+	bool m_isDeaf;
+
+	inline Dependee(): m_isDeaf(false) {}
+	inline Dependee(Dependee const& _d): Dier(), m_isDeaf(_d.m_isDeaf) {}
+	virtual ~Dependee() { if (!m_isDeaf) ChangeMan::get()->dead(this); }
 };
 
 }

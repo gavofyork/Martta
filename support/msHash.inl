@@ -8,14 +8,14 @@
  * Version: MarttaSupport License version 1.0
  *
  * The contents of this file are subject to the MarttaSupport License
- * version 1.0 (the "License"); you may not use this file except in 
- * compliance with the License. You should have received a copy of the 
+ * version 1.0 (the "License"); you may not use this file except in
+ * compliance with the License. You should have received a copy of the
  * MarttaSupport License "COPYING.MarttaSupport" along with Martta; if not
  * you may obtain a copy of the License at http://quidprocode.co.uk/Martta/
  *
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations under 
+ * License for the specific language governing rights and limitations under
  * the License.
  *
  * The Initial Developer of the code in this file is Gavin Wood.
@@ -65,7 +65,7 @@ typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator&
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator::operator++()
 {
 	AssertNR(!m_node->isFrontSentinel());
-	
+
 	// jump to next if we're at the end of the current master node...
 	if (m_node->isBackSentinel())
 		return *this;
@@ -77,13 +77,13 @@ GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator::operator++()
 		m_node = m_node->m_next;
 	return *this;
 }
-		
+
 template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator&
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator::operator--()
 {
 	AssertNR(!m_node->isFrontSentinel());
-	
+
 	if (m_node == m_masterNode)
 	{
 		do
@@ -108,13 +108,13 @@ GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator::operator--()
 	}
 	return *this;
 }
-		
+
 template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::ConstIterator&
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::ConstIterator::operator++()
 {
 	AssertNR(!m_node->isFrontSentinel());
-	
+
 	// jump to next if we're at the end of the current master node...
 	if (m_node->isBackSentinel())
 		return *this;
@@ -126,13 +126,13 @@ GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::ConstIterator::operator++()
 		m_node = m_node->m_next;
 	return *this;
 }
-		
+
 template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::ConstIterator&
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::ConstIterator::operator--()
 {
 	AssertNR(!m_node->isFrontSentinel());
-	
+
 	if (m_node == m_masterNode)
 	{
 		do
@@ -230,7 +230,7 @@ GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::moveFromBox(typename General
 	{
 		allocate(Min);
 		m_count = 0;
-	}	
+	}
 	return *this;
 }
 
@@ -291,7 +291,7 @@ void GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::checkSize()
 template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Node*
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::freshNode(uint _index)
-{ 	
+{
 	AssertNR(_index < m_capacity);
 	return freshNode(m_nodes + _index);
 }
@@ -299,7 +299,7 @@ GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::freshNode(uint _index)
 template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Node*
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::freshNode(Node* _m)
-{ 	
+{
 	if (_m->isActive())
 		return insertNode(_m);
 	_m->activate();
@@ -309,7 +309,7 @@ GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::freshNode(Node* _m)
 template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Node*
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::staleNode(uint _index)
-{ 	
+{
 	AssertNR(_index < m_capacity);
 	return freshNode(m_nodes + _index);
 }
@@ -317,7 +317,7 @@ GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::staleNode(uint _index)
 template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Node*
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::staleNode(Node* _m)
-{ 	
+{
 	if (_m->isActive())
 		return appendNode(_m);
 	_m->activate();
@@ -392,7 +392,7 @@ int GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::remove(Key const& _key)
 	}
 	// either keys are different or i == m.
 	// l is one before the sequence begins or zero if it begins on m.
-	
+
 	if (p)				// some before us.
 		p->m_next = i;
 	else if (i != m)	// none before us and some after us.
@@ -431,7 +431,7 @@ int GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::removeOne(Key const& _ke
 		delete i;
 	i = x;
 	// l is one before the dead node or zero if it is m.
-	
+
 	if (p)				// some before us.
 		p->m_next = i;
 	else if (i != m)	// none before us and some after us.
@@ -470,7 +470,7 @@ int GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::removeOne(Key const& _ke
 		delete i;
 	i = x;
 	// l is one before the dead node or zero if it is m.
-	
+
 	if (p)				// some before us.
 		p->m_next = i;
 	else if (i != m)	// none before us and some after us.
@@ -526,7 +526,7 @@ typename GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator GeneralHas
 		delete i;
 	i = x;
 	// l is one before the dead node or zero if it is m.
-	
+
 	m_count--;
 	if (p)				// some before us.
 	{
@@ -576,7 +576,7 @@ T GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::take(Key const& _key)
 		delete i;
 	i = x;
 	// l is one before the dead node or zero if it is m.
-	
+
 	if (p)				// some before us (we *were* p->m_next).
 		p->m_next = i;
 	else if (i != m)	// none before us and some after us (we *are* m).
@@ -593,13 +593,13 @@ T GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::take(Key const& _key)
 }
 
 template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
-inline bool GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator::operator==(ConstIterator const& _i)
+m_inline bool GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator::operator==(ConstIterator const& _i)
 {
 	return m_node == _i.m_node;
 }
 
 template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
-inline bool GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator::operator!=(ConstIterator const& _i)
+m_inline bool GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::Iterator::operator!=(ConstIterator const& _i)
 {
 	return m_node != _i.m_node;
 }
@@ -881,7 +881,7 @@ template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 void GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::moveAndDelete(Node* _n, uint _c)
 {
 	if (m_capacity > _c)
-	{	
+	{
 		// capacity increasing; don't know the index off hand (one of (m_capacity / _c) though).
 		uint lowerBits = floorLog2(_c);
 		for (uint ii = 0; ii < _c; ii++)
@@ -924,7 +924,7 @@ void GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::moveAndDelete(Node* _n,
 	}
 	else
 	{
-		// capacity decreasing; 
+		// capacity decreasing;
 		// go through new buckets, then iterate over possible old buckets.
 		for (uint i = 0; i < m_capacity; i++)
 		{
@@ -966,7 +966,7 @@ void GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::moveAndDelete(Node* _n,
 	}
 	deallocate(_n);
 }
-	
+
 template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey> void GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::reinsertNode(Node* _n, bool _pleaseDelete)
 {
 	// appends the node to the list.
@@ -991,7 +991,7 @@ template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
 }
 
 template<typename Key, typename T, uint Min, bool AlwaysMulti, bool ImplicitKey>
-GeneralHash<T, Key, Min, AlwaysMulti, ImplicitKey> 
+GeneralHash<T, Key, Min, AlwaysMulti, ImplicitKey>
 GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey>::inverted() const
 {
 	GeneralHash<T, Key, Min, AlwaysMulti, ImplicitKey> ret;

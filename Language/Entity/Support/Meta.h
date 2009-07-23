@@ -66,9 +66,6 @@ private: \
 
 #define MARTTA_INTERFACE \
 public: \
-	static const bool					IsInterface = true; \
-	static const bool					IsObject = false; \
-	static const bool					IsPlaceholder = false; \
 	virtual Entity const*				self() const = 0; \
 	virtual Entity*						self() = 0; \
 	template<class T> inline T*			asKind() { return this && self() ? self()->asKind<T>() : 0; } \
@@ -93,10 +90,6 @@ public: \
 	Entity::asKind; \
 	Entity::tryKind; \
 	Entity::isKind; \
-	static const bool					IsInterface = false; \
-	static const bool					IsObject = true; \
-	static const bool					IsPlaceholder = false; \
-	inline virtual bool					isPlaceholder() const { return false; } \
 	MARTTA_COMMON(S)
 
 #define MARTTA_INITIALISED_PLACEHOLDER(S) \
@@ -104,10 +97,6 @@ public: \
 	Entity::asKind; \
 	Entity::tryKind; \
 	Entity::isKind; \
-	static const bool					IsInterface = false; \
-	static const bool					IsObject = false; \
-	static const bool					IsPlaceholder = true; \
-	inline virtual bool					isPlaceholder() const { return true; } \
 	MARTTA_COMMON(S)
 
 #define MARTTA_OBJECT(S) \
@@ -132,13 +121,14 @@ public: \
 #define MARTTA_CPP_BASIC_END(E) \
 	Kind E::staticKind = Kind(E::staticAuxilliary());
 
-#define MARTTA_OBJECT_CPP(E) \
+#define MARTTA_OB_OR_PH_CPP(E, PH) \
 	MARTTA_CPP_BASIC(E) \
-	AuxilliaryFace const* E::staticAuxilliary() { if (!s_auxilliary_##E) s_auxilliary_##E = new Auxilliary<E>("Martta::" #E); return s_auxilliary_##E; } \
+	AuxilliaryFace const* E::staticAuxilliary() { if (!s_auxilliary_##E) s_auxilliary_##E = new Auxilliary<E>("Martta::" #E, PH); return s_auxilliary_##E; } \
 	void const* E::tryInterface(Kind _k) const { /*mDebug() << "tryInterface(Object): " << E::staticKind.name() << ", searching " << _k.name();*/ AssertNR(this); if (_k == staticKind) { /*mDebug() << "Shouldn't happen - object matched but wanted interface: Want " << _k.name() << ", got " << E::staticKind.name() << "!";*/ return (void const*)this; } /*mDebug() << "Trying ASTHelper " << GetCount<E>::Value << " interfaces";*/ if (void const* r = ASTHelper<GetCount<E>::Value, E>::altSupers(this, _k)) return r; /*mDebug() << "Moving to Super (" << Super::staticKind.name() << ")...";*/ return Super::tryInterface(_k); } \
 	MARTTA_CPP_BASIC_END(E)
 
-#define MARTTA_PLACEHOLDER_CPP(E) MARTTA_OBJECT_CPP(E)
+#define MARTTA_PLACEHOLDER_CPP(E) MARTTA_OB_OR_PH_CPP(E, true)
+#define MARTTA_OBJECT_CPP(E) MARTTA_OB_OR_PH_CPP(E, false)
 
 #define MARTTA_INTERFACE_CPP(E) \
 	MARTTA_CPP_BASIC(E) \

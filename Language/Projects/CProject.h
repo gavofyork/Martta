@@ -48,21 +48,21 @@ public:
 	CProject();
 	virtual ~CProject();
 
+	virtual String						finalCode() const;
+
 	virtual String						target() const { return m_tempPath + "/" + targetName(); }
 	virtual String						targetName() const;
 
 	virtual String						includeCode() const;
 	virtual StringList					libs() const;
 
-	virtual List<StringList>			buildCommands() const;
+	virtual List<StringList>			steps() const;
 
 protected:
 	virtual int							minRequired(int _i) const { return _i == 0 ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
 
 private:
-	String								finalCode() const;
-
 	String								m_tempPath;
 	String								m_supportPath;
 	String								m_tempBatName;

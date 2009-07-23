@@ -204,11 +204,13 @@
     <property name="title">
      <string>&amp;File</string>
     </property>
-    <addaction name="actNewProject"/>
+    <addaction name="actNew"/>
     <addaction name="actOpen"/>
     <addaction name="actSave"/>
+    <addaction name="actClose"/>
     <addaction name="separator"/>
-    <addaction name="actNewCProject"/>
+    <addaction name="actOpenModule"/>
+    <addaction name="actSaveModule"/>
     <addaction name="separator"/>
     <addaction name="actQuit"/>
    </widget>
@@ -223,10 +225,19 @@
     <property name="title">
      <string>&amp;Project</string>
     </property>
+    <addaction name="actNewCProject"/>
+    <addaction name="separator"/>
     <addaction name="actExecute"/>
+   </widget>
+   <widget class="QMenu" name="menuPlugins">
+    <property name="title">
+     <string>Plugins</string>
+    </property>
+    <addaction name="actReloadPlugins"/>
    </widget>
    <addaction name="menu_Project"/>
    <addaction name="menu_Project_2"/>
+   <addaction name="menuPlugins"/>
    <addaction name="menu_About"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -661,7 +672,7 @@
        <property name="frameShadow">
         <enum>QFrame::Sunken</enum>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout_2c">
+       <layout class="QVBoxLayout" name="verticalLayout_3">
         <property name="margin">
          <number>0</number>
         </property>
@@ -765,7 +776,10 @@
   </action>
   <action name="actOpen">
    <property name="text">
-    <string>&amp;Open...</string>
+    <string>&amp;Open Solution...</string>
+   </property>
+   <property name="toolTip">
+    <string>Open Project</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
@@ -773,7 +787,10 @@
   </action>
   <action name="actSave">
    <property name="text">
-    <string>&amp;Save</string>
+    <string>&amp;Save Solution</string>
+   </property>
+   <property name="toolTip">
+    <string>Save Project</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
@@ -837,9 +854,15 @@
     <string>Show &amp;First Change</string>
    </property>
   </action>
-  <action name="actNewProject">
+  <action name="actNew">
    <property name="text">
-    <string>&amp;New</string>
+    <string>&amp;New Solution</string>
+   </property>
+   <property name="toolTip">
+    <string>New Project</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
    </property>
   </action>
   <action name="actShowDeps">
@@ -871,6 +894,26 @@
   <action name="actAboutMartta">
    <property name="text">
     <string>About Martta...</string>
+   </property>
+  </action>
+  <action name="actSaveModule">
+   <property name="text">
+    <string>&amp;Save Module</string>
+   </property>
+  </action>
+  <action name="actOpenModule">
+   <property name="text">
+    <string>&amp;Open Module...</string>
+   </property>
+  </action>
+  <action name="actReloadPlugins">
+   <property name="text">
+    <string>Reload</string>
+   </property>
+  </action>
+  <action name="actClose">
+   <property name="text">
+    <string>Close Solution</string>
    </property>
   </action>
  </widget>

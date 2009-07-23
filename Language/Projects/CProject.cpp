@@ -97,17 +97,6 @@ StringList CProject::libs() const
 	return r;
 }*/
 
-#if 0
-void compile()
-{
-	AssertNR(!m_compiler);
-	StringList buildLine;
-	m_compiler = new QProcess;
-	connect(m_compiler, SIGNAL(finished(int, QProcess::ExitStatus)), SLOT(compileFinished()));
-	m_compiler->start(5qs(buildLine[0]), qs(buildLine.mid(1)), QIODevice::ReadOnly);
-}
-#endif
-
 String CProject::finalCode() const
 {
 	String ret;
@@ -118,11 +107,11 @@ String CProject::finalCode() const
 	ret += includeCode();
 	ret += Super::finalCode();
 	if (childIs<Function>(0))
-		ret += "int main(int, char**)\n{\n" + childAs<Function>(0)->codeName() + "();\n}\n";
+		ret += "int main(int argc, char** argv)\n{\n\treturn " + childAs<Function>(0)->reference() + "(argc, argv);\n}\n";
 	return ret;
 }
 
-List<StringList> CProject::buildCommands() const
+List<StringList> CProject::steps() const
 {
 	String src = m_tempPath + "/" + name() + ".cpp";
 	String bin = m_tempPath + "/" + targetName();
@@ -154,8 +143,9 @@ List<StringList> CProject::buildCommands() const
 	}
 
 	mInfo() << "Compiling" << src;
+	List<StringList> ret;
 
-#ifdef Q_WS_WIN
+#ifdef WIN32
 	QStringList env = QProcess::systemEnvironment();
 	int index = env.lastIndexOf(QRegExp("VS..COMNTOOLS.*"));
 	QRegExp r("^([A-Z0-9]+)=(.*)$");
@@ -176,10 +166,13 @@ List<StringList> CProject::buildCommands() const
 	batArgs << L"/C";
 	batArgs << m_tempBatName;
 	QDir::setCurrent(QDir::tempPath());
-	return StringList() << L"cmd" << batArgs;
+	ret << (StringList(L"cmd") << batArgs);
 #else
-	return List<StringList>() << ccArgs;
+	ret << ccArgs;
 #endif
+
+	ret << StringList(bin);
+	return ret;
 }
 
 String CProject::targetName() const

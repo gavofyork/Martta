@@ -29,6 +29,11 @@ bool Position::exists() const
 	return isValid() && m_index != UndefinedIndex && m_parent->child(m_index);
 }
 
+bool Position::isFixed() const
+{
+	return m_parent && (m_parent->isFixed() || m_parent->defineChildFixed(m_index == UndefinedIndex ? m_parent->cardinalChildCount() : m_index));
+}
+
 Entity* Position::entity() const
 {
 	AssertNR(exists());

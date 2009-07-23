@@ -24,7 +24,6 @@ using namespace MarttaSupport;
 #include "CullManager.h"
 #include "CodeScene.h"
 #include "EditDelegate.h"
-#include "CompletionDelegate.h"
 #include "Entity.h"
 
 namespace Martta
@@ -499,7 +498,7 @@ void Entity::keyPressEventStarter(KeyEvent* _e, bool _abortive)
 bool Entity::keyPressed(KeyEvent const* _e)
 {
 	Position p = over();
-	if (_e->codeScene()->isCurrent(this) && (_e->text() == L"\x7f" && _e->modifiers() == KeyEvent::ShiftModifier || _e->text() == L"\b" && isEditing(_e->codeScene())))
+	if (_e->codeScene()->isCurrent(this) && (_e->text() == L"\x7f" && _e->modifiers() == KeyEvent::ShiftModifier || _e->text() == L"\b" && isEditing(_e->codeScene())) && !isFixed())
 	{
 //		p.parent()->debugTree();
 //		mDebug() << p.index();
@@ -510,7 +509,7 @@ bool Entity::keyPressed(KeyEvent const* _e)
 		if (p.exists())
 			_e->codeScene()->setCurrent(p.entity());
 	}
-	else if (_e->codeScene()->isCurrent(this) && _e->text() == L"\x7f")
+	else if (_e->codeScene()->isCurrent(this) && _e->text() == L"\x7f" && !isFixed())
 	{
 //		p.parent()->debugTree();
 //		mDebug() << p.index();
@@ -526,7 +525,7 @@ bool Entity::keyPressed(KeyEvent const* _e)
 	}
 	else if (_e->codeScene()->isCurrent(this) && _e->text() == L"\x1b" && isEditing(_e->codeScene()))
 		_e->codeScene()->setEditing(0);
-	else if (_e->codeScene()->isCurrent(this) && _e->text() == L"\t" && !isEditing(_e->codeScene()))
+	else if (_e->codeScene()->isCurrent(this) && _e->text() == L"\t" && !isEditing(_e->codeScene()) && !isFixed())
 		_e->codeScene()->setEditing(this);
 	else if (_e->text() == L"\t")
 		activated(_e->codeScene());
@@ -835,7 +834,6 @@ Entity* Entity::evaluate(String const& _exp, int* _readUpto)
 	if (!af)
 		af = AuxilliaryRegistrar::get()->auxilliary("Martta::" + name);
 	Entity* ret = af ? af->create() : new Entity;
-	ret->prepareChildren();
 
 	Hash<String, String> ps;
 	while (eon < _exp.length() && _exp[eon] != L'}' && _exp[eon] != L'@')
@@ -868,6 +866,7 @@ Entity* Entity::evaluate(String const& _exp, int* _readUpto)
 				eon++;
 			}
 		}
+	ret->validifyChildren();
 	ret->setProperties(ps);
 	if (_readUpto)
 		*_readUpto = eon;

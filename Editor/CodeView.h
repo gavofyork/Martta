@@ -22,7 +22,6 @@
 
 #include <msStringList.h>
 #include <msString.h>
-#undef inline
 using namespace MarttaSupport;
 
 #include <QSet>
@@ -31,7 +30,6 @@ using namespace MarttaSupport;
 
 #include <Entity.h>
 #include <CodeScene.h>
-#undef inline
 
 namespace Martta
 {
@@ -53,10 +51,11 @@ public:
 	void						setShowOneChange(bool _on) { if (m_showOneChange == _on) return; m_showOneChange = _on; update(); }
 
 	// Stylist
-	Stylist*				stylist() const { return m_stylist; }
+	Stylist*					stylist() const { return m_stylist; }
 	void						setStylist(Stylist* _s) { m_stylist = _s; }
 
 	// What's happening?
+	virtual inline Entity*		subject() const { return m_subject; }
 	inline Entity*				current() const { return m_current ? (Entity*)m_current : m_subject; }
 	Entity*						editEntity() const;
 	inline EditDelegateFace*	editDelegate() const { return m_editDelegate; }
@@ -151,6 +150,7 @@ private:
 	Hash<Entity*, StringList>				m_listCache;
 	Hash<Entity*, uint>					m_cacheKey;
 
+	int					m_reinterpretCount;
 	List<int>			m_pagingRoute;
 	bool				m_navigated;
 	SafePointer<Entity>	m_strobeCreation;
