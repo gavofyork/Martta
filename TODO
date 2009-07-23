@@ -13,7 +13,6 @@ UI:
 - FIX Page up & down.
 
 Small things:
-- QUICK Show error code when build step/program fails.
 - QUICK safe exit out of reinterpretLater inf. recursion.
 - Special EntryMethod.
 - Unary operation should apply to climb Statement tree until it finds something.

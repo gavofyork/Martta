@@ -245,15 +245,25 @@ void MainWindow::on_actExecute_triggered()
 void MainWindow::stepFinished()
 {
 	StringList step = m_steps.takeFirst();
-	if (m_buildAndRun->exitStatus() || m_buildAndRun->exitCode())
+	if (m_steps.isEmpty())
+	{
+		// Program finished.
+		statusBar()->showMessage(QString("Program terminated with exit code %1").arg(m_buildAndRun->exitCode()));
+		actExecute->setEnabled(true);
+		programIn->setEnabled(false);
+		m_buildAndRun->deleteLater();
+		m_buildAndRun = 0;
+		m_outputOwed = "";
+	}
+	else if (m_buildAndRun->exitStatus() || m_buildAndRun->exitCode())
 	{
 		QMessageBox::critical(this, "Build failed", tr("Could not build executable. Build step '%1' returned with: '%2'").arg(qs(step.join(L' '))).arg(m_buildAndRun->readAllStandardError().data()));
-		delete m_buildAndRun;
+		m_buildAndRun->deleteLater();
 		m_buildAndRun = 0;
 		actExecute->setEnabled(true);
-		return;
 	}
-	executeNextStep();
+	else
+		executeNextStep();
 }
 
 void MainWindow::executeNextStep()
@@ -271,16 +281,6 @@ void MainWindow::executeNextStep()
 			connect(m_buildAndRun, SIGNAL(readyReadStandardError()), SLOT(programReadyError()));
 		}
 		m_buildAndRun->start(qs(m_steps.first()[0]), qs(m_steps.first().mid(1)), QIODevice::ReadOnly);
-	}
-	else
-	{
-		// Program finished.
-		statusBar()->showMessage(QString("Program terminated with exit code %1").arg(m_buildAndRun->exitCode()));
-		actExecute->setEnabled(true);
-		programIn->setEnabled(false);
-		m_buildAndRun->deleteLater();
-		m_buildAndRun = 0;
-		m_outputOwed = "";
 	}
 }
 
