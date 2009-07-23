@@ -164,7 +164,7 @@ void CodeView::setEditing(Entity* _e)
 			doRefreshLayout();
 	}
 
-	if (_e)
+	if (_e && !_e->isFixed())
 	{
 		if (!isInScene(_e))
 			doRefreshLayout();
@@ -498,7 +498,16 @@ void CodeView::keyPressEvent(QKeyEvent* _e)
 		if (m_reinterpretCurrentKeyEvent)
 		{
 			m_reinterpretCurrentKeyEvent = false;
-			keyPressEvent(_e);
+			m_reinterpretCount++;
+			if (m_reinterpretCount < 2)	// Catch inf. rec.
+				keyPressEvent(_e);
+			else
+			{
+				mInfo() << &*current();
+				m_subject->debugTree();
+				Assert(false, "Reinterpret key event in infinite recursion");
+			}
+			m_reinterpretCount--;
 		}
 	}
 

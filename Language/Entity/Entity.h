@@ -309,6 +309,8 @@ public:
 	virtual bool						isPlaceholder() const { return kind().isPlaceholder(); }
 	/// Checked after change; if true is returned, this may be deleted.
 	virtual bool						isSuperfluous() const;
+	bool								isFixed() const { return over().isFixed(); }
+	virtual bool						defineChildFixed(int) const { return false; }
 
 	// Tests; these use the above information in order to determine the answer.
 

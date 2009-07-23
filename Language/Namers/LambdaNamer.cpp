@@ -84,7 +84,7 @@ String LambdaNamer::defineLayout(ViewKeys const& _k, String const& _middle) cons
 
 bool LambdaNamer::keyPressed(KeyEvent const* _e)
 {
-	if ((_e->text() == "(" && !argumentCount() && (_e->focalIndex() == Identity || _e->isFocused()) || _e->text() == "," && _e->focalIndex() >= 0) && self()->back().allowedToBeKind<Argument>())
+	if ((_e->text() == "(" && !argumentCount() && (_e->focalIndex() == Identity || _e->isFocused()) || _e->text() == "," && _e->focalIndex() >= 0) && self()->back().allowedToBeKind<Argument>() && !self()->back().isFixed())
 	{
 		Argument* v = new Argument;
 		self()->back().place(v);

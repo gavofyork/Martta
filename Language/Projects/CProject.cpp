@@ -107,7 +107,7 @@ String CProject::finalCode() const
 	ret += includeCode();
 	ret += Super::finalCode();
 	if (childIs<Function>(0))
-		ret += "int main(int, char**)\n{\n" + childAs<Function>(0)->reference() + "();\n}\n";
+		ret += "int main(int argc, char** argv)\n{\n\treturn " + childAs<Function>(0)->reference() + "(argc, argv);\n}\n";
 	return ret;
 }
 

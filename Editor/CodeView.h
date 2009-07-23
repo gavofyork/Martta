@@ -150,6 +150,7 @@ private:
 	Hash<Entity*, StringList>				m_listCache;
 	Hash<Entity*, uint>					m_cacheKey;
 
+	int					m_reinterpretCount;
 	List<int>			m_pagingRoute;
 	bool				m_navigated;
 	SafePointer<Entity>	m_strobeCreation;

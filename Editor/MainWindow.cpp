@@ -199,6 +199,7 @@ void MainWindow::on_actNew_triggered()
 
 	codeView->setSubject(0);
 
+	m_projects.clear();
 	delete m_solution;
 	m_solution = 0;
 

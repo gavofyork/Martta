@@ -4,28 +4,29 @@ BUG Moving is crazily slow over statements.
   - Do recursively but prune on denied Kinds.
   - Remove all allowedToBeKind (or other Kind-checking) in handlers.
 BUG 'Mstr'-> doesn't move away (only stops editing).
-BUG Assertion on '!?'.
+BUG Assertion on '!?', 'R-1'.
 CRASH delete a Referenced EnumValue.
 
-Small things:
-- Special EntryMethod.
+UI:
 - Join statements or tree insert.
   - 'J' -> Joins next line to last [] in current.
+- FIX Page up & down.
+
+Small things:
+- QUICK Show error code when build step/program fails.
+- QUICK safe exit out of reinterpretLater inf. recursion.
+- Special EntryMethod.
 - Unary operation should apply to climb Statement tree until it finds something.
 - Insertion of entities in, e.g. argument lists for function calls.
   - Just a comma?
-- FIX Page up & down.
 - CLEAN Move crap from ExplicitType to TypeDefinition.
 - CLEAN Slim down API of CodeScene.
 - OPTIMISE String (and List/Hash/Type perhaps) with copy on write.
 - Interfacify ModifyingType (clashes with PhysicalType over ListType etc.)
   - NewOperation/DeleteOperation - interface with Type classes.
-- BRINGBACK Visual change system.
 - BRINGBACK Ser/Deser tests.
-- BRINGBACK decoration code into layout system and markup for it.
 - BRINGBACK GenericMemberOperation::isChildInValidState - do what it says.
 Dynamic code-loading (plugins).
-- Get rid of #define inline
 - Referenced as placeholder (no key press handling)
   - BRINGBACK Colouring (layout) of possibles (Entity::defineEditLayout(ViewKeysC&, Named*)
   - BRINGBACK Method names register with IdentifierSet
@@ -35,6 +36,9 @@ Dynamic code-loading (plugins).
   - TODO SearchReferenced (\)
     - All possible (including scoped exterals).
     - Should provide list for browsing/selection.
+Webkit layout system 
+- BRINGBACK decoration code into layout system and markup for it.
+- BRINGBACK Visual change system.
 
 --------------------------------------------------------------------------------
 

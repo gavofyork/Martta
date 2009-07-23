@@ -2,14 +2,14 @@
  * Version: Martta License version 1.0
  *
  * The contents of this file are subject to the Martta License version 1.0
- * (the "License"); you may not use this file except in compliance with the 
- * License. You should have received a copy of the Martta License 
+ * (the "License"); you may not use this file except in compliance with the
+ * License. You should have received a copy of the Martta License
  * "COPYING.Martta" along with Martta; if not you may obtain a copy of the
  * License at http://quidprocode.co.uk/Martta/
  *
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations under 
+ * License for the specific language governing rights and limitations under
  * the License.
  *
  * The Initial Developer of the code in this file is Gavin Wood.
@@ -45,10 +45,11 @@ bool BuiltinType::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
 	if (_p.exists() && _p->isPlaceholder() && _e->text().length() == 1 && _e->text()[0].isLower())
 	{
-		_e->reinterpretLater();
 		BuiltinType* s = new BuiltinType;
 		_p.place(s);
 		s->setEditing(_e->codeScene());
+		if (s->isEditing(_e->codeScene()))
+			_e->reinterpretLater();
 	}
 	else
 		return false;
@@ -59,8 +60,9 @@ bool BuiltinType::keyPressed(KeyEvent const* _e)
 {
 	if (_e->text().length() == 1 && (_e->text()[0].isLower() || _e->text()[0] == L':'))
 	{
-		_e->reinterpretLater();
 		setEditing(_e->codeScene());
+		if (isEditing(_e->codeScene()))
+			_e->reinterpretLater();
 	}
 	else
 		return Super::keyPressed(_e);
@@ -110,7 +112,7 @@ bool BuiltinType::defineSimilarityTo(TypeEntity const* _t, Castability _c) const
 bool BuiltinType::defineSimilarityFrom(TypeEntity const* _f, Castability _c) const
 {
 	return	m_id == Void && !_f->isKind<ModifyingType>() ||
-			isAnyConvertible(_c) && m_id == Bool && _f->isKind<AddressType>() || 
+			isAnyConvertible(_c) && m_id == Bool && _f->isKind<AddressType>() ||
 		Super::defineSimilarityFrom(_f, _c);
 }
 
@@ -128,12 +130,12 @@ public:
 	{
 		if (_val < ExtraIds)
 			return BuiltinType::name(_val);
-			
+
 		int i = ExtraIds;
 		foreach (String s, BuiltinType::s_recognisedExtras.keys())
 			if (_val == i++)
 				return s;
-				
+
 		return String::null;
 	}
 };
@@ -181,7 +183,7 @@ void BuiltinType::initialiseClass()
 	scalar << integral << Float << Double << (Long|Double);
 	List<uint> numeric;
 	numeric << scalar << (Complex|Float) << (Complex|Double) << (Complex|Long|Double);
-	
+
 	// integral types
 	foreach (uint d, integral)
 	{

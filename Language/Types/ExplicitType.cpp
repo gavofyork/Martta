@@ -2,14 +2,14 @@
  * Version: Martta License version 1.0
  *
  * The contents of this file are subject to the Martta License version 1.0
- * (the "License"); you may not use this file except in compliance with the 
- * License. You should have received a copy of the Martta License 
+ * (the "License"); you may not use this file except in compliance with the
+ * License. You should have received a copy of the Martta License
  * "COPYING.Martta" along with Martta; if not you may obtain a copy of the
  * License at http://quidprocode.co.uk/Martta/
  *
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations under 
+ * License for the specific language governing rights and limitations under
  * the License.
  *
  * The Initial Developer of the code in this file is Gavin Wood.
@@ -32,10 +32,11 @@ bool ExplicitType::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
 	if (_p.exists() && _p->isPlaceholder() && _e->text().length() == 1 && (_e->text()[0].isUpper() || _e->text()[0] == L':'))
 	{
-		_e->reinterpretLater();
 		// switch to Explicit Type.
 		Entity* e = _p.place(new ExplicitType);
 		e->setEditing(_e->codeScene());
+		if (e->isEditing(_e->codeScene()))
+			_e->reinterpretLater();
 	}
 	else
 		return false;
@@ -81,7 +82,7 @@ bool ExplicitType::defineSimilarityTo(TypeEntity const* _t, Castability _c) cons
 		if (_t->isKind<ExplicitType>() && m_subject == _t->asKind<ExplicitType>()->m_subject
 			|| m_subject->defineSimilarityTo(_t, _c))
 			return true;
-		
+
 	return Super::defineSimilarityTo(_t, _c);
 }
 
@@ -106,8 +107,9 @@ bool ExplicitType::keyPressed(KeyEvent const* _e)
 {
 	if (_e->text().length() == 1 && (_e->text()[0].isUpper() || _e->text()[0] == L':'))
 	{
-		_e->reinterpretLater();
 		setEditing(_e->codeScene());
+		if (isEditing(_e->codeScene()))
+			_e->reinterpretLater();
 	}
 	else
 		return Super::keyPressed(_e);
