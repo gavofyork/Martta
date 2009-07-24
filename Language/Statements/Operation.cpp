@@ -158,7 +158,7 @@ Position Operation::slideOnPrecedence(Position _p, Precedence _d, Associativity 
 {
 	Position p = _p;
 	while (_block != p && p->parentIs<Operation>() && p.entity() == p->parentAs<Operation>()->lastOperand() &&
-		   (_d > p->parentAs<Operation>()->precedence() || _d == p->parentAs<Operation>()->precedence() && _a == LeftAssociativity))
+		   (_d > p->parentAs<Operation>()->precedence() || (_d == p->parentAs<Operation>()->precedence() && _a == LeftAssociativity)))
 		p = p.parent()->over();
 	while (_block != p && p->isKind<Operation>() && !p->asKind<Operation>()->lastOperand()->isPlaceholder() && p->asKind<Operation>()->precedence() == _d && _a == RightAssociativity)
 		p = p->asKind<Operation>()->lastOperand()->over();

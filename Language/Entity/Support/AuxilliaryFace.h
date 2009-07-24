@@ -37,6 +37,7 @@ public:
 	virtual bool						isInterface() const = 0;
 	virtual bool						isPlaceholder() const = 0;
 	virtual char const*					name() const = 0;
+	virtual void const*					offset(Entity const*) const = 0;
 
 	// They will return 0 is called on an Interface.
 	virtual Entity*						create() const = 0;

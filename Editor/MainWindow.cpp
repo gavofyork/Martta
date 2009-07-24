@@ -55,7 +55,7 @@ MainWindow::MainWindow(QWidget* _p, Qt::WindowFlags _f):
 	m_updateTimer		(0),
 	m_buildAndRun		(0)
 {
-	qApp->addLibraryPath("/Users/gav/Projects/Martta/plugins");
+	qApp->addLibraryPath(MARTTA_PLUGINS_PATH);
 
 	setupUi(this);
 
@@ -115,7 +115,18 @@ void MainWindow::loadPlugins()
 		delete m_libraries.takeLast();
 	}
 
-	QFileInfoList list = QDir("/Users/gav/Projects/Martta/plugins").entryInfoList();
+	QFileInfoList list = QDir(MARTTA_PLUGINS_PATH).entryInfoList();
+	qDebug() << "Searching for plugins in" << MARTTA_PLUGINS_PATH;
+#if defined(DEBUG)
+	qDebug() << "Debug";
+#else
+	qDebug() << "Not debug";
+#endif
+	fprintf(stderr, "Hello!\n");
+	String s = L"Boo!";
+	fprintf(stderr, "%ls\n", s.data());
+	qDebug("Hello world!\n");
+
 
 	QHash<QString, QSet<QString> > depTree;
 	for (int i = 0; i < list.size(); ++i)
@@ -126,6 +137,9 @@ void MainWindow::loadPlugins()
 			QStringList deps = QString(f.readAll()).simplified().split(" ");
 			depTree[deps[0]] = QSet<QString>::fromList(deps.mid(1));
 		}
+
+	foreach (QString s, depTree.keys())
+		mDebug() << "Found plugin" << qs(s) << "with deps" << qs(QStringList(depTree[s].toList()).join(" "));
 
 	pluginsLoaded->clear();
 	QSet<QString> loaded;

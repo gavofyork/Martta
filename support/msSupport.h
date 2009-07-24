@@ -64,17 +64,23 @@ void assertFailed(int, char const*, char const*, char const*, char const*);
 #else
 #define Assert(X, R) if ((X)) {} else MarttaSupport::assertFailed(__LINE__, __FILE__, __FUNCTION__, #X, R)
 #endif
-#define ASSERT_EQ(X, Y) //if ((X)) {} else assertFailedEq(__LINE__, __FUNCTION__, #X, X, #Y, Y)
-#define ASSERT_NE(X, Y) //if ((X)) {} else assertFailedNe(__LINE__, __FUNCTION__, #X, X, #Y, Y)
-#define STATIC_ASSERT(X)
+#if defined(__GNUC__)
+#define AssertEq(X, Y, R) if ((X) == (Y)) {} else MarttaSupport::assertFailed(__LINE__, __FILE__, __PRETTY_FUNCTION__, String(#X " != " #Y " (%1 != %2)").arg(X).arg(Y).toCString(), R)
+#else
+#define AssertEq(X, Y, R) if ((X) == (Y)) {} else MarttaSupport::assertFailed(__LINE__, __FILE__, __FUNCTION__, String(#X " != " #Y " (%1 != %2)").arg(X).arg(Y).toCString(), R)
+#endif
+#define StaticAssert(X)
 
 #else
 
 #define Assert(X, R) (void)0
+#define AssertEq(X, Y, R) (void)0
+#define StaticAssert(X) (void)0
 
 #endif
 
 #define AssertNR(X) Assert(X, "");
+#define AssertEqNR(X, Y) AssertEq(X, Y, "");
 
 #if _MSC_VER
 template<class T> m_inline T round(T const& x) { return ((x)>=0?(long)((x)+0.5):(long)((x)-0.5)); }

@@ -48,6 +48,8 @@ public:
 	virtual AuxilliaryFace const*		interfaceAuxilliary(int _i) const { return T::template ASHelper<GetCount<T>::Value>::altSupers()[_i]; }
 	virtual int							interfaceAuxilliaryCount() const { return GetCount<T>::Value; }
 	virtual Entity*						create() const { return new T; }
+	virtual void const*					offset(Entity const* _e) const { return reinterpret_cast<void const*>(static_cast<T const*>(_e)); }
+
 private:
 	char const*							m_name;
 	bool								m_isPlaceholder;
@@ -68,6 +70,7 @@ public:
 	virtual AuxilliaryFace const*		interfaceAuxilliary(int _i) const { return T::template ASHelper<GetCount<T>::Value>::altSupers()[_i]; }
 	virtual int							interfaceAuxilliaryCount() const { return GetCount<T>::Value; }
 	virtual Entity*						create() const { return 0; }
+	virtual void const*					offset(Entity const*) const { return 0; }
 private:
 	char const*							m_name;
 };

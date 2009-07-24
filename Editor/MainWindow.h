@@ -129,7 +129,7 @@ private:
 	// Maintains correctness of m_projects, m_filename and m_solution accordingly.
 	bool					save();
 
-	Entity*					importDom(QDomElement const& _el, Entity* _p, QStringList* _projects = 0, QList<Project*>* _projects = 0);
+	Entity*					importDom(QDomElement const& _el, Entity* _p, QStringList* _projectstoLoad = 0, QList<Project*>* _projects = 0);
 	QDomElement				exportDom(QDomDocument& _doc, Entity const* _e, bool _dump = false) const;
 
 	// Serialises/deserialises the lot.

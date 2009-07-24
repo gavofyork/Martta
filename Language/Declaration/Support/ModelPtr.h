@@ -27,8 +27,6 @@
 namespace Martta
 {
 
-class Entity;
-
 template<class T>
 class ModelPtr: public ModelPtrFace
 {

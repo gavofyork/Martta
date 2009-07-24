@@ -53,7 +53,7 @@ bool ChangeMan::changed(Dependee* _changer, int _aspect)
 
 	// if (already in changed() call for this object with subseteq of _aspect) return false;
 	foreach (Changing e, m_changing)
-		if (e.m_changer == _changer && e.m_aspect & _aspect == _aspect)
+		if (e.m_changer == _changer && (e.m_aspect & _aspect) == _aspect)
 			return false;
 	m_changing.append(Changing(_changer, _aspect));
 

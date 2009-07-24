@@ -60,8 +60,10 @@ protected:
 	enum { EndOfNamed = INT_MIN, Cardinals = 0 };
 
 public:
-	inline void*						operator new(size_t _size);
-	inline void							operator delete(void* p);
+#if defined(DEBUG)
+	void*								operator new(size_t _size);
+	void								operator delete(void* p);
+#endif
 
 	/// Copy constructor which doesn't do anything. Have to have it so a derived class can use it.
 	inline Entity(): Dier(), ChildValidifier(), Depender(), Dependee(), SafePointerTarget(), m_parent(0), m_index(UndefinedIndex) {}
@@ -264,6 +266,8 @@ public:
 	 * Safe, model-aware deletion operation. It keeps everything in order according to allowedKinds().
 	 */
 	void								deleteAndRefill(Entity* _e = 0, bool _moveToGrave = false);
+
+	virtual void const*					tryKindBlind(Kind _k) const { return _k == staticKind ? reinterpret_cast<void const*>(this) : _k.isInterface() ? toInterface(_k) : 0; }
 
 	template<class T> inline bool		isKind() const { return this && kind().isKind(T::staticKind); }
 	inline bool							isKind(Kind _k) const { return this && kind().isKind(_k); }
@@ -531,24 +535,6 @@ inline MarttaSupport::TextStream& operator<<(MarttaSupport::TextStream& _out, co
 
 }
 
-extern "C"
-{
-void* malloc(size_t);
-void free(void*);
-}
-
-void* Martta::Entity::operator new(size_t _size)
-{
-	s_news++;
-	void* ret = malloc(_size);
-	return ret;
-}
-
-void Martta::Entity::operator delete(void* p)
-{
-	s_deletes++;
-	free(p);
-}
 /*
 inline QDebug operator<<(QDebug _out, const Martta::Kind& _item)
 {

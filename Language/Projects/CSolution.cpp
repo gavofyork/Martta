@@ -18,7 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "GccXML.h"
+#include "GccXml.h"
 
 #include "ModelPtrRegistrar.h"
 

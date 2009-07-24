@@ -29,7 +29,7 @@ namespace Martta
 Operator::Operator(String const& _symbol, Arity _a)
 {
 	for (m_symbol = (Symbol)0; m_symbol < SymbolCount; ((int&)m_symbol)++)
-		if (code() == _symbol && (_a == Unknown || isPostfix() && _a == UnaryPostfix || isPrefix() && _a == UnaryPrefix || isBinary() && _a == Binary))
+		if (code() == _symbol && (_a == Unknown || (isPostfix() && _a == UnaryPostfix) || (isPrefix() && _a == UnaryPrefix) || (isBinary() && _a == Binary)))
 			return;
 	m_symbol = NoOperator;
 }

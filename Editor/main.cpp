@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 	app.setApplicationVersion("M1");
 	app.setOrganizationName("Quid Pro Code, Ltd.");
 	app.setOrganizationDomain("quidprocode.co.uk");
-		
+
 	MainWindow m;
 	m.show();
 	r = app.exec();

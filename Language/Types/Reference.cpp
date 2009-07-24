@@ -2,14 +2,14 @@
  * Version: Martta License version 1.0
  *
  * The contents of this file are subject to the Martta License version 1.0
- * (the "License"); you may not use this file except in compliance with the 
- * License. You should have received a copy of the Martta License 
+ * (the "License"); you may not use this file except in compliance with the
+ * License. You should have received a copy of the Martta License
  * "COPYING.Martta" along with Martta; if not you may obtain a copy of the
  * License at http://quidprocode.co.uk/Martta/
  *
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations under 
+ * License for the specific language governing rights and limitations under
  * the License.
  *
  * The Initial Developer of the code in this file is Gavin Wood.
@@ -30,24 +30,24 @@ MARTTA_OBJECT_CPP(Reference);
 bool Reference::defineSimilarityTo(TypeEntity const* _t, Castability _c) const
 {
 			// X -*> Y => X& -=> Y&
-	return _t->isKind<Reference>() && original()->isSimilarTo(_t->asKind<Reference>()->original(), Physical) ||
+	return (_t->isKind<Reference>() && original()->isSimilarTo(_t->asKind<Reference>()->original(), Physical)) ||
 			// X -O3> Y => X& -O3> Y
-			_c == VeryConvertible && original()->isSimilarTo(_t, VeryConvertible) ||
+			(_c == VeryConvertible && original()->isSimilarTo(_t, VeryConvertible)) ||
 			// X -O2> Y => X& -O2> Y
-			_c == FairlyConvertible && original()->isSimilarTo(_t, FairlyConvertible) ||
+			(_c == FairlyConvertible && original()->isSimilarTo(_t, FairlyConvertible)) ||
 			// X -O1> Y => X& -O1> Y
-			_c == Convertible && original()->isSimilarTo(_t, Convertible) ||
+			(_c == Convertible && original()->isSimilarTo(_t, Convertible)) ||
 		Super::defineSimilarityTo(_t, _c);
 }
 
 bool Reference::defineSimilarityFrom(TypeEntity const* _f, Castability _c) const
 {
-	return isAnyConvertible(_c) && original()->isKind<Const>() && 
+	return (isAnyConvertible(_c) && original()->isKind<Const>() &&
 			// X -O2> X const&
 			(_f->isEquivalentTo(original()->asKind<Const>()->original()) || _f->isSimilarTo(original()->asKind<Const>()->original(), _c) ||
 			// X const -O2> X const&
-			_f->isKind<Const>() && (_f->asKind<Const>()->original()->isSimilarTo(original()->asKind<Const>()->original(), _c) ||
-			_f->asKind<Const>()->original()->isEquivalentTo(original()->asKind<Const>()->original()) ) ) ||
+			(_f->isKind<Const>() && (_f->asKind<Const>()->original()->isSimilarTo(original()->asKind<Const>()->original(), _c) ||
+			_f->asKind<Const>()->original()->isEquivalentTo(original()->asKind<Const>()->original()) ) ) )) ||
 		Super::defineSimilarityFrom(_f, _c);
 }
 
@@ -62,7 +62,7 @@ void Reference::decorate(DecorationContext const& _c) const
 	r.setX(r.x() - 16);
 
 	QRgb c = qRgb(0xff, 0xdd, 0xbb);
-	
+
 	QRadialGradient go(_c(1).center(), 24);
 	go.setColorAt(0.f, qRgba(c, 255));
 	go.setColorAt(1.f, qRgba(c, 0));

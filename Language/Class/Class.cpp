@@ -2,14 +2,14 @@
  * Version: Martta License version 1.0
  *
  * The contents of this file are subject to the Martta License version 1.0
- * (the "License"); you may not use this file except in compliance with the 
- * License. You should have received a copy of the Martta License 
+ * (the "License"); you may not use this file except in compliance with the
+ * License. You should have received a copy of the Martta License
  * "COPYING.Martta" along with Martta; if not you may obtain a copy of the
  * License at http://quidprocode.co.uk/Martta/
  *
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations under 
+ * License for the specific language governing rights and limitations under
  * the License.
  *
  * The Initial Developer of the code in this file is Gavin Wood.
@@ -54,14 +54,14 @@ Access Class::baseAccess(Class* _c) const
 		if (i->classType() == _c)
 			return i->access();
 		Access a = i->classType() ? i->classType()->baseAccess(_c) : NoAccess;
-		if (a == Public || a == Protected && i->access() != Public)
-			return i->access(); 
+		if (a == Public || (a == Protected && i->access() != Public))
+			return i->access();
 		else if (a == Protected)
 			return Protected;
 	}
 	return NoAccess;
 }
-	
+
 bool Class::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
 	return simplePositionKeyPressHandler<Class>(_p, _e, "L");
@@ -82,7 +82,7 @@ Entity* Class::isExpander() const
 bool Class::checkImplicitConstructors()
 {
 	bool ret = false;
-	
+
 	// Check default constructors.
 	int nonImplicits = cardinalChildCountOf<Constructor>();
 	if (!nonImplicits && !childCountOf<ArtificialDefaultConstructor>(Artificials))
@@ -121,12 +121,12 @@ bool Class::checkImplicitConstructors()
 		childOf<ArtificialCopyConstructor>(Artificials)->killAndDelete(realCC);
 		ret = true;
 	}
-	
+
 	// Check assignment operators.
 	int artificialAOs = childCountOf<ArtificialAssignmentOperator>(Artificials);
 	MethodOperator* realAO = 0;
 	foreach (MethodOperator* i, cardinalChildrenOf<MethodOperator>())
-		if (i->id() == Operator::Equals && i->argumentType(0) == Type(this).topWith(Reference()) || i->argumentType(0) == Type(this).topWith(Const()).topWith(Reference()))
+		if ((i->id() == Operator::Equals && i->argumentType(0) == Type(this).topWith(Reference())) || i->argumentType(0) == Type(this).topWith(Const()).topWith(Reference()))
 		{
 			realAO = i;
 			break;
@@ -176,7 +176,7 @@ void Class::onDependencyRemoved(Entity* _e, int _oi)
 
 void Class::onDependencyChanged(Entity* _e)
 {
-	if (_e->isKind<Base>() || _e->index() >= 0 && (_e->isKind<MethodOperator>() || _e->isKind<ConversionOperator>() || _e->isKind<Constructor>()))
+	if (_e->isKind<Base>() || (_e->index() >= 0 && (_e->isKind<MethodOperator>() || _e->isKind<ConversionOperator>() || _e->isKind<Constructor>())))
 		if (checkImplicitConstructors())
 			changed();
 	if (_e->isKind<TextLabel>())
@@ -243,7 +243,7 @@ List<Declaration*> Class::members(bool _isConst, Access _access) const
 	foreach (Base* i, cardinalChildrenOf<Base>())
 		if (!i->classType())
 			continue;
-		else if (_access == Private || _access == Protected && i->access() <= Protected)
+		else if (_access == Private || (_access == Protected && i->access() <= Protected))
 			ret << i->classType()->members(_isConst, Protected);
 		else if (_access == Public && i->access() <= Public)
 			ret << i->classType()->members(_isConst, Public);
@@ -265,9 +265,9 @@ bool Class::hasSingleCastOperator(TypeEntity const* _t, bool _const) const
 	bool dupe = false;
 	bool whackedConstForBest = false;
 	foreach (MemberLambda* i, membersOf<ConversionOperator>(_const, Public))
-	{	
+	{
 		bool b = i->returns()->isSimilarTo(_t, TypeEntity::FairlyConvertible);
-		if (b && (!gotOne || gotOne && (i->isConst() == _const) && whackedConstForBest))
+		if (b && (!gotOne || (gotOne && i->isConst() == _const && whackedConstForBest)))
 			gotOne = true, dupe = false, whackedConstForBest = (i->isConst() != _const);
 		else if (b && gotOne)
 			dupe = true;
@@ -353,16 +353,16 @@ bool Class::keyPressed(KeyEvent const* _e)
 String Class::defineLayout(ViewKeys const& _keys) const
 {
 	String ret = ("^;ycode;'class ';fb;cblack;s" + Type(const_cast<Class*>(this))->idColour().name() + ";!%1;s;ycode").arg(Identity);
-	
+
 	if (_keys["expanded"].toBool())
 	{
 		foreach (Base* i, cardinalChildrenOf<Base>())
 			ret += String(";n;i;%1").arg(i->index());
-		
+
 		ret += ";n;'{'";
 
 		for (int i = 0; i < AccessCount; i++)
-		{	
+		{
 			String mem;
 			Kinds recognised;
 			recognised << Kind::of<Constructor>();

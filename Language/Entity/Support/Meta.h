@@ -68,11 +68,12 @@ private: \
 public: \
 	virtual Entity const*				self() const = 0; \
 	virtual Entity*						self() = 0; \
-	template<class T> inline T*			asKind() { return this && self() ? self()->asKind<T>() : 0; } \
-	template<class T> inline T const*	asKind() const { return this && self() ? self()->asKind<T>() : 0; } \
-	template<class T> inline T*			tryKind() { return this && self() && self()->isKind<T>() ? self()->asKind<T>() : 0; } \
-	template<class T> inline T const*	tryKind() const { return this && self() && self()->isKind<T>() ? self()->asKind<T>() : 0; } \
-	template<class T> inline bool		isKind() const { return this && self() ? self()->isKind<T>() : false; } \
+	virtual void const*					tryKindBlind(Kind _k) const = 0; \
+	template<class T> inline T*			asKind() { if (!this) return 0; T* ret = const_cast<T*>(reinterpret_cast<T const*>(tryKindBlind(Kind::of<T>()))); AssertNR(ret); return ret; } \
+	template<class T> inline T const*	asKind() const { if (!this) return 0; T const* ret = reinterpret_cast<T const*>(tryKindBlind(Kind::of<T>())); AssertNR(ret); return ret; } \
+	template<class T> inline T*			tryKind() { if (!this) return 0; return const_cast<T*>(reinterpret_cast<T const*>(tryKindBlind(Kind::of<T>()))); } \
+	template<class T> inline T const*	tryKind() const { if (!this) return 0; return reinterpret_cast<T const*>(tryKindBlind(Kind::of<T>())); } \
+	template<class T> inline bool		isKind() const { if (!this) return false; return tryKindBlind(Kind::of<T>()); } \
 	MARTTA_BASIC
 
 #define MARTTA_COMMON(S) \
@@ -90,6 +91,7 @@ public: \
 	Entity::asKind; \
 	Entity::tryKind; \
 	Entity::isKind; \
+	virtual void const*					tryKindBlind(Kind _k) const { if (_k == staticKind) return reinterpret_cast<void const*>(this); return Super::tryKindBlind(_k); } \
 	MARTTA_COMMON(S)
 
 #define MARTTA_INITIALISED_PLACEHOLDER(S) \
@@ -97,6 +99,7 @@ public: \
 	Entity::asKind; \
 	Entity::tryKind; \
 	Entity::isKind; \
+	virtual void const*					tryKindBlind(Kind _k) const { if (_k == staticKind) return reinterpret_cast<void const*>(this); return Super::tryKindBlind(_k); } \
 	MARTTA_COMMON(S)
 
 #define MARTTA_OBJECT(S) \

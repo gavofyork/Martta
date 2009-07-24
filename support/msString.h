@@ -263,13 +263,13 @@ public:
 	m_inline String&			remove(String const& _str) { return replace(_str, String()); }
 	m_inline String&			remove(Char _ch) { return replace(_ch, String()); }
 
-	bool					toBool(bool* _ok = 0) const { if (_ok) *_ok = true; if (operator==(s_true)) return true; else if (operator==(s_false)) return false; if (_ok) *_ok = false; return false; }
+	bool					toBool(bool* _ok = 0) const { if (_ok) *_ok = true; if (operator==(L"true")) return true; else if (operator==(L"false")) return false; if (_ok) *_ok = false; return false; }
 	int						toInt(bool* _ok = 0, int _base = 10) const;
 	uint					toUint(bool* _ok = 0, int _base = 10) const;
 	double					toDouble(bool* _ok = 0) const;
 	m_inline float			toFloat(bool* _ok = 0) const { return (float)toDouble(_ok); }
 
-	static String const&	number(bool _n) { return _n ? s_true : s_false; }
+	static String			number(bool _n) { return _n ? L"true" : L"false"; }
 	static String			number(unsigned char _n, int _base = 10) { return number((unsigned long)_n, _base); }
 	static String			number(short _n) { return number((long)_n); }
 	static String			number(unsigned short _n, int _base = 10) { return number((unsigned long)_n, _base); }
@@ -286,30 +286,28 @@ public:
 	m_inline String			arg(bool _a) const { return arg(number(_a)); }
 	m_inline String			arg(double _a, int _fieldWidth = 0, char _format = 'g', int _precision = -1, Char _fillChar = L' ') const { return arg(String::number(_a, _format, _precision), _fieldWidth, _fillChar); }
 	m_inline String			arg(long _a, int _fieldWidth = 0, wchar_t _fillChar = L' ') const { return arg(String::number(_a), _fieldWidth, Char(_fillChar)); }
-	m_inline String			arg(long _a, int _fieldWidth = 0, char _fillChar) const { return arg(String::number(_a), _fieldWidth, Char(_fillChar)); }
+	m_inline String			arg(long _a, int _fieldWidth, char _fillChar) const { return arg(String::number(_a), _fieldWidth, Char(_fillChar)); }
 	m_inline String			arg(unsigned long _a, int _fieldWidth = 0, int _base = 10, wchar_t _fillChar = L' ') const { return arg(String::number(_a, _base), _fieldWidth, Char(_fillChar)); }
-	m_inline String			arg(unsigned long _a, int _fieldWidth = 0, int _base = 10, char _fillChar) const { return arg(String::number(_a, _base), _fieldWidth, Char(_fillChar)); }
+	m_inline String			arg(unsigned long _a, int _fieldWidth, int _base, char _fillChar) const { return arg(String::number(_a, _base), _fieldWidth, Char(_fillChar)); }
 	m_inline String			arg(int _a, int _fieldWidth = 0, wchar_t _fillChar = L' ') const { return arg(String::number(_a), _fieldWidth, Char(_fillChar)); }
-	m_inline String			arg(int _a, int _fieldWidth = 0, char _fillChar) const { return arg(String::number(_a), _fieldWidth, Char(_fillChar)); }
+	m_inline String			arg(int _a, int _fieldWidth, char _fillChar) const { return arg(String::number(_a), _fieldWidth, Char(_fillChar)); }
 	m_inline String			arg(unsigned int _a, int _fieldWidth = 0, int _base = 10, wchar_t _fillChar = L' ') const { return arg(String::number(_a, _base), _fieldWidth, Char(_fillChar)); }
-	m_inline String			arg(unsigned int _a, int _fieldWidth = 0, int _base = 10, char _fillChar) const { return arg(String::number(_a, _base), _fieldWidth, Char(_fillChar)); }
+	m_inline String			arg(unsigned int _a, int _fieldWidth, int _base, char _fillChar) const { return arg(String::number(_a, _base), _fieldWidth, Char(_fillChar)); }
 	m_inline String			arg(short _a, int _fieldWidth = 0, wchar_t _fillChar = L' ') const { return arg(String::number(_a), _fieldWidth, Char(_fillChar)); }
-	m_inline String			arg(short _a, int _fieldWidth = 0, char _fillChar) const { return arg(String::number(_a), _fieldWidth, Char(_fillChar)); }
+	m_inline String			arg(short _a, int _fieldWidth, char _fillChar) const { return arg(String::number(_a), _fieldWidth, Char(_fillChar)); }
 	m_inline String			arg(unsigned short _a, int _fieldWidth = 0, int _base = 10, wchar_t _fillChar = L' ') const { return arg(String::number(_a, _base), _fieldWidth, Char(_fillChar)); }
-	m_inline String			arg(unsigned short _a, int _fieldWidth = 0, int _base = 10, char _fillChar) const { return arg(String::number(_a, _base), _fieldWidth, Char(_fillChar)); }
+	m_inline String			arg(unsigned short _a, int _fieldWidth, int _base, char _fillChar) const { return arg(String::number(_a, _base), _fieldWidth, Char(_fillChar)); }
 	m_inline String			arg(unsigned char _a, int _fieldWidth = 0, int _base = 10, wchar_t _fillChar = L' ') const { return arg(String::number(_a, _base), _fieldWidth, Char(_fillChar)); }
-	m_inline String			arg(unsigned char _a, int _fieldWidth = 0, int _base = 10, char _fillChar) const { return arg(String::number(_a, _base), _fieldWidth, Char(_fillChar)); }
+	m_inline String			arg(unsigned char _a, int _fieldWidth, int _base, char _fillChar) const { return arg(String::number(_a, _base), _fieldWidth, Char(_fillChar)); }
 	String					arg(Char _a, int _fieldWidth = 0, Char _fillChar = L' ') const;
-	m_inline String			arg(Char _a, int _fieldWidth = 0, wchar_t _fillChar) const { return arg(_a, _fieldWidth, Char(_fillChar)); }
-	m_inline String			arg(Char _a, int _fieldWidth = 0, char _fillChar) const { return arg(_a, _fieldWidth, Char(_fillChar)); }
+	m_inline String			arg(Char _a, int _fieldWidth, wchar_t _fillChar) const { return arg(_a, _fieldWidth, Char(_fillChar)); }
+	m_inline String			arg(Char _a, int _fieldWidth, char _fillChar) const { return arg(_a, _fieldWidth, Char(_fillChar)); }
 	m_inline String			arg(char _a, int _fieldWidth = 0, wchar_t _fillChar = L' ') const { return arg(Char(_a), _fieldWidth, Char(_fillChar)); }
-	m_inline String			arg(char _a, int _fieldWidth = 0, char _fillChar) const { return arg(Char(_a), _fieldWidth, Char(_fillChar)); }
+	m_inline String			arg(char _a, int _fieldWidth, char _fillChar) const { return arg(Char(_a), _fieldWidth, Char(_fillChar)); }
 	m_inline String			arg(wchar_t _a, int _fieldWidth = 0, wchar_t _fillChar = L' ') const { return arg(Char(_a), _fieldWidth, Char(_fillChar)); }
-	m_inline String			arg(wchar_t _a, int _fieldWidth = 0, char _fillChar) const { return arg(Char(_a), _fieldWidth, Char(_fillChar)); }
+	m_inline String			arg(wchar_t _a, int _fieldWidth, char _fillChar) const { return arg(Char(_a), _fieldWidth, Char(_fillChar)); }
 
 	static String const		null;
-	static String const		s_true;
-	static String const		s_false;
 
 private:
 	m_privateinline void		sizeto(int _nl)	// DONT FORGET TO CALL CHANGED AFTER USING THIS!

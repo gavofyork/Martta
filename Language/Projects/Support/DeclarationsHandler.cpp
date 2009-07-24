@@ -149,7 +149,7 @@ protected:
 class FunctionResolver: public Resolver
 {
 public:
-	FunctionResolver::FunctionResolver(Entity** _s, QXmlAttributes const& _a):
+	FunctionResolver(Entity** _s, QXmlAttributes const& _a):
 		Resolver	(*_s = Entity::evaluate(String(L"Function")), _a),
 		m_returnsId	(_a.value("returns")),
 		m_contextId (_a.value("context")),
@@ -307,13 +307,20 @@ Entity* DeclarationsHandler::resolveType(QString const& _typeId, Entity** _td)
 	else if (m_functionTypes.contains(_typeId))
 	{
 		bool ellipsis = !m_functionTypes[_typeId]->m_argIds.isEmpty() && m_functionTypes[_typeId]->m_argIds.last().isEmpty();
+		foreach (QString i, m_functionTypes[_typeId]->m_argIds)
+			qDebug() << i;
+		qDebug() << m_functionTypes[_typeId]->m_argIds;
 		Entity* r = resolveType(m_functionTypes[_typeId]->m_returnsId);
 		r = r->insert(Entity::evaluate(String(L"FunctionType[ellipsis=%1][wild=false]").arg(ellipsis)));
 		foreach(QString i, m_functionTypes[_typeId]->m_argIds)
 			if (!i.isEmpty())
 				r->back().place(resolveType(i));
 			else
-				AssertNR(r->cardinalChildCount() == m_functionTypes[_typeId]->m_argIds.count() - 1)
+			{
+				AssertEqNR(r->cardinalChildCount(), m_functionTypes[_typeId]->m_argIds.count() - 1)
+				r->debugTree();
+				qDebug() << m_functionTypes[_typeId]->m_argIds.count();
+			}
 		return r;
 	}
 	else if (m_pointers.contains(_typeId))
@@ -496,7 +503,7 @@ bool DeclarationsHandler::endElement(QString const&, QString const& _n, QString 
 {
 	if (_n == "Function")
 		m_lastFunction = 0;
-	else if (_n == "IncomingFunctionType")
+	else if (_n == "FunctionType")
 		m_lastIncomingFunctionType = 0;
 	else if (_n == "Enumeration")
 		m_lastEnum = 0;

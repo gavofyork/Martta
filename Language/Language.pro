@@ -1,10 +1,10 @@
 TEMPLATE = subdirs
 SUBDIRS = \
- Project \
  Operator \
  CQualifiers \
  CTypes \
  Entity \
+ Project \
  TypeEntity \
  Labels \
  Declaration \

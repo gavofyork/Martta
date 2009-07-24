@@ -4,8 +4,8 @@ BUG Moving is crazily slow over statements.
   - Do recursively but prune on denied Kinds.
   - Remove all allowedToBeKind (or other Kind-checking) in handlers.
 BUG 'Mstr'-> doesn't move away (only stops editing).
-BUG Assertion on '!?', '-1'.
 CRASH delete a Referenced EnumValue.
+BUG DeclarationsHandler is keeping old placeholders when generating its tree.
 
 UI:
 - Join statements or tree insert.
@@ -25,7 +25,7 @@ Small things:
 - BRINGBACK Ser/Deser tests.
 - BRINGBACK GenericMemberOperation::isChildInValidState - do what it says.
 Dynamic code-loading (plugins).
-- Referenced as placeholder (no key press handling)
+- Referenced as placeholder (no key press handling)
   - BRINGBACK Colouring (layout) of possibles (Entity::defineEditLayout(ViewKeysC&, Named*)
   - BRINGBACK Method names register with IdentifierSet
   - BRINGBACK int/string etc. IdentifierSet that creates variable if necessary.

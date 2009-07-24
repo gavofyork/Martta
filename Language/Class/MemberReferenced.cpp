@@ -102,7 +102,7 @@ Type MemberReferenced::apparentType() const
 			bool memberIsCallable = m->original()->isType<FunctionType>();
 			bool constScope = ancestor<MemberLambda>()->isConst();
 			bool constMember = memberIsCallable ? m->isConst() : m->original()->isType<Const>();
-			if (constMember || !constMember && !constScope)
+			if (constMember || (!constMember && !constScope))
 			{
 				// Member Variable/FunctionType inside a method. Either enclosing method is non-const or FunctionType is const.
 				// Allowed.

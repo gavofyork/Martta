@@ -93,15 +93,15 @@ bool BuiltinType::defineSimilarityTo(TypeEntity const* _t, Castability _c) const
 			if (tId == m_id)
 				return true;
 			if (m_id != Void && (
-				isFairlyConvertibleAtMost(_c) && (
-					m_id & Int && tId & (Double | Float) && !(tId & Complex)								// int -> scalar double/float
-					|| m_id & (Double | Float) && !(m_id & Complex) && tId & Int							// scalar double/float -> int
-					|| m_id & (Double | Float) && tId & (Double | Float) && ((m_id & Complex) == (tId & Complex))	// double/float -> double/float (same scalar/complex)
-				)
+				(isFairlyConvertibleAtMost(_c) && (
+					((m_id & Int) && (tId & (Double | Float)) && !(tId & Complex))								// int -> scalar double/float
+					|| ((m_id & (Double | Float)) && !(m_id & Complex) && (tId & Int))							// scalar double/float -> int
+					|| ((m_id & (Double | Float)) && (tId & (Double | Float)) && ((m_id & Complex) == (tId & Complex)))	// double/float -> double/float (same scalar/complex)
+				))
 				||
-				isBasicallyConvertibleAtMost(_c) && (
-					m_id & (Int | Char) && tId & (Int | Bool)												// int/char -> int/bool
-				)
+				(isBasicallyConvertibleAtMost(_c) && (
+					(m_id & (Int | Char)) && (tId & (Int | Bool))												// int/char -> int/bool
+				))
 				))
 				return true;
 		}
@@ -111,8 +111,8 @@ bool BuiltinType::defineSimilarityTo(TypeEntity const* _t, Castability _c) const
 
 bool BuiltinType::defineSimilarityFrom(TypeEntity const* _f, Castability _c) const
 {
-	return	m_id == Void && !_f->isKind<ModifyingType>() ||
-			isAnyConvertible(_c) && m_id == Bool && _f->isKind<AddressType>() ||
+	return	(m_id == Void && !_f->isKind<ModifyingType>()) ||
+			(isAnyConvertible(_c) && m_id == Bool && _f->isKind<AddressType>()) ||
 		Super::defineSimilarityFrom(_f, _c);
 }
 

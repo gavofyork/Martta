@@ -11,6 +11,11 @@ CONFIG *= release
 debug:DEFINES *= DEBUG
 release:DEFINES *= RELEASE
 
+unix:DEFINES += M_UNIX
+mac:DEFINES += M_MAC
+win:DEFINES += M_WIN
+!mac:unix:DEFINES += M_LINUX
+
 DEPS = Project
 QT += svg webkit xml
 TEMPLATE = app
@@ -27,6 +32,8 @@ DEPENDS =
 QMAKE_LIBDIR += ../support ../plugins
 INCLUDEPATH *= ../support
 DEPENDPATH += .
+unix:QMAKE_LFLAGS += -Wl,-rpath,../plugins
+DEFINES += MARTTA_PLUGINS_PATH=\\\"$$PWD/../plugins\\\"
 
 TARGET = Martta
 

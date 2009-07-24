@@ -15,9 +15,14 @@ CONFIG += release
 debug:DEFINES += DEBUG
 release:DEFINES += RELEASE
 
+unix:DEFINES += M_UNIX
+mac:DEFINES += M_MAC
+win:DEFINES += M_WIN
+!mac:unix:DEFINES += M_LINUX
+
 mac:QMAKE_LFLAGS += -Wl,-Sp
+mac:QMAKE_CXXFLAGS_DEBUG += -fasm-blocks
 unix {
-	QMAKE_CXXFLAGS_DEBUG += -fasm-blocks
 	debug {
 		message("Debug build")
 		QMAKE_CXXFLAGS_DEBUG += -O0 -g3

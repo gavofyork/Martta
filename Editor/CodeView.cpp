@@ -59,7 +59,7 @@ CodeView::CodeView(QWidget* _p):
 		setMouseTracking(true);
 }
 
-CodeView::~CodeScene()
+CodeView::~CodeView()
 {
 }
 
@@ -470,7 +470,7 @@ void CodeView::keyPressEvent(QKeyEvent* _e)
 		{
 			m_reinterpretCurrentKeyEvent = false;
 			m_reinterpretCount++;
-			if (m_reinterpretCount < 2)	// Catch inf. rec.
+			if (m_reinterpretCount < 3)	// Catch inf. rec.
 				keyPressEvent(_e);
 			else
 			{
@@ -1431,7 +1431,7 @@ void CodeView::doRefreshLayout()
 			f->nextX += p.boundingRect().width();
 			f->maxHeight = qMax<float>(f->maxHeight, p.boundingRect().height());
 		}
-		else if (QRegExp("!-?[0-9]+").exactMatch(e.toCString()) && f->subject->child(e.mid(1).toInt()) || QRegExp("-?[0-9]+").exactMatch(e.toCString()) && f->subject->child(e.toInt()))
+		else if ((QRegExp("!-?[0-9]+").exactMatch(e.toCString()) && f->subject->child(e.mid(1).toInt())) || (QRegExp("-?[0-9]+").exactMatch(e.toCString()) && f->subject->child(e.toInt())))
 		{
 			String s = e.startsWith("!") ? e.mid(1) : e;
 			Entity* c = f->subject->child(s.toInt());

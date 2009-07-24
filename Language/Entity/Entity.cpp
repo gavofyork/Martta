@@ -18,6 +18,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include <cstdlib>
+
 #include <msSupport.h>
 using namespace MarttaSupport;
 
@@ -31,6 +33,19 @@ namespace Martta
 
 int s_news = 0;
 int s_deletes = 0;
+
+void* Entity::operator new(size_t _size)
+{
+	s_news++;
+	void* ret = malloc(_size);
+	return ret;
+}
+
+void Entity::operator delete(void* p)
+{
+	s_deletes++;
+	free(p);
+}
 
 MARTTA_PLACEHOLDER_CPP(Entity);
 
@@ -201,7 +216,7 @@ bool Entity::isValid() const
 }
 bool Entity::isSuperfluous() const
 {
-	return isPlaceholder() && !isNecessary() || !isAllowed();
+	return (isPlaceholder() && !isNecessary()) || !isAllowed();
 }
 bool Entity::isAllowed(int _i, Kind _o) const
 {
@@ -475,7 +490,7 @@ void Entity::keyPressEventStarter(KeyEvent* _e, bool _abortive)
 
 	while (fe)
 	{
-		if (fe && fe->keyPressed(_e) || fe && fe->attemptInsert(_e))
+		if ((fe && fe->keyPressed(_e)) || (fe && fe->attemptInsert(_e)))
 		{
 			_e->accept();
 			return;
@@ -498,7 +513,7 @@ void Entity::keyPressEventStarter(KeyEvent* _e, bool _abortive)
 bool Entity::keyPressed(KeyEvent const* _e)
 {
 	Position p = over();
-	if (_e->codeScene()->isCurrent(this) && (_e->text() == L"\x7f" && _e->modifiers() == KeyEvent::ShiftModifier || _e->text() == L"\b" && isEditing(_e->codeScene())) && !isFixed())
+	if (_e->codeScene()->isCurrent(this) && ((_e->text() == L"\x7f" && _e->modifiers() == KeyEvent::ShiftModifier) || (_e->text() == L"\b" && isEditing(_e->codeScene()))) && !isFixed())
 	{
 //		p.parent()->debugTree();
 //		mDebug() << p.index();
@@ -700,10 +715,10 @@ Position Entity::firstFor(Kind const& _k)
 	if (pi != NonePrefered)
 		return middle(pi);
 	for (int i = INT_MIN; i < virtualEndOfNamed(); i++)
-		if (middle(i).allowedToBeKind(_k) && (middle(i).exists() && middle(i)->isPlaceholder() || childCount(i) < minRequired(i)))
+		if (middle(i).allowedToBeKind(_k) && (middle(i).exists() && (middle(i)->isPlaceholder() || childCount(i) < minRequired(i))))
 			return middle(i);
 	foreach (int i, AuxilliaryRegistrar::get()->names())
-		if (middle(i).allowedToBeKind(_k) && (middle(i).exists() && middle(i)->isPlaceholder() || childCount(i) < minRequired(i)))
+		if (middle(i).allowedToBeKind(_k) && ((middle(i).exists() && middle(i)->isPlaceholder()) || childCount(i) < minRequired(i)))
 			return middle(i);
 	if (back().allowedToBeKind(_k) && cardinalChildCount() < minRequired(Cardinals))
 		return back();

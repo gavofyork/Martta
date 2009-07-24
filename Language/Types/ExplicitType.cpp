@@ -79,7 +79,7 @@ bool ExplicitType::hasSingleConversionConstructor(TypeEntity const* _f) const
 bool ExplicitType::defineSimilarityTo(TypeEntity const* _t, Castability _c) const
 {
 	if (m_subject)
-		if (_t->isKind<ExplicitType>() && m_subject == _t->asKind<ExplicitType>()->m_subject
+		if ((_t->isKind<ExplicitType>() && m_subject == _t->asKind<ExplicitType>()->m_subject)
 			|| m_subject->defineSimilarityTo(_t, _c))
 			return true;
 
@@ -89,7 +89,7 @@ bool ExplicitType::defineSimilarityTo(TypeEntity const* _t, Castability _c) cons
 bool ExplicitType::defineSimilarityFrom(TypeEntity const* _f, Castability _c) const
 {
 	// TODO: only non-explicit
-	return m_subject && _c == Convertible && hasSingleConversionConstructor(_f) ||
+	return (m_subject && _c == Convertible && hasSingleConversionConstructor(_f)) ||
 			Super::defineSimilarityFrom(_f, _c);
 }
 

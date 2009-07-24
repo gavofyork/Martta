@@ -35,8 +35,6 @@ namespace MarttaSupport
 {
 
 String const String::null;
-String const String::s_true(L"true");
-String const String::s_false(L"false");
 
 /*m_inline void memcpy(void* _d, void const* _s, int _c)
 {
@@ -57,7 +55,7 @@ m_inline int strlen(char const* _s)
 
 bool Char::operator==(char _ch)
 {
-	return m_value == btowc(_ch);
+	return (int)m_value == (int)btowc(_ch);
 }
 
 Char::Char(char _ch):

@@ -6,6 +6,11 @@ CONFIG *= release
 }
 debug:DEFINES *= DEBUG
 release:DEFINES *= RELEASE
+
+unix:DEFINES += M_UNIX
+mac:DEFINES += M_MAC
+win:DEFINES += M_WIN
+!mac:unix:DEFINES += M_LINUX
 TEMPLATE = lib
 VERSION = 0.1.0
 BASE = $$PWD

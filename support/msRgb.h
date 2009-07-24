@@ -44,7 +44,7 @@ public:
 		if (_name.startsWith(L'#') && _name.length() == 5)
 			m_value = fromRgb(_name[1].toInt(0, 16), _name[2].toInt(0, 16), _name[3].toInt(0, 16), _name[4].toInt(0, 16)) * 0x11;
 		else if (_name.startsWith(L'#') && _name.length() == 9)
-			m_value = _name.mid(1, 6).toUint(0, 16) + _name.mid(7, 2).toUint(0, 16) << 24;
+			m_value = _name.mid(1, 6).toUint(0, 16) + (_name.mid(7, 2).toUint(0, 16) << 24);
 		else
 			m_value = fromName(_name);
 	}

@@ -2,14 +2,14 @@
  * Version: Martta License version 1.0
  *
  * The contents of this file are subject to the Martta License version 1.0
- * (the "License"); you may not use this file except in compliance with the 
- * License. You should have received a copy of the Martta License 
+ * (the "License"); you may not use this file except in compliance with the
+ * License. You should have received a copy of the Martta License
  * "COPYING.Martta" along with Martta; if not you may obtain a copy of the
  * License at http://quidprocode.co.uk/Martta/
  *
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations under 
+ * License for the specific language governing rights and limitations under
  * the License.
  *
  * The Initial Developer of the code in this file is Gavin Wood.
@@ -70,36 +70,36 @@ void StringType::initialiseClass()
 	Types n;
 	// TODO: Give parameters some names!
 	// TODO: Handle defaults.
-	
+
 	BuiltinMethod::create<StringType>("append", false, sr, c);
 	BuiltinMethod::create<StringType>("append", false, sr, w);
 	BuiltinMethod::create<StringType>("append", false, sr, ccs);
 	BuiltinMethod::create<StringType>("append", false, sr, scr);
-	
+
 	BuiltinMethod::create<StringType>("at", true, w, u);
 	BuiltinMethod::create<StringType>("value", true, w, (u, w));	// 0
 	BuiltinMethod::create<StringType>("toCString", true, ccs, n);
 	BuiltinMethod::create<StringType>("data", false, ws, n);
 	BuiltinMethod::create<StringType>("data", true, wcs, n);
 	BuiltinMethod::create<StringType>("constData", true, wcs, n);
-	
+
 	BuiltinMethod::create<StringType>("reserve", false, v, u);
 	BuiltinMethod::create<StringType>("clear", false, v, n);
 	BuiltinMethod::create<StringType>("chop", false, v, u);
 	BuiltinMethod::create<StringType>("truncate", false, v, u);
-	
+
 	BuiltinMethod::create<StringType>("isEmpty", true, b, n);
 	BuiltinMethod::create<StringType>("length", true, i, n);
 	BuiltinMethod::create<StringType>("size", true, i, n);
 	BuiltinMethod::create<StringType>("resize", false, v, u);
-	
+
 	BuiltinMethod::create<StringType>("trimmed", true, s, n);
 	BuiltinMethod::create<StringType>("simplified", true, s, n);
 	BuiltinMethod::create<StringType>("mid", true, s, (u, u));
 	BuiltinMethod::create<StringType>("mid", true, s, u);
 	BuiltinMethod::create<StringType>("left", true, s, u);
 	BuiltinMethod::create<StringType>("right", true, s, u);
-	
+
 	BuiltinMethod::create<StringType>("contains", true, b, scr);
 	BuiltinMethod::create<StringType>("contains", true, b, w);
 	BuiltinMethod::create<StringType>("count", true, i, n);
@@ -119,9 +119,9 @@ void StringType::initialiseClass()
 	BuiltinMethod::create<StringType>("startsWith", true, b, scr);
 	BuiltinMethod::create<StringType>("endsWith", true, b, w);
 	BuiltinMethod::create<StringType>("endsWith", true, b, scr);
-	
+
 	BuiltinMethod::create<StringType>("fill", false, sr, (w, i));	// -1
-	
+
 	BuiltinMethod::create<StringType>("split", true, ls, w);
 	BuiltinMethod::create<StringType>("split", true, ls, scr);
 	BuiltinMethod::create<StringType>("section", true, s, (w, i, i));	// -1
@@ -148,12 +148,12 @@ void StringType::initialiseClass()
 	BuiltinMethod::create<StringType>("toUint", true, u, (Type(Bool).topWith(Pointer()), i));	// 0,10
 	BuiltinMethod::create<StringType>("toDouble", true, Type(Double), (Type(Bool).topWith(Pointer())));	// 0
 	BuiltinMethod::create<StringType>("toFloat", true, Type(Float), (Type(Bool).topWith(Pointer())));	// 0
-	
+
 	// static methods... TODO.
-//	SimpleStaticMethod::create<StringType>("number", s, i);	
-//	SimpleStaticMethod::create<StringType>("number", s, (u, i));	
-//	SimpleStaticMethod::create<StringType>("number", s, (Type(Double), c, i));	
-	
+//	SimpleStaticMethod::create<StringType>("number", s, i);
+//	SimpleStaticMethod::create<StringType>("number", s, (u, i));
+//	SimpleStaticMethod::create<StringType>("number", s, (Type(Double), c, i));
+
 	BuiltinMethod::create<StringType>("arg", false, s, (scr, i, w));	// 0,L' '
 	BuiltinMethod::create<StringType>("arg", false, s, (u, i, i, w));	// 0,10,L' '
 	BuiltinMethod::create<StringType>("arg", false, s, (w, i, w));	// 0,L' '
@@ -172,27 +172,27 @@ void StringType::initialiseClass()
 	BuiltinOperator::create<StringType>(Operator::GreaterThan, b, (scr, ccs));
 	BuiltinOperator::create<StringType>(Operator::LessThanEquals, b, (scr, ccs));
 	BuiltinOperator::create<StringType>(Operator::GreaterThanEquals, b, (scr, ccs));
-	
+
 	BuiltinOperator::create<StringType>(Operator::EqualsEquals, b, (scr, scr));
 	BuiltinOperator::create<StringType>(Operator::BangEquals, b, (scr, scr));
 	BuiltinOperator::create<StringType>(Operator::LessThan, b, (scr, scr));
 	BuiltinOperator::create<StringType>(Operator::GreaterThan, b, (scr, scr));
 	BuiltinOperator::create<StringType>(Operator::LessThanEquals, b, (scr, scr));
 	BuiltinOperator::create<StringType>(Operator::GreaterThanEquals, b, (scr, scr));
-	
+
 	BuiltinOperator::create<StringType>(Operator::EqualsEquals, b, (ccs, scr));
 	BuiltinOperator::create<StringType>(Operator::BangEquals, b, (ccs, scr));
 	BuiltinOperator::create<StringType>(Operator::LessThan, b, (ccs, scr));
 	BuiltinOperator::create<StringType>(Operator::GreaterThan, b, (ccs, scr));
 	BuiltinOperator::create<StringType>(Operator::LessThanEquals, b, (ccs, scr));
 	BuiltinOperator::create<StringType>(Operator::GreaterThanEquals, b, (ccs, scr));
-	
+
 	BuiltinOperator::create<StringType>(Operator::Plus, s, (scr, scr));
 	BuiltinOperator::create<StringType>(Operator::Plus, s, (scr, ccs));
 	BuiltinOperator::create<StringType>(Operator::Plus, s, (ccs, scr));
 	BuiltinOperator::create<StringType>(Operator::Plus, s, (scr, c));
 	BuiltinOperator::create<StringType>(Operator::Plus, s, (c, scr));
-	
+
 	BuiltinType::registerExtra(L"string", staticKind);
 	SubscriptableRegistrar::get()->registerKind<StringType>();
 }
@@ -201,7 +201,7 @@ void StringType::finaliseClass()
 {
 	SubscriptableRegistrar::get()->unregisterKind<StringType>();
 	BuiltinType::unregisterExtra(L"string");
-	
+
 	while (s_members.size())
 		s_members.takeLast()->destruct();
 	while (s_nonMembers.size())
@@ -225,19 +225,19 @@ List<ValueDefiner*> StringType::applicableMembers(Entity const*, bool _isConst) 
 bool StringType::defineSimilarityTo(TypeEntity const* _t, Castability _c) const
 {
 	return _t->isKind<StringType>() ||
-		isAnyConvertible(_c) && _t->isKind<Pointer>() &&
+		(isAnyConvertible(_c) && _t->isKind<Pointer>() &&
 		_t->asKind<Pointer>()->original()->isType<BuiltinType>() &&
 			(_t->asKind<Pointer>()->original()->asType<BuiltinType>()->id() == Char ||
-			_t->asKind<Pointer>()->original()->asType<BuiltinType>()->id() == Wchar) ||
+			_t->asKind<Pointer>()->original()->asType<BuiltinType>()->id() == Wchar)) ||
 		Super::defineSimilarityTo(_t, _c);
 }
 
 bool StringType::defineSimilarityFrom(TypeEntity const* _f, Castability _c) const
 {
-	return isAnyConvertible(_c) && _f->isKind<Pointer>() &&
+	return (isAnyConvertible(_c) && _f->isKind<Pointer>() &&
 		_f->asKind<Pointer>()->original()->isType<BuiltinType>() &&
 			(_f->asKind<Pointer>()->original()->asType<BuiltinType>()->id() == Char ||
-			_f->asKind<Pointer>()->original()->asType<BuiltinType>()->id() == Wchar) ||
+			_f->asKind<Pointer>()->original()->asType<BuiltinType>()->id() == Wchar)) ||
 		Super::defineSimilarityFrom(_f, _c);
 }
 
