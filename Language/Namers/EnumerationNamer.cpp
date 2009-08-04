@@ -22,6 +22,7 @@
 #include "ExplicitType.h"
 #include "TextLabel.h"
 #include "CodeScene.h"
+#include "SpecialKeys.h"
 #include "EnumerationNamer.h"
 
 namespace Martta
@@ -65,10 +66,10 @@ bool EnumerationNamer::keyPressed(KeyEvent const* _e)
 	if (_e->text() == L"\n" && _e->codeScene()->viewKeys(self())["expanded"].toBool())
 	{
 		Position p = (_e->isFocused() || _e->focalIndex() == 0) ?
-		(/*_e->inserting() || */_e->modifiers() & KeyEvent::ShiftModifier) ?
+		(/*_e->inserting() || */_e->modifiers() & ShiftModifier) ?
 		self()->front() :
 		self()->back() :
-		self()->middle(_e->focalIndex() + ((/*_e->inserting() || */_e->modifiers() & KeyEvent::ShiftModifier) ? 0 : 1));
+		self()->middle(_e->focalIndex() + ((/*_e->inserting() || */_e->modifiers() & ShiftModifier) ? 0 : 1));
 		EnumValue* s = new EnumValue;
 		s->prepareChildren();
 		p.place(s);

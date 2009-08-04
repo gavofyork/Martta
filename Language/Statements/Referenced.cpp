@@ -92,6 +92,13 @@ String Referenced::defineLayout(ViewKeys const& _k) const
 	return ret;
 }
 
+String Referenced::defineHtml() const
+{
+	if (!m_subject)
+		return String::null;
+	return L"<span id=\"this\" class=\"Referenced\">" + m_subject->tryKind<Labelled>()->labelHtml(m_subject->type()->typeHtml(m_subject->name())) + L"</span>";
+}
+
 EditDelegateFace* Referenced::newDelegate(CodeScene* _s)
 {
 	return new CompletionDelegate<Referenced, ValueDefiner*>(this, _s);

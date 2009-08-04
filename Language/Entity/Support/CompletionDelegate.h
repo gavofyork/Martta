@@ -27,6 +27,7 @@ using namespace MarttaSupport;
 #include "KeyEvent.h"
 #include "CodeScene.h"
 #include "Position.h"
+#include "SpecialKeys.h"
 #include "EditDelegate.h"
 
 MS_TEST_METHOD_EXISTANCE_1(committed)
@@ -92,9 +93,9 @@ public:
 	virtual bool keyPressed(KeyEvent const* _e)
 	{
 		bool resetCycled = true;
-		if (_e->text() == L"\b" && _e->modifiers() == KeyEvent::ControlModifier && m_name.size() > 1)
+		if (_e->text() == L"\b" && _e->modifiers() == ControlModifier && m_name.size() > 1)
 			m_name.chop(1);
-		else if (_e->text() == L"\b" && _e->modifiers() != KeyEvent::ControlModifier && nameStarts(m_possibilities, m_name.left(1)).size() != m_potentials.size())
+		else if (_e->text() == L"\b" && _e->modifiers() != ControlModifier && nameStarts(m_possibilities, m_name.left(1)).size() != m_potentials.size())
 		{
 			int potentials = m_potentials.size();
 			while (nameStarts(m_possibilities, m_name).size() == potentials && m_name.length())

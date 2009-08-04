@@ -65,9 +65,9 @@ public:
 #endif
 	}
 
-	virtual Rgb							idColour() const { return 0x7777777; }
 	virtual String						code(String const& _middle = "") const { return _middle; }
 	virtual TypeEntity*					bottom() { return this; }
+	virtual Rgb							idColour() const { return 0x777777; }
 
 	virtual bool						isInModel() const { return parent() && !m_owner ? parent()->isInModel() : true; }
 	virtual bool						botherNotifying() const { return isInModel(); }
@@ -122,6 +122,8 @@ public:
 	virtual List<Declaration*>			utilised() const { return List<Declaration*>(); }
 
 	virtual void						rejig() const {}
+
+	String								typeHtml(String const& _middle) const;
 
 protected:
 	/// This newClone is the simple one; it doesn't have to change the ownership or duplicate the children.

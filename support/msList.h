@@ -240,6 +240,14 @@ template<class T, class F> m_inline List<T> list_cast(List<F> _f)
 	return ret;
 }
 
+template<class T, class F> m_inline List<T> list_const_cast(List<F> _f)
+{
+	List<T> ret;
+	foreach (F i, _f)
+		ret << const_cast<T>(i);
+	return ret;
+}
+
 }
 
 #include "msList.inl"

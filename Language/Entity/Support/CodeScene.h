@@ -23,12 +23,11 @@
 #include <msString.h>
 #include <msHash.h>
 #include <msList.h>
-using MarttaSupport::StringList;
-using MarttaSupport::String;
-using MarttaSupport::Hash;
-using MarttaSupport::List;
+using namespace MarttaSupport;
 
+#include "SafePointer.h"
 #include "EntitySupport.h"
+#include "Position.h"
 
 namespace Martta
 {
@@ -58,19 +57,19 @@ public:
 	virtual Entity*				current() const = 0;
 	virtual Entity*				editEntity() const = 0;
 	virtual EditDelegateFace*	editDelegate() const = 0;
-	virtual bool				isCurrent(Entity* _e) const = 0;
-	virtual bool				isEditing(Entity* _e) const = 0;
-	virtual bool				isInScene(Entity* _e) const = 0;
-	virtual bool				isFocusable(Entity* _e) const = 0;
-
+	virtual bool				isCurrent(Entity const* _e) const = 0;
+	virtual bool				isEditing(Entity const* _e) const = 0;
+	virtual bool				isFocusable(Entity const* _e) const = 0;
+	virtual bool				isInScene(Entity const* _e) const = 0;
+/*
 	// Relative determiners.
 	virtual Entity*				next(Entity* _e) const = 0;
 	virtual Entity*				previous(Entity* _e) const = 0;
 	virtual Entity*				traverse(Entity* _e, bool _upwards, float _x) = 0;
 	virtual Entity*				nearest(Entity* _e) = 0;
-
+*/
 	// Focus changers (often make use of above).
-	virtual void				setCurrent(Entity* _e) = 0;
+	virtual void				setCurrent(Entity const* _e) = 0;
 	virtual void				navigateInto(Entity* _centre) = 0;									/// Selects _centre's leftmost, innermost focusable child. e.g. X on ()s: (++X + 4)
 	virtual void				navigateOnto(Entity* _shell) = 0;									/// Selects _shell's leftmost focusable child. e.g. ++X on ()s: (++X + 4)
 	enum NavigationDirection { Forwards, Backwards };
@@ -91,23 +90,25 @@ public:
 	void						forgetMe(EditDelegateFace* _me) { if (m_editDelegate == _me) m_editDelegate = 0; }
 	void						rememberMe(EditDelegateFace* _me) { AssertNR(!m_editDelegate); m_editDelegate = _me; }
 
-	// Layout retrieval/cache.
-	virtual String				layoutString(Entity* _e) = 0;									///< @returns the layout string for the entity _e.
-	virtual StringList			layoutList(Entity* _e) = 0;
-	/// Marks the given entity as requiring a repaint.
-	virtual bool				markDirty(Entity* _e) = 0;
+	// NONVIRTUAL For strobing
+	void						killStrobe();
+	void						setStrobeCreation(Entity* _e) { m_strobeCreation = _e; }
+	void						setStrobeChild(Entity* _e) { m_strobeChild = _e; }
+	Entity*						strobeCreation() const { return m_strobeCreation; }
+	Entity*						strobeChild() const { return m_strobeChild; }
 
 	/// @returns the status of the insertion flag.
-	virtual bool				insert() const = 0;
+	bool						insert() const { return m_insert; }
+
 	/// Notifies us that the current key event should be recycled (i.e. handled again).
-	virtual void				reinterpretCurrentKeyEvent() = 0;
+	void						reinterpretCurrentKeyEvent() { m_reinterpretCurrentKeyEvent = true; }
 
 	// Hacks
 	virtual void				silentlySetCurrent(Entity* _e) = 0;
 
 	/// Set the focused item to that which represents _e.
 	virtual void				setEditing(Entity* _e) = 0;
-	virtual void				leaveEdit() = 0;
+	void						leaveEdit() { if (editDelegate()) setEditing(0); }
 
 	virtual void				repaint(Entity* _e) = 0;
 	virtual void				relayout(Entity* _e) = 0;
@@ -115,17 +116,16 @@ public:
 	virtual void				resetLayoutCache(Entity* _e) = 0;
 	/// For when an entity has changed in the scene.
 	virtual void				relayoutLater(Entity* _e) = 0;
-	void						leaving(Entity* _e);
+
 	virtual void				leaving(Entity* _e, Position const& _grave) = 0;
 
-	virtual void				killStrobe() = 0;
-	virtual void				setStrobeCreation(Entity*) = 0;
-	virtual void				setStrobeChild(Entity*) = 0;
-	virtual Entity*				strobeCreation() const = 0;
-	virtual Entity*				strobeChild() const = 0;
-
 protected:
-//	void						notifyOfStrobe(Entity* _child, Entity* _creation);
+	// Handlers to be called pre- and post-current changing.
+	void						currentAboutToChange();
+	void						currentChanged(Entity* _to, Entity* _from);
+
+	void						keyPressHandler(KeyEvent& _e);
+	virtual bool				keyPressedAsNavigation(KeyEvent const&);
 
 	// State
 	Hash<Entity*, ViewKeys>		m_viewKeys;
@@ -133,7 +133,23 @@ protected:
 
 	EditDelegateFace*			m_editDelegate;
 
+	SafePointer<Entity>			m_strobeCreation;
+	SafePointer<Entity>			m_strobeChild;
+	SafePointer<Entity>			m_strobeFocus;
+	String						m_strobeText;
+	Position					m_activeStrobe;
+
+	bool						m_insert;
+	bool						m_insertNext;
+	bool						m_insertLock;
+
+	bool						m_reinterpretCurrentKeyEvent;
+	int							m_reinterpretCount;
+
 private:
+	/// Cycles through possible insert states. Call when the Insert key has been pressed.
+	void						insertCycle();
+
 	static List<CodeScene*>		s_allScenes;
 };
 

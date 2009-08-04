@@ -25,6 +25,7 @@
 #include <EditDelegate.h>
 
 #include "Timer.h"
+#include "SpecialKeys.h"
 #include "CommonGraphics.h"
 #include "CodeView.h"
 
@@ -43,14 +44,7 @@ CodeView::CodeView(QWidget* _p):
 	m_hover				(0),
 	m_lastRealCurrent	(0),
 	m_navigated			(false),
-	m_strobeCreation	(0),
-	m_strobeChild		(0),
-	m_strobeFocus		(0),
-	m_strobeText		(String::null),
-	m_insert			(false),
-	m_insertLock		(false),
 	m_lastDefiniteX		(-1.f),
-	m_reinterpretCurrentKeyEvent(false),
 	m_stylist			(new Stylist),
 	m_borderOffset		(8.f, 8.f),
 	m_ensureCurrentVisible(false)
@@ -143,14 +137,6 @@ void CodeView::leaving(Entity* _e, Position const&)
 		m_hover = 0;
 	if (m_lastRealCurrent == _e)
 		m_lastRealCurrent = 0;
-}
-
-void CodeView::killStrobe()
-{
-	m_strobeChild = 0;
-	m_strobeFocus = 0;
-	m_strobeCreation = 0;
-	m_strobeText = "";
 }
 
 void CodeView::setEditing(Entity* _e)
@@ -391,149 +377,36 @@ Entity* CodeView::editEntity() const
 	return m_editDelegate ? m_editDelegate->subject() : 0;
 }
 
-int translateMods(int _e)
-{
-	int r = 0;
-	if (_e & Qt::ShiftModifier)
-		r |= KeyEvent::ShiftModifier;
-	if (_e & Qt::ControlModifier)
-		r |= KeyEvent::ControlModifier;
-	return r;
-}
-
-wchar_t const* translateKey(int _e)
-{
-	switch (_e)
-	{
-	case Qt::Key_Delete:
-		return L"\x7f";
-	case Qt::Key_Escape:
-		return L"\x1b";
-	case Qt::Key_Return:
-		return L"\n";
-	case Qt::Key_Backspace:
-		return L"\b";
-	case Qt::Key_Tab:
-		return L"\t";
-	default:
-		return 0;
-	}
-}
-
 void CodeView::keyPressEvent(QKeyEvent* _e)
 {
-	if (!m_subject || !current()) return;
+	if (!subject() || !current())
+		return;
 
-	SafePointer<Entity> n = current();
-	Position currentPoint = n->over();
+	wchar_t const* k = translateKey(_e->key());
+	KeyEvent e(k ? String(k) : String(_e->text().toLatin1().data()), translateMods(_e->modifiers()));
+	keyPressHandler(e);
 
-	m_doInsert = false;
-
-	KeyEvent e;
-
-	if (m_strobeFocus && !_e->text().isEmpty() && _e->text() != " ")
-	{
-		m_activeStrobe = m_strobeCreation ? m_strobeCreation->over() : m_strobeFocus->over();
-		e = KeyEvent(m_strobeText + String(_e->text().toLatin1().data()), translateMods(_e->modifiers()), &*m_strobeFocus, true, m_strobeFocus->isPlaceholder(), UndefinedIndex, this);
-		Entity::keyPressEventStarter(&e);
-		e.executeStrobe();
-		m_activeStrobe = Nowhere;
-	}
-
-	if (!e.isAccepted())
-	{
-		// rejig for single key press.
-		wchar_t const* k = translateKey(_e->key());
-		e = KeyEvent(k ? String(k) : String(_e->text().toLatin1().data()), translateMods(_e->modifiers()), n, true, n->isPlaceholder(), UndefinedIndex, this);
-		Entity::keyPressEventStarter(&e);
-		if (e.isAccepted())
-			killStrobe();
-	}
-
-	bool allowStrobeInit = true;
-
-	// Navigation keys or the strobe kill key.
-	if (!e.isAccepted() && (keyPressedAsNavigation(_e) || _e->text() == " "))
-	{
-		killStrobe();
-		// Navigation keys can never initialise a strobe.
-		allowStrobeInit = false;
-		e.accept();
-	}
-
-	if (m_reinterpretCurrentKeyEvent) allowStrobeInit = false;
-
-	if (e.isAccepted())
-	{
-		m_insert = m_insertLock || m_doInsert;
-		if (m_reinterpretCurrentKeyEvent)
-		{
-			m_reinterpretCurrentKeyEvent = false;
-			m_reinterpretCount++;
-			if (m_reinterpretCount < 3)	// Catch inf. rec.
-				keyPressEvent(_e);
-			else
-			{
-				mInfo() << &*current();
-				m_subject->debugTree();
-				Assert(false, "Reinterpret key event in infinite recursion");
-			}
-			m_reinterpretCount--;
-		}
-	}
-
-	if (!_e->text().isEmpty() && _e->text()[0] > 32 && allowStrobeInit)
-	{
-		// Add to m_strobe.
-		if (!m_strobeFocus && currentPoint.exists() && n && n->parent() == currentPoint.entity())
-		{
-			// Kick off the strobe sequence.
-			m_strobeFocus = n;
-			m_strobeChild = n;
-			m_strobeCreation = currentPoint.entity();
-		}
-		else if (!m_strobeFocus && n && e.strobeCreation() && e.strobeCreation() != n)
-		{
-			// Kick off the strobe sequence.
-			m_strobeFocus = n;
-			m_strobeCreation = e.strobeCreation();
-			m_strobeChild = e.strobeChild();
-		}
-		else if (!m_strobeFocus && n && !e.isAccepted())
-		{
-			// Kick off the strobe sequence.
-			m_strobeFocus = n;
-			m_strobeCreation = 0;
-			m_strobeChild = 0;
-		}
-//		if (m_strobeCreation && m_strobeFocus)
-//			m_strobeChild = m_strobeCreation->child(m_strobeFocus->ancestorIndex(&*m_strobeCreation));
-//		else
-//			m_strobeChild = 0;
-		if (m_strobeFocus)
-			m_strobeText += _e->text()[0].toLatin1();
-	}
 	if (e.isAccepted())
 		_e->accept();
 }
 
-bool CodeView::keyPressedAsNavigation(QKeyEvent const* _e)
+bool CodeView::keyPressedAsNavigation(KeyEvent const& _e)
 {
-	if (_e->matches(QKeySequence::MoveToNextChar))
+	if (_e.text() == RightKey)
 	{
 		leaveEdit();
 		m_navigated = true;
 		navigateAway(current(), Forwards);
 		m_lastDefiniteX = bounds(current()).center().x();
 	}
-	else if (_e->matches(QKeySequence::MoveToPreviousChar))
+	else if (_e.text() == LeftKey)
 	{
 		leaveEdit();
 		m_navigated = true;
 		navigateAway(current(), Backwards);
 		m_lastDefiniteX = bounds(current()).center().x();
 	}
-	else if (_e->matches(QKeySequence::MoveToNextLine))
+	else if (_e.text() == DownKey)
 	{
 		leaveEdit();
 		if (m_lastDefiniteX == -1.f)
@@ -542,7 +415,7 @@ bool CodeView::keyPressedAsNavigation(QKeyEvent const* _e)
 		if (Entity* j = traverse(current(), false, m_lastDefiniteX))
 			setCurrent(j);
 	}
-	else if (_e->matches(QKeySequence::MoveToPreviousLine))
+	else if (_e.text() == UpKey)
 	{
 		leaveEdit();
 		if (m_lastDefiniteX == -1.f)
@@ -551,7 +424,7 @@ bool CodeView::keyPressedAsNavigation(QKeyEvent const* _e)
 		if (Entity* j = traverse(current(), true, m_lastDefiniteX))
 			setCurrent(j);
 	}
-	else if (_e->key() == Qt::Key_PageUp)
+	else if (_e.text() == PageUpKey)
 	{
 		leaveEdit();
 		if (m_navigated)
@@ -572,7 +445,7 @@ bool CodeView::keyPressedAsNavigation(QKeyEvent const* _e)
 			m_lastDefiniteX = bounds(current()).center().x();
 		}
 	}
-	else if (_e->key() == Qt::Key_PageDown)
+	else if (_e.text() == PageDownKey)
 	{
 		leaveEdit();
 		Entity const* e = current();
@@ -587,14 +460,6 @@ bool CodeView::keyPressedAsNavigation(QKeyEvent const* _e)
 			m_lastDefiniteX = bounds(current()).center().x();
 		}
 	}
-	else if (_e->key() == Qt::Key_Insert && m_insert && !m_insertLock)
-		m_insertLock = true;
-	else if (_e->key() == Qt::Key_Insert && m_insertLock)
-		m_insertLock = false;
-	else if (_e->key() == Qt::Key_Insert && !m_insert)
-		m_doInsert = true;
-	else if (_e->key() == Qt::Key_Enter && m_editDelegate)
-		setEditing(0);
 	else
 		return false;
 	return true;
@@ -635,17 +500,13 @@ void CodeView::silentlySetCurrent(Entity* _e)
 	}
 }
 
-void CodeView::setCurrent(Entity* _e)
+void CodeView::setCurrent(Entity const* _e)
 {
 	AssertNR(_e);
-
-//	mDebug() << "";
-//	mDebug() << "setCurrent: want to set current to" << _e;
-//	mDebug() << "";
 	if (m_current == _e || !m_subject)
 		return;
 
-	leaveEdit();
+	currentAboutToChange();
 
 	Entity* old = 0;
 	if (isInScene(m_current) && isFocusable(m_current))
@@ -653,37 +514,22 @@ void CodeView::setCurrent(Entity* _e)
 	if (m_current)
 		old = m_current;
 
-	// A bit bizarre, not necessarily wrong, though.
-	AssertNR(_e != m_subject);
-	AssertNR(_e);
-
 	if (isInScene(_e) && !isFocusable(_e))
 	{
 		mDebug() << "In scene and not focusable - definitely wrong.";
 		_e->debugTree();
-		Entity* ne = nearest(_e);
+		Entity* ne = nearest(const_cast<Entity*>(_e));
 		if (!isFocusable(ne))
 		{
 			mDebug() << "!!! ERROR nearest returned a non-focusable entity.";
-			ne = nearest(_e);
+			ne = nearest(const_cast<Entity*>(_e));
 		}
 		_e = ne;
 	}
 
-/*	mDebug() << "";
-	mDebug() << "setCurrent: setting current to" << _e;
-	mDebug() << "";
-	mDebug() << "";*/
-//	_e->debugTree();
-	m_current = _e;
+	m_current = const_cast<Entity*>(_e);
 
-
-	if (old)
-	{
-		for (Entity* e = old; e && m_current && !m_current->hasAncestor(e); e = e->parent())
-			e->checkForCullingLater();
-	}
-	currentChanged(current());
+	CodeScene::currentChanged(m_current, old);
 
 	if (QScrollArea* sa = qobject_cast<QScrollArea*>(parent()->parent()->parent()))
 	{
@@ -693,6 +539,8 @@ void CodeView::setCurrent(Entity* _e)
 		br.translate(m_borderOffset);
 		sa->ensureVisible(br.center().x(), br.center().y(), br.width() / 2 + 16, br.height() / 2 + 16);
 	}
+
+	currentChanged(m_current);
 
 	update();
 }
@@ -744,11 +592,6 @@ void CodeView::relayout(Entity* _e)
 		doRefreshLayout();
 		update();
 	}
-}
-
-void CodeView::leaveEdit()
-{
-	setEditing(0);
 }
 
 void CodeView::mouseDoubleClickEvent(QMouseEvent* _e)

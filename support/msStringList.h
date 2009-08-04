@@ -30,6 +30,7 @@ class StringList: public List<String>
 {
 public:
 	StringList() {}
+	StringList(List<String> const& _o): List<String>(_o) {}
 	StringList(String const& _s1) { append(_s1); }
 	StringList(String const& _s1, String const& _s2) { append(_s1); append(_s2); }
 	StringList(String const& _s1, String const& _s2, String const& _s3) { append(_s1); append(_s2); append(_s3); }

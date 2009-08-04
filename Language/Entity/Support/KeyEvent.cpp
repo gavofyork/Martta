@@ -56,6 +56,11 @@ KeyEvent::KeyEvent(String const& _text, int _modifiers, Entity* _focus, bool _is
 	}
 }
 
+bool KeyEvent::isInserting() const
+{
+	return m_codeScene->insert();
+}
+
 void KeyEvent::noteStrobeCreation(Entity* _creation, Entity* _old) const
 {
 	AssertNR(!m_strobed);

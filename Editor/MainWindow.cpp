@@ -117,16 +117,6 @@ void MainWindow::loadPlugins()
 
 	QFileInfoList list = QDir(MARTTA_PLUGINS_PATH).entryInfoList();
 	qDebug() << "Searching for plugins in" << MARTTA_PLUGINS_PATH;
-#if defined(DEBUG)
-	qDebug() << "Debug";
-#else
-	qDebug() << "Not debug";
-#endif
-	fprintf(stderr, "Hello!\n");
-	String s = L"Boo!";
-	fprintf(stderr, "%ls\n", s.data());
-	qDebug("Hello world!\n");
-
 
 	QHash<QString, QSet<QString> > depTree;
 	for (int i = 0; i < list.size(); ++i)
@@ -627,7 +617,7 @@ void MainWindow::on_actAboutQt_triggered()
 
 void MainWindow::on_actShowDeps_triggered()
 {
-	codeView->setShowDependencyInfo(actShowDeps->isChecked());
+//	codeView->setShowDependencyInfo(actShowDeps->isChecked());
 }
 
 void MainWindow::on_actCastability_triggered()
@@ -639,12 +629,12 @@ void MainWindow::on_actCastability_triggered()
 
 void MainWindow::on_actShowChanges_triggered()
 {
-	codeView->setShowChanges(actShowChanges->isChecked());
+//	codeView->setShowChanges(actShowChanges->isChecked());
 }
 
 void MainWindow::on_actShowFirstChange_triggered()
 {
-	codeView->setShowOneChange(actShowFirstChange->isChecked());
+//	codeView->setShowOneChange(actShowFirstChange->isChecked());
 }
 
 void MainWindow::on_actRemoveFirstChange_triggered()
@@ -798,6 +788,7 @@ void MainWindow::delayedUpdate()
 		}
 */
 		new QTreeWidgetItem(entityInfo, QStringList() << QString("Layout") << qs(e->defineLayout(codeView->viewKeys(e))));
+		new QTreeWidgetItem(entityInfo, QStringList() << QString("HTML") << qs(e->defineHtml()));
 
 		QTreeWidgetItem* rc = new QTreeWidgetItem(entityInfo, QStringList() << "Child restrictions");
 		foreach (int i, e->knownNames())

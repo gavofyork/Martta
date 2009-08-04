@@ -46,6 +46,11 @@ String Namespace::finalCode() const
 	return ic + L"\n" + implementationCode() + L"\n";
 }
 
+String Namespace::defineHtml() const
+{
+	return L"<span class=\"keyword\">namespace</span> " + toHtml(child(Identity)) + L"<div class=\"block\">" + toHtml(cardinalChildren()) + L"</div>";
+}
+
 String Namespace::defineLayout(ViewKeys const&) const
 {
 	String ret = String("ycode;'namespace';Mi;%1;n;").arg(Identity);

@@ -18,32 +18,24 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#pragma once
-
-#include "TopLevel.h"
+#include "SpecialKeys.h"
 
 namespace Martta
 {
 
-class Namespace: public TopLevel
-{
-	MARTTA_OBJECT(TopLevel)
-
-public:
-	virtual bool						isGloballyIdentifiable() const { return true; }
-	virtual Kinds						allowedKinds(int _i) const;
-	virtual String						defineLayout(ViewKeys const&) const;
-	virtual String						defineHtml() const;
-
-	virtual String						finalCode() const;
-	String								interfaceCode() const;
-	String								implementationCode() const;
-
-	virtual bool						keyPressed(KeyEvent const* _e);
-
-protected:
-	virtual inline String				defineLabelCode(String const& _text) const { return _text[0].isNumber() ? L"_" + camelCase(_text, true) : camelCase(_text, true); }
-	virtual inline String				defineLabelName(String const& _text) const { return camelCase(_text, true); }
-};
+const wchar_t* DeleteKey = L"\x7f";
+const wchar_t* EscapeKey = L"\x1b";
+const wchar_t* InsertKey = L"\x1a";
+const wchar_t* PageUpKey = L"\x01";
+const wchar_t* PageDownKey = L"\x04";
+const wchar_t* HomeKey = L"\x02";
+const wchar_t* EndKey = L"\x03";
+const wchar_t* ReturnKey = L"\n";
+const wchar_t* BackspaceKey = L"\b";
+const wchar_t* TabKey = L"\t";
+const wchar_t* LeftKey = L"\x11";
+const wchar_t* UpKey = L"\x12";
+const wchar_t* DownKey = L"\x13";
+const wchar_t* RightKey = L"\x14";
 
 }

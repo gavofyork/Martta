@@ -24,12 +24,26 @@ using MarttaSupport::Char;
 
 #include "Labelled.h"
 #include "EditDelegate.h"
+#include "WebStylistRegistrar.h"
 #include "TextLabel.h"
 
 namespace Martta
 {
 
 MARTTA_OBJECT_CPP(TextLabel);
+
+void TextLabel::initialiseClass()
+{
+	WebStylistRegistrar::get()->registerCss(staticKind.auxilliary(),
+		".TextLabel-named { color: #000 }"
+		".TextLabel-unnamed { color: #aaa }"
+	);
+}
+
+void TextLabel::finaliseClass()
+{
+	WebStylistRegistrar::get()->unregisterCss(staticKind.auxilliary());
+}
 
 String TextLabel::code() const
 {
@@ -56,6 +70,13 @@ String TextLabel::name() const
 		return String::null;
 	else
 		return tryParent<Labelled>()->labelName(m_text);
+}
+
+String TextLabel::defineHtml() const
+{
+	if (name().isEmpty())
+		return L"<span id=\"this\" class=\"minor\">[ANONYMOUS]</span>";
+	return String("<span id=\"this\" class=\"TextLabel-%1\">").arg(isNamed() ? L"named" : L"unnamed") + tryParent<Labelled>()->labelHtml(name()) + L"</span>";
 }
 
 String TextLabel::defineLayout(ViewKeys const& _k) const

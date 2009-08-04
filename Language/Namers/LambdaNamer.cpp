@@ -53,6 +53,24 @@ String LambdaNamer::defineArgListLayout(ViewKeys const&) const
 	return "ycode;'(';" + times(0, self()->cardinalChildCount(), ";', ';") + ";')'";
 }
 
+String LambdaNamer::defineReturnHtml() const
+{
+	return toHtml(self()->child(Returned)) + L" ";
+}
+
+String LambdaNamer::defineNameHtml() const
+{
+	if (self()->child(Identity))
+		return FunctionType().typeHtml(toHtml(self()->child(Identity)));
+	else
+		return name();
+}
+
+String LambdaNamer::defineArgListHtml() const
+{
+	return "<span class=\"symbol\">(</span>" + toHtml(self()->cardinalChildren(), L"<span class=\"symbol\">, </span>") + L"<span class=\"symbol\">)</span>";
+}
+
 String LambdaNamer::defineBodyLayout(ViewKeys const& _viewKeys) const
 {
 	String ret;
@@ -76,10 +94,20 @@ String LambdaNamer::defineBodyLayout(ViewKeys const& _viewKeys) const
 	return ret;
 }
 
+String LambdaNamer::defineBodyHtml() const
+{
+	return body() ? L"<br/>" + toHtml(body()) : String(" = 0");
+}
+
 String LambdaNamer::defineLayout(ViewKeys const& _k, String const& _middle) const
 {
 	// TODO handle ellipsis here so we can put one in/take one out
 	return definePreLayout(_k) + ";" + defineReturnLayout(_k) + ";>name;" + defineNameLayout(_k) + ";" + defineArgListLayout(_k) + ";" + defineMidLayout(_k, _middle) + ";" + defineBodyLayout(_k) + ";" + definePostLayout(_k);
+}
+
+String LambdaNamer::defineHtml(String const& _middle) const
+{
+	return definePreHtml() + defineReturnHtml() + defineNameHtml() + defineArgListHtml() + defineMidHtml(_middle) + defineBodyHtml() + definePostHtml();
 }
 
 bool LambdaNamer::keyPressed(KeyEvent const* _e)

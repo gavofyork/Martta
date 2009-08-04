@@ -37,6 +37,10 @@ class Stylist;
 class EditDelegateFace;
 class CodeScene;
 
+String toHtml(Entity const* _e);
+String toHtml(List<Entity const*> const& _es, String const& _delimiter = L" ");
+inline String toHtml(List<Entity*> const& _es, String const& _delimiter = L" ") { return toHtml(list_const_cast<Entity const*>(_es), _delimiter); }
+
 /**
  * Note regarding rootEntity/null-Context: You can never depend on something which does not share the
  * same Root object as you. Objects yet to be inserted into the program have a nullContext and thus
@@ -69,8 +73,8 @@ public:
 	inline Entity(): Dier(), ChildValidifier(), Depender(), Dependee(), SafePointerTarget(), m_parent(0), m_index(UndefinedIndex) {}
 	inline Entity(Entity const&): Dier(), ChildValidifier(), Familial(), Depender(), Dependee(), SafePointerTarget() { AssertNR(false); }
 
-	static void							initialiseClass() {}
-	static void							finaliseClass() {}
+	static void							initialiseClass();
+	static void							finaliseClass();
 
 	void								prepareMove(Position const& _newPosition);
 	void								commitMove(Position const& _oldPosition);
@@ -389,6 +393,7 @@ public:
 	List<int>							knownNames() const;
 
 	virtual String						defineLayout(ViewKeys const&) const;
+	virtual String						defineHtml() const;
 	virtual Entity*						isExpander() const { return 0; }
 
 	/// We become current in all code scenes.

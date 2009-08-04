@@ -28,6 +28,7 @@ using namespace MarttaSupport;
 #include "CodeScene.h"
 #include "BuiltinOperator.h"
 #include "CompletionDelegate.h"
+#include "WebStylistRegistrar.h"
 #include "BuiltinType.h"
 
 namespace Martta
@@ -121,6 +122,11 @@ String BuiltinType::defineLayout(ViewKeys const&) const
 	return typeLayout() + "^;'" + ((id() == (uint)-1) ? String("[]") : name(id())) + "'";
 }
 
+String BuiltinType::defineHtml() const
+{
+	return L"<span id=\"this\" class=\"TypeEntity\">" + typeHtml((id() == (uint)-1) ? String("[]") : name(id())) + L"</span>";
+}
+
 template<>
 class NameTrait<int>
 {
@@ -177,6 +183,8 @@ void BuiltinType::committed(int)
 
 void BuiltinType::initialiseClass()
 {
+//	WebStylistRegistrar::get()->registerCss<BuiltinType>();
+
 	List<uint> integral;
 	integral << Char << (Short|Int) << Int << (Long|Int) << (Longlong|Int) << (Unsigned|Char) << (Unsigned|Short|Int) << (Unsigned|Int) << (Unsigned|Long|Int) << (Unsigned|Longlong|Int);
 	List<uint> scalar;
@@ -252,6 +260,8 @@ void BuiltinType::initialiseClass()
 
 void BuiltinType::finaliseClass()
 {
+//	WebStylistRegistrar::get()->unregisterCss<BuiltinType>();
+
 	while (s_nonMembers.size())
 		s_nonMembers.takeLast()->destruct();
 }

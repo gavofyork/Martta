@@ -58,10 +58,12 @@ unix {
 
 # Input
 HEADERS += CodeView.h \
+		   CodeViewWK.h \
 		   CommonGraphics.h \
 		   MainWindow.h \
 		   Timer.h
 SOURCES += CodeView.cpp \
+		   CodeViewWK.cpp \
 		   CommonGraphics.cpp \
 		   MainWindow.cpp \
 		   Timer.cpp \

@@ -21,6 +21,7 @@
 #pragma once
 
 #include "SafePointer.h"
+#include "Position.h"
 
 namespace Martta
 {
@@ -33,8 +34,6 @@ class KeyEvent
 {
 public:
 	KeyEvent(String const& _text = String::null, int _modifiers = 0, Entity* _focus = 0, bool _isFocused = false, bool _focusIsPlaceholder = false, int _focalIndex = -1, CodeScene* _codeScene = 0);
-
-	enum { ShiftModifier = 0x01, ControlModifier = 0x02 };
 
 	void			accept() { m_accepted = true; }
 	bool			isAccepted() const { return m_accepted; }
@@ -52,6 +51,7 @@ public:
 	Entity*			strobeChild() const { return m_strobeChild; }
 	Position		nearestBracket(Position const& _p) const;
 	void			executeStrobe();
+	bool			isInserting() const;
 
 	void			noteStrobeCreation(Entity* _creation, Entity* _old) const;
 

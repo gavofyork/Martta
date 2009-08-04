@@ -3,6 +3,7 @@ Makefile
 bin/
 Editor/build/
 Editor/Martta.app/
+Editor/Martta
 Language/build
 plugins/
 plugin-loader/

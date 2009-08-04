@@ -26,6 +26,8 @@ using namespace MarttaSupport;
 #include "CullManager.h"
 #include "CodeScene.h"
 #include "EditDelegate.h"
+#include "SpecialKeys.h"
+#include "WebStylistRegistrar.h"
 #include "Entity.h"
 
 namespace Martta
@@ -48,6 +50,79 @@ void Entity::operator delete(void* p)
 }
 
 MARTTA_PLACEHOLDER_CPP(Entity);
+
+void Entity::initialiseClass()
+{
+	WebStylistRegistrar::get()->registerCss(staticKind.auxilliary(),
+		// TODO Move these to Stylist
+		"body { color: #666; font-size: 12px; font-family: Lucida Grande; background-color: white; }"
+		".keyword { font-weight: bold; }"
+		".minor { color: #888; font-size: 8px; }"
+		".symbol { font-weight: bold; }"
+		".block { position: relative; margin-left: 14px; }"
+		".deblock { position: relative; margin-left: -14px; }"
+
+		".TypeEntity { font-weight: bold; color: #000; }"
+		".Referenced { font-weight: normal; color: #000; }"
+		".Namespace-label { color: #000; font-weight: bold; }"
+		".Class-label { color: #000; font-weight: bold; text-shadow: -1px -1px 0px #f77; }"
+		".Label { font-weight: normal; }"
+		".AccessLabel-publicblock { border-width: 0 0 0 4px; border-color: #ff9; border-style: solid; padding-left: 4px; }"
+		".AccessLabel-protectedblock { border-width: 0 0 0 4px; border-color: #fd9; border-style: solid; padding-left: 4px; }"
+		".AccessLabel-privateblock { border-width: 0 0 0 4px; border-color: #fbb; border-style: solid; padding-left: 4px; }"
+		".AccessLabel-public { font-weight: bold; text-shadow: -1px -1px 0px #ff7; }"
+		".AccessLabel-protected { font-weight: bold; text-shadow: -1px -1px 0px #fc7; }"
+		".AccessLabel-private { font-weight: bold; text-shadow: -1px -1px 0px #faa; }"
+		".Literal { font-size: 13px; color: black; }"
+		".TypeEntity { color: black; font-size: 13px; font-weight: bold; text-shadow: -1px -1px 0px #888; }"
+		".SimpleType { text-shadow: -1px -1px 0px #fb0; }"
+		".FunctionType { text-shadow: -1px -1px 0px #84f; }"
+		".HashType { text-shadow: -1px -1px 0px #8f4; }"
+		".Operation { font-size: 12px; color: #888; background-color: rgba(0, 0, 0, 0.03); padding: 0 2px 0 2px; }"
+		".Statement { background-color: transparent; padding: 0; }"
+	);
+}
+
+void Entity::finaliseClass()
+{
+	WebStylistRegistrar::get()->unregisterCss(staticKind.auxilliary());
+}
+
+String toHtml(Entity const* _e)
+{
+	if (!_e)
+		return String::null;
+	return String("<span id=\"%1\">%2</span>").arg((int)_e).arg(_e->defineHtml().replace(L"<^>", L"<span id=\"this\"></span>"));
+}
+
+String toHtml(List<Entity const*> const& _es, String const& _delimiter)
+{
+	String ret;
+	bool first = true;
+	foreach (Entity const* e, _es)
+	{
+		if (first)
+			first = false;
+		else
+			ret += _delimiter;
+		ret += toHtml(e);
+	}
+	return ret;
+}
+
+String Entity::defineHtml() const
+{
+	String ret = L"<span id=\"this\" class=\"keyword\">" + kind().name() + L"</span><span class=\"minor\">";
+	Hash<String, String> p;
+	properties(p);
+	foreach (String s, p.keys())
+		ret += L"[" + s + L"=" + p[s] + L"]";
+	ret += L"</span><span>{";
+	foreach (Entity* e, children())
+		 ret += L" " + toHtml(e) + L"@" + e->indexName();
+	ret += L" }</span>";
+	return ret;
+}
 
 String Entity::indexName(int _i) const
 {
@@ -408,10 +483,7 @@ void Entity::relayoutLater(CodeScene* _s)
 }
 void Entity::repaint(CodeScene* _s)
 {
-	if (_s->isInScene(this))
-		_s->repaint(this);
-	else if (parent())
-		parent()->repaint(_s);
+	_s->repaint(this);
 }
 void Entity::repaint()
 {
@@ -513,7 +585,7 @@ void Entity::keyPressEventStarter(KeyEvent* _e, bool _abortive)
 bool Entity::keyPressed(KeyEvent const* _e)
 {
 	Position p = over();
-	if (_e->codeScene()->isCurrent(this) && ((_e->text() == L"\x7f" && _e->modifiers() == KeyEvent::ShiftModifier) || (_e->text() == L"\b" && isEditing(_e->codeScene()))) && !isFixed())
+	if (_e->codeScene()->isCurrent(this) && ((_e->text() == L"\x7f" && _e->modifiers() == ShiftModifier) || (_e->text() == L"\b" && isEditing(_e->codeScene()))) && !isFixed())
 	{
 //		p.parent()->debugTree();
 //		mDebug() << p.index();

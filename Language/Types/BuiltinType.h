@@ -2,14 +2,14 @@
  * Version: Martta License version 1.0
  *
  * The contents of this file are subject to the Martta License version 1.0
- * (the "License"); you may not use this file except in compliance with the 
- * License. You should have received a copy of the Martta License 
+ * (the "License"); you may not use this file except in compliance with the
+ * License. You should have received a copy of the Martta License
  * "COPYING.Martta" along with Martta; if not you may obtain a copy of the
  * License at http://quidprocode.co.uk/Martta/
  *
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations under 
+ * License for the specific language governing rights and limitations under
  * the License.
  *
  * The Initial Developer of the code in this file is Gavin Wood.
@@ -40,11 +40,11 @@ class BuiltinType: public PhysicalType
 
 	friend class BuiltinOperator;	// For use of s_nonMembers. QUICK Should probably use an interface for this.
 	friend class NameTrait<int>;
-	
+
 public:
 	static void initialiseClass();
 	static void finaliseClass();
-	
+
 	static inline void registerExtra(String const& _name, Kind const& _k) { s_recognisedExtras.insert(_name, _k); }
 	static inline void unregisterExtra(String const& _name) { s_recognisedExtras.remove(_name); }
 
@@ -76,7 +76,7 @@ public:
 	inline int							get() const { return m_id; }
 	inline void							set(uint _m) { setId(_m); }
 	virtual bool						isNull() const { return m_id == (uint)-1; }
-	
+
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 
 protected:
@@ -86,6 +86,7 @@ protected:
 	virtual Rgb							idColour() const { return 0xffbb77; }
 	virtual TypeEntity*					newClone() const { return new BuiltinType(m_id); }
 	virtual String						defineLayout(ViewKeys const&) const;
+	virtual String						defineHtml() const;
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 	virtual bool						isSuperfluous() const { return Super::isSuperfluous() && m_id == (uint)-1; }
 	virtual bool						keyPressed(KeyEvent const* _e);

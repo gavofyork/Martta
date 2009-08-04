@@ -45,6 +45,10 @@ public:
 			m_value = fromRgb(_name[1].toInt(0, 16), _name[2].toInt(0, 16), _name[3].toInt(0, 16), _name[4].toInt(0, 16)) * 0x11;
 		else if (_name.startsWith(L'#') && _name.length() == 9)
 			m_value = _name.mid(1, 6).toUint(0, 16) + (_name.mid(7, 2).toUint(0, 16) << 24);
+		else if (_name.startsWith(L'#') && _name.length() == 4)
+			m_value = fromRgb(_name[1].toInt(0, 16), _name[2].toInt(0, 16), _name[3].toInt(0, 16), 15) * 0x11;
+		else if (_name.startsWith(L'#') && _name.length() == 7)
+			m_value = _name.mid(1, 6).toUint(0, 16) + (0xff << 24);
 		else
 			m_value = fromName(_name);
 	}
@@ -59,8 +63,8 @@ public:
 	m_inline void setB(uchar _v) { m_value = fromRgb(r(), g(), _v, a()); }
 	m_inline void setA(uchar _v) { m_value = fromRgb(r(), g(), b(), _v); }
 
-	String name() const { return String(L"#%1").arg((uint)(((uint)m_value << 8ul) + a()), 8, 16, L'0'); }
-	String name(uchar _alpha) const { return String(L"#%1").arg((uint)(((uint)m_value << 8ul) + (uint)_alpha), 8, 16, L'0'); }
+	m_inline String name() const { return (a() == 255) ? String(L"#%1").arg((uint)((uint)m_value & 0xffffff), 6, 16, L'0') : String(L"#%1").arg((uint)(((uint)m_value << 8ul) + a()), 8, 16, L'0'); }
+	m_inline String name(uchar _alpha) const { return (_alpha == 255) ? String(L"#%1").arg((uint)((uint)m_value & 0xffffff), 6, 16, L'0') : String(L"#%1").arg((uint)(((uint)m_value << 8ul) + (uint)_alpha), 8, 16, L'0'); }
 
 	m_inline Rgb interpolated(int _percent, Rgb _c = black) const
 	{

@@ -59,10 +59,10 @@ public:
 	inline Entity*				current() const { return m_current ? (Entity*)m_current : m_subject; }
 	Entity*						editEntity() const;
 	inline EditDelegateFace*	editDelegate() const { return m_editDelegate; }
-	inline bool					isCurrent(Entity* _e) const { return current() == _e; }
-	inline bool					isEditing(Entity* _e) const { return editEntity() == _e; }
-	inline bool					isInScene(Entity* _e) const { return m_visible.contains(_e); }
-	inline bool					isFocusable(Entity* _e) const { return _e && m_orders[_e->parent()].contains(_e); }
+	inline bool					isCurrent(Entity const* _e) const { return current() == _e; }
+	inline bool					isEditing(Entity const* _e) const { return editEntity() == _e; }
+	inline bool					isInScene(Entity const* _e) const { return m_visible.contains(const_cast<Entity*>(_e)); }
+	inline bool					isFocusable(Entity const* _e) const { return _e && m_orders[_e->parent()].contains(const_cast<Entity*>(_e)); }
 	QRectF						bounds(Entity* _e);
 	Entity*						at(QPointF const&) const;
 
@@ -73,7 +73,7 @@ public:
 	Entity*						nearest(Entity* _e);
 
 	// Focus changers (often make use of above).
-	void						setCurrent(Entity* _e);											/// Selects the focusable entity nearest to _e.
+	void						setCurrent(Entity const* _e);											/// Selects the focusable entity nearest to _e.
 	void						navigateInto(Entity* _centre);									/// Selects _centre's leftmost, innermost focusable child. e.g. X on ()s: (++X + 4)
 	void						navigateOnto(Entity* _shell);									/// Selects _shell's leftmost focusable child. e.g. ++X on ()s: (++X + 4)
 	void						navigateAway(Entity* _from, NavigationDirection _d = Forwards);	/// Selects closest focusable entity visually _d from _from. e.g. 4 on ()s: (++X + 4)
@@ -87,23 +87,12 @@ public:
 	/// Sets the local (relative to parent) bounds of the given entity. This is called only by the layout code.
 	void						setLocalBounds(Entity* _e, QRectF const& _br) { m_bounds[_e] = _br; }
 
-	/// @returns the status of the insertion flag.
-	bool						insert() const { return m_insert; }
-	/// Notifies us that the current key event should be recycled (i.e. handled again).
-	void						reinterpretCurrentKeyEvent() { m_reinterpretCurrentKeyEvent = true; }
-
 	// Hacks
 	void						silentlySetCurrent(Entity* _e);									/// Selects the focusable entity _e; this will do nothing unless you're leaving the edit.
-
-	virtual void				setStrobeChild(Entity* _e) { m_strobeChild = _e; }
-	virtual void				setStrobeCreation(Entity* _e) { m_strobeCreation = _e; }
-	virtual Entity*				strobeChild() const { return m_strobeChild; }
-	virtual Entity*				strobeCreation() const { return m_strobeCreation; }
 
 public slots:
 	/// Set the focused item to that which represents _e.
 	void						setEditing(Entity* _e);
-	void						leaveEdit();
 
 	void						repaint(Entity* _e);
 	void						relayout(Entity* _e);
@@ -111,10 +100,9 @@ public slots:
 	void						resetLayoutCache(Entity* _e);
 	/// For when an entity has changed in the scene.
 	void						relayoutLater(Entity* _e);
+
 	inline void					leaving(Entity* _e) { leaving(_e, _e->over()); }
 	void						leaving(Entity* _e, Position const& _grave);
-
-	void						killStrobe();
 
 signals:
 	/// A new entity has been selected.
@@ -132,7 +120,7 @@ private:
 	void						leavingWhoseParentLeft(Entity* _e);
 	void						cleanupLeaver(Entity* _e);
 
-	bool						keyPressedAsNavigation(QKeyEvent const* _e);
+	bool						keyPressedAsNavigation(KeyEvent const& _e);
 	void						doRefreshLayout();
 	void						recacheLayoutList(Entity* _e, String const& _s);			///< @returns the layout list for the entity _e.
 
@@ -158,19 +146,10 @@ private:
 	Hash<Entity*, StringList>				m_listCache;
 	Hash<Entity*, uint>					m_cacheKey;
 
-	int					m_reinterpretCount;
 	List<int>			m_pagingRoute;
 	bool				m_navigated;
-	SafePointer<Entity>	m_strobeCreation;
-	SafePointer<Entity>	m_strobeChild;
-	SafePointer<Entity>	m_strobeFocus;
-	String				m_strobeText;
-	Position			m_activeStrobe;
-	bool				m_insert;
-	bool				m_doInsert;
-	bool				m_insertLock;
 	float				m_lastDefiniteX;
-	bool				m_reinterpretCurrentKeyEvent;
+
 	Stylist*			m_stylist;
 	QPointF				m_borderOffset;
 	bool				m_ensureCurrentVisible;

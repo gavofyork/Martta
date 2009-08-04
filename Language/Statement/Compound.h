@@ -38,6 +38,7 @@ protected:
 	virtual Types						allowedTypes(int _i) const { return _i >= 0 ? Types(Type()) : Super::allowedTypes(_i); }
 	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual String						defineLayout(ViewKeys const&) const;
+	virtual String						defineHtml() const;
 	virtual void						appendDefinedUptoHere(int _i, List<ValueDefiner*>* _list) const;
 	virtual bool						isSuperfluous() const { return cardinalChildCount() == 1 && child(0)->kind() == Kind::of<Statement>() && !isNecessary(); }
 };
@@ -48,6 +49,7 @@ class HardCompound: public Compound
 
 protected:
 	virtual String						defineLayout(ViewKeys const&) const;
+	virtual String						defineHtml() const;
 };
 
 }

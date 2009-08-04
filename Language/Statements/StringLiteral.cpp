@@ -43,6 +43,11 @@ String StringLiteral::defineLayout(ViewKeys const&) const
 	return String("^;ycode;'\"';ynormal;'%1';ygrayed;'\"'").arg(m_value);
 }
 
+String StringLiteral::defineHtml() const
+{
+	return String(L"<span id=\"this\"><span class=\"symbol\">\"</span><span class=\"StringLiteral Literal\">%1</span><span class=\"symbol\">\"</span></span>").arg(m_value);
+}
+
 bool StringLiteral::keyPressed(KeyEvent const* _e)
 {
 	if (_e->text() == "\"" && isEditing(_e->codeScene()))

@@ -68,6 +68,19 @@ String IntegerLiteral::defineLayout(ViewKeys const&) const
 	return String("^;ynormal;'%1';ycode;'%2';'%3'").arg(ret).arg(m_signed ? "" : "u").arg(m_range == ShortRange ? "s" : m_range == LongRange ? "l" : m_range == LonglongRange ? "ll" : "");
 }
 
+String IntegerLiteral::defineHtml() const
+{
+	double value;
+	modf(m_value, &value);
+	String ret = (value > 0 || value < 0) ? "" : ",0";
+	for (int v = value < 0 ? -value : value; v >= 1; v /= 1000)
+		ret = (",%1" + ret).arg((uint)fmod((double)v, 1000.0), v >= 1000 ? 3 : 0, 10, '0');
+	ret = ret.mid(1);
+	if (m_signed)
+		ret = (m_value < 0 ? "-" : "") + ret;
+	return String("<span id=\"this\" class=\"IntegerLiteral Literal\">%1%2%3</span>").arg(ret).arg(m_signed ? "" : "u").arg(m_range == ShortRange ? "s" : m_range == LongRange ? "l" : m_range == LonglongRange ? "ll" : "");
+}
+
 EditDelegateFace* IntegerLiteral::newDelegate(CodeScene* _s)
 {
 	class Delegate: public EditDelegate<IntegerLiteral>

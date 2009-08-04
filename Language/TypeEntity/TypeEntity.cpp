@@ -36,6 +36,11 @@ Types TypeEntity::assignableTypes() const
 	return Types();
 }
 
+String TypeEntity::typeHtml(String const& _middle) const
+{
+	return String(L"<span style=\"text-shadow: -1px -1px 0 %1\">").arg(idColour().name(255)) + _middle + L"</span>";
+}
+
 bool TypeEntity::isSimilarTo(TypeEntity const* _t, Castability _similarity) const
 {
 #if defined(DEBUG)

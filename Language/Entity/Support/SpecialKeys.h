@@ -20,30 +20,28 @@
 
 #pragma once
 
-#include "TopLevel.h"
-
 namespace Martta
 {
 
-class Namespace: public TopLevel
+enum
 {
-	MARTTA_OBJECT(TopLevel)
-
-public:
-	virtual bool						isGloballyIdentifiable() const { return true; }
-	virtual Kinds						allowedKinds(int _i) const;
-	virtual String						defineLayout(ViewKeys const&) const;
-	virtual String						defineHtml() const;
-
-	virtual String						finalCode() const;
-	String								interfaceCode() const;
-	String								implementationCode() const;
-
-	virtual bool						keyPressed(KeyEvent const* _e);
-
-protected:
-	virtual inline String				defineLabelCode(String const& _text) const { return _text[0].isNumber() ? L"_" + camelCase(_text, true) : camelCase(_text, true); }
-	virtual inline String				defineLabelName(String const& _text) const { return camelCase(_text, true); }
+	ShiftModifier = 0x01,
+	ControlModifier = 0x02
 };
+
+extern const wchar_t* DeleteKey;
+extern const wchar_t* EscapeKey;
+extern const wchar_t* InsertKey;
+extern const wchar_t* PageUpKey;
+extern const wchar_t* PageDownKey;
+extern const wchar_t* HomeKey;
+extern const wchar_t* EndKey;
+extern const wchar_t* ReturnKey;
+extern const wchar_t* BackspaceKey;
+extern const wchar_t* TabKey;
+extern const wchar_t* LeftKey;
+extern const wchar_t* UpKey;
+extern const wchar_t* DownKey;
+extern const wchar_t* RightKey;
 
 }

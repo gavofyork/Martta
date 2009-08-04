@@ -71,6 +71,9 @@ inline QStringList qs(List<String> const& _f)
 	return ret;
 }
 
+int translateMods(int _e);
+wchar_t const* translateKey(int _e);
+
 class Timer
 {
 public:

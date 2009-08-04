@@ -46,6 +46,7 @@ public:
 
 protected:
 	virtual bool						isInValidState() const;
+	virtual String						defineHtml() const;
 	virtual String						defineLayout(ViewKeys const&) const;
 //	virtual void						decorate(DecorationContext const& _c) const;
 	virtual bool						isSuperfluous() const;

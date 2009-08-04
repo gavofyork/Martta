@@ -2,14 +2,14 @@
  * Version: Martta License version 1.0
  *
  * The contents of this file are subject to the Martta License version 1.0
- * (the "License"); you may not use this file except in compliance with the 
- * License. You should have received a copy of the Martta License 
+ * (the "License"); you may not use this file except in compliance with the
+ * License. You should have received a copy of the Martta License
  * "COPYING.Martta" along with Martta; if not you may obtain a copy of the
  * License at http://quidprocode.co.uk/Martta/
  *
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations under 
+ * License for the specific language governing rights and limitations under
  * the License.
  *
  * The Initial Developer of the code in this file is Gavin Wood.
@@ -30,8 +30,9 @@ class Argument: public Declaration, public_interface VariableNamer
 {
 	MARTTA_OBJECT(Declaration)
 	MARTTA_INHERITS(VariableNamer, 0)
-	
+
 protected:
+	virtual String						defineHtml() const { return VariableNamer::defineHtml(); }
 	virtual String						defineLayout(ViewKeys const& _k) const { return VariableNamer::defineLayout(_k); }
 	virtual List<Declaration*>			utilised() const { return actualType()->utilised(); }
 
@@ -45,6 +46,7 @@ protected:
 	virtual String						implementationCode() const { return VariableNamer::implementationCode(); }
 	virtual bool						isSuperfluous() const;
 	virtual String						defineLabelLayout(String const& _text, ViewKeys const&) const { return String(L"(;M4;[[[;fs-2;fb;c#777;e#fff;'_';]]];);%1").arg(_text); }
+	virtual String						defineLabelHtml(String const& _text) const { return L"<span style=\"font-size: -2; font-weight: bold; color: #777; text-shadow: 1px 1px 0 #fff\">_</span>" + _text; }
 	virtual String						defineLabelCode(String const& _text) const { return L"_" + camelCase(_text); }
 };
 
