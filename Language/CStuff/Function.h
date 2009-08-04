@@ -48,7 +48,7 @@ protected:
 
 	virtual Entity*						isExpander() const { return body()->child(0); }
 	virtual String						defineLayout(ViewKeys const& _v) const { return "^;" + LambdaNamer::defineLayout(_v); }
-	virtual String						defineHtml() const { return L"<div id=\"this\">" + LambdaNamer::defineHtml() + L"</div>"; }
+	virtual String						defineHtml() const;
 	virtual String						interfaceCode() const { return LambdaNamer::interfaceCode(); }
 	virtual String						implementationCode() const { return LambdaNamer::implementationCode(); }
 	virtual bool						keyPressed(KeyEvent const* _e) { return LambdaNamer::keyPressed(_e) ? true : Super::keyPressed(_e); }

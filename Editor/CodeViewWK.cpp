@@ -121,7 +121,12 @@ void CodeViewWK::refresh()
 				else
 				{
 					Entity* cur = current();
+					QString s;
+					foreach (Entity* i, e->children())
+						if ((s = page()->mainFrame()->evaluateJavaScript(QString("document.getElementById('%1').innerHTML").arg((int)i)).toString()) != QString::null)
+							addToHtmlCache(i, qs(s));
 					page()->mainFrame()->evaluateJavaScript(QString("document.getElementById('%1').innerHTML = '%2'").arg((int)e).arg(html.replace('\'', "\\'")));
+					clearHtmlCache();
 					silentlySetCurrent(cur);
 				}
 			}
@@ -158,7 +163,8 @@ void CodeViewWK::init()
 	setHtml(QString("<!DOCTYPE HTML><html><head><style type=\"text/css\">%1</style></head><body onmousedown=\"procMouseDown(event)\">%2</body></html>").arg(css).arg(qs(m_subject ? toHtml(m_subject) : String::null)));
 	page()->mainFrame()->addToJavaScriptWindowObject("CodeView", this);
 	page()->mainFrame()->evaluateJavaScript(
-		"function onlyThese(node) { if (node.id == 'this') return NodeFilter.FILTER_ACCEPT; return NodeFilter.FILTER_SKIP; }"
+		"function isInvisible(node) { var n = node; while (n) if (n.style && n.style.display == 'none') return true; else n = n.parentNode; return false; }"
+		"function onlyThese(node) { if (isInvisible(node)) return NodeFilter.FILTER_REJECT; if (node.id == 'this') return NodeFilter.FILTER_ACCEPT; return NodeFilter.FILTER_SKIP; }"
 		"var g_currentIterator = document.createNodeIterator(document, NodeFilter.SHOW_ELEMENT, onlyThese, false);"
 		"function thisNode(_e)"
 		"{"

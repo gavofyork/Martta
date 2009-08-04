@@ -88,11 +88,17 @@ void Entity::finaliseClass()
 	WebStylistRegistrar::get()->unregisterCss(staticKind.auxilliary());
 }
 
+static Hash<Entity const*, String> s_htmlCache;
+
+void addToHtmlCache(Entity const* _e, String const& _s) { s_htmlCache.insert(_e, _s); }
+void clearHtmlCache() { s_htmlCache.clear(); }
+
 String toHtml(Entity const* _e)
 {
 	if (!_e)
 		return String::null;
-	return String("<span id=\"%1\">%2</span>").arg((int)_e).arg(_e->defineHtml().replace(L"<^>", L"<span id=\"this\"></span>"));
+	String r = "<span id=\"%1\">%2</span>";
+	return r.arg((int)_e).arg(s_htmlCache.contains(_e) ? s_htmlCache[_e] : _e->defineHtml().replace(L"<^>", L"<span id=\"this\"></span>"));
 }
 
 String toHtml(List<Entity const*> const& _es, String const& _delimiter)

@@ -96,7 +96,14 @@ String LambdaNamer::defineBodyLayout(ViewKeys const& _viewKeys) const
 
 String LambdaNamer::defineBodyHtml() const
 {
-	return body() ? L"<br/>" + toHtml(body()) : String(" = 0");
+	if (!body())
+		return L" = 0";
+	String info;
+	if (int n = body()->cardinalChildrenOf<Primary>().count() + body()->cardinalChildrenOf<Untyped>().count())
+		info = L" (" + String::number(n) + L" statement" + (n > 1 ? L"s" : L"") + L")";
+	else
+		info = " (empty)";
+	return (L"<span id=\"%1-info\" class=\"minor\" style=\"display: inline\">" + info + L"</span><div id=\"%1-body\" style=\"display: none\">").arg((int)(Entity*)this) + toHtml(body()) + L"</div>";
 }
 
 String LambdaNamer::defineLayout(ViewKeys const& _k, String const& _middle) const
@@ -107,7 +114,14 @@ String LambdaNamer::defineLayout(ViewKeys const& _k, String const& _middle) cons
 
 String LambdaNamer::defineHtml(String const& _middle) const
 {
-	return definePreHtml() + defineReturnHtml() + defineNameHtml() + defineArgListHtml() + defineMidHtml(_middle) + defineBodyHtml() + definePostHtml();
+	return String(L"<div onDblClick=\""
+		L"var info = document.getElementById('%1-info');"
+		L"var body = document.getElementById('%1-body');"
+		L"body.style.display = info.style.display == 'none' ? 'none' : 'block';"
+		L"info.style.display = body.style.display == 'none' ? 'inline' : 'none';"
+		L"event.stopPropagation();\">").arg((int)(Entity*)this)
+		+ definePreHtml() + defineReturnHtml() + defineNameHtml() + defineArgListHtml()
+		+ defineMidHtml(_middle) + defineBodyHtml() + definePostHtml() + L"</div>";
 }
 
 bool LambdaNamer::keyPressed(KeyEvent const* _e)

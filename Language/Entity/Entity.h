@@ -40,6 +40,9 @@ class CodeScene;
 String toHtml(Entity const* _e);
 String toHtml(List<Entity const*> const& _es, String const& _delimiter = L" ");
 inline String toHtml(List<Entity*> const& _es, String const& _delimiter = L" ") { return toHtml(list_const_cast<Entity const*>(_es), _delimiter); }
+void addToHtmlCache(Entity const* _e, String const& _s);
+void clearHtmlCache();
+
 
 /**
  * Note regarding rootEntity/null-Context: You can never depend on something which does not share the

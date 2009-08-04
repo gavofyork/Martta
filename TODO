@@ -37,6 +37,12 @@ Dynamic code-loading (plugins).
 Webkit layout system 
 - BRINGBACK decoration code into layout system and markup for it.
 - BRINGBACK Visual change system.
+- Remove old layout system.
+- Move all entities over to new.
+- Stylist support.
+- Entity stil has a lot of the CSS info.
+- Editing.
+- Check viewkeys is ok removed for { stuff.
 
 --------------------------------------------------------------------------------
 
@@ -45,7 +51,6 @@ RELEASE M1 (TBD)
 ================================================================================
 
 TODO Cache includes, so don't take so long to load.
-TODO Profile QWebView 
 
 Utilised
 - utilised/utilisable interface.
