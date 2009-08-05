@@ -57,8 +57,6 @@ public:
 	// What's happening?
 	virtual inline Entity*		subject() const { return m_subject; }
 	inline Entity*				current() const { return m_current ? (Entity*)m_current : m_subject; }
-	Entity*						editEntity() const;
-	inline EditDelegateFace*	editDelegate() const { return m_editDelegate; }
 	inline bool					isCurrent(Entity const* _e) const { return current() == _e; }
 	inline bool					isEditing(Entity const* _e) const { return editEntity() == _e; }
 	inline bool					isInScene(Entity const* _e) const { return m_visible.contains(const_cast<Entity*>(_e)); }
@@ -91,9 +89,6 @@ public:
 	void						silentlySetCurrent(Entity* _e);									/// Selects the focusable entity _e; this will do nothing unless you're leaving the edit.
 
 public slots:
-	/// Set the focused item to that which represents _e.
-	void						setEditing(Entity* _e);
-
 	void						repaint(Entity* _e);
 	void						relayout(Entity* _e);
 	/// Resets the parent's defineLayout cache.
@@ -130,7 +125,6 @@ private:
 	bool				m_showDependencyInfo;
 	bool				m_showChanges;
 	bool				m_showOneChange;
-	bool				m_leavingEdit;
 	bool				m_showHover;
 
 	// State

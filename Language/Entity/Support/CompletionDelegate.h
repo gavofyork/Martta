@@ -90,6 +90,14 @@ public:
 		else
 			return ret;
 	}
+	virtual String defineHtml() const
+	{
+		String ret = EditDelegate<T>::subject()->defineEditHtml(m_selection);
+		if (ret.contains(L"<?>"))
+			return ret.replace(L"<?>", m_name + "<span class=\"unreal\">" + (m_cycled >= 0 && m_cycled < m_potentials.size() ? NameTrait<R>::name(m_potentials[m_cycled]).mid(m_name.length()) : m_completion) + "</span>");
+		else
+			return ret;
+	}
 	virtual bool keyPressed(KeyEvent const* _e)
 	{
 		bool resetCycled = true;

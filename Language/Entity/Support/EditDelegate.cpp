@@ -45,6 +45,11 @@ String EditDelegateFace::defineLayout(ViewKeys const& _v) const
 	return m_subject->defineLayout(_v);
 }
 
+String EditDelegateFace::defineHtml() const
+{
+	return m_subject->defineHtml().replace(L"<^>", L"");
+}
+
 CodeScene* EditDelegateFace::codeScene() const
 {
 	return m_codeScene;

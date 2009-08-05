@@ -37,6 +37,7 @@ public:
 	void								committed(Named*);
 	List<Named*>						possibilities();
 	String								defineEditLayout(ViewKeys const&, Named* _subject);
+	String								defineEditHtml(Named*) { return String::null; }
 	template<class T> EditDelegateFace*	newDelegate(CodeScene* _s) { return new CompletionDelegate<T, Named*>(asKind<T>(), _s); }
 	bool								keyPressed(KeyEvent const*);
 

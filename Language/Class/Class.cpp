@@ -350,6 +350,70 @@ bool Class::keyPressed(KeyEvent const* _e)
 	return true;
 }
 
+String Class::defineHtml() const
+{
+	String ret = L"<div id=\"this\"><span class=\"keyword\">class</span> <span class=\"TypeEntity\">" + Type(const_cast<Class*>(this))->typeHtml(toHtml(child(Identity))) + L"</span>";
+	ret += toHtml(castEntities<Entity>(cardinalChildrenOf<Base>()), L"", L"div");
+	ret += "<div class=\"minor symbol\">{</div>";
+	for (int i = 0; i < AccessCount; i++)
+	{
+		String mem;
+		Kinds recognised;
+		recognised << Kind::of<Constructor>();
+		foreach (MemberLambda* f, cardinalChildrenOf<Constructor>())
+			if (f->access() == Access(i))
+				mem += toHtml(f, L"div");
+		recognised << Kind::of<Destructor>();
+		foreach (MemberLambda* f, cardinalChildrenOf<Destructor>())
+			if (f->access() == Access(i))
+				mem += toHtml(f, L"div");
+		recognised << Kind::of<Method>();
+		foreach (MemberLambda* f, cardinalChildrenOf<Method>())
+			if (f->access() == Access(i))
+				mem += toHtml(f, L"div");
+		foreach (MemberLambda* f, cardinalChildrenOf<MemberLambda>())
+			if (f->access() == Access(i) && !f->Entity::isKind(recognised))
+				mem += toHtml(f, L"div");
+		foreach (MemberVariable* f, cardinalChildrenOf<MemberVariable>())
+			if (f->access() == Access(i))
+				mem += toHtml(f, L"div");
+		foreach (MemberEnumeration* f, cardinalChildrenOf<MemberEnumeration>())
+			if (f->access() == Access(i))
+				mem += toHtml(f, L"div");
+		if (!mem.isEmpty())
+			ret += String(L"<div class=\"unblock\">%1</div><div>%2</div>").arg(Martta::code(Access(i))).arg(mem);
+//.arg(AccessLabel(Access(i)).idColour().name(255))
+	}
+	ret += L"<div class=\"minor symbol\">}</div>";
+	ret += L"</div>";
+
+/*	if (cardinalChildCountOf<Base>())
+	{
+		ret += ";ynormal;' ['";
+		foreach (Base* i, cardinalChildrenOf<Base>())
+			ret += String(";%1").arg(i->index());
+		ret += ";']'";
+	}
+	ret += ";yminor;' (";
+	if (int n = cardinalChildCountOf<Method>())
+		ret += String::number(n) + " method" + (n > 1 ? "s, " : ", ");
+	if (int n = cardinalChildCountOf<MemberVariable>())
+		ret += String::number(n) + " variable" + (n > 1 ? "s, " : ", ");
+	if (int n = cardinalChildCountOf<Constructor>())
+		ret += String::number(n) + " constructor" + (n > 1 ? "s, " : ", ");
+	if (int n = cardinalChildCountOf<Destructor>())
+		ret += String::number(n) + " destructor" + (n > 1 ? "s, " : ", ");
+	if (int n = cardinalChildCountOf<MethodOperator>())
+		ret += String::number(n) + " operator" + (n > 1 ? "s, " : ", ");
+	if (ret.endsWith(", "))
+		ret.chop(2);
+	ret += ")";
+	if (ret.endsWith("()"))
+		ret.chop(2);
+	ret += "'";*/
+	return ret;
+}
+
 String Class::defineLayout(ViewKeys const& _keys) const
 {
 	String ret = ("^;ycode;'class ';fb;cblack;s" + Type(const_cast<Class*>(this))->idColour().name() + ";!%1;s;ycode").arg(Identity);

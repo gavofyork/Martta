@@ -80,6 +80,14 @@ String EnumValue::defineLayout(ViewKeys const&) const
 	return r;
 }
 
+String EnumValue::defineHtml() const
+{
+	String r = L"<^>" + toHtml(child(Identity));
+	if (child(Definition))
+		r += "<span class=\"symbol\"> := </span>" + toHtml(child(Definition));
+	return r;
+}
+
 bool EnumValue::isSuperfluous() const
 {
 	return (childAs<TextLabel>(Identity)->text().isEmpty() && !isNecessary()) || Super::isSuperfluous();

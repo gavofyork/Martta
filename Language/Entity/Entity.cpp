@@ -57,6 +57,7 @@ void Entity::initialiseClass()
 		// TODO Move these to Stylist
 		"body { color: #666; font-size: 12px; font-family: Lucida Grande; background-color: white; }"
 		".keyword { font-weight: bold; }"
+		".unreal { color: #888; }"
 		".minor { color: #888; font-size: 8px; }"
 		".symbol { font-weight: bold; }"
 		".block { position: relative; margin-left: 14px; }"
@@ -90,18 +91,35 @@ void Entity::finaliseClass()
 
 static Hash<Entity const*, String> s_htmlCache;
 
-void addToHtmlCache(Entity const* _e, String const& _s) { s_htmlCache.insert(_e, _s); }
+void addToHtmlCache(Entity const* _e, String const& _s) { mDebug() << _e << _s; s_htmlCache.insert(_e, _s); }
 void clearHtmlCache() { s_htmlCache.clear(); }
 
-String toHtml(Entity const* _e)
+String refinedHtml(Entity const* _e)
+{
+	return _e->defineHtml().replace(L"<^>", L"<span id=\"this\"></span>");
+}
+
+String htmlEscape(String const& _s)
+{
+	return String(_s)
+		.replace(L"&", L"&amp;")
+		.replace(L"\\", L"&#92;")
+		.replace(L"<", L"&lt;")
+		.replace(L">", L"&gt;")
+		.replace(L"'", L"&apos;")
+		.replace(L"\"", L"&quot;");
+}
+
+String toHtml(Entity const* _e, String const& _tag)
 {
 	if (!_e)
 		return String::null;
-	String r = "<span id=\"%1\">%2</span>";
-	return r.arg((int)_e).arg(s_htmlCache.contains(_e) ? s_htmlCache[_e] : _e->defineHtml().replace(L"<^>", L"<span id=\"this\"></span>"));
+	if (s_htmlCache.contains(_e))
+		return s_htmlCache[_e];
+	return String("<%1 id=\"%2\">%3</%4>").arg(_tag).arg((int)_e).arg(refinedHtml(_e)).arg(_tag.section(L' ', 0, 0));
 }
 
-String toHtml(List<Entity const*> const& _es, String const& _delimiter)
+String toHtml(List<Entity const*> const& _es, String const& _delimiter, String const& _tag)
 {
 	String ret;
 	bool first = true;
@@ -111,7 +129,7 @@ String toHtml(List<Entity const*> const& _es, String const& _delimiter)
 			first = false;
 		else
 			ret += _delimiter;
-		ret += toHtml(e);
+		ret += toHtml(e, _tag);
 	}
 	return ret;
 }

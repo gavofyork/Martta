@@ -48,7 +48,7 @@ String Namespace::finalCode() const
 
 String Namespace::defineHtml() const
 {
-	return L"<span class=\"keyword\">namespace</span> " + toHtml(child(Identity)) + L"<div class=\"block\">" + toHtml(cardinalChildren()) + L"</div>";
+	return L"<span class=\"keyword\">namespace</span> " + toHtml(child(Identity)) + toHtml(cardinalChildren(), L"", L"div class=\"block\"");
 }
 
 String Namespace::defineLayout(ViewKeys const&) const

@@ -32,101 +32,86 @@
 	 <number>0</number>
 	</property>
 	<item>
-	 <widget class="QScrollArea" name="scrollArea">
-	  <property name="sizePolicy">
-	   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-		<horstretch>0</horstretch>
-		<verstretch>5</verstretch>
-	   </sizepolicy>
-	  </property>
-	  <property name="focusPolicy">
-	   <enum>Qt::NoFocus</enum>
-	  </property>
-	  <property name="frameShape">
-	   <enum>QFrame::VLine</enum>
-	  </property>
-	  <property name="lineWidth">
-	   <number>0</number>
-	  </property>
-	  <property name="verticalScrollBarPolicy">
-	   <enum>Qt::ScrollBarAlwaysOn</enum>
-	  </property>
-	  <property name="widgetResizable">
-	   <bool>true</bool>
-	  </property>
-		 <widget class="Martta::CodeViewWK" name="codeView">
-		  <property name="palette">
-		   <palette>
-			<active>
-			 <colorrole role="Base">
-			  <brush brushstyle="SolidPattern">
-			   <color alpha="255">
-				<red>255</red>
-				<green>255</green>
-				<blue>255</blue>
-			   </color>
-			  </brush>
-			 </colorrole>
-			 <colorrole role="Window">
-			  <brush brushstyle="SolidPattern">
-			   <color alpha="255">
-				<red>255</red>
-				<green>255</green>
-				<blue>255</blue>
-			   </color>
-			  </brush>
-			 </colorrole>
-			</active>
-			<inactive>
-			 <colorrole role="Base">
-			  <brush brushstyle="SolidPattern">
-			   <color alpha="255">
-				<red>255</red>
-				<green>255</green>
-				<blue>255</blue>
-			   </color>
-			  </brush>
-			 </colorrole>
-			 <colorrole role="Window">
-			  <brush brushstyle="SolidPattern">
-			   <color alpha="255">
-				<red>255</red>
-				<green>255</green>
-				<blue>255</blue>
-			   </color>
-			  </brush>
-			 </colorrole>
-			</inactive>
-			<disabled>
-			 <colorrole role="Base">
-			  <brush brushstyle="SolidPattern">
-			   <color alpha="255">
-				<red>255</red>
-				<green>255</green>
-				<blue>255</blue>
-			   </color>
-			  </brush>
-			 </colorrole>
-			 <colorrole role="Window">
-			  <brush brushstyle="SolidPattern">
-			   <color alpha="255">
-				<red>255</red>
-				<green>255</green>
-				<blue>255</blue>
-			   </color>
-			  </brush>
-			 </colorrole>
-			</disabled>
-		   </palette>
-		  </property>
-		  <property name="focusPolicy">
-		   <enum>Qt::StrongFocus</enum>
-		  </property>
-		  <property name="autoFillBackground">
-		   <bool>true</bool>
-		  </property>
-		 </widget>
-	 </widget>
+	  <widget class="Martta::CodeViewWK" name="codeView">
+	   <property name="geometry">
+		<rect>
+		 <x>0</x>
+		 <y>0</y>
+		 <width>68</width>
+		 <height>380</height>
+		</rect>
+	   </property>
+	   <property name="palette">
+		<palette>
+		 <active>
+		  <colorrole role="Base">
+		   <brush brushstyle="SolidPattern">
+			<color alpha="255">
+			 <red>255</red>
+			 <green>255</green>
+			 <blue>255</blue>
+			</color>
+		   </brush>
+		  </colorrole>
+		  <colorrole role="Window">
+		   <brush brushstyle="SolidPattern">
+			<color alpha="255">
+			 <red>255</red>
+			 <green>255</green>
+			 <blue>255</blue>
+			</color>
+		   </brush>
+		  </colorrole>
+		 </active>
+		 <inactive>
+		  <colorrole role="Base">
+		   <brush brushstyle="SolidPattern">
+			<color alpha="255">
+			 <red>255</red>
+			 <green>255</green>
+			 <blue>255</blue>
+			</color>
+		   </brush>
+		  </colorrole>
+		  <colorrole role="Window">
+		   <brush brushstyle="SolidPattern">
+			<color alpha="255">
+			 <red>255</red>
+			 <green>255</green>
+			 <blue>255</blue>
+			</color>
+		   </brush>
+		  </colorrole>
+		 </inactive>
+		 <disabled>
+		  <colorrole role="Base">
+		   <brush brushstyle="SolidPattern">
+			<color alpha="255">
+			 <red>255</red>
+			 <green>255</green>
+			 <blue>255</blue>
+			</color>
+		   </brush>
+		  </colorrole>
+		  <colorrole role="Window">
+		   <brush brushstyle="SolidPattern">
+			<color alpha="255">
+			 <red>255</red>
+			 <green>255</green>
+			 <blue>255</blue>
+			</color>
+		   </brush>
+		  </colorrole>
+		 </disabled>
+		</palette>
+	   </property>
+	   <property name="focusPolicy">
+		<enum>Qt::StrongFocus</enum>
+	   </property>
+	   <property name="autoFillBackground">
+		<bool>true</bool>
+	   </property>
+	  </widget>
 	</item>
 	<item>
 	 <widget class="Line" name="line">
@@ -204,6 +189,12 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QDockWidget" name="dockWidget">
+   <property name="font">
+	<font>
+	 <family>AlArabiya</family>
+	 <pointsize>8</pointsize>
+	</font>
+   </property>
    <property name="windowTitle">
 	<string>Dependencies</string>
    </property>
@@ -255,6 +246,12 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="classesDock">
+   <property name="font">
+	<font>
+	 <family>AlArabiya</family>
+	 <pointsize>8</pointsize>
+	</font>
+   </property>
    <property name="windowTitle">
 	<string>Classes</string>
    </property>
@@ -365,6 +362,12 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="dockWidget_5">
+   <property name="font">
+	<font>
+	 <family>AlArabiya</family>
+	 <pointsize>8</pointsize>
+	</font>
+   </property>
    <property name="windowTitle">
 	<string>I/O</string>
    </property>
@@ -398,7 +401,8 @@
 		 <widget class="QTextBrowser" name="programOut">
 		  <property name="font">
 		   <font>
-			<pointsize>10</pointsize>
+			<family>AlArabiya</family>
+			<pointsize>8</pointsize>
 		   </font>
 		  </property>
 		  <property name="frameShape">
@@ -423,6 +427,12 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="dockTypesVisible">
+   <property name="font">
+	<font>
+	 <family>AlArabiya</family>
+	 <pointsize>8</pointsize>
+	</font>
+   </property>
    <property name="windowTitle">
 	<string>Values Visible</string>
    </property>
@@ -453,7 +463,8 @@
 		 <widget class="QTreeWidget" name="typesVisible">
 		  <property name="font">
 		   <font>
-			<pointsize>10</pointsize>
+			<family>AlArabiya</family>
+			<pointsize>8</pointsize>
 		   </font>
 		  </property>
 		  <property name="frameShape">
@@ -484,6 +495,12 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="entityInfoDock">
+   <property name="font">
+	<font>
+	 <family>AlArabiya</family>
+	 <pointsize>8</pointsize>
+	</font>
+   </property>
    <property name="windowTitle">
 	<string>Entity Information</string>
    </property>
@@ -514,7 +531,8 @@
 		 <widget class="QTreeWidget" name="entityInfo">
 		  <property name="font">
 		   <font>
-			<pointsize>10</pointsize>
+			<family>AlArabiya</family>
+			<pointsize>8</pointsize>
 		   </font>
 		  </property>
 		  <property name="frameShape">
@@ -548,6 +566,12 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="dockLanguage">
+   <property name="font">
+	<font>
+	 <family>AlArabiya</family>
+	 <pointsize>8</pointsize>
+	</font>
+   </property>
    <property name="windowTitle">
 	<string>Language Available</string>
    </property>
@@ -578,7 +602,8 @@
 		 <widget class="QTreeWidget" name="language">
 		  <property name="font">
 		   <font>
-			<pointsize>10</pointsize>
+			<family>AlArabiya</family>
+			<pointsize>8</pointsize>
 		   </font>
 		  </property>
 		  <property name="frameShape">
@@ -612,6 +637,12 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="dockPlugins">
+   <property name="font">
+	<font>
+	 <family>AlArabiya</family>
+	 <pointsize>8</pointsize>
+	</font>
+   </property>
    <property name="windowTitle">
 	<string>Plugins Loaded</string>
    </property>
@@ -642,7 +673,8 @@
 		 <widget class="QTreeWidget" name="pluginsLoaded">
 		  <property name="font">
 		   <font>
-			<pointsize>10</pointsize>
+			<family>AlArabiya</family>
+			<pointsize>8</pointsize>
 		   </font>
 		  </property>
 		  <property name="frameShape">
@@ -673,6 +705,12 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="dockWidget_6">
+   <property name="font">
+	<font>
+	 <family>AlArabiya</family>
+	 <pointsize>8</pointsize>
+	</font>
+   </property>
    <property name="floating">
 	<bool>false</bool>
    </property>
@@ -700,7 +738,8 @@
 	   </property>
 	   <property name="font">
 		<font>
-		 <pointsize>10</pointsize>
+		 <family>AlArabiya</family>
+		 <pointsize>8</pointsize>
 		</font>
 	   </property>
 	   <property name="frameShape">
@@ -712,6 +751,12 @@
    </widget>
   </widget>
   <widget class="QToolBar" name="toolBar">
+   <property name="font">
+	<font>
+	 <family>AlArabiya</family>
+	 <pointsize>8</pointsize>
+	</font>
+   </property>
    <property name="windowTitle">
 	<string>toolBar</string>
    </property>

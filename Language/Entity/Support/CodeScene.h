@@ -55,19 +55,10 @@ public:
 
 	// What's happening?
 	virtual Entity*				current() const = 0;
-	virtual Entity*				editEntity() const = 0;
-	virtual EditDelegateFace*	editDelegate() const = 0;
 	virtual bool				isCurrent(Entity const* _e) const = 0;
-	virtual bool				isEditing(Entity const* _e) const = 0;
 	virtual bool				isFocusable(Entity const* _e) const = 0;
 	virtual bool				isInScene(Entity const* _e) const = 0;
-/*
-	// Relative determiners.
-	virtual Entity*				next(Entity* _e) const = 0;
-	virtual Entity*				previous(Entity* _e) const = 0;
-	virtual Entity*				traverse(Entity* _e, bool _upwards, float _x) = 0;
-	virtual Entity*				nearest(Entity* _e) = 0;
-*/
+
 	// Focus changers (often make use of above).
 	virtual void				setCurrent(Entity const* _e) = 0;
 	virtual void				navigateInto(Entity* _centre) = 0;									/// Selects _centre's leftmost, innermost focusable child. e.g. X on ()s: (++X + 4)
@@ -90,12 +81,19 @@ public:
 	void						forgetMe(EditDelegateFace* _me) { if (m_editDelegate == _me) m_editDelegate = 0; }
 	void						rememberMe(EditDelegateFace* _me) { AssertNR(!m_editDelegate); m_editDelegate = _me; }
 
-	// NONVIRTUAL For strobing
+	// NONVIRTUAL For strobing.
 	void						killStrobe();
 	void						setStrobeCreation(Entity* _e) { m_strobeCreation = _e; }
 	void						setStrobeChild(Entity* _e) { m_strobeChild = _e; }
 	Entity*						strobeCreation() const { return m_strobeCreation; }
 	Entity*						strobeChild() const { return m_strobeChild; }
+
+	// NONVIRTUAL For editing.
+	void						setEditing(Entity* _e);
+	void						leaveEdit() { if (editDelegate()) setEditing(0); }
+	Entity*						editEntity() const;
+	EditDelegateFace*			editDelegate() const;
+	bool						isEditing(Entity const* _e) const { return _e == editEntity(); }
 
 	/// @returns the status of the insertion flag.
 	bool						insert() const { return m_insert; }
@@ -103,12 +101,11 @@ public:
 	/// Notifies us that the current key event should be recycled (i.e. handled again).
 	void						reinterpretCurrentKeyEvent() { m_reinterpretCurrentKeyEvent = true; }
 
-	// Hacks
+	// Hack - should set the current entity but not issue an update and not call any
+	// focus change notifications etc. Used when leavingEditIntact since it is often called
+	// ultimately from another setCurrent(). Also used in CodeViewWK when focus needs to be
+	// preserved around a DOM update (in refresh()).
 	virtual void				silentlySetCurrent(Entity* _e) = 0;
-
-	/// Set the focused item to that which represents _e.
-	virtual void				setEditing(Entity* _e) = 0;
-	void						leaveEdit() { if (editDelegate()) setEditing(0); }
 
 	virtual void				repaint(Entity* _e) = 0;
 	virtual void				relayout(Entity* _e) = 0;
@@ -117,7 +114,7 @@ public:
 	/// For when an entity has changed in the scene.
 	virtual void				relayoutLater(Entity* _e) = 0;
 
-	virtual void				leaving(Entity* _e, Position const& _grave) = 0;
+	virtual void				leaving(Entity* _e, Position const& _grave);
 
 protected:
 	// Handlers to be called pre- and post-current changing.
@@ -130,8 +127,6 @@ protected:
 	// State
 	Hash<Entity*, ViewKeys>		m_viewKeys;
 	List<Position>				m_bracketed;
-
-	EditDelegateFace*			m_editDelegate;
 
 	SafePointer<Entity>			m_strobeCreation;
 	SafePointer<Entity>			m_strobeChild;
@@ -149,6 +144,8 @@ protected:
 private:
 	/// Cycles through possible insert states. Call when the Insert key has been pressed.
 	void						insertCycle();
+
+	mutable EditDelegateFace*	m_editDelegate;
 
 	static List<CodeScene*>		s_allScenes;
 };

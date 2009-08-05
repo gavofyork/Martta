@@ -36,7 +36,7 @@ class CodeScene;
 class KeyEvent;
 class Dier;
 class Position;
-template<class T> class SafePointer;
+template<class T, bool F> class SafePointer;
 
 typedef Hash<String, String> ViewKeys;
 

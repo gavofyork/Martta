@@ -98,7 +98,7 @@ String HardCompound::defineLayout(ViewKeys const&) const
 
 String HardCompound::defineHtml() const
 {
-	return L"<span class=\"minor symbol\">{</span><br/><div class=\"block\">" + toHtml(cardinalChildren(), L"<br/>") + L"</div><span class=\"minor symbol\">}</div>";
+	return L"<div class=\"minor symbol\">{</div><div class=\"block\">" + toHtml(cardinalChildren(), L"<br/>") + L"</div><div class=\"minor symbol\">}</div>";
 }
 
 }

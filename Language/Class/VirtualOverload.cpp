@@ -76,6 +76,11 @@ String VirtualOverload::defineEditLayout(ViewKeys const& _viewKeys, VirtualMetho
 	return "m24,0,0,0;^;ycode;'virtual';Mo;>name;ynormal;%1;Mo" + String(_viewKeys["expanded"].toBool() ? String(body()->cardinalChildCount() ? ";n;i;%1" : ";%1").arg(Body) : "");
 }
 
+String VirtualOverload::defineEditHtml(VirtualMethod*) const
+{
+	return String::null;
+}
+
 EditDelegateFace* VirtualOverload::newDelegate(CodeScene* _s)
 {
 	return new CompletionDelegate<VirtualOverload, VirtualMethod*>(this, _s);

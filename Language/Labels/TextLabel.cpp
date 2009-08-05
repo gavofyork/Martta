@@ -75,8 +75,8 @@ String TextLabel::name() const
 String TextLabel::defineHtml() const
 {
 	if (name().isEmpty())
-		return L"<span id=\"this\" class=\"minor\">[ANONYMOUS]</span>";
-	return String("<span id=\"this\" class=\"TextLabel-%1\">").arg(isNamed() ? L"named" : L"unnamed") + tryParent<Labelled>()->labelHtml(name()) + L"</span>";
+		return L"<span id=\"this\"><span class=\"minor\">[ANONYMOUS]</span></span>";
+	return String("<span id=\"this\"><span class=\"TextLabel-%1\">").arg(isNamed() ? L"named" : L"unnamed") + tryParent<Labelled>()->labelHtml(name()) + L"</span></span>";
 }
 
 String TextLabel::defineLayout(ViewKeys const& _k) const
@@ -122,7 +122,7 @@ public:
 	{
 		if (_e->text() == L"\b")
 			m_text = m_text.left(m_text.size() - 1);
-		else if (_e->text().length() == 1 && (_e->text()[0].isAlphaNumeric() || _e->text()[0] == L'_'))
+		else if (_e->text().length() == 1 && (_e->text()[0].isAlphaNumeric() || _e->text()[0] == L'_' || _e->text()[0] == L' '))
 			m_text += _e->text();
 		else
 			return EditDelegate<TextLabel>::keyPressed(_e);
@@ -168,6 +168,14 @@ public:
 	{
 		// The tryParent()-> should be safe since Labelled checks for a null this-pointer.
 		return "^;" + (m_text.isEmpty() ? String("yminor;'ANONYMOUS'") : subject()->tryParent<Labelled>()->labelLayout("'" + m_text + "'", _k));
+	}
+	virtual String defineHtml() const
+	{
+		// The tryParent()-> should be safe since Labelled checks for a null this-pointer.
+		if (m_text.isEmpty())
+			return L"<span class=\"minor\">[ANONYMOUS]</span>";
+		return subject()->tryParent<Labelled>()->labelHtml(m_text);
+//		return String(L"<span class=\"TextLabel-%1\">").arg(isNamed() ? L"named" : L"unnamed") + subject()->tryParent<Labelled>()->labelHtml(m_text)) + L"</span>";
 	}
 	String m_text;
 };

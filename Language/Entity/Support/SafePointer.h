@@ -28,30 +28,34 @@ namespace Martta
 {
 
 class SafePointerTarget;
-template<class T> class SafePointer;
+template<class T, bool F> class SafePointer;
 
 class SafePointerFace
 {
 	friend class SafePointerTarget;
-	template<class T> friend class SafePointer;
+	template<class T, bool F> friend class SafePointer;
 
 protected:
-	inline SafePointerFace(SafePointerTarget* _e = 0): m_pointer(0) { set(_e); }
+	inline SafePointerFace(SafePointerTarget* _e = 0, bool _fixed = false): m_pointer(0), m_fixed(_fixed) { set(_e); }
 	inline ~SafePointerFace() { set(0); }
 	inline void set(SafePointerTarget* _e);
 
+	inline void fix() { m_fixed = true; }
+	inline void roam() { m_fixed = false; }
+
 private:
 	SafePointerTarget*		m_pointer;
+	bool					m_fixed;
 };
 
-template<class T>
+template<class T, bool StartFixed = false>
 class SafePointer: public SafePointerFace
 {
 	friend class SafePointerTarget;
 
 public:
-	inline SafePointer(T* _e = 0): SafePointerFace(_e) {}
-	inline SafePointer(SafePointer<T> const& _s): SafePointerFace(_s.m_pointer) {}
+	inline SafePointer(T* _e = 0): SafePointerFace(_e, StartFixed) {}
+	inline SafePointer(SafePointer<T> const& _s): SafePointerFace(_s.m_pointer, StartFixed) {}
 	inline SafePointer& operator=(SafePointer<T> const& _s) { set(_s.m_pointer); return *this; }
 	inline SafePointer& operator=(T* _e) { set(_e); return *this; }
 
@@ -74,11 +78,12 @@ protected:
 			return;
 
 		M_FOREACH (SafePointerFace* i, m_safePointers)
-		{
-			i->m_pointer = _sub;
-			_sub->m_safePointers << i;
-		}
-		m_safePointers.clear();
+			if (!i->m_fixed)
+			{
+				i->m_pointer = _sub;
+				_sub->m_safePointers << i;
+				m_safePointers.removeOne(i);
+			}
 	}
 
 	inline ~SafePointerTarget()

@@ -36,6 +36,7 @@ public:
 	VirtualMethod*						get() const { return m_base; }
 	void								set(VirtualMethod* _m) { setDependency(m_base, _m); }
 	String								defineEditLayout(ViewKeys const&, VirtualMethod*) const;
+	String								defineEditHtml(VirtualMethod*) const;
 	List<VirtualMethod*>				possibilities() const;
 
 protected:

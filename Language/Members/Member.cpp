@@ -55,6 +55,11 @@ String Member::interfaceCode() const
 	return childAs<Label>(Accessibility)->code() + ": " + memberInterfaceCode();
 }
 
+String Member::defineHtml() const
+{
+	return L"<div class=\"block\" id=\"this\">" + memberDefineHtml() + L"</div>";
+}
+
 String Member::defineLayout(ViewKeys const& _k) const
 {
 	return "^;m24,0,0,0;" + memberDefineLayout(_k);

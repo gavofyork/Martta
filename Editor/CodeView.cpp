@@ -39,7 +39,6 @@ CodeView::CodeView(QWidget* _p):
 	m_showDependencyInfo(false),
 	m_showChanges		(false),
 	m_showOneChange		(true),
-	m_leavingEdit		(false),
 	m_showHover			(true),
 	m_hover				(0),
 	m_lastRealCurrent	(0),
@@ -139,57 +138,6 @@ void CodeView::leaving(Entity* _e, Position const&)
 		m_lastRealCurrent = 0;
 }
 
-void CodeView::setEditing(Entity* _e)
-{
-	if (_e == editEntity())
-		return;
-
-	mDebug() << "Changing editing...";
-
-	if (m_editDelegate)
-	{
-		// If the edit delegate is half-way to destruction, we can allow it to have a null subject.
-		AssertNR(m_editDelegate->subject() == m_current || m_current->usurpsChild(m_editDelegate->subject()) || !m_editDelegate->subject());
-		mDebug() << "Leaving editing...";
-		if (m_visible.contains(m_editDelegate->subject()))
-		{
-			editDelegate()->tryCommit();
-			m_leavingEdit = true;
-			mDebug() << "Leaving editing intact...";
-			m_editDelegate->leavingEditIntact();
-			// at this point, m_editDelegate and m_current may no longer be valid.
-			m_leavingEdit = false;
-		}
-		if (m_editDelegate)
-		{
-			delete m_editDelegate;
-			relayoutLater(m_current);
-		}
-		if (!isInScene(m_current))
-			doRefreshLayout();
-	}
-
-	if (_e && !_e->isFixed())
-	{
-		if (!isInScene(_e))
-			doRefreshLayout();
-		if (isFocusable(_e))
-			setCurrent(_e);
-		else if (_e->isUsurped())
-			setCurrent(_e->parent());
-		else
-			return;
-
-		_e->newDelegate(this);
-		if (m_editDelegate)
-		{
-			m_editDelegate->initialised();
-			update();
-		}
-		relayoutLater(current());
-	}
-}
-
 bool CodeView::event(QEvent* _e)
 {
 	if (_e->type() == QEvent::KeyPress)
@@ -286,8 +234,8 @@ void CodeView::paintEvent(QPaintEvent*)
 	QRectF br = bounds(m_current);
 	{
 		QLinearGradient g(br.topLeft(), br.bottomLeft());
-		g.setColorAt(0.f, QColor(m_editDelegate ? 255 : 192, 224, m_editDelegate ? 192 : 255, 32));
-		g.setColorAt(1.f, QColor(m_editDelegate ? 255 : 127, 192, m_editDelegate ? 127 : 255, 32));
+		g.setColorAt(0.f, QColor(editDelegate() ? 255 : 192, 224, editDelegate() ? 192 : 255, 32));
+		g.setColorAt(1.f, QColor(editDelegate() ? 255 : 127, 192, editDelegate() ? 127 : 255, 32));
 		p.setBrush(g);
 	}
 	p.drawRect(br);
@@ -370,11 +318,6 @@ void CodeView::paintEvent(QPaintEvent*)
 					p.drawRect(obr);
 				}
 			}*/
-}
-
-Entity* CodeView::editEntity() const
-{
-	return m_editDelegate ? m_editDelegate->subject() : 0;
 }
 
 void CodeView::keyPressEvent(QKeyEvent* _e)
@@ -493,11 +436,8 @@ Entity* CodeView::nearest(Entity* _e)
 
 void CodeView::silentlySetCurrent(Entity* _e)
 {
-	if (m_leavingEdit)
-	{
-//		mDebug() << "silentlySetCurrent: setting current to" << _e;
-		m_current = _e;
-	}
+//	mDebug() << "silentlySetCurrent: setting current to" << _e;
+	m_current = _e;
 }
 
 void CodeView::setCurrent(Entity const* _e)
@@ -656,14 +596,12 @@ void CodeView::setSubject(Entity* _subject)
 	m_leftmostChild.clear();
 	m_rightmostChild.clear();
 	m_bracketed.clear();
-	m_editDelegate = 0;
 
 	// If the model's going down then make sure we reset all our pointers.
 	// m_current, at least, needs to be reset with a different subject.
 //	if (!m_subject)
 	{
-		delete m_editDelegate;
-		m_editDelegate = 0;
+		delete editDelegate();
 		m_current = 0;
 		m_lastRealCurrent = 0;
 		m_strobeCreation = 0;

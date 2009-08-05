@@ -94,6 +94,17 @@ bool EnumerationNamer::keyPressed(KeyEvent const* _e)
 	return true;
 }
 
+String EnumerationNamer::defineHtml() const
+{
+	String ret;
+	String name;
+	if (isNamed())
+		name = Type(const_cast<TypeDefinition*>(asKind<TypeDefinition>()))->typeHtml(toHtml(self()->child(Identity), "span class=\"TypeEntity\""));
+	else if (!m_stem.isEmpty())
+		name = L"<span class=\"unreal\">[" + m_stem + L"...]</span>";
+	return L"<span class=\"keyword\">enum</span> " + name + L"<div class=\"minor symbol\">{</div><div class=\"block\">" + toHtml(self()->cardinalChildren()) + L"</div><div class=\"minor symbol\">}</div>";
+}
+
 String EnumerationNamer::defineLayout(ViewKeys const& _viewKeys) const
 {
 	String ret;

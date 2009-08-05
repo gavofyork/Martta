@@ -2,14 +2,14 @@
  * Version: Martta License version 1.0
  *
  * The contents of this file are subject to the Martta License version 1.0
- * (the "License"); you may not use this file except in compliance with the 
- * License. You should have received a copy of the Martta License 
+ * (the "License"); you may not use this file except in compliance with the
+ * License. You should have received a copy of the Martta License
  * "COPYING.Martta" along with Martta; if not you may obtain a copy of the
  * License at http://quidprocode.co.uk/Martta/
  *
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations under 
+ * License for the specific language governing rights and limitations under
  * the License.
  *
  * The Initial Developer of the code in this file is Gavin Wood.
@@ -28,14 +28,14 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(SimpleBinaryOperation);	
+MARTTA_OBJECT_CPP(SimpleBinaryOperation);
 
 bool SimpleBinaryOperation::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
 	Operator o(_e->text(), Operator::Binary);
 	if (!_p.exists() || _p->isPlaceholder() || o.isNull())
 		return false;
-		
+
 	bool ok = false;
 	Position p = slideOnPrecedence(_p, o.precedence(), o.associativity(), _e->nearestBracket(_p));
 	AssertNR(!p.entity()->isEditing());
@@ -96,6 +96,48 @@ String SimpleBinaryOperation::operatorLayout() const
 		return String(L"ycode;'%1';M-3;'='").arg(MarttaSupport::Char(0x00d7));
 	else if (id().symbol() == Operator::SlashEquals)
 		return String(L"ycode;'%1';M-3;'='").arg(MarttaSupport::Char(0x00f7));
+	else
+		return String(L"ycode;'%1'").arg(id().code());
+}
+
+String SimpleBinaryOperation::operatorHtml() const
+{
+	if (id().symbol() == Operator::BangEquals)
+		return L"<span class=\"symbol\">&ne;</span>";
+	else if (id().symbol() == Operator::EqualsEquals)
+		return L"<span class=\"symbol\">=</span>";
+	else if (id().symbol() == Operator::LessThanEquals)
+		return L"<span class=\"symbol\">&le;</span>";
+	else if (id().symbol() == Operator::GreaterThanEquals)
+		return L"<span class=\"symbol\">&ge;</span>";
+	else if (id().symbol() == Operator::LessThan)
+		return L"<span class=\"symbol\">&lt;</span>";
+	else if (id().symbol() == Operator::GreaterThan)
+		return L"<span class=\"symbol\">&gt;</span>";
+	else if (id().symbol() == Operator::LeftShift)
+		return L"<span class=\"symbol\">&laquo;</span>";
+	else if (id().symbol() == Operator::RightShift)
+		return L"<span class=\"symbol\">&raquo;</span>";
+	else if (id().symbol() == Operator::LeftShiftEquals)
+		return L"<span class=\"symbol\">&laquo;=</span>";
+	else if (id().symbol() == Operator::RightShiftEquals)
+		return L"<span class=\"symbol\">&raquo;=</span>";
+	else if (id().symbol() == Operator::Star)
+		return L"<span class=\"symbol\">&times;</span>";
+	else if (id().symbol() == Operator::Slash)
+		return L"<span class=\"symbol\">&divide;</span>";
+	else if (id().symbol() == Operator::BarBar)
+		return L"<span class=\"symbol\">&or;</span>";
+	else if (id().symbol() == Operator::AmpersAmpers)
+		return L"<span class=\"symbol\">&and;</span>";
+	else if (id().symbol() == Operator::PlusEquals)
+		return L"<span class=\"symbol\">+=</span>";
+	else if (id().symbol() == Operator::MinusEquals)
+		return L"<span class=\"symbol\">-=</span>";
+	else if (id().symbol() == Operator::StarEquals)
+		return L"<span class=\"symbol\">&times;=</span>";
+	else if (id().symbol() == Operator::SlashEquals)
+		return L"<span class=\"symbol\">&divide;=</span>";
 	else
 		return String(L"ycode;'%1'").arg(id().code());
 }

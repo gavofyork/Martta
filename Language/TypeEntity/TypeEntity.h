@@ -68,6 +68,7 @@ public:
 	virtual String						code(String const& _middle = "") const { return _middle; }
 	virtual TypeEntity*					bottom() { return this; }
 	virtual Rgb							idColour() const { return 0x777777; }
+	virtual String						defineHtml() const;
 
 	virtual bool						isInModel() const { return parent() && !m_owner ? parent()->isInModel() : true; }
 	virtual bool						botherNotifying() const { return isInModel(); }

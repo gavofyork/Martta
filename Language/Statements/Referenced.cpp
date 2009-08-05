@@ -95,7 +95,7 @@ String Referenced::defineLayout(ViewKeys const& _k) const
 String Referenced::defineHtml() const
 {
 	if (!m_subject)
-		return String::null;
+		return L"<^>";
 	return L"<span id=\"this\" class=\"Referenced\">" + m_subject->tryKind<Labelled>()->labelHtml(m_subject->type()->typeHtml(m_subject->name())) + L"</span>";
 }
 
@@ -109,6 +109,14 @@ String Referenced::defineEditLayout(ViewKeys const& _k, ValueDefiner* _v)
 	String ret = L"^;s" + (_v ? _v->type()->idColour() : TypeEntity::null->idColour()).name() + L";c;%1";
 	if (_v)
 		ret = _v->tryKind<Labelled>()->labelLayout(ret, _k);
+	return ret;
+}
+
+String Referenced::defineEditHtml(ValueDefiner* _v) const
+{
+	String ret = (_v ? &*_v->type() : TypeEntity::null)->typeHtml(L"<?>");
+	if (_v)
+		ret = _v->tryKind<Labelled>()->labelHtml(ret);
 	return ret;
 }
 

@@ -37,9 +37,11 @@ class Stylist;
 class EditDelegateFace;
 class CodeScene;
 
-String toHtml(Entity const* _e);
-String toHtml(List<Entity const*> const& _es, String const& _delimiter = L" ");
-inline String toHtml(List<Entity*> const& _es, String const& _delimiter = L" ") { return toHtml(list_const_cast<Entity const*>(_es), _delimiter); }
+String refinedHtml(Entity const* _e);
+String htmlEscape(String const& _s);
+String toHtml(Entity const* _e, String const& _tag = L"span");
+String toHtml(List<Entity const*> const& _es, String const& _delimiter = L" ", String const& _tag = L"span");
+inline String toHtml(List<Entity*> const& _es, String const& _delimiter = L" ", String const& _tag = L"span") { return toHtml(list_const_cast<Entity const*>(_es), _delimiter, _tag); }
 void addToHtmlCache(Entity const* _e, String const& _s);
 void clearHtmlCache();
 

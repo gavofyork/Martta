@@ -33,4 +33,12 @@ String BinaryOperation::defineLayout(ViewKeys const&) const
 	return "B#0000000a;Mo;" + middle + ";Mo";
 }
 
+String BinaryOperation::defineHtml() const
+{
+	String middle = toHtml(child(FirstOperand)) + L" " + operatorLayout() + L" " + toHtml(child(SecondOperand));
+	if (!parent()->isKind<Operation>())
+		return middle;
+	return L"<span class=\"operation\">" + middle + L"</span>";
+}
+
 }

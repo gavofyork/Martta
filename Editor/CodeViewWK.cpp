@@ -67,9 +67,7 @@ Entity* CodeViewWK::current() const
 void CodeViewWK::setCurrent(Entity const* _s)
 {
 	if (!m_silent)
-	{
 		refresh();
-	}
 	page()->mainFrame()->evaluateJavaScript(QString("setCurrentById('%1')").arg((int)_s));
 }
 
@@ -98,40 +96,48 @@ void CodeViewWK::navigateAway(Entity* _from, NavigationDirection _d)
 
 bool CodeViewWK::isFocusable(Entity const* _e) const
 {
+	if (!isInScene(_e))
+		return false;
 	return page()->mainFrame()->evaluateJavaScript(QString("thisNode(document.getElementById('%1')) != null").arg((int)_e)).toBool();
 }
 
 bool CodeViewWK::isInScene(Entity const* _e) const
 {
+	if (page()->mainFrame()->evaluateJavaScript(QString("document.getElementById('%1') != null").arg((int)_e)).toBool())
+		return true;
+	const_cast<CodeViewWK*>(this)->refresh();
 	return page()->mainFrame()->evaluateJavaScript(QString("document.getElementById('%1') != null").arg((int)_e)).toBool();
 }
 
 void CodeViewWK::refresh()
 {
+	Entity* e;
 	if (WebStylistRegistrar::get()->hasChanged())
 		init();
 	else
 		// If we're dirty then update the HTML.
-		foreach (Entity* e, m_dirty)
-			if (e)
+		while (m_dirty.count())
+			if ((e = m_dirty.takeLast()) && e != editEntity())
 			{
-				QString html = qs(e->defineHtml());
-				if (html.startsWith("<span id=\"this\">") && html.endsWith("</span>") && html.lastIndexOf("<span", 1) == 0)
-					page()->mainFrame()->evaluateJavaScript(QString("thisNode(document.getElementById('%1')).innerHTML = '%2'").arg((int)e).arg(html.mid(16, html.length() - 23).replace('\'', "\\'")));
-				else
-				{
-					Entity* cur = current();
-					QString s;
-					foreach (Entity* i, e->children())
-						if ((s = page()->mainFrame()->evaluateJavaScript(QString("document.getElementById('%1').innerHTML").arg((int)i)).toString()) != QString::null)
-							addToHtmlCache(i, qs(s));
-					page()->mainFrame()->evaluateJavaScript(QString("document.getElementById('%1').innerHTML = '%2'").arg((int)e).arg(html.replace('\'', "\\'")));
-					clearHtmlCache();
-					silentlySetCurrent(cur);
-				}
+				Entity* cur = current();
+				QString s;
+				foreach (Entity* i, e->children())
+					if (m_dirty.contains(i))
+						m_dirty.removeAll(i);
+					else if ((s = page()->mainFrame()->evaluateJavaScript(QString("document.getElementById('%1').outerHTML").arg((int)i)).toString().replace('\\', "&#92;")) != QString::null)
+						addToHtmlCache(i, qs(s));
+				page()->mainFrame()->evaluateJavaScript(QString("document.getElementById('%1').innerHTML = '%2'").arg((int)e).arg(qs(refinedHtml(e)).replace('\'', "\\'")));
+				clearHtmlCache();
+				silentlySetCurrent(cur);
 			}
+			else if (e)
+			{
+				QString html = qs(editDelegate()->defineHtml());
+				page()->mainFrame()->evaluateJavaScript(QString("thisNode(document.getElementById('%1')).innerHTML = '%2'").arg((int)editEntity()).arg(html.replace('\'', "\\'")));
+			}
+
 	m_dirty.clear();
-	qDebug() << page()->mainFrame()->evaluateJavaScript("document.body.innerHTML").toString();
+//	qDebug() << page()->mainFrame()->evaluateJavaScript("document.body.innerHTML").toString();
 }
 
 void CodeViewWK::paintEvent(QPaintEvent* _ev)
@@ -258,7 +264,8 @@ void CodeViewWK::init()
 
 void CodeViewWK::markDirty(Entity* _e)
 {
-	m_dirty.append(_e);
+	if (!m_dirty.contains(_e))
+		m_dirty.append(_e);
 	update();
 }
 

@@ -45,7 +45,7 @@ String StringLiteral::defineLayout(ViewKeys const&) const
 
 String StringLiteral::defineHtml() const
 {
-	return String(L"<span id=\"this\"><span class=\"symbol\">\"</span><span class=\"StringLiteral Literal\">%1</span><span class=\"symbol\">\"</span></span>").arg(m_value);
+	return String(L"<span id=\"this\"><span class=\"symbol\">&ldquo;</span><span class=\"StringLiteral Literal\">%1</span><span class=\"symbol\">&rdquo;</span></span>").arg(htmlEscape(String(m_value)));
 }
 
 bool StringLiteral::keyPressed(KeyEvent const* _e)

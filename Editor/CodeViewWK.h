@@ -47,17 +47,12 @@ public:
 
 	// What's happening?
 	virtual Entity*				current() const;
-	virtual Entity*				editEntity() const { return 0; }
-	virtual EditDelegateFace*	editDelegate() const { return 0; }
 	virtual bool				isCurrent(Entity const* _e) const { return _e == current(); }
-	virtual bool				isEditing(Entity const*) const { return false; }
 	virtual bool				isFocusable(Entity const* _e) const;
 	virtual bool				isInScene(Entity const* _e) const;
 
 	// Focus changers (often make use of above).
 	virtual void				setCurrent(Entity const* _e);
-	virtual void				setEditing(Entity*) {}
-
 	virtual void				navigateInto(Entity* _centre) { navigateAway(_centre); }			/// Selects _centre's leftmost, innermost focusable child. e.g. X on ()s: (++X + 4)
 	virtual void				navigateOnto(Entity* _shell) { navigateAway(_shell); }				/// Selects _shell's leftmost focusable child. e.g. ++X on ()s: (++X + 4)
 	virtual void				navigateToNew(Entity* _from) { navigateAway(_from); }				/// Selects closest focusable sibling-owned entity visually forwards from _from, or parent if none.

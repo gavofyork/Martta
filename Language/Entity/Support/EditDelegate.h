@@ -2,14 +2,14 @@
  * Version: Martta License version 1.0
  *
  * The contents of this file are subject to the Martta License version 1.0
- * (the "License"); you may not use this file except in compliance with the 
- * License. You should have received a copy of the Martta License 
+ * (the "License"); you may not use this file except in compliance with the
+ * License. You should have received a copy of the Martta License
  * "COPYING.Martta" along with Martta; if not you may obtain a copy of the
  * License at http://quidprocode.co.uk/Martta/
  *
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations under 
+ * License for the specific language governing rights and limitations under
  * the License.
  *
  * The Initial Developer of the code in this file is Gavin Wood.
@@ -19,6 +19,8 @@
  * ***** END LICENSE BLOCK ***** */
 
 #pragma once
+
+#include "SafePointer.h"
 
 namespace Martta
 {
@@ -38,17 +40,18 @@ public:
 	void						initialised() { m_immediateCommits = !isValid(); }
 	void						lazyCommit() { if (m_immediateCommits) tryCommit(); }
 	void						tryCommit() { if (isValid()) commit(); }
-	
+
 	virtual String				defineLayout(ViewKeys const&) const;
+	virtual String				defineHtml() const;
 	virtual bool				keyPressed(KeyEvent const*) { return false; }
 	/// Called only once, and only when this will be destroyed but the subject will live.
 	virtual void				leavingEditIntact() {}
-	
+
 protected:
 	virtual bool				isValid() const { return true; }
 	virtual void				commit() {}
-	
-	Entity*						m_subject;
+
+	SafePointer<Entity, true>	m_subject;
 	CodeScene*					m_codeScene;
 	bool						m_immediateCommits;
 };
@@ -59,7 +62,7 @@ class EditDelegate: public EditDelegateFace
 public:
 	EditDelegate(T* _e, CodeScene* _s): EditDelegateFace(_e, _s) {}
 
-	T* subject() const { return static_cast<T*>(m_subject); }
+	T* subject() const { return m_subject ? static_cast<T*>(&*m_subject) : 0; }
 };
 
 }

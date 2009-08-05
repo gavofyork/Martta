@@ -45,6 +45,7 @@ public:
 
 	List<TypeDefinition*>				possibilities();
 	virtual String						defineEditLayout(ViewKeys const&, TypeDefinition*) const;
+	String								defineEditHtml(TypeDefinition*) const { return String::null; }
 
 	bool								hasSingleCastOperator(TypeEntity const* _t, bool _const = false) const;
 	bool								hasSingleConversionConstructor(TypeEntity const* _f) const;

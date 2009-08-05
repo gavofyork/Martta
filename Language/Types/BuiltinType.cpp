@@ -161,6 +161,12 @@ String BuiltinType::defineEditLayout(ViewKeys const&, int) const
 	return "^;c;s" + idColour().name() + ";fb;%1";
 }
 
+String BuiltinType::defineEditHtml(int) const
+{
+	mInfo() << (L"<span class=\"TypeEntity\">" + typeHtml(L"<?>") + L"</span>");
+	return L"<span class=\"TypeEntity\">" + typeHtml(L"<?>") + L"</span>";
+}
+
 EditDelegateFace* BuiltinType::newDelegate(CodeScene* _s)
 {
 	return new CompletionDelegate<BuiltinType, int>(this, _s);

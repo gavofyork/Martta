@@ -2,14 +2,14 @@
  * Version: Martta License version 1.0
  *
  * The contents of this file are subject to the Martta License version 1.0
- * (the "License"); you may not use this file except in compliance with the 
- * License. You should have received a copy of the Martta License 
+ * (the "License"); you may not use this file except in compliance with the
+ * License. You should have received a copy of the Martta License
  * "COPYING.Martta" along with Martta; if not you may obtain a copy of the
  * License at http://quidprocode.co.uk/Martta/
  *
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations under 
+ * License for the specific language governing rights and limitations under
  * the License.
  *
  * The Initial Developer of the code in this file is Gavin Wood.
@@ -100,6 +100,11 @@ Type MemberLambda::thisType() const
 String MemberLambda::memberDefineLayout(ViewKeys const& _v) const
 {
 	return (isConst() ? "M-17;fs11;fb;ewhite;c#5f6f7f;'C';M9;fb0;e#0000;c#0000;fs;" : "") + memberLambdaDefineLayout(_v);
+}
+
+String MemberLambda::memberDefineHtml() const
+{
+	return (isConst() ? "C" : "") + memberLambdaDefineHtml();
 }
 
 bool MemberLambda::keyPressed(KeyEvent const* _e)

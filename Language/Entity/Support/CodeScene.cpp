@@ -30,12 +30,12 @@ namespace Martta
 List<CodeScene*> CodeScene::s_allScenes;
 
 CodeScene::CodeScene():
-	m_editDelegate					(0),
 	m_insert						(false),
 	m_insertNext					(false),
 	m_insertLock					(false),
 	m_reinterpretCurrentKeyEvent	(false),
-	m_reinterpretCount				(0)
+	m_reinterpretCount				(0),
+	m_editDelegate					(0)
 {
 	s_allScenes.append(this);
 }
@@ -51,6 +51,67 @@ void CodeScene::killStrobe()
 	m_strobeFocus = 0;
 	m_strobeCreation = 0;
 	m_strobeText = String::null;
+}
+
+Entity* CodeScene::editEntity() const
+{
+	return editDelegate() ? m_editDelegate->subject() : 0;
+}
+
+EditDelegateFace* CodeScene::editDelegate() const
+{
+	if (!m_editDelegate)
+		return 0;
+	if (!m_editDelegate->subject())
+		delete m_editDelegate;
+	// Note the destructor of the edit delegate tell us that it's dead so m_editDelegate is always correct.
+	return m_editDelegate;
+}
+
+void CodeScene::setEditing(Entity* _e)
+{
+	if (_e == editEntity())
+		return;
+
+	mDebug() << "Changing editing...";
+
+	if (editDelegate())
+	{
+		SafePointer<Entity> edited = m_editDelegate->subject();
+		SafePointer<Entity> cur = current();
+		// If the edit delegate is half-way to destruction, we can allow it to have a null subject.
+//		AssertNR(edited == cur || cur->usurpsChild(edited) || !edited);
+		mDebug() << "Leaving editing...";
+		if (isInScene(edited))
+		{
+			editDelegate()->tryCommit();
+			mDebug() << "Leaving editing intact...";
+			m_editDelegate->leavingEditIntact();
+			// at this point, m_editDelegate and m_current may no longer be valid.
+		}
+		if (m_editDelegate)
+		{
+			delete m_editDelegate;
+			relayoutLater(edited);
+		}
+	}
+
+	if (_e && !_e->isFixed())
+	{
+		if (isFocusable(_e))
+			setCurrent(_e);
+		else if (_e->isUsurped())
+			setCurrent(_e->parent());
+		else
+			return;
+
+		_e->newDelegate(this);
+		if (m_editDelegate)
+		{
+			m_editDelegate->initialised();
+			relayoutLater(current());
+		}
+	}
 }
 
 void CodeScene::currentAboutToChange()
@@ -86,6 +147,10 @@ Position CodeScene::nearestBracket(Position const& _p) const
 			}
 		}
 	return ret;
+}
+
+void CodeScene::leaving(Entity*, Position const&)
+{
 }
 
 void CodeScene::keyPressHandler(KeyEvent& _e)

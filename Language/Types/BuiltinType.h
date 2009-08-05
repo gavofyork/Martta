@@ -72,7 +72,8 @@ public:
 	}
 
 	List<int>							possibilities();
-	virtual String						defineEditLayout(ViewKeys const&, int) const;
+	String								defineEditLayout(ViewKeys const&, int) const;
+	String								defineEditHtml(int) const;
 	inline int							get() const { return m_id; }
 	inline void							set(uint _m) { setId(_m); }
 	virtual bool						isNull() const { return m_id == (uint)-1; }
