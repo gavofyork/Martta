@@ -116,7 +116,7 @@ String toHtml(Entity const* _e, String const& _tag)
 		return String::null;
 	if (s_htmlCache.contains(_e))
 		return s_htmlCache[_e];
-	return String("<%1 entity=\"true\" id=\"%2\">%3</%4>").arg(_tag).arg((int)_e).arg(refinedHtml(_e)).arg(_tag.section(L' ', 0, 0));
+	return String("<%1 entity=\"true\" ondblclick=\"if (CodeView.attemptEdit(%2)) event.stopPropagation();\" id=\"%2\">%3</%4>").arg(_tag).arg((int)_e).arg(refinedHtml(_e)).arg(_tag.section(L' ', 0, 0));
 }
 
 String toHtml(List<Entity const*> const& _es, String const& _delimiter, String const& _tag)

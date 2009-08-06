@@ -40,6 +40,9 @@ public:
 	Type								thisType() const;
 
 protected:
+	virtual String						definePreHtml() const;
+	virtual String						definePostHtml() const;
+
 	/// Override if you want a completely different layout (rather than the LambdaNamer template).
 	/// Overriding this will still do the const decoration etc. If you don't want that, override Member::memberDefineLayout or Entity::defineLayout.
 	virtual String						memberLambdaDefineLayout(ViewKeys const& _v) const { return LambdaNamer::defineLayout(_v); }

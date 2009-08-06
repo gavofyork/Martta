@@ -94,6 +94,14 @@ void CodeViewWK::navigateAway(Entity* _from, NavigationDirection _d)
 	page()->mainFrame()->evaluateJavaScript(QString("setCurrentById('%1'); go%2()").arg((int)_from).arg(_d == Forwards ? "Next" : "Previous"));
 }
 
+bool CodeViewWK::attemptEdit(int _e)
+{
+	Entity* e = (Entity*)_e;
+	if (isFocusable(e))
+		setEditing(e);
+	return isEditing(e);
+}
+
 bool CodeViewWK::isFocusable(Entity const* _e) const
 {
 	if (!isInScene(_e))
@@ -118,6 +126,7 @@ bool CodeViewWK::manageKeyPress(KeyEvent const& _e, Entity const* _fe)
 
 void CodeViewWK::refresh()
 {
+	mInfo() << m_dirty;
 	Entity* e;
 	if (WebStylistRegistrar::get()->hasChanged())
 		init();
@@ -133,6 +142,7 @@ void CodeViewWK::refresh()
 						m_dirty.removeAll(i);
 					else if ((s = page()->mainFrame()->evaluateJavaScript(QString("document.getElementById('%1').outerHTML").arg((int)i)).toString().replace('\\', "&#92;")) != QString::null)
 						addToHtmlCache(i, qs(s));
+				mInfo() << "Changing content: " << e;
 				page()->mainFrame()->evaluateJavaScript(QString("changeContent('%1', '%2')").arg((int)e).arg(qs(refinedHtml(e)).replace('\'', "\\'")));
 				clearHtmlCache();
 				silentlySetCurrent(cur);
@@ -179,6 +189,7 @@ void CodeViewWK::init()
 		"function isInvisible(node) { var n = node; while (n) if (n.style && n.style.display == 'none') return true; else n = n.parentNode; return false; }"
 		"function onlyThese(node) { if (isInvisible(node)) return NodeFilter.FILTER_REJECT; if (node.id == 'this') return NodeFilter.FILTER_ACCEPT; return NodeFilter.FILTER_SKIP; }"
 		"var g_currentIterator = document.createNodeIterator(document, NodeFilter.SHOW_ELEMENT, onlyThese, false);"
+		"String.prototype.escapeHTML = function () { return(this.replace(/&/g,'&amp;').replace(/>/g,'&gt;').replace(/</g,'&lt;').replace(/\"/g,'&quot;') ); };"
 		"function thisNode(_e)"
 		"{"
 		"	var children = _e.childNodes;"
@@ -282,13 +293,24 @@ void CodeViewWK::init()
 		"{"
 		"	setCurrent(document.getElementById(_id));"
 		"}"
+		"function getAttribs(_e, _a)"
+		"{"
+		"	var ns = _e.childNodes;"
+		"	for (var i = 0; i < ns.length; i++)"
+		"	{"
+		"		if (ns[i].getAttribute && ns[i].getAttribute('entity'))"
+		"			continue;"
+		"		if (ns[i].id && ns[i].attributes && ns[i].id != 'this')"
+		"			_a[ns[i].id] = ns[i].attributes;"
+		"		if (ns[i].attributes)"
+		"			getAttribs(ns[i], _a);"
+		"	}"
+		"}"
 		"function changeContent(_id, _html)"
 		"{"
 		"	var e = document.getElementById(_id);"
 		"	var s = new Array();"
-		"	for (var i = 0; i < e.childNodes.length; i++)"
-		"		if (e.childNodes[i].id && e.childNodes[i].id != 'this' && e.childNodes[i].id.indexOf('ei_') != 0 && e.childNodes[i].attributes)"
-		"			s[e.childNodes[i].id] = e.childNodes[i].attributes;"
+		"	getAttribs(e, s);"
 		"	e.innerHTML = _html;"
 		"	for (var i in s)"
 		"		if (document.getElementById(i))"

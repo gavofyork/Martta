@@ -103,7 +103,7 @@ String LambdaNamer::defineBodyHtml() const
 		info = L" (" + String::number(n) + L" statement" + (n > 1 ? L"s" : L"") + L")";
 	else
 		info = " (empty)";
-	return (L"<span stateful=\"true\" id=\"%1-info\" class=\"minor\">" + info + L"</span><div stateful=\"true\" id=\"%1-body\" style=\"display: none\">").arg((int)(Entity*)this) + toHtml(body()) + L"</div>";
+	return (L"<span id=\"%1-info\" class=\"minor\">" + info + L"</span><div id=\"%1-body\" style=\"display: none\">").arg((int)(Entity*)this) + toHtml(body()) + L"</div>";
 }
 
 String LambdaNamer::defineLayout(ViewKeys const& _k, String const& _middle) const

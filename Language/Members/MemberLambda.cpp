@@ -104,7 +104,17 @@ String MemberLambda::memberDefineLayout(ViewKeys const& _v) const
 
 String MemberLambda::memberDefineHtml() const
 {
-	return (isConst() ? "C" : "") + memberLambdaDefineHtml();
+	return L"<div class=\"deblock\">" + String(isConst() ? "C" : "M") + memberLambdaDefineHtml() + L"</div>";
+}
+
+String MemberLambda::definePreHtml() const
+{
+	return L"<div class=\"block\">";
+}
+
+String MemberLambda::definePostHtml() const
+{
+	return L"</div>";
 }
 
 bool MemberLambda::keyPressed(KeyEvent const* _e)

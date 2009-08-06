@@ -71,6 +71,7 @@ public:
 public slots:
 	void						onCurrentAboutToChange();
 	void						onCurrentChanged(QString const& _old);
+	bool						attemptEdit(int _e);
 
 signals:
 	void						currentChanged(Entity*);
