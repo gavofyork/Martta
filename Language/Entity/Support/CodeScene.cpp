@@ -149,10 +149,6 @@ Position CodeScene::nearestBracket(Position const& _p) const
 	return ret;
 }
 
-void CodeScene::leaving(Entity*, Position const&)
-{
-}
-
 void CodeScene::keyPressHandler(KeyEvent& _e)
 {
 	if (!subject() || !current())

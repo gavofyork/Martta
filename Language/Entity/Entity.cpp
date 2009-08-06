@@ -116,7 +116,7 @@ String toHtml(Entity const* _e, String const& _tag)
 		return String::null;
 	if (s_htmlCache.contains(_e))
 		return s_htmlCache[_e];
-	return String("<%1 id=\"%2\">%3</%4>").arg(_tag).arg((int)_e).arg(refinedHtml(_e)).arg(_tag.section(L' ', 0, 0));
+	return String("<%1 entity=\"true\" id=\"%2\">%3</%4>").arg(_tag).arg((int)_e).arg(refinedHtml(_e)).arg(_tag.section(L' ', 0, 0));
 }
 
 String toHtml(List<Entity const*> const& _es, String const& _delimiter, String const& _tag)
@@ -586,7 +586,7 @@ void Entity::keyPressEventStarter(KeyEvent* _e, bool _abortive)
 
 	while (fe)
 	{
-		if ((fe && fe->keyPressed(_e)) || (fe && fe->attemptInsert(_e)))
+		if ((fe && fe->keyPressed(_e)) || (fe && fe->attemptInsert(_e)) || (fe && _e->codeScene()->manageKeyPress(*_e, fe)))
 		{
 			_e->accept();
 			return;
@@ -640,7 +640,7 @@ bool Entity::keyPressed(KeyEvent const* _e)
 		_e->codeScene()->setEditing(this);
 	else if (_e->text() == L"\t")
 		activated(_e->codeScene());
-	else if (_e->text() == "{" && !_e->codeScene()->viewKeys(this)["expanded"].toBool() && isExpander())
+/*	else if (_e->text() == "{" && !_e->codeScene()->viewKeys(this)["expanded"].toBool() && isExpander())
 	{
 		_e->codeScene()->setViewKey(this, "expanded", true);
 		relayout(_e->codeScene());
@@ -651,7 +651,7 @@ bool Entity::keyPressed(KeyEvent const* _e)
 		_e->codeScene()->setViewKey(this, "expanded", false);
 		relayout(_e->codeScene());
 		setCurrent();
-	}
+	}*/
 	else
 		return false;
 	return true;

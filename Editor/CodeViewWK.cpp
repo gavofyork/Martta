@@ -109,6 +109,13 @@ bool CodeViewWK::isInScene(Entity const* _e) const
 	return page()->mainFrame()->evaluateJavaScript(QString("document.getElementById('%1') != null").arg((int)_e)).toBool();
 }
 
+bool CodeViewWK::manageKeyPress(KeyEvent const& _e, Entity const* _fe)
+{
+	mInfo() << _e.text() << _fe;
+	qDebug() << page()->mainFrame()->evaluateJavaScript(QString("document.getElementById('%1').innerHTML").arg((int)_fe)).toString();
+	return page()->mainFrame()->evaluateJavaScript(QString("routeKeyPress(document.getElementById('%1'), '%2')").arg((int)_fe).arg(qs(_e.text()).replace('\'', "\\'"))).toBool();
+}
+
 void CodeViewWK::refresh()
 {
 	Entity* e;
@@ -126,7 +133,7 @@ void CodeViewWK::refresh()
 						m_dirty.removeAll(i);
 					else if ((s = page()->mainFrame()->evaluateJavaScript(QString("document.getElementById('%1').outerHTML").arg((int)i)).toString().replace('\\', "&#92;")) != QString::null)
 						addToHtmlCache(i, qs(s));
-				page()->mainFrame()->evaluateJavaScript(QString("document.getElementById('%1').innerHTML = '%2'").arg((int)e).arg(qs(refinedHtml(e)).replace('\'', "\\'")));
+				page()->mainFrame()->evaluateJavaScript(QString("changeContent('%1', '%2')").arg((int)e).arg(qs(refinedHtml(e)).replace('\'', "\\'")));
 				clearHtmlCache();
 				silentlySetCurrent(cur);
 			}
@@ -180,6 +187,16 @@ void CodeViewWK::init()
 		"			return children[i];"
 		"	return null;"
 		"}"
+		"function routeKeyPress(_e, _k)"
+		"{"
+		"	if (_e.onkeypress != null && _e.onkeypress(_k))"
+		"		return true;"
+		"	var nodes = _e.childNodes;"
+		"	for (var i = 0; i < nodes.length; i++)"
+		"		if (!nodes[i].getAttribute('entity') && routeKeyPress(nodes[i], _k))"
+		"			return true;"
+		"	return false;"
+		"}"
 		"function goPrevious()"
 		"{"
 		"	if (!g_currentIterator.referenceNode || !g_currentIterator.referenceNode.parentNode)"
@@ -228,6 +245,17 @@ void CodeViewWK::init()
 		"			break;"
 		"	CodeView.onCurrentChanged(oldId);"
 		"}"
+		"function thisParent(_e)"
+		"{"
+		"	var t = _e.parentNode;"
+		"	while (t)"
+		"	{"
+		"		if (thisNode(t) != null)"
+		"			break;"
+		"		t = t.parentNode;"
+		"	}"
+		"	return t;"
+		"}"
 		"function setCurrent(_e)"
 		"{"
 		"	var t = _e;"
@@ -253,6 +281,60 @@ void CodeViewWK::init()
 		"function setCurrentById(_id)"
 		"{"
 		"	setCurrent(document.getElementById(_id));"
+		"}"
+		"function changeContent(_id, _html)"
+		"{"
+		"	var e = document.getElementById(_id);"
+		"	var s = new Array();"
+		"	for (var i = 0; i < e.childNodes.length; i++)"
+		"		if (e.childNodes[i].id && e.childNodes[i].id != 'this' && e.childNodes[i].id.indexOf('ei_') != 0 && e.childNodes[i].attributes)"
+		"			s[e.childNodes[i].id] = e.childNodes[i].attributes;"
+		"	e.innerHTML = _html;"
+		"	for (var i in s)"
+		"		if (document.getElementById(i))"
+		"			for (var j = 0; j < s[i].length; j++)"
+		"				document.getElementById(i).setAttribute(s[i][j].name, s[i][j].value);"
+		"}"
+		"function toggle(_id1, _id2)"
+		"{"
+		"	var a = document.getElementById(_id1);"
+		"	var b = document.getElementById(_id2);"
+		"	a.style.display = a.style.display == 'none' ? null : 'none';"
+		"	b.style.display = b.style.display == 'none' ? null : 'none';"
+		"	setCurrentWithin(a.style.display == 'none' ? b : a);"
+		"}"
+		"function setCurrentWithin(_e)"
+		"{"
+		"	var iter = document.createNodeIterator(_e, NodeFilter.SHOW_ELEMENT, onlyThese, false);"
+		"	if (iter.nextNode() != null)"
+		"	{"
+		"		setCurrent(iter.referenceNode.parentNode);"
+		"		return true;"
+		"	}"
+		"	setCurrent(_e);"
+		"	return false;"
+		"}"
+		"function set1(_id1, _id2)"
+		"{"
+		"	var a = document.getElementById(_id1);"
+		"	var b = document.getElementById(_id2);"
+		"	if (b.style.display == 'none')"
+		"		return false;"
+		"	a.style.display = null;"
+		"	b.style.display = 'none';"
+		"	setCurrentWithin(a);"
+		"	return true;"
+		"}"
+		"function set2(_id1, _id2)"
+		"{"
+		"	var a = document.getElementById(_id1);"
+		"	var b = document.getElementById(_id2);"
+		"	if (a.style.display == 'none')"
+		"		return false;"
+		"	a.style.display = 'none';"
+		"	b.style.display = null;"
+		"	setCurrentWithin(b);"
+		"	return true;"
 		"}"
 		"function procMouseDown(event)"
 		"{"

@@ -81,6 +81,7 @@ private:
 	QRect						bounds(Entity const* _e) const;
 
 	virtual bool				keyPressedAsNavigation(KeyEvent const&);
+	virtual bool				manageKeyPress(KeyEvent const&, Entity const* _fe);
 
 	virtual bool				event(QEvent* _e);
 	virtual void				paintEvent(QPaintEvent* _ev);
