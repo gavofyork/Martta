@@ -353,8 +353,9 @@ bool Class::keyPressed(KeyEvent const* _e)
 String Class::defineHtml() const
 {
 	String ret = L"<div id=\"this\"><span class=\"keyword\">class</span> <span class=\"TypeEntity\">" + Type(const_cast<Class*>(this))->typeHtml(toHtml(child(Identity))) + L"</span>";
+	ret += L"<div class=\"block\">";
 	ret += toHtml(castEntities<Entity>(cardinalChildrenOf<Base>()), L"", L"div");
-	ret += "<div class=\"minor symbol\">{</div>";
+	ret += L"<div class=\"deblock minor symbol\">{</div>";
 	for (int i = 0; i < AccessCount; i++)
 	{
 		String mem;
@@ -381,11 +382,10 @@ String Class::defineHtml() const
 			if (f->access() == Access(i))
 				mem += toHtml(f, L"div");
 		if (!mem.isEmpty())
-			ret += String(L"<div class=\"unblock\">%1</div><div>%2</div>").arg(Martta::code(Access(i))).arg(mem);
-//.arg(AccessLabel(Access(i)).idColour().name(255))
+			ret += String(L"<div class=\"deblock AccessLabel-%1\">%1</div><div class=\"AccessLabel-%1block\">%2</div>").arg(Martta::code(Access(i))).arg(mem);
 	}
-	ret += L"<div class=\"minor symbol\">}</div>";
-	ret += L"</div>";
+	ret += L"<div class=\"deblock minor symbol\">}</div>";
+	ret += L"</div></div>";
 
 /*	if (cardinalChildCountOf<Base>())
 	{

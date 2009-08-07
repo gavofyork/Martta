@@ -104,12 +104,12 @@ String MemberLambda::memberDefineLayout(ViewKeys const& _v) const
 
 String MemberLambda::memberDefineHtml() const
 {
-	return L"<div class=\"deblock\">" + String(isConst() ? "C" : "M") + memberLambdaDefineHtml() + L"</div>";
+	return L"<div id=\"this\" class=\"deblock\">" + memberLambdaDefineHtml() + L"</div>";
 }
 
 String MemberLambda::definePreHtml() const
 {
-	return L"<div class=\"block\">";
+	return String(L"<div class=\"ConstLabel-%1constblock\"\">").arg(isConst() ? L"" : L"non");
 }
 
 String MemberLambda::definePostHtml() const

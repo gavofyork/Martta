@@ -57,7 +57,7 @@ String Member::interfaceCode() const
 
 String Member::defineHtml() const
 {
-	return L"<div class=\"block\" id=\"this\">" + memberDefineHtml() + L"</div>";
+	return memberDefineHtml();
 }
 
 String Member::defineLayout(ViewKeys const& _k) const

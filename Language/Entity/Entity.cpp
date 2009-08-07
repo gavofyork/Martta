@@ -60,20 +60,22 @@ void Entity::initialiseClass()
 		".unreal { color: #888; }"
 		".minor { color: #888; font-size: 8px; }"
 		".symbol { font-weight: bold; }"
-		".block { position: relative; margin-left: 14px; }"
-		".deblock { position: relative; margin-left: -14px; }"
+		".block { position: relative; margin-left: 20px; }"
+		".deblock { position: relative; margin-left: -20px; }"
 
 		".TypeEntity { font-weight: bold; color: #000; }"
 		".Referenced { font-weight: normal; color: #000; }"
 		".Namespace-label { color: #000; font-weight: bold; }"
 		".Class-label { color: #000; font-weight: bold; text-shadow: -1px -1px 0px #f77; }"
 		".Label { font-weight: normal; }"
-		".AccessLabel-publicblock { border-width: 0 0 0 4px; border-color: #ff9; border-style: solid; padding-left: 4px; }"
-		".AccessLabel-protectedblock { border-width: 0 0 0 4px; border-color: #fd9; border-style: solid; padding-left: 4px; }"
-		".AccessLabel-privateblock { border-width: 0 0 0 4px; border-color: #fbb; border-style: solid; padding-left: 4px; }"
-		".AccessLabel-public { font-weight: bold; text-shadow: -1px -1px 0px #ff7; }"
-		".AccessLabel-protected { font-weight: bold; text-shadow: -1px -1px 0px #fc7; }"
-		".AccessLabel-private { font-weight: bold; text-shadow: -1px -1px 0px #faa; }"
+		".ConstLabel-constblock { -webkit-border-image: -webkit-gradient(linear, left top, right top, from(#fff), to(#bdf), color-stop(0.5, #bdf)) 100% 100% 100% 100% repeat repeat; border-width: 0 0 0 12px; padding-left: 8px; }"
+		".ConstLabel-nonconstblock { margin-left: 20px; }"
+		".AccessLabel-publicblock { margin-left: -8px; border-width: 0 0 0 4px; border-color: #efefbf; border-style: solid; padding-left: 4px; }"
+		".AccessLabel-protectedblock { margin-left: -8px; border-width: 0 0 0 4px; border-color: #ffdfbf; border-style: solid; padding-left: 4px; }"
+		".AccessLabel-privateblock { margin-left: -8px; border-width: 0 0 0 4px; border-color: #ffbfbf; border-style: solid; padding-left: 4px; }"
+		".AccessLabel-public { font-weight: bold; text-shadow: -1px -1px 0px #dedebb; }"
+		".AccessLabel-protected { font-weight: bold; text-shadow: -1px -1px 0px #ffddbb; }"
+		".AccessLabel-private { font-weight: bold; text-shadow: -1px -1px 0px #ffbbbb; }"
 		".Literal { font-size: 13px; color: black; }"
 		".TypeEntity { color: black; font-size: 13px; font-weight: bold; text-shadow: -1px -1px 0px #888; }"
 		".SimpleType { text-shadow: -1px -1px 0px #fb0; }"
@@ -91,7 +93,7 @@ void Entity::finaliseClass()
 
 static Hash<Entity const*, String> s_htmlCache;
 
-void addToHtmlCache(Entity const* _e, String const& _s) { mDebug() << _e << _s; s_htmlCache.insert(_e, _s); }
+void addToHtmlCache(Entity const* _e, String const& _s) { s_htmlCache.insert(_e, _s); }
 void clearHtmlCache() { s_htmlCache.clear(); }
 
 String refinedHtml(Entity const* _e)

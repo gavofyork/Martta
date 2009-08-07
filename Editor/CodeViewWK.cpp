@@ -126,7 +126,6 @@ bool CodeViewWK::manageKeyPress(KeyEvent const& _e, Entity const* _fe)
 
 void CodeViewWK::refresh()
 {
-	mInfo() << m_dirty;
 	Entity* e;
 	if (WebStylistRegistrar::get()->hasChanged())
 		init();
@@ -142,7 +141,6 @@ void CodeViewWK::refresh()
 						m_dirty.removeAll(i);
 					else if ((s = page()->mainFrame()->evaluateJavaScript(QString("document.getElementById('%1').outerHTML").arg((int)i)).toString().replace('\\', "&#92;")) != QString::null)
 						addToHtmlCache(i, qs(s));
-				mInfo() << "Changing content: " << e;
 				page()->mainFrame()->evaluateJavaScript(QString("changeContent('%1', '%2')").arg((int)e).arg(qs(refinedHtml(e)).replace('\'', "\\'")));
 				clearHtmlCache();
 				silentlySetCurrent(cur);
@@ -161,7 +159,6 @@ void CodeViewWK::paintEvent(QPaintEvent* _ev)
 {
 	refresh();
 	QWebView::paintEvent(_ev);
-	qDebug() << page()->mainFrame()->evaluateJavaScript("g_currentIterator.referenceNode.parentNode.id").toString();
 	if (current())
 	{
 		QPainter p(this);
