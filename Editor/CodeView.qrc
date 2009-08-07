@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/CodeView" >
+        <file>Support.js</file>
+    </qresource>
+</RCC>
