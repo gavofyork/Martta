@@ -108,13 +108,14 @@ function setCurrent(_e)
 			break;
 		t = t.parentNode;
 	}
-	if (!t)
+	if (!t && document.getElementById(g_currentIterator.referenceNode.parentNode.id))
 		return;
 	var oldId = g_currentIterator.referenceNode && g_currentIterator.referenceNode.parentNode ? g_currentIterator.referenceNode.parentNode.id : '';
 	CodeView.onCurrentAboutToChange();
+	g_currentIterator.detach();
 	g_currentIterator = document.createNodeIterator(document, NodeFilter.SHOW_ELEMENT, onlyThese, false);
 	while (g_currentIterator.nextNode() != null)
-		if (g_currentIterator.referenceNode.parentNode == t)
+		if (g_currentIterator.referenceNode.parentNode == t || !t)
 		{
 			CodeView.onCurrentChanged(oldId);
 			return;
@@ -123,7 +124,8 @@ function setCurrent(_e)
 }
 function setCurrentById(_id)
 {
-	setCurrent(document.getElementById(_id));
+	var e = document.getElementById(_id);
+	setCurrent(e);
 }
 function getAttribs(_e, _a)
 {
