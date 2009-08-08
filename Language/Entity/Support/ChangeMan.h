@@ -94,7 +94,7 @@ public:
 	void								addDependency(Depender* _der, Dependee* _dee) { m_dependees.insert(_der, _dee); m_dependers.insert(_dee, _der); }
 	/// Removes a dependency.
 	/// Note this will *not* call onDependencyRemoved(_e) for you. You must call it yourself if you want it to run.
-	void								removeDependency(Depender* _der, Dependee* _dee) { m_dependees.erase(m_dependees.find(_der, _dee)); m_dependers.erase(m_dependers.find(_dee, _der)); }
+	void								removeDependency(Depender* _der, Dependee* _dee) { if (m_dependees.find(_der, _dee) != m_dependees.end()) m_dependees.erase(m_dependees.find(_der, _dee)); if (m_dependers.find(_dee, _der) != m_dependers.end()) m_dependers.erase(m_dependers.find(_dee, _der)); }
 	/// Removes all dependencies.
 	void								removeAllDependencies(Depender* _der);
 	bool								haveDependency(Depender const* _der, Dependee const* _dee) const { return m_dependees.constFind(const_cast<Depender*>(_der), const_cast<Dependee*>(_dee)) != m_dependees.end(); }

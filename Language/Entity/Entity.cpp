@@ -82,7 +82,7 @@ void Entity::initialiseClass()
 		".SimpleType { text-shadow: -1px -1px 0px #fb0; }"
 		".FunctionType { text-shadow: -1px -1px 0px #84f; }"
 		".HashType { text-shadow: -1px -1px 0px #8f4; }"
-		".Operation { color: #888; background-color: rgba(0, 0, 0, 0.03); padding: 0 2px 0 2px; }"
+		".Operation { background-color: rgba(0, 0, 0, 0.03); padding: 0 2px 0 2px; }"
 		".Statement { background-color: transparent; padding: 0; }"
 	);
 }

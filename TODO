@@ -37,11 +37,13 @@ Webkit layout system
 - BRINGBACK decoration code into layout system and markup for it.
 - BRINGBACK Visual change system.
 - Remove old layout system.
+  - Remove decorate.
 - Move all entities over to new.
 - Stylist support.
 - Entity still has a lot of the CSS info.
 - Editing.
   - Move over last few edit things to new system.
+- Implement cursor movers properly.
 - SVG files.
 
 --------------------------------------------------------------------------------

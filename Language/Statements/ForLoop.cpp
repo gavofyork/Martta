@@ -74,6 +74,14 @@ String ForLoop::defineLayout(ViewKeys const& _k) const
 //	String((!child(3) || !child(3)->child(0) || child(3)->child(0)->isPlaceholder()) ? ";' ';(;3;)" : ";n;i;(;3;)");
 }
 
+String ForLoop::defineHtml() const
+{
+	return L"<^><span class=\"keyword\">for</span> <span class=\"minor symbol\">(</span>" +
+			toHtml(child(Initialiser)) + L"<span class=\"minor symbol\">;</span> " +
+			toHtml(child(Condition)) + L"<span class=\"minor symbol\">;</span> " +
+			toHtml(child(Ticker)) + L"<span class=\"minor symbol\">)</span><br/>" + Corporal::defineHtml(true);
+}
+
 String ForLoop::code() const
 {
 	String ret;

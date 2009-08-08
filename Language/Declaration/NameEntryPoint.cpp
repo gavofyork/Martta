@@ -43,6 +43,11 @@ String NameEntryPoint::defineEditLayout(ViewKeys const&, Named*)
 	return L"%1";	//TODO user IdentifierSet
 }
 
+String NameEntryPoint::defineEditHtml(Named*)
+{
+	return L"<?>";	//TODO user IdentifierSet
+}
+
 void NameEntryPoint::committed(Named* _i)
 {
 	if (_i)

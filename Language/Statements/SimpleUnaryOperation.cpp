@@ -119,9 +119,9 @@ String SimpleUnaryOperation::operatorLayout() const
 String SimpleUnaryOperation::operatorHtml() const
 {
 	if (id().symbol() == Operator::PlusPlusX || id().symbol() == Operator::XPlusPlus)
-		return L"+<span style=\"margin-left: -0.4em;\">+</span>";
+		return L"<span class=\"symbol\">+<span style=\"margin-left: -0.4em;\">+</span></span>";
 	else
-		return String("ycode;'%1'").arg(id().code());
+		return String("<span class=\"symbol\">%1</span>").arg(id().code());
 }
 
 }
