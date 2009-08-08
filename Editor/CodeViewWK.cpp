@@ -61,8 +61,6 @@ void CodeViewWK::setStylist(Stylist* _s)
 
 Entity* CodeViewWK::current() const
 {
-	mInfo() << qs(page()->mainFrame()->evaluateJavaScript("g_currentIterator.referenceNode == null").toString()) << qs(page()->mainFrame()->evaluateJavaScript("g_currentIterator.referenceNode.id").toString()) << qs(page()->mainFrame()->evaluateJavaScript("g_currentIterator.referenceNode.parentNode == null").toString()) << qs(page()->mainFrame()->evaluateJavaScript("g_currentIterator.referenceNode.parentNode.id").toString());
-	mInfo() << qs(page()->mainFrame()->evaluateJavaScript("document.getElementById(g_currentIterator.referenceNode.parentNode.id).id").toString());
 	return (Entity*)(page()->mainFrame()->evaluateJavaScript("g_currentIterator.referenceNode.parentNode.id").toInt());
 }
 
@@ -83,9 +81,7 @@ void CodeViewWK::onCurrentChanged(QString const& _oldId)
 {
 	if (!m_silent)
 	{
-		mInfo() << "Id:" << (void*)(_oldId.toInt());
 		Entity* e = current();
-		mInfo() << qs(page()->mainFrame()->evaluateJavaScript(QString("document.getElementById('%1').outerHTML").arg(_oldId)).toString());
 		CodeScene::currentChanged(e, (Entity*)(_oldId.toInt()));
 		emit currentChanged(e);
 		update();
@@ -139,19 +135,15 @@ void CodeViewWK::refresh()
 			if ((e = m_dirty.takeLast()) && e != editEntity())
 			{
 				Entity* cur = current();
-				mInfo() << "Updating " << e << "current=" << (void*)cur;
 				QString s;
 				foreach (Entity* i, e->children())
 					if (m_dirty.contains(i))
 						m_dirty.removeAll(i);
 					else if ((s = page()->mainFrame()->evaluateJavaScript(QString("document.getElementById('%1').outerHTML").arg((int)i)).toString().replace('\\', "&#92;")) != QString::null)
 						addToHtmlCache(i, qs(s));
-				mInfo() << refinedHtml(e);
 				page()->mainFrame()->evaluateJavaScript(QString("changeContent('%1', '%2')").arg((int)e).arg(qs(refinedHtml(e)).replace('\'', "\\'")));
 				clearHtmlCache();
-				mInfo() << "current=" << (void*)current();
 				silentlySetCurrent(cur);
-				mInfo() << "current=" << (void*)current();
 			}
 			else if (e)
 			{

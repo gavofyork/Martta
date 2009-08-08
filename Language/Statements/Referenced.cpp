@@ -37,7 +37,7 @@ Referenced::Referenced(ValueDefiner* _v):
 
 bool Referenced::isSuperfluous() const
 {
-	return !m_subject.isUsable() || Super::isSuperfluous();
+	return (!m_subject.isUsable() && m_hopeful.isEmpty()) || Super::isSuperfluous();
 }
 
 String Referenced::code() const
@@ -64,6 +64,8 @@ void Referenced::onDependencyRemoved(Entity* _old, int)
 	if (m_subject->self() == _old)
 	{
 //		mDebug() << "Subject removed (was" << _old << ")";
+		if (Identifiable* i = _old->tryKind<Identifiable>())
+			m_hopeful = i->name();
 		setSubject(0);
 	}
 }
@@ -95,7 +97,7 @@ String Referenced::defineLayout(ViewKeys const& _k) const
 String Referenced::defineHtml() const
 {
 	if (!m_subject)
-		return L"<^>";
+		return L"<span id=\"this\" class=\"unreal\">[" + m_hopeful + L"?]</span>";
 	return L"<span id=\"this\" class=\"Referenced\">" + m_subject->tryKind<Labelled>()->labelHtml(m_subject->type()->typeHtml(m_subject->name())) + L"</span>";
 }
 
@@ -116,7 +118,7 @@ String Referenced::defineEditHtml(ValueDefiner* _v) const
 {
 	String ret = (_v ? &*_v->type() : TypeEntity::null)->typeHtml(L"<?>");
 	if (_v)
-		ret = _v->tryKind<Labelled>()->labelHtml(ret);
+		ret = L"<span class=\"Referenced\">" + _v->tryKind<Labelled>()->labelHtml(ret) + "</span>";
 	return ret;
 }
 

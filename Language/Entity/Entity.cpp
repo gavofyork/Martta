@@ -1183,10 +1183,7 @@ void Entity::deleteAndRefill(Entity* _e, bool _moveToGrave)
 		oneFootInTheGrave();
 		c->childRemoved(this, ci);
 		if (c)
-		{
-			mInfo() << "Relaying out" << &*c;
 			c->relayoutLater();
-		}
 		delete this;
 	}
 	if (_moveToGrave)

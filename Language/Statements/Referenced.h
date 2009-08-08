@@ -55,10 +55,11 @@ protected:
 	virtual void						onDependencyChanged(Entity*) {  if (m_subject) changed(); }
 	virtual void						onDependencySwitched(Entity* _t, Entity* _old);
 	virtual void						onDependencyRemoved(Entity* _old, int);
-	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p[L"subject"] = m_subject.key(); }
-	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_subject.restoreFrom(_p[L"subject"]); }
+	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p[L"subject"] = m_subject.key(); _p[L"hopeful"] = m_hopeful; }
+	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_subject.restoreFrom(_p[L"subject"]); m_hopeful = _p[L"hopeful"]; }
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 
+	String								m_hopeful;
 	ModelPtr<ValueDefiner>				m_subject;
 };
 

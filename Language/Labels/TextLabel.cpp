@@ -174,7 +174,7 @@ public:
 		// The tryParent()-> should be safe since Labelled checks for a null this-pointer.
 		if (m_text.isEmpty())
 			return L"<span class=\"minor\">[ANONYMOUS]</span>";
-		return subject()->tryParent<Labelled>()->labelHtml(m_text);
+		return L"<span class=\"TextLabel-named\">" + subject()->tryParent<Labelled>()->labelHtml(m_text) + L"</span>";
 //		return String(L"<span class=\"TextLabel-%1\">").arg(isNamed() ? L"named" : L"unnamed") + subject()->tryParent<Labelled>()->labelHtml(m_text)) + L"</span>";
 	}
 	String m_text;
