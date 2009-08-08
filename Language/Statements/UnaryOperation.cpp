@@ -33,4 +33,10 @@ String UnaryOperation::defineLayout(ViewKeys const&) const
 	return ret.arg(operatorLayout()).arg(TheOperand);
 }
 
+String UnaryOperation::defineHtml() const
+{
+	String ret = isPostfix() ? "%2<^>%1" : "<^>%1%2";
+	return ret.arg(operatorHtml()).arg(toHtml(child(TheOperand)));
+}
+
 }

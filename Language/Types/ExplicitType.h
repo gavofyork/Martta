@@ -45,7 +45,7 @@ public:
 
 	List<TypeDefinition*>				possibilities();
 	virtual String						defineEditLayout(ViewKeys const&, TypeDefinition*) const;
-	String								defineEditHtml(TypeDefinition*) const { return String::null; }
+	String								defineEditHtml(TypeDefinition*) const;
 
 	bool								hasSingleCastOperator(TypeEntity const* _t, bool _const = false) const;
 	bool								hasSingleConversionConstructor(TypeEntity const* _f) const;
@@ -64,6 +64,7 @@ protected:
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 	virtual TypeEntity*					newClone() const { return new ExplicitType(m_subject); }
 	virtual String						defineLayout(ViewKeys const&) const;
+	virtual String						defineHtml() const;
 	virtual bool						keyPressed(KeyEvent const* _e);
 //	virtual bool						isSuperfluous() const;
 	virtual bool						canStandAlone() const;

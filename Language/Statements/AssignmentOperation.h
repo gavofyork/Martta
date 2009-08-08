@@ -37,7 +37,7 @@ private:
 	virtual Type						type() const;
 	virtual String						code() const;
 	virtual String						operatorLayout() const { return "ycode;':='"; }
-	virtual String						operatorHtml() const { return "<span class=\"symbol\">&lArr;</span>"; }
+	virtual String						operatorHtml() const { return "<span class=\"symbol\">:=</span>"; }
 	virtual Operator					id() const { return Operator::Equals; }
 	virtual int							familyDependencies() const { return Super::familyDependencies() | DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity* _e) { if (_e->parent() == this) changed(); Super::onDependencyChanged(_e); }

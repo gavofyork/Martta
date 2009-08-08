@@ -76,12 +76,12 @@ void Entity::initialiseClass()
 		".AccessLabel-public { font-weight: bold; text-shadow: -1px -1px 0px #dedebb; }"
 		".AccessLabel-protected { font-weight: bold; text-shadow: -1px -1px 0px #ffddbb; }"
 		".AccessLabel-private { font-weight: bold; text-shadow: -1px -1px 0px #ffbbbb; }"
-		".Literal { font-size: 13px; color: black; }"
-		".TypeEntity { color: black; font-size: 13px; font-weight: bold; text-shadow: -1px -1px 0px #888; }"
+		".Literal { color: black; }"
+		".TypeEntity { color: black; font-weight: bold; text-shadow: -1px -1px 0px #888; }"
 		".SimpleType { text-shadow: -1px -1px 0px #fb0; }"
 		".FunctionType { text-shadow: -1px -1px 0px #84f; }"
 		".HashType { text-shadow: -1px -1px 0px #8f4; }"
-		".Operation { font-size: 12px; color: #888; background-color: rgba(0, 0, 0, 0.03); padding: 0 2px 0 2px; }"
+		".Operation { color: #888; background-color: rgba(0, 0, 0, 0.03); padding: 0 2px 0 2px; }"
 		".Statement { background-color: transparent; padding: 0; }"
 	);
 }

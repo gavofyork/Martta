@@ -124,7 +124,7 @@ String BuiltinType::defineLayout(ViewKeys const&) const
 
 String BuiltinType::defineHtml() const
 {
-	return L"<span id=\"this\" class=\"TypeEntity\">" + typeHtml((id() == (uint)-1) ? String("[]") : name(id())) + L"</span>";
+	return L"<span id=\"this\" class=\"TypeEntity\">" + typeHtml((id() == (uint)-1) ? L"&empty;" : name(id())) + L"</span>";
 }
 
 template<>
@@ -163,7 +163,6 @@ String BuiltinType::defineEditLayout(ViewKeys const&, int) const
 
 String BuiltinType::defineEditHtml(int) const
 {
-	mInfo() << (L"<span class=\"TypeEntity\">" + typeHtml(L"<?>") + L"</span>");
 	return L"<span class=\"TypeEntity\">" + typeHtml(L"<?>") + L"</span>";
 }
 

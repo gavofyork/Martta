@@ -2,14 +2,14 @@
  * Version: Martta License version 1.0
  *
  * The contents of this file are subject to the Martta License version 1.0
- * (the "License"); you may not use this file except in compliance with the 
- * License. You should have received a copy of the Martta License 
+ * (the "License"); you may not use this file except in compliance with the
+ * License. You should have received a copy of the Martta License
  * "COPYING.Martta" along with Martta; if not you may obtain a copy of the
  * License at http://quidprocode.co.uk/Martta/
  *
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations under 
+ * License for the specific language governing rights and limitations under
  * the License.
  *
  * The Initial Developer of the code in this file is Gavin Wood.
@@ -39,6 +39,7 @@ public:
 protected:
 	virtual Operator					id() const { return m_operator; }
 	virtual String						operatorLayout() const;
+	virtual String						operatorHtml() const;
 	virtual Types						allowedTypes(int _index) const;
 	virtual Type						type() const;
 	virtual String						code() const;
@@ -47,7 +48,7 @@ protected:
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity*) { refreshOperation(); }
 	virtual void						apresLoad() { refreshOperation(); }
-	
+
 private:
 	Type								prototypeOf(int _index) const { if (!m_symbolCache) return Type(); return Operation::prototypeOf(m_symbolCache->type(), _index); }
 	Type								protoReturn() const { if (!m_symbolCache) return Type(); return Operation::prototypeOf(m_symbolCache->type()); }
@@ -57,7 +58,7 @@ private:
 	static List<ValueDefiner*>			findOperators(Operator _o, Type const& _type = Type());
 	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p[L"operator"] = String::number(m_operator.symbol()); }
 	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_operator = Operator((Operator::Symbol)_p[L"operator"].toInt()); }
-	
+
 	Operator							m_operator;
 	ValueDefiner*						m_symbolCache;
 };

@@ -132,6 +132,10 @@ EditDelegateFace* IntegerLiteral::newDelegate(CodeScene* _s)
 			String ret;
 			return ret + String("^;ynormal;'%1';ycode;'%2';'%3'").arg(m_entry).arg(subject()->m_signed ? "" : "u").arg((subject()->m_range == ShortRange ? "s" : subject()->m_range == LongRange ? "l" : subject()->m_range == LonglongRange ? "ll" : ""));
 		}
+		virtual String defineHtml() const
+		{
+			return String("<span class=\"Literal IntegerLiteral\">%1%2%3</span>").arg(m_entry).arg(subject()->m_signed ? "" : "u").arg((subject()->m_range == ShortRange ? "s" : subject()->m_range == LongRange ? "l" : subject()->m_range == LonglongRange ? "ll" : ""));
+		}
 		String m_entry;
 	};
 	return new Delegate(this, _s);

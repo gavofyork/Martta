@@ -126,13 +126,17 @@ String ExplicitType::defineLayout(ViewKeys const&) const
 	return "^;fb;s" + idColour().name() + ";'" + (m_subject.isUsable() ? m_subject->name() : "[]") + "'";
 }
 
+String ExplicitType::defineHtml() const
+{
+	return L"<span id=\"this\" class=\"TypeEntity\">" + typeHtml(m_subject.isUsable() ? m_subject->name() : L"&empty;") + L"</span>";
+}
+
 List<TypeDefinition*> ExplicitType::possibilities()
 {
 	List<TypeDefinition*> ret;
 	TypeDefinition* old = m_subject;
 	foreach (TypeDefinition* i, parent()->selfAndAncestorsChildrenOf<TypeDefinition>())
 	{
-		mDebug() << i->name();
 		m_subject = i;
 		if (parent()->isChildInValidState(index()))
 			ret << i;
@@ -144,6 +148,11 @@ List<TypeDefinition*> ExplicitType::possibilities()
 String ExplicitType::defineEditLayout(ViewKeys const&, TypeDefinition*) const
 {
 	return "fb;s" + idColour().name() + ";^;%1";
+}
+
+String ExplicitType::defineEditHtml(TypeDefinition*) const
+{
+	return L"<span class=\"TypeEntity\">" + typeHtml(L"<?>") + L"</span>";
 }
 
 EditDelegateFace* ExplicitType::newDelegate(CodeScene* _s)
