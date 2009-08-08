@@ -129,7 +129,16 @@ void CodeViewWK::refresh()
 	Entity* e;
 	if (WebStylistRegistrar::get()->hasChanged())
 		init();
-	else
+	else if (!m_dirty.isEmpty())
+	{
+		// Must handle the edit entity (if there is one) separately since refinedHtml (also using from toHtml) doesn't understand
+		// that defineHtml should be redirected to the editDelegate if there is one (and couldn't since it doesn't know which is
+		// the active CodeScene).
+		if (editDelegate())
+		{
+			QString html = qs(editDelegate()->defineHtml());
+			page()->mainFrame()->evaluateJavaScript(QString("thisNode(document.getElementById('%1')).innerHTML = '%2'").arg((int)editEntity()).arg(html.replace('\'', "\\'")));
+		}
 		// If we're dirty then update the HTML.
 		while (m_dirty.count())
 			if ((e = m_dirty.takeLast()) && e != editEntity())
@@ -137,7 +146,7 @@ void CodeViewWK::refresh()
 				Entity* cur = current();
 				QString s;
 				foreach (Entity* i, e->children())
-					if (m_dirty.contains(i))
+					if (m_dirty.contains(i) && i != editEntity())
 						m_dirty.removeAll(i);
 					else if ((s = page()->mainFrame()->evaluateJavaScript(QString("document.getElementById('%1').outerHTML").arg((int)i)).toString().replace('\\', "&#92;")) != QString::null)
 						addToHtmlCache(i, qs(s));
@@ -145,12 +154,7 @@ void CodeViewWK::refresh()
 				clearHtmlCache();
 				silentlySetCurrent(cur);
 			}
-			else if (e)
-			{
-				QString html = qs(editDelegate()->defineHtml());
-				page()->mainFrame()->evaluateJavaScript(QString("thisNode(document.getElementById('%1')).innerHTML = '%2'").arg((int)editEntity()).arg(html.replace('\'', "\\'")));
-			}
-
+	}
 	m_dirty.clear();
 }
 
