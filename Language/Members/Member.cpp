@@ -57,7 +57,7 @@ String Member::interfaceCode() const
 
 String Member::defineHtml() const
 {
-	return memberDefineHtml();
+	return L"<^>" + memberDefineHtml();
 }
 
 String Member::defineLayout(ViewKeys const& _k) const

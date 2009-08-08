@@ -104,7 +104,7 @@ String MemberLambda::memberDefineLayout(ViewKeys const& _v) const
 
 String MemberLambda::memberDefineHtml() const
 {
-	return L"<div id=\"this\" class=\"deblock\">" + memberLambdaDefineHtml() + L"</div>";
+	return memberLambdaDefineHtml();
 }
 
 String MemberLambda::definePreHtml() const
