@@ -103,7 +103,7 @@ String LambdaNamer::defineBodyHtml() const
 		info = L" (" + String::number(n) + L" statement" + (n > 1 ? L"s" : L"") + L")";
 	else
 		info = " (empty)";
-	return (L"<span id=\"%1-info\" class=\"minor\">" + info + L"</span><div id=\"%1-body\" style=\"display: none\">").arg((int)(Entity*)this) + toHtml(body()) + L"</div>";
+	return (L"<span id=\"%1-info\" class=\"minor\">" + info + L"</span><div id=\"%1-body\" style=\"display: none\">").arg((int)self()) + toHtml(body()) + L"</div>";
 }
 
 String LambdaNamer::defineLayout(ViewKeys const& _k, String const& _middle) const
@@ -114,7 +114,7 @@ String LambdaNamer::defineLayout(ViewKeys const& _k, String const& _middle) cons
 
 String LambdaNamer::defineHtml(String const& _middle) const
 {
-	return String(L"<div onKeyPress=\"if (event=='{') return set2('%1-info', '%1-body'); if (event=='}') return set1('%1-info', '%1-body'); return false;\" onDblClick=\"toggle('%1-info', '%1-body'); event.stopPropagation();\">").arg((int)(Entity*)this)
+	return String(L"<div onKeyPress=\"if (event=='{' ? set2('%1-info', '%1-body') : event=='}' ? set1('%1-info', '%1-body') : false) { CodeView.markDirty(%1); return true; } return false;\" onDblClick=\"toggle('%1-info', '%1-body'); CodeView.markDirty(%1); event.stopPropagation();\">").arg((int)self())
 		+ definePreHtml() + defineReturnHtml() + defineNameHtml() + defineArgListHtml()
 		+ defineMidHtml(_middle) + defineBodyHtml() + definePostHtml() + L"</div>";
 }

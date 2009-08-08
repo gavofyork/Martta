@@ -72,6 +72,7 @@ public slots:
 	void						onCurrentAboutToChange();
 	void						onCurrentChanged(QString const& _old);
 	bool						attemptEdit(int _e);
+	void						markDirty(int _e) { markDirty((Entity*)_e); }
 
 signals:
 	void						currentChanged(Entity*);

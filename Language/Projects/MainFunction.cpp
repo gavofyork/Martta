@@ -44,4 +44,9 @@ String MainFunction::defineMidLayout(ViewKeys&) const
 	return L"'[ENTRY]'";
 }
 
+String MainFunction::definePreHtml() const
+{
+	return L"<span style=\"background-color: #4c4; -webkit-border-radius: 2px\" class=\"iconFrame\"><span class=\"iconContents\">&crarr;</span></span> " + Super::definePreHtml();
+}
+
 }

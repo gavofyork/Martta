@@ -42,6 +42,7 @@ Webkit layout system
 - Entity still has a lot of the CSS info.
 - Editing.
   - Move over last few edit things to new system.
+- SVG files.
 
 --------------------------------------------------------------------------------
 
