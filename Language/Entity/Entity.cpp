@@ -62,8 +62,7 @@ void Entity::initialiseClass()
 		".symbol { font-weight: bold; }"
 		".block { position: relative; margin-left: 20px; }"
 		".deblock { position: relative; margin-left: -20px; }"
-		".iconFrame { padding: 1px 0px; }"
-		".iconContents { padding: 0px 0.3em; border-top: 1px solid rgba(0,0,0,0.4); border-left: 1px solid rgba(0,0,0,0.2); border-bottom: 1px solid rgba(255,255,255,0.4); border-right: 1px solid rgba(255,255,255,0.2); background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,0.2)), to(rgba(255,255,255,0.2))); font-weight: 900; color: rgba(255,255,255,0.85); text-shadow: 1px 1px 2px rgba(0,0,0,0.3); -webkit-border-radius: inherit; }"
+		".badge { margin: 0px 0px; padding: 0px 0.3em; border-top: 1px solid rgba(0,0,0,0.4); border-left: 1px solid rgba(0,0,0,0.2); border-bottom: 1px solid rgba(255,255,255,0.4); border-right: 1px solid rgba(255,255,255,0.2); background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,0.2)), to(rgba(255,255,255,0.2))); font-weight: 900; color: rgba(255,255,255,0.85); text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }"
 
 		".TypeEntity { font-weight: bold; color: #000; }"
 		".Referenced { font-weight: normal; color: #000; }"

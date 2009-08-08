@@ -139,7 +139,7 @@ String SimpleBinaryOperation::operatorHtml() const
 	else if (id().symbol() == Operator::SlashEquals)
 		return L"<span class=\"symbol\">&divide;=</span>";
 	else
-		return String(L"ycode;'%1'").arg(id().code());
+		return String(L"<span class=\"symbol\">%1</span>").arg(id().code());
 }
 
 void SimpleBinaryOperation::setOperation(Operator _o, Type const& _left, Type const& _right)
