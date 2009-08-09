@@ -2,14 +2,14 @@
  * Version: Martta License version 1.0
  *
  * The contents of this file are subject to the Martta License version 1.0
- * (the "License"); you may not use this file except in compliance with the 
- * License. You should have received a copy of the Martta License 
+ * (the "License"); you may not use this file except in compliance with the
+ * License. You should have received a copy of the Martta License
  * "COPYING.Martta" along with Martta; if not you may obtain a copy of the
  * License at http://quidprocode.co.uk/Martta/
  *
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations under 
+ * License for the specific language governing rights and limitations under
  * the License.
  *
  * The Initial Developer of the code in this file is Gavin Wood.
@@ -29,7 +29,7 @@ namespace Martta
 class OperatorLabel: public IdLabel
 {
 	MARTTA_OBJECT(IdLabel)
-	
+
 public:
 	OperatorLabel() {}
 	OperatorLabel(Operator _o): m_operator(_o) {}
@@ -41,9 +41,10 @@ public:
 	inline String						symbolCode() const { return m_operator.code(); }
 	Operator::Symbol					symbol() const { return m_operator.symbol(); }
 	void								setSymbol(Operator::Symbol _s) { m_operator.setSymbol(_s); }
-	
+
 protected:
 	virtual String						defineLayout(ViewKeys const&) const;
+	virtual String						defineHtml() const;
 	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p[L"symbol"] = String::number(symbol()); }
 	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); setSymbol((Operator::Symbol)_p[L"symbol"].toInt()); }

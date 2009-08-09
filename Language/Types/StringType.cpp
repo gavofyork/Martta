@@ -251,4 +251,9 @@ String StringType::defineLayout(ViewKeys const&) const
 	return typeLayout() + "^;'string'";
 }
 
+String StringType::defineHtml() const
+{
+	return typeHtml(L"<span id=\"this\" class=\"TypeEntity\">string</span>");
+}
+
 }

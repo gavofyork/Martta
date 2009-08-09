@@ -41,6 +41,7 @@ public:
 
 protected:
 	virtual String						defineLayout(ViewKeys const&) const;
+	virtual String						defineHtml() const;
 	virtual bool						keyPressed(KeyEvent const* _e);
 };
 

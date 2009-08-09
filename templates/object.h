@@ -32,7 +32,7 @@ class _NAME_: public _SUPER_
 protected:
 	virtual int							minRequired(int _i) const { return Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
-	virtual String						defineLayout(ViewKeys&) const;
+	virtual String						defineHtml();
 	virtual bool						keyPressed(KeyEvent const* _e);
 };
 

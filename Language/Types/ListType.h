@@ -2,14 +2,14 @@
  * Version: Martta License version 1.0
  *
  * The contents of this file are subject to the Martta License version 1.0
- * (the "License"); you may not use this file except in compliance with the 
- * License. You should have received a copy of the Martta License 
+ * (the "License"); you may not use this file except in compliance with the
+ * License. You should have received a copy of the Martta License
  * "COPYING.Martta" along with Martta; if not you may obtain a copy of the
  * License at http://quidprocode.co.uk/Martta/
  *
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations under 
+ * License for the specific language governing rights and limitations under
  * the License.
  *
  * The Initial Developer of the code in this file is Gavin Wood.
@@ -33,7 +33,7 @@ class ListType: public ModifyingType, public_interface Subscriptable
 {
 	MARTTA_INITIALISED_OBJECT(ModifyingType)
 	MARTTA_INHERITS(Subscriptable, 0)
-	
+
 	friend class BuiltinMethod;
 	friend class BuiltinOperator;
 
@@ -43,24 +43,25 @@ public:
 	static void							initialiseClass();
 	static void							finaliseClass();
 	inline static bool					keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePositionKeyPressHandler<ListType>(_p, _e, "[["); }
-	
+
 protected:
 	// Assumes we are (eventually) a non-const ref.
 	virtual Types						assignableTypes() const;
 	virtual bool						hasDefaultConstructor() const { return true; }
 	virtual List<ValueDefiner*>			applicableMembers(Entity const* _s = 0, bool _isConst = false) const;
-	
+
 	virtual String						code(String const& _middle) const;
 	virtual int							minRequired(int _i) const { return _i == Original ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual Types						allowedTypes(int _i) const;
 	virtual TypeEntity*					newClone() const { return new ListType; }
 	virtual String						defineLayout(ViewKeys const&) const;
+	virtual String						defineHtml() const;
 	virtual bool						defineSimilarityFrom(TypeEntity const* _f, Castability _c) const;
 	virtual Rgb							idColour() const { return 0x77ffbb; }
 	virtual Types						subscriptTypes() const;
 	virtual Type						subscriptsTo(Type const&) const;
-	
+
 	static List<BuiltinMethod*>			s_members;
 	static List<BuiltinOperator*>		s_nonMembers;
 };

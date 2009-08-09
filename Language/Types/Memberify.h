@@ -2,14 +2,14 @@
  * Version: Martta License version 1.0
  *
  * The contents of this file are subject to the Martta License version 1.0
- * (the "License"); you may not use this file except in compliance with the 
- * License. You should have received a copy of the Martta License 
+ * (the "License"); you may not use this file except in compliance with the
+ * License. You should have received a copy of the Martta License
  * "COPYING.Martta" along with Martta; if not you may obtain a copy of the
  * License at http://quidprocode.co.uk/Martta/
  *
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations under 
+ * License for the specific language governing rights and limitations under
  * the License.
  *
  * The Initial Developer of the code in this file is Gavin Wood.
@@ -33,11 +33,11 @@ class Memberify: public ModifyingType
 
 public:
 	enum { Scope = FirstNamed, EndOfNamed };
-	
+
 	inline Memberify() {}
 	Memberify(TypeDefinition* _scope, bool _isConst = true);
 	Memberify(Type const& _object);
-	
+
 	bool								isConst() const;
 	void								setConst(bool _c);
 	TypeEntity*							scope() const { return tryChild<TypeEntity>(Scope); }
@@ -47,11 +47,12 @@ public:
 	void								setScopeClass(TypeDefinition* _scope, bool _isConst = false);
 	virtual String						code(String const& _middle) const;
 	virtual bool						isWellDefined() const { return Super::isWellDefined() && scope(); }
-	
+
 protected:
 	virtual Types						assignableTypes() const;
 	virtual inline TypeEntity*			newClone() const { return new Memberify; }
 	virtual String						modifierLayout() const;
+	virtual String						modifierHtml() const;
 	virtual bool						isSuperfluous() const { return !childIs<TypeEntity>(Scope) || Super::isSuperfluous(); }
 	virtual bool						canStandAlone() const { return false; }
 	virtual bool						defineSimilarityFrom(TypeEntity const* _f, Castability _c) const;

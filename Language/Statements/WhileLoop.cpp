@@ -2,14 +2,14 @@
  * Version: Martta License version 1.0
  *
  * The contents of this file are subject to the Martta License version 1.0
- * (the "License"); you may not use this file except in compliance with the 
- * License. You should have received a copy of the Martta License 
+ * (the "License"); you may not use this file except in compliance with the
+ * License. You should have received a copy of the Martta License
  * "COPYING.Martta" along with Martta; if not you may obtain a copy of the
  * License at http://quidprocode.co.uk/Martta/
  *
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations under 
+ * License for the specific language governing rights and limitations under
  * the License.
  *
  * The Initial Developer of the code in this file is Gavin Wood.
@@ -28,8 +28,8 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(WhileLoop);	
-MARTTA_OBJECT_CPP(UntilLoop);	
+MARTTA_OBJECT_CPP(WhileLoop);
+MARTTA_OBJECT_CPP(UntilLoop);
 
 Kinds WhileLoop::allowedKinds(int _index) const
 {
@@ -58,6 +58,11 @@ String WhileLoop::defineLayout(ViewKeys const& _k) const
 	return ("ycode;^;'while (';%1;')'" + Corporal::defineLayout(_k, true)).arg(Condition);
 }
 
+String WhileLoop::defineHtml() const
+{
+	return L" <span id=\"this\" class=\"keyword\">while</span> <span class=\"minor symbol\">(</span>" + toHtml(child(Condition)) + L"<span class=\"minor symbol\">)</span><br/>" + Corporal::defineHtml(true);
+}
+
 Kinds UntilLoop::allowedKinds(int _index) const
 {
 	if (_index == Condition)
@@ -76,6 +81,11 @@ String UntilLoop::code() const
 String UntilLoop::defineLayout(ViewKeys const& _k) const
 {
 	return ("ycode;^;'until (';%1;')'" + Corporal::defineLayout(_k, true)).arg(Condition);
+}
+
+String UntilLoop::defineHtml() const
+{
+	return L"<span id=\"this\" class=\"keyword\">until</span> <span class=\"minor symbol\">(</span>" + toHtml(child(Condition)) + L"<span class=\"minor symbol\">)</span><br/>" + Corporal::defineHtml(true);
 }
 
 }

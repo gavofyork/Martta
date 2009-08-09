@@ -37,7 +37,7 @@ protected:
 	virtual Type						scope() const;
 	virtual String						code() const;
 	virtual String						defineLayout(ViewKeys const&) const { return String("%1;Mi;^;p:/dot.svg;Mi;%2").arg(FirstOperand).arg(SecondOperand); }
-	virtual String						defineHtml() const { return toHtml(child(FirstOperand)) + L"<^>&bull;" + toHtml(child(SecondOperand)); }
+	virtual String						defineHtml() const { return toHtml(child(FirstOperand)) + L"<span id=\"this\" class=\"symbol\">&bull;</span>" + toHtml(child(SecondOperand)); }
 };
 
 }

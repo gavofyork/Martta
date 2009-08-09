@@ -51,6 +51,11 @@ String FloatLiteral::defineLayout(ViewKeys const&) const
 	return String(m_precision == SinglePrecision ? "^;'%1f'" : m_precision == DoublePrecision ? "^;'%1'" : "^;'%1ld'").arg(m_value);
 }
 
+String FloatLiteral::defineHtml() const
+{
+	return String(L"<span id=\"this\" class=\"FloatLiteral Literal\">%2%1</span>").arg(m_precision == SinglePrecision ? L"f" : m_precision == DoublePrecision ? L"" : L"ld").arg(m_value);
+}
+
 EditDelegateFace* FloatLiteral::newDelegate(CodeScene* _s)
 {
 	class Delegate: public EditDelegate<FloatLiteral>

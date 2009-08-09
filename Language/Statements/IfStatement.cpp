@@ -81,6 +81,12 @@ String IfStatement::defineLayout(ViewKeys const& _k) const
 			(child(AltBody) ? ";n;'else'" + String(child(AltBody)->cardinalChildCount() ? ";n;i;%1" : ";%1").arg(AltBody) : String());
 }
 
+String IfStatement::defineHtml() const
+{
+	return L"<span id=\"this\" class=\"keyword\">if</span> <span class=\"minor symbol\">(</span>" + toHtml(child(Condition)) + L"<span class=\"minor symbol\">)</span><br/>" + Corporal::defineHtml(true)
+			+ L"<br/><span class=\"keyword\">else</span><br/>" + toHtml(child(AltBody));
+}
+
 bool UnlessStatement::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
 	return simplePlaceholderKeyPressHandler<UnlessStatement>(_p, _e, "!?");
@@ -99,6 +105,12 @@ String UnlessStatement::defineLayout(ViewKeys const& _k) const
 {
 	return String("ycode;^;'unless (';%1;')'").arg(Condition) + Corporal::defineLayout(_k, true) +
 			(child(AltBody) ? ";n;'else'" + String(child(AltBody)->cardinalChildCount() ? ";n;i;%1" : ";%1").arg(AltBody) : String());
+}
+
+String UnlessStatement::defineHtml() const
+{
+	return L"<span id=\"this\" class=\"keyword\">unless</span> <span class=\"minor symbol\">(</span>" + toHtml(child(Condition)) + L"<span class=\"minor symbol\">)</span><br/>" + Corporal::defineHtml(true)
+			+ L"<br/><span class=\"keyword\">else</span><br/>" + toHtml(child(AltBody));
 }
 
 }

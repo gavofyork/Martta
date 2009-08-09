@@ -55,6 +55,11 @@ String Reference::defineLayout(ViewKeys const&) const
 {
 	return String("%1;(;M1;^;fb;s;e#ffffff;c#7f6f5f;fs-2;'&';M2;)").arg(Original);
 }
+
+String Reference::defineHtml() const
+{
+	return toHtml(child(Original)) + L"<span id=\"this\" style=\"text-shadow: 1px 1px 1px #fff; color: #7f6f5f; font-size: 80%; font-weight: bold;\">&</span>";
+}
 /*
 void Reference::decorate(DecorationContext const& _c) const
 {

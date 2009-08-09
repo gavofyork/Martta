@@ -54,6 +54,11 @@ String Const::defineLayout(ViewKeys const&) const
 	return String("%1;(;M2;^;fb;s;ewhite;c#5f6f7f;fs-2;'C';M3;)").arg(Original);
 }
 
+String Const::defineHtml() const
+{
+	return toHtml(child(Original)) + L"<span id=\"this\" style=\"text-shadow: 1px 1px 1px #fff; color: #5f6f7f; font-size: 80%; font-weight: bold;\">C</span>";
+}
+
 /*void Const::decorate(DecorationContext const& _c) const
 {
 	QRectF r = alignedForUnitPen(_c(1));

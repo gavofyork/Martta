@@ -35,9 +35,9 @@ Kinds _NAME_::allowedKinds(int _i) const
 	return Super::allowedKinds(_i);
 }
 
-String _NAME_::defineLayout(ViewKeys& _k) const
+String _NAME_::defineHtml() const
 {
-	return Super::defineLayout(_k);
+	return Super::defineHtml();
 }
 
 }

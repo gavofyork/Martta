@@ -37,7 +37,7 @@ protected:
 	virtual Types						allowedTypes(int _index) const;
 	virtual Operator					id() const { return Operator::XArrow; }
 	virtual String						code() const;
-	virtual String						defineHtml() const { return toHtml(child(FirstOperand)) + L" &rarr; " + toHtml(child(SecondOperand)); }
+	virtual String						defineHtml() const { return toHtml(child(FirstOperand)) + L"<span id=\"this\" class=\"symbol\">&rarr;</span>" + toHtml(child(SecondOperand)); }
 };
 
 }

@@ -39,6 +39,7 @@ private:
 	virtual Type						apparentType() const;
 	virtual String						code() const;
 	virtual String						operatorLayout() const { return "ycode;'&'"; }
+	virtual String						operatorHtml() const { return "<span class=\"symbol\">&</span>"; }
 };
 
 }

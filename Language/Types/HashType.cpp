@@ -172,4 +172,9 @@ String HashType::defineLayout(ViewKeys const&) const
 	return (";%1;" + typeLayout() + "^;'#';%2").arg(ValueType).arg(KeyType);
 }
 
+String HashType::defineHtml() const
+{
+	return toHtml(child(ValueType)) + typeHtml(L"<span id=\"this\" class=\"symbol\">#</span>") + toHtml(child(KeyType));
+}
+
 }

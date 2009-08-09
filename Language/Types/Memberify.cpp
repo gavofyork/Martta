@@ -129,4 +129,11 @@ String Memberify::modifierLayout() const
 	return "ycode;'" + scopeType()->code() + "'";
 }
 
+String Memberify::modifierHtml() const
+{
+	if (!scopeType())
+		return String();
+	return L"<span class=\"symbol\">" + scopeType()->code() + L"</span>";
+}
+
 }
