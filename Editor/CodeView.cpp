@@ -33,20 +33,20 @@ namespace Martta
 {
 
 CodeView::CodeView(QWidget* _p):
-	QWidget				(_p),
-	m_subject			(0),
-	m_current			(0),
-	m_showDependencyInfo(false),
-	m_showChanges		(false),
-	m_showOneChange		(true),
-	m_showHover			(true),
-	m_hover				(0),
-	m_lastRealCurrent	(0),
-	m_navigated			(false),
-	m_lastDefiniteX		(-1.f),
-	m_stylist			(new Stylist),
-	m_borderOffset		(8.f, 8.f),
-	m_ensureCurrentVisible(false)
+	QWidget					(_p),
+	m_subject				(0),
+	m_current				(0),
+	m_showDependencyInfo	(false),
+	m_showChanges			(false),
+	m_showOneChange			(true),
+	m_showHover				(true),
+	m_hover					(0),
+	m_lastRealCurrent		(0),
+	m_navigated				(false),
+	m_lastDefiniteX			(-1.f),
+	m_stylist				(new Stylist),
+	m_borderOffset			(8.f, 8.f),
+	m_ensureCurrentVisible	(false)
 {
 	if (m_showHover)
 		setMouseTracking(true);
