@@ -8,6 +8,13 @@ function isInvisible(node)
 			n = n.parentNode;
 	return false;
 }
+function ensureViewable(_e)
+{
+	if (_e.getBoundingClientRect().top - 10 < 0)
+		window.scroll(window.scrollX, window.scrollY + _e.getBoundingClientRect().top - 10);
+	if (_e.getBoundingClientRect().bottom + 20 > window.innerHeight)
+		window.scroll(window.scrollX, _e.getBoundingClientRect().bottom + window.scrollY - window.innerHeight + 20);
+}
 function onlyThese(node)
 {
 	if (isInvisible(node))
@@ -50,7 +57,7 @@ function goPrevious()
 	g_currentIterator.previousNode();
 	if (g_currentIterator.referenceNode == old)
 		g_currentIterator.previousNode();
-	g_currentIterator.referenceNode.parentNode.scrollIntoView();
+	ensureViewable(g_currentIterator.referenceNode.parentNode);
 	CodeView.onCurrentChanged(oldId);
 }
 function goNext()
@@ -63,7 +70,7 @@ function goNext()
 	g_currentIterator.nextNode();
 	if (g_currentIterator.referenceNode == old)
 		g_currentIterator.nextNode();
-	g_currentIterator.referenceNode.parentNode.scrollIntoView();
+	ensureViewable(g_currentIterator.referenceNode.parentNode);
 	CodeView.onCurrentChanged(oldId);
 }
 function goUp()
@@ -76,7 +83,7 @@ function goUp()
 	while (g_currentIterator.referenceNode.parentNode.getBoundingClientRect().bottom > otop + 1)
 		if (g_currentIterator.previousNode() == null)
 			break;
-	g_currentIterator.referenceNode.parentNode.scrollIntoView();
+	ensureViewable(g_currentIterator.referenceNode.parentNode);
 	CodeView.onCurrentChanged(oldId);
 }
 function goDown()
@@ -89,7 +96,7 @@ function goDown()
 	while (g_currentIterator.referenceNode.parentNode.getBoundingClientRect().top < obottom - 1)
 		if (g_currentIterator.nextNode() == null)
 			break;
-	g_currentIterator.referenceNode.parentNode.scrollIntoView();
+	ensureViewable(g_currentIterator.referenceNode.parentNode);
 	CodeView.onCurrentChanged(oldId);
 }
 function thisParent(_e)
@@ -114,7 +121,7 @@ function setCurrent(_e)
 	}
 	if (!t && document.getElementById(g_currentIterator.referenceNode.parentNode.id))
 		return;
-	t.scrollIntoView();
+	ensureViewable(t);
 	var oldId = g_currentIterator.referenceNode && g_currentIterator.referenceNode.parentNode ? g_currentIterator.referenceNode.parentNode.id : '';
 	CodeView.onCurrentAboutToChange();
 	g_currentIterator.detach();
