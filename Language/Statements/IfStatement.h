@@ -45,6 +45,7 @@ protected:
 	virtual Kinds						allowedKinds(int _index) const;
 	virtual Types						allowedTypes(int _index) const;
 	virtual List<int> const&			defineDeclarationOrder() const { static const List<int> r = List<int>() << Condition << Body << AltBody; return r; }
+	virtual bool						requiresSemicolon() const { return false; }
 };
 
 class UnlessStatement: public IfStatement

@@ -27,12 +27,12 @@ Dynamic code-loading (plugins).
 - Referenced as placeholder (no key press handling)
   - BRINGBACK Colouring (layout) of possibles (Entity::defineEditLayout(ViewKeysC&, Named*)
   - BRINGBACK Method names register with IdentifierSet
-  - BRINGBACK int/string etc. IdentifierSet that creates variable if necessary.
   - QUICK get rid of committed() in Statement - test for inherited method existance
     - Use the method rather than require the name to exist in the class?
   - TODO SearchReferenced (\)
     - All possible (including scoped exterals).
     - Should provide list for browsing/selection.
+- BRINGBACK Type info stuff.
 Webkit layout system 
 - Implement cursor movers properly.
 - SVG files.

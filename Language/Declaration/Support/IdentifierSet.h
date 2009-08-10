@@ -2,14 +2,14 @@
  * Version: Martta License version 1.0
  *
  * The contents of this file are subject to the Martta License version 1.0
- * (the "License"); you may not use this file except in compliance with the 
- * License. You should have received a copy of the Martta License 
+ * (the "License"); you may not use this file except in compliance with the
+ * License. You should have received a copy of the Martta License
  * "COPYING.Martta" along with Martta; if not you may obtain a copy of the
  * License at http://quidprocode.co.uk/Martta/
  *
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations under 
+ * License for the specific language governing rights and limitations under
  * the License.
  *
  * The Initial Developer of the code in this file is Gavin Wood.
@@ -24,10 +24,11 @@
 #include <msList.h>
 using namespace MarttaSupport;
 
+#include "Named.h"
+
 namespace Martta
 {
 
-class Named;
 class Position;
 
 // Declare a single static instance of the derived class in its CPP file to register it.
@@ -36,9 +37,36 @@ class IdentifierSet
 public:
 	IdentifierSet();
 	virtual ~IdentifierSet();
-	
+
 	virtual List<Named*>				identifiableAt(Position const&) { return List<Named*>(); }
 	virtual void						acceptAt(Position const&, Named*) {}
+	virtual String						defineEditHtml(Named*) { return L"<?>"; }
+};
+
+template<class T>
+class SimpleIdentifierSet: public IdentifierSet
+{
+public:
+	SimpleIdentifierSet(wchar_t const* _name, wchar_t const* _html = L"<span class=\"keyword\"><?></span>"):
+		m_ourNamed	(_name),
+		m_html		(_html)
+	{}
+	virtual List<Named*>				identifiableAt(Position const& _p)
+	{
+		if (_p.allowedToBeKind<T>())
+			return List<Named*>() << &m_ourNamed;
+		return List<Named*>();
+	}
+	virtual void						acceptAt(Position const& _pos, Named*)
+	{
+		_pos.place((new T)->prepareChildren());
+	}
+	virtual String						defineEditHtml(Named*)
+	{
+		return m_html;
+	}
+	SimpleNamed m_ourNamed;
+	String m_html;
 };
 
 }

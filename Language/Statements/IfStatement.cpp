@@ -18,6 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "IdentifierSet.h"
 #include "BareTyped.h"
 #include "Const.h"
 #include "Compound.h"
@@ -29,6 +30,9 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(IfStatement);
 MARTTA_OBJECT_CPP(UnlessStatement);
+
+static SimpleIdentifierSet<IfStatement> s_ifSet(L"if");
+static SimpleIdentifierSet<UnlessStatement> s_unlessSet(L"unless");
 
 bool IfStatement::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
@@ -83,8 +87,8 @@ String IfStatement::defineLayout(ViewKeys const& _k) const
 
 String IfStatement::defineHtml() const
 {
-	return L"<span id=\"this\" class=\"keyword\">if</span> <span class=\"minor symbol\">(</span>" + toHtml(child(Condition)) + L"<span class=\"minor symbol\">)</span><br/>" + Corporal::defineHtml(true)
-			+ L"<br/><span class=\"keyword\">else</span><br/>" + toHtml(child(AltBody));
+	return L"<span id=\"this\" class=\"keyword\">if</span> <span class=\"minor symbol\">(</span>" + toHtml(child(Condition)) + L"<span class=\"minor symbol\">)</span>" + Corporal::defineHtml(true)
+			+ (child(AltBody) ? L"<span class=\"keyword\">else</span>" + toHtml(child(AltBody)) : String::null);
 }
 
 bool UnlessStatement::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
@@ -109,8 +113,8 @@ String UnlessStatement::defineLayout(ViewKeys const& _k) const
 
 String UnlessStatement::defineHtml() const
 {
-	return L"<span id=\"this\" class=\"keyword\">unless</span> <span class=\"minor symbol\">(</span>" + toHtml(child(Condition)) + L"<span class=\"minor symbol\">)</span><br/>" + Corporal::defineHtml(true)
-			+ L"<br/><span class=\"keyword\">else</span><br/>" + toHtml(child(AltBody));
+	return L"<span id=\"this\" class=\"keyword\">unless</span> <span class=\"minor symbol\">(</span>" + toHtml(child(Condition)) + L"<span class=\"minor symbol\">)</span>" + Corporal::defineHtml(true)
+			+ (child(AltBody) ? L"<span class=\"keyword\">else</span>" + toHtml(child(AltBody)) : String::null);
 }
 
 }

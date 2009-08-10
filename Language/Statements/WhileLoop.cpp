@@ -18,6 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "IdentifierSet.h"
 #include "Typed.h"
 #include "BuiltinType.h"
 #include "Const.h"
@@ -30,6 +31,9 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(WhileLoop);
 MARTTA_OBJECT_CPP(UntilLoop);
+
+static SimpleIdentifierSet<WhileLoop> s_whileLoopSet(L"while");
+static SimpleIdentifierSet<UntilLoop> s_untilLoopSet(L"until");
 
 Kinds WhileLoop::allowedKinds(int _index) const
 {

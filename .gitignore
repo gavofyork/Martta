@@ -10,5 +10,7 @@ plugin-loader/
 support/build/
 support/libsupport.a
 support/support.xcodeproj/
-
+.*-composed.cpp
 /TODO~
+/link.sh~
+/.gitignore~

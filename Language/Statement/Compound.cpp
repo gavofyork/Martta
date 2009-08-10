@@ -96,12 +96,20 @@ String statementsToHtml(List<Entity*> const& _es)
 	return ret;
 }
 
+String statementsToHtml(List<Statement*> const& _es)
+{
+	String ret;
+	foreach (Statement const* e, _es)
+		ret += toHtml(e, e->requiresSemicolon() ? L"span" : L"div") + (e->requiresSemicolon() ? L"<br/>" : L"");
+	return ret;
+}
+
 String Compound::defineHtml() const
 {
 	if (statements().size() > 1)
-		return L"<span class=\"minor symbol\">{</span><br/><div class=\"block\">" + toHtml(cardinalChildren(), "</div><div class=\"block\">") + L"</div><span class=\"minor symbol\">}</span>";
+		return L"<span class=\"minor symbol\">{</span><div class=\"block\">" + statementsToHtml(statements()) + L"</div><span class=\"minor symbol\">}</span>";
 	else if (statements().size())
-		return L"<div class=\"block\">" + toHtml(statements()[0]) + L"</div>";
+		return L"<div class=\"block\">" + statementsToHtml(statements()) + L"</div>";
 	else
 		return L"<span class=\"minor symbol\">{}</span>";
 }
@@ -113,7 +121,7 @@ String HardCompound::defineLayout(ViewKeys const&) const
 
 String HardCompound::defineHtml() const
 {
-	return L"<span class=\"minor symbol\">{</span><br/><div class=\"block\">" + toHtml(cardinalChildren(), "</div><div class=\"block\">") + L"</div><span class=\"minor symbol\">}</span>";
+	return L"<div class=\"minor symbol\">{</div><div class=\"block\">" + statementsToHtml(statements()) + L"</div><div class=\"minor symbol\">}</div>";
 }
 
 }

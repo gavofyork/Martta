@@ -35,6 +35,11 @@ class CvQualifiedType;
 class PointerType;
 class Resolver;
 
+inline QString qs(String const& _s)
+{
+	return QString::fromWCharArray(_s.data(), _s.length());
+}
+
 class DeclarationsHandler: public QXmlContentHandler
 {
 public:

@@ -22,6 +22,7 @@
 
 #include "ModelPtrRegistrar.h"
 
+#include "DeclarationsHandler.h"
 #include "CTypes.h"
 #include "CDependency.h"
 #include "CProject.h"
@@ -52,11 +53,6 @@ void CSolution::initialiseNew()
 	clearEntities();
 	back().place(Entity::evaluate(String("CProject{TextLabel[text=project]}{MainFunction{TextLabel[text=main]}{BuiltinType[id=%1]}{Argument{BuiltinType[id=%1]}{TextLabel[text=argc]}}{Argument{Pointer{Pointer{BuiltinType[id=%2]}}}{TextLabel[text=argv]}}}{CDependency[libs=][includes=/usr/include/stdlib.h*/usr/include/stdio.h][name=Standard C]}").arg(Int).arg(Char)));
 	rejigIncludes();
-}
-
-static inline QString qs(String const& _s)
-{
-	return QString::fromWCharArray(_s.data(), _s.length());
 }
 
 void CSolution::initWithProjects(List<Project*> const& _ps)

@@ -43,9 +43,13 @@ String NameEntryPoint::defineEditLayout(ViewKeys const&, Named*)
 	return L"%1";	//TODO user IdentifierSet
 }
 
-String NameEntryPoint::defineEditHtml(Named*)
+String NameEntryPoint::defineEditHtml(Named* _i)
 {
-	return L"<?>";	//TODO user IdentifierSet
+	if (_i)
+		foreach (IdentifierSet* i, IdentifierSetRegistrar::get()->allSets())
+			if (i->identifiableAt(self()->over()).contains(_i))
+				return i->defineEditHtml(_i);
+	return L"<?>";
 }
 
 void NameEntryPoint::committed(Named* _i)

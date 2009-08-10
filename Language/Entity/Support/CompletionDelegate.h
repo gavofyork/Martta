@@ -92,9 +92,9 @@ public:
 	}
 	virtual String defineHtml() const
 	{
-		String ret = EditDelegate<T>::subject()->defineEditHtml(m_selection);
+		String ret = EditDelegate<T>::subject() ? EditDelegate<T>::subject()->defineEditHtml(m_selection) : L"<?>";
 		if (ret.contains(L"<?>"))
-			return ret.replace(L"<?>", m_name + "<span class=\"unreal\">" + (m_cycled >= 0 && m_cycled < m_potentials.size() ? NameTrait<R>::name(m_potentials[m_cycled]).mid(m_name.length()) : m_completion) + "</span>");
+			return ret.replace(L"<?>", (m_selection ? NameTrait<R>::name(m_selection).left(m_name.length()) : m_name) + "<span class=\"unreal\">" + (m_cycled >= 0 && m_cycled < m_potentials.size() ? NameTrait<R>::name(m_potentials[m_cycled]).mid(m_name.length()) : m_completion) + "</span>");
 		else
 			return ret;
 	}

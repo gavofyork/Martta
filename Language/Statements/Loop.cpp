@@ -18,6 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "IdentifierSet.h"
 #include "Compound.h"
 #include "BreakStatement.h"
 #include "Loop.h"
@@ -26,6 +27,8 @@ namespace Martta
 {
 
 MARTTA_OBJECT_CPP(Loop);
+
+static SimpleIdentifierSet<Loop> s_loopSet(L"forever");
 
 bool Loop::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {

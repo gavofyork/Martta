@@ -125,6 +125,7 @@ public:
 	virtual void						rejig() const {}
 
 	String								typeHtml(String const& _middle) const;
+	virtual String						fullHtml(String const& _middle) const { return L"<span class=\"TypeEntity\">" + typeHtml(_middle) + L"</span>"; }
 
 protected:
 	/// This newClone is the simple one; it doesn't have to change the ownership or duplicate the children.

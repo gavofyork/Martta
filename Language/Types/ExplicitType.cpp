@@ -44,10 +44,14 @@ public:
 	{
 		placeVariable(_pos, new ExplicitType(static_cast<Identifiable*>(_i)->asKind<TypeDefinition>()));
 	}
+	virtual String						defineEditHtml(Named*)
+	{
+		return ExplicitType().defineEditHtml(0);
+	}
 	List<Named*> m_nameds;
 };
 
-static ExplicitTypeSet s_builtinTypeSet;
+static ExplicitTypeSet s_explicitTypeSet;
 
 bool ExplicitType::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {

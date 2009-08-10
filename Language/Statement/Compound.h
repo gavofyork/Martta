@@ -41,6 +41,7 @@ protected:
 	virtual String						defineHtml() const;
 	virtual void						appendDefinedUptoHere(int _i, List<ValueDefiner*>* _list) const;
 	virtual bool						isSuperfluous() const { return cardinalChildCount() == 1 && child(0)->kind() == Kind::of<Statement>() && !isNecessary(); }
+	virtual bool						requiresSemicolon() const { return false; }
 };
 
 class HardCompound: public Compound

@@ -18,6 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "IdentifierSet.h"
 #include "Primary.h"
 #include "BareTyped.h"
 #include "Typed.h"
@@ -29,6 +30,8 @@ namespace Martta
 {
 
 MARTTA_OBJECT_CPP(ForLoop);
+
+static SimpleIdentifierSet<ForLoop> s_forLoopSet(L"for");
 
 Kinds ForLoop::allowedKinds(int _index) const
 {
@@ -76,10 +79,10 @@ String ForLoop::defineLayout(ViewKeys const& _k) const
 
 String ForLoop::defineHtml() const
 {
-	return L"<^><span class=\"keyword\">for</span> <span class=\"minor symbol\">(</span>" +
+	return L"<span id=\"this\" class=\"keyword\">for</span> <span class=\"minor symbol\">(</span>" +
 			toHtml(child(Initialiser)) + L"<span class=\"minor symbol\">;</span> " +
 			toHtml(child(Condition)) + L"<span class=\"minor symbol\">;</span> " +
-			toHtml(child(Ticker)) + L"<span class=\"minor symbol\">)</span><br/>" + Corporal::defineHtml(true);
+			toHtml(child(Ticker)) + L"<span class=\"minor symbol\">)</span>" + Corporal::defineHtml(true);
 }
 
 String ForLoop::code() const

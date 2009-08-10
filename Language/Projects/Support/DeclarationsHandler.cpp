@@ -37,11 +37,6 @@ static inline String qs(QString const& _qs)
 	return ret;
 }
 
-static inline QString qs(String const& _s)
-{
-	return QString::fromWCharArray(_s.data(), _s.length());
-}
-
 QString properName(QXmlAttributes const& _a)
 {
 	QString ret;

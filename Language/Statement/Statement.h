@@ -40,6 +40,7 @@ class Statement: public Entity, public_interface TypedOwner, public_interface Na
 public:
 	virtual String						code() const { return "(void)0;"; }
 	virtual String						codeAsStatement() const { return code(); }
+	virtual bool						requiresSemicolon() const { return true; }
 
 	virtual List<ValueDefiner*>			valuesInLocalScope() const;
 

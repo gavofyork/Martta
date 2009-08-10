@@ -76,6 +76,10 @@ public:
 	{
 		placeVariable(_pos, new BuiltinType(static_cast<BuiltinNamed*>(_i)->m_id));
 	}
+	virtual String						defineEditHtml(Named*)
+	{
+		return BuiltinType().defineEditHtml(0);
+	}
 	List<Named*> m_nameds;
 };
 
