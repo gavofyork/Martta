@@ -1,5 +1,7 @@
 #!/bin/bash
 
+COMPOSED=1
+
 if [[ "x$1" == "x" ]]; then
 	src="$PWD/Language"
 else
@@ -92,6 +94,16 @@ for f in $files; do
 		headers="$headers $path/$file"
 	fi
 done
+
+if [[ $COMPOSED && "x$sources" != "x" ]]; then
+	echo "// Auto-generated composed file" > $dest/.$name-composed.cpp
+	for i in $sources; do
+		echo "#include \"$i\"" >> $dest/.$name-composed.cpp
+	done
+	echo >> $dest/.$name-composed.cpp
+	headers="$headers $sources"
+	sources=".$name-composed.cpp"
+fi
 
 cat > $dest/$name.pro << EOF
 include(../martta.prf)
