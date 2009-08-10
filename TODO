@@ -17,7 +17,6 @@ Small things:
 - Insertion of entities in, e.g. argument lists for function calls.
   - Just a comma?
 - CLEAN Move crap from ExplicitType to TypeDefinition.
-- CLEAN Slim down API of CodeScene.
 - OPTIMISE String (and List/Hash/Type perhaps) with copy on write.
 - Interfacify ModifyingType (clashes with PhysicalType over ListType etc.)
   - NewOperation/DeleteOperation - interface with Type classes.
@@ -25,7 +24,6 @@ Small things:
 - BRINGBACK GenericMemberOperation::isChildInValidState - do what it says.
 Dynamic code-loading (plugins).
 - Referenced as placeholder (no key press handling)
-  - BRINGBACK Colouring (layout) of possibles (Entity::defineEditLayout(ViewKeysC&, Named*)
   - BRINGBACK Method names register with IdentifierSet
   - QUICK get rid of committed() in Statement - test for inherited method existance
     - Use the method rather than require the name to exist in the class?
