@@ -1,4 +1,4 @@
-DEPS += TypeEntity Statement CTypes Operator Declaration
+DEPS += TypeEntity Statement CTypes Operator Declaration Variables
 OURDIRS = . Interfaces Support
 TWD = $$PWD
 

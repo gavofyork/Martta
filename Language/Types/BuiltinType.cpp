@@ -21,10 +21,13 @@
 #include <msStringList.h>
 using namespace MarttaSupport;
 
+#include "VariablePlacer.h"
+
 #include "Const.h"
 #include "Pointer.h"
 #include "Reference.h"
 
+#include "IdentifierSet.h"
 #include "CodeScene.h"
 #include "BuiltinOperator.h"
 #include "CompletionDelegate.h"
@@ -41,6 +44,42 @@ MARTTA_OBJECT_CPP(BuiltinType);
 
 List<BuiltinOperator*> BuiltinType::s_nonMembers;
 Hash<String, Kind> BuiltinType::s_recognisedExtras;
+
+class BuiltinNamed: public Named
+{
+public:
+	BuiltinNamed(int _id): m_id(_id) {}
+	virtual String name() const { return BuiltinType::name(m_id); }
+	uint m_id;
+};
+
+class BuiltinTypeSet: public IdentifierSet
+{
+public:
+	BuiltinTypeSet()
+	{
+		for (int i = 0; i < s_simpleIdsCount; i++)
+			m_nameds.append(new BuiltinNamed(s_simpleIds[i]));
+	}
+	~BuiltinTypeSet()
+	{
+		while (m_nameds.size())
+			delete m_nameds.takeLast();
+	}
+	virtual List<Named*>				identifiableAt(Position const& _p)
+	{
+		if (canPlaceVariable(_p))
+			return m_nameds;
+		return List<Named*>();
+	}
+	virtual void						acceptAt(Position const& _pos, Named* _i)
+	{
+		placeVariable(_pos, new BuiltinType(static_cast<BuiltinNamed*>(_i)->m_id));
+	}
+	List<Named*> m_nameds;
+};
+
+static BuiltinTypeSet s_builtinTypeSet;
 
 bool BuiltinType::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {

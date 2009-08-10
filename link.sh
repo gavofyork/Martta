@@ -19,18 +19,19 @@ if [[ "$src" == "$root" ]]; then
 		mv -f /tmp/nold /tmp/old
 	fi
 	mv $src /tmp/src
-	$src = /tmp/src
+	src=/tmp/src
 else
-	root="$1"
-#	if [[ -e $root ]]; then
-#		rm -r $root
-#	fi
+	if [[ -e $root ]]; then
+		mv -f /tmp/oldroot /tmp/older
+		mv $root /tmp/oldroot
+		mv -f /tmp/older /tmp/oldroot
+	fi
 fi
 
 if [[ "x$3" == "x" ]]; then
 	support="../../support"
 else
-	support="$2"
+	support="$3"
 fi
 
 echo "Preparing Martta language build tree."
@@ -74,8 +75,9 @@ for f in $files; do
 	file=${f/$ffile}
 	if [[ $path == $f ]]; then path="."; fi
 	paths="$paths $path"
-	local header=$(find $src -name $file.h)
-	local source=$(find $src -name $file.cpp)
+	local header=$(find $src -type f -name $file.h)
+	local source=$(find $src -type f -name $file.cpp)
+	local basic=$(find $src -type f -name $file)
 	mkdir -p $dest/$path
 	if [[ -e $header ]]; then
 		rsync -t $header $dest/$path/
@@ -85,6 +87,10 @@ for f in $files; do
 		rsync -t $source $dest/$path/
 		sources="$sources $path/$file.cpp"
 	fi
+	if [[ -e $basic ]]; then
+		rsync -t $basic $dest/$path/
+		headers="$headers $path/$file"
+	fi
 done
 
 cat > $dest/$name.pro << EOF
@@ -92,6 +98,7 @@ include(../martta.prf)
 include($name.pri)
 SOURCES += $sources
 HEADERS += $headers
+$(for (( i=4 ; i<$#+1 ; i++ )); do echo ${!i}; done;)
 EOF
 
 cat > $dest/$name.pri << EOF
@@ -124,7 +131,10 @@ CONFIG *= release
 }
 debug:DEFINES *= DEBUG
 release:DEFINES *= RELEASE
-mac:QMAKE_LFLAGS *= -Wl,-Sp
+unix:DEFINES += M_UNIX
+mac:DEFINES += M_MAC
+win:DEFINES += M_WIN
+!mac:unix:DEFINES += M_LINUX
 TEMPLATE = lib
 VERSION = 0.1.0
 BASE = \$\$PWD
@@ -144,7 +154,7 @@ QMAKE_FEATURES *= \$\$PWD
 QMAKE_LIBDIR *= \$\$DESTDIR
 DEPENDPATH *= \$\$join(OURDIRS, " \$\$TWD/", "\$\$TWD/")
 INCLUDEPATH *= \$\$join(OURDIRS, " \$\$TWD/", "\$\$TWD/")
-contains(TARGET, \$\$basename(TWD)): QMAKE_POST_LINK += echo \$\${TARGET} \$\$DEPS > \$\${DESTDIR}/\$(TARGET).dep
+contains(TARGET, \$\$basename(TWD)): contains(TEMPLATE, lib): QMAKE_POST_LINK += echo \$\${TARGET} \$\$DEPS > \$\${DESTDIR}/\$(TARGET).dep
 !contains(TARGET, \$\$basename(TWD)): !contains(NO_SOURCES, 1): LIBS *= -l\$\$basename(TWD)
 for(a, DEPS): !contains(DONE, \$\${a}) {
 	DONE += \$\${a}
@@ -158,7 +168,9 @@ prepare Operator "Operator Support/OperatorRegistrar"
 prepare CQualifiers CQualifiers ""
 prepare CTypes CTypes ""
 
-prepare Entity "Support/Auxilliary Support/AuxilliaryFace Support/AuxilliaryRegistrar Support/ChangeMan Support/CodeScene Support/CompletionDelegate Support/CullManager Support/Dier Support/EditDelegate Support/EntitySupport Support/KeyEvent Support/Kind Support/Meta Support/Position Support/SafePointer Support/Stylist Interfaces/ChildValidifier Interfaces/Dependee Interfaces/Depender Interfaces/Familial Entity" 
+prepare Entity "Support/Auxilliary Support/AuxilliaryFace Support/AuxilliaryRegistrar Support/ChangeMan Support/CodeScene Support/CompletionDelegate Support/CullManager Support/Dier Support/EditDelegate Support/EntitySupport Support/KeyEvent Support/Kind Support/Meta Support/Position Support/SafePointer Support/Stylist Interfaces/ChildValidifier Interfaces/Dependee Interfaces/Depender Interfaces/Familial Entity Support/WebStylistRegistrar Support/SpecialKeys" 
+
+prepare Project "Project Solution" "Entity"
 
 prepare TypeEntity "TypeEntity ModifyingType Interfaces/TypedOwner Interfaces/TypeNamer Support/Type" Entity
 
@@ -167,13 +179,19 @@ prepare Declaration "Support/IdentifierSet Support/IdentifierSetRegistrar Interf
 
 prepare Statement "ValueDefiner Interfaces/Corporal Interfaces/Conditional Statement Primary BareTyped Typed Untyped Compound" "TypeEntity Declaration"
 
-prepare Types "HashType ListType StringType  Array BuiltinType BuiltinDeclaration BuiltinMethod BuiltinOperator MemberTemplateType Memberify AddressType Pointer UndefinedArray Const Reference ExplicitType Interfaces/TypeDefinition FunctionType PhysicalType Subscriptable Support/SubscriptableRegistrar" "TypeEntity Statement CTypes Operator Declaration"
+prepare SimpleTypes "Const Reference PhysicalType" "TypeEntity"
 
-prepare Namers "EnumerationNamer EnumValue VariableNamer Argument LambdaNamer" "Labels Declaration Types Statement CQualifiers"
+prepare Variables "Interfaces/VariableNamer Support/VariablePlacer AssignedVariable DefaultConstructedVariable" "Labels Statement SimpleTypes"
 
-prepare Statements "AssignedVariable DefaultConstructedVariable ReturnStatement Referenced InScopeReferenced GlobalReferenced ArgumentReferenced LocalReferenced BinaryOperation AssignmentOperation SimpleBinaryOperation SubscriptOperation NewOperation DeleteOperation GenericMemberOperation MemberOperation LongMemberOperation SimpleUnaryOperation ReferenceOperation DereferenceOperation UnaryOperation Operation Invocation Evaluation Literal BoolLiteral StringLiteral IntegerLiteral FloatLiteral IfStatement Loop ForLoop WhileLoop BreakStatement" "Statement Types Labels Declaration Namers"
+prepare Types "Interfaces/TypeDefinition HashType ListType StringType ExplicitType Array BuiltinType BuiltinDeclaration BuiltinMethod BuiltinOperator MemberTemplateType Memberify AddressType Pointer UndefinedArray FunctionType Subscriptable Support/SubscriptableRegistrar" "TypeEntity Statement CTypes Operator Declaration Variables"
+
+prepare Namers "EnumerationNamer EnumValue Argument LambdaNamer" "Labels Declaration Types Statement CQualifiers"
+
+prepare Statements "ReturnStatement Referenced InScopeReferenced GlobalReferenced ArgumentReferenced LocalReferenced BinaryOperation AssignmentOperation SimpleBinaryOperation SubscriptOperation NewOperation DeleteOperation GenericMemberOperation MemberOperation LongMemberOperation SimpleUnaryOperation ReferenceOperation DereferenceOperation UnaryOperation Operation Invocation Evaluation Literal BoolLiteral StringLiteral IntegerLiteral FloatLiteral IfStatement Loop ForLoop WhileLoop BreakStatement Support/in.svg Support/out.svg" "Statement Types Labels Declaration Namers"
 
 prepare CStuff "TopLevel Root TopLevelType Function Variable Struct Union Typedef Enumeration Namespace" "Namers"
+
+prepare Projects "CProject CSolution CDependency MainFunction Support/DeclarationsHandler Support/GccXml" "CStuff Project" "CONFIG += qt" "QT = core xml"
 
 prepare Members "Construction Destructor ConstructedVariable Constructor ConversionOperator MethodOperator Method Member MemberLambda MemberVariable MemberValue MemberEnumeration ThisPointer" "Labels Declaration Types Namers Statements Operator Labels"
 

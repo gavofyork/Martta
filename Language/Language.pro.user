@@ -48,9 +48,16 @@
   <variable>buildConfiguration-Debug</variable>
   <valuemap type="QVariantMap" >
    <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString" >Debug</value>
-   <value key="QtVersionId" type="int" >3</value>
+   <value key="QtVersionId" type="int" >0</value>
    <value key="addQDumper" type="" ></value>
-   <value key="buildDirectory" type="QString" >/home/gav/Projects/Martta/Language</value>
+  </valuemap>
+ </data>
+ <data>
+  <variable>buildConfiguration-Release</variable>
+  <valuemap type="QVariantMap" >
+   <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString" >Release</value>
+   <value key="QtVersionId" type="int" >0</value>
+   <value key="addQDumper" type="" ></value>
   </valuemap>
  </data>
  <data>
@@ -58,7 +65,7 @@
   <valuemap type="QVariantMap" >
    <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString" >Debug</value>
    <valuelist key="abstractProcess.Environment" type="QVariantList" >
-    <value type="QString" >DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-IQLKBNcqWO,guid=6a919a26b1f7d80ca3befe414a7d3ccf</value>
+    <value type="QString" >DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-nTLG5g5EXr,guid=1c7266d7198c8e5b302c61804a7ea99e</value>
     <value type="QString" >DESKTOP_SESSION=default</value>
     <value type="QString" >DESKTOP_STARTUP_ID=</value>
     <value type="QString" >DISPLAY=:0.0</value>
@@ -66,8 +73,8 @@
     <value type="QString" >GDM_LANG=en_GB.UTF-8</value>
     <value type="QString" >GDM_XSERVER_LOCATION=local</value>
     <value type="QString" >GNOME_DESKTOP_SESSION_ID=this-is-deprecated</value>
-    <value type="QString" >GNOME_KEYRING_SOCKET=/tmp/keyring-nik9lk/socket</value>
-    <value type="QString" >GPG_AGENT_INFO=/tmp/seahorse-s8psdw/S.gpg-agent:4145:1</value>
+    <value type="QString" >GNOME_KEYRING_SOCKET=/tmp/keyring-P8MvNw/socket</value>
+    <value type="QString" >GPG_AGENT_INFO=/tmp/seahorse-lL2jRl/S.gpg-agent:3823:1</value>
     <value type="QString" >GTK_MODULES=canberra-gtk-module</value>
     <value type="QString" >GTK_RC_FILES=/etc/gtk/gtkrc:/home/gav/.gtkrc-1.2-gnome2</value>
     <value type="QString" >HOME=/home/gav</value>
@@ -78,16 +85,16 @@
     <value type="QString" >PATH=/usr/local/Trolltech/Qt-4.6.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games</value>
     <value type="QString" >PWD=/home/gav</value>
     <value type="QString" >QTDIR=/usr/local/Trolltech/Qt-4.6.0</value>
-    <value type="QString" >SESSION_MANAGER=local/mama:/tmp/.ICE-unix/4060</value>
+    <value type="QString" >SESSION_MANAGER=local/mama:/tmp/.ICE-unix/3737</value>
     <value type="QString" >SHELL=/bin/bash</value>
-    <value type="QString" >SSH_AGENT_PID=4117</value>
-    <value type="QString" >SSH_AUTH_SOCK=/tmp/keyring-nik9lk/socket.ssh</value>
+    <value type="QString" >SSH_AGENT_PID=3795</value>
+    <value type="QString" >SSH_AUTH_SOCK=/tmp/keyring-P8MvNw/socket.ssh</value>
     <value type="QString" >USER=gav</value>
     <value type="QString" >USERNAME=gav</value>
     <value type="QString" >WINDOWPATH=7</value>
     <value type="QString" >XAUTHORITY=/home/gav/.Xauthority</value>
     <value type="QString" >XDG_DATA_DIRS=/usr/local/share/:/usr/share/:/usr/share/gdm/</value>
-    <value type="QString" >XDG_SESSION_COOKIE=ecd819583fbe67b4bdf2b650483ed6a7-1249721549.973149-227573752</value>
+    <value type="QString" >XDG_SESSION_COOKIE=ecd819583fbe67b4bdf2b650483ed6a7-1249814941.215604-303463729</value>
    </valuelist>
    <valuelist key="abstractProcess.arguments" type="QVariantList" >
     <value type="QString" >/home/gav/Projects/Martta/Language/Language.pro</value>
@@ -106,7 +113,7 @@
   <valuemap type="QVariantMap" >
    <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString" >Debug</value>
    <valuelist key="abstractProcess.Environment" type="QVariantList" >
-    <value type="QString" >DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-IQLKBNcqWO,guid=6a919a26b1f7d80ca3befe414a7d3ccf</value>
+    <value type="QString" >DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-nTLG5g5EXr,guid=1c7266d7198c8e5b302c61804a7ea99e</value>
     <value type="QString" >DESKTOP_SESSION=default</value>
     <value type="QString" >DESKTOP_STARTUP_ID=</value>
     <value type="QString" >DISPLAY=:0.0</value>
@@ -114,8 +121,8 @@
     <value type="QString" >GDM_LANG=en_GB.UTF-8</value>
     <value type="QString" >GDM_XSERVER_LOCATION=local</value>
     <value type="QString" >GNOME_DESKTOP_SESSION_ID=this-is-deprecated</value>
-    <value type="QString" >GNOME_KEYRING_SOCKET=/tmp/keyring-nik9lk/socket</value>
-    <value type="QString" >GPG_AGENT_INFO=/tmp/seahorse-s8psdw/S.gpg-agent:4145:1</value>
+    <value type="QString" >GNOME_KEYRING_SOCKET=/tmp/keyring-P8MvNw/socket</value>
+    <value type="QString" >GPG_AGENT_INFO=/tmp/seahorse-lL2jRl/S.gpg-agent:3823:1</value>
     <value type="QString" >GTK_MODULES=canberra-gtk-module</value>
     <value type="QString" >GTK_RC_FILES=/etc/gtk/gtkrc:/home/gav/.gtkrc-1.2-gnome2</value>
     <value type="QString" >HOME=/home/gav</value>
@@ -126,16 +133,16 @@
     <value type="QString" >PATH=/usr/local/Trolltech/Qt-4.6.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games</value>
     <value type="QString" >PWD=/home/gav</value>
     <value type="QString" >QTDIR=/usr/local/Trolltech/Qt-4.6.0</value>
-    <value type="QString" >SESSION_MANAGER=local/mama:/tmp/.ICE-unix/4060</value>
+    <value type="QString" >SESSION_MANAGER=local/mama:/tmp/.ICE-unix/3737</value>
     <value type="QString" >SHELL=/bin/bash</value>
-    <value type="QString" >SSH_AGENT_PID=4117</value>
-    <value type="QString" >SSH_AUTH_SOCK=/tmp/keyring-nik9lk/socket.ssh</value>
+    <value type="QString" >SSH_AGENT_PID=3795</value>
+    <value type="QString" >SSH_AUTH_SOCK=/tmp/keyring-P8MvNw/socket.ssh</value>
     <value type="QString" >USER=gav</value>
     <value type="QString" >USERNAME=gav</value>
     <value type="QString" >WINDOWPATH=7</value>
     <value type="QString" >XAUTHORITY=/home/gav/.Xauthority</value>
     <value type="QString" >XDG_DATA_DIRS=/usr/local/share/:/usr/share/:/usr/share/gdm/</value>
-    <value type="QString" >XDG_SESSION_COOKIE=ecd819583fbe67b4bdf2b650483ed6a7-1249721549.973149-227573752</value>
+    <value type="QString" >XDG_SESSION_COOKIE=ecd819583fbe67b4bdf2b650483ed6a7-1249814941.215604-303463729</value>
    </valuelist>
    <valuelist key="abstractProcess.arguments" type="QVariantList" >
     <value type="QString" >-w</value>
@@ -149,51 +156,32 @@
   <variable>buildconfiguration-Debug-cleanstep0</variable>
   <valuemap type="QVariantMap" >
    <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString" >Debug</value>
-   <valuelist key="abstractProcess.Environment" type="QVariantList" >
-    <value type="QString" >DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-SA2xXb4VSW,guid=97554ec9dfb517c93075c1f54a69d25f</value>
-    <value type="QString" >DESKTOP_SESSION=default</value>
-    <value type="QString" >DESKTOP_STARTUP_ID=</value>
-    <value type="QString" >DISPLAY=:0.0</value>
-    <value type="QString" >GDMSESSION=default</value>
-    <value type="QString" >GDM_LANG=en_GB.UTF-8</value>
-    <value type="QString" >GDM_XSERVER_LOCATION=local</value>
-    <value type="QString" >GNOME_DESKTOP_SESSION_ID=this-is-deprecated</value>
-    <value type="QString" >GNOME_KEYRING_SOCKET=/tmp/keyring-Mvhb1z/socket</value>
-    <value type="QString" >GPG_AGENT_INFO=/tmp/seahorse-e9y6mV/S.gpg-agent:4064:1</value>
-    <value type="QString" >GTK_MODULES=canberra-gtk-module</value>
-    <value type="QString" >GTK_RC_FILES=/etc/gtk/gtkrc:/home/gav/.gtkrc-1.2-gnome2</value>
-    <value type="QString" >HOME=/home/gav</value>
-    <value type="QString" >LANG=en_GB.UTF-8</value>
-    <value type="QString" >LD_LIBRARY_PATH=/opt/qt-creator/lib/qtcreator:</value>
-    <value type="QString" >LOGNAME=gav</value>
-    <value type="QString" >ORBIT_SOCKETDIR=/tmp/orbit-gav</value>
-    <value type="QString" >PATH=/usr/local/Trolltech/Qt-4.6.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games</value>
-    <value type="QString" >PWD=/home/gav</value>
-    <value type="QString" >QTDIR=/usr/local/Trolltech/Qt-4.6.0</value>
-    <value type="QString" >SESSION_MANAGER=local/mama:/tmp/.ICE-unix/3983</value>
-    <value type="QString" >SHELL=/bin/bash</value>
-    <value type="QString" >SSH_AGENT_PID=4040</value>
-    <value type="QString" >SSH_AUTH_SOCK=/tmp/keyring-Mvhb1z/socket.ssh</value>
-    <value type="QString" >USER=gav</value>
-    <value type="QString" >USERNAME=gav</value>
-    <value type="QString" >WINDOWPATH=7</value>
-    <value type="QString" >XAUTHORITY=/home/gav/.Xauthority</value>
-    <value type="QString" >XDG_DATA_DIRS=/usr/local/share/:/usr/share/:/usr/share/gdm/</value>
-    <value type="QString" >XDG_SESSION_COOKIE=ecd819583fbe67b4bdf2b650483ed6a7-1248449117.256332-733646552</value>
-   </valuelist>
-   <valuelist key="abstractProcess.arguments" type="QVariantList" >
-    <value type="QString" >clean</value>
-    <value type="QString" >-w</value>
-   </valuelist>
-   <value key="abstractProcess.command" type="QString" >/usr/bin/make</value>
-   <value key="abstractProcess.enabled" type="bool" >true</value>
-   <value key="abstractProcess.workingDirectory" type="QString" >/home/gav/Projects/Martta/Language</value>
+  </valuemap>
+ </data>
+ <data>
+  <variable>buildconfiguration-Release-buildstep0</variable>
+  <valuemap type="QVariantMap" >
+   <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString" >Release</value>
+   <value key="buildConfiguration" type="int" >0</value>
+  </valuemap>
+ </data>
+ <data>
+  <variable>buildconfiguration-Release-buildstep1</variable>
+  <valuemap type="QVariantMap" >
+   <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString" >Release</value>
+  </valuemap>
+ </data>
+ <data>
+  <variable>buildconfiguration-Release-cleanstep0</variable>
+  <valuemap type="QVariantMap" >
+   <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString" >Release</value>
   </valuemap>
  </data>
  <data>
   <variable>buildconfigurations</variable>
   <valuelist type="QVariantList" >
    <value type="QString" >Debug</value>
+   <value type="QString" >Release</value>
   </valuelist>
  </data>
  <data>

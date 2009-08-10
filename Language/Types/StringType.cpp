@@ -18,6 +18,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "IdentifierSet.h"
+#include "VariablePlacer.h"
 #include "SubscriptableRegistrar.h"
 #include "ValueDefiner.h"
 #include "BuiltinType.h"
@@ -38,6 +40,25 @@ MARTTA_OBJECT_CPP(StringType);
 
 List<BuiltinMethod*> StringType::s_members;
 List<BuiltinOperator*> StringType::s_nonMembers;
+
+class StringTypeSet: public IdentifierSet
+{
+public:
+	StringTypeSet(): m_ourNamed(L"string") {}
+	virtual List<Named*>				identifiableAt(Position const& _p)
+	{
+		if (canPlaceVariable(_p))
+			return List<Named*>() << &m_ourNamed;
+		return List<Named*>();
+	}
+	virtual void						acceptAt(Position const& _pos, Named*)
+	{
+		placeVariable(_pos, new StringType);
+	}
+	SimpleNamed m_ourNamed;
+};
+
+static StringTypeSet s_stringTypeSet;
 
 Types StringType::subscriptTypes() const
 {
@@ -253,7 +274,7 @@ String StringType::defineLayout(ViewKeys const&) const
 
 String StringType::defineHtml() const
 {
-	return typeHtml(L"<span id=\"this\" class=\"TypeEntity\">string</span>");
+	return L"<span id=\"this\" class=\"TypeEntity\">" + typeHtml(L"string") + L"</span>";
 }
 
 }

@@ -2,14 +2,14 @@
  * Version: Martta License version 1.0
  *
  * The contents of this file are subject to the Martta License version 1.0
- * (the "License"); you may not use this file except in compliance with the 
- * License. You should have received a copy of the Martta License 
+ * (the "License"); you may not use this file except in compliance with the
+ * License. You should have received a copy of the Martta License
  * "COPYING.Martta" along with Martta; if not you may obtain a copy of the
  * License at http://quidprocode.co.uk/Martta/
  *
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations under 
+ * License for the specific language governing rights and limitations under
  * the License.
  *
  * The Initial Developer of the code in this file is Gavin Wood.
@@ -26,14 +26,13 @@ namespace Martta
 {
 
 // Don't forget to use import/export functions!
-class Identifiable: public_interface Named
+class Identifiable: public Named
 {
 	MARTTA_INTERFACE
-	MARTTA_INHERITS(Named, 0)
 
 public:
 	MARTTA_NAMED(Identity)
-	
+
 	/// @returns the user-visible name used for this entity. (e.g. "foo", "bar", "my class")
 	virtual String						name() const;
 	/// @returns the name used for this declaration in the CPP code. (e.g. "foo", "m_bar", "MyClass")
@@ -51,9 +50,9 @@ public:
 	/// string even when the entity is within a statement hierarchy or is anonymous (empty name).
 	/// (e.g. ";;MyClass;;m_foo", ";;MyClass;;void bar(int)", ";;MyClass")
 	virtual String						key() const;
-	
+
 	/// @returns the entity from which this may be addressed. Typically it is the parent, though some entities
-	/// (e.g. EnumValue) skip this immediate parent and use their parent's addressableContext. 
+	/// (e.g. EnumValue) skip this immediate parent and use their parent's addressableContext.
 	/// Default value to returns the parent is addressable or zero if not (e.g. Statement-derived parent).
 	virtual Identifiable*				addressableContext() const;
 
@@ -65,13 +64,13 @@ public:
 	virtual bool						isHidden() const { return codeName().startsWith(".") || name().isEmpty(); }				///< true for anonymous enums.
 
 	virtual Identifiable*				lookupChild(String const& _subkey) const;
-	Identifiable*						find(String const& _key) const;	// Treats this entity as root scope and looks for (scoped) _key in it. 
-	
+	Identifiable*						find(String const& _key) const;	// Treats this entity as root scope and looks for (scoped) _key in it.
+
 protected:
 	// These *MUST* be used by any final class in its property functions.
 	void								properties(Hash<String, String>& _p) const;
 	void								setProperties(Hash<String, String> const& _p);
-	
+
 	virtual ~Identifiable();
 };
 

@@ -18,32 +18,33 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#pragma once
-
-#include <msString.h>
-using namespace MarttaSupport;
-
-#include "Meta.h"
+#include "AssignedVariable.h"
+#include "DefaultConstructedVariable.h"
+#include "TypeEntity.h"
 
 namespace Martta
 {
 
-class Named
+bool canPlaceVariable(Position const& _p)
 {
-public:
-	virtual String								name() const { return String::null; }
-	virtual ~Named() {}
-};
+	return _p.allowedToBeKind<AssignedVariable>();
+}
 
-class SimpleNamed: public Named
+void placeVariable(Position const& _p, TypeEntity* _t)
 {
-public:
-	SimpleNamed(String const& _name): m_name(_name) {}
-
-	virtual String								name() const { return m_name; }
-
-private:
-	String										m_name;
-};
+	Entity* e = 0;
+	if (_p.allowedToBeKind<DefaultConstructedVariable>())
+		e = new DefaultConstructedVariable;
+	else if (_p.allowedToBeKind<AssignedVariable>())
+		e = new AssignedVariable;
+	if (e)
+	{
+		e->adopt(_t);
+		e->prepareChildren();
+		_p.place(e);
+	}
+	else
+		delete _t;
+}
 
 }

@@ -18,6 +18,9 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "VariablePlacer.h"
+
+#include "IdentifierSet.h"
 #include "TypeDefinition.h"
 #include "ExplicitType.h"
 #include "CodeScene.h"
@@ -27,6 +30,24 @@ namespace Martta
 {
 
 MARTTA_OBJECT_CPP(ExplicitType);
+
+class ExplicitTypeSet: public IdentifierSet
+{
+public:
+	virtual List<Named*>				identifiableAt(Position const& _p)
+	{
+		if (canPlaceVariable(_p))
+			return list_cast<Named*>(castEntities<Identifiable>(_p.parent()->selfAndAncestorsChildrenOf<TypeDefinition>()));
+		return List<Named*>();
+	}
+	virtual void						acceptAt(Position const& _pos, Named* _i)
+	{
+		placeVariable(_pos, new ExplicitType(static_cast<Identifiable*>(_i)->asKind<TypeDefinition>()));
+	}
+	List<Named*> m_nameds;
+};
+
+static ExplicitTypeSet s_builtinTypeSet;
 
 bool ExplicitType::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {

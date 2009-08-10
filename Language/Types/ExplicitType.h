@@ -47,6 +47,8 @@ public:
 	virtual String						defineEditLayout(ViewKeys const&, TypeDefinition*) const;
 	String								defineEditHtml(TypeDefinition*) const;
 
+	virtual bool						isCastableTo(TypeEntity const* _t, bool _const) { return hasSingleCastOperator(_t, _const); }
+
 	bool								hasSingleCastOperator(TypeEntity const* _t, bool _const = false) const;
 	bool								hasSingleConversionConstructor(TypeEntity const* _f) const;
 

@@ -34,17 +34,16 @@ Dynamic code-loading (plugins).
     - All possible (including scoped exterals).
     - Should provide list for browsing/selection.
 Webkit layout system 
-- BRINGBACK decoration code into layout system and markup for it.
-- BRINGBACK Visual change system.
-- Remove old layout system.
-  - Remove decorate.
-- Move all entities over to new.
-- Stylist support.
-- Entity still has a lot of the CSS info.
-- Editing.
-  - Move over last few edit things to new system.
 - Implement cursor movers properly.
 - SVG files.
+- BRINGBACK decoration code into layout system and markup for it.
+- Stylist support.
+  - Text-file based stylist.
+- Remove old layout system.
+  - Remove decorate.
+- DULL Move CSS info from Entity.
+- INTERNET Keep current entity in view - probably through JS - perhaps focus it?
+- BRINGBACK Visual change system.
 
 --------------------------------------------------------------------------------
 

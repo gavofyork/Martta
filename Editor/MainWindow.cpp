@@ -142,10 +142,14 @@ void MainWindow::loadPlugins()
 			if ((depTree[s] - curLoad).isEmpty())
 			{
 				m_libraries.append(new QLibrary(s));
-				m_libraries.last()->load();
-				qDebug() << "Loaded " << s;
-				loaded += s;
-				new QTreeWidgetItem(pluginsLoaded, QStringList() << s << QStringList(depTree[s].toList()).join(", "));
+				if (m_libraries.last()->load())
+				{
+					qDebug() << "Loaded " << s;
+					loaded += s;
+					new QTreeWidgetItem(pluginsLoaded, QStringList() << s << QStringList(depTree[s].toList()).join(", "));
+				}
+				else
+					qDebug() << "Error loading" << s;
 				depTree.remove(s);
 			}
 	}

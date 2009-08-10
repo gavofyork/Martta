@@ -84,8 +84,10 @@ void AuxilliaryRegistrar::initialiseClasses()
 		return;	// TODO: reinitialise?
 
 	foreach (AuxilliaryFace const* i, m_auxilliaries.values())
+	{
+		mDebug() << "Initialising" << i->name();
 		i->initialise();
-
+	}
 	m_isInitialised = true;
 }
 

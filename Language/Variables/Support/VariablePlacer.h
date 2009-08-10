@@ -20,30 +20,13 @@
 
 #pragma once
 
-#include <msString.h>
-using namespace MarttaSupport;
-
-#include "Meta.h"
-
 namespace Martta
 {
 
-class Named
-{
-public:
-	virtual String								name() const { return String::null; }
-	virtual ~Named() {}
-};
+class Position;
+class TypeEntity;
 
-class SimpleNamed: public Named
-{
-public:
-	SimpleNamed(String const& _name): m_name(_name) {}
-
-	virtual String								name() const { return m_name; }
-
-private:
-	String										m_name;
-};
+bool canPlaceVariable(Position const& _p);
+void placeVariable(Position const& _p, TypeEntity* _t);
 
 }

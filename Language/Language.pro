@@ -9,10 +9,12 @@ SUBDIRS = \
  Labels \
  Declaration \
  Statement \
+ SimpleTypes \
+ Variables \
  Types \
  Namers \
  Statements \
  CStuff \
+ Projects \
  Members \
  Class \
- Projects \
