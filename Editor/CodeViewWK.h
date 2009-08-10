@@ -53,10 +53,10 @@ public:
 
 	// Focus changers (often make use of above).
 	virtual void				setCurrent(Entity const* _e);
-	virtual void				navigateInto(Entity* _centre) { navigateAway(_centre); }			/// Selects _centre's leftmost, innermost focusable child. e.g. X on ()s: (++X + 4)
-	virtual void				navigateOnto(Entity* _shell) { navigateAway(_shell); }				/// Selects _shell's leftmost focusable child. e.g. ++X on ()s: (++X + 4)
-	virtual void				navigateToNew(Entity* _from) { navigateAway(_from); }				/// Selects closest focusable sibling-owned entity visually forwards from _from, or parent if none.
-	virtual void				navigateAway(Entity* _from, NavigationDirection _d = Forwards);		/// Selects closest focusable entity visually _d from _from. e.g. 4 on ()s: (++X + 4)
+	virtual void				navigateInto(Entity* _centre);
+	virtual void				navigateOnto(Entity* _shell);
+	virtual void				navigateToNew(Entity* _from);
+	virtual void				navigateAway(Entity* _from, NavigationDirection _d = Forwards);
 
 	// Hacks
 	virtual void				silentlySetCurrent(Entity* _e) { bool os = m_silent; m_silent = true; setCurrent(_e); m_silent = os; }

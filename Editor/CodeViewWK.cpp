@@ -88,6 +88,27 @@ void CodeViewWK::onCurrentChanged(QString const& _oldId)
 	}
 }
 
+void CodeViewWK::navigateInto(Entity* _centre)
+{
+	/// Selects _centre's leftmost, innermost focusable child. e.g. X on ()s: (++X + 4)
+	refresh();
+	page()->mainFrame()->evaluateJavaScript(QString("navigateInto('%1');").arg((int)_centre));
+}
+
+void CodeViewWK::navigateOnto(Entity* _shell)
+{
+	/// Selects _shell's leftmost focusable child. e.g. ++X on ()s: (++X + 4)
+	refresh();
+	page()->mainFrame()->evaluateJavaScript(QString("navigateOnto('%1');").arg((int)_shell));
+}
+
+void CodeViewWK::navigateToNew(Entity* _from)
+{
+	/// Selects closest focusable sibling-owned entity visually forwards from _from, or parent if none.
+	refresh();
+	page()->mainFrame()->evaluateJavaScript(QString("navigateToNew('%1');").arg((int)_from));
+}
+
 void CodeViewWK::navigateAway(Entity* _from, NavigationDirection _d)
 {
 	refresh();
