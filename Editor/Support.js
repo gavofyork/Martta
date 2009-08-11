@@ -110,7 +110,7 @@ function thisParent(_e)
 	}
 	return t;
 }
-function setCurrent(_e)
+function setReferenceNode(_e)
 {
 	var t = _e;
 	while (t)
@@ -120,7 +120,7 @@ function setCurrent(_e)
 		t = t.parentNode;
 	}
 	if (!t && document.getElementById(g_currentIterator.referenceNode.parentNode.id))
-		return;
+		return false;
 	ensureViewable(t);
 	var oldId = g_currentIterator.referenceNode && g_currentIterator.referenceNode.parentNode ? g_currentIterator.referenceNode.parentNode.id : '';
 	CodeView.onCurrentAboutToChange();
@@ -128,16 +128,64 @@ function setCurrent(_e)
 	g_currentIterator = document.createNodeIterator(document, NodeFilter.SHOW_ELEMENT, onlyThese, false);
 	while (g_currentIterator.nextNode() != null)
 		if (g_currentIterator.referenceNode.parentNode == t || !t)
-		{
-			CodeView.onCurrentChanged(oldId);
-			return;
-		}
+			return true;
 	alert('ODD');
+	return false;
+}
+function setCurrent(_e)
+{
+	var oldId = g_currentIterator.referenceNode && g_currentIterator.referenceNode.parentNode ? g_currentIterator.referenceNode.parentNode.id : '';
+	if (setReferenceNode(_e))
+		CodeView.onCurrentChanged(oldId);
 }
 function setCurrentById(_id)
 {
 	var e = document.getElementById(_id);
 	setCurrent(e);
+}
+function hasAncestor(_c, _a)
+{
+	var e = _c;
+	while (e != null)
+		if (e == _a)
+			return true;
+		else
+			e = e.parentNode;
+	return false;
+}
+function navigateInto(_centre)
+{
+	var e = document.getElementById(_centre);
+	if (!e)
+		return;
+	var oldId = g_currentIterator.referenceNode && g_currentIterator.referenceNode.parentNode ? g_currentIterator.referenceNode.parentNode.id : '';
+	CodeView.onCurrentAboutToChange();
+	g_currentIterator.detach();
+	g_currentIterator = document.createNodeIterator(document, NodeFilter.SHOW_ELEMENT, onlyThese, false);
+	while (g_currentIterator.nextNode() != null)
+		if (hasAncestor(g_currentIterator.referenceNode.parentNode, e))
+			break;
+	while (true)
+	{
+		var lastNodeParent = g_currentIterator.referenceNode.parentNode;
+		if (g_currentIterator.nextNode() == null || !hasAncestor(g_currentIterator.referenceNode.parentNode, lastNodeParent))
+		{
+			while (g_currentIterator.referenceNode.parentNode != lastNodeParent)
+				g_currentIterator.previousNode();
+			ensureViewable(g_currentIterator.referenceNode.parentNode);
+			CodeView.onCurrentChanged(oldId);
+			return;
+		}
+	}
+}
+function navigateOnto(_shell)
+{
+	var e = document.getElementById(_shell);
+
+}
+function navigateToNew(_from)
+{
+	var e = document.getElementById(_from);
 }
 function getAttribs(_e, _a)
 {
