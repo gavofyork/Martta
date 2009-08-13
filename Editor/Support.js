@@ -37,6 +37,13 @@ function thisNode(_e)
 			return children[i];
 	return null;
 }
+function entityParent(_e)
+{
+	var p = _e.parentNode;
+	while (p != null && p.getAttribute('entity') != 'true')
+		p= p.parentNode;
+	return p;
+}
 function routeKeyPress(_e, _k)
 {
 	if (_e.onkeypress != null && _e.onkeypress(_k))
@@ -155,6 +162,7 @@ function hasAncestor(_c, _a)
 }
 function navigateInto(_centre)
 {
+	/// Selects _centre's leftmost, innermost focusable child. e.g. X on ()s: (++X + 4)
 	var e = document.getElementById(_centre);
 	if (!e)
 		return;
@@ -180,11 +188,21 @@ function navigateInto(_centre)
 }
 function navigateOnto(_shell)
 {
+	/// Selects _shell's leftmost focusable child. e.g. ++X on ()s: (++X + 4)
 	var e = document.getElementById(_shell);
+	if (!e)
+		return;
+	var it = document.createNodeIterator(e, NodeFilter.SHOW_ELEMENT, function(node) { if (isInvisible(node)) return NodeFilter.FILTER_REJECT; if (node.id == 'this' && (entityParent(node.parentNode) == e || thisNode(e) == node)) return NodeFilter.FILTER_ACCEPT; return NodeFilter.FILTER_SKIP; }, false);
+	if (it.nextNode() == null)
+		return;
 
+	var oldId = g_currentIterator.referenceNode && g_currentIterator.referenceNode.parentNode ? g_currentIterator.referenceNode.parentNode.id : '';
+	if (setReferenceNode(it.referenceNode.parentNode))
+		CodeView.onCurrentChanged(oldId);
 }
 function navigateToNew(_from)
 {
+	/// Selects closest focusable sibling-owned entity visually forwards from _from, or parent if none.
 	var e = document.getElementById(_from);
 }
 function getAttribs(_e, _a)
