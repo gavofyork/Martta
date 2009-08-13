@@ -659,7 +659,7 @@ void CodeView::navigateToNew(Entity* _e)
 
 	List<Entity*> o = m_orders[_e->parent()];
 	int i = o.indexOf(_e);
-	if (i != UndefinedIndex && i < o.count() - 1)
+	if (i != -1 && i < o.count() - 1)
 		navigateInto(o[i + 1]);
 	else
 		setCurrent(nearest(_e->parent()));

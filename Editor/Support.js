@@ -117,7 +117,7 @@ function thisParent(_e)
 	}
 	return t;
 }
-function setReferenceNode(_e)
+function setReferenceNode(_e, _n)
 {
 	var t = _e;
 	while (t)
@@ -130,7 +130,8 @@ function setReferenceNode(_e)
 		return false;
 	ensureViewable(t);
 	var oldId = g_currentIterator.referenceNode && g_currentIterator.referenceNode.parentNode ? g_currentIterator.referenceNode.parentNode.id : '';
-	CodeView.onCurrentAboutToChange();
+	if (_n)
+		CodeView.onCurrentAboutToChange();
 	g_currentIterator.detach();
 	g_currentIterator = document.createNodeIterator(document, NodeFilter.SHOW_ELEMENT, onlyThese, false);
 	while (g_currentIterator.nextNode() != null)
@@ -142,7 +143,7 @@ function setReferenceNode(_e)
 function setCurrent(_e)
 {
 	var oldId = g_currentIterator.referenceNode && g_currentIterator.referenceNode.parentNode ? g_currentIterator.referenceNode.parentNode.id : '';
-	if (setReferenceNode(_e))
+	if (setReferenceNode(_e, true))
 		CodeView.onCurrentChanged(oldId);
 }
 function setCurrentById(_id)
@@ -197,13 +198,27 @@ function navigateOnto(_shell)
 		return;
 
 	var oldId = g_currentIterator.referenceNode && g_currentIterator.referenceNode.parentNode ? g_currentIterator.referenceNode.parentNode.id : '';
-	if (setReferenceNode(it.referenceNode.parentNode))
+	if (setReferenceNode(it.referenceNode.parentNode, true))
+	{
+		ensureViewable(g_currentIterator.referenceNode.parentNode);
 		CodeView.onCurrentChanged(oldId);
+	}
 }
 function navigateToNew(_from)
 {
 	/// Selects closest focusable sibling-owned entity visually forwards from _from, or parent if none.
 	var e = document.getElementById(_from);
+
+	var oldId = g_currentIterator.referenceNode && g_currentIterator.referenceNode.parentNode ? g_currentIterator.referenceNode.parentNode.id : '';
+	if (setReferenceNode(e, true))
+	{
+		while (hasAncestor(g_currentIterator.referenceNode, e))
+			g_currentIterator.nextNode();
+		if (!hasAncestor(g_currentIterator.referenceNode, entityParent(e)))
+			setReferenceNode(entityParent(e), false);
+		ensureViewable(g_currentIterator.referenceNode.parentNode);
+		CodeView.onCurrentChanged(oldId);
+	}
 }
 function getAttribs(_e, _a)
 {
