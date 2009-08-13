@@ -177,7 +177,7 @@ protected:
 	virtual void						parentSwitched(Entity* _exParent) { if (m_isDeaf != (parentIs<TypeEntity>() && parentAs<TypeEntity>()->m_isDeaf)) setIsDeaf(!m_isDeaf); Super::parentSwitched(_exParent); }
 
 private:
-	void								setIsDeaf(bool _id) { if (_id != m_isDeaf) { m_isDeaf = _id; foreach (TypeEntity* e, childrenOf<TypeEntity>()) e->setIsDeaf(m_isDeaf); } }
+	void								setIsDeaf(bool _id) { if (_id != m_isDeaf) { m_isDeaf = _id; m_active = !_id; foreach (TypeEntity* e, childrenOf<TypeEntity>()) e->setIsDeaf(m_isDeaf); } }
 
 	/// Returns an exact copy of this tree, except that the top is owned by _t.
 	/// Unowned nodes are copied.
