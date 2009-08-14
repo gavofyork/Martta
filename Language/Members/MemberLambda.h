@@ -60,10 +60,8 @@ protected:
 	virtual String						basicCode(FunctionCodeScope _ref) const;
 
 	virtual bool						isInValidState() const { return type().isWellDefined(); }
-	virtual Entity*						isExpander() const;
 	virtual String						memberDefineHtml() const;
 	virtual bool						keyPressed(KeyEvent const* _e);
-//	virtual void						memberDecorate(DecorationContext const& _p) const;
 	virtual Type						type() const { return MemberValue::memberifiedType(LambdaNamer::type()); }
 };
 

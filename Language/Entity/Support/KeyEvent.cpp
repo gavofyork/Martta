@@ -49,8 +49,8 @@ KeyEvent::KeyEvent(String const& _text, int _modifiers, Entity* _focus, bool _is
 			AssertNR(m_codeScene->strobeChild());
 			m_sCrPoint = m_codeScene->strobeCreation()->over();
 			m_sChPoint = m_codeScene->strobeChild()->over();
-			m_codeScene->strobeCreation()->prepareMove(Nowhere);
-			m_codeScene->strobeChild()->prepareMove(m_sCrPoint);
+			m_codeScene->strobeCreation()->silentMove(Nowhere);
+			m_codeScene->strobeChild()->silentMove(m_sCrPoint);
 		}
 		mDebug() << "(strobe) text:" << m_text;
 	}
@@ -74,9 +74,6 @@ void KeyEvent::noteStrobeCreation(Entity* _creation, Entity* _old) const
 	m_strobeCreation = _creation;
 	m_strobeChild = _old;
 	const_cast<KeyEvent*>(this)->m_strobed = true;	// QUICK mutable.
-
-	if (m_sCrPoint)
-		m_codeScene->strobeCreation()->commitMove(m_sCrPoint);	// Commit the move out of the model if there was a prior-creation to move away.
 
 	// If the child wasn't replaced by something else.
 	if (m_codeScene->strobeChild() == m_originalStrobeChild && m_sChPoint)	// && c because we only need to move the strobeChild if there was a strobe creation (before, anyways).
@@ -115,8 +112,8 @@ void KeyEvent::executeStrobe()
 	}
 	if (m_text.length() > 1 && m_sCrPoint && m_sChPoint)
 	{
-		m_codeScene->strobeChild()->prepareMove(m_sChPoint);
-		m_codeScene->strobeCreation()->prepareMove(m_sCrPoint);
+		m_codeScene->strobeChild()->silentMove(m_sChPoint);
+		m_codeScene->strobeCreation()->silentMove(m_sCrPoint);
 	}
 }
 

@@ -48,7 +48,6 @@ protected:
 	void								onDependencyAdded(Entity* _e);
 	void								onDependencyChanged(Entity* _e);
 	void								onDependencyRemoved(Entity* _e);
-	Entity*								isExpander() const;
 
 	String								m_stem;
 };

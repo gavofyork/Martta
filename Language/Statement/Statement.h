@@ -55,7 +55,7 @@ public:
 	void								changed(int _aspect = AllAspects)
 	{
 		foreach (Entity* i, children())
-			i->relayoutLater();
+			i->markDirty();
 		Super::changed(_aspect);
 	}
 

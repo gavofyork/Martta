@@ -52,29 +52,6 @@ bool MemberLambda::isConst() const
 	return false;
 }
 
-Entity* MemberLambda::isExpander() const
-{
-	if (body())
-		return body()->child(0);
-	else
-		return 0;
-}
-
-/*void MemberLambda::memberDecorate(DecorationContext const& _p) const
-{
-	if (isConst())
-	{
-		QRectF r(0.f, 0.f, 16.f, _p.cap(0).height());
-		QRgb c = qRgb(0xbb, 0xdd, 0xff);
-		QLinearGradient go(QPointF(0.f, 0.f), QPointF(8.f, 0.f));
-		go.setColorAt(0.f, qRgba(c, 0));
-		go.setColorAt(1.f, qRgba(c, 255));
-		_p->setPen(Qt::NoPen);
-		_p->setBrush(go);
-		_p->drawRect(r);
-	}
-}*/
-
 String MemberLambda::basicCode(FunctionCodeScope _ref) const
 {
 	if (!isComplete())

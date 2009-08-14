@@ -72,7 +72,7 @@ protected:
 	virtual String						defineHtml() const;
 
 	virtual int							familyDependencies() const { return DependsOnBoth; }
-	virtual void						onDependencySwitched(Entity* _e, Entity* _o) { if (_e == parent()) relayoutLater(); else Super::onDependencySwitched(_e, _o); }
+	virtual void						onDependencySwitched(Entity* _e, Entity* _o) { if (_e == parent()) markDirty(); else Super::onDependencySwitched(_e, _o); }
 };
 
 }

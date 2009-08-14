@@ -45,7 +45,7 @@ protected:
 	virtual String						defineHtml() const;
 
 	virtual int							familyDependencies() const { return DependsOnBoth; }
-	virtual void						onDependencySwitched(Entity* _e, Entity* _o) { if (_e == parent()) relayoutLater(); else Super::onDependencySwitched(_e, _o); }
+	virtual void						onDependencySwitched(Entity* _e, Entity* _o) { if (_e == parent()) markDirty(); else Super::onDependencySwitched(_e, _o); }
 
 	template<class T> static bool		simpleKeyPressedOnPositionHandler(Position const& _p, KeyEvent const* _e, String const& _t, Precedence _d, Associativity _a, bool _pre = true, bool _confusable = false)
 	{

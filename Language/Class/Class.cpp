@@ -74,11 +74,6 @@ void Class::rejigDeps()
 		addDependency(i->child(Member::Accessibility));
 }
 
-Entity* Class::isExpander() const
-{
-	return cardinalChildCount() ? child(0) : const_cast<Class*>(this);
-}
-
 bool Class::checkImplicitConstructors()
 {
 	bool ret = false;
@@ -152,7 +147,7 @@ void Class::onChildrenInitialised()
 	rejigDeps();
 	if (checkImplicitConstructors())
 		changed();
-	relayoutLater();
+	markDirty();
 }
 
 void Class::onDependencyAdded(Entity* _e)
@@ -182,7 +177,7 @@ void Class::onDependencyChanged(Entity* _e)
 	if (_e->isKind<TextLabel>())
 		changed(Visually);
 	if (_e->isKind<AccessLabel>())
-		relayoutLater();
+		markDirty();
 }
 
 Kinds Class::allowedKinds(int _i) const

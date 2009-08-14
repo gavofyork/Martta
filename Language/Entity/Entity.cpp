@@ -354,7 +354,7 @@ bool Entity::cull()
 	if (c && !isCurrentOrAncestor() && isSuperfluous())
 	{
 		deleteAndRefill();
-		c->relayoutLater();
+		c->markDirty();
 		return true;
 	}
 	return false;
@@ -497,48 +497,11 @@ EditDelegateFace* Entity::editDelegate(CodeScene* _s)
 }
 
 // Drawing
-void Entity::resetLayoutCache()
-{
-	if (isInModel())
-		foreach (CodeScene* i, CodeScene::all())
-			i->resetLayoutCache(this);
-}
-void Entity::relayout()
+void Entity::markDirty()
 {
 	foreach (CodeScene* i, CodeScene::all())
-		relayout(i);
+		i->markDirty(this);
 }
-void Entity::relayout(CodeScene* _s)
-{
-	_s->relayout(this);
-}
-void Entity::relayoutLater()
-{
-	if (isInModel())
-		foreach (CodeScene* i, CodeScene::all())
-			relayoutLater(i);
-}
-void Entity::relayoutLater(CodeScene* _s)
-{
-	_s->relayoutLater(this);
-}
-void Entity::repaint(CodeScene* _s)
-{
-	_s->repaint(this);
-}
-void Entity::repaint()
-{
-	foreach (CodeScene* i, CodeScene::all())
-		repaint(i);
-}
-/*void Entity::decorate(DecorationContext const& _c) const
-{
-	if (!isValid())
-	{
-		_c->setPen(QPen(QColor(255, 128, 128), 2, Qt::DotLine, Qt::RoundCap));
-		_c->drawLine(QPointF(_c().left(), _c().bottom() - 2.f), QPointF(_c().right() - 2.f, _c().bottom() - 2.f));
-	}
-}*/
 
 // Keypress/UI event handlers.
 void Entity::activateEvent(CodeScene* _s)
@@ -550,17 +513,6 @@ bool Entity::activated(CodeScene* _s)
 {
 	if (onActivated(_s))
 		return true;
-	else if (Entity* e = isExpander())
-	{
-		_s->setViewKey(this, "expanded", !_s->viewKeys(this)["expanded"].toBool());
-		relayout(_s);
-
-		if (_s->viewKeys(this)["expanded"].toBool())
-			e->setCurrent();
-		else
-			setCurrent();
-		return true;
-	}
 	else
 	{
 		setEditing(_s);
@@ -586,7 +538,7 @@ void Entity::keyPressEventStarter(KeyEvent* _e, bool _abortive)
 		if (_e->codeScene()->editDelegate())
 		{
 			_e->codeScene()->editDelegate()->lazyCommit();
-			_e->codeScene()->relayout(_e->focus());
+			_e->focus()->markDirty();
 		}
 		return;
 	}
@@ -624,26 +576,16 @@ bool Entity::keyPressed(KeyEvent const* _e)
 	Position p = over();
 	if (_e->codeScene()->isCurrent(this) && ((_e->text() == L"\x7f" && _e->modifiers() == ShiftModifier) || (_e->text() == L"\b" && isEditing(_e->codeScene()))) && !isFixed())
 	{
-//		p.parent()->debugTree();
-//		mDebug() << p.index();
-//		debugTree();
 		deleteAndRefill(0, false);	// NOTE: Was true; changed to false to avoid erroneous currents being set. May need a rethink.
-//		p.parent()->debugTree();
-//		mDebug() << p.index();
 		if (p.exists())
 			_e->codeScene()->setCurrent(p.entity());
 	}
 	else if (_e->codeScene()->isCurrent(this) && _e->text() == L"\x7f" && !isFixed())
 	{
-//		p.parent()->debugTree();
-//		mDebug() << p.index();
-//		debugTree();
 		if (nonPlaceholderCount() == 1 && isAllowed(nonPlaceholder(0)->kind()))
 			deleteAndRefill(nonPlaceholder(0), false);	// SEE ABOVE.
 		else
 			deleteAndRefill(0, false);	// SEE ABOVE.
-//		p.parent()->debugTree();
-//		mDebug() << p.index();
 		if (p.exists())
 			_e->codeScene()->setCurrent(p.entity());
 	}
@@ -653,18 +595,6 @@ bool Entity::keyPressed(KeyEvent const* _e)
 		_e->codeScene()->setEditing(this);
 	else if (_e->text() == L"\t")
 		activated(_e->codeScene());
-/*	else if (_e->text() == "{" && !_e->codeScene()->viewKeys(this)["expanded"].toBool() && isExpander())
-	{
-		_e->codeScene()->setViewKey(this, "expanded", true);
-		relayout(_e->codeScene());
-		isExpander()->setCurrent();
-	}
-	else if (_e->text() == "}" && _e->codeScene()->viewKeys(this)["expanded"].toBool() && isExpander())
-	{
-		_e->codeScene()->setViewKey(this, "expanded", false);
-		relayout(_e->codeScene());
-		setCurrent();
-	}*/
 	else
 		return false;
 	return true;
@@ -687,7 +617,7 @@ bool Entity::attemptAppend(KeyEvent const* _e)
 }
 
 // Context/position changing.
-void Entity::prepareMove(Position const& _newPosition)
+void Entity::silentMove(Position const& _newPosition)
 {
 	if (_newPosition == over())
 		return;
@@ -706,20 +636,6 @@ void Entity::prepareMove(Position const& _newPosition)
 		else
 			m_index = UndefinedIndex;
 	}
-}
-void Entity::commitMove(Position const& _oldPosition)
-{
-	if (_oldPosition.parent() == m_parent)
-		return;
-
-	Entity* oldRoot = _oldPosition.parent() ? _oldPosition.parent()->root() : 0;
-	Entity* newRoot = root();
-
-	// TODO: Must be a better way of doing this?
-	// Tell scene we're leaving if we had a non-null root entity and it's different.
-	if (oldRoot && newRoot != oldRoot)
-		foreach (CodeScene* i, CodeScene::all())
-			i->leaving(this, _oldPosition);
 }
 void Entity::removeFromBrood(int _index, Entity* _e)
 {
@@ -814,7 +730,7 @@ void Entity::changed(int _aspects)
 		if (!isEditing())
 			checkForCullingLater();
 		if (_aspects & Visually)
-			relayoutLater();
+			markDirty();
 	}
 }
 
@@ -875,7 +791,7 @@ bool Entity::validifyChild(int _i, int* _added)
 		ret = true;
 	}
 	if (ret)
-		resetLayoutCache();
+		markDirty();
 	return ret;
 }
 bool Entity::validifyChildren()
@@ -908,7 +824,7 @@ bool Entity::validifyChildren()
 		childAdded(added);
 
 	if (added != INT_MAX - 1)
-		resetLayoutCache();
+		markDirty();
 	return ret;
 }
 Entity* Entity::prepareChildren()
@@ -922,7 +838,7 @@ Entity* Entity::prepareChildren()
 	for (int i = m_cardinalChildren.size(); i < minRequired(Cardinals); ++i)
 		back().spawnPreparedSilent()->parentAdded();
 	childrenInitialised();
-	resetLayoutCache();
+	markDirty();
 	return this;
 }
 bool Entity::removeInvalidChildren()
@@ -1029,7 +945,7 @@ void Entity::move(Position const& _newPosition)
 			for (int i = home; i != end; i += s)
 				m_parent->childMoved(m_parent->m_cardinalChildren[i], i + s);
 		m_parent->childMoved(this, old.index());
-		m_parent->relayoutLater();
+		m_parent->markDirty();
 	}
 	else
 	{
@@ -1037,8 +953,7 @@ void Entity::move(Position const& _newPosition)
 		if (m_parent)
 		{
 			m_parent->childAdded(m_index);
-			m_parent->resetLayoutCache();
-			m_parent->relayoutLater();
+			m_parent->markDirty();
 		}
 	}
 }
@@ -1073,7 +988,7 @@ Entity* Entity::usurp(Entity* _u)
 		_u->m_parent->childSwitched(_u, this);
 
 	delete this;
-	_u->resetLayoutCache();
+	_u->markDirty();
 	return _u;
 }
 Entity* Entity::replace(Entity* _r)
@@ -1091,7 +1006,7 @@ Entity* Entity::replace(Entity* _r)
 	if (_r->m_parent)
 	{
 		_r->m_parent->childSwitched(_r, this);
-		_r->m_parent->relayoutLater();
+		_r->m_parent->markDirty();
 	}
 	delete this;
 	return _r;
@@ -1135,7 +1050,7 @@ Entity* Entity::insert(Entity* _e, int _preferedIndex)
 		oneFootInTheGrave(_e->child(_preferedIndex));
 		killAndDelete(_e->child(_preferedIndex));
 	}
-	(_e->parent() ? _e->parent() : _e)->relayoutLater();
+	(_e->parent() ? _e->parent() : _e)->markDirty();
 	return _e;
 }
 bool Entity::tryInsert(Entity* _e, int _preferedIndex)
@@ -1164,7 +1079,7 @@ bool Entity::tryInsert(Entity* _e, int _preferedIndex)
 	if (_e->parent())
 		_e->parent()->childSwitched(_e, this);
 
-	_e->resetLayoutCache();
+	_e->markDirty();
 	return ip != Nowhere;
 }
 void Entity::deleteAndRefill(Entity* _e, bool _moveToGrave)
@@ -1184,7 +1099,7 @@ void Entity::deleteAndRefill(Entity* _e, bool _moveToGrave)
 		p->parentAdded();
 		c->childSwitched(p.entity(), this);
 		if (c)
-			c->relayoutLater();
+			c->markDirty();
 		delete this;
 	}
 	else
@@ -1194,7 +1109,7 @@ void Entity::deleteAndRefill(Entity* _e, bool _moveToGrave)
 		oneFootInTheGrave();
 		c->childRemoved(this, ci);
 		if (c)
-			c->relayoutLater();
+			c->markDirty();
 		delete this;
 	}
 	if (_moveToGrave)
@@ -1206,7 +1121,7 @@ void Entity::notifyOfStrobe(Entity* _strobeCreation)
 	if (_strobeCreation && m_parent)
 	{
 		parentSwitched(_strobeCreation);
-		relayoutLater();
+		markDirty();
 	}
 	else if (_strobeCreation)
 		parentRemoved(_strobeCreation);
@@ -1219,7 +1134,7 @@ void Entity::notifyOfStrobe(Entity* _strobeCreation)
 			m_parent->childSwitched(this, _strobeCreation);
 		else
 			m_parent->childAdded(m_index);
-		m_parent->resetLayoutCache();
+		m_parent->markDirty();
 	}
 }
 

@@ -81,9 +81,7 @@ public:
 	static void							initialiseClass();
 	static void							finaliseClass();
 
-	void								prepareMove(Position const& _newPosition);
-	void								commitMove(Position const& _oldPosition);
-	void								silentMove(Position const& _to) { Position from = over(); prepareMove(_to); commitMove(from); }
+	void								silentMove(Position const& _to);
 	void								silentRemove() { silentMove(Nowhere); }
 	void								move(Position const& _newPosition);
 	/// Same as move() except that if the destination is a placeholder we replace it,
@@ -382,10 +380,6 @@ public:
 	virtual void						apresLoad() {}	// Called following a load after the model has been loaded.
 	virtual void						archive() { Hash<String, String> h; properties(h); setProperties(h); }	// Should (at least) force all ModelPtrs to revert to textual form.
 
-	// UI
-	///
-//	virtual void						decorate(DecorationContext const&) const;
-
 	// We've been double-clicked.
 	bool								activated(CodeScene* _s);
 	virtual bool						onActivated(CodeScene*) { return false; }
@@ -398,7 +392,6 @@ public:
 	List<int>							knownNames() const;
 
 	virtual String						defineHtml() const;
-	virtual Entity*						isExpander() const { return 0; }
 
 	/// We become current in all code scenes.
 	void								setCurrent();
@@ -416,20 +409,9 @@ public:
 	void								navigateOnto(CodeScene* _s);
 	void								navigateToNew(CodeScene* _s);
 	void								dropCursor();
-	/// Redraw ourself in all views.
-	void								repaint();
+
 	/// Re-layout ourself now in all views.
-	void								relayout();
-	/// Re-layout ourself sometime before the next paint cycle in all views.
-	void								relayoutLater();
-	/// Redraw ourself in one view.
-	void								repaint(CodeScene* _s);
-	/// Re-layout ourself now in one view.
-	void								relayout(CodeScene* _s);
-	/// Re-layout ourself sometime before the next paint cycle in one view.
-	void								relayoutLater(CodeScene* _s);
-	/// Reset-layout cache.
-	void								resetLayoutCache();
+	virtual void						markDirty();
 
 	static void							keyPressEventStarter(KeyEvent* _e, bool _abortive = false);
 	void								activateEvent(CodeScene* _s);
@@ -457,19 +439,19 @@ protected:
 		if (m_parent && _old.parent())
 		{
 			parentSwitched(_old.parent());
-			m_parent->resetLayoutCache();
+			m_parent->markDirty();
 		}
 		else if (_old.parent())
 			parentRemoved(_old.parent());
 		else if (m_parent)
 		{
 			parentAdded();
-			m_parent->resetLayoutCache();
+			m_parent->markDirty();
 		}
 		if (_old.parent())
 		{
 			_old.parent()->childRemoved(this, _old.index());
-			_old.parent()->resetLayoutCache();
+			_old.parent()->markDirty();
 		}
 	}
 	/// Given an Entity/Interface-pointer-style variable and a value, set the variable and call add, change and remove

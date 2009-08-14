@@ -61,13 +61,6 @@ public:
 	// Hacks
 	virtual void				silentlySetCurrent(Entity* _e) { bool os = m_silent; m_silent = true; setCurrent(_e); m_silent = os; }
 
-	virtual void				repaint(Entity* _e) { markDirty(_e); }
-	virtual void				relayout(Entity* _e) { markDirty(_e); }
-	virtual void				resetLayoutCache(Entity* _e) { markDirty(_e); }
-	virtual void				relayoutLater(Entity* _e) { markDirty(_e); }
-
-	virtual void				leaving(Entity*, Position const&) {}
-
 public slots:
 	void						onCurrentAboutToChange();
 	void						onCurrentChanged(QString const& _old);
@@ -88,7 +81,7 @@ private:
 	virtual bool				event(QEvent* _e);
 	virtual void				paintEvent(QPaintEvent* _ev);
 
-	void						markDirty(Entity* _e);
+	virtual void				markDirty(Entity* _e);
 
 	List<SafePointer<Entity> >	m_dirty;
 

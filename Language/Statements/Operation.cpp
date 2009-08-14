@@ -128,7 +128,6 @@ bool Operation::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 	if (_e->text() == "(" && _p->isPlaceholder())
 	{
 		_e->codeScene()->setBracketed(_p);
-		_e->codeScene()->repaint(0);
 		return true;
 	}
 	return false;
@@ -140,14 +139,12 @@ bool Operation::keyPressed(KeyEvent const* _e)
 	{
 		_e->codeScene()->removeBracket(over());
 		over()->setCurrent();
-		repaint(_e->codeScene());
 		return true;
 	}
 	else if(_e->text() == ")")
 	{
 		_e->codeScene()->setBracketed(over());
 		over()->setCurrent();
-		repaint(_e->codeScene());
 		return true;
 	}
 

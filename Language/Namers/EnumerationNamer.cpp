@@ -117,11 +117,6 @@ String EnumerationNamer::defineHtml() const
 */
 }
 
-Entity* EnumerationNamer::isExpander() const
-{
-	return self()->isComplete() ? self()->cardinalChildrenOf<EnumValue>()[0] : 0;
-}
-
 void EnumerationNamer::onDependencyRemoved(Entity* _e)
 {
 	if (_e->isKind<EnumValue>())

@@ -50,7 +50,6 @@ protected:
 	virtual Types						assignableTypes() const { return Type(const_cast<Enumeration*>(this)); }
 
 	virtual bool						keyPressed(KeyEvent const* _e) { AssertNR(isComplete()); return EnumerationNamer::keyPressed(_e) ? true : Super::keyPressed(_e); }
-	virtual Entity*						isExpander() const { return child(isNamed() ? 1 : 0); }
 
 	virtual int							familyDependencies() { return DependsOnChildren; }
 	virtual void						onDependencyAdded(Entity* _e) { EnumerationNamer::onDependencyAdded(_e); }

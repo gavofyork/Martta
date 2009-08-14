@@ -76,7 +76,7 @@ public:
 	virtual void commit()
 	{
 		EditDelegate<T>::subject()->set(m_selection);
-		EditDelegate<T>::codeScene()->repaint(EditDelegate<T>::subject());
+		EditDelegate<T>::codeScene()->markDirty(EditDelegate<T>::subject());
 	}
 	virtual bool isValid() const
 	{

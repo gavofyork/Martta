@@ -139,7 +139,7 @@ bool Invocation::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 			n->dropCursor();
 		else
 		{
-			n->relayout();
+			n->markDirty();
 			n->setCurrent();
 		}
 		return true;

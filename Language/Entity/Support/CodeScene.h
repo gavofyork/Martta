@@ -121,14 +121,7 @@ public:
 
 	virtual bool				manageKeyPress(KeyEvent const&, Entity const*) { return false; }
 
-	virtual void				repaint(Entity* _e) = 0;
-	virtual void				relayout(Entity* _e) = 0;
-	/// Resets the parent's defineLayout cache.
-	virtual void				resetLayoutCache(Entity* _e) = 0;
-	/// For when an entity has changed in the scene.
-	virtual void				relayoutLater(Entity* _e) = 0;
-
-	virtual void				leaving(Entity*, Position const&) {}
+	virtual void				markDirty(Entity* _e) = 0;
 
 protected:
 	// Handlers to be called pre- and post-current changing.
