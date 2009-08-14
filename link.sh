@@ -67,6 +67,7 @@ local ffile="*/"
 local fpath="/*"
 local sources=""
 local headers=""
+local data=""
 local paths=""
 
 mkdir -p $dest
