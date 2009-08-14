@@ -43,7 +43,6 @@ Webkit layout system
   - BRINGBACK VirtualOverload::defineHtml, ::defineEditHtml.
   - BRINGBACK parentheses annotation - may need update on change.
   - BRINGBACK Error system (!isValid()).
-  - QUICK ./link.sh knows what to do with .svgs
 - BRINGBACK Stylist support.
   - defineHtml moves to interface WebKitHtml::webKitHtml.
   - WKDefaultStylist uses Entity object's WebKitHtml::webKitHtml where possible.

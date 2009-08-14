@@ -91,7 +91,7 @@ for f in $files; do
 	fi
 	if [[ -e $basic ]]; then
 		rsync -t $basic $dest/$path/
-		headers="$headers $path/$file"
+		data="$data $path/$file"
 	fi
 done
 
@@ -112,6 +112,16 @@ SOURCES += $sources
 HEADERS += $headers
 $(for (( i=4 ; i<$#+1 ; i++ )); do echo ${!i}; done;)
 EOF
+if [[ "x$data" != "x" ]]; then
+cat >> $dest/$name.pro << EOF
+INSTALL_DATA.files = $data
+INSTALL_DATA.path = Data
+INSTALLS += INSTALL_DATA
+DATA.commands = @echo "Copying data..." && mkdir -p "\$\$DESTDIR/Data" && cp \$\$INSTALL_DATA.files "\$\$DESTDIR/Data"
+QMAKE_EXTRA_TARGETS += DATA
+PRE_TARGETDEPS += DATA
+EOF
+fi
 
 cat > $dest/$name.pri << EOF
 DEPS += $depends
