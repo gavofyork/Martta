@@ -69,6 +69,7 @@ public:
 	virtual TypeEntity*					bottom() { return this; }
 	virtual Rgb							idColour() const { return 0x777777; }
 	virtual String						defineHtml() const;
+	virtual void						markDirty() { if (m_active && !m_isDeaf && !m_owner) Super::markDirty(); }
 
 	virtual bool						isInModel() const { return parent() && !m_owner ? parent()->isInModel() : true; }
 	virtual bool						botherNotifying() const { return isInModel(); }
@@ -180,7 +181,7 @@ private:
 	/// Unowned nodes are copied.
 	inline TypeEntity*					clone(Type* _owner) const { return newClone(_owner); }
 
-	Type*							m_owner;
+	Type*								m_owner;
 };
 
 }

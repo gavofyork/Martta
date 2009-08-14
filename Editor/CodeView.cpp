@@ -160,6 +160,7 @@ void CodeView::refresh()
 		}
 		// If we're dirty then update the HTML.
 		while (m_dirty.count())
+		{	mDebug() << &*m_dirty.last() << "(" << m_dirty.count() << "left)";
 			if ((e = m_dirty.takeLast()) && e != editEntity())
 			{
 				Entity* cur = current();
@@ -173,6 +174,7 @@ void CodeView::refresh()
 				clearHtmlCache();
 				silentlySetCurrent(cur);
 			}
+		}
 	}
 	m_dirty.clear();
 }
@@ -211,6 +213,8 @@ void CodeView::init()
 
 void CodeView::markDirty(Entity* _e)
 {
+	if (!isInScene(_e))
+		return;
 	if (!m_dirty.contains(_e))
 		m_dirty.append(_e);
 	update();
