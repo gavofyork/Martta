@@ -37,6 +37,18 @@ class Position;
 class Entity;
 class Stylist;
 
+class DataFinder
+{
+public:
+	static DataFinder*			get() { return s_this ? s_this : (s_this = new DataFinder); }
+	static void					set(DataFinder* _f) { delete s_this; s_this = _f; }
+
+	virtual String				fullPathOf(String const&) { return String::null; }
+
+private:
+	static DataFinder*			s_this;
+};
+
 class CodeScene
 {
 public:

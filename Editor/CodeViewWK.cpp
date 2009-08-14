@@ -244,11 +244,14 @@ bool CodeViewWK::event(QEvent* _e)
 		QKeyEvent* ke = static_cast<QKeyEvent*>(_e);
 		wchar_t const* k = translateKey(ke->key());
 		KeyEvent e(k ? String(k) : String(ke->text().toLatin1().data()), translateMods(ke->modifiers()));
-		keyPressHandler(e);
-		if (e.isAccepted())
+		if (e.text().length() > 0)
 		{
-			_e->accept();
-			return true;
+			keyPressHandler(e);
+			if (e.isAccepted())
+			{
+				_e->accept();
+				return true;
+			}
 		}
 	}
 	return QWebView::event(_e);

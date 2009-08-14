@@ -63,12 +63,18 @@ bool KeyEvent::isInserting() const
 
 void KeyEvent::noteStrobeCreation(Entity* _creation, Entity* _old) const
 {
+	// Quick exit if we're not in the strobe phase of the key press handler.
+	// If we don't exit, we'll end up moving/killing any active strobe's creation before the strobe has been cancelled.
+	if (m_text.length() < 2)
+		return;
+
 	AssertNR(!m_strobed);
+	SafePointer<Entity> cre = _creation;
+	mDebug() << _creation;
 	m_strobeCreation = _creation;
 	m_strobeChild = _old;
 	const_cast<KeyEvent*>(this)->m_strobed = true;	// QUICK mutable.
 
-	// TODO: Move this stuff to the EKE's notifyStrobeCreation... This will avoid having to test the child for originality.
 	if (m_sCrPoint)
 		m_codeScene->strobeCreation()->commitMove(m_sCrPoint);	// Commit the move out of the model if there was a prior-creation to move away.
 
@@ -76,7 +82,8 @@ void KeyEvent::noteStrobeCreation(Entity* _creation, Entity* _old) const
 	if (m_codeScene->strobeChild() == m_originalStrobeChild && m_sChPoint)	// && c because we only need to move the strobeChild if there was a strobe creation (before, anyways).
 		m_codeScene->strobeChild()->notifyOfStrobe(m_codeScene->strobeCreation());
 
-	if (m_codeScene->strobeCreation())
+	Assert(m_codeScene->strobeCreation() != m_strobeCreation, "New strobe creation cannot be same as old strobe creation.");
+	if (m_codeScene->strobeCreation() && m_codeScene->strobeCreation() != m_strobeCreation)
 	{
 		// Notifications?
 		m_codeScene->strobeCreation()->killAndDelete();

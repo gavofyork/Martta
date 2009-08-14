@@ -605,6 +605,8 @@ bool Martta::Entity::simplePositionKeyPressHandler(Position const& _p, KeyEvent 
 			// insert
 			// when pressed on _p refers to a, changes from x->(a->(d, e), b, c) to x->(N->(a->(d, e)), b, c)
 			Entity* e = _p.entity();
+			mDebug() << e;
+			mDebug() << n;
 			_e->noteStrobeCreation(e, n);
 			e->insert(n);
 			n->prepareChildren();

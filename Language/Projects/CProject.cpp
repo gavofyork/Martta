@@ -88,15 +88,6 @@ StringList CProject::libs() const
 	return ret;
 }
 
-// TODO: remove once Qt is exorcised.
-/*static inline QStringList qs(StringList const& _s)
-{
-	QStringList r;
-	foreach (String i, _s)
-		r.append(qs(i));
-	return r;
-}*/
-
 String CProject::finalCode() const
 {
 	String ret;
@@ -118,15 +109,16 @@ List<StringList> CProject::steps() const
 
 	StringList ccArgs;
 #ifdef _MSC_VER
+	ccArgs << src;
 	ccArgs << L"/Fe" + bin;
 	ccArgs << L"/nologo";
 	// TODO: Win32 linking to support library.
 #else
 	ccArgs << L"g++";
-	ccArgs << L"-o" << bin;
-	ccArgs << supportPath() + L"/libsupport.a";
-#endif
 	ccArgs << src;
+	ccArgs << L"-o" << bin;
+	ccArgs << supportPath() + L"libsupport.a";
+#endif
 
 	foreach (String i, libs())
 		ccArgs << L"-l" + i;
@@ -145,7 +137,7 @@ List<StringList> CProject::steps() const
 	mInfo() << "Compiling" << src;
 	List<StringList> ret;
 
-#ifdef WIN32
+#ifdef M_WIN
 	QStringList env = QProcess::systemEnvironment();
 	int index = env.lastIndexOf(QRegExp("VS..COMNTOOLS.*"));
 	QRegExp r("^([A-Z0-9]+)=(.*)$");
@@ -177,7 +169,7 @@ List<StringList> CProject::steps() const
 
 String CProject::targetName() const
 {
-#ifdef WIN32
+#ifdef M_WIN
 	return name() + ".exe";
 #else
 	return name();

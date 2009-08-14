@@ -18,6 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "WebStylistRegistrar.h"
 #include "PhysicalType.h"
 #include "Reference.h"
 #include "Const.h"
@@ -26,6 +27,10 @@ namespace Martta
 {
 
 MARTTA_OBJECT_CPP(Const);
+MARTTA_REGISTER_CSS(Const,
+	L".Const-Fader { margin-left: -15px; padding-left: 16px; padding-right: 3px; -webkit-border-top-right-radius: 7px; -webkit-border-bottom-right-radius: 7px; color:#05a; text-shadow: 1px 1px 0px #fff; background-image: -webkit-gradient(linear, right top, left top, from(rgba(0, 127, 255, 0.5)), to(rgba(0, 127, 255, 0))); }"
+	L".Const { text-shadow: 1px 1px 1px #fff; color:#05a; font-size: 70%; font-weight: bold; }"
+);
 
 bool Const::defineSimilarityFrom(TypeEntity const* _f, Castability _c) const
 {
@@ -56,7 +61,7 @@ String Const::defineLayout(ViewKeys const&) const
 
 String Const::defineHtml() const
 {
-	return toHtml(child(Original)) + L"<span id=\"this\" style=\"text-shadow: 1px 1px 1px #fff; color: #5f6f7f; font-size: 80%; font-weight: bold;\">C</span>";
+	return toHtml(child(Original)) + L"<span id=\"this\" class=\"Const-Fader\"><span class=\"Const\">CONST</span></span>";
 }
 
 /*void Const::decorate(DecorationContext const& _c) const

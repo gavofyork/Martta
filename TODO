@@ -22,6 +22,7 @@ Small things:
   - NewOperation/DeleteOperation - interface with Type classes.
 - BRINGBACK Ser/Deser tests.
 - BRINGBACK GenericMemberOperation::isChildInValidState - do what it says.
+
 Dynamic code-loading (plugins).
 - Referenced as placeholder (no key press handling)
   - BRINGBACK Method names register with IdentifierSet
@@ -31,8 +32,9 @@ Dynamic code-loading (plugins).
     - All possible (including scoped exterals).
     - Should provide list for browsing/selection.
 - BRINGBACK Type info stuff.
+  - Just use a simple summary-like interface first.
+
 Webkit layout system
-- BRINGBACK Implement cursor movers properly.
 - BRINGBACK SVG files.
 - BRINGBACK decoration code into layout system and markup for it.
 - Remove old layout system.
@@ -41,7 +43,9 @@ Webkit layout system
   - Remove repait etc., replace with markDirty
     - Look into using change system instead?
 - BRINGBACK Stylist support.
-  - Text-file based stylist.
+  - defineHtml moves to interface WebKitHtml::webKitHtml.
+  - WKDefaultStylist uses Entity object's WebKitHtml::webKitHtml where possible.
+  - WKTextStylist uses text file, defaulting to WebKitHtml::webKitHtml. 
 - DULL Move CSS info from Entity.
 - BRINGBACK Visual change system.
 

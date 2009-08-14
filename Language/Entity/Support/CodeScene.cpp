@@ -29,6 +29,8 @@ namespace Martta
 
 List<CodeScene*> CodeScene::s_allScenes;
 
+DataFinder* DataFinder::s_this = 0;
+
 CodeScene::CodeScene():
 	m_insert						(false),
 	m_insertNext					(false),

@@ -35,7 +35,6 @@ namespace Martta
 {
 
 MARTTA_OBJECT_CPP(MemberReferenced);
-MARTTA_OBJECT_CPP(FloatingMemberReferenced);
 
 bool MemberReferenced::keyPressed(KeyEvent const* _e)
 {
@@ -126,6 +125,8 @@ Type MemberReferenced::apparentType() const
 		_e->reinterpretLater();	// since we may have been deleted and replaced with e.g. a variable, we want appropriately.
 		return true;
 	}*/
+
+MARTTA_OBJECT_CPP(FloatingMemberReferenced);
 
 bool FloatingMemberReferenced::keyPressed(KeyEvent const* _e)
 {

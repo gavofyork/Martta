@@ -49,6 +49,15 @@ void CullActor::prime()
 	}
 }
 
+class RealDataFinder: public DataFinder
+{
+public:
+	virtual String				fullPathOf(String const& _f)
+	{
+		return MARTTA_PLUGINS_PATH "/Data/" + _f;
+	}
+};
+
 MainWindow::MainWindow(QWidget* _p, Qt::WindowFlags _f):
 	QMainWindow			(_p, _f),
 	m_solution			(0),
@@ -56,6 +65,7 @@ MainWindow::MainWindow(QWidget* _p, Qt::WindowFlags _f):
 	m_buildAndRun		(0)
 {
 	qApp->addLibraryPath(MARTTA_PLUGINS_PATH);
+	DataFinder::set(new RealDataFinder);
 
 	setupUi(this);
 

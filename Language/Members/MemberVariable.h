@@ -47,7 +47,7 @@ protected:
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual Type						type() const { return MemberValue::memberifiedType(VariableNamer::type()); }
 	virtual String						defineLabelLayout(String const& _text, ViewKeys const&) const { return String("(;M4;[[[;fs-2;fb;c#777;e#fff;'M';]]];);%1").arg(_text); }
-//	virtual String						defineLabelHtml(String const& _text, ViewKeys const&) const { return String("(;M4;[[[;fs-2;fb;c#777;e#fff;'M';]]];);%1").arg(_text); }
+	virtual String						defineLabelHtml(String const& _text) const;
 	virtual String						defineLabelCode(String const& _text) const { return L"m_" + camelCase(_text); }
 };
 

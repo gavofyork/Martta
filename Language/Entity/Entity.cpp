@@ -99,7 +99,21 @@ void clearHtmlCache() { s_htmlCache.clear(); }
 
 String refinedHtml(Entity const* _e)
 {
-	return _e->defineHtml().replace(L"<^>", L"<span id=\"this\"></span>");
+	String ret = _e->defineHtml().replace(L"<^>", L"<span id=\"this\"></span>");
+	int i;
+	while ((i = ret.indexOf(L"=\"data://")) != -1)
+	{
+		int t = ret.indexOf(L'\"', i+6);
+		if (t == -1)
+			break;
+		// abc<@xyz>d
+		// 0123456789
+		//    i ---t
+		// i+2, t-i-2
+		// i, t-i+1
+		ret.replace(i+2, t-i-2, L"file://" + DataFinder::get()->fullPathOf(ret.mid(i+9, t-i-9)));
+	}
+	return ret;
 }
 
 String htmlEscape(String const& _s)

@@ -40,8 +40,8 @@ public:
 
 	void								registerCss(AuxilliaryFace const* _f, String const& _css) { m_css[_f] = _css; m_changed = true; }
 	void								unregisterCss(AuxilliaryFace const* _f) { m_css.remove(_f); m_changed = true; }
-	template<class T> void				registerCss(String const& _css) { m_css[T::staticKind().auxilliary()] = _css; m_changed = true; }
-	template<class T> void				unregisterCss() { m_css.remove(T::staticKind().auxilliary()); m_changed = true; }
+	template<class T> void				registerCss(String const& _css) { m_css[T::staticKind.auxilliary()] = _css; m_changed = true; }
+	template<class T> void				unregisterCss() { m_css.remove(T::staticKind.auxilliary()); m_changed = true; }
 
 	bool								hasChanged() const { return m_changed; }
 	String								css() const { m_changed = false; return StringList(m_css.values()).join(L' '); }
@@ -52,6 +52,23 @@ private:
 	Hash<AuxilliaryFace const*, String> m_css;										///< All our CSS elements.
 	mutable bool						m_changed;
 };
+
+template<class E>
+class CssRegisterer
+{
+public:
+	CssRegisterer(String const& _css)
+	{
+		WebStylistRegistrar::get()->registerCss<E>(_css);
+	}
+	~CssRegisterer()
+	{
+		WebStylistRegistrar::get()->unregisterCss<E>();
+	}
+};
+
+#define MARTTA_REGISTER_CSS(EntityClass, CSS) \
+	static CssRegisterer<EntityClass> s_css_ ## EntityClass ## __LINE__ (CSS)
 
 }
 

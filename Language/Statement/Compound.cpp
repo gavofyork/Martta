@@ -107,11 +107,11 @@ String statementsToHtml(List<Statement*> const& _es)
 String Compound::defineHtml() const
 {
 	if (statements().size() > 1)
-		return L"<span class=\"minor symbol\">{</span><div class=\"block\">" + statementsToHtml(statements()) + L"</div><span class=\"minor symbol\">}</span>";
+		return L"<div class=\"minor symbol\">{</div><div class=\"block\">" + statementsToHtml(statements()) + L"</div><div class=\"minor symbol\">}</div>";
 	else if (statements().size())
 		return L"<div class=\"block\">" + statementsToHtml(statements()) + L"</div>";
 	else
-		return L"<span class=\"minor symbol\">{}</span>";
+		return L" <span class=\"minor symbol\">{}</span>";
 }
 
 String HardCompound::defineLayout(ViewKeys const&) const
