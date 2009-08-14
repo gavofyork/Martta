@@ -115,7 +115,7 @@ public:
 
 	// Hack - should set the current entity but not issue an update and not call any
 	// focus change notifications etc. Used when leavingEditIntact since it is often called
-	// ultimately from another setCurrent(). Also used in CodeViewWK when focus needs to be
+	// ultimately from another setCurrent(). Also used in CodeView when focus needs to be
 	// preserved around a DOM update (in refresh()).
 	virtual void				silentlySetCurrent(Entity* _e) = 0;
 

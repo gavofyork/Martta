@@ -122,13 +122,6 @@ bool Memberify::defineSimilarityFrom(TypeEntity const* _f, Castability _c) const
 			|| Super::defineSimilarityFrom(_f, _c);
 }
 
-String Memberify::modifierLayout() const
-{
-	if (!scopeType())
-		return String();
-	return "ycode;'" + scopeType()->code() + "'";
-}
-
 String Memberify::modifierHtml() const
 {
 	if (!scopeType())

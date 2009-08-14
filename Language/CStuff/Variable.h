@@ -36,7 +36,6 @@ public:
 	Qualifiers							qualifiers() const { return m_qualifiers; }
 
 protected:
-	virtual String						defineLayout(ViewKeys const& _k) const { return "^;" + VariableNamer::defineLayout(_k); }
 	virtual String						defineHtml() const { return L"<^>" + VariableNamer::defineHtml(); }
 	virtual List<Declaration*>			utilised() const { return actualType()->utilised(); }
 

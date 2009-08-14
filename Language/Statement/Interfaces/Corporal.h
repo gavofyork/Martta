@@ -32,7 +32,6 @@ class Corporal
 public:
 	MARTTA_NAMED(Body)
 
-	String							defineLayout(ViewKeys const&, bool _shrink) const;
 	String							defineHtml(bool _shrink) const;
 	bool							keyPressed(KeyEvent const* _e);
 

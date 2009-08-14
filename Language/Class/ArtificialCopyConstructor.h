@@ -34,7 +34,6 @@ class ArtificialCopyConstructor: public Constructor, public_interface Artificial
 protected:
 	virtual int							minRequired(int) const { return 0; }
 	virtual Kinds						allowedKinds(int) const { return Kinds(); }
-	virtual String						defineLayout(ViewKeys const&) const { return String(); }
 	virtual String						defineHtml() const { return String::null; }
 	virtual String						interfaceCode() const { return ""; }
 	virtual String						implementationCode() const { return ""; }

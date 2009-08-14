@@ -25,11 +25,6 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(OperatorLabel);
 
-String OperatorLabel::defineLayout(ViewKeys const&) const
-{
-	return "ycode;'operator" + symbolCode() + "'";
-}
-
 String OperatorLabel::defineHtml() const
 {
 	return L"<span class=\"keyword\">operator</span><span class=\"symbol\">" + symbolCode() + "</span>";

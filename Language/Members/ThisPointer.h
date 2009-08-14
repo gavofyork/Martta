@@ -35,7 +35,6 @@ public:
 protected:
 	virtual Type						type() const;
 	virtual String						code() const { return "this"; }
-	virtual String						defineLayout(ViewKeys const&) const;
 	virtual String						defineHtml() const { return L"<span id=\"this\" class=\"keyword\">" + type()->typeHtml(L"this") + L"</span>"; }
 };
 

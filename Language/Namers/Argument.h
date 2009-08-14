@@ -33,7 +33,6 @@ class Argument: public Declaration, public_interface VariableNamer
 
 protected:
 	virtual String						defineHtml() const { return VariableNamer::defineHtml(); }
-	virtual String						defineLayout(ViewKeys const& _k) const { return VariableNamer::defineLayout(_k); }
 	virtual List<Declaration*>			utilised() const { return actualType()->utilised(); }
 
 	virtual Identifiable*				addressableContext() const { return 0; }
@@ -45,7 +44,6 @@ protected:
 	virtual String						interfaceCode() const { return VariableNamer::interfaceCode(); }
 	virtual String						implementationCode() const { return VariableNamer::implementationCode(); }
 	virtual bool						isSuperfluous() const;
-	virtual String						defineLabelLayout(String const& _text, ViewKeys const&) const { return String(L"(;M4;[[[;fs-2;fb;c#777;e#fff;'_';]]];);%1").arg(_text); }
 	virtual String						defineLabelHtml(String const& _text) const { return L"<span style=\"font-size: -2; font-weight: bold; color: #777; text-shadow: 1px 1px 0 #fff\">_</span>" + _text; }
 	virtual String						defineLabelCode(String const& _text) const { return L"_" + camelCase(_text); }
 };

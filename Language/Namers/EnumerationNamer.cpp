@@ -103,23 +103,7 @@ String EnumerationNamer::defineHtml() const
 	else if (!m_stem.isEmpty())
 		name = L"<span class=\"unreal\">[" + m_stem + L"...]</span>";
 	return L"<span class=\"keyword\">enum</span> " + name + L"<div class=\"minor symbol\">{</div><div class=\"block\">" + toHtml(self()->cardinalChildren()) + L"</div><div class=\"minor symbol\">}</div>";
-}
-
-String EnumerationNamer::defineLayout(ViewKeys const& _viewKeys) const
-{
-	String ret;
-	String name;
-	if (isNamed())
-		name = (";Mo;fb;cblack;s" + Type(const_cast<TypeDefinition*>(asKind<TypeDefinition>()))->idColour().name() + ";!%1").arg(Identity);
-	else
-		name = ";Mo;c#777;yminor;'[" + m_stem + "...]'";
-	if (_viewKeys["expanded"].toBool())
-	{
-		ret += "ycode;'enum'" + name + ";s;ycode;n;'{'";
-		foreach (EnumValue* f, self()->cardinalChildrenOf<EnumValue>())
-			ret += String(";n;i;%1").arg(f->index());
-		ret += ";n;'}'";
-	}
+/*
 	else
 	{
 		ret += "ycode;'enum'" + name + ";s;yminor;' (";
@@ -130,7 +114,7 @@ String EnumerationNamer::defineLayout(ViewKeys const& _viewKeys) const
 			ret += "empty";
 		ret += ")'";
 	}
-	return ret;
+*/
 }
 
 Entity* EnumerationNamer::isExpander() const

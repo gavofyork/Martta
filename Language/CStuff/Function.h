@@ -47,7 +47,6 @@ protected:
 	virtual void						onDependencyRemoved(Entity*, int) { changed(); }
 
 	virtual Entity*						isExpander() const { return body()->child(0); }
-	virtual String						defineLayout(ViewKeys const& _v) const { return "^;" + LambdaNamer::defineLayout(_v); }
 	virtual String						defineHtml() const;
 	virtual String						interfaceCode() const { return LambdaNamer::interfaceCode(); }
 	virtual String						implementationCode() const { return LambdaNamer::implementationCode(); }

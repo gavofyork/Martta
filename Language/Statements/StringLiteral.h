@@ -43,7 +43,6 @@ public:
 protected:
 	virtual Type						type() const { return Type(Char).topWith(Const()).topWith(Pointer()); }
 	virtual String						code() const { return "\"" + String(m_value).replace("\"", "\\\"") + "\""; }
-	virtual String						defineLayout(ViewKeys const&) const;
 	virtual String						defineHtml() const;
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 	virtual bool						keyPressed(KeyEvent const* _e);

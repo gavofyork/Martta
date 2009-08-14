@@ -32,7 +32,7 @@
 	 <number>0</number>
 	</property>
 	<item>
-	  <widget class="Martta::CodeViewWK" name="codeView">
+	  <widget class="Martta::CodeView" name="codeView">
 	   <property name="geometry">
 		<rect>
 		 <x>0</x>
@@ -937,9 +937,9 @@
    <header>CodeView.h</header>
   </customwidget>
   <customwidget>
-   <class>Martta::CodeViewWK</class>
+   <class>Martta::CodeView</class>
    <extends>QWebView</extends>
-   <header>CodeViewWK.h</header>
+   <header>CodeView.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -163,9 +163,6 @@ protected:
 	Type*								owner() const { return m_owner; }
 	void								setOwner(Type* _o) { m_owner = _o; }
 
-	String								typeLayout() const { return String("e;c;s%1;fb;").arg(idColour().name()); }
-	String								instanceLayout() const { return String("e;c;s%1;fb0;").arg(idColour().name()); }
-
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity*) { changed(); }
 

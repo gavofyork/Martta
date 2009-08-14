@@ -36,7 +36,6 @@ public:
 
 protected:
 	virtual String						memberInterfaceCode() const;
-	virtual String						definePreLayout(ViewKeys const& _k) const { return Super::definePreLayout(_k) + ";yminor;'VIRTUAL';Mo"; }
 	virtual String						definePreHtml() const { return Super::definePreHtml() + L"<span class=\"minor\">VIRTUAL</span> "; }
 };
 

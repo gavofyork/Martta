@@ -67,11 +67,6 @@ Type VariableNamer::type() const
 		return Type();
 }
 
-String VariableNamer::defineLayout(ViewKeys const&) const
-{
-	return String(L"%1;s%2;Mi;>name;fb0;!%3").arg(OurType).arg(actualType()->idColour().name()).arg(Identity);
-}
-
 String VariableNamer::defineHtml() const
 {
 	return toHtml(self()->child(OurType)) + L" " + actualType()->typeHtml(toHtml(self()->child(Identity)));

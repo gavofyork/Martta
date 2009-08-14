@@ -45,7 +45,6 @@ protected:
 
 	inline String						interfaceCode() const { return basicCode() + ";\n"; }
 	inline String						implementationCode() const { return String::null; }
-	String								defineLayout(ViewKeys const&) const;
 	String								defineHtml() const;
 	virtual inline String				defineLabelHtml(String const& _middle) const { return L"<span class=\"VariableNamer-definition\">" + _middle + L"</span>"; }
 	bool								keyPressed(KeyEvent const* _e);

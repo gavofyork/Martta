@@ -38,7 +38,6 @@ public:
 
 protected:
 	// From Member
-	virtual String						memberDefineLayout(ViewKeys const& _k) const { return EnumerationNamer::defineLayout(_k); }
 	virtual String						memberDefineHtml() const { return EnumerationNamer::defineHtml(); }
 	virtual String						memberInterfaceCode() const { return EnumerationNamer::interfaceCode(); }
 	virtual String						memberImplementationCode() const { return String::null; }

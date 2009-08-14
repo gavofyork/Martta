@@ -48,7 +48,6 @@ public:
 protected:
 	virtual void						apresLoad();
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
-	virtual String						defineLayout(ViewKeys const&) const;
 	virtual String						defineHtml() const;
 	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p[L"text"] = m_text.isEmpty() ? code() : m_text; }

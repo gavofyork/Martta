@@ -159,7 +159,7 @@ void MainWindow::loadPlugins()
 					new QTreeWidgetItem(pluginsLoaded, QStringList() << s << QStringList(depTree[s].toList()).join(", "));
 				}
 				else
-					qDebug() << "Error loading" << s;
+					Assert(false, "Error loading " + qs(s) + ": " + qs(m_libraries.last()->errorString()));
 				depTree.remove(s);
 			}
 	}
@@ -801,7 +801,6 @@ void MainWindow::delayedUpdate()
 				new QTreeWidgetItem(us, QStringList() << (u ? qs(u->name()) : QString("NULL?")) << (u ? qs(u->kind().name()) : QString("NULL?")));
 		}
 */
-		new QTreeWidgetItem(entityInfo, QStringList() << QString("Layout") << qs(e->defineLayout(codeView->viewKeys(e))));
 		new QTreeWidgetItem(entityInfo, QStringList() << QString("HTML") << qs(e->defineHtml()));
 
 		QTreeWidgetItem* rc = new QTreeWidgetItem(entityInfo, QStringList() << "Child restrictions");

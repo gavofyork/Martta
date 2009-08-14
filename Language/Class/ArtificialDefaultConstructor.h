@@ -36,7 +36,6 @@ protected:
 	virtual Kinds						allowedKinds(int) const { return Kinds(); }
 	virtual String						interfaceCode() const { return ""; }
 	virtual String						implementationCode() const { return ""; }
-	virtual String						defineLayout(ViewKeys const&) const { return String(); }
 	virtual String						defineHtml() const { return String::null; }
 
 	virtual Access						access() const { return Public; }

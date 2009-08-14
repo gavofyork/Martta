@@ -39,11 +39,6 @@ Kinds MainFunction::allowedKinds(int _i) const
 	return Super::allowedKinds(_i);
 }
 
-String MainFunction::defineMidLayout(ViewKeys&) const
-{
-	return L"'[ENTRY]'";
-}
-
 String MainFunction::definePreHtml() const
 {
 	return L"<span style=\"background-color: #4c4; -webkit-border-radius: 2px\" class=\"badge\">&crarr;</span> " + Super::definePreHtml();

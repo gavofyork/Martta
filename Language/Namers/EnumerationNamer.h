@@ -40,7 +40,6 @@ public:
 protected:
 	virtual bool						hasDefaultConstructor() const { return true; }
 
-	String								defineLayout(ViewKeys const& _k) const;
 	String								defineHtml() const;
 	String								interfaceCode() const;
 	bool								keyPressed(KeyEvent const* _e);

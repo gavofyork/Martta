@@ -86,14 +86,6 @@ Type Referenced::type() const
 	return m_subject->type();
 }
 
-String Referenced::defineLayout(ViewKeys const& _k) const
-{
-	String ret = L"^;s" + (m_subject ? m_subject->type()->idColour() : TypeEntity::null->idColour()).name() + L";c;'" + (m_subject ? m_subject->name() : String()) + L"'";
-	if (m_subject)
-		ret = m_subject->tryKind<Labelled>()->labelLayout(ret, _k);
-	return ret;
-}
-
 String Referenced::defineHtml() const
 {
 	if (!m_subject)
@@ -104,14 +96,6 @@ String Referenced::defineHtml() const
 EditDelegateFace* Referenced::newDelegate(CodeScene* _s)
 {
 	return new CompletionDelegate<Referenced, ValueDefiner*>(this, _s);
-}
-
-String Referenced::defineEditLayout(ViewKeys const& _k, ValueDefiner* _v)
-{
-	String ret = L"^;s" + (_v ? _v->type()->idColour() : TypeEntity::null->idColour()).name() + L";c;%1";
-	if (_v)
-		ret = _v->tryKind<Labelled>()->labelLayout(ret, _k);
-	return ret;
 }
 
 String Referenced::defineEditHtml(ValueDefiner* _v) const

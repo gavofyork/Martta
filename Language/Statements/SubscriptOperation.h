@@ -34,7 +34,6 @@ public:
 
 private:
 	virtual String						defineHtml() const { return toHtml(child(FirstOperand)) + L"<span id=\"this\" class=\"symbol\">[</span>" + toHtml(child(SecondOperand)) + L"<span class=\"symbol\">]</span>"; }
-	virtual String						defineLayout(ViewKeys const&) const { return String("%1;Mi;^;'[';%2;']'").arg(FirstOperand).arg(SecondOperand); }
 	virtual Types						allowedTypes(int _index) const;
 //	virtual Types						deniedTypes(int _index) const;
 	virtual Type						type() const;

@@ -36,11 +36,9 @@ public:
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 
 	virtual List<ValueDefiner*>			possibilities() const { return possibilities(over()); }
-	virtual String						defineEditLayout(ViewKeys const& _k, ValueDefiner* _v);
 	virtual String						defineEditHtml(ValueDefiner* _v);
 
 protected:
-	virtual String						defineLayout(ViewKeys const& _k) const;
 	virtual String						defineHtml() const;
 	virtual bool						keyPressed(KeyEvent const* _e);
 };

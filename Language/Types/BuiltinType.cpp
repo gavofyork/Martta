@@ -160,11 +160,6 @@ bool BuiltinType::defineSimilarityFrom(TypeEntity const* _f, Castability _c) con
 		Super::defineSimilarityFrom(_f, _c);
 }
 
-String BuiltinType::defineLayout(ViewKeys const&) const
-{
-	return typeLayout() + "^;'" + ((id() == (uint)-1) ? String("[]") : name(id())) + "'";
-}
-
 String BuiltinType::defineHtml() const
 {
 	return L"<span id=\"this\" class=\"TypeEntity\">" + typeHtml((id() == (uint)-1) ? L"&empty;" : name(id())) + L"</span>";
@@ -197,11 +192,6 @@ List<int> BuiltinType::possibilities()
 	for (int i = 0; i < s_recognisedExtras.count(); i++)
 		ret << NameTrait<int>::ExtraIds + i;
 	return ret;
-}
-
-String BuiltinType::defineEditLayout(ViewKeys const&, int) const
-{
-	return "^;c;s" + idColour().name() + ";fb;%1";
 }
 
 String BuiltinType::defineEditHtml(int) const

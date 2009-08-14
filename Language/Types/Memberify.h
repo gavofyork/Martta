@@ -51,7 +51,6 @@ public:
 protected:
 	virtual Types						assignableTypes() const;
 	virtual inline TypeEntity*			newClone() const { return new Memberify; }
-	virtual String						modifierLayout() const;
 	virtual String						modifierHtml() const;
 	virtual bool						isSuperfluous() const { return !childIs<TypeEntity>(Scope) || Super::isSuperfluous(); }
 	virtual bool						canStandAlone() const { return false; }

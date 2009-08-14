@@ -25,11 +25,6 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(AccessLabel);
 
-String AccessLabel::defineLayout(ViewKeys const&) const
-{
-	return String("^;ynormal;'%1'").arg(Martta::code(m_access));
-}
-
 String AccessLabel::defineHtml() const
 {
 	return String(L"<span id=\"this\">%1</span>").arg(Martta::code(m_access));

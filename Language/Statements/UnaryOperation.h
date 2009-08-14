@@ -41,9 +41,7 @@ protected:
 	inline Type							operandType() const { return typeOf(TheOperand); }
 	inline Type							effectiveOperandType() const { return effectiveType(TheOperand); }
 
-	virtual String						operatorLayout() const { return String("ycode;'") + String(id().code()) + "'"; }
 	virtual String						operatorHtml() const { return L"<span class=\"symbol\">" + String(id().code()) + L"</span>"; }
-	virtual String						defineLayout(ViewKeys const&) const;
 	virtual String						defineHtml() const;
 
 	virtual int							familyDependencies() const { return DependsOnBoth; }

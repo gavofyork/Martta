@@ -41,7 +41,6 @@ private:
 	virtual TypeEntity* 				newClone() const { return new Reference; }
 	virtual bool						defineSimilarityFrom(TypeEntity const* _f, Castability _c) const;
 	virtual bool						defineSimilarityTo(TypeEntity const* _t, Castability _c) const;
-	virtual String						defineLayout(ViewKeys const&) const;
 	virtual String						defineHtml() const;
 	virtual List<Declaration*>			utilised() const { return List<Declaration*>(); }
 };

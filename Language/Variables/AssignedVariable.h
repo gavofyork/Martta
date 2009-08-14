@@ -41,7 +41,6 @@ protected:
 	virtual int							minRequired(int _i) const { return _i == OurType || _i == AssignedValue || _i == Identity ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _index) const;
 	virtual int							familyDependencies() const { return DependsOnChildren; }
-	virtual String						defineLayout(ViewKeys const& _k) const { return (VariableNamer::defineLayout(_k) + ";Mi;^;ycode;':=';Mi;%1").arg(AssignedValue); }
 	virtual String						defineHtml() const { return VariableNamer::defineHtml() + L"<span id=\"this\" class=\"symbol\"> := </span>" + toHtml(child(AssignedValue)); }
 	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual void						onDependencyChanged(Entity*);

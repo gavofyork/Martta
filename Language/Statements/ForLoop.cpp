@@ -71,12 +71,6 @@ bool ForLoop::keyPressed(KeyEvent const* _e)
 	return true;
 }
 
-String ForLoop::defineLayout(ViewKeys const& _k) const
-{
-	return ("Hfull;ycode;^;'for (';%1;'\\; ';%2;'\\; ';%3;')'" + Corporal::defineLayout(_k, true)).arg(Initialiser).arg(Condition).arg(Ticker);
-//	String((!child(3) || !child(3)->child(0) || child(3)->child(0)->isPlaceholder()) ? ";' ';(;3;)" : ";n;i;(;3;)");
-}
-
 String ForLoop::defineHtml() const
 {
 	return L"<span id=\"this\" class=\"keyword\">for</span> <span class=\"minor symbol\">(</span>" +

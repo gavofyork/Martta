@@ -79,40 +79,6 @@ String TextLabel::defineHtml() const
 	return String("<span id=\"this\"><span class=\"TextLabel-%1\">").arg(isNamed() ? L"named" : L"unnamed") + tryParent<Labelled>()->labelHtml(name()) + L"</span></span>";
 }
 
-String TextLabel::defineLayout(ViewKeys const& _k) const
-{
-	if (name().isEmpty())
-		return L"^;yminor;'[ANONYMOUS]'";
-
-	return "^;" + tryParent<Labelled>()->labelLayout(String(isNamed() ? "c#000" : "c#aaa") + ";'" + name() + "'", _k);
-}
-/*
-void TextLabel::decorate(DecorationContext const& _c) const
-{
-	bool dec= false;
-	if (parent()->hasAncestor<Namespace>())
-	{
-		if (parentIs<Variable>() && parent()->parentIs<Member>())
-			dec = true;
-		else if (parentIs<Argument>())
-			dec = true;
-	}
-	if (dec)
-	{
-		QRectF r = alignedForUnitPen(_c(1));
-		r.setWidth(qMin(_c(0).width(), r.height() * 2));
-
-		QRgb c = qRgb(0, 0, 0);
-
-		QRadialGradient go(_c(1).center(), r.height() * 2);
-		go.setColorAt(0.f, qRgba(c, 32));
-		go.setColorAt(1.f, qRgba(c, 0));
-		_c->setPen(Qt::NoPen);
-		_c->setBrush(go);
-		_c->drawRoundRect(r, 50, 100);
-	}
-}*/
-
 class Delegate: public EditDelegate<TextLabel>
 {
 public:
@@ -163,11 +129,6 @@ public:
 	virtual bool isValid() const
 	{
 		return true;//!m_text.isEmpty();
-	}
-	virtual String defineLayout(ViewKeys const& _k) const
-	{
-		// The tryParent()-> should be safe since Labelled checks for a null this-pointer.
-		return "^;" + (m_text.isEmpty() ? String("yminor;'ANONYMOUS'") : subject()->tryParent<Labelled>()->labelLayout("'" + m_text + "'", _k));
 	}
 	virtual String defineHtml() const
 	{

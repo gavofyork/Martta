@@ -48,7 +48,6 @@ protected:
 	// New virtuals.
 	virtual String						memberInterfaceCode() const { return String::null; }
 	virtual String						memberImplementationCode() const { return String::null; }
-	virtual String						memberDefineLayout(ViewKeys const&) const { return String::null; }
 	virtual String						memberDefineHtml() const { return String::null; }
 
 	// Old virtuals.
@@ -58,7 +57,6 @@ protected:
 	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity*) { changed(); }
-	virtual String						defineLayout(ViewKeys const&) const;
 	virtual String						defineHtml() const;
 };
 

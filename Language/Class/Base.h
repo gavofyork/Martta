@@ -42,7 +42,6 @@ public:
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 
 protected:
-	virtual String						defineLayout(ViewKeys const&) const;
 	virtual String						defineHtml() const;
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual void						onDependencyChanged(Entity* _e);

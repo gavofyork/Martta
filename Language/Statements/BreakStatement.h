@@ -31,7 +31,6 @@ class BreakStatement: public Untyped
 
 private:
 	virtual String						code() const { return "break;"; }
-	virtual String						defineLayout(ViewKeys const&) const { return "^;ycode;'break'"; }
 	virtual String						defineHtml() const { return "<span id=\"this\" class=\"keyword\">break</span>"; }
 };
 

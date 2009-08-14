@@ -46,11 +46,6 @@ bool FloatLiteral::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 	return true;
 }
 
-String FloatLiteral::defineLayout(ViewKeys const&) const
-{
-	return String(m_precision == SinglePrecision ? "^;'%1f'" : m_precision == DoublePrecision ? "^;'%1'" : "^;'%1ld'").arg(m_value);
-}
-
 String FloatLiteral::defineHtml() const
 {
 	return String(L"<span id=\"this\" class=\"FloatLiteral Literal\">%2%1</span>").arg(m_precision == SinglePrecision ? L"f" : m_precision == DoublePrecision ? L"" : L"ld").arg(m_value);
@@ -91,10 +86,6 @@ EditDelegateFace* FloatLiteral::newDelegate(CodeScene* _s)
 			bool ret;
 			m_entry.toDouble(&ret);
 			return ret;
-		}
-		String defineLayout(ViewKeys const&) const
-		{
-			return (String("^;ynormal;'%1';ycode;") + (subject()->m_precision == SinglePrecision ? "'f'" : subject()->m_precision == DoublePrecision ? "" : "'ld'")).arg(m_entry);
 		}
 
 		String m_entry;

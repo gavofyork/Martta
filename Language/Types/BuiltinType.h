@@ -72,7 +72,6 @@ public:
 	}
 
 	List<int>							possibilities();
-	String								defineEditLayout(ViewKeys const&, int) const;
 	String								defineEditHtml(int) const;
 	inline int							get() const { return m_id; }
 	inline void							set(uint _m) { setId(_m); }
@@ -86,7 +85,6 @@ protected:
 	virtual bool						contentsEquivalentTo(TypeEntity const* _t) const { return _t->asKind<BuiltinType>()->m_id == m_id; }
 	virtual Rgb							idColour() const { return 0xffbb77; }
 	virtual TypeEntity*					newClone() const { return new BuiltinType(m_id); }
-	virtual String						defineLayout(ViewKeys const&) const;
 	virtual String						defineHtml() const;
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 	virtual bool						isSuperfluous() const { return Super::isSuperfluous() && m_id == (uint)-1; }

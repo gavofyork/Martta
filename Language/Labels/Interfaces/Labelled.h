@@ -33,14 +33,6 @@ class Labelled
 public:
 	virtual ~Labelled() {}
 
-	inline String labelLayout(String const& _middle, ViewKeys const& _k) const
-	{
-		if (!this)
-			return Labelled::defineLabelLayout(_middle, _k);
-		else
-			return defineLabelLayout(_middle, _k);
-	}
-
 	inline String labelHtml(String const& _middle) const
 	{
 		if (!this)
@@ -67,7 +59,6 @@ public:
 
 protected:
 	virtual inline String defineLabelHtml(String const& _middle) const { return _middle; }
-	virtual inline String defineLabelLayout(String const& _middle, ViewKeys const&) const { return _middle; }
 	virtual inline String defineLabelCode(String const& _text) const { return labelName(_text); }
 	virtual inline String defineLabelName(String const& _text) const { return camelCase(_text); }
 };

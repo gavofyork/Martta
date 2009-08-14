@@ -44,7 +44,6 @@ protected:
 	virtual Kinds						allowedKinds(int) const;
 	virtual String						interfaceCode() const;
 	virtual String						implementationCode() const;
-	virtual String						defineLayout(ViewKeys const&) const;
 	virtual String						defineHtml() const;
 	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual List<Declaration*>			utilised() const;

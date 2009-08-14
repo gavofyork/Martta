@@ -32,7 +32,6 @@ class UndefinedArray: public AddressType
 protected:
 	virtual String						code(String const& _middle) const;
 	virtual TypeEntity*					newClone() const { return new UndefinedArray; }
-	virtual String						defineLayout(ViewKeys const&) const { return String("ycode;%1;^;'[]'").arg(Original); }
 	virtual String						defineHtml() const { return toHtml(child(Original)) + L"<span id=\"this\" class=\"symbol\">[]</span>"; }
 };
 

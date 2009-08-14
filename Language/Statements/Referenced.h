@@ -41,15 +41,12 @@ public:
 	void								setSubject(ValueDefiner* _e) { setDependency(m_subject, _e); }
 	ModelPtr<ValueDefiner>				get() const { return m_subject; }
 	void								set(ValueDefiner* _e) { setDependency(m_subject, _e); }
-	virtual String						defineEditLayout(ViewKeys const&, ValueDefiner* _v);
 	virtual String						defineEditHtml(ValueDefiner*) const;
 	virtual List<ValueDefiner*>			possibilities() const { return List<ValueDefiner*>(); }
 
 protected:
 	virtual bool						isInValidState() const;
 	virtual String						defineHtml() const;
-	virtual String						defineLayout(ViewKeys const&) const;
-//	virtual void						decorate(DecorationContext const& _c) const;
 	virtual bool						isSuperfluous() const;
 	virtual void						apresLoad() { if (m_subject) addDependency(m_subject->self()); Super::apresLoad(); }
 	virtual void						onDependencyChanged(Entity*) {  if (m_subject) changed(); }

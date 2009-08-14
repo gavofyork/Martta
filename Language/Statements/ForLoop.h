@@ -44,7 +44,6 @@ public:
 
 private:
 	virtual List<int> const&			defineDeclarationOrder() const { static const List<int> r = List<int>() << Initialiser << Condition << Ticker << Body; return r; }
-	virtual String						defineLayout(ViewKeys const&) const;
 	virtual String						defineHtml() const;
 	virtual bool						keyPressed(KeyEvent const* _e);
 };

@@ -531,10 +531,6 @@ void Entity::repaint()
 	foreach (CodeScene* i, CodeScene::all())
 		repaint(i);
 }
-String Entity::defineLayout(ViewKeys const&) const
-{
-	return "^;ycode;'[]'";
-}
 /*void Entity::decorate(DecorationContext const& _c) const
 {
 	if (!isValid())

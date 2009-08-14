@@ -33,7 +33,6 @@ protected:
 	virtual int							minRequired(int _i) const { return Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual bool						defineChildFixed(int _i) const { return _i == Returned || _i >= 0; }
-	virtual String						defineMidLayout(ViewKeys&) const;
 	virtual String						definePreHtml() const;
 	virtual bool						keyPressed(KeyEvent const* _e);
 };

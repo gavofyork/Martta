@@ -62,7 +62,6 @@ public:
 	inline static Rgb					idColour(Access _a) { return _a == Public ? Rgb(192, 192, 0) : _a == Protected ? Rgb(255, 127, 0) : _a == Private ? Rgb(255, 0, 0) : Rgb(0, 0, 0); }
 
 protected:
-	virtual String						defineLayout(ViewKeys const&) const;
 	virtual String						defineHtml() const;
 	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual String						code() const { return Martta::code(m_access); }

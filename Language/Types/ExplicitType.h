@@ -44,7 +44,6 @@ public:
 	void								set(TypeDefinition* _m) { setSubject(_m); }
 
 	List<TypeDefinition*>				possibilities();
-	virtual String						defineEditLayout(ViewKeys const&, TypeDefinition*) const;
 	String								defineEditHtml(TypeDefinition*) const;
 
 	virtual bool						isCastableTo(TypeEntity const* _t, bool _const) { return hasSingleCastOperator(_t, _const); }
@@ -65,7 +64,6 @@ protected:
 	virtual Rgb							idColour() const;
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 	virtual TypeEntity*					newClone() const { return new ExplicitType(m_subject); }
-	virtual String						defineLayout(ViewKeys const&) const;
 	virtual String						defineHtml() const;
 	virtual bool						keyPressed(KeyEvent const* _e);
 //	virtual bool						isSuperfluous() const;

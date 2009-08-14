@@ -271,11 +271,6 @@ String StringType::code(String const& _middle) const
 	return "::MarttaSupport::String" + _middle;
 }
 
-String StringType::defineLayout(ViewKeys const&) const
-{
-	return typeLayout() + "^;'string'";
-}
-
 String StringType::defineHtml() const
 {
 	return L"<span id=\"this\" class=\"TypeEntity\">" + typeHtml(L"string") + L"</span>";

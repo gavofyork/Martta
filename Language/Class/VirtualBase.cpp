@@ -25,11 +25,6 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(VirtualBase);
 
-String VirtualBase::defineLayout(ViewKeys const& _v) const
-{
-	return Super::defineLayout(_v) + ";Mi;ycode;'[virtual]'";
-}
-
 String VirtualBase::defineHtml() const
 {
 	return Super::defineHtml() + L" <span class=\"keyword\">[virtual]</span>";

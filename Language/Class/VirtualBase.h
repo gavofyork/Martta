@@ -31,7 +31,6 @@ class VirtualBase: public Base
 
 protected:
 	virtual String						code() const;
-	virtual String						defineLayout(ViewKeys const&) const;
 	virtual String						defineHtml() const;
 };
 

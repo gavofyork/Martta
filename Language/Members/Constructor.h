@@ -38,7 +38,6 @@ protected:
 	// From MemberLambda
 	virtual int							minRequired(int _i) const { return _i == Identity || _i == Constness || _i == Returned ? 0 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
-	virtual String						defineReturnLayout(ViewKeys const&) const { return String::null; }
 	virtual String						defineReturnHtml() const { return String::null; }
 	virtual bool						isConst() const { return false; }
 

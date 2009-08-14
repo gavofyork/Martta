@@ -68,9 +68,7 @@ protected:
 		return simpleKeyPressedOnPositionHandler<T>(_p, _e, _o.code(), _o.precedence(), _o.associativity());
 	}
 
-	virtual String						operatorLayout() const { return String("ycode;'") + id().code() + "'"; }
 	virtual String						operatorHtml() const { return L"<span class=\"symbol\">" + String(id().code()) + L"</span>"; }
-	virtual String						defineLayout(ViewKeys const&) const;
 	virtual String						defineHtml() const;
 
 	virtual int							familyDependencies() const { return DependsOnBoth; }

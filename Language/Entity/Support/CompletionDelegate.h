@@ -55,7 +55,7 @@ template<class S> inline List<S> nameStarts(List<S> const& _l, String const& _s)
 // Exists: void T::set(R)
 // Exists: R T::get()
 // Works: NameTrait<R>::name(R)
-// Exists: String T::defineEditLayout(ViewKeys const&, R); should contain %1 for where the editing is to be.
+// Exists: String T::defineEditHtml(R); should contain <?> for where the editing is to be.
 // Might exist: T::committed()
 
 template<class T, class R>
@@ -81,14 +81,6 @@ public:
 	virtual bool isValid() const
 	{
 		return m_cycled > -1 || (m_name + m_completion).toUpper() == NameTrait<R>::name(m_selection).toUpper();
-	}
-	virtual String defineLayout(ViewKeys const& _v) const
-	{
-		String ret = EditDelegate<T>::subject()->defineEditLayout(_v, m_selection);
-		if (ret.contains("%1"))
-			return ret.arg("'" + m_name + "';s;ygrayed;'" + (m_cycled >= 0 && m_cycled < m_potentials.size() ? NameTrait<R>::name(m_potentials[m_cycled]).mid(m_name.length()) : m_completion) + "'");
-		else
-			return ret;
 	}
 	virtual String defineHtml() const
 	{

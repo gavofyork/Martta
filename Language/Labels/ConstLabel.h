@@ -35,7 +35,6 @@ public:
 	void								setIsConst(bool _c) { m_isConst = _c; changed(); }
 
 protected:
-	virtual String						defineLayout(ViewKeys const&) const;
 	virtual String						defineHtml() const;
 	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual String						code() const { return m_isConst ? " const" : ""; }

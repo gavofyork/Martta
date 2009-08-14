@@ -57,11 +57,6 @@ bool Loop::keyPressed(KeyEvent const* _e)
 	return true;
 }
 
-String Loop::defineLayout(ViewKeys const& _k) const
-{
-	return ("Hfull;ycode;^;'forever'" + Corporal::defineLayout(_k, true));
-}
-
 String Loop::defineHtml() const
 {
 	return L"<span id=\"this\" class=\"keyword\">forever</span><br/>" + Corporal::defineHtml(true);

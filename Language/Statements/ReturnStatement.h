@@ -41,7 +41,6 @@ public:
 
 	virtual Kinds						ancestralDependencies() const { return Kind::of<LambdaNamer>(); }
 	virtual void						onDependencyChanged(Entity* _e);
-	virtual String						defineLayout(ViewKeys const&) const { return "^;ycode;'return'" + (child(Returned) ? String(";Mo;%1").arg(Returned) : String::null); }
 	virtual String						defineHtml() const { return L"<^><span class=\"keyword\">return</span> " + toHtml(child(Returned)); }
 };
 

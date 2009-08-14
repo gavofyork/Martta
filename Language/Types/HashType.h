@@ -57,7 +57,6 @@ protected:
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual TypeEntity*					newClone() const { return new HashType; }
 	virtual String						code(String const& _middle) const;
-	virtual String						defineLayout(ViewKeys const&) const;
 	virtual String						defineHtml() const;
 	virtual bool						defineSimilarityTo(TypeEntity const* _t, Castability _c) const;
 	virtual Rgb							idColour() const { return 0xbbff77; }

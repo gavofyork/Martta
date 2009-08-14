@@ -397,7 +397,6 @@ public:
 	String								namedIndexId() const;		// number for static named, alpha for dynamic named, null for cardinal.
 	List<int>							knownNames() const;
 
-	virtual String						defineLayout(ViewKeys const&) const;
 	virtual String						defineHtml() const;
 	virtual Entity*						isExpander() const { return 0; }
 

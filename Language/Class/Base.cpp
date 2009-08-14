@@ -82,11 +82,6 @@ Kinds Base::allowedKinds(int _i) const
 	return Super::allowedKinds(_i);
 }
 
-String Base::defineLayout(ViewKeys const&) const
-{
-	return String("^;ycode;'inherits';Mi;%1;Mi;'as';Mi;%2").arg(Superclass).arg(Accessibility);
-}
-
 String Base::defineHtml() const
 {
 	return L"<span id=\"this\" class=\"keyword\">inherits</span> " + toHtml(child(Superclass)) + L" <span class=\"keyword\">as</span>"+ toHtml(child(Accessibility));

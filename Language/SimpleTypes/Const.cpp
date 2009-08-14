@@ -54,31 +54,10 @@ String Const::code(String const& _middle) const
 	return String();
 }
 
-String Const::defineLayout(ViewKeys const&) const
-{
-	return String("%1;(;M2;^;fb;s;ewhite;c#5f6f7f;fs-2;'C';M3;)").arg(Original);
-}
-
 String Const::defineHtml() const
 {
 	return toHtml(child(Original)) + L"<span id=\"this\" class=\"Const-Fader\"><span class=\"Const\">CONST</span></span>";
 }
-
-/*void Const::decorate(DecorationContext const& _c) const
-{
-	QRectF r = alignedForUnitPen(_c(1));
-	r.setX(r.x() - 16);
-
-	QRgb c = qRgb(0xbb, 0xdd, 0xff);
-
-	QRadialGradient go(_c(1).center(), 24);
-	go.setColorAt(0.f, qRgba(c, 255));
-	go.setColorAt(1.f, qRgba(c, 0));
-
-	_c->setPen(Qt::NoPen);
-	_c->setBrush(go);
-	_c->drawRoundRect(r, 50, 100);
-}*/
 
 Kinds Const::deniedKinds(int _i) const
 {

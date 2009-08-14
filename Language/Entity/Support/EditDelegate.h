@@ -41,7 +41,6 @@ public:
 	void						lazyCommit() { if (m_immediateCommits) tryCommit(); }
 	void						tryCommit() { if (isValid()) commit(); }
 
-	virtual String				defineLayout(ViewKeys const&) const;
 	virtual String				defineHtml() const;
 	virtual bool				keyPressed(KeyEvent const*) { return false; }
 	/// Called only once, and only when this will be destroyed but the subject will live.

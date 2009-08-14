@@ -32,7 +32,6 @@ class Namespace: public TopLevel
 public:
 	virtual bool						isGloballyIdentifiable() const { return true; }
 	virtual Kinds						allowedKinds(int _i) const;
-	virtual String						defineLayout(ViewKeys const&) const;
 	virtual String						defineHtml() const;
 
 	virtual String						finalCode() const;

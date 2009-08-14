@@ -39,7 +39,6 @@ private:
 	virtual TypeEntity*					newClone() const { return new AddressType; }
 	virtual bool						defineSimilarityTo(TypeEntity const* _t, Castability _c) const;
 	virtual String						modifierHtml() const { return L"<span class=\"symbol\">@</span>"; }
-	virtual String						modifierLayout() const { return "ycode;'@'"; }
 	virtual String						code(String const& _middle) const { return original()->code("@" + _middle); }
 	virtual Types						subscriptTypes() const;
 	virtual Type						subscriptsTo(Type const&) const;

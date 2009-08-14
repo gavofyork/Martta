@@ -62,44 +62,6 @@ List<ValueDefiner*> SimpleBinaryOperation::findOperators(Operator _o, Type const
 	return findBestOverload((_left, _right), allOperators(_o.symbol()));
 }
 
-String SimpleBinaryOperation::operatorLayout() const
-{
-	if (id().symbol() == Operator::BangEquals)
-		return L"ycode;fs+1;'=';M-5;'/';M-6;'='";
-	else if (id().symbol() == Operator::EqualsEquals)
-		return L"ycode;fs+1;'=';M-3;'='";
-	else if (id().symbol() == Operator::LessThanEquals)
-		return String(L"ycode;'%1'").arg(MarttaSupport::Char(0x2264));
-	else if (id().symbol() == Operator::GreaterThanEquals)
-		return String(L"ycode;'%1'").arg(MarttaSupport::Char(0x2265));
-	else if (id().symbol() == Operator::LeftShift)
-		return L"ycode;'<';M-4;'<'";
-	else if (id().symbol() == Operator::RightShift)
-		return L"ycode;'>';M-4;'>'";
-	else if (id().symbol() == Operator::LeftShiftEquals)
-		return L"ycode;'<';M-4;'<';M-3;'='";
-	else if (id().symbol() == Operator::RightShiftEquals)
-		return L"ycode;'>';M-4;'>';M-3;'='";
-	else if (id().symbol() == Operator::Star)
-		return String(L"ycode;'%1'").arg(MarttaSupport::Char(0x00d7));
-	else if (id().symbol() == Operator::Slash)
-		return String(L"ycode;'%1'").arg(MarttaSupport::Char(0x00f7));
-	else if (id().symbol() == Operator::BarBar)
-		return String(L"ycode;'%1'").arg(MarttaSupport::Char(0x06f7));
-	else if (id().symbol() == Operator::AmpersAmpers)
-		return String(L"ycode;'%1'").arg(MarttaSupport::Char(0x06f8));
-	else if (id().symbol() == Operator::PlusEquals)
-		return L"ycode;'+';M-3;'='";
-	else if (id().symbol() == Operator::MinusEquals)
-		return L"ycode;'-';M-3;'='";
-	else if (id().symbol() == Operator::StarEquals)
-		return String(L"ycode;'%1';M-3;'='").arg(MarttaSupport::Char(0x00d7));
-	else if (id().symbol() == Operator::SlashEquals)
-		return String(L"ycode;'%1';M-3;'='").arg(MarttaSupport::Char(0x00f7));
-	else
-		return String(L"ycode;'%1'").arg(id().code());
-}
-
 String SimpleBinaryOperation::operatorHtml() const
 {
 	if (id().symbol() == Operator::BangEquals)

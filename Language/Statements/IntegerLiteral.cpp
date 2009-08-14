@@ -55,19 +55,6 @@ bool IntegerLiteral::keyPressedOnPosition(Position const& _p, KeyEvent const* _e
 	return true;
 }
 
-String IntegerLiteral::defineLayout(ViewKeys const&) const
-{
-	double value;
-	modf(m_value, &value);
-	String ret = (value > 0 || value < 0) ? "" : ",0";
-	for (int v = value < 0 ? -value : value; v >= 1; v /= 1000)
-		ret = (",%1" + ret).arg((uint)fmod((double)v, 1000.0), v >= 1000 ? 3 : 0, 10, '0');
-	ret = ret.mid(1);
-	if (m_signed)
-		ret = (m_value < 0 ? "-" : "") + ret;
-	return String("^;ynormal;'%1';ycode;'%2';'%3'").arg(ret).arg(m_signed ? "" : "u").arg(m_range == ShortRange ? "s" : m_range == LongRange ? "l" : m_range == LonglongRange ? "ll" : "");
-}
-
 String IntegerLiteral::defineHtml() const
 {
 	double value;
@@ -126,11 +113,6 @@ EditDelegateFace* IntegerLiteral::newDelegate(CodeScene* _s)
 			bool ret;
 			m_entry.toInt(&ret);
 			return ret;
-		}
-		virtual String defineLayout(ViewKeys const&) const
-		{
-			String ret;
-			return ret + String("^;ynormal;'%1';ycode;'%2';'%3'").arg(m_entry).arg(subject()->m_signed ? "" : "u").arg((subject()->m_range == ShortRange ? "s" : subject()->m_range == LongRange ? "l" : subject()->m_range == LonglongRange ? "ll" : ""));
 		}
 		virtual String defineHtml() const
 		{

@@ -38,7 +38,6 @@ private:
 	virtual Type						type() const;
 	virtual Type						apparentType() const;
 	virtual String						code() const;
-	virtual String						operatorLayout() const { return "ycode;'&'"; }
 	virtual String						operatorHtml() const { return "<img src=\"data://in.svg\"/>"; }
 };
 

@@ -56,33 +56,9 @@ bool Reference::defineSimilarityFrom(TypeEntity const* _f, Castability _c) const
 		Super::defineSimilarityFrom(_f, _c);
 }
 
-String Reference::defineLayout(ViewKeys const&) const
-{
-	return String("%1;(;M1;^;fb;s;e#ffffff;c#7f6f5f;fs-2;'&';M2;)").arg(Original);
-}
-
 String Reference::defineHtml() const
 {
 	return toHtml(child(Original)) + L"<span id=\"this\" class=\"Reference-Fader\"><span class=\"Reference\">&</span></span>";
 }
-/*
-void Reference::decorate(DecorationContext const& _c) const
-{
-	QRectF r = alignedForUnitPen(_c(1));
-	r.setX(r.x() - 16);
-
-	QRgb c = qRgb(0xff, 0xdd, 0xbb);
-
-	QRadialGradient go(_c(1).center(), 24);
-	go.setColorAt(0.f, qRgba(c, 255));
-	go.setColorAt(1.f, qRgba(c, 0));
-
-	QLinearGradient gp(_c(1).topRight() - QPointF(8.f, 0.f), _c(1).topLeft());
-	gp.setColorAt(0.f, qRgba(c, 255));
-	gp.setColorAt(1.f, qRgba(c, 0));
-	_c->setPen(Qt::NoPen);
-	_c->setBrush(go);
-	_c->drawRoundRect(r, 50, 100);
-}*/
 
 }

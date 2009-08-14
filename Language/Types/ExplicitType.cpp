@@ -146,11 +146,6 @@ List<Declaration*> ExplicitType::utilised() const
 	return m_subject.isUsable() ? subject()->utilisedInUse() : Super::utilised();	// TODO: define for other types.
 }
 
-String ExplicitType::defineLayout(ViewKeys const&) const
-{
-	return "^;fb;s" + idColour().name() + ";'" + (m_subject.isUsable() ? m_subject->name() : "[]") + "'";
-}
-
 String ExplicitType::defineHtml() const
 {
 	return L"<span id=\"this\" class=\"TypeEntity\">" + typeHtml(m_subject.isUsable() ? m_subject->name() : L"&empty;") + L"</span>";
@@ -168,11 +163,6 @@ List<TypeDefinition*> ExplicitType::possibilities()
 	}
 	m_subject = old;
 	return ret;
-}
-
-String ExplicitType::defineEditLayout(ViewKeys const&, TypeDefinition*) const
-{
-	return "fb;s" + idColour().name() + ";^;%1";
 }
 
 String ExplicitType::defineEditHtml(TypeDefinition*) const

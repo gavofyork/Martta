@@ -43,7 +43,6 @@ public:
 	void								setSymbol(Operator::Symbol _s) { m_operator.setSymbol(_s); }
 
 protected:
-	virtual String						defineLayout(ViewKeys const&) const;
 	virtual String						defineHtml() const;
 	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p[L"symbol"] = String::number(symbol()); }

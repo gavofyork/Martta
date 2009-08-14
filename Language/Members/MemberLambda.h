@@ -44,8 +44,7 @@ protected:
 	virtual String						definePostHtml() const;
 
 	/// Override if you want a completely different layout (rather than the LambdaNamer template).
-	/// Overriding this will still do the const decoration etc. If you don't want that, override Member::memberDefineLayout or Entity::defineLayout.
-	virtual String						memberLambdaDefineLayout(ViewKeys const& _v) const { return LambdaNamer::defineLayout(_v); }
+	/// Overriding this will still do the const decoration etc. If you don't want that, override Member::memberDefineHtml or defineHtml.
 	virtual String						memberLambdaDefineHtml() const { return LambdaNamer::defineHtml(); }
 
 	virtual String						memberImplementationCode() const { return LambdaNamer::implementationCode(); }
@@ -62,7 +61,6 @@ protected:
 
 	virtual bool						isInValidState() const { return type().isWellDefined(); }
 	virtual Entity*						isExpander() const;
-	virtual String						memberDefineLayout(ViewKeys const& _v) const;
 	virtual String						memberDefineHtml() const;
 	virtual bool						keyPressed(KeyEvent const* _e);
 //	virtual void						memberDecorate(DecorationContext const& _p) const;

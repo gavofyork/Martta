@@ -47,7 +47,6 @@ public:
 protected:
 	virtual Type						type() const { return Type(m_precision == SinglePrecision ? Float : m_precision == DoublePrecision ? Double : (Long|Double)); }
 	virtual String						code() const { String ret = String("%1").arg(m_value); if (!ret.contains(".")) ret += "."; ret += m_precision == SinglePrecision ? "f" : m_precision == DoublePrecision ? "" : "ld"; return ret; }
-	virtual String						defineLayout(ViewKeys const&) const;
 	virtual String						defineHtml() const;
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p[L"precision"] = String::number(m_precision); _p[L"value"] = String::number(m_value); }

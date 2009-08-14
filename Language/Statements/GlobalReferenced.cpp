@@ -45,11 +45,6 @@ bool GlobalReferenced::keyPressed(KeyEvent const* _e)
 	return true;
 }
 
-String GlobalReferenced::defineLayout(ViewKeys const& _k) const
-{
-	return L"p:/global.svg;" + Super::defineLayout(_k);
-}
-
 String GlobalReferenced::defineHtml() const
 {
 	return L"<span class=\"minor symbol\">::</span>" + Super::defineHtml();
@@ -58,11 +53,6 @@ String GlobalReferenced::defineHtml() const
 String GlobalReferenced::defineEditHtml(ValueDefiner* _v)
 {
 	return L"<span class=\"minor symbol\">::</span>" + Super::defineEditHtml(_v);
-}
-
-String GlobalReferenced::defineEditLayout(ViewKeys const& _k, ValueDefiner* _v)
-{
-	return L"p:/global.svg;" + Super::defineEditLayout(_k, _v);
 }
 
 List<ValueDefiner*> GlobalReferenced::possibilities(Position const& _p)

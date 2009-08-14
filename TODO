@@ -12,6 +12,8 @@ UI:
 - FIX Page up & down.
 
 Small things:
+- Recognise this.
+- enumnamer/class expansion.
 - Get rpath stuff working.
 - Unary operation should apply to climb Statement tree until it finds something.
 - Insertion of entities in, e.g. argument lists for function calls.
@@ -35,13 +37,14 @@ Dynamic code-loading (plugins).
   - Just use a simple summary-like interface first.
 
 Webkit layout system
-- BRINGBACK SVG files.
-- BRINGBACK decoration code into layout system and markup for it.
 - Remove old layout system.
+  - Remove defineLayout.
+  - Remove isExpander.
   - Remove decorate.
   - Remove leaving.
-  - Remove repait etc., replace with markDirty
+  - Remove repaint etc., replace with markDirty
     - Look into using change system instead?
+  - Sort out VirtualOverload::defineHtml, ::defineEditHtml
 - BRINGBACK Stylist support.
   - defineHtml moves to interface WebKitHtml::webKitHtml.
   - WKDefaultStylist uses Entity object's WebKitHtml::webKitHtml where possible.

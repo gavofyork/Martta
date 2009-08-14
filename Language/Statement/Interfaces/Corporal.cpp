@@ -28,11 +28,6 @@ namespace Martta
 MARTTA_INTERFACE_CPP(Corporal);
 MARTTA_NAMED_CPP(Corporal, Body);
 
-String Corporal::defineLayout(ViewKeys const&, bool _shrink) const
-{
-	return (String(!_shrink || (self()->child(Body) && self()->child(Body)->cardinalChildCount()) ? ";n;i;%2" : ";%2")).arg(Body);
-}
-
 String Corporal::defineHtml(bool) const
 {
 	return toHtml(self()->child(Body));//, !_shrink || (self()->child(Body) && self()->child(Body)->cardinalChildCount()) ? L"span class=\"block\"" : L"span");

@@ -42,11 +42,6 @@ bool BoolLiteral::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 	return true;
 }
 
-String BoolLiteral::defineLayout(ViewKeys const&) const
-{
-	return String("^;'%1'").arg(m_value ? "true" : "false");
-}
-
 String BoolLiteral::defineHtml() const
 {
 	return L"<span id=\"this\" class=\"keyword\">" + type()->typeHtml(m_value ? L"true" : L"false") + L"</span>";

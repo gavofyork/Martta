@@ -35,24 +35,6 @@ MARTTA_NAMED_CPP(LambdaNamer, Body);
 MARTTA_NAMED_CPP(LambdaNamer, Name);
 MARTTA_NAMED_CPP(LambdaNamer, Returned);
 
-String LambdaNamer::defineReturnLayout(ViewKeys const&) const
-{
-	return String("%1;Mo").arg(Returned);
-}
-
-String LambdaNamer::defineNameLayout(ViewKeys const&) const
-{
-	if (self()->child(Identity))
-		return String("ynormal;s%1;!%2").arg(FunctionType().idColour().name()).arg(Identity);
-	else
-		return "ycode;'" + name().replace(";", "\\;").replace("'", "\\'") + "'";
-}
-
-String LambdaNamer::defineArgListLayout(ViewKeys const&) const
-{
-	return "ycode;'(';" + times(0, self()->cardinalChildCount(), ";', ';") + ";')'";
-}
-
 String LambdaNamer::defineReturnHtml() const
 {
 	return toHtml(self()->child(Returned)) + L" ";
@@ -71,29 +53,6 @@ String LambdaNamer::defineArgListHtml() const
 	return "<span class=\"symbol\">(</span>" + toHtml(self()->cardinalChildren(), L"<span class=\"symbol\">, </span>") + L"<span class=\"symbol\">)</span>";
 }
 
-String LambdaNamer::defineBodyLayout(ViewKeys const& _viewKeys) const
-{
-	String ret;
-	if (body())
-		if (_viewKeys["expanded"].toBool())
-			ret += (body()->cardinalChildCount() ? "n;i;" : "") + String::number(Body);
-		else
-		{
-			ret += "yminor;' (";
-			if (int n = body()->cardinalChildrenOf<Primary>().count() + body()->cardinalChildrenOf<Untyped>().count())
-				ret += String::number(n) + " statement" + (n > 1 ? "s, " : ", ");
-			if (ret.endsWith(", "))
-				ret.chop(2);
-			ret += ")";
-			if (ret.endsWith(" ()"))
-				ret.replace(" ()", " (empty)");
-			ret += "'";
-		}
-	else
-		ret += "' = 0'";
-	return ret;
-}
-
 String LambdaNamer::defineBodyHtml() const
 {
 	if (!body())
@@ -104,12 +63,6 @@ String LambdaNamer::defineBodyHtml() const
 	else
 		info = " (empty)";
 	return (L"<span id=\"%1-info\" class=\"minor\">" + info + L"</span><div id=\"%1-body\" style=\"display: none\">").arg((int)self()) + toHtml(body()) + L"</div>";
-}
-
-String LambdaNamer::defineLayout(ViewKeys const& _k, String const& _middle) const
-{
-	// TODO handle ellipsis here so we can put one in/take one out
-	return definePreLayout(_k) + ";" + defineReturnLayout(_k) + ";>name;" + defineNameLayout(_k) + ";" + defineArgListLayout(_k) + ";" + defineMidLayout(_k, _middle) + ";" + defineBodyLayout(_k) + ";" + definePostLayout(_k);
 }
 
 String LambdaNamer::defineHtml(String const& _middle) const

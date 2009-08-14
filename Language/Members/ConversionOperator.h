@@ -33,8 +33,6 @@ public:
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 
 protected:
-	virtual String						defineNameLayout(ViewKeys const& _viewKeys) const;
-	virtual String						defineReturnLayout(ViewKeys const&) const { return String::null; }
 	virtual String						defineNameHtml() const { return L"<span class=\"keyword\">operator</span> " + toHtml(child(Returned)); }
 	virtual String						defineReturnHtml() const { return String::null; }
 	virtual String						name() const;

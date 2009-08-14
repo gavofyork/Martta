@@ -57,11 +57,6 @@ String WhileLoop::code() const
 	return ret;
 }
 
-String WhileLoop::defineLayout(ViewKeys const& _k) const
-{
-	return ("ycode;^;'while (';%1;')'" + Corporal::defineLayout(_k, true)).arg(Condition);
-}
-
 String WhileLoop::defineHtml() const
 {
 	return L" <span id=\"this\" class=\"keyword\">while</span> <span class=\"minor symbol\">(</span>" + toHtml(child(Condition)) + L"<span class=\"minor symbol\">)</span><br/>" + Corporal::defineHtml(true);
@@ -80,11 +75,6 @@ String UntilLoop::code() const
 	ret += "while (!(" + (asStatement(Condition) ? asStatement(Condition)->code() : "");
 	ret += "))\n" + (asStatement(Body) ? asStatement(Body)->codeAsStatement() : "");
 	return ret;
-}
-
-String UntilLoop::defineLayout(ViewKeys const& _k) const
-{
-	return ("ycode;^;'until (';%1;')'" + Corporal::defineLayout(_k, true)).arg(Condition);
 }
 
 String UntilLoop::defineHtml() const

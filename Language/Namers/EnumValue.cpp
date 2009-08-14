@@ -72,14 +72,6 @@ bool EnumValue::isChildInValidState(int _i) const
 	return false;
 }
 
-String EnumValue::defineLayout(ViewKeys const&) const
-{
-	String r = String("^;%1").arg(Identity);
-	if (child(Definition))
-		return (r + ";' := ';%1").arg(Definition);
-	return r;
-}
-
 String EnumValue::defineHtml() const
 {
 	String r = L"<^>" + toHtml(child(Identity));

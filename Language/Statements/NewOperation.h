@@ -33,7 +33,6 @@ public:
 	inline static bool					keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simpleKeyPressedOnPositionHandler<NewOperation>(_p, _e, "N", NoPrecedence, NoAssociativity); }
 
 private:
-	virtual String						operatorLayout() const { return "ycode;'new '"; }
 	virtual String						operatorHtml() const { return "<span class=\"keyword\">new</span>"; }
 	virtual Kinds						allowedKinds(int _index) const;
 	virtual Type						type() const;

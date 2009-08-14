@@ -161,11 +161,6 @@ String ListType::code(String const& _middle) const
 		return "::MarttaSupport::List<>" + _middle;
 }
 
-String ListType::defineLayout(ViewKeys const&) const
-{
-	return ("ycode;%1;^;" + typeLayout() + "'[[]]'").arg(Original);
-}
-
 String ListType::defineHtml() const
 {
 	return toHtml(child(Original)) + typeHtml(L"<span id=\"this\" class=\"symbol\">[[]]</span>");

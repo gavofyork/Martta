@@ -44,7 +44,6 @@ public:
 
 protected:
 	virtual Identifiable*				addressableContext() const { return parentAs<Identifiable>()->addressableContext(); }
-	virtual String						defineLayout(ViewKeys const&) const;
 	virtual String						defineHtml() const;
 	virtual int							minRequired(int _i) const { return _i == Identity ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int) const;

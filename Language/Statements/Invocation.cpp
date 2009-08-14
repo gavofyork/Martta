@@ -92,15 +92,6 @@ Types Invocation::allowedTypes(int _index) const
 	return Super::allowedTypes(_index);
 }
 
-String Invocation::defineLayout(ViewKeys const&) const
-{
-	String ret = "%1;ycode;'(';^";
-	ret = ret.arg(Callee);
-	for (int i = 0; i < cardinalChildCount(); i++)
-		ret += String((i == 0) ? ";%1" : ";', ';%1").arg(i);
-	return ret + ";')'";
-}
-
 String Invocation::defineHtml() const
 {
 	return toHtml(child(Callee)) + L"<span class=\"symbol\" id=\"this\">(</span>" + toHtml(cardinalChildren(), L", ") + L"<span class=\"symbol\">)</span>";

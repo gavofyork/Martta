@@ -106,16 +106,6 @@ Types SimpleUnaryOperation::allowedTypes(int _index) const
 	return Super::allowedTypes(_index);
 }
 
-String SimpleUnaryOperation::operatorLayout() const
-{
-	if (id().symbol() == Operator::PlusPlusX || id().symbol() == Operator::XPlusPlus)
-		return L"ycode;'+';M-3;'+'";
-	else if (id().symbol() == Operator::MinusMinusX || id().symbol() == Operator::XMinusMinus)
-		return L"ycode;'-';M-1;'-'";
-	else
-		return String("ycode;'%1'").arg(id().code());
-}
-
 String SimpleUnaryOperation::operatorHtml() const
 {
 	if (id().symbol() == Operator::PlusPlusX || id().symbol() == Operator::XPlusPlus)

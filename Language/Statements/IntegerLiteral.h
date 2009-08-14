@@ -47,7 +47,6 @@ public:
 protected:
 	virtual Type						type() const { return Type(Int|(m_signed ? Signed : Unsigned)|((int)m_range)); }
 	virtual String						code() const { return String("%1").arg(m_value, 0, 'f', 0) + (m_signed ? "" : "U") + (m_range == ShortRange ? "" : m_range == LongRange ? "L" : m_range == LonglongRange ? "LL" : ""); }
-	virtual String						defineLayout(ViewKeys const&) const;
 	virtual String						defineHtml() const;
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p[L"range"] = String::number(m_range); _p[L"signed"] = String::number(m_signed); _p[L"value"] = String::number(m_value); }

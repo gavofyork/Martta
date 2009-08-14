@@ -40,7 +40,6 @@ protected:
 	virtual Kinds						allowedKinds(int _index) const;
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity*) { changed(); }
-	virtual String						defineLayout(ViewKeys const& _k) const { return "^;" + VariableNamer::defineLayout(_k); }
 	virtual String						defineHtml() const { return L"<span id=\"this\">" + VariableNamer::defineHtml() + L"</span>"; }
 	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual bool						isInValidState() const;

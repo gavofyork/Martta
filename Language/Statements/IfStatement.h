@@ -39,7 +39,6 @@ public:
 protected:
 	virtual String						code() const;
 	virtual bool						keyPressed(KeyEvent const* _e);
-	virtual String						defineLayout(ViewKeys const&) const;
 	virtual String						defineHtml() const;
 	virtual int							minRequired(int _i) const { return _i == Condition || _i == Body ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _index) const;
@@ -57,7 +56,6 @@ public:
 
 protected:
 	virtual String						code() const;
-	virtual String						defineLayout(ViewKeys const&) const;
 	virtual String						defineHtml() const;
 };
 

@@ -40,7 +40,6 @@ protected:
 	virtual bool						isType(Kind _typeKind) { return Entity::isKind(_typeKind) || original()->isType(_typeKind); }
 	virtual TypeEntity*					asType(Kind _typeKind) { if (Entity::isKind(_typeKind)) return this; AssertNR(original()->isType(_typeKind)); return original()->asType(_typeKind); }
 	virtual String						code(String const& _middle) const;
-	virtual String						defineLayout(ViewKeys const&) const;
 	virtual String						defineHtml() const;
 	virtual TypeEntity*					newClone() const { return new Const; }
 	virtual Kinds						deniedKinds(int _i) const;

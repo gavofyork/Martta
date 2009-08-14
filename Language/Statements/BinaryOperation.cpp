@@ -25,14 +25,6 @@ namespace Martta
 
 MARTTA_PLACEHOLDER_CPP(BinaryOperation);
 
-String BinaryOperation::defineLayout(ViewKeys const&) const
-{
-	String middle = String("%2;Mi;^;%1;Mi;%3").arg(operatorLayout()).arg(FirstOperand).arg(SecondOperand);
-	if (!parent()->isKind<Operation>())
-		return middle;
-	return "B#0000000a;Mo;" + middle + ";Mo";
-}
-
 String BinaryOperation::defineHtml() const
 {
 	return toHtml(child(FirstOperand), childIs<Operation>(FirstOperand) ? L"span class=\"Operation\"" : L"span") + L" <^>" + operatorHtml() + L" " + toHtml(child(SecondOperand), childIs<Operation>(SecondOperand) ? L"span class=\"Operation\"" : L"span");

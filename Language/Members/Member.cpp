@@ -60,25 +60,6 @@ String Member::defineHtml() const
 	return L"<^>" + memberDefineHtml();
 }
 
-String Member::defineLayout(ViewKeys const& _k) const
-{
-	return "^;m24,0,0,0;" + memberDefineLayout(_k);
-}
-
-/*void Member::decorate(DecorationContext const& _p) const
-{
-	if (isComplete())
-	{
-		_p->setPen(Qt::NoPen);
-		QColor c = childAs<AccessLabel>(Accessibility)->idColour();
-		c.setAlpha(64);
-		_p->setBrush(c);
-		_p->drawRect(QRectF(16.f, 0.f, 4.f, _p.cap(0).height()));
-		memberDecorate(_p);
-	}
-	Super::decorate(_p);
-}*/
-
 bool Member::keyPressed(KeyEvent const* _e)
 {
 	// TODO: exchange for usurps

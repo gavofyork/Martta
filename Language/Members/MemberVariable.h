@@ -41,12 +41,10 @@ protected:
 	virtual List<Declaration*>			utilised() const { return actualType()->utilised(); }
 	virtual String						memberInterfaceCode() const { return VariableNamer::interfaceCode(); }
 	virtual String						memberImplementationCode() const { return VariableNamer::implementationCode(); }
-	virtual String						memberDefineLayout(ViewKeys const& _k) const { return VariableNamer::defineLayout(_k); }
 	virtual String						memberDefineHtml() const { return VariableNamer::defineHtml(); }
 	virtual int							minRequired(int _i) const { return _i == OurType ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual Type						type() const { return MemberValue::memberifiedType(VariableNamer::type()); }
-	virtual String						defineLabelLayout(String const& _text, ViewKeys const&) const { return String("(;M4;[[[;fs-2;fb;c#777;e#fff;'M';]]];);%1").arg(_text); }
 	virtual String						defineLabelHtml(String const& _text) const;
 	virtual String						defineLabelCode(String const& _text) const { return L"m_" + camelCase(_text); }
 };

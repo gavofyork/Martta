@@ -43,7 +43,6 @@ protected:
 	virtual String						code() const;
 	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual String						defineHtml() const;
-	virtual String						defineLayout(ViewKeys const&) const;
 	String								callList(List<Typed*> _parameters) const;
 	virtual int							familyDependencies() const { return Super::familyDependencies() | DependsOnChildren; }
 	virtual void						onDependencyChanged(Entity* _e);

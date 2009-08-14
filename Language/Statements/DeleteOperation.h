@@ -38,7 +38,6 @@ protected:
 	virtual Types						allowedTypes(int) const { return Type().topWith(Const()).topWith(Pointer()); }
 	virtual Type						type() const { return Type(); }
 	virtual String						code() const { return "delete " + childAs<Statement>(TheOperand)->code(); }
-	virtual String						defineLayout(ViewKeys const&) const { return String("p:/delete.svg;^;%d;p:/delete.svg").arg(TheOperand); }
 	virtual String						defineHtml() const { return L"<span id=\"this\" class=\"keyword\">delete</span>" + toHtml(child(TheOperand)); }
 };
 

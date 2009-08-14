@@ -46,7 +46,6 @@ public:
 	/// @note non-virtual - specifically to avoid automatic mixins. You have to mix it in explicitly.
 	String								interfaceCode() const { return basicCode(InsideScope) + ";\n"; }
 	String								implementationCode() const;
-	String								defineLayout(ViewKeys const& _viewKeys, String const& _middle = String::null) const;
 	String								defineHtml(String const& _middle = String::null) const;
 	bool								keyPressed(KeyEvent const* _e);
 	/// Gives a parameter list of the call. This depends on argumentType/CodeName, ellipsis, reference and codeName.
@@ -68,14 +67,6 @@ public:
 	/// A default implementation exists.
 	virtual String						basicCode(FunctionCodeScope _ref) const;
 	virtual String						summary() const { return basicCode(InsideScope); }
-	virtual String						definePreLayout(ViewKeys const&) const { return String::null; }
-	virtual String						defineMidLayout(ViewKeys const&, String const& _middle) const { return _middle; }
-	virtual String						definePostLayout(ViewKeys const&) const { return String::null; }
-	virtual String						defineNameLayout(ViewKeys const& _viewKeys) const;
-	virtual String						defineReturnLayout(ViewKeys const& _viewKeys) const;
-	virtual String						defineArgListLayout(ViewKeys const& _viewKeys) const;
-	virtual String						defineBodyLayout(ViewKeys const& _viewKeys) const;
-
 	virtual String						definePreHtml() const { return String::null; }
 	virtual String						defineMidHtml(String const& _middle) const { return _middle; }
 	virtual String						definePostHtml() const { return String::null; }

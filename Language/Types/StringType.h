@@ -50,7 +50,6 @@ protected:
 	virtual List<ValueDefiner*>			applicableMembers(Entity const* _s = 0, bool _isConst = false) const;
 
 	virtual String						code(String const& _middle) const;
-	virtual String						defineLayout(ViewKeys const&) const;
 	virtual String						defineHtml() const;
 	virtual bool						defineSimilarityFrom(TypeEntity const* _f, Castability _c) const;
 	virtual bool						defineSimilarityTo(TypeEntity const* _t, Castability _c) const;

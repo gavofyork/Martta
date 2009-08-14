@@ -34,7 +34,6 @@ class Stylist
 public:
 	virtual ~Stylist() {}
 
-	virtual String defineLayout(Entity* _e, ViewKeys const& _k);
 	virtual String defineHtml(Entity*, ViewKeys const&) { return "HELLO"; }
 };
 

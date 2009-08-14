@@ -41,7 +41,6 @@ private:
 	virtual int							minRequired(int _i) const { return _i == Condition ? 1 : Super::minRequired(_i); }
 	virtual Types						allowedTypes(int _index) const;
 	virtual String						code() const;
-	virtual String						defineLayout(ViewKeys const&) const;
 	virtual String						defineHtml() const;
 	virtual List<int> const&			defineDeclarationOrder() const { static const List<int> r = List<int>() << Condition << Body; return r; }
 };
@@ -55,7 +54,6 @@ public:
 
 private:
 	virtual String						code() const;
-	virtual String						defineLayout(ViewKeys const&) const;
 	virtual String						defineHtml() const;
 	virtual Kinds						allowedKinds(int _index) const;
 };

@@ -97,11 +97,6 @@ Type MemberLambda::thisType() const
 	return t.topWith(Pointer());
 }
 
-String MemberLambda::memberDefineLayout(ViewKeys const& _v) const
-{
-	return (isConst() ? "M-17;fs11;fb;ewhite;c#5f6f7f;'C';M9;fb0;e#0000;c#0000;fs;" : "") + memberLambdaDefineLayout(_v);
-}
-
 String MemberLambda::memberDefineHtml() const
 {
 	return memberLambdaDefineHtml();

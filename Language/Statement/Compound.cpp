@@ -71,16 +71,6 @@ bool Compound::keyPressed(KeyEvent const* _e)
 	return true;
 }
 
-String Compound::defineLayout(ViewKeys const&) const
-{
-	if (statements().size() > 1)
-		return "ycode;-i;'{';n;" + times(0, cardinalChildCount(), ";n;") + ";n;-i;'}'";
-	else if (statements().size())
-		return "ycode;0";
-	else
-		return "ycode;'{}'";
-}
-
 String statementsToHtml(List<Entity*> const& _es)
 {
 	String ret;
@@ -112,11 +102,6 @@ String Compound::defineHtml() const
 		return L"<div class=\"block\">" + statementsToHtml(statements()) + L"</div>";
 	else
 		return L" <span class=\"minor symbol\">{}</span>";
-}
-
-String HardCompound::defineLayout(ViewKeys const&) const
-{
-	return "ycode;-i;'{';n;" + times(0, cardinalChildCount(), ";n;") + ";n;-i;'}'";
 }
 
 String HardCompound::defineHtml() const

@@ -25,11 +25,6 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(ConstLabel);
 
-String ConstLabel::defineLayout(ViewKeys const&) const
-{
-	return String("^;ycode;p%1").arg(m_isConst ? ":/snowflake.svg" : ":/fire.svg");
-}
-
 String ConstLabel::defineHtml() const
 {
 	return String(L"<span id=\"this\" class=\"keyword\">%1</span>").arg(m_isConst ? L"const" : L"mutable");

@@ -35,7 +35,6 @@ protected:
 	virtual Operator					id() const { return Operator::Equals; }
 	virtual String						name() const { return "operator="; }
 	virtual String						codeName() const { return "operator="; }
-	virtual String						defineLayout(ViewKeys const&) const { return String(); }
 	virtual String						defineHtml() const { return String::null; }
 	virtual	bool						isConst() const { return true; }
 	virtual Access						access() const { return Public; }

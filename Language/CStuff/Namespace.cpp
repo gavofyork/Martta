@@ -51,15 +51,6 @@ String Namespace::defineHtml() const
 	return L"<span class=\"keyword\">namespace</span> " + toHtml(child(Identity)) + toHtml(cardinalChildren(), L"", L"div class=\"block\"");
 }
 
-String Namespace::defineLayout(ViewKeys const&) const
-{
-	String ret = String("ycode;'namespace';Mi;%1;n;").arg(Identity);
-
-	for(int i = 0; i < cardinalChildCount(); i++)
-		ret += String("i;%1;v8;").arg(i);
-	return ret;
-}
-
 Kinds Namespace::allowedKinds(int _i) const
 {
 	if (_i >= 0)

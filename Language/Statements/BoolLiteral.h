@@ -40,7 +40,6 @@ public:
 protected:
 	virtual Type						type() const { return Type(Bool); }
 	virtual String						code() const { return m_value ? "true" : "false"; }
-	virtual String						defineLayout(ViewKeys const&) const;
 	virtual String						defineHtml() const;
 	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p[L"value"] = String::number(m_value); }
 	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_value = _p[L"value"].toBool(); }

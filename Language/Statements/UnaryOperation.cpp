@@ -25,14 +25,6 @@ namespace Martta
 
 MARTTA_PLACEHOLDER_CPP(UnaryOperation);
 
-String UnaryOperation::defineLayout(ViewKeys const&) const
-{
-	String ret = isPostfix() ? "%2;^;%1" : "^;%1;%2";
-	if (parent()->isKind<Operation>())
-		ret = "B#0000000a;Mi;" + ret + ";Mi";
-	return ret.arg(operatorLayout()).arg(TheOperand);
-}
-
 String UnaryOperation::defineHtml() const
 {
 	String ret = isPostfix() ? "%2<^>%1" : "<^>%1%2";
