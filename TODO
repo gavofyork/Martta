@@ -16,7 +16,6 @@ BUG: Delete argument in invocation or statement in compound.
 BUG 'int i = 0;'
 
 Small things:
-- Recognise this.
 - enumnamer/class expansion.
 - Get rpath stuff working.
 - Unary operation should apply to climb Statement tree until it finds something.
