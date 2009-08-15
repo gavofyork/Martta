@@ -40,17 +40,17 @@ List<Named*> NameEntryPoint::possibilities()
 
 String NameEntryPoint::defineEditHtml(CodeScene* _cs) const
 {
-	if (EditDelegateFace* d = self()->editDelegate(_cs))
-	{
-		String ret = d->real() + L"<span class=\"unreal\">" + d->unreal() + L"</span>";
-		Named* n = static_cast<CompletionDelegate<Entity, Named*>*>(d)->selection();
-		if (n)
-			foreach (IdentifierSet* i, IdentifierSetRegistrar::get()->allSets())
-				if (i->identifiableAt(self()->over()).contains(n))
-					return i->defineEditHtml(n, ret);
-		return ret;
-	}
-	return String::null;
+	if (self()->isPlaceholder())
+		if (EditDelegateFace* d = self()->editDelegate(_cs))
+		{
+			String ret = d->real() + L"<span class=\"unreal\">" + d->unreal() + L"</span>";
+			if (Named* n = static_cast<CompletionDelegate<Entity, Named*>*>(d)->selection())
+				foreach (IdentifierSet* i, IdentifierSetRegistrar::get()->allSets())
+					if (i->identifiableAt(self()->over()).contains(n))
+						return i->defineEditHtml(n, ret);
+			return ret;
+		}
+	return defineHtml();
 }
 
 void NameEntryPoint::committed(Named* _i)

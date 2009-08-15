@@ -377,7 +377,10 @@ void Entity::clearEditing()
 }
 EditDelegateFace* Entity::editDelegate(CodeScene* _s) const
 {
-	return _s->editDelegate();
+	if (EditDelegateFace* d = _s->editDelegate())
+		if (d->subject() == this)
+			return d;
+	return 0;
 }
 
 // Keypress/UI event handlers.

@@ -13,7 +13,6 @@ UI:
 - FIX Page up & down.
 BUG: CodeView::onCurrentChanged _oldId bad on deletion of field.
 BUG: Delete argument in invocation or statement in compound.
-BUG: StringLiteral editing.
 
 Small things:
 - enumnamer/class expansion.
