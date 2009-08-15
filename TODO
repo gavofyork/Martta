@@ -1,18 +1,23 @@
-BUG Moving is crazily slow over statements.
-- To fix change key press dispatch method:
-  - All allowedKinds on Position and execute the Auxilliary's dispatchKeyPress.
-  - Do recursively but prune on denied Kinds.
-  - Remove all allowedToBeKind (or other Kind-checking) in handlers.
-BUG 'Mstr'-> doesn't move away (only stops editing).
-CRASH delete a Referenced EnumValue.
-BUG DeclarationsHandler is keeping old placeholders when generating its tree.
-BUG dbl-click on type entity.
+CRASH CodeView::onCurrentChanged _oldId bad on deletion of field.
+BUG Delete argument in invocation or statement in compound, enumvalue in enumer.
+BUG Colour doesn't carry for enums to their referenceds.
+BUG 'some'<Del> doesn't delete.
+BUG 'M' gives largely arbitrary results.
+Dynamic code-loading (plugins).
+- Referenced as placeholder (no key press handling)
+  - BRINGBACK Method names register with IdentifierSet.
+  - BRINGBACK Enum values.
+    - CRASH delete a Referenced EnumValue?
+  - QUICK get rid of committed() in Statement - test for inherited method existance
+    - Use the method rather than require the name to exist in the class?
+- BRINGBACK Type info stuff.
+  - Just use a simple summary-like interface first.
 UI:
 - Join statements or tree insert.
   - 'J' -> Joins next line to last [] in current.
 - FIX Page up & down.
-BUG: CodeView::onCurrentChanged _oldId bad on deletion of field.
-BUG: Delete argument in invocation or statement in compound.
+
+BUG DeclarationsHandler is keeping old placeholders when generating its tree.
 
 Small things:
 - enumnamer/class expansion.
@@ -21,19 +26,10 @@ Small things:
 - Insertion of entities in, e.g. argument lists for function calls.
   - Just a comma?
 - CLEAN Move crap from ExplicitType to TypeDefinition.
-- OPTIMISE String (and List/Hash/Type perhaps) with copy on write.
 - Interfacify ModifyingType (clashes with PhysicalType over ListType etc.)
   - NewOperation/DeleteOperation - interface with Type classes.
 - BRINGBACK Ser/Deser tests.
 - BRINGBACK GenericMemberOperation::isChildInValidState - do what it says.
-
-Dynamic code-loading (plugins).
-- Referenced as placeholder (no key press handling)
-  - BRINGBACK Method names register with IdentifierSet
-  - QUICK get rid of committed() in Statement - test for inherited method existance
-    - Use the method rather than require the name to exist in the class?
-- BRINGBACK Type info stuff.
-  - Just use a simple summary-like interface first.
 
 Webkit layout system
 - BRINGBACK VirtualOverload::defineHtml, ::defineEditHtml.
@@ -41,10 +37,11 @@ Webkit layout system
 - BRINGBACK Error system (!isValid()).
 - BRINGBACK Visual change system.
 
-TODO SearchReferenced (\)
-- All possible (including scoped exterals).
-- Should provide list for browsing/selection.
-TODO WKTextStylist uses text file, defaulting to WebKitHtml::webKitHtml. 
+BUG Moving is crazily slow over statements.
+- To fix change key press dispatch method:
+  - All allowedKinds on Position and execute the Auxilliary's dispatchKeyPress.
+  - Do recursively but prune on denied Kinds.
+  - Remove all allowedToBeKind (or other Kind-checking) in handlers.
 
 --------------------------------------------------------------------------------
 
@@ -52,7 +49,13 @@ RELEASE M1 (TBD)
 
 ================================================================================
 
+TODO Better GUI for loading/reloading plugins/projects.
 TODO Cache includes, so don't take so long to load.
+TODO SearchReferenced (\)
+- All possible (including scoped exterals).
+- Should provide list for browsing/selection.
+TODO WKTextStylist uses text file, defaulting to WebKitHtml::webKitHtml. 
+OPTIMISE String (and List/Hash/Type perhaps) with copy on write.
 
 Utilised
 - utilised/utilisable interface.

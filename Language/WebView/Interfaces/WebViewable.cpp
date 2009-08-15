@@ -41,7 +41,7 @@ MARTTA_REGISTER_CSS(WebViewable,
 
 String WebViewable::cssBorder(String const& _name, Rgb _col)
 {
-	return String(L"%4head { background-image: -webkit-gradient(linear, left top, left bottom, from(%1), to(%2)); border-top: 1px %3 solid; border-left: 1px %2 solid; border-right: 1px %2 solid; padding: 1px 4px; } %4body { border-bottom: 1px %3 solid; border-left: 1px %2 solid; border-right: 2px %2 solid; background-color: white; }")
+	return String(L"%4head { background-image: -webkit-gradient(linear, left top, left bottom, from(%1), to(%2)); border-top: 1px %3 solid; border-left: 1px %2 solid; border-right: 1px %2 solid; padding: 1px 4px; } %4body { border-bottom: 2px %3 solid; border-left: 2px %2 solid; border-right: 2px %2 solid; background-color: white; }")
 		.arg(_col.interpolated(50, Rgb(0xffffff)).name())
 		.arg(_col.name())
 		.arg(_col.interpolated(40, Rgb(0xffffff)).name())
