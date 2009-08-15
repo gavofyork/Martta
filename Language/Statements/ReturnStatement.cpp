@@ -53,8 +53,7 @@ int ReturnStatement::minRequired(int _i) const
 
 void ReturnStatement::onDependencyChanged(Entity*)
 {
-	if (validifyChildren())
-		markDirty();
+	validifyChildren();
 	changed();
 }
 

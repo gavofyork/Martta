@@ -35,13 +35,14 @@ class Depender: public_interface Familial
 	MARTTA_INHERITS(Familial, 0)
 
 	friend class ChangeMan;
+
 protected:
-	Depender(): m_active(true) {}
+	Depender(): m_isAsleep(false) {}
 
 	// How we react to changes.
 
 	/// Return false if not interested in notifications in current state.
-	virtual bool						botherNotifying() const { return m_active; }
+	virtual bool						shouldBeNotified() const { return !m_isAsleep; }
 
 	/// Called when:
 	/// - Our index changes and familyDependencies includes DependsOnIndex, but the parent remains the same.
@@ -89,7 +90,7 @@ protected:
 	/// include BeInModel.
 	virtual void						onChildrenInitialised();
 
-	virtual ~Depender() { if (m_active) ChangeMan::get()->dead(this); }
+	virtual ~Depender() { if (!m_isAsleep) ChangeMan::get()->dead(this); }
 
 	/// The following API is to define exactly what we depend on.
 	/// Three way of doing this:
@@ -104,26 +105,26 @@ protected:
 
 	/// Adds a dependency.
 	/// Note this will *not* call onDependencyAdded(_e) for you. You must call it yourself if you want it to run.
-	inline void							addDependency(Dependee* _e) { if (m_active) ChangeMan::get()->addDependency(this, _e); }
+	inline void							addDependency(Dependee* _e) { if (!m_isAsleep) ChangeMan::get()->addDependency(this, _e); }
 	/// Removes a dependency.
 	/// Note this will *not* call onDependencyRemoved(_e) for you. You must call it yourself if you want it to run.
-	inline void							removeDependency(Dependee* _e) { if (m_active) ChangeMan::get()->removeDependency(this, _e); }
+	inline void							removeDependency(Dependee* _e) { if (!m_isAsleep) ChangeMan::get()->removeDependency(this, _e); }
 	/// Removes all dependencies.
-	inline void							removeAllDependencies() { if (m_active) ChangeMan::get()->removeAllDependencies(this); }
+	inline void							removeAllDependencies() { if (!m_isAsleep) ChangeMan::get()->removeAllDependencies(this); }
 	/// @returns true if this object already has a freeform dependency on another
-	inline bool							haveDependency(Dependee* _e) const { return m_active && ChangeMan::get()->haveDependency(this, _e); }
+	inline bool							haveDependency(Dependee* _e) const { return !m_isAsleep && ChangeMan::get()->haveDependency(this, _e); }
 
-	virtual void						childrenInitialised() { if (m_active) ChangeMan::get()->childrenInitialised(this); }
-	virtual void						childAdded(int _newChildsIndex) { if (m_active) ChangeMan::get()->childAdded(this, _newChildsIndex); }
-	virtual void						childSwitched(Entity* _currentChild, Entity* _exChild) { if (m_active) ChangeMan::get()->childSwitched(this, _currentChild, _exChild); }
-	virtual void						childRemoved(Entity* _exChild, int _exChildsIndex) { if (m_active) ChangeMan::get()->childRemoved(this, _exChild, _exChildsIndex); }
-	virtual void						childMoved(Entity* _child, int _originalIndex) { if (m_active) ChangeMan::get()->childMoved(this, _child, _originalIndex); }
-	virtual void						parentAdded() { if (m_active) ChangeMan::get()->parentAdded(this); }
-	virtual void						parentSwitched(Entity* _exParent) { if (m_active) ChangeMan::get()->parentSwitched(this, _exParent); }
-	virtual void						parentRemoved(Entity* _exParent) { if (m_active) ChangeMan::get()->parentRemoved(this, _exParent); }
-	virtual void						dependencySwitched(Entity* _currentDependency, Entity* _exDependency) { if (m_active) ChangeMan::get()->dependencySwitched(this, _currentDependency, _exDependency); }
+	virtual void						childrenInitialised() { if (!m_isAsleep) ChangeMan::get()->childrenInitialised(this); }
+	virtual void						childAdded(int _newChildsIndex) { if (!m_isAsleep) ChangeMan::get()->childAdded(this, _newChildsIndex); }
+	virtual void						childSwitched(Entity* _currentChild, Entity* _exChild) { if (!m_isAsleep) ChangeMan::get()->childSwitched(this, _currentChild, _exChild); }
+	virtual void						childRemoved(Entity* _exChild, int _exChildsIndex) { if (!m_isAsleep) ChangeMan::get()->childRemoved(this, _exChild, _exChildsIndex); }
+	virtual void						childMoved(Entity* _child, int _originalIndex) { if (!m_isAsleep) ChangeMan::get()->childMoved(this, _child, _originalIndex); }
+	virtual void						parentAdded() { if (!m_isAsleep) ChangeMan::get()->parentAdded(this); }
+	virtual void						parentSwitched(Entity* _exParent) { if (!m_isAsleep) ChangeMan::get()->parentSwitched(this, _exParent); }
+	virtual void						parentRemoved(Entity* _exParent) { if (!m_isAsleep) ChangeMan::get()->parentRemoved(this, _exParent); }
+	virtual void						dependencySwitched(Entity* _currentDependency, Entity* _exDependency) { if (!m_isAsleep) ChangeMan::get()->dependencySwitched(this, _currentDependency, _exDependency); }
 
-	bool								m_active;
+	bool								m_isAsleep;
 };
 
 }

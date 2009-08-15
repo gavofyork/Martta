@@ -23,13 +23,14 @@
 #include <QWebView>
 
 #include <Entity.h>
+#include <ChangeMan.h>
 #include <WebStylist.h>
 #include <CodeScene.h>
 
 namespace Martta
 {
 
-class CodeView: public QWebView, public CodeScene
+class CodeView: public QWebView, public CodeScene, public ChangeListener
 {
 	Q_OBJECT
 
@@ -65,12 +66,26 @@ public slots:
 	void						onCurrentAboutToChange();
 	void						onCurrentChanged(QString const& _old);
 	bool						attemptEdit(int _e);
-	void						markDirty(int _e) { markDirty((Entity*)_e); }
+	void						markDirty(int _e) { relayout((Entity*)_e); }
 
 signals:
 	void						currentChanged(Entity*);
 
 private:
+	virtual void						onChanged(Entity* _e, int _aspect) { relayout(_e); (void)(_aspect); }
+	virtual void						onChildrenInitialised(Entity* _e) { relayout(_e); }
+	virtual void						onChildAdded(Entity* _e, int _index) { relayout(_e); (void)(_index); }
+	virtual void						onChildSwitched(Entity* _e, Entity* _child, Entity* _oldChild) { relayout(_e); (void)(_child); (void)(_oldChild); }
+	virtual void						onDependencySwitched(Entity* _e, Entity* _current, Entity* _old) { relayout(_e); (void)(_current); (void)(_old); }
+	virtual void						onChildRemoved(Entity* _e, Entity* _old, int _oldIndex) { relayout(_e); (void)(_old); (void)(_oldIndex); }
+	virtual void						onChildMoved(Entity* _e, Entity* _child, int _oldIndex) { relayout(_e); (void)(_child); (void)(_oldIndex); }
+	virtual void						onParentAdded(Entity* _e) { (void)(_e); }
+	virtual void						onParentSwitched(Entity* _e, Entity* _old) { (void)(_e); (void)(_old); }
+	virtual void						onParentRemoved(Entity* _e, Entity* _old) { (void)(_e); (void)(_old); }
+	virtual void						onAncestorAdded(Entity* _e, Entity* _ancestor) { relayout(_e); (void)(_ancestor); }
+	virtual void						onAncestorSwitched(Entity* _e, Entity* _ancestor, Entity* _old) { relayout(_e); (void)(_ancestor); (void)(_old); }
+	virtual void						onAncestorRemoved(Entity* _e, Entity* _old) { relayout(_e); (void)(_old); }
+
 	void						init();
 	void						refresh();
 	QRect						bounds(Entity const* _e) const;
@@ -81,7 +96,7 @@ private:
 	virtual bool				event(QEvent* _e);
 	virtual void				paintEvent(QPaintEvent* _ev);
 
-	virtual void				markDirty(Entity* _e);
+	virtual void				relayout(Entity* _e);
 
 	List<SafePointer<Entity> >	m_dirty;
 

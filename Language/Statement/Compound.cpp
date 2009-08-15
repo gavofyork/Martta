@@ -56,7 +56,6 @@ bool Compound::keyPressed(KeyEvent const* _e)
 		middle(_e->focalIndex() + ((_e->isInserting() || _e->modifiers() & ShiftModifier) ? 0 : 1));
 		Statement* s = new Statement;
 		p.place(s);
-		markDirty();
 		s->setCurrent();
 	}
 	else if (_e->text() == L"¬" && _e->focalIndex() != UndefinedIndex)

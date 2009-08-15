@@ -28,8 +28,31 @@ namespace Martta
 class Depender;
 class Dependee;
 
+class ChangeListener
+{
+public:
+	ChangeListener();
+	~ChangeListener();
+
+	virtual void						onChanged(Entity* _e, int _aspect) { (void)(_e); (void)(_aspect); }
+	virtual void						onChildrenInitialised(Entity* _e) { (void)(_e); }
+	virtual void						onChildAdded(Entity* _e, int _index) { (void)(_e); (void)(_index); }
+	virtual void						onChildSwitched(Entity* _e, Entity* _child, Entity* _oldChild) { (void)(_e); (void)(_child); (void)(_oldChild); }
+	virtual void						onDependencySwitched(Entity* _e, Entity* _current, Entity* _old) { (void)(_e); (void)(_current); (void)(_old); }
+	virtual void						onChildRemoved(Entity* _e, Entity* _old, int _oldIndex) { (void)(_e); (void)(_old); (void)(_oldIndex); }
+	virtual void						onChildMoved(Entity* _e, Entity* _child, int _oldIndex) { (void)(_e); (void)(_child); (void)(_oldIndex); }
+	virtual void						onParentAdded(Entity* _e) { (void)(_e); }
+	virtual void						onParentSwitched(Entity* _e, Entity* _old) { (void)(_e); (void)(_old); }
+	virtual void						onParentRemoved(Entity* _e, Entity* _old) { (void)(_e); (void)(_old); }
+	virtual void						onAncestorAdded(Entity* _e, Entity* _ancestor) { (void)(_e); (void)(_ancestor); }
+	virtual void						onAncestorSwitched(Entity* _e, Entity* _ancestor, Entity* _old) { (void)(_e); (void)(_ancestor); (void)(_old); }
+	virtual void						onAncestorRemoved(Entity* _e, Entity* _old) { (void)(_e); (void)(_old); }
+};
+
 class ChangeMan
 {
+	friend class ChangeListener; // To keep adding/removing listeners out of the API.
+
 public:
 	enum Operation
 	{
@@ -79,15 +102,15 @@ public:
 	void								sleep() { m_asleep = true; }
 	void								wake() { m_asleep = false; }
 
-	virtual void						childrenInitialised(Depender* _this);
-	virtual void						childAdded(Depender* _this, int _newChildsIndex);
-	virtual void						childSwitched(Depender* _this, Entity* _currentChild, Entity* _exChild);
-	virtual void						childRemoved(Depender* _this, Entity* _exChild, int _deadChildsIndex);
-	virtual void						childMoved(Depender* _this, Entity* _child, int _oldIndex);
-	virtual void						parentAdded(Depender* _this);
-	virtual void						parentSwitched(Depender* _this, Entity* _exParent);
-	virtual void						parentRemoved(Depender* _this, Entity* _exParent);
-	virtual void						dependencySwitched(Depender* _this, Entity* _currentDependency, Entity* _exDependency);
+	void								childrenInitialised(Depender* _this);
+	void								childAdded(Depender* _this, int _newChildsIndex);
+	void								childSwitched(Depender* _this, Entity* _currentChild, Entity* _exChild);
+	void								childRemoved(Depender* _this, Entity* _exChild, int _deadChildsIndex);
+	void								childMoved(Depender* _this, Entity* _child, int _oldIndex);
+	void								parentAdded(Depender* _this);
+	void								parentSwitched(Depender* _this, Entity* _exParent);
+	void								parentRemoved(Depender* _this, Entity* _exParent);
+	void								dependencySwitched(Depender* _this, Entity* _currentDependency, Entity* _exDependency);
 
 	/// Adds a dependency.
 	/// Note this will *not* call onDependencyAdded(_e) for you. You must call it yourself if you want it to run.
@@ -121,6 +144,8 @@ private:
 
 	bool								m_asleep;
 	bool								m_hasChanged;
+
+	List<ChangeListener*>				m_listeners;
 
 	static ChangeMan*					s_this;
 };

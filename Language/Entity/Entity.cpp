@@ -239,7 +239,6 @@ bool Entity::cull()
 	if (c && !isCurrentOrAncestor() && isSuperfluous())
 	{
 		deleteAndRefill();
-		c->markDirty();
 		return true;
 	}
 	return false;
@@ -381,13 +380,6 @@ EditDelegateFace* Entity::editDelegate(CodeScene* _s) const
 	return _s->editDelegate();
 }
 
-// Drawing
-void Entity::markDirty()
-{
-	foreach (CodeScene* i, CodeScene::all())
-		i->markDirty(this);
-}
-
 // Keypress/UI event handlers.
 void Entity::activateEvent(CodeScene* _s)
 {
@@ -423,7 +415,7 @@ void Entity::keyPressEventStarter(KeyEvent* _e, bool _abortive)
 		if (_e->codeScene()->editDelegate())
 		{
 			_e->codeScene()->editDelegate()->lazyCommit();
-			_e->focus()->markDirty();
+			_e->codeScene()->relayout(_e->focus());
 		}
 		return;
 	}
@@ -614,8 +606,6 @@ void Entity::changed(int _aspects)
 	{
 		if (!isEditing())
 			checkForCullingLater();
-		if (_aspects & Visually)
-			markDirty();
 	}
 }
 
@@ -675,8 +665,6 @@ bool Entity::validifyChild(int _i, int* _added)
 		*_added = (*_added == INT_MAX - 1) ? _i : INT_MAX;
 		ret = true;
 	}
-	if (ret)
-		markDirty();
 	return ret;
 }
 bool Entity::validifyChildren()
@@ -708,8 +696,6 @@ bool Entity::validifyChildren()
 	else if (added < INT_MAX - 1)
 		childAdded(added);
 
-	if (added != INT_MAX - 1)
-		markDirty();
 	return ret;
 }
 Entity* Entity::prepareChildren()
@@ -723,7 +709,6 @@ Entity* Entity::prepareChildren()
 	for (int i = m_cardinalChildren.size(); i < minRequired(Cardinals); ++i)
 		back().spawnPreparedSilent()->parentAdded();
 	childrenInitialised();
-	markDirty();
 	return this;
 }
 bool Entity::removeInvalidChildren()
@@ -830,16 +815,12 @@ void Entity::move(Position const& _newPosition)
 			for (int i = home; i != end; i += s)
 				m_parent->childMoved(m_parent->m_cardinalChildren[i], i + s);
 		m_parent->childMoved(this, old.index());
-		m_parent->markDirty();
 	}
 	else
 	{
 		parentSwitchedWithChildRemoved(old);
 		if (m_parent)
-		{
 			m_parent->childAdded(m_index);
-			m_parent->markDirty();
-		}
 	}
 }
 Entity* Entity::usurp(Entity* _u)
@@ -873,7 +854,6 @@ Entity* Entity::usurp(Entity* _u)
 		_u->m_parent->childSwitched(_u, this);
 
 	delete this;
-	_u->markDirty();
 	return _u;
 }
 Entity* Entity::replace(Entity* _r)
@@ -889,10 +869,7 @@ Entity* Entity::replace(Entity* _r)
 	_r->parentSwitchedWithChildRemoved(you);
 	// Tell _r's new context that it's here.
 	if (_r->m_parent)
-	{
 		_r->m_parent->childSwitched(_r, this);
-		_r->m_parent->markDirty();
-	}
 	delete this;
 	return _r;
 }
@@ -935,7 +912,6 @@ Entity* Entity::insert(Entity* _e, int _preferedIndex)
 		oneFootInTheGrave(_e->child(_preferedIndex));
 		killAndDelete(_e->child(_preferedIndex));
 	}
-	(_e->parent() ? _e->parent() : _e)->markDirty();
 	return _e;
 }
 bool Entity::tryInsert(Entity* _e, int _preferedIndex)
@@ -964,7 +940,6 @@ bool Entity::tryInsert(Entity* _e, int _preferedIndex)
 	if (_e->parent())
 		_e->parent()->childSwitched(_e, this);
 
-	_e->markDirty();
 	return ip != Nowhere;
 }
 void Entity::deleteAndRefill(Entity* _e, bool _moveToGrave)
@@ -983,8 +958,6 @@ void Entity::deleteAndRefill(Entity* _e, bool _moveToGrave)
 		oneFootInTheGrave(p.entity());
 		p->parentAdded();
 		c->childSwitched(p.entity(), this);
-		if (c)
-			c->markDirty();
 		delete this;
 	}
 	else
@@ -993,8 +966,6 @@ void Entity::deleteAndRefill(Entity* _e, bool _moveToGrave)
 		kill();
 		oneFootInTheGrave();
 		c->childRemoved(this, ci);
-		if (c)
-			c->markDirty();
 		delete this;
 	}
 	if (_moveToGrave)
@@ -1004,10 +975,7 @@ void Entity::deleteAndRefill(Entity* _e, bool _moveToGrave)
 void Entity::notifyOfStrobe(Entity* _strobeCreation)
 {
 	if (_strobeCreation && m_parent)
-	{
 		parentSwitched(_strobeCreation);
-		markDirty();
-	}
 	else if (_strobeCreation)
 		parentRemoved(_strobeCreation);
 	else if (m_parent)
@@ -1019,7 +987,6 @@ void Entity::notifyOfStrobe(Entity* _strobeCreation)
 			m_parent->childSwitched(this, _strobeCreation);
 		else
 			m_parent->childAdded(m_index);
-		m_parent->markDirty();
 	}
 }
 

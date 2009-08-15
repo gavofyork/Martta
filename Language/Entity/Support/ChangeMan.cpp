@@ -28,6 +28,16 @@ namespace Martta
 
 ChangeMan* ChangeMan::s_this = 0;
 
+ChangeListener::ChangeListener()
+{
+	ChangeMan::get()->m_listeners.append(this);
+}
+
+ChangeListener::~ChangeListener()
+{
+	ChangeMan::get()->m_listeners.removeOne(this);
+}
+
 void ChangeMan::oneFootInTheGrave(Dependee* _going, Dependee* _replacement)
 {
 	for (MultiHash<Dependee*, Depender*>::Iterator i = m_dependers.find(_going); i != m_dependers.end() && i.key() == _going; i = m_dependers.erase(i))
@@ -35,7 +45,7 @@ void ChangeMan::oneFootInTheGrave(Dependee* _going, Dependee* _replacement)
 		MultiHash<Depender*, Dependee*>::Iterator j = m_dependees.find(i.value(), i.key());
 		AssertNR (j != m_dependees.end());
 		m_dependees.erase(j);
-		if (i.value()->botherNotifying())
+		if (i.value()->shouldBeNotified())
 		{
 			if (_replacement)
 				m_changeQueue << Entry(i.value(), DependencySwitched, _replacement->self(), _going->self());
@@ -58,14 +68,18 @@ bool ChangeMan::changed(Dependee* _changer, int _aspect)
 	m_changing.append(Changing(_changer, _aspect));
 
 	Entity* e = _changer->self();
+
+	foreach (ChangeListener* l, m_listeners)
+		l->onChanged(_changer->self(), _aspect);
+
 	foreach (Depender* d, m_dependers.values(_changer))
-		if (d->botherNotifying())
+		if (d->shouldBeNotified())
 			m_changeQueue << Entry(d, _aspect, e);
 	foreach (Depender* d, e->childrenOf<Depender>())
-		if (d->botherNotifying() && d->familyDependencies() & Depender::DependsOnParent)
+		if (d->shouldBeNotified() && d->familyDependencies() & Depender::DependsOnParent)
 			m_changeQueue << Entry(d, _aspect, e);
 	if (Depender* d = e->tryParent<Depender>())
-		if (d->botherNotifying() && d->familyDependencies() & Depender::DependsOnChildren)
+		if (d->shouldBeNotified() && d->familyDependencies() & Depender::DependsOnChildren)
 			m_changeQueue << Entry(d, _aspect, e);
 	List<Entity*> es;
 	es << _changer->self();
@@ -158,8 +172,13 @@ void ChangeMan::childrenInitialised(Depender* _this)
 {
 	if (m_asleep)
 		return;
-	if (_this->botherNotifying() && _this->familyDependencies() & Depender::DependsOnChildren)
-		m_changeQueue << Entry(_this, EntityChildrenInitialised);
+	if (_this->shouldBeNotified())
+	{
+		foreach (ChangeListener* l, m_listeners)
+			l->onChildrenInitialised(_this->self());
+		if (_this->familyDependencies() & Depender::DependsOnChildren)
+			m_changeQueue << Entry(_this, EntityChildrenInitialised);
+	}
 	processQueue();
 	m_hasChanged = true;
 }
@@ -169,12 +188,17 @@ void ChangeMan::childAdded(Depender* _this, int _index)
 	AssertNR(_this->self()->child(_index));
 	if (m_asleep)
 		return;
-	if (_this->botherNotifying() && _this->familyDependencies() & Depender::DependsOnChildren)
+	if (_this->shouldBeNotified())
 	{
-		m_changeQueue << Entry(_this, DependencyAdded, _this->self()->child(_index));
-		if (_index >= 0)
-			for (int i = _index + 1; i < _this->self()->cardinalChildCount(); i++)
-				childMoved(_this, _this->self()->child(i), i - 1);
+		foreach (ChangeListener* l, m_listeners)
+			l->onChildAdded(_this->self(), _index);
+		if (_this->familyDependencies() & Depender::DependsOnChildren)
+		{
+			m_changeQueue << Entry(_this, DependencyAdded, _this->self()->child(_index));
+			if (_index >= 0)
+				for (int i = _index + 1; i < _this->self()->cardinalChildCount(); i++)
+					childMoved(_this, _this->self()->child(i), i - 1);
+		}
 	}
 	processQueue();
 	m_hasChanged = true;
@@ -188,8 +212,13 @@ void ChangeMan::childSwitched(Depender* _this, Entity* _ch, Entity* _old)
 	AssertNR(_old->parent() != _this->self());
 	if (m_asleep)
 		return;
-	if (_this->botherNotifying() && _this->familyDependencies() & Depender::DependsOnChildren)
-		m_changeQueue << Entry(_this, DependencySwitched, _ch, _old);
+	if (_this->shouldBeNotified())
+	{
+		foreach (ChangeListener* l, m_listeners)
+			l->onChildSwitched(_this->self(), _ch, _old);
+		if (_this->familyDependencies() & Depender::DependsOnChildren)
+			m_changeQueue << Entry(_this, DependencySwitched, _ch, _old);
+	}
 	processQueue();
 }
 
@@ -202,8 +231,12 @@ void ChangeMan::dependencySwitched(Depender* _this, Entity* _currentDependency, 
 	AssertNR(m_dependees.contains(_this, dee));
 	if (m_asleep)
 		return;
-	if (_this->botherNotifying())
+	if (_this->shouldBeNotified())
+	{
+		foreach (ChangeListener* l, m_listeners)
+			l->onDependencySwitched(_this->self(), _currentDependency, _exDependency);
 		m_changeQueue << Entry(_this, DependencySwitched, _currentDependency, _exDependency);
+	}
 	processQueue();
 }
 
@@ -213,12 +246,17 @@ void ChangeMan::childRemoved(Depender* _this, Entity* _old, int _index)
 	AssertNR(_old->parent() != _this->self());
 	if (m_asleep)
 		return;
-	if (_this->botherNotifying() && _this->familyDependencies() & Depender::DependsOnChildren)
+	if (_this->shouldBeNotified())
 	{
-		m_changeQueue << Entry(_this, DependencyRemoved, _old, 0, _index);
-		if (_index >= 0)
-			for (int i = _index; i < _this->self()->cardinalChildCount(); i++)
-				childMoved(_this, _this->self()->child(i), i + 1);
+		foreach (ChangeListener* l, m_listeners)
+			l->onChildRemoved(_this->self(), _old, _index);
+		if (_this->familyDependencies() & Depender::DependsOnChildren)
+		{
+			m_changeQueue << Entry(_this, DependencyRemoved, _old, 0, _index);
+			if (_index >= 0)
+				for (int i = _index; i < _this->self()->cardinalChildCount(); i++)
+					childMoved(_this, _this->self()->child(i), i + 1);
+		}
 	}
 	processQueue();
 	m_hasChanged = true;
@@ -229,10 +267,15 @@ void ChangeMan::childMoved(Depender* _this, Entity* _ch, int _oI)
 	AssertNR(_ch);
 	if (m_asleep)
 		return;
-	if (_this->botherNotifying() && _this->familyDependencies() & Depender::TestOnOrder)
-		m_changeQueue << Entry(_this, ChildMoved, _ch, 0, _oI);
+	if (_this->shouldBeNotified())
+	{
+		foreach (ChangeListener* l, m_listeners)
+			l->onChildMoved(_this->self(), _ch, _oI);
+		if (_this->familyDependencies() & Depender::TestOnOrder)
+			m_changeQueue << Entry(_this, ChildMoved, _ch, 0, _oI);
+	}
 	if (Depender* d = _ch->tryKind<Depender>())
-		if (d->botherNotifying() && d->familyDependencies() & Depender::DependsOnIndex)
+		if (d->shouldBeNotified() && d->familyDependencies() & Depender::DependsOnIndex)
 			m_changeQueue << Entry(d, IndexChanged, 0, 0, _oI);
 	processQueue();
 	m_hasChanged = true;
@@ -244,8 +287,13 @@ void ChangeMan::parentAdded(Depender* _this)
 	AssertNR(p);
 	if (m_asleep)
 		return;
-	if (_this->botherNotifying() && _this->familyDependencies() & Depender::DependsOnParent)
-		m_changeQueue << Entry(_this, DependencyAdded, p);
+	if (_this->shouldBeNotified())
+	{
+		foreach (ChangeListener* l, m_listeners)
+			l->onParentAdded(_this->self());
+		if (_this->familyDependencies() & Depender::DependsOnParent)
+			m_changeQueue << Entry(_this, DependencyAdded, p);
+	}
 
 	List<Entity*> es;
 	es << _this->self();
@@ -256,7 +304,11 @@ void ChangeMan::parentAdded(Depender* _this)
 			foreach (Kind k, d->ancestralDependencies())
 				if (Entity* a = e->ancestor(k))
 					if (p->hasSelfAncestor(a))
+					{
+						foreach (ChangeListener* l, m_listeners)
+							l->onAncestorAdded(e, a);
 						m_changeQueue << Entry(d, DependencyAdded, a);
+					}
 		es << e->children();
 	}
 	processQueue();
@@ -270,8 +322,13 @@ void ChangeMan::parentSwitched(Depender* _this, Entity* _old)
 	AssertNR(p != _old);
 	if (m_asleep)
 		return;
-	if (_this->botherNotifying() && _this->familyDependencies() & Depender::DependsOnParent)
-		m_changeQueue << Entry(_this, DependencySwitched, p, _old);
+	if (_this->shouldBeNotified())
+	{
+		foreach (ChangeListener* l, m_listeners)
+			l->onParentSwitched(_this->self(), _old);
+		if (_this->familyDependencies() & Depender::DependsOnParent)
+			m_changeQueue << Entry(_this, DependencySwitched, p, _old);
+	}
 
 	List<Entity*> es;
 	es << _this->self();
@@ -286,11 +343,23 @@ void ChangeMan::parentSwitched(Depender* _this, Entity* _old)
 				{
 					Entity* oldAnc = _old->selfAncestor(k);
 					if (a && !oldAnc)											// Had no old ancestor but do have a new one. Added...
+					{
+						foreach (ChangeListener* l, m_listeners)
+							l->onAncestorAdded(e, a);
 						m_changeQueue << Entry(d, DependencyAdded, a);
+					}
 					else if (oldAnc && !a)										// Had old ancestor but no new one. Removed...
+					{
+						foreach (ChangeListener* l, m_listeners)
+							l->onAncestorRemoved(e, oldAnc);
 						m_changeQueue << Entry(d, DependencyRemoved, oldAnc);
+					}
 					else if (oldAnc != a)										// Have both, but they're different. Changed...
+					{
+						foreach (ChangeListener* l, m_listeners)
+							l->onAncestorSwitched(e, a, oldAnc);
 						m_changeQueue << Entry(d, DependencySwitched, a, oldAnc);
+					}
 				}
 			}
 		es << e->children();
@@ -304,8 +373,13 @@ void ChangeMan::parentRemoved(Depender* _this, Entity* _old)
 	AssertNR(!_this->self()->parent());
 	if (m_asleep)
 		return;
-	if (_this->botherNotifying() && _this->familyDependencies() & Depender::DependsOnParent)
-		m_changeQueue << Entry(_this, DependencyRemoved, _old);
+	if (_this->shouldBeNotified())
+	{
+		foreach (ChangeListener* l, m_listeners)
+			l->onParentRemoved(_this->self(), _old);
+		if (_this->familyDependencies() & Depender::DependsOnParent)
+			m_changeQueue << Entry(_this, DependencyRemoved, _old);
+	}
 
 	List<Entity*> es;
 	es << _this->self();
@@ -315,8 +389,12 @@ void ChangeMan::parentRemoved(Depender* _this, Entity* _old)
 		if (Depender* d = e->tryKind<Depender>())
 			foreach (Kind k, d->ancestralDependencies())
 				if (!e->hasAncestor(k))
-					if (Entity* a = _old->selfAncestor(k))
-						m_changeQueue << Entry(d, DependencyRemoved, a);
+					if (Entity* oldAnc = _old->selfAncestor(k))
+					{
+						foreach (ChangeListener* l, m_listeners)
+							l->onAncestorRemoved(e, oldAnc);
+						m_changeQueue << Entry(d, DependencyRemoved, oldAnc);
+					}
 		es << e->children();
 	}
 	processQueue();

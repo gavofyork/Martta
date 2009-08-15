@@ -138,10 +138,7 @@ bool Invocation::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 		if (n->cardinalChildCount())
 			n->dropCursor();
 		else
-		{
-			n->markDirty();
 			n->setCurrent();
-		}
 		return true;
 	}
 	return false;

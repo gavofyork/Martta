@@ -147,7 +147,6 @@ void Class::onChildrenInitialised()
 	rejigDeps();
 	if (checkImplicitConstructors())
 		changed();
-	markDirty();
 }
 
 void Class::onDependencyAdded(Entity* _e)
@@ -176,8 +175,6 @@ void Class::onDependencyChanged(Entity* _e)
 			changed();
 	if (_e->isKind<TextLabel>())
 		changed(Visually);
-	if (_e->isKind<AccessLabel>())
-		markDirty();
 }
 
 Kinds Class::allowedKinds(int _i) const

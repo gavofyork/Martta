@@ -54,13 +54,6 @@ public:
 	Typed*								asTyped(int _i) const;
 	Type								typeOf(int _i) const;
 
-	void								changed(int _aspect = AllAspects)
-	{
-		foreach (Entity* i, children())
-			i->markDirty();
-		Super::changed(_aspect);
-	}
-
 	void								committed(Named* _n) { NameEntryPoint::committed(_n); }
 
 protected:

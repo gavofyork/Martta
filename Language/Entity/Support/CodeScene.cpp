@@ -94,7 +94,7 @@ void CodeScene::setEditing(Entity* _e)
 		if (m_editDelegate)
 		{
 			delete m_editDelegate;
-			markDirty(edited);
+			relayout(edited);
 		}
 	}
 
@@ -111,7 +111,7 @@ void CodeScene::setEditing(Entity* _e)
 		if (m_editDelegate)
 		{
 			m_editDelegate->initialised();
-			markDirty(current());
+			relayout(current());
 		}
 	}
 }

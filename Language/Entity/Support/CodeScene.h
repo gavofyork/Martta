@@ -116,8 +116,7 @@ public:
 
 	virtual bool				manageKeyPress(KeyEvent const&, Entity const*) { return false; }
 
-	virtual void				markDirty(Entity* _e) = 0;
-
+	virtual void				relayout(Entity* _e) = 0;
 protected:
 	// Handlers to be called pre- and post-current changing.
 	void						currentAboutToChange();

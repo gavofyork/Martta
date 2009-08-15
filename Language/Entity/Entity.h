@@ -397,9 +397,6 @@ public:
 	void								navigateToNew(CodeScene* _s);
 	void								dropCursor();
 
-	/// Re-layout ourself now in all views.
-	virtual void						markDirty();
-
 	static void							keyPressEventStarter(KeyEvent* _e, bool _abortive = false);
 	void								activateEvent(CodeScene* _s);
 
@@ -424,22 +421,13 @@ protected:
 	inline void							parentSwitchedWithChildRemoved(Position const& _old)
 	{
 		if (m_parent && _old.parent())
-		{
 			parentSwitched(_old.parent());
-			m_parent->markDirty();
-		}
 		else if (_old.parent())
 			parentRemoved(_old.parent());
 		else if (m_parent)
-		{
 			parentAdded();
-			m_parent->markDirty();
-		}
 		if (_old.parent())
-		{
 			_old.parent()->childRemoved(this, _old.index());
-			_old.parent()->markDirty();
-		}
 	}
 	/// Given an Entity/Interface-pointer-style variable and a value, set the variable and call add, change and remove
 	/// dependency as necessary.

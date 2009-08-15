@@ -38,7 +38,7 @@ List<Named*> NameEntryPoint::possibilities()
 	return ret;
 }
 
-String NameEntryPoint::defineEditHtml(CodeScene* _cs)
+String NameEntryPoint::defineEditHtml(CodeScene* _cs) const
 {
 	if (EditDelegateFace* d = self()->editDelegate(_cs))
 	{

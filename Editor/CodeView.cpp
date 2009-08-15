@@ -150,18 +150,10 @@ void CodeView::refresh()
 		init();
 	else if (!m_dirty.isEmpty())
 	{
-		// Must handle the edit entity (if there is one) separately since refinedHtml (also using from toHtml) doesn't understand
-		// that defineHtml should be redirected to the editDelegate if there is one (and couldn't since it doesn't know which is
-		// the active CodeScene).
-		if (editDelegate())
-		{
-			QString html = qs(m_stylist->editHtml(editEntity(), this));
-			page()->mainFrame()->evaluateJavaScript(QString("thisNode(document.getElementById('%1')).innerHTML = '%2'").arg((int)editEntity()).arg(html.replace('\'', "\\'")));
-		}
 		// If we're dirty then update the HTML.
 		while (m_dirty.count())
-		{	mDebug() << &*m_dirty.last() << "(" << m_dirty.count() << "left)";
-			if ((e = m_dirty.takeLast()) && e != editEntity())
+		{	//mDebug() << &*m_dirty.last() << "(" << m_dirty.count() << "left)";
+			if ((e = m_dirty.takeLast()))
 			{
 				Entity* cur = current();
 				QString s;
@@ -208,12 +200,22 @@ void CodeView::init()
 	m_dirty.clear();
 }
 
-void CodeView::markDirty(Entity* _e)
+void CodeView::relayout(Entity* _e)
 {
-	if (!isInScene(_e))
-		return;
-	if (!m_dirty.contains(_e))
+	if (_e && _e == editEntity())
+	{
+		// Must handle the edit entity (if there is one) separately since refinedHtml (also using from toHtml) doesn't understand
+		// that defineHtml should be redirected to the editDelegate if there is one (and couldn't since it doesn't know which is
+		// the active CodeScene).
+		QString html = qs(m_stylist->editHtml(_e, this));
+		page()->mainFrame()->evaluateJavaScript(QString("thisNode(document.getElementById('%1')).innerHTML = '%2'").arg((int)_e).arg(html.replace('\'', "\\'")));
+	}
+	else
+	{
+		if (m_dirty.contains(_e) || !isInScene(_e))
+			return;
 		m_dirty.append(_e);
+	}
 	update();
 }
 

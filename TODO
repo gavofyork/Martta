@@ -12,7 +12,8 @@ UI:
   - 'J' -> Joins next line to last [] in current.
 - FIX Page up & down.
 BUG: CodeView::onCurrentChanged _oldId bad on deletion of field.
-TODO WKTextStylist uses text file, defaulting to WebKitHtml::webKitHtml. 
+BUG: Delete argument in invocation.
+BUG 'int i = 0;'
 
 Small things:
 - Recognise this.
@@ -34,20 +35,20 @@ Dynamic code-loading (plugins).
   - BRINGBACK Method names register with IdentifierSet
   - QUICK get rid of committed() in Statement - test for inherited method existance
     - Use the method rather than require the name to exist in the class?
-  - TODO SearchReferenced (\)
-    - All possible (including scoped exterals).
-    - Should provide list for browsing/selection.
 - BRINGBACK Type info stuff.
   - Just use a simple summary-like interface first.
 
 Webkit layout system
-- Remove old layout system.
-  - Look into using change system instead of markDirty?
-  - BRINGBACK VirtualOverload::defineHtml, ::defineEditHtml.
-  - BRINGBACK parentheses annotation - may need update on change.
-  - BRINGBACK Error system (!isValid()).
+- BRINGBACK VirtualOverload::defineHtml, ::defineEditHtml.
+- BRINGBACK parentheses annotation - may need update on change.
+- BRINGBACK Error system (!isValid()).
 - DULL Move CSS info from Entity.
 - BRINGBACK Visual change system.
+
+TODO SearchReferenced (\)
+- All possible (including scoped exterals).
+- Should provide list for browsing/selection.
+TODO WKTextStylist uses text file, defaulting to WebKitHtml::webKitHtml. 
 
 --------------------------------------------------------------------------------
 

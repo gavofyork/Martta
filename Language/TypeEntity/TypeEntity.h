@@ -58,7 +58,8 @@ public:
 #if defined(DEBUG)
 		s_typeCount++;
 #endif
-		m_isDeaf = true;
+		m_isUnchanging = true;
+		m_isAsleep = true;
 	}
 	inline ~TypeEntity()
 	{
@@ -71,10 +72,9 @@ public:
 	virtual TypeEntity*					bottom() { return this; }
 	virtual Rgb							idColour() const { return 0x777777; }
 	virtual String						defineHtml() const;
-	virtual void						markDirty() { if (m_active && !m_isDeaf && !m_owner) Super::markDirty(); }
-
-	virtual bool						isInModel() const { return parent() && !m_owner ? parent()->isInModel() : true; }
-	virtual bool						botherNotifying() const { return isInModel(); }
+	virtual bool						shouldNotify() const { return !m_owner && !m_isAsleep && !m_isUnchanging && isInModel(); }
+	virtual bool						shouldBeNotified() const { return !m_owner && !m_isAsleep && !m_isUnchanging && isInModel(); }
+	virtual bool						isInModel() const { return (parent() && !m_owner) ? parent()->isInModel() : true; }
 
 	inline bool							isOwned() const { if (m_owner) return true; if (!parent()) return false; if (TypeEntity* t = tryParent<TypeEntity>()) return t->isOwned(); return true; }
 	virtual bool						isNull() const { return isPlaceholder(); }
@@ -173,11 +173,11 @@ protected:
 	// (actually a BuiltType, but we're not to know). This might be changed in the future.
 	virtual bool						keyPressed(KeyEvent const*_e) { if (attemptInsert(_e)) return true; return Super::keyPressed(_e); }
 
-	virtual void						parentAdded() { if (m_isDeaf != (parentIs<TypeEntity>() && parentAs<TypeEntity>()->m_isDeaf)) setIsDeaf(!m_isDeaf); Super::parentAdded(); }
-	virtual void						parentSwitched(Entity* _exParent) { if (m_isDeaf != (parentIs<TypeEntity>() && parentAs<TypeEntity>()->m_isDeaf)) setIsDeaf(!m_isDeaf); Super::parentSwitched(_exParent); }
+	virtual void						parentAdded() { if (m_isUnchanging != (parentIs<TypeEntity>() && parentAs<TypeEntity>()->m_isUnchanging)) setInert(!m_isUnchanging); Super::parentAdded(); }
+	virtual void						parentSwitched(Entity* _exParent) { if (m_isUnchanging != (parentIs<TypeEntity>() && parentAs<TypeEntity>()->m_isUnchanging)) setInert(!m_isUnchanging); Super::parentSwitched(_exParent); }
 
 private:
-	void								setIsDeaf(bool _id) { if (_id != m_isDeaf) { m_isDeaf = _id; m_active = !_id; foreach (TypeEntity* e, childrenOf<TypeEntity>()) e->setIsDeaf(m_isDeaf); } }
+	void								setInert(bool _inert) { if (m_isUnchanging != _inert || m_isAsleep != _inert) { m_isUnchanging = m_isAsleep = _inert; foreach (TypeEntity* e, childrenOf<TypeEntity>()) e->setInert(_inert); } }
 
 	/// Returns an exact copy of this tree, except that the top is owned by _t.
 	/// Unowned nodes are copied.

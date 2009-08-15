@@ -51,12 +51,12 @@ bool GlobalReferenced::keyPressed(KeyEvent const* _e)
 
 String GlobalReferenced::defineHtml() const
 {
-	return L"<span class=\"MemberVariable-Fader\"><span class=\"MemberVariable\"><img src=\"data://GlobalReferenced.svg\"/></span></span>" + Super::defineHtml();
+	return L"<span class=\"GlobalReferenced-Fader\"><span class=\"GlobalReferenced\">::</span></span>" + Super::defineHtml();
 }
 
 String GlobalReferenced::defineEditHtml(CodeScene* _cs)
 {
-	return L"<span class=\"MemberVariable-Fader\"><span class=\"MemberVariable\"><img src=\"data://GlobalReferenced.svg\"/></span></span>" + Super::defineEditHtml(_cs);
+	return L"<span class=\"GlobalReferenced-Fader\"><span class=\"GlobalReferenced\">::</span></span>" + Super::defineEditHtml(_cs);
 }
 
 List<ValueDefiner*> GlobalReferenced::possibilities(Position const& _p)
