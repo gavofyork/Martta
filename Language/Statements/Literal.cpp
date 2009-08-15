@@ -24,5 +24,6 @@ namespace Martta
 {
 
 MARTTA_PLACEHOLDER_CPP(Literal);
+MARTTA_REGISTER_CSS(Literal, ".Literal { color: black; }");
 
 }

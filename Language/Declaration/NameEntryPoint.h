@@ -42,7 +42,7 @@ public:
 protected:
 	bool								keyPressed(KeyEvent const*);
 
-	template<class T> EditDelegateFace*	newDelegate(CodeScene* _s) { return new CompletionDelegate<T, Named*>(asKind<T>(), _s); }
+	template<class T> EditDelegateFace*	newDelegate(CodeScene* _s) { return self()->isPlaceholder() ? new CompletionDelegate<T, Named*>(asKind<T>(), _s) : 0; }
 
 	virtual String						defineHtml() const { return L"<span id=\"this\">&empty;</span>"; }
 	virtual String						defineEditHtml(CodeScene* _cs) const;

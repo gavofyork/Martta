@@ -28,7 +28,6 @@ namespace Martta
 {
 
 MARTTA_INTERFACE_CPP(WebViewable);
-
 MARTTA_REGISTER_CSS(WebViewable,
 	"body { color: #666; font-size: 12px; font-family: Lucida Grande; background-color: white; }"
 	".keyword { font-weight: bold; }"
@@ -38,28 +37,16 @@ MARTTA_REGISTER_CSS(WebViewable,
 	".block { position: relative; margin-left: 20px; }"
 	".deblock { position: relative; margin-left: -20px; }"
 	".badge { margin: 0px 0px; padding: 0px 0.3em; border-top: 1px solid rgba(0,0,0,0.4); border-left: 1px solid rgba(0,0,0,0.2); border-bottom: 1px solid rgba(255,255,255,0.4); border-right: 1px solid rgba(255,255,255,0.2); background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,0.2)), to(rgba(255,255,255,0.2))); font-weight: 900; color: rgba(255,255,255,0.85); text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }"
-
-	".TypeEntity { font-weight: bold; color: #000; }"
-	".Referenced { font-weight: normal; color: #000; }"
-	".Namespace-label { color: #000; font-weight: bold; }"
-	".Class-label { color: #000; font-weight: bold; text-shadow: -1px -1px 0px #f77; }"
-	".Label { font-weight: normal; }"
-	".ConstLabel-constblock { -webkit-border-image: -webkit-gradient(linear, left top, right top, from(#fff), to(#bdf), color-stop(0.5, #bdf)) 100% 100% 100% 100% repeat repeat; border-width: 0 0 0 12px; padding-left: 8px; margin-left: -20px; }"
-	".ConstLabel-nonconstblock { }"
-	".AccessLabel-publicblock { margin-left: -8px; border-width: 0 0 0 4px; border-color: #efefbf; border-style: solid; padding-left: 4px; }"
-	".AccessLabel-protectedblock { margin-left: -8px; border-width: 0 0 0 4px; border-color: #ffdfbf; border-style: solid; padding-left: 4px; }"
-	".AccessLabel-privateblock { margin-left: -8px; border-width: 0 0 0 4px; border-color: #ffbfbf; border-style: solid; padding-left: 4px; }"
-	".AccessLabel-public { font-weight: bold; text-shadow: -1px -1px 0px #dedebb; }"
-	".AccessLabel-protected { font-weight: bold; text-shadow: -1px -1px 0px #ffddbb; }"
-	".AccessLabel-private { font-weight: bold; text-shadow: -1px -1px 0px #ffbbbb; }"
-	".Literal { color: black; }"
-	".TypeEntity { color: black; font-weight: bold; text-shadow: -1px -1px 0px #888; }"
-	".SimpleType { text-shadow: -1px -1px 0px #fb0; }"
-	".FunctionType { text-shadow: -1px -1px 0px #84f; }"
-	".HashType { text-shadow: -1px -1px 0px #8f4; }"
-	".Operation { background-color: rgba(0, 0, 0, 0.03); padding: 0 2px 0 2px; }"
-	".Statement { background-color: transparent; padding: 0; }"
 );
+
+String WebViewable::cssBorder(String const& _name, Rgb _col)
+{
+	return String(L"%4head { background-image: -webkit-gradient(linear, left top, left bottom, from(%1), to(%2)); border-top: 1px %3 solid; border-left: 1px %2 solid; border-right: 1px %2 solid; padding: 1px 4px; } %4body { border-bottom: 1px %3 solid; border-left: 1px %2 solid; border-right: 2px %2 solid; background-color: white; }")
+		.arg(_col.interpolated(50, Rgb(0xffffff)).name())
+		.arg(_col.name())
+		.arg(_col.interpolated(40, Rgb(0xffffff)).name())
+		.arg(_name);
+}
 
 CssRegisterer::CssRegisterer(AuxilliaryFace const* _f, String const& _css):
 	m_f(_f)

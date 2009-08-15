@@ -28,7 +28,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(Reference);
 MARTTA_REGISTER_CSS(Reference,
-	L".Reference-Fader { margin-left: -15px; padding-left: 16px; padding-right: 3px; -webkit-border-top-right-radius: 7px; -webkit-border-bottom-right-radius: 7px; text-shadow: 1px 1px 0px #fff; background-image: -webkit-gradient(linear, right top, left top, from(rgba(255, 127, 0, 0.5)), to(rgba(255, 127, 0, 0))); }"
+	L".Reference-Fader { margin-left: -5px; padding-left: 6px; padding-right: 3px; -webkit-border-top-right-radius: 7px; -webkit-border-bottom-right-radius: 7px; text-shadow: 1px 1px 0px #fff; background-image: -webkit-gradient(linear, right top, left top, from(rgba(255, 127, 0, 0.5)), to(rgba(255, 127, 0, 0.05))); }"
 	L".Reference { text-shadow: 1px 1px 1px #fff; color:#a50; font-size: 70%; font-weight: bold; }"
 );
 

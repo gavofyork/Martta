@@ -24,6 +24,13 @@ namespace Martta
 {
 
 MARTTA_OBJECT_CPP(AccessLabel);
+MARTTA_REGISTER_CSS(AccessLabel,
+	".AccessLabel-publicblock { margin-left: -8px; border-width: 0 0 0 4px; border-color: #efefbf; border-style: solid; padding-left: 4px; }.AccessLabel-protectedblock { margin-left: -8px; border-width: 0 0 0 4px; border-color: #ffdfbf; border-style: solid; padding-left: 4px; }"
+	".AccessLabel-privateblock { margin-left: -8px; border-width: 0 0 0 4px; border-color: #ffbfbf; border-style: solid; padding-left: 4px; }"
+	".AccessLabel-public { font-weight: bold; text-shadow: -1px -1px 0px #dedebb; }"
+	".AccessLabel-protected { font-weight: bold; text-shadow: -1px -1px 0px #ffddbb; }"
+	".AccessLabel-private { font-weight: bold; text-shadow: -1px -1px 0px #ffbbbb; }"
+);
 
 String AccessLabel::defineHtml() const
 {

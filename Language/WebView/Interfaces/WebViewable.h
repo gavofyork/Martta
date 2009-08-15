@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include <msRgb.h>
 #include <msString.h>
 #include <msList.h>
 using namespace MarttaSupport;
@@ -42,6 +43,7 @@ public:
 	virtual String							defineEditHtml(CodeScene* _cs) const;
 
 	static String							htmlEscape(String const& _s);
+	static String							cssBorder(String const& _name, Rgb _col);
 
 protected:
 	static String							toHtml(Entity const* _e, String const& _tag = L"span");

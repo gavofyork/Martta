@@ -28,6 +28,7 @@ namespace Martta
 {
 
 MARTTA_PLACEHOLDER_CPP(Referenced);
+MARTTA_REGISTER_CSS(Referenced, ".Referenced { font-weight: normal; color: #000; }");
 
 Referenced::Referenced(ValueDefiner* _v):
 	m_subject	(0)

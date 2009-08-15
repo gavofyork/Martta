@@ -31,6 +31,10 @@ namespace Martta
 {
 
 MARTTA_PLACEHOLDER_CPP(MemberLambda);
+MARTTA_REGISTER_CSS(MemberLambda,
+	WebViewable::cssBorder(L".MemberLambda-public-", AccessLabel::idColour(Public).interpolated(70, Rgb(0xffffff))) +
+	WebViewable::cssBorder(L".MemberLambda-protected-", AccessLabel::idColour(Protected).interpolated(70, Rgb(0xffffff))) +
+	WebViewable::cssBorder(L".MemberLambda-private-", AccessLabel::idColour(Private).interpolated(70, Rgb(0xffffff))));
 
 Kinds MemberLambda::allowedKinds(int _i) const
 {

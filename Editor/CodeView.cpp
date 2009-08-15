@@ -120,6 +120,7 @@ bool CodeView::attemptEdit(int _e)
 	Entity* e = (Entity*)_e;
 	if (isFocusable(e))
 		setEditing(e);
+	mDebug() << editEntity() << isEditing(e);
 	return isEditing(e);
 }
 

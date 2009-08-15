@@ -28,8 +28,10 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(Const);
 MARTTA_REGISTER_CSS(Const,
-	L".Const-Fader { margin-left: -15px; padding-left: 16px; padding-right: 3px; -webkit-border-top-right-radius: 7px; -webkit-border-bottom-right-radius: 7px; color:#05a; text-shadow: 1px 1px 0px #fff; background-image: -webkit-gradient(linear, right top, left top, from(rgba(0, 127, 255, 0.5)), to(rgba(0, 127, 255, 0))); }"
+	L".Const-Fader { margin-left: -5px; padding-left: 6px; padding-right: 3px; -webkit-border-top-right-radius: 7px; -webkit-border-bottom-right-radius: 7px; color:#05a; text-shadow: 1px 1px 0px #fff; background-image: -webkit-gradient(linear, right top, left top, from(rgba(0, 127, 255, 0.5)), to(rgba(0, 127, 255, 0.05))); }"
 	L".Const { text-shadow: 1px 1px 1px #fff; color:#05a; font-size: 70%; font-weight: bold; }"
+	L".ConstLabel-constblock { -webkit-border-image: -webkit-gradient(linear, left top, right top, from(#fff), to(#bdf), color-stop(0.5, #bdf)) 100% 100% 100% 100% repeat repeat; border-width: 0 0 0 12px; padding-left: 8px; margin-left: -20px; }"
+	L".ConstLabel-nonconstblock { }"
 );
 
 bool Const::defineSimilarityFrom(TypeEntity const* _f, Castability _c) const

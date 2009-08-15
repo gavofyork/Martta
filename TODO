@@ -6,7 +6,7 @@ BUG Moving is crazily slow over statements.
 BUG 'Mstr'-> doesn't move away (only stops editing).
 CRASH delete a Referenced EnumValue.
 BUG DeclarationsHandler is keeping old placeholders when generating its tree.
-BUG dbl-click on if.
+BUG dbl-click on type entity.
 UI:
 - Join statements or tree insert.
   - 'J' -> Joins next line to last [] in current.

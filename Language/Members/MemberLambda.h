@@ -40,6 +40,7 @@ public:
 	Type								thisType() const;
 
 protected:
+	virtual String						defineBorderClass() const { return String(L"MemberLambda-") + Martta::code(access()); }
 	virtual String						definePreHtml() const;
 	virtual String						definePostHtml() const;
 

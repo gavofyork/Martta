@@ -26,6 +26,7 @@ namespace Martta
 {
 
 MARTTA_PLACEHOLDER_CPP(Statement);
+MARTTA_REGISTER_CSS(Statement, ".Statement { background-color: transparent; padding: 0; }");
 
 bool Statement::isTyped(int _i) const
 {

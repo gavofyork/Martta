@@ -44,6 +44,7 @@ namespace Martta
 {
 
 MARTTA_OBJECT_CPP(Class);
+MARTTA_REGISTER_CSS(Class, ".Class-label { color: #000; font-weight: bold; text-shadow: -1px -1px 0px #f77; }");
 
 Access Class::baseAccess(Class* _c) const
 {
@@ -173,7 +174,7 @@ void Class::onDependencyChanged(Entity* _e)
 	if (_e->isKind<Base>() || (_e->index() >= 0 && (_e->isKind<MethodOperator>() || _e->isKind<ConversionOperator>() || _e->isKind<Constructor>())))
 		if (checkImplicitConstructors())
 			changed();
-	if (_e->isKind<TextLabel>())
+	if (_e->isKind<TextLabel>() || _e->isKind<AccessLabel>())
 		changed(Visually);
 }
 

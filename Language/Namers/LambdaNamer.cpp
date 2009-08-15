@@ -34,6 +34,7 @@ MARTTA_INTERFACE_CPP(LambdaNamer);
 MARTTA_NAMED_CPP(LambdaNamer, Body);
 MARTTA_NAMED_CPP(LambdaNamer, Name);
 MARTTA_NAMED_CPP(LambdaNamer, Returned);
+MARTTA_REGISTER_CSS(LambdaNamer, WebViewable::cssBorder(L".LambdaNamer-", Rgb(0xdddddd)));
 
 String LambdaNamer::defineReturnHtml() const
 {
@@ -57,19 +58,30 @@ String LambdaNamer::defineBodyHtml() const
 {
 	if (!body())
 		return L" = 0";
+	return String(L"<div id=\"%1-body\" ondblclick=\"event.stopPropagation()\" style=\"display: none\">").arg((int)self()) + toHtml(body()) + L"</div>";
+}
+
+String LambdaNamer::defineMidHtml(String const& _middle) const
+{
 	String info;
 	if (int n = body()->cardinalChildrenOf<Primary>().count() + body()->cardinalChildrenOf<Untyped>().count())
 		info = L" (" + String::number(n) + L" statement" + (n > 1 ? L"s" : L"") + L")";
 	else
 		info = " (empty)";
-	return (L"<span id=\"%1-info\" class=\"minor\">" + info + L"</span><div id=\"%1-body\" style=\"display: none\">").arg((int)self()) + toHtml(body()) + L"</div>";
+	return String(_middle + L"<span id=\"%1-info\" class=\"minor\">" + info + L"</span>").arg((int)self());
+}
+
+String LambdaNamer::defineEnclosureHtml(String const& _part, String const& _middle) const
+{
+	return L"<div class=\"" + defineBorderClass() + L"-" + _part + "\">" + _middle + L"</div>";
 }
 
 String LambdaNamer::defineLambdaHtml(String const& _middle) const
 {
 	return String(L"<div onKeyPress=\"if (event=='{' ? set2('%1-info', '%1-body') : event=='}' ? set1('%1-info', '%1-body') : false) { CodeView.markDirty(%1); return true; } return false;\" onDblClick=\"toggle('%1-info', '%1-body'); CodeView.markDirty(%1); event.stopPropagation();\">").arg((int)self())
-		+ definePreHtml() + defineReturnHtml() + defineNameHtml() + defineArgListHtml()
-		+ defineMidHtml(_middle) + defineBodyHtml() + definePostHtml() + L"</div>";
+		+ definePreHtml()
+		+ defineEnclosureHtml(L"head", defineReturnHtml() + defineNameHtml() + defineArgListHtml() + defineMidHtml(_middle))
+		+ defineEnclosureHtml(L"body", defineBodyHtml()) + definePostHtml() + L"</div>";
 }
 
 bool LambdaNamer::keyPressed(KeyEvent const* _e)

@@ -28,6 +28,7 @@ namespace Martta
 {
 
 MARTTA_OBJECT_CPP(MainFunction);
+MARTTA_REGISTER_CSS(MainFunction, WebViewable::cssBorder(L".MainFunction-", Rgb(0xaacc99)));
 
 bool MainFunction::keyPressed(KeyEvent const* _e)
 {
@@ -39,9 +40,9 @@ Kinds MainFunction::allowedKinds(int _i) const
 	return Super::allowedKinds(_i);
 }
 
-String MainFunction::definePreHtml() const
+/*String MainFunction::defineHtml() const
 {
 	return L"<span style=\"background-color: #4c4; -webkit-border-radius: 2px\" class=\"badge\">&crarr;</span> " + Super::definePreHtml();
-}
+}*/
 
 }

@@ -29,6 +29,7 @@ namespace Martta
 {
 
 MARTTA_OBJECT_CPP(Namespace);
+MARTTA_REGISTER_CSS(Namespace, ".Namespace-label { color: #000; font-weight: bold; }");
 
 bool Namespace::keyPressed(KeyEvent const* _e)
 {

@@ -69,8 +69,10 @@ public:
 	/// A default implementation exists.
 	virtual String						basicCode(FunctionCodeScope _ref) const;
 	virtual String						summary() const { return basicCode(InsideScope); }
+	virtual String						defineBorderClass() const { return L"LambdaNamer"; }
 	virtual String						definePreHtml() const { return String::null; }
-	virtual String						defineMidHtml(String const& _middle) const { return _middle; }
+	virtual String						defineEnclosureHtml(String const& _part, String const& _middle) const;
+	virtual String						defineMidHtml(String const& _middle) const;
 	virtual String						definePostHtml() const { return String::null; }
 	virtual String						defineNameHtml() const;
 	virtual String						defineReturnHtml() const;

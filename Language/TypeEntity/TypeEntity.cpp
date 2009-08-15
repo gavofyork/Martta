@@ -25,6 +25,7 @@ namespace Martta
 {
 
 MARTTA_PLACEHOLDER_CPP(TypeEntity);
+MARTTA_REGISTER_CSS(TypeEntity, ".TypeEntity { color: black; font-weight: bold; text-shadow: -1px -1px 0px #888; }");
 
 TypeEntity* TypeEntity::null = (new TypeEntity)->setOwned();
 
