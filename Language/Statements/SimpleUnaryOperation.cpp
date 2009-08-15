@@ -92,7 +92,7 @@ Type SimpleUnaryOperation::type() const
 String SimpleUnaryOperation::code() const
 {
 	if (!haveOperand() || !m_symbolCache)
-		return String();
+		return String::null;
 	if (isPostfix())
 		return parenthesise(operand()->code() + id().code());
 	else

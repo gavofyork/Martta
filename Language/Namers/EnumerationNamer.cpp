@@ -46,7 +46,7 @@ String EnumerationNamer::interfaceCode() const
 void EnumerationNamer::updateStem()
 {
 	String oldStem = m_stem;
-	m_stem = String();
+	m_stem = String::null;
 	foreach (EnumValue* i, self()->cardinalChildrenOf<EnumValue>())
 		if (m_stem.isEmpty())
 			m_stem = i->codeName();

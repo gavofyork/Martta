@@ -40,7 +40,7 @@ class Root: public Declaration
 public:
 	enum { Included = FirstNamed, EndOfNamed };
 
-	virtual String						name() const { return String(); }
+	virtual String						name() const { return String::null; }
 	virtual Entity*						parent() const { return 0; }
 	virtual String						reference() const { return ""; }
 	virtual String						key() const { return ""; }

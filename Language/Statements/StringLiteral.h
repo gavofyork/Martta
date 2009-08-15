@@ -33,7 +33,7 @@ class StringLiteral: public Literal
 	MARTTA_OBJECT(Literal)
 
 public:
-	StringLiteral(String const& _string = String()): m_value(_string) {}
+	StringLiteral(String const& _string = String::null): m_value(_string) {}
 
 	String								value() const { return m_value; }
 	void								setValue(String const& _s) { m_value = _s; changed(); }

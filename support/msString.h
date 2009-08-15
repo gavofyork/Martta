@@ -259,9 +259,9 @@ public:
 	m_inline String&			prepend(String const& _str) { return replace(0, 0, _str); }
 	m_inline String&			prepend(Char _ch) { return replace(0, 0, _ch); }
 	m_inline String&			prepend(const char* _str) { return replace(0, 0, String(_str)); }
-	m_inline String&			remove(int _position, int _n) { return replace(_position, _n, String()); }
-	m_inline String&			remove(String const& _str) { return replace(_str, String()); }
-	m_inline String&			remove(Char _ch) { return replace(_ch, String()); }
+	m_inline String&			remove(int _position, int _n) { return replace(_position, _n, String::null); }
+	m_inline String&			remove(String const& _str) { return replace(_str, String::null); }
+	m_inline String&			remove(Char _ch) { return replace(_ch, String::null); }
 
 	bool					toBool(bool* _ok = 0) const { if (_ok) *_ok = true; if (operator==(L"true")) return true; else if (operator==(L"false")) return false; if (_ok) *_ok = false; return false; }
 	int						toInt(bool* _ok = 0, int _base = 10) const;

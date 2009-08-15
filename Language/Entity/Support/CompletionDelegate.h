@@ -39,7 +39,7 @@ template<class T>
 class NameTrait
 {
 public:
-	static String name(T _val) { return _val ? _val->name() : String(); }
+	static String name(T _val) { return _val ? _val->name() : String::null; }
 };
 
 template<class S> inline List<S> nameStarts(List<S> const& _l, String const& _s)

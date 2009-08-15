@@ -60,7 +60,7 @@ public:
 
 	static inline String name(uint _d)
 	{
-		return (_d == (uint)-1) ? String() : (_d == Wchar) ? String("wchar_t") : (String((_d & Unsigned) ? (_d & Float || _d & Double) ? "c" : "u" : "") +
+		return (_d == (uint)-1) ? String::null : (_d == Wchar) ? String("wchar_t") : (String((_d & Unsigned) ? (_d & Float || _d & Double) ? "c" : "u" : "") +
 				(((_d & Longlong) == Longlong) ? "ll" : (_d & Short) ? "s" : (_d & Long) ? "l" : "") +
 				((_d & Float) ? "float" : (_d & Bool) ? "bool" : (_d & Double) ? "double" : (_d & Char) ? "char" : (_d & Int) ? "int" : "void"));
 	}

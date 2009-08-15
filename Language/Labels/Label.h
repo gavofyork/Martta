@@ -2,14 +2,14 @@
  * Version: Martta License version 1.0
  *
  * The contents of this file are subject to the Martta License version 1.0
- * (the "License"); you may not use this file except in compliance with the 
- * License. You should have received a copy of the Martta License 
+ * (the "License"); you may not use this file except in compliance with the
+ * License. You should have received a copy of the Martta License
  * "COPYING.Martta" along with Martta; if not you may obtain a copy of the
  * License at http://quidprocode.co.uk/Martta/
  *
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations under 
+ * License for the specific language governing rights and limitations under
  * the License.
  *
  * The Initial Developer of the code in this file is Gavin Wood.
@@ -20,20 +20,22 @@
 
 #pragma once
 
+#include "WebViewable.h"
 #include "Entity.h"
 
 namespace Martta
 {
 
-class Label: public Entity
+class Label: public Entity, public_interface WebViewable
 {
 	MARTTA_PLACEHOLDER(Entity)
-	
+	MARTTA_INHERITS(WebViewable, 0)
+
 public:
 	// Potentially queries the parent's isChildInValidState() to check if we're valid.
 	// @note NEVER call them from the parent's isChildInValidState() function.
-	inline virtual String				code() const { return String(); }
-	
+	inline virtual String				code() const { return String::null; }
+
 	virtual int							familyDependencies() const { return DependsOnNothing; }
 };
 

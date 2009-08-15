@@ -76,7 +76,7 @@ String Namespace::interfaceCode() const
 
 	List<Declaration*> ds = solve(q, deps);
 	if (!ds.size())
-		return String();
+		return String::null;
 	foreach (Declaration* i, ds)
 		ret += i->interfaceCode() + "\n";
 

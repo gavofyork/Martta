@@ -51,7 +51,7 @@ Kinds Member::allowedKinds(int _i) const
 String Member::interfaceCode() const
 {
 	if (!isComplete())
-		return String();
+		return String::null;
 	return childAs<Label>(Accessibility)->code() + ": " + memberInterfaceCode();
 }
 

@@ -32,7 +32,7 @@ class TextLabel: public IdLabel, public_interface WebViewable
 	MARTTA_INHERITS(WebViewable, 0)
 
 public:
-	TextLabel(String const& _t = String()): m_text(_t) {}
+	TextLabel(String const& _t = String::null): m_text(_t) {}
 
 	// Queries the parent's isChildInValidState() to check if we're valid - if so and we're null it makes up a name. If not it just returns "".
 	// @note NEVER call them from the parent's isChildInValidState() function.

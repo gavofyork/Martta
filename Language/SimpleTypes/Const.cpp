@@ -53,7 +53,7 @@ String Const::code(String const& _middle) const
 {
 	if (childIs<TypeEntity>(Original))
 		return childAs<TypeEntity>(Original)->code(" const" + _middle);
-	return String();
+	return String::null;
 }
 
 String Const::defineHtml() const

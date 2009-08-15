@@ -122,7 +122,7 @@ void SimpleBinaryOperation::onDependencyChanged(Entity*)
 String SimpleBinaryOperation::code() const
 {
 	if (!haveLeft() || !haveRight() || !m_symbolCache)
-		return String();
+		return String::null;
 	return parenthesise(left()->code() + " " + id().code() + " " + right()->code());
 }
 

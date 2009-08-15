@@ -40,8 +40,8 @@ public:
 protected:
 	virtual int							minRequired(int _i) const { return _i == Identity || _i == Constness || _i == Returned ? 0 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
-	virtual String						name() const { return m_base.isUsable() ? m_base->name() : String(); }
-	virtual String						codeName() const { return m_base ? m_base->codeName() : String(); }
+	virtual String						name() const { return m_base.isUsable() ? m_base->name() : String::null; }
+	virtual String						codeName() const { return m_base ? m_base->codeName() : String::null; }
 	virtual bool						isInValidState() const { return m_base.isUsable(); }
 	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);

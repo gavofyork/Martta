@@ -59,7 +59,7 @@ bool MemberLambda::isConst() const
 String MemberLambda::basicCode(FunctionCodeScope _ref) const
 {
 	if (!isComplete())
-		return String();
+		return String::null;
 	return Martta::code(qualifiers() & FunctionMask) + returns()->code(" " + callingCode(_ref)) + (isConst() ? " const" : "");
 }
 

@@ -118,7 +118,7 @@ Type LambdaNamer::type() const
 
 String LambdaNamer::implementationCode() const
 {
-	return basicCode(LambdaNamer::OutsideScope) + "\n" + (body() ? body()->code() : String());
+	return basicCode(LambdaNamer::OutsideScope) + "\n" + (body() ? body()->code() : String::null);
 }
 
 String LambdaNamer::callingCode(FunctionCodeScope _ref) const

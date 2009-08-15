@@ -62,7 +62,7 @@ Access Base::access() const
 String Base::code() const
 {
 	if (!isComplete())
-		return String();
+		return String::null;
 	return childAs<Label>(Accessibility)->code() + " " + childAs<TypeEntity>(Superclass)->code();
 }
 

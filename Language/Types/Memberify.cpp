@@ -105,7 +105,7 @@ String Memberify::code(String const& _middle) const
 {
 	if (scopeType())
 		return original()->code(" " + scopeType()->code() + ":: " + _middle) + (original()->ignore<ModifyingType>()->isType<FunctionType>() && isConst() ? " const" : "");
-	return String();
+	return String::null;
 }
 
 bool Memberify::defineSimilarityFrom(TypeEntity const* _f, Castability _c) const
@@ -125,7 +125,7 @@ bool Memberify::defineSimilarityFrom(TypeEntity const* _f, Castability _c) const
 String Memberify::modifierHtml() const
 {
 	if (!scopeType())
-		return String();
+		return String::null;
 	return L"<span class=\"symbol\">" + scopeType()->code() + L"</span>";
 }
 

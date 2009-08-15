@@ -580,24 +580,24 @@ String& String::replace(Char _before, Char _after)
 String String::section(String const& _sep, int _start, int _end) const
 {
 	if (!m_length)
-		return String();
+		return String::null;
 	int f = ((_start < 0) ? lastIndexOfNth(_sep, -_start) : indexOfNth(_sep, _start));
 	f += f == -1 ? 1 : _sep.length();
 	int t = (_end < 0) ? lastIndexOfNth(_sep, -_end - 1) : indexOfNth(_sep, _end + 1);
 	if (t == -1)
 		t = m_length;
-	return f < t ? mid(f, t - f) : String();
+	return f < t ? mid(f, t - f) : String::null;
 }
 
 String String::section(Char _sep, int _start, int _end) const
 {
 	if (!m_length)
-		return String();
+		return String::null;
 	int f = ((_start < 0) ? lastIndexOfNth(_sep, -_start) : indexOfNth(_sep, _start)) + 1;
 	int t = (_end < 0) ? lastIndexOfNth(_sep, -_end - 1) : indexOfNth(_sep, _end + 1);
 	if (t == -1)
 		t = m_length;
-	return f < t ? mid(f, t - f) : String();
+	return f < t ? mid(f, t - f) : String::null;
 }
 
 String& String::append(String const& _str)
@@ -639,7 +639,7 @@ String& String::append(Char _ch)
 String String::trimmed() const
 {
 	if (!m_length)
-		return String();
+		return String::null;
 	uint i;
 	for (i = 0; i < m_length && iswspace(m_data[i]); i++) ;
 	uint j;
@@ -652,7 +652,7 @@ String String::simplified() const
 	String src = trimmed();
 	String ret;
 	if (!src.m_length)
-		return String();
+		return String::null;
 	ret.reserve(src.length());
 	wchar_t* d = ret.m_data;
 	wchar_t* s = src.m_data;

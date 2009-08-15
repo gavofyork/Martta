@@ -115,7 +115,7 @@ bool BuiltinType::keyPressed(KeyEvent const* _e)
 
 String BuiltinType::code(String const& _middle) const
 {
-	if (m_id == (uint)-1) return String();
+	if (m_id == (uint)-1) return String::null;
 	if (m_id == Wchar) return "wchar_t";
 	return String((m_id & Unsigned) ? (m_id & Float || m_id & Double) ? "complex " : "unsigned " : "") +
 			(((m_id & Longlong) == Longlong) ? "long long " : (m_id & Short) ? "short " : (m_id & Long) ? "long " : "") +
