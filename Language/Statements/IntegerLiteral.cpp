@@ -70,8 +70,9 @@ String IntegerLiteral::defineHtml() const
 
 String IntegerLiteral::defineEditHtml(CodeScene* _cs) const
 {
-	if (EditDelegate* d = editDelegate(_cs))
+	if (EditDelegateFace* d = editDelegate(_cs))
 		return String("<span class=\"Literal IntegerLiteral\">%1%2%3</span>").arg(d->real()).arg(m_signed ? "" : "u").arg((m_range == ShortRange ? "s" : m_range == LongRange ? "l" : m_range == LonglongRange ? "ll" : ""));
+	return String::null;
 }
 
 EditDelegateFace* IntegerLiteral::newDelegate(CodeScene* _s)

@@ -41,7 +41,7 @@ protected:
 	virtual List<Declaration*>			utilised() const { return actualType()->utilised(); }
 	virtual String						memberInterfaceCode() const { return VariableNamer::interfaceCode(); }
 	virtual String						memberImplementationCode() const { return VariableNamer::implementationCode(); }
-	virtual String						memberDefineHtml() const { return VariableNamer::defineHtml(); }
+	virtual String						memberDefineHtml() const { return defineVariableHtml(); }
 	virtual int							minRequired(int _i) const { return _i == OurType ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual Type						type() const { return MemberValue::memberifiedType(VariableNamer::type()); }

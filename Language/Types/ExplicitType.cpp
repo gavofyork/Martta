@@ -44,9 +44,9 @@ public:
 	{
 		placeVariable(_pos, new ExplicitType(static_cast<Identifiable*>(_i)->asKind<TypeDefinition>()));
 	}
-	virtual String						defineEditHtml(Named*)
+	virtual String						defineEditHtml(Named*, String const& _mid)
 	{
-		return ExplicitType().defineEditHtml(0);
+		return ExplicitType().fullHtml(_mid);
 	}
 	List<Named*> m_nameds;
 };

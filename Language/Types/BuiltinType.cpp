@@ -76,9 +76,9 @@ public:
 	{
 		placeVariable(_pos, new BuiltinType(static_cast<BuiltinNamed*>(_i)->m_id));
 	}
-	virtual String						defineEditHtml(Named*)
+	virtual String						defineEditHtml(Named*, String const& _mid)
 	{
-		return BuiltinType().defineEditHtml(0);
+		return BuiltinType().fullHtml(_mid);
 	}
 	List<Named*> m_nameds;
 };
@@ -197,7 +197,7 @@ List<int> BuiltinType::possibilities()
 String BuiltinType::defineEditHtml(CodeScene* _cs) const
 {
 	if (EditDelegateFace* d = editDelegate(_cs))
-		return L"<span class=\"TypeEntity\">" + typeHtml(d->real() + L"<span class=\"unreal\">" + d->unreal() + L"</span>") + L"</span>";
+		return fullHtml(d->real() + L"<span class=\"unreal\">" + d->unreal() + L"</span>");
 	return String::null;
 }
 

@@ -20,14 +20,16 @@
 
 #pragma once
 
+#include "WebViewable.h"
 #include "Meta.h"
 
 namespace Martta
 {
 
-class Corporal
+class Corporal: public_interface WebViewable
 {
 	MARTTA_INTERFACE
+	MARTTA_INHERITS(WebViewable, 0)
 
 public:
 	MARTTA_NAMED(Body)

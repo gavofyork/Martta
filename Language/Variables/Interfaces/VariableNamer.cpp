@@ -67,7 +67,7 @@ Type VariableNamer::type() const
 		return Type();
 }
 
-String VariableNamer::defineHtml() const
+String VariableNamer::defineVariableHtml() const
 {
 	return toHtml(self()->child(OurType)) + L" " + actualType()->typeHtml(toHtml(self()->child(Identity)));
 }

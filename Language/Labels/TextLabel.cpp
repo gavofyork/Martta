@@ -19,31 +19,20 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include <msString.h>
-using MarttaSupport::String;
-using MarttaSupport::Char;
+using namespace MarttaSupport;
 
 #include "Labelled.h"
 #include "EditDelegate.h"
-#include "WebStylistRegistrar.h"
 #include "TextLabel.h"
 
 namespace Martta
 {
 
 MARTTA_OBJECT_CPP(TextLabel);
-
-void TextLabel::initialiseClass()
-{
-	WebStylistRegistrar::get()->registerCss(staticKind.auxilliary(),
-		".TextLabel-named { color: #000 }"
-		".TextLabel-unnamed { color: #aaa }"
-	);
-}
-
-void TextLabel::finaliseClass()
-{
-	WebStylistRegistrar::get()->unregisterCss(staticKind.auxilliary());
-}
+MARTTA_REGISTER_CSS(TextLabel,
+	".TextLabel-named { color: #000 }"
+	".TextLabel-unnamed { color: #aaa }"
+);
 
 String TextLabel::code() const
 {
@@ -81,13 +70,14 @@ String TextLabel::defineHtml() const
 
 String TextLabel::defineEditHtml(CodeScene* _cs) const
 {
-	if (EditDelegate* d = editDelegate(_cs))
+	if (EditDelegateFace* d = editDelegate(_cs))
 	{
 		// The tryParent()-> should be safe since Labelled checks for a null this-pointer.
 		if (d->real().isEmpty())
 			return L"<span class=\"minor\">[ANONYMOUS]</span>";
 		return L"<span class=\"TextLabel-named\">" + tryParent<Labelled>()->labelHtml(d->real()) + L"</span>";
 	}
+	return String::null;
 }
 
 class Delegate: public EditDelegate<TextLabel>

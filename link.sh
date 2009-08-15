@@ -197,9 +197,9 @@ prepare WebView "Interfaces/WebViewable Support/WebStylist Support/WebStylistReg
 
 prepare Project "Project Solution" "Entity"
 
-prepare TypeEntity "TypeEntity ModifyingType Interfaces/TypedOwner Interfaces/TypeNamer Support/Type" "Entity WebViewable"
+prepare TypeEntity "TypeEntity ModifyingType Interfaces/TypedOwner Interfaces/TypeNamer Support/Type" "Entity WebView"
 
-prepare Labels "Interfaces/Labelled ConstLabel AccessLabel Label MiscLabels IdLabel TextLabel OperatorLabel" "Entity Operator WebViewable"
+prepare Labels "Interfaces/Labelled ConstLabel AccessLabel Label MiscLabels IdLabel TextLabel OperatorLabel" "Entity Operator WebView"
 
 prepare Declaration "Support/IdentifierSet Support/IdentifierSetRegistrar Interfaces/Identifiable Support/ModelPtr Support/ModelPtrFace Support/ModelPtrRegistrar Interfaces/Named NameEntryPoint Declaration" "Labels"
 
@@ -213,7 +213,7 @@ prepare Types "Interfaces/TypeDefinition HashType ListType StringType ExplicitTy
 
 prepare Namers "EnumerationNamer EnumValue Argument LambdaNamer" "Labels Declaration Types Statement CQualifiers"
 
-prepare Statements "ReturnStatement Referenced InScopeReferenced GlobalReferenced ArgumentReferenced LocalReferenced BinaryOperation AssignmentOperation SimpleBinaryOperation SubscriptOperation NewOperation DeleteOperation GenericMemberOperation MemberOperation LongMemberOperation SimpleUnaryOperation ReferenceOperation DereferenceOperation UnaryOperation Operation Invocation Evaluation Literal BoolLiteral StringLiteral IntegerLiteral FloatLiteral IfStatement Loop ForLoop WhileLoop BreakStatement Support/in.svg Support/out.svg" "Statement Types Labels Declaration Namers"
+prepare Statements "ReturnStatement Referenced InScopeReferenced GlobalReferenced ArgumentReferenced LocalReferenced BinaryOperation AssignmentOperation SimpleBinaryOperation SubscriptOperation NewOperation DeleteOperation GenericMemberOperation MemberOperation LongMemberOperation SimpleUnaryOperation ReferenceOperation DereferenceOperation UnaryOperation Operation Invocation Evaluation Literal BoolLiteral StringLiteral IntegerLiteral FloatLiteral IfStatement Loop ForLoop WhileLoop BreakStatement Support/in.svg Support/out.svg Support/GlobalReferenced.svg" "Statement Types Labels Declaration Namers"
 
 prepare CStuff "TopLevel Root TopLevelType Function Variable Struct Union Typedef Enumeration Namespace" "Namers"
 

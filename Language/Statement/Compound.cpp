@@ -72,7 +72,7 @@ bool Compound::keyPressed(KeyEvent const* _e)
 	return true;
 }
 
-String statementsToHtml(List<Entity*> const& _es)
+String Compound::statementsToHtml(List<Entity*> const& _es)
 {
 	String ret;
 	bool first = true;
@@ -82,16 +82,16 @@ String statementsToHtml(List<Entity*> const& _es)
 			first = false;
 		else
 			ret += L"<br/>";
-		ret += toHtml(e);
+		ret += WebViewable::toHtml(e);
 	}
 	return ret;
 }
 
-String statementsToHtml(List<Statement*> const& _es)
+String Compound::statementsToHtml(List<Statement*> const& _es)
 {
 	String ret;
 	foreach (Statement const* e, _es)
-		ret += toHtml(e, e->requiresSemicolon() ? L"span" : L"div") + (e->requiresSemicolon() ? L"<br/>" : L"");
+		ret += WebViewable::toHtml(e, e->requiresSemicolon() ? L"span" : L"div") + (e->requiresSemicolon() ? L"<br/>" : L"");
 	return ret;
 }
 

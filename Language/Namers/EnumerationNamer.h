@@ -21,15 +21,17 @@
 #pragma once
 
 #include "TypeDefinition.h"
+#include "WebViewable.h"
 #include "ValueDefiner.h"
 
 namespace Martta
 {
 
-class EnumerationNamer: public_interface TypeDefinition
+class EnumerationNamer: public_interface TypeDefinition, public_interface WebViewable
 {
 	MARTTA_INTERFACE
 	MARTTA_INHERITS(TypeDefinition, 0)
+	MARTTA_INHERITS(WebViewable, 1)
 
 public:
 	void								updateStem();
@@ -40,7 +42,7 @@ public:
 protected:
 	virtual bool						hasDefaultConstructor() const { return true; }
 
-	String								defineHtml() const;
+	String								defineEnumerationHtml() const;
 	String								interfaceCode() const;
 	bool								keyPressed(KeyEvent const* _e);
 	List<ValueDefiner*>					valuesAdded() const { return self()->cardinalChildrenOf<ValueDefiner>(); }

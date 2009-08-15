@@ -35,18 +35,20 @@ class Referenced: public Typed
 public:
 	Referenced(ValueDefiner* _v = 0);
 
-	virtual String						code() const;
-	virtual Type						type() const;
 	ModelPtr<ValueDefiner>				subject() const { return m_subject; }
 	void								setSubject(ValueDefiner* _e) { setDependency(m_subject, _e); }
 	ModelPtr<ValueDefiner>				get() const { return m_subject; }
 	void								set(ValueDefiner* _e) { setDependency(m_subject, _e); }
-	virtual String						defineEditHtml(ValueDefiner*) const;
+
+	String								editHtmlHelper(ValueDefiner* _v, String const& _mid) const;
 	virtual List<ValueDefiner*>			possibilities() const { return List<ValueDefiner*>(); }
 
 protected:
+	virtual String						code() const;
+	virtual Type						type() const;
 	virtual bool						isInValidState() const;
 	virtual String						defineHtml() const;
+	virtual String						defineEditHtml(CodeScene* _cs) const;
 	virtual bool						isSuperfluous() const;
 	virtual void						apresLoad() { if (m_subject) addDependency(m_subject->self()); Super::apresLoad(); }
 	virtual void						onDependencyChanged(Entity*) {  if (m_subject) changed(); }
@@ -66,7 +68,7 @@ class ReferencedValueSet: public IdentifierSet
 public:
 	virtual List<Named*>				identifiableAt(Position const& _p) { return list_cast<Named*>(castEntities<Identifiable>(T::possibilities(_p))); }
 	virtual void						acceptAt(Position const& _p, Named* _i) { ValueDefiner* v = static_cast<Identifiable*>(_i)->asKind<ValueDefiner>(); _p.place(new T(v)); }
-	virtual String						defineEditHtml(Named* _i) { ValueDefiner* v = static_cast<Identifiable*>(_i)->asKind<ValueDefiner>(); return Referenced().defineEditHtml(v); }
+	virtual String						defineEditHtml(Named* _i, String const& _mid) { ValueDefiner* v = static_cast<Identifiable*>(_i)->asKind<ValueDefiner>(); return Referenced().editHtmlHelper(v, _mid); }
 };
 
 }

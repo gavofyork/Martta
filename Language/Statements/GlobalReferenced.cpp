@@ -26,6 +26,10 @@ namespace Martta
 {
 
 MARTTA_OBJECT_CPP(GlobalReferenced);
+MARTTA_REGISTER_CSS(GlobalReferenced,
+	L".GlobalReferenced-Fader { margin-right: -15px; padding-right: 15px; padding-left: 4px; -webkit-border-top-left-radius: 7px; -webkit-border-bottom-left-radius: 7px; background-image: -webkit-gradient(linear, left top, right top, from(#ccc), to(rgba(0, 0, 0, 0))); }"
+	L".GlobalReferenced { text-shadow: 1px 1px 1px #fff; color: #888; font-size: 70%; font-weight: bold; }"
+);
 
 bool GlobalReferenced::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
@@ -47,12 +51,12 @@ bool GlobalReferenced::keyPressed(KeyEvent const* _e)
 
 String GlobalReferenced::defineHtml() const
 {
-	return L"<span class=\"minor symbol\">::</span>" + Super::defineHtml();
+	return L"<span class=\"MemberVariable-Fader\"><span class=\"MemberVariable\"><img src=\"data://GlobalReferenced.svg\"/></span></span>" + Super::defineHtml();
 }
 
-String GlobalReferenced::defineEditHtml(ValueDefiner* _v)
+String GlobalReferenced::defineEditHtml(CodeScene* _cs)
 {
-	return L"<span class=\"minor symbol\">::</span>" + Super::defineEditHtml(_v);
+	return L"<span class=\"MemberVariable-Fader\"><span class=\"MemberVariable\"><img src=\"data://GlobalReferenced.svg\"/></span></span>" + Super::defineEditHtml(_cs);
 }
 
 List<ValueDefiner*> GlobalReferenced::possibilities(Position const& _p)

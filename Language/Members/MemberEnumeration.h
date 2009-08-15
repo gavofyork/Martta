@@ -38,7 +38,7 @@ public:
 
 protected:
 	// From Member
-	virtual String						memberDefineHtml() const { return EnumerationNamer::defineHtml(); }
+	virtual String						memberDefineHtml() const { return defineEnumerationHtml(); }
 	virtual String						memberInterfaceCode() const { return EnumerationNamer::interfaceCode(); }
 	virtual String						memberImplementationCode() const { return String::null; }
 

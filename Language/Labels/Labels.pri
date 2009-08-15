@@ -1,4 +1,4 @@
-DEPS += Entity Operator
+DEPS += Entity Operator WebView
 OURDIRS = . Interfaces
 TWD = $$PWD
 

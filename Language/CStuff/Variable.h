@@ -36,7 +36,7 @@ public:
 	Qualifiers							qualifiers() const { return m_qualifiers; }
 
 protected:
-	virtual String						defineHtml() const { return L"<^>" + VariableNamer::defineHtml(); }
+	virtual String						defineHtml() const { return L"<^>" + defineVariableHtml(); }
 	virtual List<Declaration*>			utilised() const { return actualType()->utilised(); }
 
 	virtual bool						keyPressed(KeyEvent const* _e) { return VariableNamer::keyPressed(_e) ? true : Super::keyPressed(_e); }

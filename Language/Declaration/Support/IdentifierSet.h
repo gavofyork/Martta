@@ -40,7 +40,7 @@ public:
 
 	virtual List<Named*>				identifiableAt(Position const&) { return List<Named*>(); }
 	virtual void						acceptAt(Position const&, Named*) {}
-	virtual String						defineEditHtml(Named*) { return L"<?>"; }
+	virtual String						defineEditHtml(Named*, String const& _mid) { return _mid; }
 };
 
 template<class T>
@@ -61,7 +61,7 @@ public:
 	{
 		_pos.place((new T)->prepareChildren());
 	}
-	virtual String						defineEditHtml(Named*)
+	virtual String						defineEditHtml(Named*, String const&)
 	{
 		return m_html;
 	}

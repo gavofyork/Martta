@@ -61,6 +61,17 @@ MARTTA_REGISTER_CSS(WebViewable,
 	".Statement { background-color: transparent; padding: 0; }"
 );
 
+CssRegisterer::CssRegisterer(AuxilliaryFace const* _f, String const& _css):
+	m_f(_f)
+{
+	WebStylistRegistrar::get()->registerCss(_f, _css);
+}
+
+CssRegisterer::~CssRegisterer()
+{
+	WebStylistRegistrar::get()->unregisterCss(m_f);
+}
+
 String WebViewable::defineEditHtml(CodeScene*) const
 {
 	return defineHtml().replace(L"<^>", L"");

@@ -21,16 +21,18 @@
 #pragma once
 
 #include "Labelled.h"
+#include "WebViewable.h"
 #include "ValueDefiner.h"
 
 namespace Martta
 {
 
-class VariableNamer: public_interface ValueDefiner, public_interface Labelled
+class VariableNamer: public_interface ValueDefiner, public_interface Labelled, public_interface WebViewable
 {
 	MARTTA_INTERFACE
 	MARTTA_INHERITS(ValueDefiner, 0)
 	MARTTA_INHERITS(Labelled, 1)
+	MARTTA_INHERITS(WebViewable, 2)
 
 public:
 	MARTTA_NAMED(OurType)
@@ -45,9 +47,9 @@ protected:
 
 	inline String						interfaceCode() const { return basicCode() + ";\n"; }
 	inline String						implementationCode() const { return String::null; }
-	String								defineHtml() const;
 	virtual inline String				defineLabelHtml(String const& _middle) const { return L"<span class=\"VariableNamer-definition\">" + _middle + L"</span>"; }
 	bool								keyPressed(KeyEvent const* _e);
+	String								defineVariableHtml() const;
 };
 
 }

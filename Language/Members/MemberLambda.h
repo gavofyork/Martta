@@ -43,10 +43,6 @@ protected:
 	virtual String						definePreHtml() const;
 	virtual String						definePostHtml() const;
 
-	/// Override if you want a completely different layout (rather than the LambdaNamer template).
-	/// Overriding this will still do the const decoration etc. If you don't want that, override Member::memberDefineHtml or defineHtml.
-	virtual String						memberLambdaDefineHtml() const { return LambdaNamer::defineHtml(); }
-
 	virtual String						memberImplementationCode() const { return LambdaNamer::implementationCode(); }
 	virtual String						memberInterfaceCode() const { return LambdaNamer::interfaceCode(); }
 

@@ -21,6 +21,7 @@
 #pragma once
 
 #include "AccessLabel.h"
+#include "WebViewable.h"
 #include "Entity.h"
 
 namespace Martta
@@ -28,9 +29,10 @@ namespace Martta
 
 class Class;
 
-class Base: public Entity
+class Base: public Entity, public_interface WebViewable
 {
 	MARTTA_OBJECT(Entity)
+	MARTTA_INHERITS(WebViewable, 0)
 
 public:
 	enum { Accessibility = FirstNamed, Superclass, EndOfNamed };

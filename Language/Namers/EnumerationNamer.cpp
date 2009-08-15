@@ -94,7 +94,7 @@ bool EnumerationNamer::keyPressed(KeyEvent const* _e)
 	return true;
 }
 
-String EnumerationNamer::defineHtml() const
+String EnumerationNamer::defineEnumerationHtml() const
 {
 	String ret;
 	String name;

@@ -55,9 +55,9 @@ public:
 	{
 		placeVariable(_pos, new StringType);
 	}
-	virtual String						defineEditHtml(Named*)
+	virtual String						defineEditHtml(Named*, String const& _mid)
 	{
-		return L"<span class=\"TypeEntity\">" + StringType().typeHtml(L"<?>") + L"</span>";
+		return L"<span class=\"TypeEntity\">" + StringType().typeHtml(_mid) + L"</span>";
 	}
 	SimpleNamed m_ourNamed;
 };

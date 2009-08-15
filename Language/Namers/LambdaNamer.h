@@ -21,6 +21,7 @@
 #pragma once
 
 #include "CQualifiers.h"
+#include "WebViewable.h"
 #include "Type.h"
 #include "ValueDefiner.h"
 
@@ -30,10 +31,11 @@ namespace Martta
 class Argument;
 class Compound;
 
-class LambdaNamer: public_interface ValueDefiner
+class LambdaNamer: public_interface ValueDefiner, public_interface WebViewable
 {
 	MARTTA_INTERFACE
 	MARTTA_INHERITS(ValueDefiner, 0)
+	MARTTA_INHERITS(WebViewable, 1)
 
 public:
 	MARTTA_NAMED(Body)
@@ -46,7 +48,7 @@ public:
 	/// @note non-virtual - specifically to avoid automatic mixins. You have to mix it in explicitly.
 	String								interfaceCode() const { return basicCode(InsideScope) + ";\n"; }
 	String								implementationCode() const;
-	String								defineHtml(String const& _middle = String::null) const;
+	String								defineLambdaHtml(String const& _middle = String::null) const;
 	bool								keyPressed(KeyEvent const* _e);
 	/// Gives a parameter list of the call. This depends on argumentType/CodeName, ellipsis, reference and codeName.
 	String								callingCode(FunctionCodeScope _ref) const;

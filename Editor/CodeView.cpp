@@ -22,8 +22,8 @@
 #include <QtWebKit>
 
 #include <WebStylist.h>
-#include <EditDelegate.h>
 #include <WebStylistRegistrar.h>
+#include <EditDelegate.h>
 
 #include "Timer.h"
 #include "SpecialKeys.h"
@@ -200,7 +200,7 @@ QRect CodeView::bounds(Entity const* _e) const
 void CodeView::init()
 {
 	QString css = qs(WebStylistRegistrar::get()->css());
-	setHtml(QString("<!DOCTYPE HTML><html><head><style type=\"text/css\">%1</style></head><body onmousedown=\"procMouseDown(event)\">%2</body></html>").arg(css).arg(qs(m_stylist->fullHtml(m_subject))));
+	setHtml(QString("<!DOCTYPE HTML><html><head><style type=\"text/css\">%1</style></head><body onmousedown=\"procMouseDown(event)\">%2</body></html>").arg(css).arg(qs(m_stylist->toHtml(m_subject))));
 	page()->mainFrame()->addToJavaScriptWindowObject("CodeView", this);
 	QFile support(":/CodeView/Support.js");
 	support.open(QFile::ReadOnly);

@@ -29,8 +29,8 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(MemberVariable);
 MARTTA_REGISTER_CSS(MemberVariable,
-	L".MemberVariable-Fader { margin-right: -15px; padding-right: 15px; padding-left: 4px; color:#444; text-shadow: 1px 1px 0px #fff; -webkit-border-top-left-radius: 7px; -webkit-border-bottom-left-radius: 7px; background-image: -webkit-gradient(linear, left top, right top, from(#999), to(rgba(0, 0, 0, 0))); }"
-	L".MemberVariable { text-shadow: 1px 1px 1px #fff; color:#555; font-size: 70%; font-weight: bold; }"
+	L".MemberVariable-Fader { margin-right: -15px; padding-right: 15px; padding-left: 4px; -webkit-border-top-left-radius: 7px; -webkit-border-bottom-left-radius: 7px; background-image: -webkit-gradient(linear, left top, right top, from(#ccc), to(rgba(0, 0, 0, 0))); }"
+	L".MemberVariable { text-shadow: 1px 1px 1px #fff; color: #888; font-size: 70%; font-weight: bold; }"
 );
 
 String MemberVariable::defineLabelHtml(String const& _text) const

@@ -43,7 +43,7 @@ public:
 protected:
 	virtual int							minRequired(int _i) const { return _i == Cardinals ? 1 : _i == Identity ? 0 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
-	virtual String						defineHtml() const { return "<^>" + EnumerationNamer::defineHtml(); }
+	virtual String						defineHtml() const { return "<^>" + defineEnumerationHtml(); }
 	virtual String						interfaceCode() const { return EnumerationNamer::interfaceCode(); }
 	virtual bool						hasDefaultConstructor() const { return EnumerationNamer::hasDefaultConstructor(); }
 	virtual List<ValueDefiner*>			valuesAdded() const { return EnumerationNamer::valuesAdded(); }

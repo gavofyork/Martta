@@ -28,11 +28,14 @@
 namespace Martta
 {
 
+class ExplicitTypeSet;
+
 class ExplicitType: public PhysicalType
 {
 	MARTTA_OBJECT(PhysicalType)
 
 	friend class TypeDefinition;
+	friend class ExplicitTypeSet;
 
 public:
 	ExplicitType(TypeDefinition* _subject = 0): m_subject(0) { setSubject(_subject); }

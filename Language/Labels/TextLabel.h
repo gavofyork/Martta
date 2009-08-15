@@ -20,20 +20,19 @@
 
 #pragma once
 
+#include "WebViewable.h"
 #include "IdLabel.h"
 
 namespace Martta
 {
 
-class TextLabel: public IdLabel
+class TextLabel: public IdLabel, public_interface WebViewable
 {
-	MARTTA_INITIALISED_OBJECT(IdLabel)
+	MARTTA_OBJECT(IdLabel)
+	MARTTA_INHERITS(WebViewable, 0)
 
 public:
 	TextLabel(String const& _t = String()): m_text(_t) {}
-
-	static void							initialiseClass();
-	static void							finaliseClass();
 
 	// Queries the parent's isChildInValidState() to check if we're valid - if so and we're null it makes up a name. If not it just returns "".
 	// @note NEVER call them from the parent's isChildInValidState() function.

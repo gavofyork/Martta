@@ -801,7 +801,7 @@ void MainWindow::delayedUpdate()
 				new QTreeWidgetItem(us, QStringList() << (u ? qs(u->name()) : QString("NULL?")) << (u ? qs(u->kind().name()) : QString("NULL?")));
 		}
 */
-		new QTreeWidgetItem(entityInfo, QStringList() << QString("HTML") << qs(e->defineHtml()));
+//		new QTreeWidgetItem(entityInfo, QStringList() << QString("HTML") << qs(e->toHtml()));
 
 		QTreeWidgetItem* rc = new QTreeWidgetItem(entityInfo, QStringList() << "Child restrictions");
 		foreach (int i, e->knownNames())

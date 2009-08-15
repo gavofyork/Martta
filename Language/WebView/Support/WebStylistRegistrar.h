@@ -54,22 +54,5 @@ private:
 	mutable bool						m_changed;
 };
 
-template<class E>
-class CssRegisterer
-{
-public:
-	CssRegisterer(String const& _css)
-	{
-		WebStylistRegistrar::get()->registerCss<E>(_css);
-	}
-	~CssRegisterer()
-	{
-		WebStylistRegistrar::get()->unregisterCss<E>();
-	}
-};
-
-#define MARTTA_REGISTER_CSS(EntityClass, CSS) \
-	static CssRegisterer<EntityClass> s_css_ ## EntityClass ## __LINE__ (CSS)
-
 }
 

@@ -76,7 +76,7 @@ Type MemberLambda::thisType() const
 
 String MemberLambda::memberDefineHtml() const
 {
-	return memberLambdaDefineHtml();
+	return defineLambdaHtml();
 }
 
 String MemberLambda::definePreHtml() const

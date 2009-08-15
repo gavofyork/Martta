@@ -1,4 +1,4 @@
-DEPS += Entity
+DEPS += Entity WebView
 OURDIRS = . Interfaces Support
 TWD = $$PWD
 

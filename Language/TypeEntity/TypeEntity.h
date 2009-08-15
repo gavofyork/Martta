@@ -23,6 +23,7 @@
 #include <msRgb.h>
 using namespace MarttaSupport;
 
+#include "WebViewable.h"
 #include "TypedOwner.h"
 #include "Entity.h"
 
@@ -36,10 +37,11 @@ class Type;
 class TypeEntity;
 template<class T> class TypeConstructor;
 
-class TypeEntity: public Entity, public_interface TypedOwner
+class TypeEntity: public Entity, public_interface TypedOwner, public_interface WebViewable
 {
 	MARTTA_PLACEHOLDER(Entity)
 	MARTTA_INHERITS(TypedOwner, 0)
+	MARTTA_INHERITS(WebViewable, 1)
 
 	friend class Type;
 	template<class T> friend class TypeConstructor;

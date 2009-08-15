@@ -21,15 +21,17 @@
 #pragma once
 
 #include "ValueDefiner.h"
+#include "WebViewable.h"
 #include "Declaration.h"
 
 namespace Martta
 {
 
-class EnumValue: public Declaration, public_interface ValueDefiner
+class EnumValue: public Declaration, public_interface ValueDefiner, public_interface WebViewable
 {
 	MARTTA_OBJECT(Declaration)
 	MARTTA_INHERITS(ValueDefiner, 0)
+	MARTTA_INHERITS(WebViewable, 1)
 
 	friend class Entity;
 	friend class EnumValueResolver;

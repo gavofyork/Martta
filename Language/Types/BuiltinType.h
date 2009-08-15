@@ -31,6 +31,7 @@ extern const int s_simpleIds[];
 extern const int s_simpleIdsCount;
 
 class BuiltinOperator;
+class BuiltinTypeSet;
 
 template<class T> class NameTrait;
 
@@ -40,6 +41,7 @@ class BuiltinType: public PhysicalType
 
 	friend class BuiltinOperator;	// For use of s_nonMembers. QUICK Should probably use an interface for this.
 	friend class NameTrait<int>;
+	friend class BuiltinTypeSet;
 
 public:
 	static void initialiseClass();

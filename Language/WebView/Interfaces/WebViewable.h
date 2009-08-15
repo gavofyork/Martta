@@ -21,12 +21,15 @@
 #pragma once
 
 #include <msString.h>
+#include <msList.h>
 using namespace MarttaSupport;
 
 #include "Meta.h"
 
 namespace Martta
 {
+
+class CodeScene;
 
 class WebViewable
 {
@@ -43,7 +46,20 @@ public:
 protected:
 	static String							toHtml(Entity const* _e, String const& _tag = L"span");
 	static String							toHtml(List<Entity const*> const& _es, String const& _delimiter = L" ", String const& _tag = L"span");
-	inline String							toHtml(List<Entity*> const& _es, String const& _delimiter = L" ", String const& _tag = L"span") { return toHtml(list_const_cast<Entity const*>(_es), _delimiter, _tag); }
+	inline static String					toHtml(List<Entity*> const& _es, String const& _delimiter = L" ", String const& _tag = L"span") { return toHtml(list_const_cast<Entity const*>(_es), _delimiter, _tag); }
+};
+
+#define MARTTA_REGISTER_CSS(EntityClass, CSS) \
+	static CssRegisterer s_css_ ## EntityClass ## __LINE__ (EntityClass::staticAuxilliary(), CSS)
+
+class CssRegisterer
+{
+public:
+	CssRegisterer(AuxilliaryFace const* _f, String const& _css);
+	~CssRegisterer();
+
+private:
+	AuxilliaryFace const* m_f;
 };
 
 }

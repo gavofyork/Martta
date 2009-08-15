@@ -67,8 +67,8 @@ public:
 	inline Entity(): Dier(), ChildValidifier(), Depender(), Dependee(), SafePointerTarget(), m_parent(0), m_index(UndefinedIndex) {}
 	inline Entity(Entity const&): Dier(), ChildValidifier(), Familial(), Depender(), Dependee(), SafePointerTarget() { AssertNR(false); }
 
-	static void							initialiseClass();
-	static void							finaliseClass();
+	static void							initialiseClass() {}
+	static void							finaliseClass() {}
 
 	void								silentMove(Position const& _to);
 	void								silentRemove() { silentMove(Nowhere); }
