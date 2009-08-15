@@ -153,15 +153,15 @@ bool FloatingMemberReferenced::keyPressedOnPosition(Position const& _p, KeyEvent
 	{
 		FloatingMemberReferenced* r = new FloatingMemberReferenced;
 		_p.place(r);
-		r->setEditing(_e->codeScene());
-		if (r->isEditing(_e->codeScene()))
+		_e->codeScene()->setEditing(r);
+		if (_e->codeScene()->isEditing(r))
 			_e->reinterpretLater();
 	}
 	else if (_p.exists() && _p->isPlaceholder() && _e->text() == L"M")
 	{
 		FloatingMemberReferenced* r = new FloatingMemberReferenced;
 		_p.place(r);
-		r->setEditing(_e->codeScene());
+		_e->codeScene()->setEditing(r);
 	}
 	else
 		return false;

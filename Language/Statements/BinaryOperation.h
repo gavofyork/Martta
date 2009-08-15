@@ -58,7 +58,7 @@ protected:
 //			n->debugTree();
 			n->validifyChildren();
 //			n->debugTree();
-			n->child(SecondOperand)->navigateOnto(_e->codeScene());
+			_e->codeScene()->navigateOnto(n->child(SecondOperand));
 			return true;
 		}
 		return false;

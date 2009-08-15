@@ -301,41 +301,21 @@ void Entity::debugTree(String const& _i) const
 bool Entity::isCurrent() const
 {
 	foreach (CodeScene* i, CodeScene::all())
-		if (isCurrent(i))
+		if (i->isCurrent(this))
 			return true;
 	return false;
-}
-bool Entity::isCurrent(CodeScene* _s) const
-{
-	return _s->current() == this;
 }
 bool Entity::isCurrentOrAncestor() const
 {
 	foreach (CodeScene* i, CodeScene::all())
-		if (isCurrentOrAncestor(i))
+		if (i->current()->hasSelfAncestor(this))
 			return true;
 	return false;
-}
-bool Entity::isCurrentOrAncestor(CodeScene* _s) const
-{
-	return _s->current()->hasSelfAncestor(this);
 }
 void Entity::setCurrent()
 {
 	foreach (CodeScene* i, CodeScene::all())
 		i->setCurrent(this);
-}
-void Entity::navigateInto(CodeScene* _s)
-{
-	_s->navigateInto(this);
-}
-void Entity::navigateToNew(CodeScene* _s)
-{
-	_s->navigateToNew(this);
-}
-void Entity::navigateOnto(CodeScene* _s)
-{
-	_s->navigateOnto(this);
 }
 void Entity::dropCursor()
 {
@@ -358,17 +338,9 @@ void Entity::dropCursor()
 bool Entity::isEditing() const
 {
 	foreach (CodeScene* i, CodeScene::all())
-		if (isEditing(i))
+		if (i->isEditing(this))
 			return true;
 	return false;
-}
-bool Entity::isEditing(CodeScene* _s) const
-{
-	return _s->editEntity() == this;
-}
-void Entity::setEditing(CodeScene* _s)
-{
-	_s->setEditing(this);
 }
 void Entity::clearEditing()
 {
@@ -395,8 +367,8 @@ bool Entity::activated(CodeScene* _s)
 		return true;
 	else
 	{
-		setEditing(_s);
-		return isEditing(_s);
+		_s->setEditing(this);
+		return _s->isEditing(this);
 	}
 }
 void Entity::keyPressEventStarter(KeyEvent* _e, bool _abortive)
@@ -412,7 +384,7 @@ void Entity::keyPressEventStarter(KeyEvent* _e, bool _abortive)
 				return;
 		}
 
-	if (_e->focus()->isEditing(_e->codeScene()) && _e->codeScene()->editDelegate() && _e->codeScene()->editDelegate()->keyPressed(_e))
+	if (_e->codeScene()->isEditing(_e->focus()) && _e->codeScene()->editDelegate() && _e->codeScene()->editDelegate()->keyPressed(_e))
 	{
 		_e->accept();
 		if (_e->codeScene()->editDelegate())
@@ -454,7 +426,7 @@ void Entity::keyPressEventStarter(KeyEvent* _e, bool _abortive)
 bool Entity::keyPressed(KeyEvent const* _e)
 {
 	Position p = over();
-	if (_e->codeScene()->isCurrent(this) && ((_e->text() == L"\x7f" && _e->modifiers() == ShiftModifier) || (_e->text() == L"\b" && isEditing(_e->codeScene()))) && !isFixed())
+	if (_e->codeScene()->isCurrent(this) && ((_e->text() == L"\x7f" && _e->modifiers() == ShiftModifier) || (_e->text() == L"\b" && _e->codeScene()->isEditing(this))) && !isFixed())
 	{
 		deleteAndRefill(0, false);	// NOTE: Was true; changed to false to avoid erroneous currents being set. May need a rethink.
 		if (p.exists())
@@ -469,9 +441,9 @@ bool Entity::keyPressed(KeyEvent const* _e)
 		if (p.exists())
 			_e->codeScene()->setCurrent(p.entity());
 	}
-	else if (_e->codeScene()->isCurrent(this) && _e->text() == L"\x1b" && isEditing(_e->codeScene()))
+	else if (_e->codeScene()->isCurrent(this) && _e->text() == L"\x1b" && _e->codeScene()->isEditing(this))
 		_e->codeScene()->setEditing(0);
-	else if (_e->codeScene()->isCurrent(this) && _e->text() == L"\t" && !isEditing(_e->codeScene()) && !isFixed())
+	else if (_e->codeScene()->isCurrent(this) && _e->text() == L"\t" && !_e->codeScene()->isEditing(this) && !isFixed())
 		_e->codeScene()->setEditing(this);
 	else if (_e->text() == L"\t")
 		activated(_e->codeScene());

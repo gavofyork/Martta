@@ -70,7 +70,7 @@ protected:
 		p->insert(n, TheOperand);
 		n->validifyChildren();
 		if (pre)
-			n->navigateInto(_e->codeScene());
+			_e->codeScene()->navigateInto(n);
 		else
 			n->setCurrent();
 		return true;

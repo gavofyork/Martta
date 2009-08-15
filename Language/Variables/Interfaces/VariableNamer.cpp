@@ -47,7 +47,7 @@ bool VariableNamer::keyPressed(KeyEvent const* _e)
 {
 	if (_e->text() == " " && _e->focalIndex() == OurType)
 	{
-		self()->child(Identity)->navigateOnto(_e->codeScene());
+		_e->codeScene()->navigateOnto(self()->child(Identity));
 	}
 	else
 		return false;

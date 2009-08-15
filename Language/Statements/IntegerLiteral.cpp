@@ -36,19 +36,19 @@ bool IntegerLiteral::keyPressedOnPosition(Position const& _p, KeyEvent const* _e
 		_e->noteStrobeCreation(l, _p.entity());
 		_p.place(l);
 		l->setValue(_e->text().toDouble());
-		l->setEditing(_e->codeScene());
+		_e->codeScene()->setEditing(l);
 	}
 	else if (_p.exists() && _p->isPlaceholder() && _e->text().length() == 1 && _e->text()[0].isNumber())
 	{
 		IntegerLiteral* l = new IntegerLiteral;
 		_p.place(l);
 		l->setValue(_e->text().toDouble());
-		l->setEditing(_e->codeScene());
+		_e->codeScene()->setEditing(l);
 	}
 	else if (_p.exists() && _p->isKind<IntegerLiteral>() && _e->text().length() == 1 && _e->text()[0].isNumber())
 	{
 		_p->asKind<IntegerLiteral>()->setValue(_e->text().toDouble());
-		_p->setEditing(_e->codeScene());
+		_e->codeScene()->setEditing(_p.entity());
 	}
 	else
 		return false;

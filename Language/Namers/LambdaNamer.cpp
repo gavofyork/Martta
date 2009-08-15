@@ -91,15 +91,15 @@ bool LambdaNamer::keyPressed(KeyEvent const* _e)
 		Argument* v = new Argument;
 		self()->back().place(v);
 		v->prepareChildren();
-		v->navigateInto(_e->codeScene());
+		_e->codeScene()->navigateInto(v);
 	}
 	else if (_e->text() == "(" && _e->focalIndex() == Identity && argument(0))
 	{
-		argument(0)->navigateInto(_e->codeScene());
+		_e->codeScene()->navigateInto(argument(0));
 	}
 	else if (_e->text() == " " && _e->focalIndex() == Returned && self()->child(Identity))
 	{
-		self()->child(Identity)->navigateOnto(_e->codeScene());
+		_e->codeScene()->navigateOnto(self()->child(Identity));
 	}
 	else
 		return false;

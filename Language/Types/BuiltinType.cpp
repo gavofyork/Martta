@@ -91,8 +91,8 @@ bool BuiltinType::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 	{
 		BuiltinType* s = new BuiltinType;
 		_p.place(s);
-		s->setEditing(_e->codeScene());
-		if (s->isEditing(_e->codeScene()))
+		_e->codeScene()->setEditing(s);
+		if (_e->codeScene()->isEditing(s))
 			_e->reinterpretLater();
 	}
 	else
@@ -104,8 +104,8 @@ bool BuiltinType::keyPressed(KeyEvent const* _e)
 {
 	if (_e->text().length() == 1 && (_e->text()[0].isLower() || _e->text()[0] == L':'))
 	{
-		setEditing(_e->codeScene());
-		if (isEditing(_e->codeScene()))
+		_e->codeScene()->setEditing(this);
+		if (_e->codeScene()->isEditing(this))
 			_e->reinterpretLater();
 	}
 	else

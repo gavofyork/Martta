@@ -35,7 +35,7 @@ bool LocalReferenced::keyPressedOnPosition(Position const& _p, KeyEvent const* _
 	{
 		LocalReferenced* r = new LocalReferenced;
 		_p.place(r);
-		r->setEditing(_e->codeScene());
+		_e->codeScene()->setEditing(r);
 	}
 	else
 		return false;

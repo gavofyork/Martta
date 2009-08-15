@@ -31,7 +31,7 @@ bool StringLiteral::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 	if (_p.exists() && _p->isPlaceholder() && _e->text() == "\"")
 	{
 		Entity* l = _p.place(new StringLiteral);
-		l->setEditing(_e->codeScene());
+		_e->codeScene()->setEditing(l);
 	}
 	else
 		return false;
@@ -45,7 +45,7 @@ String StringLiteral::defineHtml() const
 
 bool StringLiteral::keyPressed(KeyEvent const* _e)
 {
-	if (_e->text() == "\"" && isEditing(_e->codeScene()))
+	if (_e->text() == "\"" && _e->codeScene()->isEditing(this))
 	{
 		clearEditing();
 	}

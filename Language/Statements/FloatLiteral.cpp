@@ -34,12 +34,12 @@ bool FloatLiteral::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 		FloatLiteral* l = new FloatLiteral;
 		l->setValue(_p->asKind<IntegerLiteral>()->value());
 		_p->replace(l);
-		l->setEditing(_e->codeScene());
+		_e->codeScene()->setEditing(l);
 	}
 	else if (_p.exists() && _p->isKind<FloatLiteral>() && _e->text().length() == 1 && _e->text()[0].isNumber())
 	{
 		_p->asKind<FloatLiteral>()->setValue(_e->text().toInt());
-		_p->setEditing(_e->codeScene());
+		_e->codeScene()->setEditing(_p.entity());
 	}
 	else
 		return false;

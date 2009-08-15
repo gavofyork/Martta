@@ -28,13 +28,13 @@
 #include "Dier.h"
 #include "Meta.h"
 #include "Position.h"
+#include "CodeScene.h"
 #include "SafePointer.h"
 
 namespace Martta
 {
 
 class EditDelegateFace;
-class CodeScene;
 
 /**
  * Note regarding rootEntity/null-Context: You can never depend on something which does not share the
@@ -380,22 +380,16 @@ public:
 	String								namedIndexId() const;		// number for static named, alpha for dynamic named, null for cardinal.
 	List<int>							knownNames() const;
 
-	/// We become current in all code scenes.
+	/// These apply to all CodeScenes in operation.
 	void								setCurrent();
-	void								setEditing(CodeScene* _s);
+	void								dropCursor();
 	bool								isCurrent() const;
-	bool								isCurrent(CodeScene* _s) const;
 	bool								isCurrentOrAncestor() const;
-	bool								isCurrentOrAncestor(CodeScene* _s) const;
 	bool								isEditing() const;
-	bool								isEditing(CodeScene* _s) const;
+	void								clearEditing();
+
 	EditDelegateFace*					editDelegate(CodeScene* _s) const;
 	virtual EditDelegateFace*			newDelegate(CodeScene*) { return 0; }
-	void								clearEditing();
-	void								navigateInto(CodeScene* _s);
-	void								navigateOnto(CodeScene* _s);
-	void								navigateToNew(CodeScene* _s);
-	void								dropCursor();
 
 	static void							keyPressEventStarter(KeyEvent* _e, bool _abortive = false);
 	void								activateEvent(CodeScene* _s);
@@ -544,7 +538,7 @@ bool Martta::Entity::simplePlaceholderKeyPressHandler(Position const& _p, KeyEve
 	{
 		Entity* e = Kind::of<T>().spawnPrepared();
 		_p.place(e);
-		e->navigateInto(_e->codeScene());
+		_e->codeScene()->navigateInto(e);
 		return true;
 	}
 	return false;
@@ -567,7 +561,7 @@ bool Martta::Entity::simplePositionKeyPressHandler(Position const& _p, KeyEvent 
 			e->insert(n);
 			n->prepareChildren();
 			if (_ontoNew)
-				n->navigateToNew(_e->codeScene());
+				_e->codeScene()->navigateToNew(n);
 			else
 				n->setCurrent();
 		}
@@ -577,7 +571,7 @@ bool Martta::Entity::simplePositionKeyPressHandler(Position const& _p, KeyEvent 
 			// when pressed on _p which doesn't exist yet or is a placeholder (a), changes from x->([a,] b, c) to x->(N, b, c)
 			n->prepareChildren();
 			_p.place(n);
-			n->navigateInto(_e->codeScene());
+			_e->codeScene()->navigateInto(n);
 		}
 	}
 	else

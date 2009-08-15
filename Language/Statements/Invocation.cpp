@@ -111,7 +111,7 @@ void Invocation::onDependencyChanged(Entity* _e)
 bool Invocation::keyPressed(KeyEvent const* _e)
 {
 	if (_e->text() == "(" && _e->focalIndex() == Callee && child(0))
-		child(0)->navigateOnto(_e->codeScene());
+		_e->codeScene()->navigateOnto(child(0));
 	else if (_e->text() == "(" && _e->focalIndex() == Callee)
 		setCurrent();
 	else if (_e->text() == ")" && !_e->isFocused())

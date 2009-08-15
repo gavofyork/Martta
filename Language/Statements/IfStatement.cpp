@@ -72,7 +72,7 @@ bool IfStatement::keyPressed(KeyEvent const* _e)
 	{
 		if (!child(AltBody))
 			middle(AltBody).spawnPrepared();
-		child(AltBody)->navigateOnto(_e->codeScene());
+		_e->codeScene()->navigateOnto(child(AltBody));
 	}
 	else
 		return Super::keyPressed(_e);

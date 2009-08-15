@@ -21,7 +21,6 @@ Small things:
 - Insertion of entities in, e.g. argument lists for function calls.
   - Just a comma?
 - CLEAN Move crap from ExplicitType to TypeDefinition.
-- CLEAN Simplify Entity/CodeScene API.
 - OPTIMISE String (and List/Hash/Type perhaps) with copy on write.
 - Interfacify ModifyingType (clashes with PhysicalType over ListType etc.)
   - NewOperation/DeleteOperation - interface with Type classes.
@@ -40,7 +39,6 @@ Webkit layout system
 - BRINGBACK VirtualOverload::defineHtml, ::defineEditHtml.
 - BRINGBACK parentheses annotation - may need update on change.
 - BRINGBACK Error system (!isValid()).
-- DULL Move CSS info from Entity.
 - BRINGBACK Visual change system.
 
 TODO SearchReferenced (\)

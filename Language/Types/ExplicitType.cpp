@@ -59,8 +59,8 @@ bool ExplicitType::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 	{
 		// switch to Explicit Type.
 		Entity* e = _p.place(new ExplicitType);
-		e->setEditing(_e->codeScene());
-		if (e->isEditing(_e->codeScene()))
+		_e->codeScene()->setEditing(e);
+		if (_e->codeScene()->isEditing(e))
 			_e->reinterpretLater();
 	}
 	else
@@ -132,8 +132,8 @@ bool ExplicitType::keyPressed(KeyEvent const* _e)
 {
 	if (_e->text().length() == 1 && (_e->text()[0].isUpper() || _e->text()[0] == L':'))
 	{
-		setEditing(_e->codeScene());
-		if (isEditing(_e->codeScene()))
+		_e->codeScene()->setEditing(this);
+		if (_e->codeScene()->isEditing(this))
 			_e->reinterpretLater();
 	}
 	else

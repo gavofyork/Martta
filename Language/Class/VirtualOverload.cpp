@@ -52,8 +52,8 @@ bool VirtualOverload::keyPressed(KeyEvent const* _e)
 {
 	if (_e->text().length() == 1 && _e->text()[0].isLower())
 	{
-		setEditing(_e->codeScene());
-		if (isEditing(_e->codeScene()))
+		_e->codeScene()->setEditing(this);
+		if (_e->codeScene()->isEditing(this))
 			_e->reinterpretLater();
 	}
 	else

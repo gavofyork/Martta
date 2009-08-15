@@ -70,8 +70,8 @@ bool NameEntryPoint::keyPressed(KeyEvent const* _e)
 {
 	if (self()->isPlaceholder() && _e->text().length() == 1 && _e->text()[0].isLower())
 	{
-		self()->setEditing(_e->codeScene());
-		if (self()->isEditing(_e->codeScene()))
+		_e->codeScene()->setEditing(self());
+		if (_e->codeScene()->isEditing(self()))
 			_e->reinterpretLater();
 		return true;
 	}
