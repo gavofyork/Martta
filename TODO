@@ -6,11 +6,13 @@ BUG Moving is crazily slow over statements.
 BUG 'Mstr'-> doesn't move away (only stops editing).
 CRASH delete a Referenced EnumValue.
 BUG DeclarationsHandler is keeping old placeholders when generating its tree.
+BUG dbl-click on if.
 UI:
 - Join statements or tree insert.
   - 'J' -> Joins next line to last [] in current.
 - FIX Page up & down.
 BUG: CodeView::onCurrentChanged _oldId bad on deletion of field.
+TODO WKTextStylist uses text file, defaulting to WebKitHtml::webKitHtml. 
 
 Small things:
 - Recognise this.
@@ -44,16 +46,6 @@ Webkit layout system
   - BRINGBACK VirtualOverload::defineHtml, ::defineEditHtml.
   - BRINGBACK parentheses annotation - may need update on change.
   - BRINGBACK Error system (!isValid()).
-- BRINGBACK Stylist support.
-  - defineHtml moves to interface WebKitHtml::webKitHtml.
-    - EditDelegate::defineHtml a bit annoying - abstract into something independent of HTML.
-      - Extra tags to help styles:
-      - String EditDelegate::real(), String EditDelegate::unreal().
-      - Stylist understands & replaces <^real>.
-      - Remove EditDelegateFace::defineHtml.
-        - For editable Entity classes, keep implementation but reroute to it from defineEditHtml.
-  - WKDefaultStylist uses Entity object's WebKitHtml::webKitHtml where possible.
-  - WKTextStylist uses text file, defaulting to WebKitHtml::webKitHtml. 
 - DULL Move CSS info from Entity.
 - BRINGBACK Visual change system.
 

@@ -99,7 +99,7 @@ String Invocation::defineHtml() const
 
 void Invocation::onDependencyChanged(Entity* _e)
 {
-	if (_e == child(Callee))
+	if (_e == child(Callee) && !child(Callee)->isPlaceholder() && child(Callee)->isInValidState())
 	{
 		// The function we are calling has changed.
 		validifyChildren();
