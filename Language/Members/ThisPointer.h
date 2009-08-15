@@ -32,10 +32,11 @@ class ThisPointer: public Typed
 public:
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 
+	virtual String						defineHtml() const { return L"<span id=\"this\" class=\"keyword\">" + type()->typeHtml(L"this") + L"</span>"; }
+
 protected:
 	virtual Type						type() const;
 	virtual String						code() const { return "this"; }
-	virtual String						defineHtml() const { return L"<span id=\"this\" class=\"keyword\">" + type()->typeHtml(L"this") + L"</span>"; }
 };
 
 }

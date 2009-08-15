@@ -18,6 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "IdentifierSet.h"
 #include "Type.h"
 #include "MemberLambda.h"
 #include "ThisPointer.h"
@@ -26,6 +27,33 @@ namespace Martta
 {
 
 MARTTA_OBJECT_CPP(ThisPointer);
+
+class ThisPointerSet: public IdentifierSet
+{
+public:
+	ThisPointerSet(): m_ourNamed(L"this") {}
+	virtual List<Named*>				identifiableAt(Position const& _p)
+	{
+		if (_p.exists() && _p->hasAncestor<MemberLambda>())
+		{
+			m_lastType = _p->ancestor<MemberLambda>()->thisType();
+			return List<Named*>() << &m_ourNamed;
+		}
+		return List<Named*>();
+	}
+	virtual void						acceptAt(Position const& _pos, Named*)
+	{
+		_pos.place(new ThisPointer);
+	}
+	virtual String						defineEditHtml(Named*, String const& _mid)
+	{
+		return L"<span id=\"this\" class=\"keyword\">" + m_lastType->typeHtml(_mid) + L"</span>";
+	}
+	Type m_lastType;
+	SimpleNamed m_ourNamed;
+};
+
+static ThisPointerSet s_thisPointerSet;
 
 bool ThisPointer::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {

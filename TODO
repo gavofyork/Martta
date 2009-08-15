@@ -12,7 +12,7 @@ UI:
   - 'J' -> Joins next line to last [] in current.
 - FIX Page up & down.
 BUG: CodeView::onCurrentChanged _oldId bad on deletion of field.
-BUG: Delete argument in invocation.
+BUG: Delete argument in invocation or statement in compound.
 BUG 'int i = 0;'
 
 Small things:
