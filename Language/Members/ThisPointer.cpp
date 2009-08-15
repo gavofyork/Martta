@@ -43,7 +43,7 @@ public:
 	}
 	virtual void						acceptAt(Position const& _pos, Named*)
 	{
-		_pos.place(new ThisPointer);
+		_pos.place(new ThisPointer)->setCurrent();
 	}
 	virtual String						defineEditHtml(Named*, String const& _mid)
 	{

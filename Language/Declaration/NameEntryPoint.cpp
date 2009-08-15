@@ -61,7 +61,6 @@ void NameEntryPoint::committed(Named* _i)
 			{
 				Position p = self()->over();
 				i->acceptAt(self()->over(), _i);
-				p->dropCursor();
 				// NOTE: We may not exist at this point!
 				return;
 			}

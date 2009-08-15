@@ -134,6 +134,8 @@ Position CodeScene::nearestBracket(Position const& _p) const
 {
 	int n = UndefinedIndex;
 	Position ret;
+	if (!_p.exists())
+		return ret;
 	foreach (Position i, m_bracketed)
 		if (_p == i)
 		{

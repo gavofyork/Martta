@@ -35,7 +35,9 @@ String Corporal::defineHtml(bool) const
 
 bool Corporal::keyPressed(KeyEvent const* _e)
 {
-	if ((_e->text() == ")" || _e->text() == "{") && _e->focalIndex() != Body && self()->child(Body))
+	if (_e->text() == ")" && _e->focalIndex() != Body)
+		self()->navigateOnto(_e->codeScene());
+	else if ((_e->text() == ")" || _e->text() == "{") && _e->focalIndex() != Body && self()->child(Body))
 		self()->child(Body)->navigateOnto(_e->codeScene());
 	else
 		return false;

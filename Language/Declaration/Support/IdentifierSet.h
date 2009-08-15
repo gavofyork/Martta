@@ -47,9 +47,10 @@ template<class T>
 class SimpleIdentifierSet: public IdentifierSet
 {
 public:
-	SimpleIdentifierSet(wchar_t const* _name, wchar_t const* _html = L"<span class=\"keyword\"><?></span>"):
+	SimpleIdentifierSet(wchar_t const* _name, wchar_t const* _preHtml = L"<span class=\"keyword\">", wchar_t const* _postHtml = L"</span>"):
 		m_ourNamed	(_name),
-		m_html		(_html)
+		m_preHtml	(_preHtml),
+		m_postHtml	(_postHtml)
 	{}
 	virtual List<Named*>				identifiableAt(Position const& _p)
 	{
@@ -59,14 +60,15 @@ public:
 	}
 	virtual void						acceptAt(Position const& _pos, Named*)
 	{
-		_pos.place((new T)->prepareChildren());
+		_pos.place((new T)->prepareChildren())->dropCursor();
 	}
-	virtual String						defineEditHtml(Named*, String const&)
+	virtual String						defineEditHtml(Named*, String const& _mid)
 	{
-		return m_html;
+		return m_preHtml + _mid + m_postHtml;
 	}
 	SimpleNamed m_ourNamed;
-	String m_html;
+	String m_preHtml;
+	String m_postHtml;
 };
 
 }
