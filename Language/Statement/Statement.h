@@ -22,6 +22,7 @@
 
 #include "Type.h"
 #include "NameEntryPoint.h"
+#include "WebViewable.h"
 #include "TypedOwner.h"
 #include "Entity.h"
 
@@ -31,11 +32,12 @@ namespace Martta
 class ValueDefiner;
 class Typed;
 
-class Statement: public Entity, public_interface TypedOwner, public_interface NameEntryPoint
+class Statement: public Entity, public_interface TypedOwner, public_interface NameEntryPoint, public_interface WebViewable
 {
 	MARTTA_PLACEHOLDER(Entity)
 	MARTTA_INHERITS(TypedOwner, 0)
 	MARTTA_INHERITS(NameEntryPoint, 1)
+	MARTTA_INHERITS(WebViewable, 2)
 
 public:
 	virtual String						code() const { return "(void)0;"; }
@@ -66,7 +68,6 @@ protected:
 	virtual void						appendDefinedUptoHere(int, List<ValueDefiner*>*) const;
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s) { return NameEntryPoint::newDelegate<Statement>(_s); }
 	virtual bool						keyPressed(KeyEvent const* _e) { return NameEntryPoint::keyPressed(_e) ? true : Super::keyPressed(_e); }
-	virtual String						defineHtml() const { return L"<span id=\"this\">&empty;</span>"; }
 };
 
 }

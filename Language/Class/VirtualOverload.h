@@ -35,7 +35,6 @@ public:
 
 	VirtualMethod*						get() const { return m_base; }
 	void								set(VirtualMethod* _m) { setDependency(m_base, _m); }
-	String								defineEditHtml(VirtualMethod*) const;
 	List<VirtualMethod*>				possibilities() const;
 
 protected:
@@ -46,6 +45,8 @@ protected:
 	virtual bool						isInValidState() const { return m_base.isUsable(); }
 	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
+
+	virtual String						defineEditHtml(CodeScene*) const;
 
 	virtual void						apresLoad() { AssertNR(m_base.isUsable()); addDependency(m_base); Super::apresLoad(); }
 

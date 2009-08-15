@@ -35,7 +35,6 @@ namespace Martta
 class EditDelegateFace;
 class Position;
 class Entity;
-class Stylist;
 
 class DataFinder
 {
@@ -60,10 +59,6 @@ public:
 	// Set the current attributes.
 	virtual Entity*				subject() const = 0;
 	virtual void				setSubject(Entity* _subject) = 0;
-
-	// Stylist
-	virtual Stylist*			stylist() const = 0;
-	virtual void				setStylist(Stylist* _s) = 0;
 
 	// What's happening?
 	virtual Entity*				current() const = 0;

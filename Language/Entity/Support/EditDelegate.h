@@ -36,12 +36,15 @@ public:
 	virtual ~EditDelegateFace();
 
 	CodeScene*					codeScene() const;
+
+	virtual String				real() const { return String::null; }
+	virtual String				unreal() const { return String::null; }
 	Entity*						subject() const { return m_subject; }
+
 	void						initialised() { m_immediateCommits = !isValid(); }
 	void						lazyCommit() { if (m_immediateCommits) tryCommit(); }
 	void						tryCommit() { if (isValid()) commit(); }
 
-	virtual String				defineHtml() const;
 	virtual bool				keyPressed(KeyEvent const*) { return false; }
 	/// Called only once, and only when this will be destroyed but the subject will live.
 	virtual void				leavingEditIntact() {}

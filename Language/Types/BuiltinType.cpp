@@ -194,9 +194,11 @@ List<int> BuiltinType::possibilities()
 	return ret;
 }
 
-String BuiltinType::defineEditHtml(int) const
+String BuiltinType::defineEditHtml(CodeScene* _cs) const
 {
-	return L"<span class=\"TypeEntity\">" + typeHtml(L"<?>") + L"</span>";
+	if (EditDelegateFace* d = editDelegate(_cs))
+		return L"<span class=\"TypeEntity\">" + typeHtml(d->real() + L"<span class=\"unreal\">" + d->unreal() + L"</span>") + L"</span>";
+	return String::null;
 }
 
 EditDelegateFace* BuiltinType::newDelegate(CodeScene* _s)

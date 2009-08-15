@@ -49,6 +49,7 @@ protected:
 	virtual void						apresLoad();
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 	virtual String						defineHtml() const;
+	virtual String						defineEditHtml(CodeScene* _cs) const;
 	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p[L"text"] = m_text.isEmpty() ? code() : m_text; }
 	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_text = _p[L"text"]; }

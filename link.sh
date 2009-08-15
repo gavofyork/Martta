@@ -78,20 +78,20 @@ for f in $files; do
 	file=${f/$ffile}
 	if [[ $path == $f ]]; then path="."; fi
 	paths="$paths $path"
-	local header=$(find $src -type f -name $file.h)
-	local source=$(find $src -type f -name $file.cpp)
-	local basic=$(find $src -type f -name $file)
+	local header=$(find $src -type f -name $file.h | head -n1)
+	local source=$(find $src -type f -name $file.cpp | head -n1)
+	local basic=$(find $src -type f -name $file | head -n1)
 	mkdir -p $dest/$path
 	if [[ -e $header ]]; then
-		rsync -t $header $dest/$path/
+		cp -f $header $dest/$path/
 		headers="$headers $path/$file.h"
 	fi
 	if [[ -e $source ]]; then
-		rsync -t $source $dest/$path/
+		cp -f $source $dest/$path/
 		sources="$sources $path/$file.cpp"
 	fi
 	if [[ -e $basic ]]; then
-		rsync -t $basic $dest/$path/
+		cp -f $basic $dest/$path/
 		data="$data $path/$file"
 	fi
 done
@@ -191,15 +191,15 @@ prepare Operator "Operator Support/OperatorRegistrar"
 prepare CQualifiers CQualifiers ""
 prepare CTypes CTypes ""
 
-prepare Entity "Support/Auxilliary Support/AuxilliaryFace Support/AuxilliaryRegistrar Support/ChangeMan Support/CodeScene Support/CompletionDelegate Support/CullManager Support/Dier Support/EditDelegate Support/EntitySupport Support/KeyEvent Support/Kind Support/Meta Support/Position Support/SafePointer Support/Stylist Interfaces/ChildValidifier Interfaces/Dependee Interfaces/Depender Interfaces/Familial Entity Support/WebStylistRegistrar Support/SpecialKeys" 
+prepare Entity "Support/Auxilliary Support/AuxilliaryFace Support/AuxilliaryRegistrar Support/ChangeMan Support/CodeScene Support/CompletionDelegate Support/CullManager Support/Dier Support/EditDelegate Support/EntitySupport Support/KeyEvent Support/Kind Support/Meta Support/Position Support/SafePointer Interfaces/ChildValidifier Interfaces/Dependee Interfaces/Depender Interfaces/Familial Entity Support/SpecialKeys" 
 
-prepare WebKitView "Interfaces/WebKitViewable" "Entity"
+prepare WebView "Interfaces/WebViewable Support/WebStylist Support/WebStylistRegistrar" "Entity"
 
 prepare Project "Project Solution" "Entity"
 
-prepare TypeEntity "TypeEntity ModifyingType Interfaces/TypedOwner Interfaces/TypeNamer Support/Type" Entity
+prepare TypeEntity "TypeEntity ModifyingType Interfaces/TypedOwner Interfaces/TypeNamer Support/Type" "Entity WebViewable"
 
-prepare Labels "Interfaces/Labelled ConstLabel AccessLabel Label MiscLabels IdLabel TextLabel OperatorLabel" "Entity Operator"
+prepare Labels "Interfaces/Labelled ConstLabel AccessLabel Label MiscLabels IdLabel TextLabel OperatorLabel" "Entity Operator WebViewable"
 
 prepare Declaration "Support/IdentifierSet Support/IdentifierSetRegistrar Interfaces/Identifiable Support/ModelPtr Support/ModelPtrFace Support/ModelPtrRegistrar Interfaces/Named NameEntryPoint Declaration" "Labels"
 

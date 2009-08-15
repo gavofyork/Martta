@@ -165,9 +165,11 @@ List<TypeDefinition*> ExplicitType::possibilities()
 	return ret;
 }
 
-String ExplicitType::defineEditHtml(TypeDefinition*) const
+String ExplicitType::defineEditHtml(CodeScene* _cs) const
 {
-	return L"<span class=\"TypeEntity\">" + typeHtml(L"<?>") + L"</span>";
+	if (EditDelegateFace* d = editDelegate(_cs))
+		return L"<span class=\"TypeEntity\">" + typeHtml(d->real() + L"<span class=\"unreal\">" + d->unreal() + L"</span>") + L"</span>";
+	return String::null;
 }
 
 EditDelegateFace* ExplicitType::newDelegate(CodeScene* _s)

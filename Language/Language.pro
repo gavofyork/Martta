@@ -4,7 +4,7 @@ SUBDIRS = \
  CQualifiers \
  CTypes \
  Entity \
- WebKitView \
+ WebView \
  Project \
  TypeEntity \
  Labels \

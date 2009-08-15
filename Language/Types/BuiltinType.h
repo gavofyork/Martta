@@ -72,7 +72,6 @@ public:
 	}
 
 	List<int>							possibilities();
-	String								defineEditHtml(int) const;
 	inline int							get() const { return m_id; }
 	inline void							set(uint _m) { setId(_m); }
 	virtual bool						isNull() const { return m_id == (uint)-1; }
@@ -86,6 +85,7 @@ protected:
 	virtual Rgb							idColour() const { return 0xffbb77; }
 	virtual TypeEntity*					newClone() const { return new BuiltinType(m_id); }
 	virtual String						defineHtml() const;
+	virtual String						defineEditHtml(CodeScene* _cs) const;
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 	virtual bool						isSuperfluous() const { return Super::isSuperfluous() && m_id == (uint)-1; }
 	virtual bool						keyPressed(KeyEvent const* _e);

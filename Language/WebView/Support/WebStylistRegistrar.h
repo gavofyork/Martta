@@ -49,6 +49,7 @@ public:
 
 private:
 	static WebStylistRegistrar*			s_this;										///< Us.
+
 	Hash<AuxilliaryFace const*, String> m_css;										///< All our CSS elements.
 	mutable bool						m_changed;
 };

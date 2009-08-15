@@ -1,5 +1,5 @@
 DEPS += Entity
-OURDIRS = Interfaces
+OURDIRS = Interfaces Support
 TWD = $$PWD
 
 include(../dep.pri)

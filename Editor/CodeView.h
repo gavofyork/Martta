@@ -23,7 +23,7 @@
 #include <QWebView>
 
 #include <Entity.h>
-#include <Stylist.h>
+#include <WebStylist.h>
 #include <CodeScene.h>
 
 namespace Martta
@@ -42,8 +42,8 @@ public:
 	virtual void				setSubject(Entity* _subject);
 
 	// Stylist
-	virtual Stylist*			stylist() const { return m_stylist; };
-	virtual void				setStylist(Stylist* _s);
+	virtual WebStylist*			stylist() const { return m_stylist; };
+	virtual void				setStylist(WebStylist* _s);
 
 	// What's happening?
 	virtual Entity*				current() const;
@@ -86,7 +86,7 @@ private:
 	List<SafePointer<Entity> >	m_dirty;
 
 	SafePointer<Entity>			m_subject;
-	Stylist*					m_stylist;
+	WebStylist*					m_stylist;
 	bool						m_silent;
 };
 

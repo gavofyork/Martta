@@ -33,18 +33,8 @@
 namespace Martta
 {
 
-class Stylist;
 class EditDelegateFace;
 class CodeScene;
-
-String refinedHtml(Entity const* _e);
-String htmlEscape(String const& _s);
-String toHtml(Entity const* _e, String const& _tag = L"span");
-String toHtml(List<Entity const*> const& _es, String const& _delimiter = L" ", String const& _tag = L"span");
-inline String toHtml(List<Entity*> const& _es, String const& _delimiter = L" ", String const& _tag = L"span") { return toHtml(list_const_cast<Entity const*>(_es), _delimiter, _tag); }
-void addToHtmlCache(Entity const* _e, String const& _s);
-void clearHtmlCache();
-
 
 /**
  * Note regarding rootEntity/null-Context: You can never depend on something which does not share the
@@ -61,7 +51,6 @@ class Entity: public Nothing, public SafePointerTarget, virtual public Dier, pub
 	MARTTA_INHERITS(Dependee, 1)
 	MARTTA_INHERITS(Depender, 2)
 
-	friend class Stylist;
 	friend class EditDelegateFace;
 	friend class KeyEvent;
 
@@ -391,8 +380,6 @@ public:
 	String								namedIndexId() const;		// number for static named, alpha for dynamic named, null for cardinal.
 	List<int>							knownNames() const;
 
-	virtual String						defineHtml() const;
-
 	/// We become current in all code scenes.
 	void								setCurrent();
 	void								setEditing(CodeScene* _s);
@@ -402,7 +389,7 @@ public:
 	bool								isCurrentOrAncestor(CodeScene* _s) const;
 	bool								isEditing() const;
 	bool								isEditing(CodeScene* _s) const;
-	EditDelegateFace*					editDelegate(CodeScene* _s);
+	EditDelegateFace*					editDelegate(CodeScene* _s) const;
 	virtual EditDelegateFace*			newDelegate(CodeScene*) { return 0; }
 	void								clearEditing();
 	void								navigateInto(CodeScene* _s);

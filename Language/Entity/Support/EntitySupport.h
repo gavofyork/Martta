@@ -30,7 +30,6 @@ namespace Martta
 {
 
 class Entity;
-class Stylist;
 class EditDelegateFace;
 class CodeScene;
 class KeyEvent;

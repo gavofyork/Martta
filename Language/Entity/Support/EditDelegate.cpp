@@ -40,11 +40,6 @@ EditDelegateFace::~EditDelegateFace()
 		m_subject->checkForCullingLater();
 }
 
-String EditDelegateFace::defineHtml() const
-{
-	return m_subject->defineHtml().replace(L"<^>", L"");
-}
-
 CodeScene* EditDelegateFace::codeScene() const
 {
 	return m_codeScene;

@@ -20,21 +20,30 @@
 
 #pragma once
 
-#include <msSupport.h>
 #include <msString.h>
 using namespace MarttaSupport;
 
-#include "EntitySupport.h"
+#include "Meta.h"
 
 namespace Martta
 {
 
-class Stylist
+class WebViewable
 {
-public:
-	virtual ~Stylist() {}
+	MARTTA_INTERFACE
 
-	virtual String defineHtml(Entity*, ViewKeys const&) { return "HELLO"; }
+public:
+	virtual ~WebViewable() {}
+
+	virtual String							defineHtml() const { return String::null; }
+	virtual String							defineEditHtml(CodeScene* _cs) const;
+
+	static String							htmlEscape(String const& _s);
+
+protected:
+	static String							toHtml(Entity const* _e, String const& _tag = L"span");
+	static String							toHtml(List<Entity const*> const& _es, String const& _delimiter = L" ", String const& _tag = L"span");
+	inline String							toHtml(List<Entity*> const& _es, String const& _delimiter = L" ", String const& _tag = L"span") { return toHtml(list_const_cast<Entity const*>(_es), _delimiter, _tag); }
 };
 
 }

@@ -68,6 +68,12 @@ String IntegerLiteral::defineHtml() const
 	return String("<span id=\"this\" class=\"IntegerLiteral Literal\">%1%2%3</span>").arg(ret).arg(m_signed ? "" : "u").arg(m_range == ShortRange ? "s" : m_range == LongRange ? "l" : m_range == LonglongRange ? "ll" : "");
 }
 
+String IntegerLiteral::defineEditHtml(CodeScene* _cs) const
+{
+	if (EditDelegate* d = editDelegate(_cs))
+		return String("<span class=\"Literal IntegerLiteral\">%1%2%3</span>").arg(d->real()).arg(m_signed ? "" : "u").arg((m_range == ShortRange ? "s" : m_range == LongRange ? "l" : m_range == LonglongRange ? "ll" : ""));
+}
+
 EditDelegateFace* IntegerLiteral::newDelegate(CodeScene* _s)
 {
 	class Delegate: public EditDelegate<IntegerLiteral>
@@ -114,10 +120,12 @@ EditDelegateFace* IntegerLiteral::newDelegate(CodeScene* _s)
 			m_entry.toInt(&ret);
 			return ret;
 		}
-		virtual String defineHtml() const
+		virtual String real() const
 		{
-			return String("<span class=\"Literal IntegerLiteral\">%1%2%3</span>").arg(m_entry).arg(subject()->m_signed ? "" : "u").arg((subject()->m_range == ShortRange ? "s" : subject()->m_range == LongRange ? "l" : subject()->m_range == LonglongRange ? "ll" : ""));
+			return m_entry;
 		}
+
+	private:
 		String m_entry;
 	};
 	return new Delegate(this, _s);

@@ -38,13 +38,18 @@ List<Named*> NameEntryPoint::possibilities()
 	return ret;
 }
 
-String NameEntryPoint::defineEditHtml(Named* _i)
+String NameEntryPoint::defineEditHtml(CodeScene* _cs)
 {
-	if (_i)
-		foreach (IdentifierSet* i, IdentifierSetRegistrar::get()->allSets())
-			if (i->identifiableAt(self()->over()).contains(_i))
-				return i->defineEditHtml(_i);
-	return L"<?>";
+	if (EditDelegateFace* d = editDelegate(_cs))
+	{
+		Named* n = static_cast<CompletionDelegate<Entity, Named*> >(d)->selection();
+		if (n)
+			foreach (IdentifierSet* i, IdentifierSetRegistrar::get()->allSets())
+				if (i->identifiableAt(self()->over()).contains(n))
+					return i->defineEditHtml(n);
+		return d->real() + L"<span class=\"unreal\">" + d->unreal() + L"</span>";
+	}
+	return String::null;
 }
 
 void NameEntryPoint::committed(Named* _i)

@@ -20,6 +20,7 @@ Small things:
 - Insertion of entities in, e.g. argument lists for function calls.
   - Just a comma?
 - CLEAN Move crap from ExplicitType to TypeDefinition.
+- CLEAN Simplify Entity/CodeScene API.
 - OPTIMISE String (and List/Hash/Type perhaps) with copy on write.
 - Interfacify ModifyingType (clashes with PhysicalType over ListType etc.)
   - NewOperation/DeleteOperation - interface with Type classes.
@@ -45,6 +46,12 @@ Webkit layout system
   - BRINGBACK Error system (!isValid()).
 - BRINGBACK Stylist support.
   - defineHtml moves to interface WebKitHtml::webKitHtml.
+    - EditDelegate::defineHtml a bit annoying - abstract into something independent of HTML.
+      - Extra tags to help styles:
+      - String EditDelegate::real(), String EditDelegate::unreal().
+      - Stylist understands & replaces <^real>.
+      - Remove EditDelegateFace::defineHtml.
+        - For editable Entity classes, keep implementation but reroute to it from defineEditHtml.
   - WKDefaultStylist uses Entity object's WebKitHtml::webKitHtml where possible.
   - WKTextStylist uses text file, defaulting to WebKitHtml::webKitHtml. 
 - DULL Move CSS info from Entity.

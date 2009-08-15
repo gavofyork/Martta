@@ -55,7 +55,6 @@ template<class S> inline List<S> nameStarts(List<S> const& _l, String const& _s)
 // Exists: void T::set(R)
 // Exists: R T::get()
 // Works: NameTrait<R>::name(R)
-// Exists: String T::defineEditHtml(R); should contain <?> for where the editing is to be.
 // Might exist: T::committed()
 
 template<class T, class R>
@@ -68,6 +67,7 @@ public:
 		m_possibilities = EditDelegate<T>::subject()->possibilities();
 		updateCompletion();
 	}
+	R selection() const { return m_selection; }
 	virtual void leavingEditIntact()
 	{
 		mDebug() << "leaving edit intact with " << m_selection;
@@ -82,13 +82,13 @@ public:
 	{
 		return m_cycled > -1 || (m_name + m_completion).toUpper() == NameTrait<R>::name(m_selection).toUpper();
 	}
-	virtual String defineHtml() const
+	virtual String real() const
 	{
-		String ret = EditDelegate<T>::subject() ? EditDelegate<T>::subject()->defineEditHtml(m_selection) : L"<?>";
-		if (ret.contains(L"<?>"))
-			return ret.replace(L"<?>", (m_selection ? NameTrait<R>::name(m_selection).left(m_name.length()) : m_name) + "<span class=\"unreal\">" + (m_cycled >= 0 && m_cycled < m_potentials.size() ? NameTrait<R>::name(m_potentials[m_cycled]).mid(m_name.length()) : m_completion) + "</span>");
-		else
-			return ret;
+		return m_selection ? NameTrait<R>::name(m_selection).left(m_name.length()) : m_name;
+	}
+	virtual String unreal() const
+	{
+		return (m_cycled >= 0 && m_cycled < m_potentials.size() ? NameTrait<R>::name(m_potentials[m_cycled]).mid(m_name.length()) : m_completion);
 	}
 	virtual bool keyPressed(KeyEvent const* _e)
 	{
@@ -153,6 +153,8 @@ public:
 			m_completion.chop(1);
 		}
 	}
+
+private:
 	R							m_selection;
 	String						m_name;
 	String						m_completion;

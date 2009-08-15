@@ -21,7 +21,7 @@
 #include <QtGui>
 #include <QtWebKit>
 
-#include <Stylist.h>
+#include <WebStylist.h>
 #include <EditDelegate.h>
 #include <WebStylistRegistrar.h>
 
@@ -35,7 +35,7 @@ namespace Martta
 CodeView::CodeView(QWidget* _parent):
 	QWebView					(_parent),
 	m_subject					(0),
-	m_stylist					(new Stylist),
+	m_stylist					(new WebStylist),
 	m_silent					(false)
 {
 	init();
@@ -52,7 +52,7 @@ void CodeView::setSubject(Entity* _s)
 	init();
 }
 
-void CodeView::setStylist(Stylist* _s)
+void CodeView::setStylist(WebStylist* _s)
 {
 	delete m_stylist;
 	m_stylist = _s;
@@ -155,7 +155,7 @@ void CodeView::refresh()
 		// the active CodeScene).
 		if (editDelegate())
 		{
-			QString html = qs(editDelegate()->defineHtml());
+			QString html = qs(m_stylist->editHtml(editEntity(), this));
 			page()->mainFrame()->evaluateJavaScript(QString("thisNode(document.getElementById('%1')).innerHTML = '%2'").arg((int)editEntity()).arg(html.replace('\'', "\\'")));
 		}
 		// If we're dirty then update the HTML.
@@ -166,12 +166,9 @@ void CodeView::refresh()
 				Entity* cur = current();
 				QString s;
 				foreach (Entity* i, e->children())
-					if (m_dirty.contains(i) && i != editEntity())
-						m_dirty.removeAll(i);
-					else if ((s = page()->mainFrame()->evaluateJavaScript(QString("document.getElementById('%1').outerHTML").arg((int)i)).toString().replace('\\', "&#92;")) != QString::null)
-						addToHtmlCache(i, qs(s));
-				page()->mainFrame()->evaluateJavaScript(QString("changeContent('%1', '%2')").arg((int)e).arg(qs(refinedHtml(e)).replace('\'', "\\'")));
-				clearHtmlCache();
+					if ((s = page()->mainFrame()->evaluateJavaScript(QString("document.getElementById('%1').outerHTML").arg((int)i)).toString().replace('\\', "&#92;")) != QString::null)
+						m_stylist->addToHtmlCache(i, qs(s));
+				page()->mainFrame()->evaluateJavaScript(QString("changeContent('%1', '%2')").arg((int)e).arg(qs(m_stylist->rejiggedHtml(e)).replace('\'', "\\'")));
 				silentlySetCurrent(cur);
 			}
 		}
@@ -203,7 +200,7 @@ QRect CodeView::bounds(Entity const* _e) const
 void CodeView::init()
 {
 	QString css = qs(WebStylistRegistrar::get()->css());
-	setHtml(QString("<!DOCTYPE HTML><html><head><style type=\"text/css\">%1</style></head><body onmousedown=\"procMouseDown(event)\">%2</body></html>").arg(css).arg(qs(m_subject ? toHtml(m_subject) : String::null)));
+	setHtml(QString("<!DOCTYPE HTML><html><head><style type=\"text/css\">%1</style></head><body onmousedown=\"procMouseDown(event)\">%2</body></html>").arg(css).arg(qs(m_stylist->fullHtml(m_subject))));
 	page()->mainFrame()->addToJavaScriptWindowObject("CodeView", this);
 	QFile support(":/CodeView/Support.js");
 	support.open(QFile::ReadOnly);

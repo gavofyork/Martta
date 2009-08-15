@@ -79,6 +79,17 @@ String TextLabel::defineHtml() const
 	return String("<span id=\"this\"><span class=\"TextLabel-%1\">").arg(isNamed() ? L"named" : L"unnamed") + tryParent<Labelled>()->labelHtml(name()) + L"</span></span>";
 }
 
+String TextLabel::defineEditHtml(CodeScene* _cs) const
+{
+	if (EditDelegate* d = editDelegate(_cs))
+	{
+		// The tryParent()-> should be safe since Labelled checks for a null this-pointer.
+		if (d->real().isEmpty())
+			return L"<span class=\"minor\">[ANONYMOUS]</span>";
+		return L"<span class=\"TextLabel-named\">" + tryParent<Labelled>()->labelHtml(d->real()) + L"</span>";
+	}
+}
+
 class Delegate: public EditDelegate<TextLabel>
 {
 public:
@@ -130,14 +141,12 @@ public:
 	{
 		return true;//!m_text.isEmpty();
 	}
-	virtual String defineHtml() const
+	virtual String real() const
 	{
-		// The tryParent()-> should be safe since Labelled checks for a null this-pointer.
-		if (m_text.isEmpty())
-			return L"<span class=\"minor\">[ANONYMOUS]</span>";
-		return L"<span class=\"TextLabel-named\">" + subject()->tryParent<Labelled>()->labelHtml(m_text) + L"</span>";
-//		return String(L"<span class=\"TextLabel-%1\">").arg(isNamed() ? L"named" : L"unnamed") + subject()->tryParent<Labelled>()->labelHtml(m_text)) + L"</span>";
+		return m_text;
 	}
+
+private:
 	String m_text;
 };
 

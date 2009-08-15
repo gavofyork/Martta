@@ -21,24 +21,31 @@
 #pragma once
 
 #include "CompletionDelegate.h"
+#include "WebViewable.h"
 #include "Named.h"
 #include "Meta.h"
 
 namespace Martta
 {
 
-class NameEntryPoint
+class NameEntryPoint: public_interface WebViewable
 {
 	MARTTA_INTERFACE
+	MARTTA_INHERITS(WebViewable, 0)
 
 public:
 	Named*								get() const { return 0; }
 	void								set(Named*) const {}
 	void								committed(Named*);
 	List<Named*>						possibilities();
-	String								defineEditHtml(Named*);
-	template<class T> EditDelegateFace*	newDelegate(CodeScene* _s) { return new CompletionDelegate<T, Named*>(asKind<T>(), _s); }
+
+protected:
 	bool								keyPressed(KeyEvent const*);
+
+	template<class T> EditDelegateFace*	newDelegate(CodeScene* _s) { return new CompletionDelegate<T, Named*>(asKind<T>(), _s); }
+
+	virtual String						defineHtml() const { return L"<span id=\"this\">&empty;</span>"; }
+	virtual String						defineEditHtml(CodeScene* _cs);
 
 	virtual ~NameEntryPoint() {}
 };
