@@ -67,6 +67,7 @@ local ffile="*/"
 local fpath="/*"
 local sources=""
 local headers=""
+local distfiles=""
 local data=""
 local paths=""
 
@@ -102,15 +103,17 @@ if [[ $COMPOSED && "x$sources" != "x" ]]; then
 		echo "#include \"$i\"" >> $dest/.$name-composed.cpp
 	done
 	echo >> $dest/.$name-composed.cpp
-	headers="$headers $sources"
+	headers="$headers"
+	distfiles="$sources"
 	sources=".$name-composed.cpp"
 fi
 
 cat > $dest/$name.pro << EOF
 include(../martta.prf)
 include($name.pri)
-SOURCES += $sources
 HEADERS += $headers
+unix:HEADERS += $distfiles
+SOURCES += $sources
 $(for (( i=4 ; i<$#+1 ; i++ )); do echo ${!i}; done;)
 EOF
 if [[ "x$data" != "x" ]]; then

@@ -1,5 +1,5 @@
 BUG current() bad in onCurrentAboutToChange.
-BUG Colour doesn't carry for enums to their referenceds.
+BUG 'a'<Del> loses current.
 BUG 'some'<Del> doesn't delete.
 BUG 'M' gives largely arbitrary results.
 Dynamic code-loading (plugins).

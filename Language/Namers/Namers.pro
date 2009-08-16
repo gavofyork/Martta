@@ -1,5 +1,6 @@
 include(../martta.prf)
 include(Namers.pri)
+HEADERS +=  ./EnumerationNamer.h ./EnumValue.h ./Argument.h ./LambdaNamer.h
+unix:HEADERS +=  ./EnumerationNamer.cpp ./EnumValue.cpp ./Argument.cpp ./LambdaNamer.cpp
 SOURCES += .Namers-composed.cpp
-HEADERS +=  ./EnumerationNamer.h ./EnumValue.h ./Argument.h ./LambdaNamer.h  ./EnumerationNamer.cpp ./EnumValue.cpp ./Argument.cpp ./LambdaNamer.cpp
 
