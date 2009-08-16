@@ -44,7 +44,7 @@ bool BoolLiteral::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 
 String BoolLiteral::defineHtml() const
 {
-	return L"<span id=\"this\" class=\"keyword\">" + type()->typeHtml(m_value ? L"true" : L"false") + L"</span>";
+	return L"<^span class=\"keyword\">" + type()->typeHtml(m_value ? L"true" : L"false") + L"</span>";
 }
 
 }

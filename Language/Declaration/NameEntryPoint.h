@@ -44,7 +44,7 @@ protected:
 
 	template<class T> EditDelegateFace*	newDelegate(CodeScene* _s) { return self()->isPlaceholder() ? new CompletionDelegate<T, Named*>(asKind<T>(), _s) : 0; }
 
-	virtual String						defineHtml() const { return L"<span id=\"this\">&empty;</span>"; }
+	virtual String						defineHtml() const { return L"<^span>&empty;</span>"; }
 	virtual String						defineEditHtml(CodeScene* _cs) const;
 
 	virtual ~NameEntryPoint() {}

@@ -36,7 +36,7 @@ protected:
 	virtual Types						allowedTypes(int _index) const;
 	virtual Type						scope() const;
 	virtual String						code() const;
-	virtual String						defineHtml() const { return toHtml(child(FirstOperand)) + L"<span id=\"this\" class=\"symbol\">&bull;</span>" + toHtml(child(SecondOperand)); }
+	virtual String						defineHtml() const { return toHtml(child(FirstOperand)) + L"<^span class=\"symbol\">&bull;</span>" + toHtml(child(SecondOperand)); }
 };
 
 }

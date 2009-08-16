@@ -102,7 +102,7 @@ String EnumerationNamer::defineEnumerationHtml() const
 		name = Type(const_cast<TypeDefinition*>(asKind<TypeDefinition>()))->typeHtml(toHtml(self()->child(Identity), "span class=\"TypeEntity\""));
 	else if (!m_stem.isEmpty())
 		name = L"<span class=\"unreal\">[" + m_stem + L"...]</span>";
-	return L"<span class=\"keyword\">enum</span> " + name + L"<div class=\"minor symbol\">{</div><div class=\"block\">" + toHtml(self()->cardinalChildren()) + L"</div><div class=\"minor symbol\">}</div>";
+	return L"<span class=\"keyword\">enum</span> " + name + L"<div class=\"minor symbol\">{</div><div class=\"block\">" + toHtml(self()->cardinalChildren(), L"", L"div") + L"</div><div class=\"minor symbol\">}</div>";
 /*
 	else
 	{

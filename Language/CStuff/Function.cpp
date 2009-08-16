@@ -40,7 +40,7 @@ Kinds Function::allowedKinds(int _i) const
 
 String Function::defineHtml() const
 {
-	return L"<div id=\"this\">" + defineLambdaHtml() + L"</div>";
+	return L"<^div>" + defineLambdaHtml() + L"</div>";
 }
 
 }

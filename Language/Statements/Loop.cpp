@@ -59,7 +59,7 @@ bool Loop::keyPressed(KeyEvent const* _e)
 
 String Loop::defineHtml() const
 {
-	return L"<span id=\"this\" class=\"keyword\">forever</span><br/>" + Corporal::defineHtml(true);
+	return L"<^span class=\"keyword\">forever</span><br/>" + Corporal::defineHtml(true);
 }
 
 String Loop::code() const

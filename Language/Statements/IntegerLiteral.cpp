@@ -65,13 +65,13 @@ String IntegerLiteral::defineHtml() const
 	ret = ret.mid(1);
 	if (m_signed)
 		ret = (m_value < 0 ? "-" : "") + ret;
-	return String("<span id=\"this\" class=\"IntegerLiteral Literal\">%1%2%3</span>").arg(ret).arg(m_signed ? "" : "u").arg(m_range == ShortRange ? "s" : m_range == LongRange ? "l" : m_range == LonglongRange ? "ll" : "");
+	return String("<^span class=\"IntegerLiteral Literal\">%1%2%3</span>").arg(ret).arg(m_signed ? "" : "u").arg(m_range == ShortRange ? "s" : m_range == LongRange ? "l" : m_range == LonglongRange ? "ll" : "");
 }
 
 String IntegerLiteral::defineEditHtml(CodeScene* _cs) const
 {
 	if (EditDelegateFace* d = editDelegate(_cs))
-		return String("<span class=\"Literal IntegerLiteral\">%1%2%3</span>").arg(d->real()).arg(m_signed ? "" : "u").arg((m_range == ShortRange ? "s" : m_range == LongRange ? "l" : m_range == LonglongRange ? "ll" : ""));
+		return String("<^span class=\"Literal IntegerLiteral\">%1%2%3</span>").arg(d->real()).arg(m_signed ? "" : "u").arg((m_range == ShortRange ? "s" : m_range == LongRange ? "l" : m_range == LonglongRange ? "ll" : ""));
 	return String::null;
 }
 

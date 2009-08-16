@@ -148,7 +148,7 @@ List<Declaration*> ExplicitType::utilised() const
 
 String ExplicitType::defineHtml() const
 {
-	return L"<span id=\"this\" class=\"TypeEntity\">" + typeHtml(m_subject.isUsable() ? m_subject->name() : L"&empty;") + L"</span>";
+	return L"<^span class=\"TypeEntity\">" + typeHtml(m_subject.isUsable() ? m_subject->name() : L"&empty;") + L"</span>";
 }
 
 List<TypeDefinition*> ExplicitType::possibilities()
@@ -168,7 +168,7 @@ List<TypeDefinition*> ExplicitType::possibilities()
 String ExplicitType::defineEditHtml(CodeScene* _cs) const
 {
 	if (EditDelegateFace* d = editDelegate(_cs))
-		return L"<span class=\"TypeEntity\">" + typeHtml(d->real() + L"<span class=\"unreal\">" + d->unreal() + L"</span>") + L"</span>";
+		return L"<^span class=\"TypeEntity\">" + typeHtml(d->real() + L"<span class=\"unreal\">" + d->unreal() + L"</span>") + L"</span>";
 	return String::null;
 }
 

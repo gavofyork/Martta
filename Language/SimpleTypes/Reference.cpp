@@ -58,7 +58,7 @@ bool Reference::defineSimilarityFrom(TypeEntity const* _f, Castability _c) const
 
 String Reference::defineHtml() const
 {
-	return toHtml(child(Original)) + L"<span id=\"this\" class=\"Reference-Fader\"><span class=\"Reference\">&</span></span>";
+	return toHtml(child(Original)) + L"<^span class=\"Reference-Fader\"><span class=\"Reference\">&</span></span>";
 }
 
 }

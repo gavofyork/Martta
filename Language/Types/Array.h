@@ -41,7 +41,7 @@ protected:
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual Types						allowedTypes(int _i) const;
 	virtual TypeEntity*					newClone() const;
-	virtual String						defineHtml() const { return toHtml(child(Original)) + L"<span id=\"this\" class=\"symbol\">[</span>" + toHtml(child(Length)) + L"<span class=\"symbol\">]</span>"; }
+	virtual String						defineHtml() const { return toHtml(child(Original)) + L"<^span class=\"symbol\">[</span>" + toHtml(child(Length)) + L"<span class=\"symbol\">]</span>"; }
 	virtual List<Declaration*>			utilised() const;
 };
 

@@ -163,7 +163,7 @@ String ListType::code(String const& _middle) const
 
 String ListType::defineHtml() const
 {
-	return toHtml(child(Original)) + typeHtml(L"<span id=\"this\" class=\"symbol\">[[]]</span>");
+	return toHtml(child(Original)) + typeHtml(L"<^span class=\"symbol\">[[]]</span>");
 }
 
 }

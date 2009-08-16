@@ -66,7 +66,7 @@ public:
 
 public slots:
 	void						onCurrentAboutToChange();
-	void						onCurrentChanged(QString const& _old);
+	void						onCurrentChanged();
 	bool						attemptEdit(int _e);
 	void						markDirty(int _e) { relayout((Entity*)_e); }
 

@@ -57,7 +57,7 @@ public:
 	}
 	virtual String						defineEditHtml(Named*, String const& _mid)
 	{
-		return L"<span class=\"TypeEntity\">" + StringType().typeHtml(_mid) + L"</span>";
+		return L"<^span class=\"TypeEntity\">" + StringType().typeHtml(_mid) + L"</span>";
 	}
 	SimpleNamed m_ourNamed;
 };
@@ -273,7 +273,7 @@ String StringType::code(String const& _middle) const
 
 String StringType::defineHtml() const
 {
-	return L"<span id=\"this\" class=\"TypeEntity\">" + typeHtml(L"string") + L"</span>";
+	return L"<^span class=\"TypeEntity\">" + typeHtml(L"string") + L"</span>";
 }
 
 }

@@ -39,7 +39,7 @@ Types TypeEntity::assignableTypes() const
 
 String TypeEntity::defineHtml() const
 {
-	return L"<span id=\"this\" class=\"TypeEntity\">&empty;</span>";
+	return L"<^span class=\"TypeEntity\">&empty;</span>";
 }
 
 String TypeEntity::typeHtml(String const& _middle) const

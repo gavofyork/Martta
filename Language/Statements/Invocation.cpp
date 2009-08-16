@@ -94,7 +94,7 @@ Types Invocation::allowedTypes(int _index) const
 
 String Invocation::defineHtml() const
 {
-	return toHtml(child(Callee)) + L"<span class=\"symbol\" id=\"this\">(</span>" + toHtml(cardinalChildren(), L", ") + L"<span class=\"symbol\">)</span>";
+	return toHtml(child(Callee)) + L"<^span class=\"symbol\">(</span>" + toHtml(cardinalChildren(), L", ") + L"<span class=\"symbol\">)</span>";
 }
 
 void Invocation::onDependencyChanged(Entity* _e)

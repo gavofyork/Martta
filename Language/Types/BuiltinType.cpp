@@ -78,7 +78,7 @@ public:
 	}
 	virtual String						defineEditHtml(Named*, String const& _mid)
 	{
-		return BuiltinType().fullHtml(_mid);
+		return L"<^span>" + BuiltinType().fullHtml(_mid) + L"</span>";
 	}
 	List<Named*> m_nameds;
 };
@@ -162,7 +162,7 @@ bool BuiltinType::defineSimilarityFrom(TypeEntity const* _f, Castability _c) con
 
 String BuiltinType::defineHtml() const
 {
-	return L"<span id=\"this\" class=\"TypeEntity\">" + typeHtml((id() == (uint)-1) ? L"&empty;" : name(id())) + L"</span>";
+	return L"<^span class=\"TypeEntity\">" + typeHtml((id() == (uint)-1) ? L"&empty;" : name(id())) + L"</span>";
 }
 
 template<>

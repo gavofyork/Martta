@@ -1,9 +1,6 @@
-function currentChanged(_oldId)
+function currentChanged()
 {
-	if (document.getElementById(_oldId).id == _oldId)
-		CodeView.onCurrentChanged(_oldId);
-	else
-		CodeView.onCurrentChanged(0);
+	CodeView.onCurrentChanged();
 }
 function isInvisible(node)
 {
@@ -66,52 +63,48 @@ function goPrevious()
 	if (!g_currentIterator.referenceNode || !g_currentIterator.referenceNode.parentNode)
 		return;
 	var old = g_currentIterator.referenceNode;
-	var oldId = old.parentNode.id;
 	CodeView.onCurrentAboutToChange();
 	g_currentIterator.previousNode();
 	if (g_currentIterator.referenceNode == old)
 		g_currentIterator.previousNode();
 	ensureViewable(g_currentIterator.referenceNode.parentNode);
-	currentChanged(oldId);
+	currentChanged();
 }
 function goNext()
 {
 	if (!g_currentIterator.referenceNode || !g_currentIterator.referenceNode.parentNode)
 		return;
 	var old = g_currentIterator.referenceNode;
-	var oldId = old.parentNode.id;
 	CodeView.onCurrentAboutToChange();
 	g_currentIterator.nextNode();
 	if (g_currentIterator.referenceNode == old)
 		g_currentIterator.nextNode();
 	ensureViewable(g_currentIterator.referenceNode.parentNode);
-	currentChanged(oldId);
+	currentChanged();
 }
 function goUp()
 {
 	if (!g_currentIterator.referenceNode || !g_currentIterator.referenceNode.parentNode)
 		return;
 	var otop = g_currentIterator.referenceNode.parentNode.getBoundingClientRect().top;
-	var oldId = g_currentIterator.referenceNode.parentNode.id;
 	CodeView.onCurrentAboutToChange();
 	while (g_currentIterator.referenceNode.parentNode.getBoundingClientRect().bottom > otop + 1)
 		if (g_currentIterator.previousNode() == null)
 			break;
 	ensureViewable(g_currentIterator.referenceNode.parentNode);
-	currentChanged(oldId);
+	currentChanged();
 }
 function goDown()
 {
 	if (!g_currentIterator.referenceNode || !g_currentIterator.referenceNode.parentNode)
 		return;
 	var obottom = g_currentIterator.referenceNode.parentNode.getBoundingClientRect().bottom;
-	var oldId = g_currentIterator.referenceNode.parentNode.id;
 	CodeView.onCurrentAboutToChange();
 	while (g_currentIterator.referenceNode.parentNode.getBoundingClientRect().top < obottom - 1)
 		if (g_currentIterator.nextNode() == null)
 			break;
 	ensureViewable(g_currentIterator.referenceNode.parentNode);
-	currentChanged(oldId);
+	currentChanged();
 }
 function thisParent(_e)
 {
@@ -148,9 +141,8 @@ function setReferenceNode(_e, _n)
 }
 function setCurrent(_e)
 {
-	var oldId = (g_currentIterator.referenceNode && g_currentIterator.referenceNode.parentNode && document.getElementById(g_currentIterator.referenceNode.parentNode.id)) ? g_currentIterator.referenceNode.parentNode.id : '';
 	if (setReferenceNode(_e, true))
-		currentChanged(oldId);
+		currentChanged();
 }
 function setCurrentById(_id)
 {
@@ -173,7 +165,6 @@ function navigateInto(_centre)
 	var e = document.getElementById(_centre);
 	if (!e)
 		return;
-	var oldId = g_currentIterator.referenceNode && g_currentIterator.referenceNode.parentNode ? g_currentIterator.referenceNode.parentNode.id : '';
 	CodeView.onCurrentAboutToChange();
 	g_currentIterator.detach();
 	g_currentIterator = document.createNodeIterator(document, NodeFilter.SHOW_ELEMENT, onlyThese, false);
@@ -188,7 +179,7 @@ function navigateInto(_centre)
 			while (g_currentIterator.referenceNode.parentNode != lastNodeParent)
 				g_currentIterator.previousNode();
 			ensureViewable(g_currentIterator.referenceNode.parentNode);
-			currentChanged(oldId);
+			currentChanged();
 			return;
 		}
 	}
@@ -203,11 +194,10 @@ function navigateOnto(_shell)
 	if (it.nextNode() == null)
 		return;
 
-	var oldId = g_currentIterator.referenceNode && g_currentIterator.referenceNode.parentNode ? g_currentIterator.referenceNode.parentNode.id : '';
 	if (setReferenceNode(it.referenceNode.parentNode, true))
 	{
 		ensureViewable(g_currentIterator.referenceNode.parentNode);
-		currentChanged(oldId);
+		currentChanged();
 	}
 }
 function navigateToNew(_from)
@@ -215,7 +205,6 @@ function navigateToNew(_from)
 	/// Selects closest focusable sibling-owned entity visually forwards from _from, or parent if none.
 	var e = document.getElementById(_from);
 
-	var oldId = g_currentIterator.referenceNode && g_currentIterator.referenceNode.parentNode ? g_currentIterator.referenceNode.parentNode.id : '';
 	if (setReferenceNode(e, true))
 	{
 		while (hasAncestor(g_currentIterator.referenceNode, e))
@@ -223,7 +212,7 @@ function navigateToNew(_from)
 		if (!hasAncestor(g_currentIterator.referenceNode, entityParent(e)))
 			setReferenceNode(entityParent(e), false);
 		ensureViewable(g_currentIterator.referenceNode.parentNode);
-		currentChanged(oldId);
+		currentChanged();
 	}
 }
 function getAttribs(_e, _a)

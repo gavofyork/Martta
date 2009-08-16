@@ -86,12 +86,10 @@ void CodeView::setCurrent(Entity const* _s)
 void CodeView::onCurrentAboutToChange()
 {
 	if (!m_silent)
-	{
 		currentAboutToChange();
-	}
 }
 
-void CodeView::onCurrentChanged(QString const&)
+void CodeView::onCurrentChanged()
 {
 	if (!m_silent)
 	{
