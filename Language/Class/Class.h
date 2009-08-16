@@ -41,6 +41,7 @@ public:
 	Access								baseAccess(Class* _c) const;
 
 protected:
+	virtual Rgb							idColour() const { return Rgb(0xff7777); }
 	virtual Kinds						allowedKinds(int) const;
 	virtual String						interfaceCode() const;
 	virtual String						implementationCode() const;

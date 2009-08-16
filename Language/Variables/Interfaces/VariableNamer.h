@@ -47,7 +47,7 @@ protected:
 
 	inline String						interfaceCode() const { return basicCode() + ";\n"; }
 	inline String						implementationCode() const { return String::null; }
-	virtual inline String				defineLabelHtml(String const& _middle) const { return L"<span class=\"VariableNamer-definition\">" + _middle + L"</span>"; }
+	virtual inline String				defineLabelHtml(String const& _middle) const { return L"<span class=\"VariableNamer-definition\">" + type()->typeHtml(_middle) + L"</span>"; }
 	bool								keyPressed(KeyEvent const* _e);
 	String								defineVariableHtml() const;
 };

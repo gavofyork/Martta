@@ -44,9 +44,9 @@ public:
 	{
 		placeVariable(_pos, new ExplicitType(static_cast<Identifiable*>(_i)->asKind<TypeDefinition>()));
 	}
-	virtual String						defineEditHtml(Named*, String const& _mid)
+	virtual String						defineEditHtml(Named* _i, String const& _mid)
 	{
-		return ExplicitType().fullHtml(_mid);
+		return ExplicitType(static_cast<Identifiable*>(_i)->asKind<TypeDefinition>()).fullHtml(_mid);
 	}
 	List<Named*> m_nameds;
 };
@@ -120,7 +120,7 @@ bool ExplicitType::defineSimilarityFrom(TypeEntity const* _f, Castability _c) co
 
 Rgb ExplicitType::idColour() const
 {
-	return 0xff7777;
+	return m_subject ? m_subject->idColour() : Rgb(0x444444);
 }
 
 bool ExplicitType::canStandAlone() const

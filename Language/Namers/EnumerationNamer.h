@@ -51,6 +51,8 @@ protected:
 	void								onDependencyChanged(Entity* _e);
 	void								onDependencyRemoved(Entity* _e);
 
+	virtual Rgb							idColour() const { return Rgb(0x4477aa); }
+
 	String								m_stem;
 };
 
