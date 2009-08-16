@@ -86,15 +86,18 @@ void CodeView::setCurrent(Entity const* _s)
 void CodeView::onCurrentAboutToChange()
 {
 	if (!m_silent)
+	{
 		currentAboutToChange();
+	}
 }
 
-void CodeView::onCurrentChanged(QString const& _oldId)
+void CodeView::onCurrentChanged(QString const&)
 {
 	if (!m_silent)
 	{
 		Entity* e = current();
-		CodeScene::currentChanged(e, (Entity*)(_oldId.toInt()));
+		CodeScene::currentChanged(e, m_oldCurrent);
+		m_oldCurrent = e;
 		emit currentChanged(e);
 		update();
 	}
@@ -220,7 +223,8 @@ void CodeView::relayout(Entity* _e)
 		// that defineHtml should be redirected to the editDelegate if there is one (and couldn't since it doesn't know which is
 		// the active CodeScene).
 		QString html = qs(m_stylist->editHtml(_e, this));
-		page()->mainFrame()->evaluateJavaScript(QString("thisNode(document.getElementById('%1')).innerHTML = '%2'").arg((int)_e).arg(html.replace('\'', "\\'")));
+		// TODO!!!: remember then restore this as the current silently.
+		page()->mainFrame()->evaluateJavaScript(QString("changeEditContent(%1, '%2')").arg((int)_e).arg(html.replace('\'', "\\'")));
 	}
 	else
 	{

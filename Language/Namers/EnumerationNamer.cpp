@@ -63,7 +63,7 @@ void EnumerationNamer::updateStem()
 
 bool EnumerationNamer::keyPressed(KeyEvent const* _e)
 {
-	if (_e->text() == L"\n" && _e->codeScene()->viewKeys(self())["expanded"].toBool())
+	if (_e->text() == L"\n" || _e->text() == L",")
 	{
 		Position p = (_e->isFocused() || _e->focalIndex() == 0) ?
 		(/*_e->inserting() || */_e->modifiers() & ShiftModifier) ?

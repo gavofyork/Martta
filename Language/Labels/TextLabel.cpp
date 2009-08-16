@@ -64,8 +64,8 @@ String TextLabel::name() const
 String TextLabel::defineHtml() const
 {
 	if (name().isEmpty())
-		return L"<span id=\"this\"><span class=\"minor\">[ANONYMOUS]</span></span>";
-	return String("<span id=\"this\"><span class=\"TextLabel-%1\">").arg(isNamed() ? L"named" : L"unnamed") + tryParent<Labelled>()->labelHtml(name()) + L"</span></span>";
+		return L"<^span class=\"minor\">[ANONYMOUS]</span>";
+	return String("<^span class=\"TextLabel-%1\">").arg(isNamed() ? L"named" : L"unnamed") + tryParent<Labelled>()->labelHtml(name()) + L"</span>";
 }
 
 String TextLabel::defineEditHtml(CodeScene* _cs) const
@@ -74,8 +74,8 @@ String TextLabel::defineEditHtml(CodeScene* _cs) const
 	{
 		// The tryParent()-> should be safe since Labelled checks for a null this-pointer.
 		if (d->real().isEmpty())
-			return L"<span class=\"minor\">[ANONYMOUS]</span>";
-		return L"<span class=\"TextLabel-named\">" + tryParent<Labelled>()->labelHtml(d->real()) + L"</span>";
+			return L"<^span class=\"minor\">[ANONYMOUS]</span>";
+		return L"<^span class=\"TextLabel-named\">" + tryParent<Labelled>()->labelHtml(d->real()) + L"</span>";
 	}
 	return String::null;
 }

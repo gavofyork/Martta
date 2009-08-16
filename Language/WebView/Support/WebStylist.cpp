@@ -46,13 +46,13 @@ String WebStylist::toHtml(Entity const* _e, String const& _tag)
 		return String::null;
 	if (m_htmlCache.contains(_e))
 		return m_htmlCache[_e];
-	return String("<%1 entity=\"true\" ondblclick=\"if (CodeView.attemptEdit(%2)) event.stopPropagation();\" id=\"%2\">%3</%4>").arg(_tag).arg((int)_e).arg(refineHtml(defineHtml(_e))).arg(_tag.section(L' ', 0, 0));
+	return String("<%1 entity=\"true\" ondblclick=\"if (CodeView.attemptEdit(%2)) event.stopPropagation();\" id=\"%2\">%3</%4>").arg(_tag).arg((int)_e).arg(refineHtml(defineHtml(_e), !_e->isUsurped())).arg(_tag.section(L' ', 0, 0));
 }
 
 String WebStylist::rejiggedHtml(Entity const* _e)
 {
 	KeepCurrent k(this);
-	String ret = refineHtml(defineHtml(_e));
+	String ret = refineHtml(defineHtml(_e), !_e->isUsurped());
 	m_htmlCache.clear();
 	return ret;
 }
@@ -60,14 +60,24 @@ String WebStylist::rejiggedHtml(Entity const* _e)
 String WebStylist::editHtml(Entity const* _e, CodeScene* _cs)
 {
 	KeepCurrent k(this);
-	return refineHtml(defineEditHtml(_e, _cs));
+	return refineHtml(defineEditHtml(_e, _cs), true);
 }
 
-String WebStylist::refineHtml(String const& _html)
+String WebStylist::refineHtml(String const& _html, bool _allowThis)
 {
 	String ret = _html;
-	ret.replace(L"<^>", L"<span id=\"this\"></span>");
+	ret.replace(L"<^>", _allowThis ? L"<span id=\"this\"></span>" : L"");
 	int i;
+	if ((i = ret.indexOf(L"<^")) > -1)
+	{
+		int t = min((uint)ret.indexOf(L' ', i), (uint)ret.indexOf(L'>', i));
+		// abc<^div >
+		// 0123456789
+		//    i    t
+		if (t != -1 && _allowThis)
+			ret.replace(t, 0, L" id=\"this\"");
+		ret.replace(i + 1, 1, String::null);
+	}
 	while ((i = ret.indexOf(L"=\"data://")) != -1)
 	{
 		int t = ret.indexOf(L'\"', i+6);

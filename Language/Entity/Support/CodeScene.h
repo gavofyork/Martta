@@ -76,10 +76,6 @@ public:
 	virtual void				navigateAway(Entity* _from, NavigationDirection _d = Forwards) = 0;	/// Selects closest focusable entity visually _d from _from. e.g. 4 on ()s: (++X + 4)
 	virtual void				navigateToNew(Entity* _from) = 0;									/// Selects closest focusable sibling-owned entity visually forwards from _from, or parent if none.
 
-	// NONVIRTUAL For viewkeys.
-	void						setViewKey(Entity* _e, String const& _key, bool _v) { m_viewKeys[_e][_key] = String::number(_v); }
-	ViewKeys const&				viewKeys(Entity* _e) { return m_viewKeys[_e]; }
-
 	// NONVIRTUAL Bracketing code.
 	void						setBracketed(Position const& _p) { m_bracketed.append(_p); }
 	void						removeBracket(Position const& _p) { m_bracketed.removeAt(m_bracketed.lastIndexOf(_p)); }
@@ -128,7 +124,6 @@ protected:
 	virtual bool				keyPressedAsNavigation(KeyEvent const&);
 
 	// State
-	Hash<Entity*, ViewKeys>		m_viewKeys;
 	List<Position>				m_bracketed;
 
 	SafePointer<Entity>			m_strobeCreation;

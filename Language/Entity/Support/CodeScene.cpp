@@ -86,12 +86,14 @@ void CodeScene::setEditing(Entity* _e)
 		mDebug() << "Leaving editing...";
 		if (isInScene(edited))
 		{
-			editDelegate()->tryCommit();
+			if (editDelegate())
+				editDelegate()->tryCommit();
 			mDebug() << "Leaving editing intact...";
-			m_editDelegate->leavingEditIntact();
+			if (editDelegate())
+				editDelegate()->leavingEditIntact();
 			// at this point, m_editDelegate and m_current may no longer be valid.
 		}
-		if (m_editDelegate)
+		if (editDelegate())
 		{
 			delete m_editDelegate;
 			relayout(edited);

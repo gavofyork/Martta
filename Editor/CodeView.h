@@ -107,6 +107,8 @@ private:
 	bool						m_silent;
 	QPoint						m_remembered;
 	SafePointer<Entity>			m_rememberedParent;
+
+	SafePointer<Entity, true>	m_oldCurrent;
 };
 
 }

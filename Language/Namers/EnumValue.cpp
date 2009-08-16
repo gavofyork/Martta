@@ -74,9 +74,9 @@ bool EnumValue::isChildInValidState(int _i) const
 
 String EnumValue::defineHtml() const
 {
-	String r = L"<^>" + toHtml(child(Identity));
+	String r = toHtml(child(Identity));
 	if (child(Definition))
-		r += "<span class=\"symbol\"> := </span>" + toHtml(child(Definition));
+		r += " <span class=\"symbol\">:=</span> " + toHtml(child(Definition));
 	return r;
 }
 

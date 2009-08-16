@@ -1,3 +1,10 @@
+function currentChanged(_oldId)
+{
+	if (document.getElementById(_oldId).id == _oldId)
+		CodeView.onCurrentChanged(_oldId);
+	else
+		CodeView.onCurrentChanged(0);
+}
 function isInvisible(node)
 {
 	var n = node;
@@ -65,7 +72,7 @@ function goPrevious()
 	if (g_currentIterator.referenceNode == old)
 		g_currentIterator.previousNode();
 	ensureViewable(g_currentIterator.referenceNode.parentNode);
-	CodeView.onCurrentChanged(oldId);
+	currentChanged(oldId);
 }
 function goNext()
 {
@@ -78,7 +85,7 @@ function goNext()
 	if (g_currentIterator.referenceNode == old)
 		g_currentIterator.nextNode();
 	ensureViewable(g_currentIterator.referenceNode.parentNode);
-	CodeView.onCurrentChanged(oldId);
+	currentChanged(oldId);
 }
 function goUp()
 {
@@ -91,7 +98,7 @@ function goUp()
 		if (g_currentIterator.previousNode() == null)
 			break;
 	ensureViewable(g_currentIterator.referenceNode.parentNode);
-	CodeView.onCurrentChanged(oldId);
+	currentChanged(oldId);
 }
 function goDown()
 {
@@ -104,7 +111,7 @@ function goDown()
 		if (g_currentIterator.nextNode() == null)
 			break;
 	ensureViewable(g_currentIterator.referenceNode.parentNode);
-	CodeView.onCurrentChanged(oldId);
+	currentChanged(oldId);
 }
 function thisParent(_e)
 {
@@ -143,7 +150,7 @@ function setCurrent(_e)
 {
 	var oldId = (g_currentIterator.referenceNode && g_currentIterator.referenceNode.parentNode && document.getElementById(g_currentIterator.referenceNode.parentNode.id)) ? g_currentIterator.referenceNode.parentNode.id : '';
 	if (setReferenceNode(_e, true))
-		CodeView.onCurrentChanged(oldId);
+		currentChanged(oldId);
 }
 function setCurrentById(_id)
 {
@@ -181,7 +188,7 @@ function navigateInto(_centre)
 			while (g_currentIterator.referenceNode.parentNode != lastNodeParent)
 				g_currentIterator.previousNode();
 			ensureViewable(g_currentIterator.referenceNode.parentNode);
-			CodeView.onCurrentChanged(oldId);
+			currentChanged(oldId);
 			return;
 		}
 	}
@@ -200,7 +207,7 @@ function navigateOnto(_shell)
 	if (setReferenceNode(it.referenceNode.parentNode, true))
 	{
 		ensureViewable(g_currentIterator.referenceNode.parentNode);
-		CodeView.onCurrentChanged(oldId);
+		currentChanged(oldId);
 	}
 }
 function navigateToNew(_from)
@@ -216,7 +223,7 @@ function navigateToNew(_from)
 		if (!hasAncestor(g_currentIterator.referenceNode, entityParent(e)))
 			setReferenceNode(entityParent(e), false);
 		ensureViewable(g_currentIterator.referenceNode.parentNode);
-		CodeView.onCurrentChanged(oldId);
+		currentChanged(oldId);
 	}
 }
 function getAttribs(_e, _a)
@@ -287,6 +294,12 @@ function set2(_id1, _id2)
 function procMouseDown(event)
 {
 	setCurrent(event.target);
+}
+function changeEditContent(_e, _c)
+{
+	var e = document.getElementById(_e);
+	thisNode(e).outerHTML = _c;
+	setReferenceNode(e, false);
 }
 function restoreCurrent(_x, _y, _parent)
 {

@@ -1,20 +1,16 @@
 <!DOCTYPE QtCreatorProject>
 <qtcreator>
  <data>
-  <variable>RunConfiguration0-CommandLineArguments</variable>
+  <variable>RunConfiguration0-Arguments</variable>
   <valuelist type="QVariantList" />
  </data>
  <data>
-  <variable>RunConfiguration0-ProFile</variable>
-  <value type="QString" >Editor.pro</value>
+  <variable>RunConfiguration0-Executable</variable>
+  <value type="QString" ></value>
  </data>
  <data>
   <variable>RunConfiguration0-RunConfiguration.name</variable>
-  <value type="QString" >Editor</value>
- </data>
- <data>
-  <variable>RunConfiguration0-UseDyldImageSuffix</variable>
-  <value type="bool" >false</value>
+  <value type="QString" >Custom Executable</value>
  </data>
  <data>
   <variable>RunConfiguration0-UseTerminal</variable>
@@ -25,12 +21,20 @@
   <valuelist type="QVariantList" />
  </data>
  <data>
+  <variable>RunConfiguration0-UserName</variable>
+  <value type="QString" ></value>
+ </data>
+ <data>
   <variable>RunConfiguration0-UserSetName</variable>
   <value type="bool" >false</value>
  </data>
  <data>
+  <variable>RunConfiguration0-WorkingDirectory</variable>
+  <value type="QString" >$BUILDDIR</value>
+ </data>
+ <data>
   <variable>RunConfiguration0-type</variable>
-  <value type="QString" >Qt4ProjectManager.Qt4RunConfiguration</value>
+  <value type="QString" >ProjectExplorer.CustomExecutableRunConfiguration</value>
  </data>
  <data>
   <variable>activeRunConfiguration</variable>
@@ -44,10 +48,16 @@
   <variable>buildConfiguration-Debug</variable>
   <valuemap type="QVariantMap" >
    <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString" >Debug</value>
-   <value key="QtVersionId" type="int" >3</value>
+   <value key="QtVersionId" type="int" >0</value>
    <value key="addQDumper" type="" ></value>
-   <value key="buildDirectory" type="QString" >/home/gav/Projects/Martta/Editor</value>
-   <value key="useShadowBuild" type="bool" >false</value>
+  </valuemap>
+ </data>
+ <data>
+  <variable>buildConfiguration-Release</variable>
+  <valuemap type="QVariantMap" >
+   <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString" >Release</value>
+   <value key="QtVersionId" type="int" >0</value>
+   <value key="addQDumper" type="" ></value>
   </valuemap>
  </data>
  <data>
@@ -87,14 +97,14 @@
     <value type="QString" >XDG_SESSION_COOKIE=ecd819583fbe67b4bdf2b650483ed6a7-1250279745.790416-626331341</value>
    </valuelist>
    <valuelist key="abstractProcess.arguments" type="QVariantList" >
-    <value type="QString" >/home/gav/Projects/Martta/Editor/Editor.pro</value>
+    <value type="QString" >/home/gav/Projects/Martta/Language/Language.pro</value>
     <value type="QString" >-spec</value>
     <value type="QString" >linux-g++</value>
     <value type="QString" >-r</value>
    </valuelist>
    <value key="abstractProcess.command" type="QString" >/usr/local/Trolltech/Qt-4.6.0/bin/qmake</value>
    <value key="abstractProcess.enabled" type="bool" >false</value>
-   <value key="abstractProcess.workingDirectory" type="QString" >/home/gav/Projects/Martta/Editor</value>
+   <value key="abstractProcess.workingDirectory" type="QString" >/home/gav/Projects/Martta/Language</value>
    <value key="buildConfiguration" type="int" >2</value>
   </valuemap>
  </data>
@@ -139,58 +149,39 @@
    </valuelist>
    <value key="abstractProcess.command" type="QString" >/usr/bin/make</value>
    <value key="abstractProcess.enabled" type="bool" >true</value>
-   <value key="abstractProcess.workingDirectory" type="QString" >/home/gav/Projects/Martta/Editor</value>
+   <value key="abstractProcess.workingDirectory" type="QString" >/home/gav/Projects/Martta/Language</value>
   </valuemap>
  </data>
  <data>
   <variable>buildconfiguration-Debug-cleanstep0</variable>
   <valuemap type="QVariantMap" >
    <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString" >Debug</value>
-   <valuelist key="abstractProcess.Environment" type="QVariantList" >
-    <value type="QString" >DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-SA2xXb4VSW,guid=97554ec9dfb517c93075c1f54a69d25f</value>
-    <value type="QString" >DESKTOP_SESSION=default</value>
-    <value type="QString" >DESKTOP_STARTUP_ID=</value>
-    <value type="QString" >DISPLAY=:0.0</value>
-    <value type="QString" >GDMSESSION=default</value>
-    <value type="QString" >GDM_LANG=en_GB.UTF-8</value>
-    <value type="QString" >GDM_XSERVER_LOCATION=local</value>
-    <value type="QString" >GNOME_DESKTOP_SESSION_ID=this-is-deprecated</value>
-    <value type="QString" >GNOME_KEYRING_SOCKET=/tmp/keyring-Mvhb1z/socket</value>
-    <value type="QString" >GPG_AGENT_INFO=/tmp/seahorse-e9y6mV/S.gpg-agent:4064:1</value>
-    <value type="QString" >GTK_MODULES=canberra-gtk-module</value>
-    <value type="QString" >GTK_RC_FILES=/etc/gtk/gtkrc:/home/gav/.gtkrc-1.2-gnome2</value>
-    <value type="QString" >HOME=/home/gav</value>
-    <value type="QString" >LANG=en_GB.UTF-8</value>
-    <value type="QString" >LD_LIBRARY_PATH=/opt/qt-creator/lib/qtcreator:</value>
-    <value type="QString" >LOGNAME=gav</value>
-    <value type="QString" >ORBIT_SOCKETDIR=/tmp/orbit-gav</value>
-    <value type="QString" >PATH=/usr/local/Trolltech/Qt-4.6.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games</value>
-    <value type="QString" >PWD=/home/gav</value>
-    <value type="QString" >QTDIR=/usr/local/Trolltech/Qt-4.6.0</value>
-    <value type="QString" >SESSION_MANAGER=local/mama:/tmp/.ICE-unix/3983</value>
-    <value type="QString" >SHELL=/bin/bash</value>
-    <value type="QString" >SSH_AGENT_PID=4040</value>
-    <value type="QString" >SSH_AUTH_SOCK=/tmp/keyring-Mvhb1z/socket.ssh</value>
-    <value type="QString" >USER=gav</value>
-    <value type="QString" >USERNAME=gav</value>
-    <value type="QString" >WINDOWPATH=7</value>
-    <value type="QString" >XAUTHORITY=/home/gav/.Xauthority</value>
-    <value type="QString" >XDG_DATA_DIRS=/usr/local/share/:/usr/share/:/usr/share/gdm/</value>
-    <value type="QString" >XDG_SESSION_COOKIE=ecd819583fbe67b4bdf2b650483ed6a7-1248449117.256332-733646552</value>
-   </valuelist>
-   <valuelist key="abstractProcess.arguments" type="QVariantList" >
-    <value type="QString" >clean</value>
-    <value type="QString" >-w</value>
-   </valuelist>
-   <value key="abstractProcess.command" type="QString" >/usr/bin/make</value>
-   <value key="abstractProcess.enabled" type="bool" >true</value>
-   <value key="abstractProcess.workingDirectory" type="QString" >/home/gav/Projects/Martta/Editor</value>
+  </valuemap>
+ </data>
+ <data>
+  <variable>buildconfiguration-Release-buildstep0</variable>
+  <valuemap type="QVariantMap" >
+   <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString" >Release</value>
+   <value key="buildConfiguration" type="int" >0</value>
+  </valuemap>
+ </data>
+ <data>
+  <variable>buildconfiguration-Release-buildstep1</variable>
+  <valuemap type="QVariantMap" >
+   <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString" >Release</value>
+  </valuemap>
+ </data>
+ <data>
+  <variable>buildconfiguration-Release-cleanstep0</variable>
+  <valuemap type="QVariantMap" >
+   <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString" >Release</value>
   </valuemap>
  </data>
  <data>
   <variable>buildconfigurations</variable>
   <valuelist type="QVariantList" >
    <value type="QString" >Debug</value>
+   <value type="QString" >Release</value>
   </valuelist>
  </data>
  <data>

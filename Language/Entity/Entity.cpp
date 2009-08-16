@@ -577,11 +577,10 @@ void Entity::changed(int _aspects)
 {
 	if (!isInModel())
 		return;
-	if (Dependee::changed(_aspects))
-	{
+	SafePointer<Entity> safeThis = this;
+	if (Dependee::changed(_aspects) && safeThis)
 		if (!isEditing())
 			checkForCullingLater();
-	}
 }
 
 Position Entity::firstFor(Kind const& _k)
