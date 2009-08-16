@@ -104,6 +104,8 @@ String Referenced::editHtmlHelper(ValueDefiner* _v, String const& _mid) const
 	String ret = (_v ? &*_v->type() : TypeEntity::null)->typeHtml(_mid);
 	if (_v)
 		return L"<^span class=\"Referenced\">" + _v->tryKind<Labelled>()->labelHtml(ret) + "</span>";
+	else
+		return L"<^>";
 	return ret;
 }
 
