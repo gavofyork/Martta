@@ -61,7 +61,19 @@ void CodeView::setStylist(WebStylist* _s)
 
 Entity* CodeView::current() const
 {
-	return (Entity*)(page()->mainFrame()->evaluateJavaScript("g_currentIterator.referenceNode.parentNode.id").toInt());
+	return (Entity*)(page()->mainFrame()->evaluateJavaScript("document.getElementById(g_currentIterator.referenceNode.parentNode.id).id").toInt());
+}
+
+void CodeView::rememberCurrent()
+{
+	m_remembered = bounds(current()).topLeft() + QPoint(5, 5);
+	m_rememberedParent = current()->parent();
+}
+
+void CodeView::restoreCurrent()
+{
+	refresh();
+	page()->mainFrame()->evaluateJavaScript(QString("restoreCurrent(%1, %2, %3)").arg(m_remembered.x()).arg(m_remembered.y()).arg((int)&*m_rememberedParent));
 }
 
 void CodeView::setCurrent(Entity const* _s)

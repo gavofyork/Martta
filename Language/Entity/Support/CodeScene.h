@@ -65,6 +65,8 @@ public:
 	virtual bool				isCurrent(Entity const* _e) const = 0;
 	virtual bool				isFocusable(Entity const* _e) const = 0;
 	virtual bool				isInScene(Entity const* _e) const = 0;
+	virtual void				rememberCurrent() = 0;
+	virtual void				restoreCurrent() = 0;
 
 	// Focus changers (often make use of above).
 	virtual void				setCurrent(Entity const* _e) = 0;

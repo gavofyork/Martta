@@ -51,6 +51,8 @@ public:
 	virtual bool				isCurrent(Entity const* _e) const { return _e == current(); }
 	virtual bool				isFocusable(Entity const* _e) const;
 	virtual bool				isInScene(Entity const* _e) const;
+	virtual void				rememberCurrent();
+	virtual void				restoreCurrent();
 
 	// Focus changers (often make use of above).
 	virtual void				setCurrent(Entity const* _e);
@@ -103,6 +105,8 @@ private:
 	SafePointer<Entity>			m_subject;
 	WebStylist*					m_stylist;
 	bool						m_silent;
+	QPoint						m_remembered;
+	SafePointer<Entity>			m_rememberedParent;
 };
 
 }

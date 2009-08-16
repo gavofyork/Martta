@@ -41,7 +41,7 @@ function entityParent(_e)
 {
 	var p = _e.parentNode;
 	while (p != null && p.getAttribute('entity') != 'true')
-		p= p.parentNode;
+		p = p.parentNode;
 	return p;
 }
 function routeKeyPress(_e, _k)
@@ -122,14 +122,13 @@ function setReferenceNode(_e, _n)
 	var t = _e;
 	while (t)
 	{
-		if (thisNode(t) != null)
+		if (thisNode(t) != null && !isInvisible(t))
 			break;
 		t = t.parentNode;
 	}
 	if (!t && document.getElementById(g_currentIterator.referenceNode.parentNode.id))
 		return false;
 	ensureViewable(t);
-	var oldId = g_currentIterator.referenceNode && g_currentIterator.referenceNode.parentNode ? g_currentIterator.referenceNode.parentNode.id : '';
 	if (_n)
 		CodeView.onCurrentAboutToChange();
 	g_currentIterator.detach();
@@ -137,12 +136,12 @@ function setReferenceNode(_e, _n)
 	while (g_currentIterator.nextNode() != null)
 		if (g_currentIterator.referenceNode.parentNode == t || !t)
 			return true;
-	alert('ODD');
+	alert('Couldn\'t navigate to ' + _e.id + ' (' + t.id + ') though exists in document: ' + document.getElementById(t.id) + ' and has this child ' + thisNode(t) + ' and is visible: ' + (!isInvisible(t)));
 	return false;
 }
 function setCurrent(_e)
 {
-	var oldId = g_currentIterator.referenceNode && g_currentIterator.referenceNode.parentNode ? g_currentIterator.referenceNode.parentNode.id : '';
+	var oldId = (g_currentIterator.referenceNode && g_currentIterator.referenceNode.parentNode && document.getElementById(g_currentIterator.referenceNode.parentNode.id)) ? g_currentIterator.referenceNode.parentNode.id : '';
 	if (setReferenceNode(_e, true))
 		CodeView.onCurrentChanged(oldId);
 }
@@ -288,5 +287,54 @@ function set2(_id1, _id2)
 function procMouseDown(event)
 {
 	setCurrent(event.target);
+}
+function restoreCurrent(_x, _y, _parent)
+{
+	var p = document.getElementById(_parent);
+	var it = document.createNodeIterator(p, NodeFilter.SHOW_ELEMENT, onlyThese, false);
+	var bestx;
+	var besty;
+	while (it.nextNode())
+	{
+		if (entityParent(it.referenceNode.parentNode) == p)
+		{
+			var r = it.referenceNode.parentNode.getBoundingClientRect();
+			if (r.top <= _y && r.bottom >= _y)
+			{
+				besty = it.referenceNode.parentNode;
+				// Y exact.
+				if (r.left <= _x && r.right >= _x)
+				{
+					// X exact.
+					bestx = it.referenceNode.parentNode;
+					break;
+				}
+				else if (r.left >= _x)
+				{
+					// Overshot on X
+					if (!bestx)
+						bestx = it.referenceNode.parentNode;
+					break;
+				}
+				else // Not far enough on X
+					bestx = it.referenceNode.parentNode;
+			}
+			else if (r.top >= _y)
+			{
+				// Overshot on Y
+				if (!besty)
+					besty = it.referenceNode.parentNode;
+				break;
+			}
+			else // Not far enough on Y
+				besty = it.referenceNode.parentNode;
+		}
+	}
+	if (bestx)
+		setCurrent(bestx);
+	else if (besty)
+		setCurrent(besty);
+	else
+		setCurrent(p);
 }
 g_currentIterator.nextNode();

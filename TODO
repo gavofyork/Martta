@@ -1,5 +1,4 @@
-CRASH CodeView::onCurrentChanged _oldId bad on deletion of field.
-BUG Delete argument in invocation or statement in compound, enumvalue in enumer.
+BUG EnumValue insertion?
 BUG Colour doesn't carry for enums to their referenceds.
 BUG 'some'<Del> doesn't delete.
 BUG 'M' gives largely arbitrary results.

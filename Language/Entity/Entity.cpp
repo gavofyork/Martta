@@ -428,18 +428,18 @@ bool Entity::keyPressed(KeyEvent const* _e)
 	Position p = over();
 	if (_e->codeScene()->isCurrent(this) && ((_e->text() == L"\x7f" && _e->modifiers() == ShiftModifier) || (_e->text() == L"\b" && _e->codeScene()->isEditing(this))) && !isFixed())
 	{
+		_e->codeScene()->rememberCurrent();
 		deleteAndRefill(0, false);	// NOTE: Was true; changed to false to avoid erroneous currents being set. May need a rethink.
-		if (p.exists())
-			_e->codeScene()->setCurrent(p.entity());
+		_e->codeScene()->restoreCurrent();
 	}
 	else if (_e->codeScene()->isCurrent(this) && _e->text() == L"\x7f" && !isFixed())
 	{
+		_e->codeScene()->rememberCurrent();
 		if (nonPlaceholderCount() == 1 && isAllowed(nonPlaceholder(0)->kind()))
 			deleteAndRefill(nonPlaceholder(0), false);	// SEE ABOVE.
 		else
 			deleteAndRefill(0, false);	// SEE ABOVE.
-		if (p.exists())
-			_e->codeScene()->setCurrent(p.entity());
+		_e->codeScene()->restoreCurrent();
 	}
 	else if (_e->codeScene()->isCurrent(this) && _e->text() == L"\x1b" && _e->codeScene()->isEditing(this))
 		_e->codeScene()->setEditing(0);
