@@ -398,8 +398,11 @@ void Entity::keyPressEventStarter(KeyEvent* _e, bool _abortive)
 	if (_e->text().isEmpty())
 		return;
 
-	SafePointer<Entity> fe = _e->focus();
+	SafePointer<Entity, true> fe = _e->focus();
 	_e->codeScene()->setEditing(0);
+
+	if (!fe)
+		fe = _e->codeScene()->current();
 
 	while (fe)
 	{

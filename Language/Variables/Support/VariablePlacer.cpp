@@ -42,7 +42,7 @@ void placeVariable(Position const& _p, TypeEntity* _t)
 		e->adopt(_t);
 		e->prepareChildren();
 		_p.place(e);
-		e->child(VariableNamer::Identity)->setCurrent();
+		e->child(VariableNamer::OurType)->setCurrent();
 	}
 	else
 		delete _t;

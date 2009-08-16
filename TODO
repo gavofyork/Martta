@@ -1,4 +1,3 @@
-BUG EnumValue insertion?
 BUG current() bad in onCurrentAboutToChange.
 BUG Colour doesn't carry for enums to their referenceds.
 BUG 'some'<Del> doesn't delete.
