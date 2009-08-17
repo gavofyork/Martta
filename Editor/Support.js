@@ -28,6 +28,7 @@ function onlyThese(node)
 	return NodeFilter.FILTER_SKIP;
 }
 var g_currentIterator = document.createNodeIterator(document, NodeFilter.SHOW_ELEMENT, onlyThese, false);
+var g_inOutCache = new Array();
 String.prototype.escapeHTML =
 	function ()
 	{
@@ -41,11 +42,29 @@ function thisNode(_e)
 			return children[i];
 	return null;
 }
+function hasAncestor(_c, _a)
+{
+	var e = _c;
+	while (e != null)
+		if (e == _a)
+			return true;
+		else
+			e = e.parentNode;
+	return false;
+}
 function entityParent(_e)
 {
 	var p = _e.parentNode;
 	while (p != null && p.getAttribute('entity') != 'true')
 		p = p.parentNode;
+	return p;
+}
+function focusableEntityParent(_e)
+{
+	var p = _e.parentNode;
+	for (; p != null; p = p.parentNode)
+		if (thisNode(p) && p.getAttribute('entity') == 'true')
+			break;
 	return p;
 }
 function routeKeyPress(_e, _k)
@@ -57,6 +76,38 @@ function routeKeyPress(_e, _k)
 		if (!nodes[i].getAttribute('entity') && routeKeyPress(nodes[i], _k))
 			return true;
 	return false;
+}
+function goIn()
+{
+	if (!g_currentIterator.referenceNode || !g_currentIterator.referenceNode.parentNode)
+		return;
+	var e = g_currentIterator.referenceNode.parentNode;
+	var c;
+	if (g_inOutCache[e.id] && document.getElementById(g_inOutCache[e.id]) && focusableEntityParent(document.getElementById(g_inOutCache[e.id])) == e)
+	{
+		c = document.getElementById(g_inOutCache[e.id]);
+	}
+	else
+	{
+		var it = document.createNodeIterator(e, NodeFilter.SHOW_ELEMENT, function(node) { if (isInvisible(node)) return NodeFilter.FILTER_REJECT; if (node.id == 'this' && entityParent(node.parentNode) == e) return NodeFilter.FILTER_ACCEPT; return NodeFilter.FILTER_SKIP; }, false);
+		if (it.nextNode() == null)
+			return;
+		c = it.referenceNode.parentNode;
+	}
+	if (c && setReferenceNode(c))
+		currentChanged();
+}
+function goOut()
+{
+	if (!g_currentIterator.referenceNode || !g_currentIterator.referenceNode.parentNode)
+		return;
+	var e = g_currentIterator.referenceNode.parentNode;
+	var p = focusableEntityParent(g_currentIterator.referenceNode.parentNode);
+	if (p && setReferenceNode(p))
+	{
+		g_inOutCache[p.id] = e.id;
+		currentChanged();
+	}
 }
 function goPrevious()
 {
@@ -91,6 +142,23 @@ function goUp()
 	while (g_currentIterator.referenceNode.parentNode.getBoundingClientRect().bottom > otop + 1)
 		if (g_currentIterator.previousNode() == null)
 			break;
+
+	if (g_currentIterator.referenceNode != null)
+	{
+		otop = g_currentIterator.referenceNode.parentNode.getBoundingClientRect().top;
+		while (g_currentIterator.previousNode())
+		{
+			if (g_currentIterator.referenceNode.parentNode.getBoundingClientRect().bottom >= otop + 1)
+			{
+				g_currentIterator.nextNode();
+				break;
+			}
+			if (g_currentIterator.referenceNode.parentNode.getBoundingClientRect().top < otop)
+				otop = g_currentIterator.referenceNode.parentNode.getBoundingClientRect().top;
+		}
+		g_currentIterator.nextNode();
+	}
+
 	ensureViewable(g_currentIterator.referenceNode.parentNode);
 	currentChanged();
 }
@@ -103,6 +171,23 @@ function goDown()
 	while (g_currentIterator.referenceNode.parentNode.getBoundingClientRect().top < obottom - 1)
 		if (g_currentIterator.nextNode() == null)
 			break;
+
+	if (g_currentIterator.referenceNode != null)
+	{
+		obottom = g_currentIterator.referenceNode.parentNode.getBoundingClientRect().bottom;
+		while (g_currentIterator.nextNode())
+		{
+			if (g_currentIterator.referenceNode.parentNode.getBoundingClientRect().top >= obottom - 1)
+			{
+				g_currentIterator.previousNode();
+				break;
+			}
+			if (g_currentIterator.referenceNode.parentNode.getBoundingClientRect().bottom < obottom)
+				obottom = g_currentIterator.referenceNode.parentNode.getBoundingClientRect().bottom;
+		}
+		g_currentIterator.previousNode();
+	}
+
 	ensureViewable(g_currentIterator.referenceNode.parentNode);
 	currentChanged();
 }
@@ -148,16 +233,6 @@ function setCurrentById(_id)
 {
 	var e = document.getElementById(_id);
 	setCurrent(e);
-}
-function hasAncestor(_c, _a)
-{
-	var e = _c;
-	while (e != null)
-		if (e == _a)
-			return true;
-		else
-			e = e.parentNode;
-	return false;
 }
 function navigateInto(_centre)
 {
