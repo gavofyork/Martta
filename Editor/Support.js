@@ -202,12 +202,12 @@ function navigateOnto(_shell)
 }
 function navigateToNew(_from)
 {
-	/// Selects closest focusable sibling-owned entity visually forwards from _from, or parent if none.
+	/// Selects closest focusable sibling-or-self-owned entity visually forwards from _from, or parent if none.
 	var e = document.getElementById(_from);
 
 	if (setReferenceNode(e, true))
 	{
-		while (hasAncestor(g_currentIterator.referenceNode, e))
+//		while (hasAncestor(g_currentIterator.referenceNode, e))
 			g_currentIterator.nextNode();
 		if (!hasAncestor(g_currentIterator.referenceNode, entityParent(e)))
 			setReferenceNode(entityParent(e), false);
