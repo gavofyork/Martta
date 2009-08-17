@@ -1,4 +1,3 @@
-ASSERT Shift-Enter on enum's label.
 BUG 'M' gives largely arbitrary results.
 
 BUG current() bad in onCurrentAboutToChange.

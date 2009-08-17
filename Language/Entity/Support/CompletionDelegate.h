@@ -102,8 +102,8 @@ public:
 		}
 		else if (_e->text() == L"\b")
 		{
-			CodeScene* cs = EditDelegate<T>::codeScene();
-			Position p = EditDelegate<T>::subject()->over();
+//			CodeScene* cs = EditDelegate<T>::codeScene();
+//			Position p = EditDelegate<T>::subject()->over();
 			EditDelegate<T>::subject()->deleteAndRefill();
 			return true;
 		}

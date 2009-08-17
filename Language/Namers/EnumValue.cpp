@@ -82,7 +82,7 @@ String EnumValue::defineHtml() const
 
 bool EnumValue::isSuperfluous() const
 {
-	return (childAs<TextLabel>(Identity)->text().isEmpty() && !isNecessary()) || Super::isSuperfluous();
+	return (childAs<TextLabel>(Identity)->text().isEmpty() && (!isNecessary() || child(Definition))) || Super::isSuperfluous();
 }
 
 String EnumValue::code() const
