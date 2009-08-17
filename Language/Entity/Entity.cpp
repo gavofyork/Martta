@@ -347,13 +347,6 @@ void Entity::clearEditing()
 	foreach (CodeScene* i, CodeScene::all())
 		i->setEditing(0);
 }
-EditDelegateFace* Entity::editDelegate(CodeScene* _s) const
-{
-	if (EditDelegateFace* d = _s->editDelegate())
-		if (d->subject() == this)
-			return d;
-	return 0;
-}
 
 // Keypress/UI event handlers.
 void Entity::activateEvent(CodeScene* _s)
@@ -405,7 +398,7 @@ void Entity::keyPressEventStarter(KeyEvent* _e, bool _abortive)
 
 	while (fe)
 	{
-		if ((fe && fe->keyPressed(_e)) || (fe && fe->attemptInsert(_e)) || (fe && _e->codeScene()->manageKeyPress(*_e, fe)))
+		if ((fe && _e->codeScene()->manageKeyPress(*_e, fe)) || (fe && fe->keyPressed(_e)) || (fe && fe->attemptInsert(_e)))
 		{
 			_e->accept();
 			return;

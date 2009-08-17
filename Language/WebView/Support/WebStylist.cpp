@@ -66,12 +66,10 @@ String WebStylist::editHtml(Entity const* _e, CodeScene* _cs)
 String WebStylist::refineHtml(String const& _html, bool _allowThis, bool _forceThis)
 {
 	String ret = _html;
-	bool hasThis = false;
-	if (ret.contains(L"<^>"))
-	{
-		hasThis = true;
-		ret.replace(L"<^>", _allowThis ? L"<span id=\"this\"></span>" : L"");
-	}
+	if (!ret.startsWith(L"<^") && _forceThis)
+		ret = L"<span id=\"this\">" + ret + L"</span>";
+
+	ret.replace(L"<^>", _allowThis ? L"<span id=\"this\"></span>" : L"");
 	int i;
 	if ((i = ret.indexOf(L"<^")) > -1)
 	{
@@ -82,10 +80,8 @@ String WebStylist::refineHtml(String const& _html, bool _allowThis, bool _forceT
 		if (t != -1 && _allowThis)
 			ret.replace(t, 0, L" id=\"this\"");
 		ret.replace(i + 1, 1, String::null);
-		hasThis = true;
 	}
-	if (!hasThis && _forceThis)
-		ret = L"<span id=\"this\">" + ret + L"</span>";
+
 	while ((i = ret.indexOf(L"=\"data://")) != -1)
 	{
 		int t = ret.indexOf(L'\"', i+6);

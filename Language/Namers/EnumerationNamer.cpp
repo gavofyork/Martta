@@ -63,7 +63,7 @@ void EnumerationNamer::updateStem()
 
 bool EnumerationNamer::keyPressed(KeyEvent const* _e)
 {
-	if ((_e->text() == L"\n" && !_e->isFocused()) || (_e->text() == L"," && _e->focalIndex() >= 0))
+	if ((_e->text() == ReturnKey && !_e->isFocused()) || (_e->text() == L"," && _e->focalIndex() >= 0))
 	{
 		Position p = (_e->focalIndex() == Identity) ?
 		(_e->isInserting() || _e->modifiers() & ShiftModifier) ?
@@ -77,7 +77,7 @@ bool EnumerationNamer::keyPressed(KeyEvent const* _e)
 	}
 	else if (_e->text() == L"¬" && _e->focalIndex() != UndefinedIndex)
 	{
-		self()->child(_e->focalIndex())->setCurrent();
+		_e->codeScene()->navigateOnto(self()->child(_e->focalIndex()));
 	}
 	else if (_e->text() == "H")
 	{

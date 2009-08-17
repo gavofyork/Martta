@@ -70,7 +70,7 @@ String TextLabel::defineHtml() const
 
 String TextLabel::defineEditHtml(CodeScene* _cs) const
 {
-	if (EditDelegateFace* d = editDelegate(_cs))
+	if (EditDelegateFace* d = _cs->editDelegate(this))
 	{
 		// The tryParent()-> should be safe since Labelled checks for a null this-pointer.
 		if (d->real().isEmpty())
@@ -147,7 +147,7 @@ bool TextLabel::keyPressed(KeyEvent const* _e)
 		_e->codeScene()->setEditing(this);
 		if (_e->codeScene()->isEditing(this))
 		{
-			static_cast<Delegate*>(editDelegate(_e->codeScene()))->setText("");
+			static_cast<Delegate*>(_e->codeScene()->editDelegate(this))->setText("");
 			_e->reinterpretLater();
 		}
 	}

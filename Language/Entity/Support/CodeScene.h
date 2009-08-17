@@ -98,6 +98,7 @@ public:
 	void						leaveEdit() { if (editDelegate()) setEditing(0); }
 	Entity*						editEntity() const;
 	EditDelegateFace*			editDelegate() const;
+	inline EditDelegateFace*	editDelegate(Entity const* _e) const { return _e == editEntity() ? editDelegate() : 0; }
 	bool						isEditing(Entity const* _e) const { return _e == editEntity(); }
 
 	/// @returns the status of the insertion flag.

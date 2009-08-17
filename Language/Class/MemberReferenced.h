@@ -38,6 +38,7 @@ public:
 protected:
 	virtual Type						apparentType() const;
 	virtual bool						keyPressed(KeyEvent const* _e);
+	virtual String						defineEditHtml(CodeScene* _cs) const;
 
 	virtual Kinds						ancestralDependencies() const;
 	virtual bool						isInValidState() const;

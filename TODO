@@ -1,6 +1,5 @@
-BUG 'M' gives largely arbitrary results.
+EMAIL Kill selections.
 
-BUG current() bad in onCurrentAboutToChange.
 Dynamic code-loading (plugins).
 - Referenced as placeholder (no key press handling)
   - BRINGBACK Method names register with IdentifierSet.
@@ -15,6 +14,7 @@ UI:
   - 'J' -> Joins next line to last [] in current.
 - FIX Page up & down.
 
+BUG current() bad in onCurrentAboutToChange.
 BUG DeclarationsHandler is keeping old placeholders when generating its tree.
 
 Small things:

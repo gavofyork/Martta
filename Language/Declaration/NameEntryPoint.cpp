@@ -41,7 +41,7 @@ List<Named*> NameEntryPoint::possibilities()
 String NameEntryPoint::defineEditHtml(CodeScene* _cs) const
 {
 	if (self()->isPlaceholder())
-		if (EditDelegateFace* d = self()->editDelegate(_cs))
+		if (EditDelegateFace* d = _cs->editDelegate(self()))
 		{
 			String ret = d->real() + L"<span class=\"unreal\">" + d->unreal() + L"</span>";
 			if (Named* n = static_cast<CompletionDelegate<Entity, Named*>*>(d)->selection())

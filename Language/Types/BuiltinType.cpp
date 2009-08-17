@@ -196,7 +196,7 @@ List<int> BuiltinType::possibilities()
 
 String BuiltinType::defineEditHtml(CodeScene* _cs) const
 {
-	if (EditDelegateFace* d = editDelegate(_cs))
+	if (EditDelegateFace* d = _cs->editDelegate(this))
 		return fullHtml(d->real() + L"<span class=\"unreal\">" + d->unreal() + L"</span>");
 	return String::null;
 }

@@ -61,7 +61,11 @@ template<class T, class R>
 class CompletionDelegate: public EditDelegate<T>
 {
 public:
-	CompletionDelegate(T* _e, CodeScene* _s): EditDelegate<T>(_e, _s), m_selection(EditDelegate<T>::subject()->get()), m_name(NameTrait<R>::name(m_selection))
+	CompletionDelegate(T* _e, CodeScene* _s):
+		EditDelegate<T>		(_e, _s),
+		m_selection			(EditDelegate<T>::subject()->get()),
+		m_name				(NameTrait<R>::name(m_selection)),
+		m_cycled			(-1)
 	{
 		m_immediateCommits = _e->isPlaceholder();
 		m_possibilities = EditDelegate<T>::subject()->possibilities();

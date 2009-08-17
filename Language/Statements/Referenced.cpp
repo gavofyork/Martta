@@ -102,16 +102,12 @@ EditDelegateFace* Referenced::newDelegate(CodeScene* _s)
 String Referenced::editHtmlHelper(ValueDefiner* _v, String const& _mid) const
 {
 	String ret = (_v ? &*_v->type() : TypeEntity::null)->typeHtml(_mid);
-	if (_v)
-		return L"<^span class=\"Referenced\">" + _v->tryKind<Labelled>()->labelHtml(ret) + "</span>";
-	else
-		return L"<^>";
-	return ret;
+	return L"<^span class=\"Referenced\">" + _v->tryKind<Labelled>()->labelHtml(ret) + "</span>";
 }
 
 String Referenced::defineEditHtml(CodeScene* _cs) const
 {
-	if (EditDelegateFace* d = editDelegate(_cs))
+	if (EditDelegateFace* d = _cs->editDelegate(this))
 		return editHtmlHelper(static_cast<CompletionDelegate<Referenced, ValueDefiner*>*>(d)->selection(), d->real() + L"<span class=\"unreal\">" + d->unreal() + L"</span>");
 	return String::null;
 }

@@ -101,6 +101,10 @@ bool LambdaNamer::keyPressed(KeyEvent const* _e)
 	{
 		_e->codeScene()->navigateOnto(self()->child(Identity));
 	}
+	else if (_e->text() == "{" && _e->focalIndex() != Body)
+	{
+		_e->codeScene()->navigateInto(self()->child(Body));
+	}
 	else
 		return false;
 	return true;

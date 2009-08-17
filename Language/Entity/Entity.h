@@ -388,7 +388,6 @@ public:
 	bool								isEditing() const;
 	void								clearEditing();
 
-	EditDelegateFace*					editDelegate(CodeScene* _s) const;
 	virtual EditDelegateFace*			newDelegate(CodeScene*) { return 0; }
 
 	static void							keyPressEventStarter(KeyEvent* _e, bool _abortive = false);

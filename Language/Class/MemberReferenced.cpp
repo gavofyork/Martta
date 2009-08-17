@@ -20,6 +20,7 @@
 
 #include "Class.h"
 #include "GenericMemberOperation.h"
+#include "MemberVariable.h"
 #include "MemberLambda.h"
 
 #include "Memberify.h"
@@ -38,7 +39,7 @@ MARTTA_OBJECT_CPP(MemberReferenced);
 
 bool MemberReferenced::keyPressed(KeyEvent const* _e)
 {
-	if (_e->text() == L"!")
+	if (_e->text() == L"`")
 	{
 		replace(new FloatingMemberReferenced(m_subject))->setCurrent();
 		return true;
@@ -119,6 +120,19 @@ Type MemberReferenced::apparentType() const
 	return ret;
 }
 
+String MemberReferenced::defineEditHtml(CodeScene* _cs) const
+{
+	if (EditDelegateFace* d = _cs->editDelegate(this))
+	{
+		ValueDefiner* s = static_cast<CompletionDelegate<Referenced, ValueDefiner*>*>(d)->selection();
+		String ret = d->real() + L"<span class=\"unreal\">" + d->unreal() + L"</span>";
+		if (!s)
+			ret = MemberVariable().labelHtml(ret);
+		return editHtmlHelper(s, ret);
+	}
+	return String::null;
+}
+
 /*	else if (_e->text() == " " || _e->text() == "[" || _e->text() == "#")
 	{
 		codeScene()->leaveEdit();
@@ -130,7 +144,7 @@ MARTTA_OBJECT_CPP(FloatingMemberReferenced);
 
 bool FloatingMemberReferenced::keyPressed(KeyEvent const* _e)
 {
-	if (_e->text() == L"!")
+	if (_e->text() == L"`")
 	{
 		replace(new MemberReferenced(m_subject))->setCurrent();
 		return true;
