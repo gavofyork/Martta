@@ -400,7 +400,6 @@ void Entity::keyPressEventStarter(KeyEvent* _e, bool _abortive)
 
 	SafePointer<Entity, true> fe = _e->focus();
 	_e->codeScene()->setEditing(0);
-
 	if (!fe)
 		fe = _e->codeScene()->current();
 
@@ -429,13 +428,13 @@ void Entity::keyPressEventStarter(KeyEvent* _e, bool _abortive)
 bool Entity::keyPressed(KeyEvent const* _e)
 {
 	Position p = over();
-	if (_e->codeScene()->isCurrent(this) && ((_e->text() == L"\x7f" && _e->modifiers() == ShiftModifier) || (_e->text() == L"\b" && _e->codeScene()->isEditing(this))) && !isFixed())
+	if (_e->codeScene()->isCurrent(this) && ((_e->text() == DeleteKey && _e->modifiers() == ShiftModifier) || (_e->text() == L"\b" && _e->codeScene()->isEditing(this))) && !isFixed())
 	{
 		_e->codeScene()->rememberCurrent();
 		deleteAndRefill(0, false);	// NOTE: Was true; changed to false to avoid erroneous currents being set. May need a rethink.
 		_e->codeScene()->restoreCurrent();
 	}
-	else if (_e->codeScene()->isCurrent(this) && _e->text() == L"\x7f" && !isFixed())
+	else if (_e->codeScene()->isCurrent(this) && _e->text() == DeleteKey && !isFixed())
 	{
 		_e->codeScene()->rememberCurrent();
 		if (nonPlaceholderCount() == 1 && isAllowed(nonPlaceholder(0)->kind()))
@@ -444,11 +443,9 @@ bool Entity::keyPressed(KeyEvent const* _e)
 			deleteAndRefill(0, false);	// SEE ABOVE.
 		_e->codeScene()->restoreCurrent();
 	}
-	else if (_e->codeScene()->isCurrent(this) && _e->text() == L"\x1b" && _e->codeScene()->isEditing(this))
-		_e->codeScene()->setEditing(0);
-	else if (_e->codeScene()->isCurrent(this) && _e->text() == L"\t" && !_e->codeScene()->isEditing(this) && !isFixed())
+	else if (_e->codeScene()->isCurrent(this) && _e->text() == TabKey && !_e->codeScene()->isEditing(this) && !isFixed())
 		_e->codeScene()->setEditing(this);
-	else if (_e->text() == L"\t")
+	else if (_e->text() == TabKey)
 		activated(_e->codeScene());
 	else
 		return false;

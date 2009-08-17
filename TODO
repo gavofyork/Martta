@@ -1,5 +1,6 @@
+BUG Shift-Enter on enum's label.
 BUG current() bad in onCurrentAboutToChange.
-BUG 'a'<Del> loses current.
+BUG 'a'<BS> loses current.
 BUG 'some'<Del> doesn't delete.
 BUG 'M' gives largely arbitrary results.
 Dynamic code-loading (plugins).

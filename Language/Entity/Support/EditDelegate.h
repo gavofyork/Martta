@@ -45,7 +45,7 @@ public:
 	void						lazyCommit() { if (m_immediateCommits) tryCommit(); }
 	void						tryCommit() { if (isValid()) commit(); }
 
-	virtual bool				keyPressed(KeyEvent const*) { return false; }
+	virtual bool				keyPressed(KeyEvent const*);
 	/// Called only once, and only when this will be destroyed but the subject will live.
 	virtual void				leavingEditIntact() {}
 
