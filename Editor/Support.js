@@ -292,20 +292,20 @@ function changeEditContent(_e, _c)
 }
 function restoreCurrent(_x, _y, _parent)
 {
-	var p = document.getElementById(_parent);
+	var p = _parent ? document.getElementById(_parent) : document;
 	var it = document.createNodeIterator(p, NodeFilter.SHOW_ELEMENT, onlyThese, false);
 	var bestx;
 	var besty;
 	while (it.nextNode())
 	{
-		if (entityParent(it.referenceNode.parentNode) == p)
+		if (entityParent(it.referenceNode.parentNode) == p || !_parent)
 		{
 			var r = it.referenceNode.parentNode.getBoundingClientRect();
 			if (r.top <= _y && r.bottom >= _y)
 			{
 				besty = it.referenceNode.parentNode;
 				// Y exact.
-				if (r.left <= _x && r.right >= _x)
+				if (r.left <= _x && r.right >= _x && _parent)
 				{
 					// X exact.
 					bestx = it.referenceNode.parentNode;

@@ -1,8 +1,7 @@
-BUG Shift-Enter on enum's label.
-BUG current() bad in onCurrentAboutToChange.
-BUG 'a'<BS> loses current.
-BUG 'some'<Del> doesn't delete.
+ASSERT Shift-Enter on enum's label.
 BUG 'M' gives largely arbitrary results.
+
+BUG current() bad in onCurrentAboutToChange.
 Dynamic code-loading (plugins).
 - Referenced as placeholder (no key press handling)
   - BRINGBACK Method names register with IdentifierSet.

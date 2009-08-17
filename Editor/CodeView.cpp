@@ -61,6 +61,10 @@ void CodeView::setStylist(WebStylist* _s)
 
 Entity* CodeView::current() const
 {
+	Entity* r = (Entity*)(page()->mainFrame()->evaluateJavaScript("document.getElementById(g_currentIterator.referenceNode.parentNode.id).id").toInt());
+	if (r)
+		return r;
+	const_cast<CodeView*>(this)->restoreCurrent();
 	return (Entity*)(page()->mainFrame()->evaluateJavaScript("document.getElementById(g_currentIterator.referenceNode.parentNode.id).id").toInt());
 }
 
@@ -96,6 +100,7 @@ void CodeView::onCurrentChanged()
 		Entity* e = current();
 		CodeScene::currentChanged(e, m_oldCurrent);
 		m_oldCurrent = e;
+		rememberCurrent();
 		emit currentChanged(e);
 		update();
 	}

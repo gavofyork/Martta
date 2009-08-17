@@ -105,8 +105,6 @@ public:
 			CodeScene* cs = EditDelegate<T>::codeScene();
 			Position p = EditDelegate<T>::subject()->over();
 			EditDelegate<T>::subject()->deleteAndRefill();
-			if (p.exists())
-				cs->setCurrent(p.entity());
 			return true;
 		}
 		else if (_e->text().length() == 1 && _e->text()[0].isLetter())
