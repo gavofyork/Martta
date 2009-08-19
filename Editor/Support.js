@@ -137,6 +137,9 @@ function goUp()
 {
 	if (!g_currentIterator.referenceNode || !g_currentIterator.referenceNode.parentNode)
 		return;
+	var o = g_currentIterator.referenceNode.parentNode.getBoundingClientRect();
+	var oleft = g_currentIterator.referenceNode.parentNode.getBoundingClientRect().left;
+	var oright = g_currentIterator.referenceNode.parentNode.getBoundingClientRect().right;
 	var otop = g_currentIterator.referenceNode.parentNode.getBoundingClientRect().top;
 	CodeView.onCurrentAboutToChange();
 	while (g_currentIterator.referenceNode.parentNode.getBoundingClientRect().bottom > otop + 1)
@@ -145,18 +148,36 @@ function goUp()
 
 	if (g_currentIterator.referenceNode != null)
 	{
-		otop = g_currentIterator.referenceNode.parentNode.getBoundingClientRect().top;
+		var cr = g_currentIterator.referenceNode.parentNode.getBoundingClientRect();
+		var d = Math.abs(cr.left - oleft) + Math.abs(cr.right - oright);
+		var n = 1;
+		var m = 1;
+		otop = cr.top;
 		while (g_currentIterator.previousNode())
 		{
-			if (g_currentIterator.referenceNode.parentNode.getBoundingClientRect().bottom >= otop + 1)
-			{
-				g_currentIterator.nextNode();
+			m++;
+			n++;
+			var cr = g_currentIterator.referenceNode.parentNode.getBoundingClientRect();
+			if (cr.bottom <= otop + 1)
 				break;
+			if (cr.top > otop)
+			{
+				otop = cr.top;
+				d = null;		// guarantee that boxes with lower tops are preferred.
 			}
-			if (g_currentIterator.referenceNode.parentNode.getBoundingClientRect().top < otop)
-				otop = g_currentIterator.referenceNode.parentNode.getBoundingClientRect().top;
+			else if (cr.top < otop || cr.bottom >= o.bottom)
+				continue;
+			var nd = Math.abs(cr.left - oleft) + Math.abs(cr.right - oright);
+			if (d == null || nd < d || oleft > cr.left && oright < cr.right)
+			{
+//				alert(d + '=d, nd=' + nd);
+				d = nd;
+				n = 1;
+			}
 		}
-		g_currentIterator.nextNode();
+//		alert(m + '-' + n);
+		for (var i = 0; i < n; i++)
+			g_currentIterator.nextNode();
 	}
 
 	ensureViewable(g_currentIterator.referenceNode.parentNode);
@@ -166,6 +187,10 @@ function goDown()
 {
 	if (!g_currentIterator.referenceNode || !g_currentIterator.referenceNode.parentNode)
 		return;
+
+	var oleft = g_currentIterator.referenceNode.parentNode.getBoundingClientRect().left;
+	var oright = g_currentIterator.referenceNode.parentNode.getBoundingClientRect().right;
+
 	var obottom = g_currentIterator.referenceNode.parentNode.getBoundingClientRect().bottom;
 	CodeView.onCurrentAboutToChange();
 	while (g_currentIterator.referenceNode.parentNode.getBoundingClientRect().top < obottom - 1)
@@ -174,18 +199,30 @@ function goDown()
 
 	if (g_currentIterator.referenceNode != null)
 	{
+		var d = null;
+		var n = 0;
 		obottom = g_currentIterator.referenceNode.parentNode.getBoundingClientRect().bottom;
 		while (g_currentIterator.nextNode())
 		{
-			if (g_currentIterator.referenceNode.parentNode.getBoundingClientRect().top >= obottom - 1)
-			{
-				g_currentIterator.previousNode();
+			n++;
+			var cr = g_currentIterator.referenceNode.parentNode.getBoundingClientRect();
+			if (cr.top >= obottom - 1)
 				break;
-			}
-			if (g_currentIterator.referenceNode.parentNode.getBoundingClientRect().bottom < obottom)
+			if (cr.bottom < obottom)
+			{
 				obottom = g_currentIterator.referenceNode.parentNode.getBoundingClientRect().bottom;
+				d = null;		// guarantee that boxes with hogher bottoms are preferred.
+			}
+
+			var nd = Math.abs(cr.left - oleft) + Math.abs(cr.right - oright);
+			if (d == null || nd < d || cr.bottom <= obottom && oleft > cr.left && oright < cr.right)
+			{
+				d = nd;
+				n = 1;
+			}
 		}
-		g_currentIterator.previousNode();
+		for (var i = 0; i < n; i++)
+			g_currentIterator.previousNode();
 	}
 
 	ensureViewable(g_currentIterator.referenceNode.parentNode);

@@ -12,7 +12,6 @@ Dynamic code-loading (plugins).
 UI:
 - Join statements or tree insert.
   - 'J' -> Joins next line to last [] in current.
-- FIX Page up & down.
 
 BUG current() bad in onCurrentAboutToChange.
 BUG DeclarationsHandler is keeping old placeholders when generating its tree.
@@ -43,6 +42,10 @@ BUG Moving is crazily slow over statements.
 --------------------------------------------------------------------------------
 
 RELEASE M1 (TBD)
+
+- WebKit.
+- Plugins.
+- Binary builds/installers.
 
 ================================================================================
 
