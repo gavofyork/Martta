@@ -40,7 +40,8 @@ QMAKE_LIBDIR += ../support \
 	../plugins
 INCLUDEPATH *= ../support
 DEPENDPATH += .
-unix:QMAKE_LFLAGS += -Wl,-rpath,../plugins
+linux:QMAKE_LFLAGS += -Wl,-rpath,../plugins
+mac:QMAKE_LFLAGS += -Wl,-macosx_version_min,10.5 -Wl,-rpath,$$PWD/../plugins
 DEFINES += MARTTA_PLUGINS_PATH=\\\"$$PWD/../plugins\\\"
 TARGET = Martta
 DISTFILES += ../TODO

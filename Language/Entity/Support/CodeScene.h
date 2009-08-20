@@ -44,6 +44,8 @@ public:
 
 	virtual String				fullPathOf(String const&) { return String::null; }
 
+	virtual ~DataFinder() {}
+
 private:
 	static DataFinder*			s_this;
 };

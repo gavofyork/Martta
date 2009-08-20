@@ -19,7 +19,6 @@ BUG DeclarationsHandler is keeping old placeholders when generating its tree.
 
 Small things:
 - enumnamer/class expansion.
-- Get rpath stuff working.
 - Unary operation should apply to climb Statement tree until it finds something.
 - Insertion of entities in, e.g. argument lists for function calls.
   - Just a comma?

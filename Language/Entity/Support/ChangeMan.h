@@ -32,7 +32,7 @@ class ChangeListener
 {
 public:
 	ChangeListener();
-	~ChangeListener();
+	virtual ~ChangeListener();
 
 	virtual void						onChanged(Entity* _e, int _aspect) { (void)(_e); (void)(_aspect); }
 	virtual void						onChildrenInitialised(Entity* _e) { (void)(_e); }
