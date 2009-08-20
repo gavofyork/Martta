@@ -1,4 +1,5 @@
 EMAIL Kill selections.
+CRASH Kill a TypeDefinition referenced by ExplicitType - ExplicitType is not notified, or if it is, it is ignored.
 
 Dynamic code-loading (plugins).
 - Referenced as placeholder (no key press handling)
