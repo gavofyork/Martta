@@ -38,6 +38,22 @@ ChangeListener::~ChangeListener()
 	ChangeMan::get()->m_listeners.removeOne(this);
 }
 
+ChangeMan::Entry::Entry(Depender* _depender, Operation _op, Entity* _o1, Entity* _o2, int _index):
+	m_depender(_depender->self()),
+	m_object1(_o1),
+	m_object2(_o2),
+	m_index(_index),
+	m_op(_op)
+{}
+
+ChangeMan::Entry::Entry(Depender* _depender, int _aspect, Entity* _changer):
+	m_depender(_depender->self()),
+	m_object1(_changer),
+	m_object2(0),
+	m_index(_aspect),
+	m_op(DependencyChanged)
+{}
+
 void ChangeMan::oneFootInTheGrave(Dependee* _going, Dependee* _replacement)
 {
 	for (MultiHash<Dependee*, Depender*>::Iterator i = m_dependers.find(_going); i != m_dependers.end() && i.key() == _going; i = m_dependers.erase(i))

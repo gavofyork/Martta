@@ -31,7 +31,6 @@ Webkit layout system
 - BRINGBACK VirtualOverload::defineHtml, ::defineEditHtml.
 - BRINGBACK parentheses annotation - may need update on change.
 - BRINGBACK Error system (!isValid()).
-- BRINGBACK Visual change system.
 
 BUG Moving is crazily slow over statements.
 - To fix change key press dispatch method:

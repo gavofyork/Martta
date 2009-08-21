@@ -37,7 +37,9 @@ CodeView::CodeView(QWidget* _parent):
 	m_subject					(0),
 	m_stylist					(new WebStylist),
 	m_silent					(false),
-	m_showDependencyInfo		(true)
+	m_showDependencyInfo		(true),
+	m_showChanges				(false),
+	m_showOneChange				(false)
 {
 	init();
 }
@@ -187,13 +189,18 @@ void CodeView::refresh()
 	m_dirty.clear();
 }
 
+inline QRectF operator+(QRectF const& _a, float _x)
+{
+	return QRectF(_a.x() - _x, _a.y() - _x, _a.width() + 2.f * _x, _a.height() + 2.f * _x);
+}
+
 void CodeView::paintEvent(QPaintEvent* _ev)
 {
 	refresh();
 	QWebView::paintEvent(_ev);
+	QPainter p(this);
 	if (Entity* c = current())
 	{
-		QPainter p(this);
 		QRect b = bounds(c);
 		p.setPen(QColor().black());
 		p.drawRect(b);
@@ -218,6 +225,36 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 					p.drawRect(br);
 				}
 		}
+	}
+	if ((m_showChanges || m_showOneChange) && !ChangeMan::get()->changesDone().isEmpty())
+	{
+		List<ChangeMan::Entry>& changes = ChangeMan::get()->changesDone();
+		foreach (ChangeMan::Entry i, m_showOneChange ? changes.mid(0, 1) : changes)
+			if (isInScene(i.m_depender))
+			{
+				QColor c;
+				switch (i.m_op)
+				{
+					case ChangeMan::DependencyChanged: c = QColor(0, 0, 255); break;
+					case ChangeMan::DependencySwitched: c = QColor(0, 127, 255); break;
+					case ChangeMan::DependencyAdded: c = QColor(0, 127, 0); break;
+					case ChangeMan::EntityChildrenInitialised: c = QColor(0, 255, 0); break;
+					case ChangeMan::DependencyRemoved: c = QColor(255, 0, 0); break;
+					case ChangeMan::ChildMoved: c = QColor(0, 255, 255); break;
+					case ChangeMan::IndexChanged: c = QColor(255, 0, 255); break;
+				}
+				p.setPen(QPen(c, 2.f));
+				p.setBrush(QColor(c.red(), c.green(), c.blue(), 64));
+				QRectF br = bounds(i.m_depender) + 1.f;
+				p.drawRect(br);
+				if (i.m_object1 && isInScene(i.m_object1))
+				{
+					QRectF obr = bounds(i.m_object1) + 1.f;
+					p.drawLine(br.center(), obr.center());
+					p.setPen(QPen(QColor(0, 0, 0, 128), 2.f));
+					p.drawRect(obr);
+				}
+			}
 	}
 }
 

@@ -70,9 +70,9 @@ public:
 	// Dependee/Depender dead notifications.
 	struct Entry
 	{
-		Entry(Depender* _depender, Operation _op, Entity* _o1 = 0, Entity* _o2 = 0, int _index = UndefinedIndex): m_depender(_depender), m_object1(_o1), m_object2(_o2), m_index(_index), m_op(_op) {}
-		Entry(Depender* _depender, int _aspect, Entity* _changer): m_depender(_depender), m_object1(_changer), m_object2(0), m_index(_aspect), m_op(DependencyChanged) {}
-		Depender* m_depender;
+		Entry(Depender* _depender, Operation _op, Entity* _o1 = 0, Entity* _o2 = 0, int _index = UndefinedIndex);
+		Entry(Depender* _depender, int _aspect, Entity* _changer);
+		Entity* m_depender;
 		Entity* m_object1;
 		Entity* m_object2;
 		union
@@ -128,6 +128,8 @@ public:
 
 	List<Dependee*>						dependeesOf(Depender* _d) const { return m_dependees.values(_d); }
 	List<Depender*>						dependersOf(Dependee* _d) const { return m_dependers.values(_d); }
+
+	List<Entry>&						changesDone() { return m_changesDone; }
 
 private:
 	ChangeMan(): m_asleep(false), m_hasChanged(false) {}

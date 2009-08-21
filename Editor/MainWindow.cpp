@@ -92,7 +92,13 @@ MainWindow::MainWindow(QWidget* _p, Qt::WindowFlags _f):
 		setFilename(QString::null);
 
 	resetSubject();
+	ChangeMan::get()->changesDone().clear();
 	ChangeMan::get()->setChanged();
+
+	on_actShowDeps_triggered();
+	on_actCastability_triggered();
+	on_actShowChanges_triggered();
+	on_actShowFirstChange_triggered();
 }
 
 MainWindow::~MainWindow()
@@ -631,7 +637,7 @@ void MainWindow::on_actAboutQt_triggered()
 
 void MainWindow::on_actShowDeps_triggered()
 {
-//	codeView->setShowDependencyInfo(actShowDeps->isChecked());
+	codeView->setShowDependencyInfo(actShowDeps->isChecked());
 }
 
 void MainWindow::on_actCastability_triggered()
@@ -643,25 +649,25 @@ void MainWindow::on_actCastability_triggered()
 
 void MainWindow::on_actShowChanges_triggered()
 {
-//	codeView->setShowChanges(actShowChanges->isChecked());
+	codeView->setShowChanges(actShowChanges->isChecked());
 }
 
 void MainWindow::on_actShowFirstChange_triggered()
 {
-//	codeView->setShowOneChange(actShowFirstChange->isChecked());
+	codeView->setShowOneChange(actShowFirstChange->isChecked());
 }
 
 void MainWindow::on_actRemoveFirstChange_triggered()
 {
-//	if (s_changes.size())
-//		s_changes.removeFirst();
-//	codeView->update();
+	if (ChangeMan::get()->changesDone().size())
+		ChangeMan::get()->changesDone().removeFirst();
+	codeView->update();
 }
 
 void MainWindow::on_actClearChanges_triggered()
 {
-//	clearChanges();
-//	codeView->update();
+	ChangeMan::get()->changesDone().clear();
+	codeView->update();
 }
 
 void MainWindow::resetSubject()

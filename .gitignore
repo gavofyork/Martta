@@ -13,3 +13,6 @@ support/support.xcodeproj/
 /TODO~
 /link.sh~
 /.gitignore~
+/Editor/Editor.pro.user
+/Language/Language.pro.user
+/support/support.pro.user

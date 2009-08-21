@@ -70,6 +70,10 @@ public slots:
 	bool						attemptEdit(int _e);
 	void						markDirty(int _e) { relayout((Entity*)_e); }
 
+	void						setShowDependencyInfo(bool _v) { m_showDependencyInfo = _v; update(); }
+	void						setShowChanges(bool _v) { m_showChanges = _v; update(); }
+	void						setShowOneChange(bool _v) { m_showOneChange = _v; update(); }
+
 signals:
 	void						currentChanged(Entity*);
 
@@ -111,6 +115,8 @@ private:
 	SafePointer<Entity, true>	m_oldCurrent;
 
 	bool						m_showDependencyInfo;
+	bool						m_showChanges;
+	bool						m_showOneChange;
 };
 
 }
