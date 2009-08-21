@@ -63,4 +63,13 @@ List<ValueDefiner*> Statement::valuesInLocalScope() const
 	return ret;
 }
 
+bool Statement::keyPressed(KeyEvent const* _e)
+{
+	if (NameEntryPoint::keyPressed(_e))
+	{}
+	else
+		return Super::keyPressed(_e);
+	return true;
+}
+
 }

@@ -320,15 +320,10 @@ public:
 	/// Convenience version of above.
 	/// Takes into account parent's allowedKinds(int) and this object's allowedAncestor.
 	template<class T> inline bool		isAllowed(int _i) const { return isAllowed(_i, Kind::of<T>()); }
-	/// @returns true if this entity would be valid if it were an object of a particular type.
+
 	/// Takes into account parent's allowedKinds(int) and this object's allowedAncestor.
-	inline bool							isAllowed(Kind _o) const { return parent() ? parent()->isAllowed(index(), _o) : true; }
-	/// Convenience version of above.
-	/// Takes into account parent's allowedKinds(int) and this object's allowedAncestor.
-	template<class T> inline bool		isAllowed() const { return isAllowed(Kind::of<T>()); }
-	/// @returns true if this entity, in its current position, is valid.
-	/// Takes into account parent's allowedKinds(int) and this object's allowedAncestor.
-	inline bool							isAllowed() const { return isAllowed(kind()); }
+	inline bool							isAllowed() const { return over().allowedToBeKind(kind()); }
+
 	/// @returns true if this entity cannot be killed without costing the validity of its parent's children set.
 	bool								isNecessary() const;
 	/// @returns true if all entity positions are filled validly, including all those required.
@@ -564,7 +559,7 @@ bool Martta::Entity::simplePositionKeyPressHandler(Position const& _p, KeyEvent 
 			else
 				n->setCurrent();
 		}
-		else
+		else if (!_p.exists() || _p->isPlaceholder() || _p.index() >= 0)	// if it's not cardinal we'll end up pushing the new thing behind the current.
 		{
 			// when pressed on _p which already exists, changes from x->(a->(d, e), b, c) to x->(N, a->(d, e), b, c)
 			// when pressed on _p which doesn't exist yet or is a placeholder (a), changes from x->([a,] b, c) to x->(N, b, c)
@@ -572,6 +567,8 @@ bool Martta::Entity::simplePositionKeyPressHandler(Position const& _p, KeyEvent 
 			_p.place(n);
 			_e->codeScene()->navigateInto(n);
 		}
+		else
+			delete n;
 	}
 	else
 		return false;

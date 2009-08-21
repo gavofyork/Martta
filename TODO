@@ -1,20 +1,16 @@
 GONE? Can edit a main function sometimes.
+BUG 'if i==' when no int i.
 
-BRINGBACK Enum values.
-CRASH delete an enum with a referenced value.
-
-- Join statements or tree insert.
-  - 'J' -> Joins next line to last [] in current.
 - Insertion of entities in, e.g. argument lists for function calls.
   - Just a comma?
 - BRINGBACK Error system (!isValid()).
+- BRINGBACK Type info stuff.
+  - Just use a simple summary-like interface first.
 
 Dynamic code-loading (plugins).
 - Referenced as placeholder (no key press handling)
   - QUICK get rid of committed() in Statement - test for inherited method existance
     - Use the method rather than require the name to exist in the class?
-- BRINGBACK Type info stuff.
-  - Just use a simple summary-like interface first.
 UI:
 - EMAIL Kill selections.
 

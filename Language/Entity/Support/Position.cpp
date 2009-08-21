@@ -78,8 +78,7 @@ void Position::insertSilent(Entity* _e) const
 
 bool Position::allowedToBeKind(Kind _k) const
 {
-	return _k.isKind(m_parent->allowedKinds(m_index == UndefinedIndex ? m_parent->cardinalChildCount() : m_index))
-			&& !_k.isKind(m_parent->deniedKinds(m_index == UndefinedIndex ? m_parent->cardinalChildCount() : m_index));
+	return m_parent ? m_parent->isAllowed((m_index == UndefinedIndex) ? m_parent->cardinalChildCount() : m_index, _k) : true;
 }
 
 bool Position::isRequired() const

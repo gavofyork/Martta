@@ -65,9 +65,9 @@ List<ValueDefiner*> SimpleBinaryOperation::findOperators(Operator _o, Type const
 String SimpleBinaryOperation::operatorHtml() const
 {
 	if (id().symbol() == Operator::BangEquals)
-		return L"<span class=\"symbol\">&ne;</span>";
+		return L"<span class=\"symbol\">=<span style=\"margin-left:-0.4em\">/</span><span style=\"margin-left:-0.4em\">=</span></span>";
 	else if (id().symbol() == Operator::EqualsEquals)
-		return L"<span class=\"symbol\">=</span>";
+		return L"<span class=\"symbol\">=<span style=\"margin-left:-0.27em\">=</span></span>";
 	else if (id().symbol() == Operator::LessThanEquals)
 		return L"<span class=\"symbol\">&le;</span>";
 	else if (id().symbol() == Operator::GreaterThanEquals)

@@ -60,7 +60,7 @@ protected:
 	virtual List<int> const&			defineDeclarationOrder() const { static const List<int> r; return r; }
 	virtual void						appendDefinedUptoHere(int, List<ValueDefiner*>*) const;
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s) { return NameEntryPoint::newDelegate<Statement>(_s); }
-	virtual bool						keyPressed(KeyEvent const* _e) { return NameEntryPoint::keyPressed(_e) ? true : Super::keyPressed(_e); }
+	virtual bool						keyPressed(KeyEvent const* _e);
 };
 
 }

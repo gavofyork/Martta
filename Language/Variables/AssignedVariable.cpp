@@ -54,7 +54,7 @@ String AssignedVariable::code() const
 
 bool AssignedVariable::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
-	if (!_p->isAllowed<DefaultConstructedVariable>())
+	if (!_p.allowedToBeKind<DefaultConstructedVariable>())
 		return simplePlaceholderKeyPressHandler<AssignedVariable>(_p, _e, "V");
 	else
 		return false;
@@ -62,8 +62,6 @@ bool AssignedVariable::keyPressedOnPosition(Position const& _p, KeyEvent const* 
 
 void AssignedVariable::onDependencyChanged(Entity*)
 {
-//	mDebug() << this << ": Dependency Changed: " << _e;
-	//debugTree();
 	changed();
 }
 

@@ -217,8 +217,8 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 		QRectF br = bounds(c);
 
 		QLinearGradient g(br.topLeft(), br.bottomLeft());
-		g.setColorAt(0.f, QColor(editDelegate() ? 255 : 192, 224, editDelegate() ? 192 : 255, 64));
-		g.setColorAt(1.f, QColor(editDelegate() ? 255 : 127, 192, editDelegate() ? 127 : 255, 64));
+		g.setColorAt(0.f, editDelegate() ? QColor(255, 128, 0, 80) : QColor(0, 128, 255, 16));
+		g.setColorAt(1.f, editDelegate() ? QColor(255, 128, 0, 16) : QColor(0, 128, 255, 48));
 		p.setPen(Qt::NoPen);
 		p.setBrush(g);
 //		p.drawRect(br);

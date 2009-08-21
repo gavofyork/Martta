@@ -439,7 +439,7 @@ bool Entity::keyPressed(KeyEvent const* _e)
 	else if (_e->codeScene()->isCurrent(this) && _e->text() == DeleteKey && !isFixed())
 	{
 		_e->codeScene()->rememberCurrent();
-		if (nonPlaceholderCount() == 1 && isAllowed(nonPlaceholder(0)->kind()))
+		if (nonPlaceholderCount() == 1 && over().allowedToBeKind(nonPlaceholder(0)->kind()))
 			deleteAndRefill(nonPlaceholder(0), false);	// SEE ABOVE.
 		else
 			deleteAndRefill(0, false);	// SEE ABOVE.
@@ -599,7 +599,7 @@ Position Entity::firstFor(Kind const& _k)
 	if (back().allowedToBeKind(_k) && cardinalChildCount() < minRequired(Cardinals))
 		return back();
 	foreach (Entity* i, cardinalChildren())
-		if (i->isPlaceholder() && i->isAllowed(_k))
+		if (i->isPlaceholder() && i->over().allowedToBeKind(_k))
 			return i->over();
 	for (int i = INT_MIN; i < virtualEndOfNamed(); i++)
 		if (middle(i).allowedToBeKind(_k))

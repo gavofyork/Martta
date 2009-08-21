@@ -62,6 +62,11 @@ bool Compound::keyPressed(KeyEvent const* _e)
 	{
 		child(_e->focalIndex())->setCurrent();
 	}
+	else if (_e->text() == L"J" && _e->focalIndex() != UndefinedIndex && _e->focalIndex() >= 0 && _e->focusIsPlaceholder()
+		&& child(_e->focalIndex() + 1) && _e->focus()->over().allowedToBeKind(child(_e->focalIndex() + 1)->kind()))
+	{
+		_e->focus()->replace(child(_e->focalIndex() + 1));
+	}
 	else if (_e->text() == "{")
 	{
 		child(0)->setCurrent();
