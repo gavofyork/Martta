@@ -109,6 +109,8 @@ private:
 	SafePointer<Entity>			m_rememberedParent;
 
 	SafePointer<Entity, true>	m_oldCurrent;
+
+	bool						m_showDependencyInfo;
 };
 
 }

@@ -126,6 +126,9 @@ public:
 	void								setChanged() { m_hasChanged = true; }
 	void								resetChanged() { m_hasChanged = false; }
 
+	List<Dependee*>						dependeesOf(Depender* _d) const { return m_dependees.values(_d); }
+	List<Depender*>						dependersOf(Dependee* _d) const { return m_dependers.values(_d); }
+
 private:
 	ChangeMan(): m_asleep(false), m_hasChanged(false) {}
 	virtual ~ChangeMan() {}

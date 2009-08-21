@@ -604,7 +604,7 @@ Entity* MainWindow::importDom(QDomElement const& _el, Entity* _p, QStringList* _
 			h.insert(qs(_el.attributes().item(i).nodeName()), qs(_el.attributes().item(i).nodeValue()));
 
 	if (_p)
-		e->silentMove(_p->named(index));
+		e->move(_p->named(index));
 
 	e->setProperties(h);
 	for (QDomNode i = _el.firstChild(); !i.isNull(); i = i.nextSibling())

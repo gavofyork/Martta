@@ -73,10 +73,11 @@ protected:
 	virtual bool						canStandAlone() const;
 	virtual bool						defineSimilarityTo(TypeEntity const* _t, Castability _c) const;
 	virtual bool						defineSimilarityFrom(TypeEntity const* _from, Castability _c) const;
-	virtual void						apresLoad() { addDependency(m_subject->self()); Super::apresLoad(); }
+	virtual void						apresLoad();
 	virtual List<Declaration*>			utilised() const;
 	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p[L"subject"] = m_subject.key(); }
 	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_subject.restoreFrom(_p[L"subject"]); }
+	virtual void						onDependencyRemoved(Entity* _s, int) { if (_s->tryKind<TypeDefinition>() == m_subject) setSubject(0); changed(); }
 
 	ModelPtr<TypeDefinition>			m_subject;
 };

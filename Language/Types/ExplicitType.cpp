@@ -146,6 +146,13 @@ List<Declaration*> ExplicitType::utilised() const
 	return m_subject.isUsable() ? subject()->utilisedInUse() : Super::utilised();	// TODO: define for other types.
 }
 
+void ExplicitType::apresLoad()
+{
+	if (m_subject)
+		set(m_subject);
+	Super::apresLoad();
+}
+
 String ExplicitType::defineHtml() const
 {
 	return L"<^span class=\"TypeEntity\">" + typeHtml(m_subject.isUsable() ? m_subject->name() : L"&empty;") + L"</span>";

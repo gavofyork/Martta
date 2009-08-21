@@ -173,11 +173,11 @@ protected:
 	// (actually a BuiltType, but we're not to know). This might be changed in the future.
 	virtual bool						keyPressed(KeyEvent const*_e) { if (attemptInsert(_e)) return true; return Super::keyPressed(_e); }
 
-	virtual void						parentAdded() { if (m_isUnchanging != (parentIs<TypeEntity>() && parentAs<TypeEntity>()->m_isUnchanging)) setInert(!m_isUnchanging); Super::parentAdded(); }
-	virtual void						parentSwitched(Entity* _exParent) { if (m_isUnchanging != (parentIs<TypeEntity>() && parentAs<TypeEntity>()->m_isUnchanging)) setInert(!m_isUnchanging); Super::parentSwitched(_exParent); }
+	virtual void						parentAdded();
+	virtual void						parentSwitched(Entity* _exParent);
 
 private:
-	void								setInert(bool _inert) { if (m_isUnchanging != _inert || m_isAsleep != _inert) { m_isUnchanging = m_isAsleep = _inert; foreach (TypeEntity* e, childrenOf<TypeEntity>()) e->setInert(_inert); } }
+	void								setInert(bool _inert) { if (m_isUnchanging != _inert || m_isAsleep != _inert) { m_isUnchanging = m_isAsleep = _inert; foreach (TypeEntity* e, childrenOf<TypeEntity>()) e->setInert(_inert); apresLoad(); } }
 
 	/// Returns an exact copy of this tree, except that the top is owned by _t.
 	/// Unowned nodes are copied.

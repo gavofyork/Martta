@@ -21,7 +21,8 @@ release:DEFINES *= RELEASE
 unix:DEFINES += M_UNIX
 mac:DEFINES += M_MAC
 win:DEFINES += M_WIN
-!mac:unix:DEFINES += M_LINUX
+!mac:unix: CONFIG += linux
+linux:DEFINES += M_LINUX
 DEPS = Project WebView
 QT += svg \
 	webkit \

@@ -36,7 +36,8 @@ CodeView::CodeView(QWidget* _parent):
 	QWebView					(_parent),
 	m_subject					(0),
 	m_stylist					(new WebStylist),
-	m_silent					(false)
+	m_silent					(false),
+	m_showDependencyInfo		(true)
 {
 	init();
 }
@@ -190,12 +191,33 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 {
 	refresh();
 	QWebView::paintEvent(_ev);
-	if (current())
+	if (Entity* c = current())
 	{
 		QPainter p(this);
-		QRect b = bounds(current());
+		QRect b = bounds(c);
 		p.setPen(QColor().black());
 		p.drawRect(b);
+
+		if (m_showDependencyInfo)
+		{
+			p.setBrush(Qt::NoBrush);
+			p.setPen(QColor(0, 255, 0, 128));
+			foreach (Dependee* i, ChangeMan::get()->dependeesOf(c))
+			{
+				if (i && isInScene(i->self()))
+				{
+					QRectF br = bounds(i->self());
+					p.drawRect(br);
+				}
+			}
+			p.setPen(QColor(255, 0, 0, 128));
+			foreach (Depender* i, ChangeMan::get()->dependersOf(c))
+				if (isInScene(i->self()))
+				{
+					QRectF br = bounds(i->self());
+					p.drawRect(br);
+				}
+		}
 	}
 }
 

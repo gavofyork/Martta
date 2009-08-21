@@ -42,6 +42,20 @@ String TypeEntity::defineHtml() const
 	return L"<^span class=\"TypeEntity\">&empty;</span>";
 }
 
+void TypeEntity::parentAdded()
+{
+	if (m_isUnchanging != (parentIs<TypeEntity>() && parentAs<TypeEntity>()->m_isUnchanging))
+		setInert(!m_isUnchanging);
+	Super::parentAdded();
+}
+
+void TypeEntity::parentSwitched(Entity* _exParent)
+{
+	if (m_isUnchanging != (parentIs<TypeEntity>() && parentAs<TypeEntity>()->m_isUnchanging))
+		setInert(!m_isUnchanging);
+	Super::parentSwitched(_exParent);
+}
+
 String TypeEntity::typeHtml(String const& _middle) const
 {
 	return String(L"<span style=\"text-shadow: -1px -1px 0 %1\">").arg(idColour().name(255)) + _middle + L"</span>";

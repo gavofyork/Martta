@@ -51,9 +51,9 @@ public:
 	inline T* operator->() const { return this->operator T*(); }
 };
 
-template<class T> inline bool operator==(T const* _t, ModelPtr<T> const& _f) { return _t == _f; }
-template<class T> inline bool operator!=(T const* _t, ModelPtr<T> const& _f) { return _t != _f; }
-template<class T> inline bool operator==(T* _t, ModelPtr<T> const& _f) { return _t == _f; }
-template<class T> inline bool operator!=(T* _t, ModelPtr<T> const& _f) { return _t != _f; }
+template<class T> inline bool operator==(T const* _t, ModelPtr<T> const& _f) { return _f == _t; }
+template<class T> inline bool operator!=(T const* _t, ModelPtr<T> const& _f) { return _f != _t; }
+template<class T> inline bool operator==(T* _t, ModelPtr<T> const& _f) { return _f == _t; }
+template<class T> inline bool operator!=(T* _t, ModelPtr<T> const& _f) { return _f != _t; }
 
 }
