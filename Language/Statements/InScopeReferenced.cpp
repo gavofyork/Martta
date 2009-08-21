@@ -26,6 +26,8 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(InScopeReferenced);
 
+static ReferencedValueSet<InScopeReferenced> s_inScopeReferencedRegistrand;
+
 List<ValueDefiner*> InScopeReferenced::possibilities(Position const& _p)
 {
 	return _p->ancestor<Declaration>()->valuesKnown();

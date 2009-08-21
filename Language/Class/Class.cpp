@@ -72,13 +72,8 @@ void Class::rejigDeps()
 {
 	removeAllDependencies();
 	foreach (Entity* i, members())
-	{
 		if (i->child(Member::Accessibility))
-		{
-			mInfo() << "Adding dep:" << i << i->child(Member::Accessibility);
 			addDependency(i->child(Member::Accessibility));
-		}
-	}
 }
 
 bool Class::checkImplicitConstructors()

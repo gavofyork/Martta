@@ -632,7 +632,7 @@ bool Entity::validifyChild(int _i, int* _added)
 	foreach (Entity* e, m_namedChildren.values(_i))
 		if (!e->isAllowed())
 		{
-			e->oneFootInTheGrave();
+			e->inLimbo();
 			e->killAndDelete();
 		}
 	while (childCount(_i) < minRequired(_i))
@@ -815,7 +815,7 @@ Entity* Entity::usurp(Entity* _u)
 	kill(_u);
 
 	// Signal we're off.
-	oneFootInTheGrave(_u);
+	inLimbo(_u);
 
 	// Tell _r's old context (if it has one) that it has gone, and tell _r that it has a new context.
 	_u->parentSwitchedWithChildRemoved(you);
@@ -840,7 +840,7 @@ Entity* Entity::replace(Entity* _r)
 	kill(_r);
 
 	// Signal we're off.
-	oneFootInTheGrave(_r);
+	inLimbo(_r);
 	// Tell _r's old context (if it has one) that it has gone, and tell _r that it has a new context.
 	_r->parentSwitchedWithChildRemoved(you);
 	// Tell _r's new context that it's here.
@@ -885,7 +885,7 @@ Entity* Entity::insert(Entity* _e, int _preferedIndex)
 			_e->parent()->childSwitched(_e, this);
 		_e->parentSwitchedWithChildRemoved(you);
 		parentRemoved(_e->parent());
-		oneFootInTheGrave(_e->child(_preferedIndex));
+		inLimbo(_e->child(_preferedIndex));
 		killAndDelete(_e->child(_preferedIndex));
 	}
 	return _e;
@@ -918,6 +918,13 @@ bool Entity::tryInsert(Entity* _e, int _preferedIndex)
 
 	return ip != Nowhere;
 }
+void Entity::inLimbo(Dependee* _replacement)
+{
+	foreach (Entity* e, children())
+		e->inLimbo();
+	oneFootInTheGrave(_replacement);
+}
+
 void Entity::deleteAndRefill(Entity* _e, bool _moveToGrave)
 {
 	SafePointer<Entity> c = parent();
@@ -931,7 +938,7 @@ void Entity::deleteAndRefill(Entity* _e, bool _moveToGrave)
 	{
 		p.spawnPreparedSilent();
 		kill(p.entity());
-		oneFootInTheGrave(p.entity());
+		inLimbo(p.entity());
 		p->parentAdded();
 		c->childSwitched(p.entity(), this);
 		delete this;
@@ -940,7 +947,7 @@ void Entity::deleteAndRefill(Entity* _e, bool _moveToGrave)
 	{
 		int ci = m_index;
 		kill();
-		oneFootInTheGrave();
+		inLimbo();
 		c->childRemoved(this, ci);
 		delete this;
 	}

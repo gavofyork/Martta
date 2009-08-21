@@ -1,8 +1,7 @@
 GONE? Can edit a main function sometimes.
 
-  - BRINGBACK Method names register with IdentifierSet.
-  - BRINGBACK Enum values.
-    - CRASH delete a Referenced EnumValue?
+BRINGBACK Enum values.
+CRASH delete an enum with a referenced value.
 
 - Join statements or tree insert.
   - 'J' -> Joins next line to last [] in current.

@@ -216,7 +216,7 @@ public:
 	/**
 	 * kill()s the deletes the object but informs any dependent it is dieing first.
 	 */
-	inline void							killAndDeleteWithNotification() { move(Nowhere); oneFootInTheGrave(); killAndDelete(); }
+	inline void							killAndDeleteWithNotification() { move(Nowhere); inLimbo(); killAndDelete(); }
 
 	/**
 	 * Kills this object and replaces it with _u.
@@ -464,6 +464,8 @@ private:
 	bool								validifyChild(int _i, int* _added);
 
 	void								notifyOfStrobe(Entity* _strobeCreation);
+
+	void								inLimbo(Dependee* _replacement = 0);
 
 	Entity*								m_parent;
 	int									m_index;
