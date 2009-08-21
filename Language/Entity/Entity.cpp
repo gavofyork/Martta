@@ -436,7 +436,7 @@ bool Entity::keyPressed(KeyEvent const* _e)
 		deleteAndRefill(0, false);	// NOTE: Was true; changed to false to avoid erroneous currents being set. May need a rethink.
 		_e->codeScene()->restoreCurrent();
 	}
-	else if (_e->codeScene()->isCurrent(this) && _e->text() == DeleteKey && !isFixed())
+	else if (_e->codeScene()->isCurrent(this) && (_e->text() == DeleteKey || _e->text() == BackspaceKey) && !isFixed())		// BackspaceKey comes out of editdelegates when there aren't any chars left.
 	{
 		_e->codeScene()->rememberCurrent();
 		if (nonPlaceholderCount() == 1 && isAllowed(nonPlaceholder(0)->kind()))

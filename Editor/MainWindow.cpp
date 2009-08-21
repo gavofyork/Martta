@@ -405,13 +405,13 @@ bool MainWindow::load(String const& _filename)
 	}
 	if (doc.doctype().name() != "MarttaSolution")
 	{
-		QMessageBox::critical(0, tr("Load Solution"), tr("Invalid file format (%1)").arg(doc.doctype().name()));
+		QMessageBox::critical(0, tr("Load Solution"), tr("Invalid solution file format (%1)").arg(doc.doctype().name()));
 		return false;
 	}
 
 	QStringList projectFiles;
 	QList<Project*> projects;
-	Entity* e = importDom(doc.documentElement(), 0, &projectFiles, &projects);	// Expects to be able to write into m_projects.
+	Entity* e = importDom(doc.documentElement(), 0, &projectFiles, &projects);	// Expects to be able to write into projects.
 	if (!e->isKind<Solution>())
 	{
 		QMessageBox::critical(0, tr("Load Solution"), tr("Invalid file contents (unknown Solution entity %1---missing a plugin?)").arg(qs(e->kind().name())));
@@ -570,8 +570,7 @@ void MainWindow::updateSolutionSupportPath()
 
 QDomElement MainWindow::exportDom(QDomDocument& _doc, Entity const* _e, bool _dump) const
 {
-	QDomElement n = _doc.createElement("entity");
-	n.setAttribute("kind", qs(_e->kind().name()));
+	QDomElement n = _doc.createElement(qs(_e->kind().name()).replace("::", ":"));
 	Hash<String, String> h;
 	_e->properties(h);
 	for (Hash<String, String>::Iterator i = h.begin(); i != h.end(); ++i)
@@ -595,7 +594,7 @@ QDomElement MainWindow::exportDom(QDomDocument& _doc, Entity const* _e, bool _du
 
 Entity* MainWindow::importDom(QDomElement const& _el, Entity* _p, QStringList* _unloadedProjects, QList<Project*>* _projects)
 {
-	Entity* e = Entity::spawn(qs(_el.attribute("kind")));
+	Entity* e = Entity::spawn(qs(_el.nodeName().replace(":", "::")));
 	Assert(e, "Spawn doesn't know anything about this kind, yet it did when exported.");
 
 	if (e->isKind<Project>() && _projects)
@@ -614,10 +613,10 @@ Entity* MainWindow::importDom(QDomElement const& _el, Entity* _p, QStringList* _
 
 	e->setProperties(h);
 	for (QDomNode i = _el.firstChild(); !i.isNull(); i = i.nextSibling())
-		if (i.isElement() && i.toElement().tagName() == "entity")
-			importDom(i.toElement(), e, _unloadedProjects, _projects);
-		else if(i.isElement() && i.toElement().tagName() == "project" && _unloadedProjects)
+		if(i.isElement() && i.toElement().tagName() == "project" && _unloadedProjects)
 			*_unloadedProjects << i.namedItem("filename").nodeValue();
+		else if (i.isElement())
+			importDom(i.toElement(), e, _unloadedProjects, _projects);
 	return e;
 }
 

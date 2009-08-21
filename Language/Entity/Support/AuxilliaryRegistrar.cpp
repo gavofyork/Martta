@@ -56,6 +56,7 @@ void AuxilliaryRegistrar::jigCache()
 	m_interfacesMap.clear();
 	m_supersMap.clear();
 	m_immediateDerivedsMap.clear();
+	m_derivedsMap.clear();
 
 	foreach (AuxilliaryFace const* i, m_auxilliaries.values())
 	{
