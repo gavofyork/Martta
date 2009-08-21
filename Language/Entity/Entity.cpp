@@ -430,13 +430,13 @@ void Entity::keyPressEventStarter(KeyEvent* _e, bool _abortive)
 bool Entity::keyPressed(KeyEvent const* _e)
 {
 	Position p = over();
-	if (_e->codeScene()->isCurrent(this) && ((_e->text() == DeleteKey && _e->modifiers() == ShiftModifier) || (_e->text() == L"\b" && _e->codeScene()->isEditing(this))) && !isFixed())
+	if (_e->codeScene()->isCurrent(this) && (_e->text() == DeleteKey && _e->modifiers() == ShiftModifier) && !isFixed())
 	{
 		_e->codeScene()->rememberCurrent();
 		deleteAndRefill(0, false);	// NOTE: Was true; changed to false to avoid erroneous currents being set. May need a rethink.
 		_e->codeScene()->restoreCurrent();
 	}
-	else if (_e->codeScene()->isCurrent(this) && (_e->text() == DeleteKey || _e->text() == BackspaceKey) && !isFixed())		// BackspaceKey comes out of editdelegates when there aren't any chars left.
+	else if (_e->codeScene()->isCurrent(this) && _e->text() == DeleteKey && !isFixed())
 	{
 		_e->codeScene()->rememberCurrent();
 		if (nonPlaceholderCount() == 1 && isAllowed(nonPlaceholder(0)->kind()))

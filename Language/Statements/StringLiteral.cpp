@@ -62,7 +62,7 @@ EditDelegateFace* StringLiteral::newDelegate(CodeScene* _s)
 		Delegate(StringLiteral* _e, CodeScene* _s): EditDelegate<StringLiteral>(_e, _s) {}
 		virtual bool keyPressed(KeyEvent const* _e)
 		{
-			if (_e->text() == L"\b" && subject()->m_value.length() > 1)
+			if (_e->text() == L"\b" && subject()->m_value.length())
 				subject()->m_value.chop(1);
 			else if ((_e->text()[0].isGraph() && _e->text() != L"\"") || _e->text()[0] == L' ' || _e->text()[0] == L'\t')
 				subject()->m_value += _e->text();

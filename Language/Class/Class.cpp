@@ -72,7 +72,13 @@ void Class::rejigDeps()
 {
 	removeAllDependencies();
 	foreach (Entity* i, members())
-		addDependency(i->child(Member::Accessibility));
+	{
+		if (i->child(Member::Accessibility))
+		{
+			mInfo() << "Adding dep:" << i << i->child(Member::Accessibility);
+			addDependency(i->child(Member::Accessibility));
+		}
+	}
 }
 
 bool Class::checkImplicitConstructors()
@@ -227,8 +233,8 @@ List<Declaration*> Class::utilised() const
 List<Declaration*> Class::members(bool _isConst, Access _access) const
 {
 	List<Declaration*> ret;
-	foreach (MemberValue* i, cardinalChildrenOf<MemberValue>())
-		if ((i->isConst() || !_isConst) && i->access() <= _access)
+	foreach (Member* i, cardinalChildrenOf<Member>())
+		if (i->access() <= _access && (!i->isKind<MemberValue>() || i->asKind<MemberValue>()->isConst() || !_isConst))
 			ret += i;
 	foreach (MemberValue* i, childrenAs<MemberValue>(Artificials))
 		if ((i->isConst() || !_isConst) && i->access() <= _access)

@@ -71,7 +71,7 @@ String IntegerLiteral::defineHtml() const
 String IntegerLiteral::defineEditHtml(CodeScene* _cs) const
 {
 	if (EditDelegateFace* d = _cs->editDelegate(this))
-		return String("<^span class=\"Literal IntegerLiteral\">%1%2%3</span>").arg(d->real()).arg(m_signed ? "" : "u").arg((m_range == ShortRange ? "s" : m_range == LongRange ? "l" : m_range == LonglongRange ? "ll" : ""));
+		return String("<^span class=\"Literal IntegerLiteral\">%1<span class=\"unreal\">%4</span>%2%3</span>").arg(d->real()).arg(m_signed ? "" : "u").arg((m_range == ShortRange ? "s" : m_range == LongRange ? "l" : m_range == LonglongRange ? "ll" : "")).arg(d->unreal());
 	return String::null;
 }
 
@@ -87,7 +87,7 @@ EditDelegateFace* IntegerLiteral::newDelegate(CodeScene* _s)
 		}
 		virtual bool keyPressed(KeyEvent const* _e)
 		{
-			if (_e->text() == L"\b" && m_entry.size() > 1)
+			if (_e->text() == L"\b" && m_entry.size())
 				m_entry = m_entry.left(m_entry.size() - 1);
 			else if (_e->text().length() == 1 && _e->text()[0].isNumber())
 				m_entry += _e->text();
@@ -124,6 +124,10 @@ EditDelegateFace* IntegerLiteral::newDelegate(CodeScene* _s)
 		virtual String real() const
 		{
 			return m_entry;
+		}
+		virtual String unreal() const
+		{
+			return m_entry.isEmpty() ? L"0" : String::null;
 		}
 
 	private:

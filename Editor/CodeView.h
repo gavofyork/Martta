@@ -77,6 +77,9 @@ public slots:
 signals:
 	void						currentChanged(Entity*);
 
+private slots:
+	void						onSelectionChanged();
+
 private:
 	virtual void						onChanged(Entity* _e, int _aspect) { relayout(_e); (void)(_aspect); }
 	virtual void						onChildrenInitialised(Entity* _e) { relayout(_e); }

@@ -1,7 +1,9 @@
-BUG Can edit a main function sometimes.
+GONE? Can edit a main function sometimes.
+
   - BRINGBACK Method names register with IdentifierSet.
   - BRINGBACK Enum values.
     - CRASH delete a Referenced EnumValue?
+
 - Join statements or tree insert.
   - 'J' -> Joins next line to last [] in current.
 - Insertion of entities in, e.g. argument lists for function calls.

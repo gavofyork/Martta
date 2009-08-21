@@ -37,6 +37,8 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(MemberReferenced);
 
+static ReferencedValueSet<MemberReferenced> s_memberReferencedRegistrand;
+
 bool MemberReferenced::keyPressed(KeyEvent const* _e)
 {
 	if (_e->text() == L"`")
@@ -66,21 +68,23 @@ bool MemberReferenced::isInValidState() const
 	return Super::isInValidState();
 }
 
-List<ValueDefiner*> MemberReferenced::possibilities(Position const& _p)
+List<ValueDefiner*> MemberReferenced::possibilities(Position const& _p, bool _methods, bool _nonMethods)
 {
 	List<ValueDefiner*> ret;
 	Type method = Type(FunctionType(false, true)).topWith(Memberify()).topWith(Reference());
-	if (TypeNamer* s = _p->tryKind<TypeNamer>())
-		foreach (Type t, s->ourAllowedTypes())
+	mInfo() << _p.entity() << _p->tryKind<TypeNamer>();
+	if (TypedOwner* s = _p.parent()->tryKind<TypedOwner>())
+		foreach (Type t, s->allowedTypes(_p.index()))
 		{
 			List<ValueDefiner*> appMems;
-			if (t->isType<Memberify>() && t->asType<Memberify>()->scope())
-				appMems = t->asType<Memberify>()->scope()->applicableMembers(s->self(), t->asType<Memberify>()->isConst());
-			else if (_p->hasAncestor<Class>())
-				appMems = castEntities<ValueDefiner>(_p->ancestor<Class>()->membersOf<MemberValue>(_p->hasAncestor<MemberLambda>() ? _p->ancestor<MemberLambda>()->isConst() : false));
-			if (false)
+			if (t->isType<Memberify>() && t->asType<Memberify>()->scope() && _p.entity())
+				appMems = t->asType<Memberify>()->scope()->applicableMembers(_p.entity(), t->asType<Memberify>()->isConst());
+			else if (Class* c = _p->ancestor<Class>())
+				appMems = castEntities<ValueDefiner>(c->membersOf<MemberValue>(_p->hasAncestor<MemberLambda>() ? _p->ancestor<MemberLambda>()->isConst() : false));
+			mInfo() << appMems << _p->ancestor<Class>();
+			if (!_methods)
 				appMems = filterTypedsInv<ValueDefiner>(method, appMems);
-			else if (false)
+			else if (!_nonMethods)
 				appMems = filterTypeds<ValueDefiner>(method, appMems);
 			ret << appMems;
 		}

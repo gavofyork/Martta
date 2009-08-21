@@ -51,7 +51,7 @@ String CSolution::includeCode() const
 void CSolution::initialiseNew()
 {
 	clearEntities();
-	back().place(Entity::evaluate(String("CProject{TextLabel[text=project]}{MainFunction{TextLabel[text=main]}{BuiltinType[id=%1]}{Argument{BuiltinType[id=%1]}{TextLabel[text=argc]}}{Argument{Pointer{Pointer{BuiltinType[id=%2]}}}{TextLabel[text=argv]}}}{CDependency[libs=][includes=/usr/include/stdlib.h*/usr/include/stdio.h][name=Standard C]}").arg(Int).arg(Char)));
+	back().place(Entity::evaluate(String("CProject{TextLabel[text=project]}{MainFunction{TextLabel[text=main]}{BuiltinType[id=%1]}{Argument{BuiltinType[id=%1]}{TextLabel[text=argc]}}{Argument{Pointer{Pointer{BuiltinType[id=%2]}}}{TextLabel[text=argv]}}{Compound{ReturnStatement{IntegerLiteral[value=0][signed=true]}}}}{CDependency[libs=][includes=/usr/include/stdlib.h*/usr/include/stdio.h][name=Standard C]}").arg(Int).arg(Char)));
 	rejigIncludes();
 }
 

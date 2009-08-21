@@ -32,8 +32,8 @@ class MemberReferenced: public Referenced
 public:
 	MemberReferenced(ValueDefiner* _subject = 0): Referenced(_subject) {}
 
-	virtual List<ValueDefiner*>			possibilities() const { return possibilities(over()); }
-	static List<ValueDefiner*>			possibilities(Position const& _p);
+	virtual List<ValueDefiner*>			possibilities() const { return possibilities(over(), true, true); }
+	static List<ValueDefiner*>			possibilities(Position const& _p, bool _methods = true, bool _nonMethods = true);
 
 protected:
 	virtual Type						apparentType() const;

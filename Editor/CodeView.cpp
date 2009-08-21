@@ -42,6 +42,7 @@ CodeView::CodeView(QWidget* _parent):
 	m_showOneChange				(false)
 {
 	init();
+	connect(this, SIGNAL(selectionChanged()), SLOT(onSelectionChanged()));
 }
 
 CodeView::~CodeView()
@@ -194,6 +195,11 @@ inline QRectF operator+(QRectF const& _a, float _x)
 	return QRectF(_a.x() - _x, _a.y() - _x, _a.width() + 2.f * _x, _a.height() + 2.f * _x);
 }
 
+void CodeView::onSelectionChanged()
+{
+	mInfo();
+}
+
 void CodeView::paintEvent(QPaintEvent* _ev)
 {
 	refresh();
@@ -204,10 +210,19 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 			m_bracketed.removeAll(i);
 
 	QWebView::paintEvent(_ev);
-	QPainter p(this);
+
 	if (c)
 	{
-		QRect b = bounds(c);
+		QPainter p(this);
+		QRectF br = bounds(c);
+
+		QLinearGradient g(br.topLeft(), br.bottomLeft());
+		g.setColorAt(0.f, QColor(editDelegate() ? 255 : 192, 224, editDelegate() ? 192 : 255, 64));
+		g.setColorAt(1.f, QColor(editDelegate() ? 255 : 127, 192, editDelegate() ? 127 : 255, 64));
+		p.setPen(Qt::NoPen);
+		p.setBrush(g);
+//		p.drawRect(br);
+		p.drawRect(QRectF(0, br.y(), width(), br.height()));
 
 		p.setPen(Qt::NoPen);
 		foreach (Position i, m_bracketed)
@@ -225,23 +240,14 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 			p.drawRect(QRectF(br.x() - 2.f, br.y(), br.width() + 4.f, br.height()));
 		}
 
-		QRectF br = b;
-		{
-			QLinearGradient g(br.topLeft(), br.bottomLeft());
-			g.setColorAt(0.f, QColor(editDelegate() ? 255 : 192, 224, editDelegate() ? 192 : 255, 32));
-			g.setColorAt(1.f, QColor(editDelegate() ? 255 : 127, 192, editDelegate() ? 127 : 255, 32));
-			p.setBrush(g);
-		}
-		p.drawRect(br);
-		p.drawRect(QRectF(0, br.y(), width(), br.height()));
 		p.setBrush(Qt::NoBrush);
-		p.setPen(QColor(0, 0, 0, 64));
+		p.setPen(QColor(0, 0, 0, 128));
 		p.drawRect(br);
-		p.setPen(QColor(0, 0, 0, 32));
+		p.setPen(QColor(0, 0, 0, 64));
 		p.drawRect(br + 1.f);
-		p.setPen(QColor(0, 0, 0, 16));
+		p.setPen(QColor(0, 0, 0, 32));
 		p.drawRect(br + 2.f);
-		p.setPen(QColor(0, 0, 0, 8));
+		p.setPen(QColor(0, 0, 0, 16));
 		p.drawRect(br + 3.f);
 
 		if (m_showDependencyInfo)
@@ -267,6 +273,7 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 	}
 	if ((m_showChanges || m_showOneChange) && !ChangeMan::get()->changesDone().isEmpty())
 	{
+		QPainter p(this);
 		List<ChangeMan::Entry>& changes = ChangeMan::get()->changesDone();
 		foreach (ChangeMan::Entry i, m_showOneChange ? changes.mid(0, 1) : changes)
 			if (isInScene(i.m_depender))
