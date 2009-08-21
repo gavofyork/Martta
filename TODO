@@ -1,4 +1,5 @@
 EMAIL Kill selections.
+BUG Can edit a main function sometimes.
 
 Dynamic code-loading (plugins).
 - Referenced as placeholder (no key press handling)
@@ -29,7 +30,6 @@ Small things:
 
 Webkit layout system
 - BRINGBACK VirtualOverload::defineHtml, ::defineEditHtml.
-- BRINGBACK parentheses annotation - may need update on change.
 - BRINGBACK Error system (!isValid()).
 
 BUG Moving is crazily slow over statements.

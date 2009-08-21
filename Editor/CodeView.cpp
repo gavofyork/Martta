@@ -197,13 +197,52 @@ inline QRectF operator+(QRectF const& _a, float _x)
 void CodeView::paintEvent(QPaintEvent* _ev)
 {
 	refresh();
+	Entity* c = current();
+
+	foreach (Position i, m_bracketed)
+		if (!i.exists() || (i.entity() != c && !c->hasAncestor(i.entity())))
+			m_bracketed.removeAll(i);
+
 	QWebView::paintEvent(_ev);
 	QPainter p(this);
-	if (Entity* c = current())
+	if (c)
 	{
 		QRect b = bounds(c);
-		p.setPen(QColor().black());
-		p.drawRect(b);
+
+		p.setPen(Qt::NoPen);
+		foreach (Position i, m_bracketed)
+		{
+			QRectF br = bounds(i.entity());
+			QLinearGradient g(br.topLeft(), br.bottomLeft());
+			g.setColorAt(0.f, QColor(224, 255, 192, 32));
+			g.setColorAt(1.f, QColor(192, 255, 127, 32));
+			QLinearGradient go(br.topLeft(), br.bottomLeft());
+			go.setColorAt(0.f, QColor(224, 255, 192, 128));
+			go.setColorAt(1.f, QColor(192, 255, 127, 128));
+			p.setBrush(g);
+			p.drawRect(br);
+			p.setBrush(go);
+			p.drawRect(QRectF(br.x() - 2.f, br.y(), br.width() + 4.f, br.height()));
+		}
+
+		QRectF br = b;
+		{
+			QLinearGradient g(br.topLeft(), br.bottomLeft());
+			g.setColorAt(0.f, QColor(editDelegate() ? 255 : 192, 224, editDelegate() ? 192 : 255, 32));
+			g.setColorAt(1.f, QColor(editDelegate() ? 255 : 127, 192, editDelegate() ? 127 : 255, 32));
+			p.setBrush(g);
+		}
+		p.drawRect(br);
+		p.drawRect(QRectF(0, br.y(), width(), br.height()));
+		p.setBrush(Qt::NoBrush);
+		p.setPen(QColor(0, 0, 0, 64));
+		p.drawRect(br);
+		p.setPen(QColor(0, 0, 0, 32));
+		p.drawRect(br + 1.f);
+		p.setPen(QColor(0, 0, 0, 16));
+		p.drawRect(br + 2.f);
+		p.setPen(QColor(0, 0, 0, 8));
+		p.drawRect(br + 3.f);
 
 		if (m_showDependencyInfo)
 		{

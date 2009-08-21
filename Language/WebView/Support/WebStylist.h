@@ -75,7 +75,7 @@ private:
 	/// These substitutions include:
 	/// - Replacing "<^>" pseudo-tag with a span element of id "this".
 	/// - Interpreting "data://" URIs.
-	String								refineHtml(String const& _html, bool _allowThis = true, bool _forceThis = false);
+	String								refineHtml(String const& _html, bool _allowThis = true, bool _forceThis = false, String const& _addClass = String::null);
 
 	int									m_stack;
 	Hash<Entity const*, String>			m_htmlCache;

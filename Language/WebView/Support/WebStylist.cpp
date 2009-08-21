@@ -60,25 +60,38 @@ String WebStylist::rejiggedHtml(Entity const* _e)
 String WebStylist::editHtml(Entity const* _e, CodeScene* _cs)
 {
 	KeepCurrent k(this);
-	return refineHtml(defineEditHtml(_e, _cs), true, true);
+	return refineHtml(defineEditHtml(_e, _cs), true, true, L"editing");
 }
 
-String WebStylist::refineHtml(String const& _html, bool _allowThis, bool _forceThis)
+String WebStylist::refineHtml(String const& _html, bool _allowThis, bool _forceThis, String const& _addClass)
 {
 	String ret = _html;
 	if (!ret.startsWith(L"<^") && _forceThis)
-		ret = L"<span id=\"this\">" + ret + L"</span>";
+		ret = L"<span id=\"this\" class=\"" + _addClass + "\">" + ret + L"</span>";
 
 	ret.replace(L"<^>", _allowThis ? L"<span id=\"this\"></span>" : L"");
 	int i;
 	if ((i = ret.indexOf(L"<^")) > -1)
 	{
-		int t = min((uint)ret.indexOf(L' ', i), (uint)ret.indexOf(L'>', i));
+		int c = ret.indexOf(L'>', i);
+		int t = min((uint)ret.indexOf(L' ', i), (uint)c);
 		// abc<^div >
 		// 0123456789
-		//    i    t
+		//    i    tc
+		int a = ret.indexOf(L" class=\"", i);
+		bool alreadyClass = (a != -1 && a < c);
 		if (t != -1 && _allowThis)
-			ret.replace(t, 0, L" id=\"this\"");
+		{
+			if (alreadyClass)
+				ret.replace(t, 0, L" id=\"this\"");
+			else
+				ret.replace(t, 0, L" id=\"this\" class=\"" + _addClass + "\"");
+		}
+		if (alreadyClass)
+		{
+			a = ret.indexOf(L" class=\"", i);
+			ret.replace(a + 8, 0, _addClass + L" ");
+		}
 		ret.replace(i + 1, 1, String::null);
 	}
 

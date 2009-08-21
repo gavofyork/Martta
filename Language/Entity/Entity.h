@@ -363,7 +363,7 @@ public:
 	virtual int							definePreferedFor(Kind const&) const { return NonePrefered; }
 
 	// Save/load
-	virtual List<Entity*>				savedChildren() const { return children(); }
+	virtual List<Entity*>				savedChildren() const;
 	virtual void						properties(Hash<String, String>&) const {}
 	virtual void						setProperties(Hash<String, String> const&) {}
 	virtual void						apresLoad() {}	// Called following a load after the model has been loaded.

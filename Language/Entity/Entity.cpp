@@ -364,6 +364,15 @@ bool Entity::activated(CodeScene* _s)
 		return _s->isEditing(this);
 	}
 }
+List<Entity*> Entity::savedChildren() const
+{
+	List<Entity*> ret;
+	foreach (int i, knownNames())
+		if (Entity* c = child(i))
+			ret.append(c);
+	return ret + cardinalChildren();
+}
+
 void Entity::keyPressEventStarter(KeyEvent* _e, bool _abortive)
 {
 	Entity* f = _e->focus();
