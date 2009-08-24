@@ -46,22 +46,18 @@ protected:
 	{
 		if (!_p.exists() || _p->isPlaceholder() || _e->text() != _t)
 			return false;
-
 		Position p = slideOnPrecedence(_p, _d, _a, _e->nearestBracket(_p));
-//		mDebug() << "Slide from" << _p << "to" << p;
-		if (!isTemporary(p.entity()))
-		{
-			Entity* n = new T;
-			_e->noteStrobeCreation(n, &*p);
-//			p->debugTree();
-			p->insert(n, FirstOperand);
-//			n->debugTree();
-			n->validifyChildren();
-//			n->debugTree();
-			_e->codeScene()->navigateOnto(n->child(SecondOperand));
-			return true;
-		}
-		return false;
+
+		if (isTemporary(p.entity()) || !p->isKind<Typed>())
+			return false;
+
+		Entity* n = new T;
+		_e->noteStrobeCreation(n, &*p);
+		p->insert(n, FirstOperand);
+		n->validifyChildren();
+		//_e->codeScene()->navigateOnto(n->child(SecondOperand));
+		n->dropCursor();
+		return true;
 	}
 	template<class T> static bool		simpleKeyPressedOnPositionHandler(Position const& _p, KeyEvent const* _e, Operator _o)
 	{

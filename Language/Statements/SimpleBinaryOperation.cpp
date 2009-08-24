@@ -36,25 +36,20 @@ bool SimpleBinaryOperation::keyPressedOnPosition(Position const& _p, KeyEvent co
 	if (!_p.exists() || _p->isPlaceholder() || o.isNull())
 		return false;
 
-	bool ok = false;
 	Position p = slideOnPrecedence(_p, o.precedence(), o.associativity(), _e->nearestBracket(_p));
 	AssertNR(!p.entity()->isEditing());
-	if (p->isKind<Typed>() && findOperators(o, p->asKind<Typed>()->apparentType()).size())
-		ok = true;
-	if (!ok)
-		p = _p;
-	if (p->isKind<Typed>() && findOperators(o, p->asKind<Typed>()->apparentType()).size())
-		ok = true;
-	if (ok)
-	{
-		SimpleBinaryOperation* n = new SimpleBinaryOperation(o, p->asKind<Typed>()->apparentType());
-		_e->noteStrobeCreation(n, &*p);
-		p->insert(n, FirstOperand);
-		n->validifyChildren();
-		n->dropCursor();
-		return true;
-	}
-	return false;
+
+	// Try condition for p, then _p if p fails, then bail if _p fails. p is the one that succeeded first.
+	for (; !(p->isKind<Typed>() && findOperators(o, p->asKind<Typed>()->apparentType()).size()); p = _p)
+		if (p == _p)
+			return false;
+
+	SimpleBinaryOperation* n = new SimpleBinaryOperation(o, p->asKind<Typed>()->apparentType());
+	_e->noteStrobeCreation(n, &*p);
+	p->insert(n, FirstOperand);
+	n->validifyChildren();
+	n->dropCursor();
+	return true;
 }
 
 List<ValueDefiner*> SimpleBinaryOperation::findOperators(Operator _o, Type const& _left, Type const& _right)
