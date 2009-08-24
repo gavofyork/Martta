@@ -133,100 +133,63 @@ function goNext()
 	ensureViewable(g_currentIterator.referenceNode.parentNode);
 	currentChanged();
 }
-function goUp()
+function goVert(_d)
 {
 	if (!g_currentIterator.referenceNode || !g_currentIterator.referenceNode.parentNode)
 		return;
-	var o = g_currentIterator.referenceNode.parentNode.getBoundingClientRect();
-	var oleft = g_currentIterator.referenceNode.parentNode.getBoundingClientRect().left;
-	var oright = g_currentIterator.referenceNode.parentNode.getBoundingClientRect().right;
-	var otop = g_currentIterator.referenceNode.parentNode.getBoundingClientRect().top;
-	CodeView.onCurrentAboutToChange();
-	while (g_currentIterator.referenceNode.parentNode.getBoundingClientRect().bottom > otop + 1)
-		if (g_currentIterator.previousNode() == null)
-			break;
 
-	if (g_currentIterator.referenceNode != null)
+	var orig = g_currentIterator.referenceNode.parentNode.getBoundingClientRect();
+
+	function top(_r) { return _d ? _r.top : -_r.bottom; }
+	function bottom(_r) { return _d ? _r.bottom : -_r.top; }
+	function overlapBonus(_r) { return (_r.left < orig.right || orig.left < _r.right) ? 0.1 : 0; }
+	function dx(_r) { return Math.abs(_r.left + _r.right - orig.left - orig.right) * 2 + Math.abs(_r.right - _r.left - orig.right + orig.left) - overlapBonus(_r); }
+	function goOn() { return _d ? g_currentIterator.nextNode() : g_currentIterator.previousNode(); }
+	function backup() { return _d ? g_currentIterator.previousNode() : g_currentIterator.nextNode(); }
+	function curTop() { return top(g_currentIterator.referenceNode.parentNode.getBoundingClientRect()); }
+	function curBottom() { return bottom(g_currentIterator.referenceNode.parentNode.getBoundingClientRect()); }
+	function curDx() { return dx(g_currentIterator.referenceNode.parentNode.getBoundingClientRect()); }
+
+	CodeView.onCurrentAboutToChange();
+
+	while (curTop() < bottom(orig) && goOn()) {}
+
+	if (g_currentIterator.referenceNode)
 	{
-		var cr = g_currentIterator.referenceNode.parentNode.getBoundingClientRect();
-		var d = Math.abs(cr.left - oleft) + Math.abs(cr.right - oright);
-		var n = 1;
-		var m = 1;
-		otop = cr.top;
-		while (g_currentIterator.previousNode())
+		var bestBottom = curBottom();
+		var bestDx = curDx();
+		var extras = 1;
+		while (goOn())
 		{
-			m++;
-			n++;
-			var cr = g_currentIterator.referenceNode.parentNode.getBoundingClientRect();
-			if (cr.bottom <= otop + 1)
+			extras++;
+			if (curTop() >= bestBottom)
 				break;
-			if (cr.top > otop)
+			else if (curBottom() < bestBottom)
 			{
-				otop = cr.top;
-				d = null;		// guarantee that boxes with lower tops are preferred.
+				bestBottom = curBottom();
+				bestDx = curDx();
+				extras = 1;
 			}
-			else if (cr.top < otop || cr.bottom >= o.bottom)
-				continue;
-			var nd = Math.abs(cr.left - oleft) + Math.abs(cr.right - oright);
-			if (d == null || nd < d || oleft > cr.left && oright < cr.right)
+			else if (curDx() < bestDx && curBottom() <= bestBottom)
 			{
-//				alert(d + '=d, nd=' + nd);
-				d = nd;
-				n = 1;
+				bestDx = curDx();
+				extras = 1;
 			}
 		}
-//		alert(m + '-' + n);
-		for (var i = 0; i < n; i++)
-			g_currentIterator.nextNode();
+		for (var i = 0; i < extras; i++)
+			backup();
+		ensureViewable(g_currentIterator.referenceNode.parentNode);
 	}
 
-	ensureViewable(g_currentIterator.referenceNode.parentNode);
 	currentChanged();
 }
 function goDown()
 {
-	if (!g_currentIterator.referenceNode || !g_currentIterator.referenceNode.parentNode)
-		return;
-
-	var oleft = g_currentIterator.referenceNode.parentNode.getBoundingClientRect().left;
-	var oright = g_currentIterator.referenceNode.parentNode.getBoundingClientRect().right;
-
-	var obottom = g_currentIterator.referenceNode.parentNode.getBoundingClientRect().bottom;
-	CodeView.onCurrentAboutToChange();
-	while (g_currentIterator.referenceNode.parentNode.getBoundingClientRect().top < obottom - 1)
-		if (g_currentIterator.nextNode() == null)
-			break;
-
-	if (g_currentIterator.referenceNode != null)
-	{
-		var d = null;
-		var n = 0;
-		obottom = g_currentIterator.referenceNode.parentNode.getBoundingClientRect().bottom;
-		while (g_currentIterator.nextNode())
-		{
-			n++;
-			var cr = g_currentIterator.referenceNode.parentNode.getBoundingClientRect();
-			if (cr.top >= obottom - 1)
-				break;
-			if (cr.bottom < obottom)
-			{
-				obottom = g_currentIterator.referenceNode.parentNode.getBoundingClientRect().bottom;
-				d = null;		// guarantee that boxes with hogher bottoms are preferred.
-			}
-
-			var nd = Math.abs(cr.left - oleft) + Math.abs(cr.right - oright);
-			if (d == null || nd < d || cr.bottom <= obottom && oleft > cr.left && oright < cr.right)
-			{
-				d = nd;
-				n = 1;
-			}
-		}
-		for (var i = 0; i < n; i++)
-			g_currentIterator.previousNode();
-	}
-
-	ensureViewable(g_currentIterator.referenceNode.parentNode);
-	currentChanged();
+	goVert(1);
+}
+function goUp()
+{
+	goVert(0);
 }
 function thisParent(_e)
 {

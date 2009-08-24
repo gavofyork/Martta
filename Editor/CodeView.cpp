@@ -254,13 +254,13 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 		}
 
 		p.setBrush(Qt::NoBrush);
-		p.setPen(editDelegate() ? QColor(32, 0, 0, 128) : QColor(0, 0, 0, 128));
+		p.setPen(editDelegate() ? QColor(255, 0, 0, 128) : QColor(0, 0, 0, 128));
 		p.drawRect(br);
-		p.setPen(editDelegate() ? QColor(32, 0, 0, 64) : QColor(0, 0, 0, 64));
+		p.setPen(editDelegate() ? QColor(255, 0, 0, 64) : QColor(0, 0, 0, 64));
 		p.drawRect(br + 1.f);
-		p.setPen(editDelegate() ? QColor(32, 0, 0, 32) : QColor(0, 0, 0, 32));
+		p.setPen(editDelegate() ? QColor(255, 0, 0, 32) : QColor(0, 0, 0, 32));
 		p.drawRect(br + 2.f);
-		p.setPen(editDelegate() ? QColor(32, 0, 0, 16) : QColor(0, 0, 0, 16));
+		p.setPen(editDelegate() ? QColor(255, 0, 0, 16) : QColor(0, 0, 0, 16));
 		p.drawRect(br + 3.f);
 
 		if (m_showDependencyInfo)
