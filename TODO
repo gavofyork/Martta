@@ -1,5 +1,6 @@
 GONE? Can edit a main function sometimes.
-BUG 'if i==' when no int i.
+BUG focus on i of int i, move down onto if(i==i) and second i focuses.s
+BUG down from if (i==i) [empty] goes to entity further down still.
 
 - Insertion of entities in, e.g. argument lists for function calls.
   - Just a comma?

@@ -38,7 +38,7 @@
         <active>
          <colorrole role="Base">
           <brush brushstyle="SolidPattern">
-           <color alpha="255">
+           <color alpha="0">
             <red>255</red>
             <green>255</green>
             <blue>255</blue>
@@ -47,7 +47,7 @@
          </colorrole>
          <colorrole role="Window">
           <brush brushstyle="SolidPattern">
-           <color alpha="255">
+           <color alpha="0">
             <red>255</red>
             <green>255</green>
             <blue>255</blue>
@@ -58,7 +58,7 @@
         <inactive>
          <colorrole role="Base">
           <brush brushstyle="SolidPattern">
-           <color alpha="255">
+           <color alpha="0">
             <red>255</red>
             <green>255</green>
             <blue>255</blue>
@@ -67,7 +67,7 @@
          </colorrole>
          <colorrole role="Window">
           <brush brushstyle="SolidPattern">
-           <color alpha="255">
+           <color alpha="0">
             <red>255</red>
             <green>255</green>
             <blue>255</blue>
@@ -78,7 +78,7 @@
         <disabled>
          <colorrole role="Base">
           <brush brushstyle="SolidPattern">
-           <color alpha="255">
+           <color alpha="0">
             <red>255</red>
             <green>255</green>
             <blue>255</blue>
@@ -87,7 +87,7 @@
          </colorrole>
          <colorrole role="Window">
           <brush brushstyle="SolidPattern">
-           <color alpha="255">
+           <color alpha="0">
             <red>255</red>
             <green>255</green>
             <blue>255</blue>
@@ -100,13 +100,13 @@
       <property name="focusPolicy">
        <enum>Qt::StrongFocus</enum>
       </property>
-      <property name="autoFillBackground">
-       <bool>true</bool>
-      </property>
      </widget>
     </item>
     <item>
      <widget class="Line" name="line">
+      <property name="autoFillBackground">
+       <bool>true</bool>
+      </property>
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
@@ -119,6 +119,9 @@
         <horstretch>0</horstretch>
         <verstretch>1</verstretch>
        </sizepolicy>
+      </property>
+      <property name="autoFillBackground">
+       <bool>true</bool>
       </property>
       <property name="frameShape">
        <enum>QFrame::VLine</enum>
@@ -179,13 +182,20 @@
    <addaction name="menuPlugins"/>
    <addaction name="menu_About"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QStatusBar" name="statusbar">
+   <property name="autoFillBackground">
+    <bool>true</bool>
+   </property>
+  </widget>
   <widget class="QDockWidget" name="dockWidget">
    <property name="font">
     <font>
      <family>AlArabiya</family>
      <pointsize>8</pointsize>
     </font>
+   </property>
+   <property name="autoFillBackground">
+    <bool>true</bool>
    </property>
    <property name="windowTitle">
     <string>Dependencies</string>
@@ -243,6 +253,9 @@
      <family>AlArabiya</family>
      <pointsize>8</pointsize>
     </font>
+   </property>
+   <property name="autoFillBackground">
+    <bool>true</bool>
    </property>
    <property name="windowTitle">
     <string>Classes</string>
@@ -360,6 +373,9 @@
      <pointsize>8</pointsize>
     </font>
    </property>
+   <property name="autoFillBackground">
+    <bool>true</bool>
+   </property>
    <property name="windowTitle">
     <string>I/O</string>
    </property>
@@ -424,6 +440,9 @@
      <family>AlArabiya</family>
      <pointsize>8</pointsize>
     </font>
+   </property>
+   <property name="autoFillBackground">
+    <bool>true</bool>
    </property>
    <property name="windowTitle">
     <string>Values Visible</string>
@@ -492,6 +511,9 @@
      <family>AlArabiya</family>
      <pointsize>8</pointsize>
     </font>
+   </property>
+   <property name="autoFillBackground">
+    <bool>true</bool>
    </property>
    <property name="windowTitle">
     <string>Entity Information</string>
@@ -564,6 +586,9 @@
      <pointsize>8</pointsize>
     </font>
    </property>
+   <property name="autoFillBackground">
+    <bool>true</bool>
+   </property>
    <property name="windowTitle">
     <string>Language Available</string>
    </property>
@@ -635,6 +660,9 @@
      <pointsize>8</pointsize>
     </font>
    </property>
+   <property name="autoFillBackground">
+    <bool>true</bool>
+   </property>
    <property name="windowTitle">
     <string>Plugins Loaded</string>
    </property>
@@ -703,6 +731,9 @@
      <pointsize>8</pointsize>
     </font>
    </property>
+   <property name="autoFillBackground">
+    <bool>true</bool>
+   </property>
    <property name="floating">
     <bool>false</bool>
    </property>
@@ -751,6 +782,9 @@
    </property>
    <property name="windowTitle">
     <string>toolBar</string>
+   </property>
+   <property name="autoFillBackground">
+    <bool>true</bool>
    </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>

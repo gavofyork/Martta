@@ -100,6 +100,8 @@ private slots:
 	void updateProgramCode();
 
 private:
+	virtual void paintEvent(QPaintEvent* _p);
+
 	void updateSolutionSupportPath();
 
 	void setFilename(QString const& _fn);

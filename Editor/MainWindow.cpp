@@ -72,6 +72,8 @@ MainWindow::MainWindow(QWidget* _p, Qt::WindowFlags _f):
 #ifdef Q_WS_MAC
 	setUnifiedTitleAndToolBarOnMac(true);
 #endif
+	setAttribute(Qt::WA_TranslucentBackground, true);
+	centralWidget()->setAttribute(Qt::WA_OpaquePaintEvent, false);
 
 	QSettings s;
 	restoreState(s.value("mainwindow/state").toByteArray());
@@ -120,6 +122,16 @@ MainWindow::~MainWindow()
 #if defined(DEBUG)
 //	mInfo() << "Type count:" << TypeEntity::s_typeCount;
 #endif
+}
+
+void MainWindow::paintEvent(QPaintEvent* _ev)
+{
+	QPainter p(this);
+	p.fillRect(_ev->rect(), Qt::transparent);
+/*	p.setPen(Qt::NoPen);
+	p.setBrush(Qt::white);
+	p.setOpacity(0.6);
+	p.drawRect(rect());*/
 }
 
 void MainWindow::loadPlugins()

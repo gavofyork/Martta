@@ -43,6 +43,8 @@ CodeView::CodeView(QWidget* _parent):
 {
 	init();
 	connect(this, SIGNAL(selectionChanged()), SLOT(onSelectionChanged()));
+	setAttribute(Qt::WA_OpaquePaintEvent, false);
+	setRenderHints(QPainter::TextAntialiasing | QPainter::Antialiasing);
 }
 
 CodeView::~CodeView()
@@ -209,20 +211,31 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 		if (!i.exists() || (i.entity() != c && !c->hasAncestor(i.entity())))
 			m_bracketed.removeAll(i);
 
+	if (c)
+	{
+		QPainter p(this);
+
+		p.setOpacity(0.9);
+		p.fillRect(rect(), Qt::white);
+		p.setOpacity(1);
+
+//		p.setRenderHint(QPainter::Antialiasing, true);
+		QRectF br = bounds(c);
+
+		QLinearGradient g(br.topLeft(), br.bottomLeft());
+		g.setColorAt(0.f, editDelegate() ? QColor(255, 128, 0, 80) : QColor(0, 128, 255, 16));
+		g.setColorAt(1.f, editDelegate() ? QColor(255, 128, 0, 32) : QColor(0, 128, 255, 48));
+		p.setPen(Qt::NoPen);
+		p.setBrush(g);
+//		p.drawRect(br);
+		p.drawRect(QRectF(0, br.y(), width(), br.height()));
+	}
 	QWebView::paintEvent(_ev);
 
 	if (c)
 	{
 		QPainter p(this);
 		QRectF br = bounds(c);
-
-		QLinearGradient g(br.topLeft(), br.bottomLeft());
-		g.setColorAt(0.f, editDelegate() ? QColor(255, 128, 0, 80) : QColor(0, 128, 255, 16));
-		g.setColorAt(1.f, editDelegate() ? QColor(255, 128, 0, 16) : QColor(0, 128, 255, 48));
-		p.setPen(Qt::NoPen);
-		p.setBrush(g);
-//		p.drawRect(br);
-		p.drawRect(QRectF(0, br.y(), width(), br.height()));
 
 		p.setPen(Qt::NoPen);
 		foreach (Position i, m_bracketed)
@@ -241,13 +254,13 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 		}
 
 		p.setBrush(Qt::NoBrush);
-		p.setPen(QColor(0, 0, 0, 128));
+		p.setPen(editDelegate() ? QColor(32, 0, 0, 128) : QColor(0, 0, 0, 128));
 		p.drawRect(br);
-		p.setPen(QColor(0, 0, 0, 64));
+		p.setPen(editDelegate() ? QColor(32, 0, 0, 64) : QColor(0, 0, 0, 64));
 		p.drawRect(br + 1.f);
-		p.setPen(QColor(0, 0, 0, 32));
+		p.setPen(editDelegate() ? QColor(32, 0, 0, 32) : QColor(0, 0, 0, 32));
 		p.drawRect(br + 2.f);
-		p.setPen(QColor(0, 0, 0, 16));
+		p.setPen(editDelegate() ? QColor(32, 0, 0, 16) : QColor(0, 0, 0, 16));
 		p.drawRect(br + 3.f);
 
 		if (m_showDependencyInfo)
@@ -320,6 +333,9 @@ void CodeView::init()
 	QFile support(":/CodeView/Support.js");
 	support.open(QFile::ReadOnly);
 	page()->mainFrame()->evaluateJavaScript(support.readAll().data());
+	QPalette pal = palette();
+	pal.setBrush(QPalette::Base, Qt::transparent);
+	page()->setPalette(pal);
 	m_dirty.clear();
 }
 
