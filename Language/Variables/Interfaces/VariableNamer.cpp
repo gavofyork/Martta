@@ -45,7 +45,7 @@ String VariableNamer::basicCode() const
 
 bool VariableNamer::keyPressed(KeyEvent const* _e)
 {
-	if (_e->text() == " " && _e->focalIndex() == OurType)
+	if (_e->text() == L" " && _e->focalIndex() == OurType && !self()->child(OurType)->isPlaceholder())
 	{
 		_e->codeScene()->navigateOnto(self()->child(Identity));
 	}
