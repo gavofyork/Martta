@@ -148,14 +148,14 @@ void Class::onChildrenInitialised()
 {
 	rejigDeps();
 	if (checkImplicitConstructors())
-		changed();
+		changed(Logically);
 }
 
 void Class::onDependencyAdded(Entity* _e)
 {
 	if (_e->index() >= 0 && (_e->isKind<MethodOperator>() || _e->isKind<ConversionOperator>() || _e->isKind<Constructor>()))
 		if (checkImplicitConstructors())
-			changed();
+			changed(Logically);
 	if (_e->isKind<Member>())
 		rejigDeps();
 }
@@ -165,16 +165,16 @@ void Class::onDependencyRemoved(Entity* _e, int _oi)
 	// TODO: Will it remove the Access label dep? Even if the member is only moved to another class?
 	if (_oi >= 0 && (_e->isKind<MethodOperator>() || _e->isKind<ConversionOperator>() || _e->isKind<Constructor>()))
 		if (checkImplicitConstructors())
-			changed();
+			changed(Logically);
 	if (_e->isKind<Member>())
 		rejigDeps();
 }
 
-void Class::onDependencyChanged(Entity* _e)
+void Class::onDependencyChanged(int, Entity* _e)
 {
 	if (_e->isKind<Base>() || (_e->index() >= 0 && (_e->isKind<MethodOperator>() || _e->isKind<ConversionOperator>() || _e->isKind<Constructor>())))
 		if (checkImplicitConstructors())
-			changed();
+			changed(Logically);
 	if (_e->isKind<TextLabel>() || _e->isKind<AccessLabel>())
 		changed(Visually);
 }

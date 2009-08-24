@@ -46,7 +46,7 @@ public:
 protected:
 	virtual String						defineHtml() const;
 	virtual Kinds						allowedKinds(int _i) const;
-	virtual void						onDependencyChanged(Entity* _e);
+	virtual void						onDependencyChanged(int, Entity* _e);
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual int							minRequired(int _i) const { return _i == Accessibility || _i == Superclass ? 1 : Super::minRequired(_i); }
 	virtual bool						isChildInValidState(int _i) const;

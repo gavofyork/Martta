@@ -48,7 +48,7 @@ protected:
 	virtual String						defineHtml() const;
 	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual List<Declaration*>			utilised() const;
-	virtual void						onDependencyChanged(Entity* _e);
+	virtual void						onDependencyChanged(int, Entity* _e);
 	virtual void						apresLoad() { rejigDeps(); checkImplicitConstructors(); }
 	virtual void						onDependencyAdded(Entity* _e);
 	virtual void						onDependencyRemoved(Entity* _e, int);

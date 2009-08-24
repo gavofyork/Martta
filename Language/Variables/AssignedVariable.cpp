@@ -60,9 +60,9 @@ bool AssignedVariable::keyPressedOnPosition(Position const& _p, KeyEvent const* 
 		return false;
 }
 
-void AssignedVariable::onDependencyChanged(Entity*)
+void AssignedVariable::onDependencyChanged(int, Entity*)
 {
-	changed();
+	changed(Logically);
 }
 
 void AssignedVariable::onDependencySwitched(Entity* _e, Entity*)

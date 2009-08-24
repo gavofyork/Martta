@@ -52,7 +52,7 @@ String Referenced::code() const
 void Referenced::onDependencySwitched(Entity* _t, Entity* _old)
 {
 //	mDebug() << "Dependency switched" << _old << "->" << _t << " subject:" << (m_subject ? m_subject->self() : (Entity*)0);
-	if (m_subject->self() == _old)
+	if (m_subject == _old->tryKind<ValueDefiner>())
 	{
 //		mDebug() << "Subject switched to" << _t << "from" << _old;
 		setSubject(_t->asKind<ValueDefiner>());
@@ -62,7 +62,7 @@ void Referenced::onDependencySwitched(Entity* _t, Entity* _old)
 void Referenced::onDependencyRemoved(Entity* _old, int)
 {
 //	mDebug() << "Dependency removed" << _old << " subject:" << &*m_subject;
-	if (m_subject->self() == _old)
+	if (m_subject == _old->tryKind<ValueDefiner>())
 	{
 //		mDebug() << "Subject removed (was" << _old << ")";
 		if (Identifiable* i = _old->tryKind<Identifiable>())

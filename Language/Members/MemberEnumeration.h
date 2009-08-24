@@ -56,7 +56,7 @@ protected:
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual int							familyDependencies() { return DependsOnChildren; }
 	virtual void						onDependencyAdded(Entity* _e) { EnumerationNamer::onDependencyAdded(_e); }
-	virtual void						onDependencyChanged(Entity* _e) { EnumerationNamer::onDependencyChanged(_e); }
+	virtual void						onDependencyChanged(int _a, Entity* _e) { EnumerationNamer::onDependencyChanged(_a, _e); }
 	virtual void						onDependencyRemoved(Entity* _e, int) { EnumerationNamer::onDependencyRemoved(_e); }
 	virtual bool						keyPressed(KeyEvent const* _e) { AssertNR(isComplete()); return EnumerationNamer::keyPressed(_e) ? true : Super::keyPressed(_e); }
 	virtual inline String				defineLabelName(String const& _text) const { return camelCase(_text, true); }

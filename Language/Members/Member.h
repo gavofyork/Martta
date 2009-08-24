@@ -55,7 +55,7 @@ protected:
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual int							familyDependencies() const { return DependsOnChildren; }
-	virtual void						onDependencyChanged(Entity*) { changed(); }
+	virtual void						onDependencyChanged(int, Entity*) { changed(Logically); }
 	virtual String						defineHtml() const;
 };
 

@@ -81,19 +81,19 @@ private slots:
 	void						onSelectionChanged();
 
 private:
-	virtual void						onChanged(Entity* _e, int _aspect) { relayout(_e); (void)(_aspect); }
+	virtual void						onChanged(Entity* _e, int _aspect) { if (_aspect & Dependee::Visually) relayout(_e); (void)(_aspect); }
 	virtual void						onChildrenInitialised(Entity* _e) { relayout(_e); }
 	virtual void						onChildAdded(Entity* _e, int _index) { relayout(_e); (void)(_index); }
 	virtual void						onChildSwitched(Entity* _e, Entity* _child, Entity* _oldChild) { relayout(_e); (void)(_child); (void)(_oldChild); }
-	virtual void						onDependencySwitched(Entity* _e, Entity* _current, Entity* _old) { relayout(_e); (void)(_current); (void)(_old); }
+	virtual void						onDependencySwitched(Entity* _e, Entity* _current, Entity* _old) { (void)(_e); (void)(_current); (void)(_old); }
 	virtual void						onChildRemoved(Entity* _e, Entity* _old, int _oldIndex) { relayout(_e); (void)(_old); (void)(_oldIndex); }
 	virtual void						onChildMoved(Entity* _e, Entity* _child, int _oldIndex) { relayout(_e); (void)(_child); (void)(_oldIndex); }
 	virtual void						onParentAdded(Entity* _e) { (void)(_e); }
 	virtual void						onParentSwitched(Entity* _e, Entity* _old) { (void)(_e); (void)(_old); }
 	virtual void						onParentRemoved(Entity* _e, Entity* _old) { (void)(_e); (void)(_old); }
-	virtual void						onAncestorAdded(Entity* _e, Entity* _ancestor) { relayout(_e); (void)(_ancestor); }
-	virtual void						onAncestorSwitched(Entity* _e, Entity* _ancestor, Entity* _old) { relayout(_e); (void)(_ancestor); (void)(_old); }
-	virtual void						onAncestorRemoved(Entity* _e, Entity* _old) { relayout(_e); (void)(_old); }
+	virtual void						onAncestorAdded(Entity* _e, Entity* _ancestor) { (void)(_e); (void)(_ancestor); }
+	virtual void						onAncestorSwitched(Entity* _e, Entity* _ancestor, Entity* _old) { (void)(_e); (void)(_ancestor); (void)(_old); }
+	virtual void						onAncestorRemoved(Entity* _e, Entity* _old) { (void)(_e); (void)(_old); }
 
 	void						init();
 	void						refresh();

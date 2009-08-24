@@ -46,7 +46,7 @@ protected:
 	virtual String						code() const;
 	virtual Precedence					precedence() const { return id().precedence(); }
 	virtual int							familyDependencies() const { return DependsOnChildren; }
-	virtual void						onDependencyChanged(Entity* _e);
+	virtual void						onDependencyChanged(int, Entity* _e);
 	virtual void						apresLoad() { refreshOperation(); }
 
 private:

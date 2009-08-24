@@ -52,8 +52,7 @@ protected:
 	/// - A registered or family dependency's state changes (_e is the dependency) and its onChanged() returned true.
 	/// - A child changes position, and children are a family dependency (_e is the child).
 	/// @note By default, it does nothing.
-	virtual void						onDependencyChanged(int /*_aspect*/, Entity* _e) { onDependencyChanged(_e); }
-	virtual void						onDependencyChanged(Entity* /*_e*/) {}	// TODO: Remove
+	virtual void						onDependencyChanged(int /*_aspect*/, Entity* /*_e*/) { }
 	/// Called when:
 	/// - A registered dependency is removed and another is immediately added (_e is the new dependency).
 	/// - The object fulfilling an ancestral dependency has changed, though both are non-null (_e is the old ancestor).

@@ -97,15 +97,15 @@ String Invocation::defineHtml() const
 	return toHtml(child(Callee)) + L"<^span class=\"symbol\">(</span>" + toHtml(cardinalChildren(), L", ") + L"<span class=\"symbol\">)</span>";
 }
 
-void Invocation::onDependencyChanged(Entity* _e)
+void Invocation::onDependencyChanged(int _a, Entity* _e)
 {
 	if (_e == child(Callee) && !child(Callee)->isPlaceholder() && child(Callee)->isInValidState())
 	{
 		// The function we are calling has changed.
 		validifyChildren();
-		changed();
+		changed(Logically);
 	}
-	Super::onDependencyChanged(_e);
+	Super::onDependencyChanged(_a, _e);
 }
 
 bool Invocation::keyPressed(KeyEvent const* _e)

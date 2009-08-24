@@ -56,6 +56,18 @@ String Const::code(String const& _middle) const
 	return String::null;
 }
 
+bool Const::keyPressed(KeyEvent const* _e)
+{
+	if (_e->text() == L"!")
+	{
+		usurp(child(Original));
+		return true;
+	}
+	else
+		return false;
+	return Super::keyPressed(_e);
+}
+
 String Const::defineHtml() const
 {
 	return toHtml(child(Original)) + L"<^span class=\"Const-Fader\"><span class=\"Const\">CONST</span></span>";

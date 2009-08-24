@@ -51,10 +51,10 @@ int ReturnStatement::minRequired(int _i) const
 		return Super::minRequired(_i);
 }
 
-void ReturnStatement::onDependencyChanged(Entity*)
+void ReturnStatement::onDependencyChanged(int, Entity*)
 {
 	validifyChildren();
-	changed();
+	changed(Logically);
 }
 
 Kinds ReturnStatement::allowedKinds(int _i) const

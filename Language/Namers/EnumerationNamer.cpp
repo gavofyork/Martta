@@ -128,17 +128,17 @@ void EnumerationNamer::onDependencyAdded(Entity* _e)
 	if (_e->isKind<EnumValue>())
 		updateStem();
 	else
-		self()->changed();
+		self()->changed(Dependee::Logically);
 }
 
-void EnumerationNamer::onDependencyChanged(Entity* _e)
+void EnumerationNamer::onDependencyChanged(int, Entity* _e)
 {
 	if (_e->isKind<TextLabel>())
 	{
 		if (!_e->asKind<TextLabel>()->isNamed())
 			setUnnamed();
 		else
-			self()->changed();
+			self()->changed(Dependee::Logically);
 	}
 	else
 		updateStem();

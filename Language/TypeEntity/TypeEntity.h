@@ -167,7 +167,7 @@ protected:
 	void								setOwner(Type* _o) { m_owner = _o; }
 
 	virtual int							familyDependencies() const { return DependsOnChildren; }
-	virtual void						onDependencyChanged(Entity*) { changed(); }
+	virtual void						onDependencyChanged(int, Entity*) { changed(Logically); }
 
 	// TypeEntity should not defer to Entity for [a-z] keypress. Instead it should attempting to insert a specific TypeEntity
 	// (actually a BuiltType, but we're not to know). This might be changed in the future.

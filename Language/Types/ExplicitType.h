@@ -77,7 +77,10 @@ protected:
 	virtual List<Declaration*>			utilised() const;
 	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p[L"subject"] = m_subject.key(); }
 	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_subject.restoreFrom(_p[L"subject"]); }
-	virtual void						onDependencyRemoved(Entity* _s, int) { if (_s->tryKind<TypeDefinition>() == m_subject) setSubject(0); changed(); }
+
+	virtual void						onDependencyRemoved(Entity* _s, int) { if (_s->tryKind<TypeDefinition>() == m_subject) setSubject(0); }
+	virtual void						onDependencySwitched(Entity* _s, Entity* _o) { if (_o->tryKind<TypeDefinition>() == m_subject) setSubject(_s->tryKind<TypeDefinition>()); }
+	virtual void						onDependencyChanged(int, Entity* _s) { if (_s->tryKind<TypeDefinition>() == m_subject) changed(); }
 
 	ModelPtr<TypeDefinition>			m_subject;
 };

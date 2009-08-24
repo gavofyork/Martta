@@ -43,8 +43,8 @@ protected:
 	virtual Kinds						allowedKinds(int _i) const;
 
 	virtual int							familyDependencies() const { return DependsOnChildren; }
-	virtual void						onDependencyChanged(Entity*) { changed(); }
-	virtual void						onDependencyRemoved(Entity*, int) { changed(); }
+	virtual void						onDependencyChanged(int, Entity*) { changed(Logically); }
+	virtual void						onDependencyRemoved(Entity*, int) { changed(Logically); }
 
 	virtual String						defineHtml() const;
 	virtual String						interfaceCode() const { return LambdaNamer::interfaceCode(); }

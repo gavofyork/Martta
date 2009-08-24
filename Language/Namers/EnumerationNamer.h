@@ -48,7 +48,7 @@ protected:
 	List<ValueDefiner*>					valuesAdded() const { return self()->cardinalChildrenOf<ValueDefiner>(); }
 
 	void								onDependencyAdded(Entity* _e);
-	void								onDependencyChanged(Entity* _e);
+	void								onDependencyChanged(int, Entity* _e);
 	void								onDependencyRemoved(Entity* _e);
 
 	virtual Rgb							idColour() const { return Rgb(0x4477aa); }

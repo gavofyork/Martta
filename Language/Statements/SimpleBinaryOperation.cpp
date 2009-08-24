@@ -109,7 +109,7 @@ void SimpleBinaryOperation::setOperation(Operator _o, Type const& _left, Type co
 	}
 }
 
-void SimpleBinaryOperation::onDependencyChanged(Entity*)
+void SimpleBinaryOperation::onDependencyChanged(int, Entity*)
 {
 	refreshOperation();
 }

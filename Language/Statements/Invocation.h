@@ -45,7 +45,7 @@ protected:
 	virtual String						defineHtml() const;
 	String								callList(List<Typed*> _parameters) const;
 	virtual int							familyDependencies() const { return Super::familyDependencies() | DependsOnChildren; }
-	virtual void						onDependencyChanged(Entity* _e);
+	virtual void						onDependencyChanged(int, Entity* _e);
 };
 
 }

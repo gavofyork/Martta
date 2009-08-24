@@ -55,7 +55,7 @@ protected:
 //	virtual bool						usurpsChild(Entity const* _e) const { return _e == child(Identity); }
 
 	virtual int							familyDependencies() const { return DependsOnChildren; }
-	virtual void						onDependencyChanged(Entity* _e) { if (_e == child(Identity)) { /*checkForCullingLater(); */changed(); } }
+	virtual void						onDependencyChanged(int, Entity* _e) { if (_e == child(Identity)) { /*checkForCullingLater(); */changed(Logically); } }
 };
 
 }

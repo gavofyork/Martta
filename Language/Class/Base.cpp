@@ -40,9 +40,9 @@ bool Base::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 	return simplePositionKeyPressHandler<Base>(_p, _e, "B");
 }
 
-void Base::onDependencyChanged(Entity*)
+void Base::onDependencyChanged(int, Entity*)
 {
-	changed();
+	changed(Logically);
 }
 
 bool Base::isChildInValidState(int _i) const

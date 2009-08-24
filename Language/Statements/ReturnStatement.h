@@ -40,7 +40,7 @@ public:
 	inline static bool					keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePlaceholderKeyPressHandler<ReturnStatement>(_p, _e, "R"); }
 
 	virtual Kinds						ancestralDependencies() const { return Kind::of<LambdaNamer>(); }
-	virtual void						onDependencyChanged(Entity* _e);
+	virtual void						onDependencyChanged(int, Entity* _e);
 	virtual String						defineHtml() const { return L"<^><span class=\"keyword\">return</span> " + toHtml(child(Returned)); }
 };
 

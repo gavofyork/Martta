@@ -1,38 +1,31 @@
-GONE? Can edit a main function sometimes.
+Insertion of entities in, e.g. argument lists for function calls.
+OPTIMISE Slow at end of edit - is parent being redrawn or something?
+BRINGBACK Error system (!isValid()).
+BRINGBACK Type info stuff.
+- Just use a simple summary-like interface first.
+BRINGBACK VirtualOverload::defineHtml, ::defineEditHtml.
+QUICK get rid of committed() in Statement - test for inherited method existance
+- Use the method rather than require the name to exist in the class?
+CLEAN Move crap from ExplicitType to TypeDefinition.
 
-- Insertion of entities in, e.g. argument lists for function calls.
-  - Just a comma?
-- BRINGBACK Error system (!isValid()).
-- BRINGBACK Type info stuff.
-  - Just use a simple summary-like interface first.
+EnumNamer/Class expansion.
+Unary operation should apply to climb Statement tree until it finds something.
+Interfacify ModifyingType (clashes with PhysicalType over ListType etc.)
+- NewOperation/DeleteOperation - interface with Type classes.
 
-Dynamic code-loading (plugins).
-- Referenced as placeholder (no key press handling)
-  - QUICK get rid of committed() in Statement - test for inherited method existance
-    - Use the method rather than require the name to exist in the class?
-UI:
-- EMAIL Kill selections.
-
-BUG current() bad in onCurrentAboutToChange.
-BUG DeclarationsHandler is keeping old placeholders when generating its tree.
-
-Small things:
-- enumnamer/class expansion.
-- Unary operation should apply to climb Statement tree until it finds something.
-- CLEAN Move crap from ExplicitType to TypeDefinition.
-- Interfacify ModifyingType (clashes with PhysicalType over ListType etc.)
-  - NewOperation/DeleteOperation - interface with Type classes.
-- BRINGBACK Ser/Deser tests.
-- BRINGBACK GenericMemberOperation::isChildInValidState - do what it says.
-
-Webkit layout system
-- BRINGBACK VirtualOverload::defineHtml, ::defineEditHtml.
+BRINGBACK Ser/Deser tests.
+BRINGBACK GenericMemberOperation::isChildInValidState - do what it says.
 
 BUG Moving is crazily slow over statements.
 - To fix change key press dispatch method:
   - All allowedKinds on Position and execute the Auxilliary's dispatchKeyPress.
   - Do recursively but prune on denied Kinds.
   - Remove all allowedToBeKind (or other Kind-checking) in handlers.
+
+BUG current() bad in onCurrentAboutToChange.
+BUG DeclarationsHandler is keeping old placeholders when generating its tree.
+BUG GONE? Can edit a main function sometimes.
+EMAIL Kill selections.
 
 --------------------------------------------------------------------------------
 

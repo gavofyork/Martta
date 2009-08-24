@@ -43,7 +43,7 @@ protected:
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual String						defineHtml() const { return defineVariableHtml() + L"<^span class=\"symbol\"> := </span>" + toHtml(child(AssignedValue)); }
 	virtual bool						keyPressed(KeyEvent const* _e);
-	virtual void						onDependencyChanged(Entity*);
+	virtual void						onDependencyChanged(int, Entity*);
 	virtual void						onDependencySwitched(Entity*, Entity*);
 	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); Identifiable::properties(_p); }
 	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); Identifiable::setProperties(_p); }
