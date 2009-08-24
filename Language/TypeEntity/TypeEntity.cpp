@@ -42,6 +42,21 @@ String TypeEntity::defineHtml() const
 	return L"<^span class=\"TypeEntity\">&empty;</span>";
 }
 
+bool TypeEntity::keyPressed(KeyEvent const* _e)
+{
+	if (attemptInsert(_e))
+	{}
+	else if (_e->isFocused() && !isPlaceholder() && _e->text().length() == 1 && _e->text()[0].isGraph())
+	{
+		_e->codeScene()->navigateAway(this, CodeScene::Forwards);
+		if (_e->codeScene()->current() != this)
+			_e->reinterpretLater();
+	}
+	else
+		return Super::keyPressed(_e);
+	return true;
+}
+
 void TypeEntity::parentAdded()
 {
 	if (m_isUnchanging != (parentIs<TypeEntity>() && parentAs<TypeEntity>()->m_isUnchanging))

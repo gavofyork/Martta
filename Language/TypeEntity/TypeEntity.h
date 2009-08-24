@@ -171,7 +171,7 @@ protected:
 
 	// TypeEntity should not defer to Entity for [a-z] keypress. Instead it should attempting to insert a specific TypeEntity
 	// (actually a BuiltType, but we're not to know). This might be changed in the future.
-	virtual bool						keyPressed(KeyEvent const*_e) { if (attemptInsert(_e)) return true; return Super::keyPressed(_e); }
+	virtual bool						keyPressed(KeyEvent const*_e);
 
 	virtual void						parentAdded();
 	virtual void						parentSwitched(Entity* _exParent);
