@@ -79,19 +79,6 @@ void AuxilliaryRegistrar::jigCache()
 //	recurseAux(m_immediateDerivedsMap.values(0)[0], "");
 }
 
-void AuxilliaryRegistrar::initialiseClasses()
-{
-	if (m_isInitialised)
-		return;	// TODO: reinitialise?
-
-	foreach (AuxilliaryFace const* i, m_auxilliaries.values())
-	{
-		mDebug() << "Initialising" << i->name();
-		i->initialise();
-	}
-	m_isInitialised = true;
-}
-
 void AuxilliaryRegistrar::finaliseClasses()
 {
 	if (!m_isInitialised)

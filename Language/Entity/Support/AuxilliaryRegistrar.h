@@ -72,7 +72,22 @@ public:
 	inline MultiHash<AuxilliaryFace const*, AuxilliaryFace const*> const& supers() const { return m_supersMap; }
 
 	void								recurseAux(AuxilliaryFace const* _face, String const& _indent) const;
-	void								initialiseClasses();
+	template<class C> void				initialiseClasses(C* _f)
+	{
+		if (m_isInitialised)
+			return;
+		int s = m_auxilliaries.size();
+		int ii = 0;
+		foreach (AuxilliaryFace const* i, m_auxilliaries.values())
+		{
+			i->initialise();
+			if (_f)
+				(*_f)(ii++, s);
+		}
+		m_isInitialised = true;
+	}
+	void								operator()(int, int) {}
+//	void								initialiseClasses() { initialiseClasses(this); }
 	void								finaliseClasses();
 	void								jigCache();
 

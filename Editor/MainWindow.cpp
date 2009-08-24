@@ -128,14 +128,29 @@ void MainWindow::paintEvent(QPaintEvent* _ev)
 {
 	QPainter p(this);
 	p.fillRect(_ev->rect(), Qt::transparent);
-/*	p.setPen(Qt::NoPen);
-	p.setBrush(Qt::white);
-	p.setOpacity(0.6);
-	p.drawRect(rect());*/
 }
+
+struct UpdateProgress
+{
+	QProgressDialog* m_p;
+	int m_o;
+	int m_t;
+	inline void operator()(int _i, int _s) const { m_p->setValue(m_o + m_t * _i / _s); }
+} u;
 
 void MainWindow::loadPlugins()
 {
+	setEnabled(false);
+
+	QStringList deps;
+	QFileInfoList list = QDir(MARTTA_PLUGINS_PATH).entryInfoList();
+	for (int i = 0; i < list.size(); ++i)
+		if (list.at(i).canonicalFilePath().endsWith(".dep"))
+			deps += list.at(i).canonicalFilePath();
+
+	QProgressDialog progress("Initialising language...", "Abort", 0, deps.size() * 2 + 3, this);
+	progress.setWindowModality(Qt::WindowModal);
+
 	AuxilliaryRegistrar::get()->finaliseClasses();
 	while (m_libraries.size())
 	{
@@ -143,21 +158,19 @@ void MainWindow::loadPlugins()
 		delete m_libraries.takeLast();
 	}
 
-	QFileInfoList list = QDir(MARTTA_PLUGINS_PATH).entryInfoList();
-	qDebug() << "Searching for plugins in" << MARTTA_PLUGINS_PATH;
+	progress.setValue(1);
+	progress.setLabelText("Loading dependencies...");
 
 	QHash<QString, QSet<QString> > depTree;
-	for (int i = 0; i < list.size(); ++i)
-		if (list.at(i).canonicalFilePath().endsWith(".dep"))
-		{
-			QFile f(list.at(i).canonicalFilePath());
-			f.open(QIODevice::ReadOnly);
-			QStringList deps = QString(f.readAll()).simplified().split(" ");
-			depTree[deps[0]] = QSet<QString>::fromList(deps.mid(1));
-		}
+	foreach (QString s, deps)
+	{
+		QFile f(s);
+		f.open(QIODevice::ReadOnly);
+		QStringList deps = QString(f.readAll()).simplified().split(" ");
+		depTree[deps[0]] = QSet<QString>::fromList(deps.mid(1));
+	}
 
-	foreach (QString s, depTree.keys())
-		mDebug() << "Found plugin" << qs(s) << "with deps" << qs(QStringList(depTree[s].toList()).join(" "));
+	progress.setValue(2);
 
 	pluginsLoaded->clear();
 	QSet<QString> loaded;
@@ -169,27 +182,39 @@ void MainWindow::loadPlugins()
 		foreach (QString s, depTree.keys())
 			if ((depTree[s] - curLoad).isEmpty())
 			{
+				progress.setLabelText("Loading & linking " + s + "...");
 				m_libraries.append(new QLibrary(s));
 				if (m_libraries.last()->load())
 				{
-					qDebug() << "Loaded " << s;
 					loaded += s;
 					new QTreeWidgetItem(pluginsLoaded, QStringList() << s << QStringList(depTree[s].toList()).join(", "));
 				}
 				else
 					Assert(false, "Error loading " + qs(s) + ": " + qs(m_libraries.last()->errorString()));
 				depTree.remove(s);
+				progress.setValue(progress.value() + 1);
 			}
 	}
 
-	qDebug() << "Unknown dependencies:";
-	foreach (QString s, depTree.keys())
-		qDebug() << s << QStringList(depTree[s].toList()).join(", ");
+	if (depTree.size())
+	{
+		qDebug() << "Unknown dependencies:";
+		foreach (QString s, depTree.keys())
+			qDebug() << s << QStringList(depTree[s].toList()).join(", ");
+	}
 
+	progress.setLabelText("Caching data...");
 	AuxilliaryRegistrar::get()->jigCache();
-	AuxilliaryRegistrar::get()->initialiseClasses();
+	progress.setValue(progress.value() + 1);
+
+	progress.setLabelText("Priming for use...");
+	u.m_p = &progress;
+	u.m_o = progress.value();
+	u.m_t = deps.size();
+	AuxilliaryRegistrar::get()->initialiseClasses<UpdateProgress>(&u);
 
 	updateLanguage();
+	setEnabled(true);
 }
 
 void MainWindow::on_actReloadPlugins_triggered()
