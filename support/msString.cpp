@@ -96,7 +96,8 @@ bool Char::isSpace() const
 
 bool Char::isGraph() const
 {
-	return m_value == L'\x7f' || iswgraph(m_value);
+	mInfo() << (int)m_value << (m_value != L'\x7f');
+	return m_value != L'\x7f' && iswgraph(m_value);
 }
 
 bool Char::isLower() const
