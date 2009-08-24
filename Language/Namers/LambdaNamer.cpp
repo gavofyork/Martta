@@ -86,10 +86,10 @@ String LambdaNamer::defineLambdaHtml(String const& _middle) const
 
 bool LambdaNamer::keyPressed(KeyEvent const* _e)
 {
-	if (((_e->text() == "(" && !argumentCount() && (_e->focalIndex() == Identity || _e->isFocused())) || (_e->text() == "," && _e->focalIndex() >= 0)) && self()->back().allowedToBeKind<Argument>() && !self()->back().isFixed())
+	if (((_e->text() == L"(" && !argumentCount() && (_e->focalIndex() == Identity || _e->isFocused())) || (_e->text() == L"," && _e->focalIndex() >= 0)) && self()->back().allowedToBeKind<Argument>() && !self()->back().isFixed())
 	{
 		Argument* v = new Argument;
-		self()->back().place(v);
+		((_e->focalIndex() < 0 || _e->focalIndex() == UndefinedIndex) ? self()->back() : self()->middle(_e->focalIndex() + (_e->isInserting() ? 0 : 1))).place(v);
 		v->prepareChildren();
 		_e->codeScene()->navigateInto(v);
 	}
