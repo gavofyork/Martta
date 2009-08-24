@@ -47,14 +47,14 @@ String TextLabel::code() const
 
 void TextLabel::apresLoad()
 {
-	if (m_text.startsWith("_ANON"))
+	if (m_text.startsWith("ANON"))
 		m_text = String::null;
 }
 
 String TextLabel::name() const
 {
 	if (m_text.isEmpty() && isValid())
-		return String("_ANON%1").arg((int)this);//return "foo";	// TODO: make it proper.
+		return String("ANON%1").arg((int)this);//return "foo";	// TODO: make it proper.
 	else if (m_text.isEmpty())
 		return String::null;
 	else
