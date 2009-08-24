@@ -116,9 +116,13 @@ bool Invocation::keyPressed(KeyEvent const* _e)
 		setCurrent();
 	else if (_e->text() == ")" && !_e->isFocused())
 		setCurrent();
-	else if (_e->text() == "," && _e->focalIndex() >= 0 && _e->focalIndex() < cardinalChildCount() - 1)
+	else if (_e->text() == "," && (_e->focalIndex() >= 0 || _e->focalIndex() == UndefinedIndex) && back().allowedKinds().size())
+	{
 		// Jump to next if we press a comma in the parameter list, before the last item.
-		child(_e->focalIndex() + 1)->setCurrent();
+		Typed* t = new Typed;
+		(_e->focalIndex() == UndefinedIndex ? self()->back() : self()->middle(_e->focalIndex() + (_e->isInserting() ? 0 : 1))).place(t);
+		t->setCurrent();
+	}
 	else if (_e->text() == "," && back().allowedKinds().size())
 		// Insert a new item if we press a comma anywhere else, if we're allowed to.
 		back().spawnPrepared()->setCurrent();

@@ -1,5 +1,3 @@
-Insertion of entities in, e.g. argument lists for function calls.
-OPTIMISE Slow at end of edit - is parent being redrawn or something?
 BRINGBACK Error system (!isValid()).
 BRINGBACK Type info stuff.
 - Just use a simple summary-like interface first.
