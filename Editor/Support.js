@@ -148,7 +148,8 @@ function goVert(_d)
 	function top(_r) { return _d ? _r.top : -_r.bottom; }
 	function bottom(_r) { return _d ? _r.bottom : -_r.top; }
 	function overlapBonus(_r) { return (_r.left < orig.right || orig.left < _r.right) ? 0.1 : 0; }
-	function dx(_r) { return Math.abs(_r.left + _r.right - orig.left - orig.right) * 2 + Math.abs(_r.right - _r.left - orig.right + orig.left) - overlapBonus(_r); }
+//	function dx(_r) { return Math.abs(_r.left + _r.right - orig.left - orig.right) * 2 + Math.abs(_r.right - _r.left - orig.right + orig.left) - overlapBonus(_r); }
+	function dx(_r) { return (1 + Math.abs(_r.left - orig.left)) * (1 + Math.abs(_r.right - orig.right)); }
 	function goOn() { return _d ? g_currentIterator.nextNode() : g_currentIterator.previousNode(); }
 	function backup() { return _d ? g_currentIterator.previousNode() : g_currentIterator.nextNode(); }
 	function curTop() { return top(g_currentIterator.referenceNode.parentNode.getBoundingClientRect()); }
@@ -169,6 +170,8 @@ function goVert(_d)
 			extras++;
 			if (curTop() >= bestBottom)
 				break;
+			else if (curTop() < bottom(orig))
+				continue;
 			else if (curBottom() < bestBottom)
 			{
 				bestBottom = curBottom();
