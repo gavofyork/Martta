@@ -83,7 +83,7 @@ String TextLabel::defineEditHtml(CodeScene* _cs) const
 class Delegate: public EditDelegate<TextLabel>
 {
 public:
-	Delegate(TextLabel* _e, CodeScene* _s): EditDelegate<TextLabel>(_e, _s), m_text(subject()->isNamed() ? subject()->text() : String::null) {}
+	Delegate(TextLabel* _e, CodeScene* _s): EditDelegate<TextLabel>(_e, _s), m_text(subject()->isNamed() ? _e->tryParent<Labelled>()->labelName(subject()->text()) : String::null) {}
 	void setText(String const& _t) { m_text = _t; }
 	virtual bool keyPressed(KeyEvent const* _e)
 	{
