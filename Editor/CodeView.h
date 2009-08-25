@@ -39,87 +39,93 @@ public:
 	~CodeView();
 
 	// Set the current attributes.
-	virtual Entity*				subject() const { return &*m_subject; }
-	virtual void				setSubject(Entity* _subject);
+	virtual Entity*						subject() const { return &*m_subject; }
+	virtual void						setSubject(Entity* _subject);
 
 	// Stylist
-	virtual WebStylist*			stylist() const { return m_stylist; };
-	virtual void				setStylist(WebStylist* _s);
+	virtual WebStylist*					stylist() const { return m_stylist; };
+	virtual void						setStylist(WebStylist* _s);
 
 	// What's happening?
-	virtual Entity*				current() const;
-	virtual bool				isCurrent(Entity const* _e) const { return _e == current(); }
-	virtual bool				isFocusable(Entity const* _e) const;
-	virtual bool				isInScene(Entity const* _e) const;
-	virtual void				rememberCurrent();
-	virtual void				restoreCurrent();
+	virtual Entity*						current() const;
+	virtual bool						isCurrent(Entity const* _e) const { return _e == current(); }
+	virtual bool						isFocusable(Entity const* _e) const;
+	virtual bool						isInScene(Entity const* _e) const;
+	virtual void						rememberCurrent();
+	virtual void						restoreCurrent();
 
 	// Focus changers (often make use of above).
-	virtual void				setCurrent(Entity const* _e);
-	virtual void				navigateInto(Entity* _centre);
-	virtual void				navigateOnto(Entity* _shell);
-	virtual void				navigateToNew(Entity* _from);
-	virtual void				navigateAway(Entity* _from, NavigationDirection _d = Forwards);
+	virtual void						setCurrent(Entity const* _e);
+	virtual void						navigateInto(Entity* _centre);
+	virtual void						navigateOnto(Entity* _shell);
+	virtual void						navigateToNew(Entity* _from);
+	virtual void						navigateAway(Entity* _from, NavigationDirection _d = Forwards);
 
 	// Hacks
-	virtual void				silentlySetCurrent(Entity* _e) { bool os = m_silent; m_silent = true; setCurrent(_e); m_silent = os; }
+	virtual void						silentlySetCurrent(Entity* _e) { bool os = m_silent; m_silent = true; setCurrent(_e); m_silent = os; }
 
 public slots:
-	void						onCurrentAboutToChange();
-	void						onCurrentChanged();
-	bool						attemptEdit(int _e);
-	void						markDirty(int _e) { relayout((Entity*)_e); }
+	void								onCurrentAboutToChange();
+	void								onCurrentChanged();
+	bool								attemptEdit(int _e);
+	void								markDirty(int _e) { relayout((Entity*)_e); }
 
-	void						setShowDependencyInfo(bool _v) { m_showDependencyInfo = _v; update(); }
-	void						setShowChanges(bool _v) { m_showChanges = _v; update(); }
-	void						setShowOneChange(bool _v) { m_showOneChange = _v; update(); }
+	void								setShowDependencyInfo(bool _v) { m_showDependencyInfo = _v; update(); }
+	void								setShowChanges(bool _v) { m_showChanges = _v; update(); }
+	void								setShowOneChange(bool _v) { m_showOneChange = _v; update(); }
+	void								setShowInvalids(bool _v) { m_showInvalids = _v; update(); }
 
 signals:
-	void						currentChanged(Entity*);
+	void								currentChanged(Entity*);
 
 private slots:
-	void						onSelectionChanged();
+	void								onSelectionChanged();
 
 private:
-	virtual void						onChanged(Entity* _e, int _aspect) { if (_aspect & Dependee::Visually) relayout(_e); (void)(_aspect); }
-	virtual void						onChildrenInitialised(Entity* _e) { relayout(_e); }
-	virtual void						onChildAdded(Entity* _e, int _index) { relayout(_e); (void)(_index); }
-	virtual void						onChildSwitched(Entity* _e, Entity* _child, Entity* _oldChild) { relayout(_e); (void)(_child); (void)(_oldChild); }
-	virtual void						onDependencySwitched(Entity* _e, Entity* _current, Entity* _old) { (void)(_e); (void)(_current); (void)(_old); }
+	virtual void						onChanged(Entity* _e, int _aspect) { if (_aspect & Dependee::Visually) relayout(_e); else if (_aspect & Dependee::Logically) checkInvalid(_e); }
+	virtual void						onChildrenInitialised(Entity* _e) { relayout(_e); foreach (Entity* e, _e->children()) checkInvalid(e); }
+	virtual void						onChildAdded(Entity* _e, int _index) { relayout(_e); checkInvalid(_e->child(_index)); }
+	virtual void						onChildSwitched(Entity* _e, Entity* _child, Entity* _oldChild) { relayout(_e); checkInvalid(_child); (void)(_oldChild); }
+	virtual void						onDependencySwitched(Entity* _e, Entity* _current, Entity* _old) { checkInvalid(_e); (void)(_e); (void)(_current); (void)(_old); }
 	virtual void						onChildRemoved(Entity* _e, Entity* _old, int _oldIndex) { relayout(_e); (void)(_old); (void)(_oldIndex); }
-	virtual void						onChildMoved(Entity* _e, Entity* _child, int _oldIndex) { relayout(_e); (void)(_child); (void)(_oldIndex); }
+	virtual void						onChildMoved(Entity* _e, Entity* _child, int _oldIndex) { relayout(_e); checkInvalid(_child); checkInvalid(_e->child(_oldIndex)); }
 	virtual void						onParentAdded(Entity* _e) { (void)(_e); }
 	virtual void						onParentSwitched(Entity* _e, Entity* _old) { (void)(_e); (void)(_old); }
 	virtual void						onParentRemoved(Entity* _e, Entity* _old) { (void)(_e); (void)(_old); }
-	virtual void						onAncestorAdded(Entity* _e, Entity* _ancestor) { (void)(_e); (void)(_ancestor); }
-	virtual void						onAncestorSwitched(Entity* _e, Entity* _ancestor, Entity* _old) { (void)(_e); (void)(_ancestor); (void)(_old); }
-	virtual void						onAncestorRemoved(Entity* _e, Entity* _old) { (void)(_e); (void)(_old); }
+	virtual void						onAncestorAdded(Entity* _e, Entity* _ancestor) { checkInvalid(_e); (void)(_ancestor); }
+	virtual void						onAncestorSwitched(Entity* _e, Entity* _ancestor, Entity* _old) { checkInvalid(_e); (void)(_ancestor); (void)(_old); }
+	virtual void						onAncestorRemoved(Entity* _e, Entity* _old) { checkInvalid(_e); (void)(_old); }
 
-	void						init();
-	void						refresh();
-	QRect						bounds(Entity const* _e) const;
+	void								init();
+	void								refresh();
+	void								checkInvalids();
+	QRect								bounds(Entity const* _e) const;
+	inline void							checkInvalid(Entity* _e) { if (!m_invalidsToCheck.contains(_e) && isInScene(_e)) m_invalidsToCheck.append(_e); }
 
-	virtual bool				keyPressedAsNavigation(KeyEvent const&);
-	virtual bool				manageKeyPress(KeyEvent const&, Entity const* _fe);
+	virtual bool						keyPressedAsNavigation(KeyEvent const&);
+	virtual bool						manageKeyPress(KeyEvent const&, Entity const* _fe);
 
-	virtual bool				event(QEvent* _e);
-	virtual void				paintEvent(QPaintEvent* _ev);
+	virtual bool						event(QEvent* _e);
+	virtual void						paintEvent(QPaintEvent* _ev);
 
-	virtual void				relayout(Entity* _e);
+	virtual void						relayout(Entity* _e);
 
-	List<SafePointer<Entity> >	m_dirty;
+	List<SafePointer<Entity> >			m_dirty;
 
-	SafePointer<Entity>			m_subject;
-	WebStylist*					m_stylist;
-	bool						m_silent;
-	QPoint						m_remembered;
-	SafePointer<Entity>			m_rememberedParent;
+	SafePointer<Entity>					m_subject;
+	WebStylist*							m_stylist;
+	bool								m_silent;
+	SafePointer<Entity, true>			m_oldCurrent;
+	QPoint								m_remembered;
+	SafePointer<Entity>					m_rememberedParent;
 
-	SafePointer<Entity, true>	m_oldCurrent;
+	bool								m_showDependencyInfo;
+	bool								m_showChanges;
+	bool								m_showOneChange;
 
-	bool						m_showDependencyInfo;
-	bool						m_showChanges;
-	bool						m_showOneChange;
+	bool								m_showInvalids;
+	List<SafePointer<Entity> >			m_invalidsToCheck;
+	List<SafePointer<Entity> >			m_invalids;
 };
 
 }

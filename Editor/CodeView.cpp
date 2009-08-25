@@ -39,7 +39,8 @@ CodeView::CodeView(QWidget* _parent):
 	m_silent					(false),
 	m_showDependencyInfo		(true),
 	m_showChanges				(false),
-	m_showOneChange				(false)
+	m_showOneChange				(false),
+	m_showInvalids				(true)
 {
 	init();
 	connect(this, SIGNAL(selectionChanged()), SLOT(onSelectionChanged()));
@@ -176,7 +177,7 @@ void CodeView::refresh()
 	{
 		// If we're dirty then update the HTML.
 		while (m_dirty.count())
-		{	//mDebug() << &*m_dirty.last() << "(" << m_dirty.count() << "left)";
+		{
 			if ((e = m_dirty.takeLast()))
 			{
 				Entity* cur = current();
@@ -202,9 +203,23 @@ void CodeView::onSelectionChanged()
 	mInfo();
 }
 
+void CodeView::checkInvalids()
+{
+	while (m_invalidsToCheck.count())
+		if (Entity* e = m_invalidsToCheck.takeLast())
+		{
+			bool validity = e->isValid();
+			if (validity && m_invalids.contains(e))
+				m_invalids.removeOne(e);
+			else if (!validity && !m_invalids.contains(e))
+				m_invalids.append(e);
+		}
+}
+
 void CodeView::paintEvent(QPaintEvent* _ev)
 {
 	refresh();
+	checkInvalids();
 	Entity* c = current();
 
 	foreach (Position i, m_bracketed)
@@ -227,7 +242,6 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 		g.setColorAt(1.f, editDelegate() ? QColor(255, 128, 0, 32) : QColor(0, 128, 255, 48));
 		p.setPen(Qt::NoPen);
 		p.setBrush(g);
-//		p.drawRect(br);
 		p.drawRect(QRectF(0, br.y(), width(), br.height()));
 	}
 	QWebView::paintEvent(_ev);
@@ -284,6 +298,16 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 				}
 		}
 	}
+	if (m_showInvalids)
+	{
+		QPainter p(this);
+		foreach (Entity* e, m_invalids)
+		{
+			p.setPen(QPen(QColor(255, 0, 0, 128), 1, Qt::DotLine));
+			p.setBrush(QColor(255, 0, 0, 32));
+			p.drawRect(bounds(e));
+		}
+	}
 	if ((m_showChanges || m_showOneChange) && !ChangeMan::get()->changesDone().isEmpty())
 	{
 		QPainter p(this);
@@ -337,6 +361,16 @@ void CodeView::init()
 	pal.setBrush(QPalette::Base, Qt::transparent);
 	page()->setPalette(pal);
 	m_dirty.clear();
+	m_invalidsToCheck.clear();
+	List<Entity*> q;
+	q.append(m_subject);
+	while (q.size())
+		if (Entity* e = q.takeLast())
+		{
+			m_invalidsToCheck.append(e);
+			foreach (Entity* i, e->children())
+				q.append(i);
+		}
 }
 
 void CodeView::relayout(Entity* _e)
@@ -347,16 +381,17 @@ void CodeView::relayout(Entity* _e)
 		// that defineHtml should be redirected to the editDelegate if there is one (and couldn't since it doesn't know which is
 		// the active CodeScene).
 		QString html = qs(m_stylist->editHtml(_e, this));
-		// TODO!!!: remember then restore this as the current silently.
 		page()->mainFrame()->evaluateJavaScript(QString("changeEditContent(%1, '%2')").arg((int)_e).arg(html.replace('\'', "\\'")));
+		update();
 	}
-	else
+	else if (isInScene(_e))
 	{
-		if (m_dirty.contains(_e) || !isInScene(_e))
-			return;
-		m_dirty.append(_e);
+		if (!m_invalidsToCheck.contains(_e))
+			m_invalidsToCheck.append(_e);
+		if (!m_dirty.contains(_e))
+			m_dirty.append(_e);
+		update();
 	}
-	update();
 }
 
 bool CodeView::keyPressedAsNavigation(KeyEvent const& _e)

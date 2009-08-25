@@ -1,19 +1,18 @@
-QUICK get rid of committed() in Statement - test for inherited method existance
-- Use the method rather than require the name to exist in the class?
-BRINGBACK Error system (!isValid()).
+BUG Up from foo selects class.
 BRINGBACK Type info stuff.
 - Just use a simple summary-like interface first.
 BRINGBACK VirtualOverload::defineHtml, ::defineEditHtml.
 
-EnumNamer/Class expansion.
-Unary operation should apply to climb Statement tree until it finds something.
-Interfacify ModifyingType (clashes with PhysicalType over ListType etc.)
-- NewOperation/DeleteOperation - interface with Type classes.
+BRINGBACK EnumNamer/Class expansion.
 BRINGBACK GenericMemberOperation::isChildInValidState - do what it says.
 
 BRINGBACK All tests incl. Ser/Deser.
 
-BUG Moving is crazily slow over statements.
+Unary operation should apply to climb Statement tree until it finds something.
+Interfacify ModifyingType (clashes with PhysicalType over ListType etc.)
+- NewOperation/DeleteOperation - interface with Type classes.
+
+OPTIMISE Moving is crazily slow over statements.
 - To fix change key press dispatch method:
   - All allowedKinds on Position and execute the Auxilliary's dispatchKeyPress.
   - Do recursively but prune on denied Kinds.
@@ -34,7 +33,7 @@ RELEASE M1 (TBD)
 
 ================================================================================
 
-TODO Better GUI for loading/reloading plugins/projects.
+TODO Replace node + this with just node.
 TODO Cache includes, so don't take so long to load.
 TODO SearchReferenced (\)
 - All possible (including scoped exterals).
