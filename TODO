@@ -1,10 +1,9 @@
+BUG need a mask for drawing.
 BUG Up from foo selects class.
 BRINGBACK Type info stuff.
 - Just use a simple summary-like interface first.
 BRINGBACK VirtualOverload::defineHtml, ::defineEditHtml.
-
 BRINGBACK EnumNamer/Class expansion.
-BRINGBACK GenericMemberOperation::isChildInValidState - do what it says.
 
 BRINGBACK All tests incl. Ser/Deser.
 

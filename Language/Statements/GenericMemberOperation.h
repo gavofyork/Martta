@@ -29,11 +29,12 @@ class GenericMemberOperation: public BinaryOperation
 {
 	MARTTA_PLACEHOLDER(BinaryOperation)
 
-protected:
+public:
 	virtual Type						scope() const { return Type(); }
+
+protected:
 	virtual Types						allowedTypes(int _index) const;
 	virtual Types						deniedTypes(int _index) const;
-	virtual bool						isChildInValidState(int _index) const;
 	virtual Type						type() const;
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual void						onDependencyChanged(int, Entity*) { changed(Logically); }

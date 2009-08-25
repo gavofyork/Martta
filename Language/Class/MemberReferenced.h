@@ -41,7 +41,7 @@ protected:
 	virtual String						defineEditHtml(CodeScene* _cs) const;
 
 	virtual Kinds						ancestralDependencies() const;
-	virtual bool						isInValidState() const;
+	virtual void						onDependencyChanged(int _a, Entity* _d) { if (_d->isKind<MemberLambda>() || _d->isKind<Class>()) changed(Logically); Super::onDependencyChanged(_a, _d); }
 };
 
 class FloatingMemberReferenced: public MemberReferenced

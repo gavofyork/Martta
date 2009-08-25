@@ -57,17 +57,6 @@ Kinds MemberReferenced::ancestralDependencies() const
 	return ret;
 }
 
-bool MemberReferenced::isInValidState() const
-{
-	if (!parentIs<GenericMemberOperation>() && m_subject->isKind<MemberValue>() && hasAncestor<MemberLambda>())
-	{
-		AssertNR(hasAncestor<Class>());
-		if (!ancestor<Class>()->membersOf<MemberValue>(ancestor<MemberLambda>()->isConst()).contains(m_subject->asKind<MemberValue>()))
-			return false;
-	}
-	return Super::isInValidState();
-}
-
 List<ValueDefiner*> MemberReferenced::possibilities(Position const& _p, bool _methods, bool _nonMethods)
 {
 	List<ValueDefiner*> ret;

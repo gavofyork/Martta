@@ -39,6 +39,7 @@ public:
 	enum { Accessibility = FirstNamed, EndOfNamed };
 
 	virtual Access						access() const;
+	/// @returns the type definition (e.g. Class object) of which this is a member.
 	TypeDefinition*						typeDefinition() const;
 
 	virtual String						interfaceCode() const;

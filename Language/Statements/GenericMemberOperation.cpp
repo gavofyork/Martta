@@ -65,21 +65,6 @@ Types GenericMemberOperation::deniedTypes(int _index) const
 	return Super::deniedTypes(_index);
 }
 
-bool GenericMemberOperation::isChildInValidState(int _index) const
-{
-	if (_index == SecondOperand)
-	{
-		if (scope().isNull())
-			return false;
-		// If we somehow managed to end up at a Memberified type despite not being a Referenced, fair play.
-		// TODO: this check should be done from Typed via. Referenced, not here. Two avoid Referenced having to know about
-		// applicable members etc. it should be interfaced off to ValueDefiner::isAccessibleAt(<here>)
-//		if (childIs<Referenced>(SecondOperand) && !scope()->applicableMembers(parent()).contains(childAs<Referenced>(SecondOperand)->subject()))
-//			return false;
-	}
-	return Super::isChildInValidState(_index);
-}
-
 Type GenericMemberOperation::type() const
 {
 	Type st = scope();

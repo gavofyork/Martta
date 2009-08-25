@@ -31,7 +31,7 @@ class Typed: public BareTyped
 
 public:
 	virtual int							familyDependencies() const { return DependsOnParent | DependsOnIndex; }
-//	virtual void						onDependencyChanged(Entity* _e);
+	virtual void						onDependencyChanged(int _a, Entity* _e);
 	virtual void						onIndexChanged(int _oldIndex);
 };
 

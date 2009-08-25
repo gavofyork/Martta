@@ -73,10 +73,7 @@ void Referenced::onDependencyRemoved(Entity* _old, int)
 
 bool Referenced::isInValidState() const
 {
-	// If we're not referencing anything yet, return null.
-	if (!m_subject.isUsable())
-		return false;
-	return Super::isInValidState();
+	return m_subject && m_subject->isAccessibleAt(over()) && Super::isInValidState();
 }
 
 Type Referenced::type() const

@@ -26,14 +26,14 @@ namespace Martta
 
 MARTTA_PLACEHOLDER_CPP(Typed);
 
-/*void Typed::onDependencyChanged(Entity* _e)
+void Typed::onDependencyChanged(int _a, Entity* _e)
 {
-	if (_e == parent())
+	if (_a & Logically && _e == parent())
 	{
 		// If our parent has changed, it might mean our validity has changed. Update.
 		changed(Logically);
 	}
-}*/
+}
 
 void Typed::onIndexChanged(int _oldIndex)
 {

@@ -14,6 +14,10 @@
   <property name="windowTitle">
    <string>Martta</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../Martta Logo-64.png</normaloff>../Martta Logo-64.png</iconset>
+  </property>
   <property name="toolButtonStyle">
    <enum>Qt::ToolButtonTextOnly</enum>
   </property>
@@ -173,7 +177,7 @@
    </widget>
    <widget class="QMenu" name="menuPlugins">
     <property name="title">
-     <string>Plugins</string>
+     <string>P&amp;lugins</string>
     </property>
     <addaction name="actReloadPlugins"/>
    </widget>
@@ -944,7 +948,10 @@
   </action>
   <action name="actReloadPlugins">
    <property name="text">
-    <string>Reload</string>
+    <string>&amp;Reload</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+L</string>
    </property>
   </action>
   <action name="actClose">
