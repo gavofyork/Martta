@@ -205,6 +205,7 @@ void CodeView::onSelectionChanged()
 
 void CodeView::checkInvalids()
 {
+	m_invalids.removeAll(0);
 	while (m_invalidsToCheck.count())
 		if (Entity* e = m_invalidsToCheck.takeLast())
 		{
@@ -301,11 +302,13 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 	if (m_showInvalids)
 	{
 		QPainter p(this);
+		p.setPen(QPen(QColor(255, 0, 0, 128), 1, Qt::DotLine));
+		p.setBrush(QColor(255, 0, 0, 32));
 		foreach (Entity* e, m_invalids)
 		{
-			p.setPen(QPen(QColor(255, 0, 0, 128), 1, Qt::DotLine));
-			p.setBrush(QColor(255, 0, 0, 32));
-			p.drawRect(bounds(e));
+			QRect b = bounds(e);
+			if (_ev->region().contains(b))
+				p.drawRect(b);
 		}
 	}
 	if ((m_showChanges || m_showOneChange) && !ChangeMan::get()->changesDone().isEmpty())
@@ -344,7 +347,10 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 QRect CodeView::bounds(Entity const* _e) const
 {
 	QStringList l = page()->mainFrame()->evaluateJavaScript(QString("bounds('%1')").arg((int)_e)).toString().split(" ");
-	return QRect(l[0].toInt(), l[1].toInt(), l[2].toInt(), l[3].toInt());
+	if (l.size() == 4)
+		return QRect(l[0].toInt(), l[1].toInt(), l[2].toInt(), l[3].toInt());
+	else
+		return QRect(-1, -1, 0, 0);
 }
 
 void CodeView::init()
