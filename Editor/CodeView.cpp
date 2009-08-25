@@ -343,10 +343,8 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 
 QRect CodeView::bounds(Entity const* _e) const
 {
-	return QRect(	page()->mainFrame()->evaluateJavaScript(QString("document.getElementById('%1').getBoundingClientRect().left").arg((int)_e)).toInt(),
-					page()->mainFrame()->evaluateJavaScript(QString("document.getElementById('%1').getBoundingClientRect().top").arg((int)_e)).toInt(),
-					page()->mainFrame()->evaluateJavaScript(QString("document.getElementById('%1').getBoundingClientRect().width").arg((int)_e)).toInt(),
-					page()->mainFrame()->evaluateJavaScript(QString("document.getElementById('%1').getBoundingClientRect().height").arg((int)_e)).toInt());
+	QStringList l = page()->mainFrame()->evaluateJavaScript(QString("bounds('%1')").arg((int)_e)).toString().split(" ");
+	return QRect(l[0].toInt(), l[1].toInt(), l[2].toInt(), l[3].toInt());
 }
 
 void CodeView::init()

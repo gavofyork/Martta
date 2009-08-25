@@ -1,3 +1,8 @@
+function bounds(_id)
+{
+	var bb = document.getElementById(_id).getBoundingClientRect();
+	return bb.left + ' ' + bb.top + ' ' + bb.width + ' ' + bb.height;
+}
 function currentChanged()
 {
 	CodeView.onCurrentChanged();
