@@ -1,18 +1,17 @@
+QUICK get rid of committed() in Statement - test for inherited method existance
+- Use the method rather than require the name to exist in the class?
 BRINGBACK Error system (!isValid()).
 BRINGBACK Type info stuff.
 - Just use a simple summary-like interface first.
 BRINGBACK VirtualOverload::defineHtml, ::defineEditHtml.
-QUICK get rid of committed() in Statement - test for inherited method existance
-- Use the method rather than require the name to exist in the class?
-CLEAN Move crap from ExplicitType to TypeDefinition.
 
 EnumNamer/Class expansion.
 Unary operation should apply to climb Statement tree until it finds something.
 Interfacify ModifyingType (clashes with PhysicalType over ListType etc.)
 - NewOperation/DeleteOperation - interface with Type classes.
-
-BRINGBACK Ser/Deser tests.
 BRINGBACK GenericMemberOperation::isChildInValidState - do what it says.
+
+BRINGBACK All tests incl. Ser/Deser.
 
 BUG Moving is crazily slow over statements.
 - To fix change key press dispatch method:
@@ -151,21 +150,6 @@ Better code() handling.
 --------------------------------------------------------------------------------
 
 RELEASE M7 (TBD)
-
-================================================================================
-
-View - Clever updates - perhaps remove picture cache?
-- Cache only new stuff and remember child stuff.
-- Note when alpha not needed (i.e. clear colour), and total slot for width.
-  - Go no further up tree have alpha || new width > slot.
-  - slot can be set lazily by parent; default it to last known width.
-  - Certain things cause item to be relaid out on slot-change
-    - e.g. centering, right-justify
-    - They never cause a parent-relayout (though slots of its children may change).
-
---------------------------------------------------------------------------------
-
-RELEASE M8 (TBD)
 
 ================================================================================
 

@@ -33,7 +33,7 @@ MARTTA_REGISTER_CSS(Referenced, ".Referenced { font-weight: normal; color: #000;
 Referenced::Referenced(ValueDefiner* _v):
 	m_subject	(0)
 {
-	setSubject(_v);
+	set(_v);
 }
 
 bool Referenced::isSuperfluous() const
@@ -55,7 +55,7 @@ void Referenced::onDependencySwitched(Entity* _t, Entity* _old)
 	if (m_subject == _old->tryKind<ValueDefiner>())
 	{
 //		mDebug() << "Subject switched to" << _t << "from" << _old;
-		setSubject(_t->asKind<ValueDefiner>());
+		set(_t->asKind<ValueDefiner>());
 	}
 }
 
@@ -67,7 +67,7 @@ void Referenced::onDependencyRemoved(Entity* _old, int)
 //		mDebug() << "Subject removed (was" << _old << ")";
 		if (Identifiable* i = _old->tryKind<Identifiable>())
 			m_hopeful = i->name();
-		setSubject(0);
+		set(0);
 	}
 }
 

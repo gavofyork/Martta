@@ -68,66 +68,6 @@ bool ExplicitType::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 	return true;
 }
 
-Types ExplicitType::assignableTypes() const
-{
-	return m_subject ? m_subject->assignableTypes() : Types();
-}
-
-List<ValueDefiner*> ExplicitType::applicableMembers(Entity const* _s, bool _isConst) const
-{
-	if (m_subject)
-		return m_subject->applicableMembers(_s, _isConst);
-	return List<ValueDefiner*>();
-}
-
-bool ExplicitType::hasSingleCastOperator(TypeEntity const* _t, bool _const) const
-{
-	if (!m_subject)
-		return false;
-	return m_subject->hasSingleCastOperator(_t, _const);
-}
-
-bool ExplicitType::hasDefaultConstructor() const
-{
-	if (!subject())
-		return false;
-	return subject()->hasDefaultConstructor();
-}
-
-bool ExplicitType::hasSingleConversionConstructor(TypeEntity const* _f) const
-{
-	if (!m_subject)
-		return Unrelated;
-	return subject()->hasSingleConversionConstructor(_f);
-}
-
-bool ExplicitType::defineSimilarityTo(TypeEntity const* _t, Castability _c) const
-{
-	if (m_subject)
-		if ((_t->isKind<ExplicitType>() && m_subject == _t->asKind<ExplicitType>()->m_subject)
-			|| m_subject->defineSimilarityTo(_t, _c))
-			return true;
-
-	return Super::defineSimilarityTo(_t, _c);
-}
-
-bool ExplicitType::defineSimilarityFrom(TypeEntity const* _f, Castability _c) const
-{
-	// TODO: only non-explicit
-	return (m_subject && _c == Convertible && hasSingleConversionConstructor(_f)) ||
-			Super::defineSimilarityFrom(_f, _c);
-}
-
-Rgb ExplicitType::idColour() const
-{
-	return m_subject ? m_subject->idColour() : Rgb(0x444444);
-}
-
-bool ExplicitType::canStandAlone() const
-{
-	return m_subject && m_subject->canStandAlone();
-}
-
 bool ExplicitType::keyPressed(KeyEvent const* _e)
 {
 	if (_e->text().length() == 1 && (_e->text()[0].isUpper() || _e->text()[0] == L':'))
@@ -139,11 +79,6 @@ bool ExplicitType::keyPressed(KeyEvent const* _e)
 	else
 		return Super::keyPressed(_e);
 	return true;
-}
-
-List<Declaration*> ExplicitType::utilised() const
-{
-	return m_subject.isUsable() ? subject()->utilisedInUse() : Super::utilised();	// TODO: define for other types.
 }
 
 void ExplicitType::apresLoad()

@@ -36,7 +36,6 @@ public:
 	Referenced(ValueDefiner* _v = 0);
 
 	ModelPtr<ValueDefiner>				subject() const { return m_subject; }
-	void								setSubject(ValueDefiner* _e) { setDependency(m_subject, _e); }
 	ModelPtr<ValueDefiner>				get() const { return m_subject; }
 	void								set(ValueDefiner* _e) { setDependency(m_subject, _e); }
 

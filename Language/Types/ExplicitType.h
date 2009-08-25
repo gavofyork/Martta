@@ -38,48 +38,46 @@ class ExplicitType: public PhysicalType
 	friend class ExplicitTypeSet;
 
 public:
-	ExplicitType(TypeDefinition* _subject = 0): m_subject(0) { setSubject(_subject); }
+	ExplicitType(TypeDefinition* _subject = 0): m_subject(0) { set(_subject); }
 
-	// QUICK workout which is better and eliminate other.
 	TypeDefinition*						subject() const { return m_subject; }
-	void								setSubject(TypeDefinition* _subject = 0) { setDependency(m_subject, _subject); }
 	TypeDefinition*						get() const { return m_subject; }
-	void								set(TypeDefinition* _m) { setSubject(_m); }
+	void								set(TypeDefinition* _subject) { setDependency(m_subject, _subject); }
 
 	List<TypeDefinition*>				possibilities();
 
-	virtual bool						isCastableTo(TypeEntity const* _t, bool _const) { return hasSingleCastOperator(_t, _const); }
-
-	bool								hasSingleCastOperator(TypeEntity const* _t, bool _const = false) const;
-	bool								hasSingleConversionConstructor(TypeEntity const* _f) const;
-
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 
-	virtual bool						isNull() const { return !m_subject.isUsable(); }
-
 protected:
-	virtual bool						hasDefaultConstructor() const;
-	virtual Types						assignableTypes() const;
-	virtual List<ValueDefiner*>			applicableMembers(Entity const* _s = 0, bool _isConst = false) const;
-	virtual String						code(String const& _middle) const { return (m_subject ? m_subject->asKind<Identifiable>()->reference() : "") + _middle; }
-	virtual bool						contentsEquivalentTo(TypeEntity const* _t) const { return _t->asKind<ExplicitType>()->m_subject == m_subject; }
-	virtual Rgb							idColour() const;
-	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
-	virtual TypeEntity*					newClone() const { return new ExplicitType(m_subject); }
+	virtual inline bool					hasDefaultConstructor() const { return m_subject ? m_subject->hasDefaultConstructor() : false; }
+	virtual inline Types				assignableTypes() const { return m_subject ? m_subject->assignableTypes() : Types(); }
+	virtual inline List<ValueDefiner*>	applicableMembers(Entity const* _s = 0, bool _isConst = false) const { return m_subject ? m_subject->applicableMembers(_s, _isConst) : List<ValueDefiner*>(); }
+	virtual inline bool					canStandAlone() const { return m_subject && m_subject->canStandAlone(); }
+	virtual inline bool					isCastableTo(TypeEntity const* _t, bool _const) { return m_subject && m_subject->hasSingleCastOperator(_t, _const); }
+	virtual inline TypeEntity*			newClone() const { return new ExplicitType(m_subject); }
+
+	virtual inline bool					contentsEquivalentTo(TypeEntity const* _t) const { if (ExplicitType const* e = _t->tryKind<ExplicitType>()) return e->m_subject == m_subject; return false; }
+	virtual inline bool					defineSimilarityTo(TypeEntity const* _t, Castability _c) const { return (m_subject && m_subject->defineSimilarityTo(_t, _c)) || Super::defineSimilarityTo(_t, _c); }
+	virtual inline bool					defineSimilarityFrom(TypeEntity const* _f, Castability _c) const { return (m_subject && _c == Convertible && m_subject->hasSingleConversionConstructor(_f)) || Super::defineSimilarityFrom(_f, _c); }
+
+	virtual inline bool					isNull() const { return !m_subject.isUsable(); }
+
+	virtual inline String				code(String const& _middle) const { return (m_subject ? m_subject->asKind<Identifiable>()->reference() : "") + _middle; }
+	virtual inline List<Declaration*>	utilised() const { return m_subject ? m_subject->utilisedInUse() : Super::utilised(); }	// TODO: define for other types.
+
+	virtual inline Rgb					idColour() const { return m_subject ? m_subject->idColour() : Rgb(0x444444); }
 	virtual String						defineHtml() const;
-	virtual String						defineEditHtml(CodeScene* _cs) const;
 	virtual bool						keyPressed(KeyEvent const* _e);
+	virtual String						defineEditHtml(CodeScene* _cs) const;
+	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 //	virtual bool						isSuperfluous() const;
-	virtual bool						canStandAlone() const;
-	virtual bool						defineSimilarityTo(TypeEntity const* _t, Castability _c) const;
-	virtual bool						defineSimilarityFrom(TypeEntity const* _from, Castability _c) const;
+
 	virtual void						apresLoad();
-	virtual List<Declaration*>			utilised() const;
 	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p[L"subject"] = m_subject.key(); }
 	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_subject.restoreFrom(_p[L"subject"]); }
 
-	virtual void						onDependencyRemoved(Entity* _s, int) { if (_s->tryKind<TypeDefinition>() == m_subject) setSubject(0); }
-	virtual void						onDependencySwitched(Entity* _s, Entity* _o) { if (_o->tryKind<TypeDefinition>() == m_subject) setSubject(_s->tryKind<TypeDefinition>()); }
+	virtual void						onDependencyRemoved(Entity* _s, int) { if (_s->tryKind<TypeDefinition>() == m_subject) set(0); }
+	virtual void						onDependencySwitched(Entity* _s, Entity* _o) { if (_o->tryKind<TypeDefinition>() == m_subject) set(_s->tryKind<TypeDefinition>()); }
 	virtual void						onDependencyChanged(int, Entity* _s) { if (_s->tryKind<TypeDefinition>() == m_subject) changed(); }
 
 	ModelPtr<TypeDefinition>			m_subject;
