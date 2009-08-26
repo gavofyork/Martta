@@ -22,6 +22,7 @@
 
 #include "Identifiable.h"
 #include "WebViewable.h"
+#include "WebInformer.h"
 #include "Entity.h"
 
 namespace Martta
@@ -33,14 +34,17 @@ class ValueDefiner;
  * Class for anything individually referencable in the language.
  * Currently this includes only functions, variables, types and enumeration values.
  */
-class Declaration: public Entity, public_interface Identifiable, public_interface WebViewable
+class Declaration: public Entity, public_interface Identifiable, public_interface WebViewable, public_interface WebInformer
 {
 	MARTTA_PLACEHOLDER(Entity)
 	MARTTA_INHERITS(Identifiable, 0)
 	MARTTA_INHERITS(WebViewable, 1)
+	MARTTA_INHERITS(WebInformer, 2)
 
 public:
 	virtual ~Declaration();
+
+	virtual String						superChildInformationHtml(Entity const* _e) const;
 
 	/// From Identifiable (default implementations).
 	virtual String						key() const;

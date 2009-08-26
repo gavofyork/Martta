@@ -51,6 +51,8 @@ public:
 	/// (e.g. ";;MyClass;;m_foo", ";;MyClass;;void bar(int)", ";;MyClass")
 	virtual String						key() const;
 
+	virtual Entity const*				associate() const { return self(); }
+
 	/// @returns the entity from which this may be addressed. Typically it is the parent, though some entities
 	/// (e.g. EnumValue) skip this immediate parent and use their parent's addressableContext.
 	/// Default value to returns the parent is addressable or zero if not (e.g. Statement-derived parent).

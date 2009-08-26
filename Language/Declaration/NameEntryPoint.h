@@ -28,6 +28,8 @@
 namespace Martta
 {
 
+class IdentifierSet;
+
 class NameEntryPoint: public_interface WebViewable
 {
 	MARTTA_INTERFACE
@@ -37,7 +39,8 @@ public:
 	Named*								get() const { return 0; }
 	void								set(Named*) const {}
 	void								committed(Named*);
-	List<Named*>						possibilities();
+	List<Named*>						possibilities() const;
+	IdentifierSet*						ownerOf(Named* _n) const;
 
 protected:
 	bool								keyPressed(KeyEvent const*);

@@ -2,14 +2,14 @@
  * Version: Martta License version 1.0
  *
  * The contents of this file are subject to the Martta License version 1.0
- * (the "License"); you may not use this file except in compliance with the 
- * License. You should have received a copy of the Martta License 
+ * (the "License"); you may not use this file except in compliance with the
+ * License. You should have received a copy of the Martta License
  * "COPYING.Martta" along with Martta; if not you may obtain a copy of the
  * License at http://quidprocode.co.uk/Martta/
  *
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations under 
+ * License for the specific language governing rights and limitations under
  * the License.
  *
  * The Initial Developer of the code in this file is Gavin Wood.
@@ -25,7 +25,7 @@
 namespace Martta
 {
 
-MARTTA_INTERFACE_CPP(TypedOwner);	
+MARTTA_INTERFACE_CPP(TypedOwner);
 
 Types TypedOwner::allowedTypes(int) const
 {
@@ -52,7 +52,7 @@ Type TypedOwner::effectiveType(int _i) const
 	return Type();
 }
 
-Type TypedOwner::nominalType(int _i) const
+Type TypedOwner::canonicalType(int _i) const
 {
 	if (!self()->childIs<TypeNamer>(_i))
 		return Type();
@@ -82,6 +82,36 @@ bool TypedOwner::isChildInValidState(int _i) const
 				mDebug() << self()->childAs<TypeNamer>(_i)->apparentType()->code() << " != " << i->code();
 			}
 	return false;
+}
+
+String TypedOwner::informationHtml() const
+{
+	int num = max(self()->minRequired(), self()->cardinalChildCount());
+	List<int> ai;
+	foreach (int i, self()->knownNames())
+		if (allowedTypes(i).count())
+			ai.append(i);
+	for (int i = 0; i < num; ++i)
+		if (allowedTypes(i).count())
+			ai.append(i);
+	if (ai.count() || allowedTypes(num).count())
+	{
+		Pairs p(L"Typed Children");
+		foreach (int i, ai)
+		{
+			Pairs q(self()->indexName(i) + L": " + escape(effectiveType(i)->name()));
+			if (canonicalType(i) != effectiveType(i))
+				q << "Canonical type" << escape(canonicalType(i)->name());
+			q << "Allowed types" << escape(compileTypes(allowedTypes(i)));
+			if (deniedTypes(i).count())
+				q << "Denied types" << escape(compileTypes(deniedTypes(i)));
+			p << q;
+		}
+		if (allowedTypes(num).count())
+			p << L"..." << escape(compileTypes(allowedTypes(num)));
+		return p;
+	}
+	return String::null;
 }
 
 }

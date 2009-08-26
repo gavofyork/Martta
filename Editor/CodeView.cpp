@@ -193,9 +193,9 @@ void CodeView::refresh()
 	m_dirty.clear();
 }
 
-inline QRectF operator+(QRectF const& _a, float _x)
+inline QRect operator+(QRect const& _a, int _x)
 {
-	return QRectF(_a.x() - _x, _a.y() - _x, _a.width() + 2.f * _x, _a.height() + 2.f * _x);
+	return QRect(_a.x() - _x, _a.y() - _x, _a.width() + 2 * _x, _a.height() + 2 * _x);
 }
 
 void CodeView::onSelectionChanged()
@@ -219,64 +219,80 @@ void CodeView::checkInvalids()
 
 void CodeView::paintEvent(QPaintEvent* _ev)
 {
-	refresh();
-	checkInvalids();
+	TIME_STATEMENT("refresh")
+		refresh();
+	TIME_STATEMENT("checkInvalids")
+		checkInvalids();
 	Entity* c = current();
 
+	TIME_STATEMENT("brackets")
 	foreach (Position i, m_bracketed)
 		if (!i.exists() || (i.entity() != c && !c->hasAncestor(i.entity())))
 			m_bracketed.removeAll(i);
 
+	TIME_STATEMENT("precurrent")
 	if (c)
 	{
 		QPainter p(this);
 
-		p.setOpacity(0.9);
-		p.fillRect(rect(), Qt::white);
-		p.setOpacity(1);
+		TIME_STATEMENT(fillRect)
+		p.fillRect(rect(), QColor(255, 255, 255, 235));
 
 //		p.setRenderHint(QPainter::Antialiasing, true);
-		QRectF br = bounds(c);
-
-		QLinearGradient g(br.topLeft(), br.bottomLeft());
-		g.setColorAt(0.f, editDelegate() ? QColor(255, 128, 0, 80) : QColor(0, 128, 255, 16));
-		g.setColorAt(1.f, editDelegate() ? QColor(255, 128, 0, 32) : QColor(0, 128, 255, 48));
-		p.setPen(Qt::NoPen);
-		p.setBrush(g);
-		p.drawRect(QRectF(0, br.y(), width(), br.height()));
+		QRect br = bounds(c);
+		br = QRect(0, br.y(), width(), br.height());
+		if (_ev->region().contains(br))
+		{
+			QLinearGradient g(br.topLeft(), br.bottomLeft());
+			g.setColorAt(0.f, editDelegate() ? QColor(255, 128, 0, 80) : QColor(0, 128, 255, 16));
+			g.setColorAt(1.f, editDelegate() ? QColor(255, 128, 0, 32) : QColor(0, 128, 255, 48));
+			p.setPen(Qt::NoPen);
+			p.setBrush(g);
+			TIME_STATEMENT(drawSelRect)
+				p.drawRect(br);
+		}
 	}
-	QWebView::paintEvent(_ev);
+	TIME_STATEMENT("WVpaintEvent")
+		QWebView::paintEvent(_ev);
 
+	TIME_STATEMENT("postcurrent")
 	if (c)
 	{
 		QPainter p(this);
-		QRectF br = bounds(c);
+		QRect br = bounds(c);
 
 		p.setPen(Qt::NoPen);
 		foreach (Position i, m_bracketed)
 		{
-			QRectF br = bounds(i.entity());
-			QLinearGradient g(br.topLeft(), br.bottomLeft());
-			g.setColorAt(0.f, QColor(224, 255, 192, 32));
-			g.setColorAt(1.f, QColor(192, 255, 127, 32));
-			QLinearGradient go(br.topLeft(), br.bottomLeft());
-			go.setColorAt(0.f, QColor(224, 255, 192, 128));
-			go.setColorAt(1.f, QColor(192, 255, 127, 128));
-			p.setBrush(g);
-			p.drawRect(br);
-			p.setBrush(go);
-			p.drawRect(QRectF(br.x() - 2.f, br.y(), br.width() + 4.f, br.height()));
+			QRect br = bounds(i.entity());
+			QRect obr = QRect(br.x() - 2.f, br.y(), br.width() + 4.f, br.height());
+			if (_ev->region().contains(obr))
+			{
+				QLinearGradient g(br.topLeft(), br.bottomLeft());
+				g.setColorAt(0.f, QColor(224, 255, 192, 32));
+				g.setColorAt(1.f, QColor(192, 255, 127, 32));
+				QLinearGradient go(br.topLeft(), br.bottomLeft());
+				go.setColorAt(0.f, QColor(224, 255, 192, 128));
+				go.setColorAt(1.f, QColor(192, 255, 127, 128));
+				p.setBrush(g);
+				p.drawRect(br);
+				p.setBrush(go);
+				p.drawRect(obr);
+			}
 		}
 
-		p.setBrush(Qt::NoBrush);
-		p.setPen(editDelegate() ? QColor(255, 0, 0, 128) : QColor(0, 0, 0, 128));
-		p.drawRect(br);
-		p.setPen(editDelegate() ? QColor(255, 0, 0, 64) : QColor(0, 0, 0, 64));
-		p.drawRect(br + 1.f);
-		p.setPen(editDelegate() ? QColor(255, 0, 0, 32) : QColor(0, 0, 0, 32));
-		p.drawRect(br + 2.f);
-		p.setPen(editDelegate() ? QColor(255, 0, 0, 16) : QColor(0, 0, 0, 16));
-		p.drawRect(br + 3.f);
+		if (_ev->region().contains(br + 3))
+		{
+			p.setBrush(Qt::NoBrush);
+			p.setPen(editDelegate() ? QColor(255, 0, 0, 128) : QColor(0, 0, 0, 128));
+			p.drawRect(br);
+			p.setPen(editDelegate() ? QColor(255, 0, 0, 64) : QColor(0, 0, 0, 64));
+			p.drawRect(br + 1.f);
+			p.setPen(editDelegate() ? QColor(255, 0, 0, 32) : QColor(0, 0, 0, 32));
+			p.drawRect(br + 2.f);
+			p.setPen(editDelegate() ? QColor(255, 0, 0, 16) : QColor(0, 0, 0, 16));
+			p.drawRect(br + 3.f);
+		}
 
 		if (m_showDependencyInfo)
 		{
@@ -286,16 +302,18 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 			{
 				if (i && isInScene(i->self()))
 				{
-					QRectF br = bounds(i->self());
-					p.drawRect(br);
+					QRect br = bounds(i->self());
+					if (_ev->region().contains(br))
+						p.drawRect(br);
 				}
 			}
 			p.setPen(QColor(255, 0, 0, 128));
 			foreach (Depender* i, ChangeMan::get()->dependersOf(c))
 				if (isInScene(i->self()))
 				{
-					QRectF br = bounds(i->self());
-					p.drawRect(br);
+					QRect br = bounds(i->self());
+					if (_ev->region().contains(br))
+						p.drawRect(br);
 				}
 		}
 	}
@@ -331,14 +349,17 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 				}
 				p.setPen(QPen(c, 2.f));
 				p.setBrush(QColor(c.red(), c.green(), c.blue(), 64));
-				QRectF br = bounds(i.m_depender) + 1.f;
-				p.drawRect(br);
+				QRect br = bounds(i.m_depender) + 1.f;
+				if (_ev->region().contains(br))
+					p.drawRect(br);
 				if (i.m_object1 && isInScene(i.m_object1))
 				{
-					QRectF obr = bounds(i.m_object1) + 1.f;
-					p.drawLine(br.center(), obr.center());
+					QRect obr = bounds(i.m_object1) + 1.f;
+					if (_ev->region().contains(QRect(br.center(), obr.center())))
+						p.drawLine(br.center(), obr.center());
 					p.setPen(QPen(QColor(0, 0, 0, 128), 2.f));
-					p.drawRect(obr);
+					if (_ev->region().contains(obr))
+						p.drawRect(obr);
 				}
 			}
 	}

@@ -66,6 +66,7 @@ public:
 		while (m_nameds.size())
 			delete m_nameds.takeLast();
 	}
+	virtual String						setId() const { return L"Martta::BuiltinType"; }
 	virtual List<Named*>				identifiableAt(Position const& _p)
 	{
 		if (canPlaceVariable(_p))
@@ -184,7 +185,7 @@ public:
 	}
 };
 
-List<int> BuiltinType::possibilities()
+List<int> BuiltinType::possibilities() const
 {
 	List<int> ret;
 	for (int i = 0; i < s_simpleIdsCount; i++)

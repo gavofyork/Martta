@@ -32,6 +32,7 @@ class ThisPointerSet: public IdentifierSet
 {
 public:
 	ThisPointerSet(): m_ourNamed(L"this") {}
+	virtual String						setId() const { return L"Martta::ThisPointer"; }
 	virtual List<Named*>				identifiableAt(Position const& _p)
 	{
 		if (_p.exists() && _p->hasAncestor<MemberLambda>())

@@ -44,7 +44,7 @@ public:
 	TypeDefinition*						get() const { return m_subject; }
 	void								set(TypeDefinition* _subject) { setDependency(m_subject, _subject); }
 
-	List<TypeDefinition*>				possibilities();
+	List<TypeDefinition*>				possibilities() const;
 
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 

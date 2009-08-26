@@ -56,4 +56,13 @@ template<class T, class F> inline List<T*> filterEntities(List<F*> _f)
 	return ret;
 }
 
+template<class T, class F> inline List<F*> filterEntitiesInv(List<F*> _f)
+{
+	List<F*> ret;
+	foreach (F* i, _f)
+		if (!i->template isKind<T>())
+			ret << i;
+	return ret;
+}
+
 }

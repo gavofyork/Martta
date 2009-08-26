@@ -30,6 +30,29 @@ Declaration::~Declaration()
 {
 }
 
+String Declaration::superChildInformationHtml(Entity const* _e) const
+{
+	if (_e->ancestor<Declaration>() != this)
+		return String::null;
+	Pairs p(L"Declaration Context", false);
+	p << kind().name() << name();
+	if (utilised().size())
+	{
+		Pairs up("Utilised");
+		foreach (Declaration* u, utilised())
+			up << (u ? u->name() : L"n/a") << (u ? u->kind().name() : L"n/a");
+		p << up;
+	}
+	if (utilisedSiblings().size())
+	{
+		Pairs up("Utilised Siblings");
+		foreach (Declaration* u, utilisedSiblings())
+			up << (u ? u->name() : L"n/a") << (u ? u->kind().name() : L"n/a");
+		p << up;
+	}
+	return p;
+}
+
 void Declaration::archivePtrs(bool) const
 {
 }

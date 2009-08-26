@@ -26,6 +26,7 @@
 #endif
 
 #include <ChangeMan.h>
+#include <WebInformer.h>
 
 #include "Timer.h"
 #include "MainWindow.h"
@@ -746,16 +747,6 @@ static void addChild(QTreeWidgetItem* _p, Entity const* _c)
 		addChild(t, e);
 }
 
-String compileKinds(Kinds const& _t)
-{
-	String ret;
-	foreach (Kind k, _t)
-		ret += k.name() + L", ";
-	if (ret.endsWith(L", "))
-		ret.chop(2);
-	return ret;
-}
-
 void MainWindow::entityFocused(Entity* _e)
 {
 	if (codeView->current() != _e)
@@ -773,7 +764,7 @@ void MainWindow::entityFocused(Entity* _e)
 void MainWindow::updateProgramCode()
 {
 	if (Project* p = codeView->subject()->tryKind<Project>())
-		programCode->setText(qs(p->finalCode()));
+		programCode->setPlainText(qs(p->finalCode()));
 }
 
 void MainWindow::delayedUpdate()
@@ -783,111 +774,20 @@ void MainWindow::delayedUpdate()
 	Entity* e = codeView->current();
 	QString t;
 	if (e && e->parent())
-	TIME_STATEMENT("update"){
-		t += "<table><tr>";
-		t += "<td><b>" + qs(e->kind().name()) + "</b>";
-		foreach (Kind k, e->parent()->allowedKinds(e->index()))
-			t += "<br>" + qs(k.name());
-		t += "<br>";
-		foreach (Kind k, e->parent()->deniedKinds(e->index()))
-			t += "<br><i>" + qs(k.name()) + "</i>";
-		t += "</td>";
-/*		if (e->isKind<BareTyped>())
+		TIME_STATEMENT("update")
 		{
-			t += "<td><b><i>" + Qt::escape(qs(e->asKind<BareTyped>()->type()->code())) + "</i><br/><font size=\"-2\" color=\"#888888\">(" + Qt::escape(qs(e->asKind<BareTyped>()->apparentType()->code())) + ")</font></b>";
-			foreach (Type i, e->asKind<BareTyped>()->ourAllowedTypes())
-				t += "<br>" + Qt::escape(qs(i->code()));
-			t += "<br>";
-			foreach (Type i, e->asKind<BareTyped>()->ourDeniedTypes())
-				t += "<br><i>" + Qt::escape(qs(i->code())) + "</i>";
-			t += "</td>";
-		}*/
-		t += "</tr></table>";
-
-		int vvalue = typesVisible->verticalScrollBar()->value();
-		typesVisible->clear();
-/*		if (e->isKind<Statement>())
-		{
-			QTreeWidgetItem* l = new QTreeWidgetItem(typesVisible, QStringList() << QString("Local"));
-			foreach (ValueDefiner* v, e->asKind<Statement>()->valuesInLocalScope())
-				new QTreeWidgetItem(l, QStringList() << qs(v->name()) << qs(v->type()->code()));
-		}*/
-/*		if (e->hasAncestor<Class>())
-		{
-			QTreeWidgetItem* m = new QTreeWidgetItem(typesVisible, QStringList() << QString("Members"));
-			QTreeWidgetItem* h = new QTreeWidgetItem(m, QStringList() << QString("Hidden"));
-			foreach (ValueDefiner* v, castEntities<ValueDefiner>(e->ancestor<Class>()->membersOf<MemberValue>(e->hasAncestor<MemberLambda>() ? e->ancestor<MemberLambda>()->isConst() : false)))
-				new QTreeWidgetItem(v->isKind<Artificial>() ? h : m, QStringList() << qs(v->name()) << qs(v->type()->code()));
-		}*/
-/*		QTreeWidgetItem* g = new QTreeWidgetItem(typesVisible, QStringList() << QString("General"));
-		foreach (ValueDefiner* v, e->ancestor<Declaration>()->valuesKnown())
-			new QTreeWidgetItem(g, QStringList() << qs(v->name()) << qs(v->type()->code()));*/
-/*		QTreeWidgetItem* gl = new QTreeWidgetItem(typesVisible, QStringList() << QString("Global"));
-		foreach (ValueDefiner* v, e->root()->childrenOf<ValueDefiner>())
-			new QTreeWidgetItem(gl, QStringList() << QString(v->name()) << QString(v->type()->code()));*/
-		typesVisible->expandAll();
-		typesVisible->verticalScrollBar()->setValue(vvalue);
-
-		vvalue = entityInfo->verticalScrollBar()->value();
-		entityInfo->clear();
-
-/*		if (Declaration* d = e->selfAncestor<Declaration>())
-		{
-			QTreeWidgetItem* decl = new QTreeWidgetItem(entityInfo, QStringList() << QString("Declaration Context"));
-			new QTreeWidgetItem(decl, QStringList() << qs(d->name()) << qs(d->kind().name()));
-			QTreeWidgetItem* ul = new QTreeWidgetItem(decl, QStringList() << QString("Utilised"));
-			foreach (Declaration* u, d->utilised())
-				new QTreeWidgetItem(ul, QStringList() << (u ? qs(u->name()) : QString("NULL?")) << (u ? qs(u->kind().name()) : QString("NULL?")));
-			QTreeWidgetItem* us = new QTreeWidgetItem(decl, QStringList() << QString("Utilised Siblings"));
-			foreach (Declaration* u, d->utilisedSiblings())
-				new QTreeWidgetItem(us, QStringList() << (u ? qs(u->name()) : QString("NULL?")) << (u ? qs(u->kind().name()) : QString("NULL?")));
+			t = "<script language=\"javascript\">function toggle(_id, _t){var a = document.getElementById(_id); var hid = a.style.display == 'none'; _t.innerHTML = hid ? _id : (_id + '...'); a.style.display = hid ? null : 'none';}</script>"
+				"<style type=\"text/css\">body{margin:2px;padding:0;font-size:12px;}h1{text-shadow:-1px -1px 2px #aaa;font-size:110%;text-align:left;padding:0 0 0 0.5em;margin:0 0 0.5em 0;border-bottom:1px #888 solid;font-weight:bold;color:black;}.sh{color:black;font-weight:bold}h2{cursor:pointer;text-decoration:underline;font-size:100%;margin-top:0px;color:black;font-weight:bold;margin:0 0 0.1em 0;} table{font-size:100%;padding:0;margin:0;border-spacing:0}th{font-size:100%;font-weight:normal;color:black;text-align:left;padding:0 1em 0 0;margin:0 0;white-space:nowrap} td{font-size:100%;color:#666;padding:0;margin:0;spacing:0;white-space:nowrap} tr{margin:0;padding:0}</style>";
+			t += qs(WebInformer::basicInformationHtml(e));
+			if (WebInformer* we = e->tryKind<WebInformer>())
+				t += qs(we->informationHtml());
+			for (Entity* p = e->parent(); p; p = p->parent())
+				if (WebInformer* we = p->tryKind<WebInformer>())
+					t += qs(we->superChildInformationHtml(e));
 		}
-*/
-//		new QTreeWidgetItem(entityInfo, QStringList() << QString("HTML") << qs(e->toHtml()));
-
-		QTreeWidgetItem* rc = new QTreeWidgetItem(entityInfo, QStringList() << "Child restrictions");
-		foreach (int i, e->knownNames())
-			if (e->allowedKinds(i).count())
-				new QTreeWidgetItem(rc, QStringList() << qs(e->indexName(i)) << qs(compileKinds(e->allowedKinds(i)) + " (%1 req'd)").arg(e->minRequired(i)));
-		for (int i = 0; i < e->minRequired(); ++i)
-			new QTreeWidgetItem(rc, QStringList() << QString::number(i) << qs(compileKinds(e->allowedKinds(i)) + " (req'd)"));
-		if (e->allowedKinds(e->minRequired()).count())
-			new QTreeWidgetItem(rc, QStringList() << "..." << qs(compileKinds(e->allowedKinds(e->minRequired()))));
-
-
-/*		if (TypeNamer* td = e->tryKind<TypeNamer>())
-		{
-			QTreeWidgetItem* te = new QTreeWidgetItem(entityInfo, QStringList() << QString("Type Namer Information") << qs(td->type()->code()));
-			new QTreeWidgetItem(te, QStringList() << "Apparent type" << qs(td->apparentType()->code()));
-			new QTreeWidgetItem(te, QStringList() << "Type restrictions" << qs(compileTypes(td->ourAllowedTypes()) + " (%1 types)").arg(td->ourAllowedTypes().size()));
-			foreach (ValueDefiner* v, td->type()->applicableMembers())
-				new QTreeWidgetItem(te, QStringList() << qs(v->name()) << qs(v->type()->code()));
-		}
-*/		/*
-		if (TypedOwner* to = e->tryKind<TypedOwner>())
-		{
-			QTreeWidgetItem* te = new QTreeWidgetItem(entityInfo, QStringList() << QString("Typed Owner Information"));
-
-			foreach (int i, e->knownNames())
-				if (to->allowedTypes(i).count())
-					new QTreeWidgetItem(te, QStringList() << qs(e->indexName(i)) + ": " + qs(to->nominalType(i)->code() + " {" + to->effectiveType(i)->code() + "}") << qs(compileTypes(to->allowedTypes(i)) + " (%1 types)").arg(to->allowedTypes(i).size()) );
-			for (int i = 0; i < max(e->minRequired(), e->cardinalChildCount()); ++i)
-				if (to->allowedTypes(i).count())
-					new QTreeWidgetItem(te, QStringList() << QString::number(i) + ": " + qs(to->nominalType(i)->code() + " {" + to->effectiveType(i)->code() + "}") << qs(compileTypes(to->allowedTypes(i)) + " (%1 types)").arg(to->allowedTypes(i).size()) );
-			if (to->allowedTypes(max(e->minRequired(), e->cardinalChildCount())).count())
-				new QTreeWidgetItem(te, QStringList() << "..." << qs(compileTypes(to->allowedTypes(max(e->minRequired(), e->cardinalChildCount()))) + " (%1 types)").arg(to->allowedTypes(max(e->minRequired(), e->cardinalChildCount())).size()) );
-		}*/
-
-		QTreeWidgetItem* ac = new QTreeWidgetItem(entityInfo, QStringList() << "Actual children" << qs(e->kind().name()));
-		foreach (Entity* e, e->children())
-			addChild(ac, e);
-
-		entityInfo->expandAll();
-		entityInfo->verticalScrollBar()->setValue(vvalue);
-	}
 	else
 		t += "Nothing selected.";
-	informationView->setText(t);
+	entityInfo->setHtml(t);
 
 	if (ChangeMan::get()->hasChanged())
 	{

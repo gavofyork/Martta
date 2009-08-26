@@ -32,7 +32,7 @@ namespace Martta
 class ValueDefiner;
 class Typed;
 
-class Statement: public Entity, public_interface TypedOwner, public_interface NameEntryPoint, public_interface WebViewable
+class Statement: public Entity, public_interface TypedOwner, public_interface NameEntryPoint, public_interface WebViewable, public_interface WebInformer
 {
 	MARTTA_PLACEHOLDER(Entity)
 	MARTTA_INHERITS(TypedOwner, 0)
@@ -61,6 +61,8 @@ protected:
 	virtual void						appendDefinedUptoHere(int, List<ValueDefiner*>*) const;
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s) { return NameEntryPoint::newDelegate<Statement>(_s); }
 	virtual bool						keyPressed(KeyEvent const* _e);
+
+	virtual String						informationHtml() const;
 };
 
 }

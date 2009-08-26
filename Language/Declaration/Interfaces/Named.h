@@ -32,6 +32,8 @@ class Named
 {
 public:
 	virtual String								name() const { return String::null; }
+	virtual Entity const*						associate() const { return 0; }
+
 	virtual ~Named() {}
 };
 

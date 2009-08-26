@@ -2,14 +2,14 @@
  * Version: Martta License version 1.0
  *
  * The contents of this file are subject to the Martta License version 1.0
- * (the "License"); you may not use this file except in compliance with the 
- * License. You should have received a copy of the Martta License 
+ * (the "License"); you may not use this file except in compliance with the
+ * License. You should have received a copy of the Martta License
  * "COPYING.Martta" along with Martta; if not you may obtain a copy of the
  * License at http://quidprocode.co.uk/Martta/
  *
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations under 
+ * License for the specific language governing rights and limitations under
  * the License.
  *
  * The Initial Developer of the code in this file is Gavin Wood.
@@ -44,7 +44,7 @@ class Type
 	friend class ModifyingType;
 	friend class TypeEntity;
 	template<class T> friend struct TypeConstructor;
-	
+
 public:
 	enum Aadl { AdoptAndDeleteLater };
 
@@ -78,7 +78,7 @@ public:
 
 	inline TypeEntity& operator*() const { return *m_top; }
 	inline TypeEntity* operator->() const { return m_top; }
-	
+
 	/// Append as child of top. Goes onto the back of the top's list.
 	inline Type& append(Type const& _t)
 	{
@@ -94,7 +94,7 @@ public:
 	/// As append() but doesn't change this type.
 	inline Type& appendedWith(Type const& _t) const { return Type(*this).append(_t); }
 	inline Type& placedWith(Type const& _t, int _name = TypeEntity::Default) const { return Type(*this).place(_t, _name); }
-	
+
 	/// Append to top. This is now the value of the new top item.
 	inline Type& topWith(TypeEntity const& _newContext, int _at = TypeEntity::Default)
 	{
@@ -105,7 +105,7 @@ public:
 	}
 	/// As topWith(), but doesn't change this type.
 	inline Type toppedWith(TypeEntity const& _newContext, int _at = TypeEntity::Default) const { return Type(*this).topWith(_newContext, _at); }
-	
+
 	/// Append to bottom of tree.
 	inline Type& tailWith(TypeEntity const& _newChild, int _at = TypeEntity::Default)
 	{
@@ -120,6 +120,16 @@ private:
 
 	TypeEntity* m_top;
 };
+
+inline String compileTypes(Types const& _t)
+{
+	String ret;
+	foreach (Type t, _t)
+		ret += t->name() + L", ";
+	if (ret.endsWith(L", "))
+		ret.chop(2);
+	return ret;
+}
 
 inline Types operator,(Types const& _qs, Type const& _t)
 {

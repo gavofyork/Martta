@@ -28,6 +28,8 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(ArgumentReferenced);
 
+static ReferencedValueSet<ArgumentReferenced> s_argumentReferencedRegistrand;
+
 bool ArgumentReferenced::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
 	if (_p.exists() && _p->isPlaceholder() && _e->text() == L"_")

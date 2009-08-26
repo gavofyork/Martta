@@ -34,6 +34,7 @@ MARTTA_OBJECT_CPP(ExplicitType);
 class ExplicitTypeSet: public IdentifierSet
 {
 public:
+	virtual String						setId() const { return L"Martta::ExplicitType"; }
 	virtual List<Named*>				identifiableAt(Position const& _p)
 	{
 		if (canPlaceVariable(_p))
@@ -93,17 +94,17 @@ String ExplicitType::defineHtml() const
 	return L"<^span class=\"TypeEntity\">" + typeHtml(m_subject.isUsable() ? m_subject->name() : L"&empty;") + L"</span>";
 }
 
-List<TypeDefinition*> ExplicitType::possibilities()
+List<TypeDefinition*> ExplicitType::possibilities() const
 {
 	List<TypeDefinition*> ret;
 	TypeDefinition* old = m_subject;
 	foreach (TypeDefinition* i, parent()->selfAndAncestorsChildrenOf<TypeDefinition>())
 	{
-		m_subject = i;
+		const_cast<ExplicitType*>(this)->m_subject = i;
 		if (parent()->isChildInValidState(index()))
 			ret << i;
 	}
-	m_subject = old;
+	const_cast<ExplicitType*>(this)->m_subject = old;
 	return ret;
 }
 

@@ -45,6 +45,7 @@ class StringTypeSet: public IdentifierSet
 {
 public:
 	StringTypeSet(): m_ourNamed(L"string") {}
+	virtual String						setId() const { return L"Martta::StringType"; }
 	virtual List<Named*>				identifiableAt(Position const& _p)
 	{
 		if (canPlaceVariable(_p))

@@ -18,6 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "Artificial.h"
 #include "Class.h"
 #include "GenericMemberOperation.h"
 #include "MemberVariable.h"
@@ -61,7 +62,6 @@ List<ValueDefiner*> MemberReferenced::possibilities(Position const& _p, bool _me
 {
 	List<ValueDefiner*> ret;
 	Type method = Type(FunctionType(false, true)).topWith(Memberify()).topWith(Reference());
-	mInfo() << _p.entity() << _p->tryKind<TypeNamer>();
 	if (TypedOwner* s = _p.parent()->tryKind<TypedOwner>())
 		foreach (Type t, s->allowedTypes(_p.index()))
 		{
@@ -70,7 +70,7 @@ List<ValueDefiner*> MemberReferenced::possibilities(Position const& _p, bool _me
 				appMems = t->asType<Memberify>()->scope()->applicableMembers(_p.entity(), t->asType<Memberify>()->isConst());
 			else if (Class* c = _p->ancestor<Class>())
 				appMems = castEntities<ValueDefiner>(c->membersOf<MemberValue>(_p->hasAncestor<MemberLambda>() ? _p->ancestor<MemberLambda>()->isConst() : false));
-			mInfo() << appMems << _p->ancestor<Class>();
+			appMems = filterEntitiesInv<Artificial>(appMems);
 			if (!_methods)
 				appMems = filterTypedsInv<ValueDefiner>(method, appMems);
 			else if (!_nonMethods)

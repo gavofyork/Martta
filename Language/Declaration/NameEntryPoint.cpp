@@ -30,12 +30,20 @@ namespace Martta
 
 MARTTA_INTERFACE_CPP(NameEntryPoint);
 
-List<Named*> NameEntryPoint::possibilities()
+List<Named*> NameEntryPoint::possibilities() const
 {
 	List<Named*> ret;
 	foreach (IdentifierSet* i, IdentifierSetRegistrar::get()->allSets())
 		ret << i->identifiableAt(self()->over());
 	return ret;
+}
+
+IdentifierSet* NameEntryPoint::ownerOf(Named* _n) const
+{
+	foreach (IdentifierSet* i, IdentifierSetRegistrar::get()->allSets())
+		if (i->identifiableAt(self()->over()).contains(_n))
+			return i;
+	return 0;
 }
 
 String NameEntryPoint::defineEditHtml(CodeScene* _cs) const

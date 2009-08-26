@@ -1,4 +1,4 @@
-DEPS += Labels
+DEPS += Labels WebView
 OURDIRS = . Interfaces Support
 TWD = $$PWD
 

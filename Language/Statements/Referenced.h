@@ -65,6 +65,7 @@ template<class T>
 class ReferencedValueSet: public IdentifierSet
 {
 public:
+	virtual String						setId() const { return Kind::of<T>().name(); }
 	virtual List<Named*>				identifiableAt(Position const& _p) { return list_cast<Named*>(castEntities<Identifiable>(T::possibilities(_p))); }
 	virtual void						acceptAt(Position const& _p, Named* _i) { ValueDefiner* v = static_cast<Identifiable*>(_i)->asKind<ValueDefiner>(); _p.place(new T(v))->setCurrent(); }
 	virtual String						defineEditHtml(Named* _i, String const& _mid) { ValueDefiner* v = static_cast<Identifiable*>(_i)->asKind<ValueDefiner>(); return Referenced().editHtmlHelper(v, _mid); }

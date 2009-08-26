@@ -1,4 +1,4 @@
-DEPS += TypeEntity Declaration
+DEPS += TypeEntity Declaration WebView
 OURDIRS = . Interfaces
 TWD = $$PWD
 

@@ -38,6 +38,7 @@ public:
 	IdentifierSet();
 	virtual ~IdentifierSet();
 
+	virtual String						setId() const { return String::null; }
 	virtual List<Named*>				identifiableAt(Position const&) { return List<Named*>(); }
 	virtual void						acceptAt(Position const&, Named*) {}
 	virtual String						defineEditHtml(Named*, String const& _mid) { return _mid; }
@@ -52,6 +53,7 @@ public:
 		m_preHtml	(_preHtml),
 		m_postHtml	(_postHtml)
 	{}
+	virtual String						setId() const { return Kind::of<T>().name(); }
 	virtual List<Named*>				identifiableAt(Position const& _p)
 	{
 		if (_p.allowedToBeKind<T>())

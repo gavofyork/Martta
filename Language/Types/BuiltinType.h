@@ -73,7 +73,7 @@ public:
 		return (uint)-1;
 	}
 
-	List<int>							possibilities();
+	List<int>							possibilities() const;
 	inline int							get() const { return m_id; }
 	inline void							set(uint _m) { setId(_m); }
 	virtual bool						isNull() const { return m_id == (uint)-1; }

@@ -199,7 +199,7 @@ prepare CTypes CTypes ""
 
 prepare Entity "Support/Auxilliary Support/AuxilliaryFace Support/AuxilliaryRegistrar Support/ChangeMan Support/CodeScene Support/CompletionDelegate Support/CullManager Support/Dier Support/EditDelegate Support/EntitySupport Support/KeyEvent Support/Kind Support/Meta Support/Position Support/SafePointer Interfaces/ChildValidifier Interfaces/Dependee Interfaces/Depender Interfaces/Familial Entity Support/SpecialKeys" 
 
-prepare WebView "Interfaces/WebViewable Support/WebStylist Support/WebStylistRegistrar" "Entity"
+prepare WebView "Interfaces/WebViewable Interfaces/WebInformer Support/WebStylist Support/WebStylistRegistrar" "Entity"
 
 prepare Project "Project Solution" "Entity"
 

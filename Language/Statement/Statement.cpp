@@ -20,6 +20,7 @@
 
 #include "Typed.h"
 #include "ValueDefiner.h"
+#include "IdentifierSet.h"
 #include "Statement.h"
 
 namespace Martta
@@ -70,6 +71,28 @@ bool Statement::keyPressed(KeyEvent const* _e)
 	else
 		return Super::keyPressed(_e);
 	return true;
+}
+
+String Statement::informationHtml() const
+{
+	String ret = TypedOwner::informationHtml();
+	MultiHash<String, Entity const*> vs;
+	foreach (Named* n, possibilities())
+		if (n->associate()->isKind<TypeNamer>() && n->associate()->isKind<Identifiable>())
+			vs.insert(ownerOf(n)->setId(), n->associate());
+	if (vs.count())
+	{
+		Pairs p(L"Values Visible");
+		foreach (String s, vs.uniqueKeys())
+		{
+			Pairs q(s);
+			foreach (Entity const* e, vs.values(s))
+				q << e->asKind<Identifiable>()->name() << e->asKind<TypeNamer>()->type()->name();
+			p << q;
+		}
+		ret += p;
+	}
+	return ret;
 }
 
 }

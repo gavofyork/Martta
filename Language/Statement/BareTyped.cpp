@@ -25,4 +25,17 @@ namespace Martta
 
 MARTTA_PLACEHOLDER_CPP(BareTyped);
 
+String BareTyped::informationHtml() const
+{
+	String ret = Super::informationHtml() + TypeNamer::informationHtml();
+	if (type()->applicableMembers().count())
+	{
+		Pairs p("Members", true);
+		foreach (ValueDefiner* v, type()->applicableMembers())
+			p << v->name() << v->type()->code();
+		ret += p;
+	}
+	return ret;
+}
+
 }

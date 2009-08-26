@@ -18,6 +18,9 @@
    <iconset>
     <normaloff>../Martta Logo-64.png</normaloff>../Martta Logo-64.png</iconset>
   </property>
+  <property name="styleSheet">
+   <string>font: 8pt &quot;Verdana&quot;;</string>
+  </property>
   <property name="toolButtonStyle">
    <enum>Qt::ToolButtonTextOnly</enum>
   </property>
@@ -106,35 +109,6 @@
       </property>
      </widget>
     </item>
-    <item>
-     <widget class="Line" name="line">
-      <property name="autoFillBackground">
-       <bool>true</bool>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QTextBrowser" name="informationView">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>1</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="autoFillBackground">
-       <bool>true</bool>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::VLine</enum>
-      </property>
-      <property name="lineWidth">
-       <number>0</number>
-      </property>
-     </widget>
-    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -194,8 +168,11 @@
   <widget class="QDockWidget" name="dockWidget">
    <property name="font">
     <font>
-     <family>AlArabiya</family>
+     <family>Verdana</family>
      <pointsize>8</pointsize>
+     <weight>50</weight>
+     <italic>false</italic>
+     <bold>false</bold>
     </font>
    </property>
    <property name="autoFillBackground">
@@ -208,6 +185,9 @@
     <number>1</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents">
+    <property name="autoFillBackground">
+     <bool>true</bool>
+    </property>
     <layout class="QHBoxLayout">
      <property name="spacing">
       <number>0</number>
@@ -219,7 +199,11 @@
       <widget class="QTreeView" name="dependencies">
        <property name="font">
         <font>
-         <pointsize>10</pointsize>
+         <family>Verdana</family>
+         <pointsize>8</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
         </font>
        </property>
        <property name="focusPolicy">
@@ -254,8 +238,11 @@
   <widget class="QDockWidget" name="classesDock">
    <property name="font">
     <font>
-     <family>AlArabiya</family>
+     <family>Verdana</family>
      <pointsize>8</pointsize>
+     <weight>50</weight>
+     <italic>false</italic>
+     <bold>false</bold>
     </font>
    </property>
    <property name="autoFillBackground">
@@ -268,6 +255,9 @@
     <number>2</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_2">
+    <property name="autoFillBackground">
+     <bool>true</bool>
+    </property>
     <layout class="QHBoxLayout">
      <property name="spacing">
       <number>0</number>
@@ -277,6 +267,9 @@
      </property>
      <item>
       <widget class="QFrame" name="frame_2">
+       <property name="autoFillBackground">
+        <bool>true</bool>
+       </property>
        <property name="frameShape">
         <enum>QFrame::Panel</enum>
        </property>
@@ -373,8 +366,11 @@
   <widget class="QDockWidget" name="dockWidget_5">
    <property name="font">
     <font>
-     <family>AlArabiya</family>
+     <family>Verdana</family>
      <pointsize>8</pointsize>
+     <weight>50</weight>
+     <italic>false</italic>
+     <bold>false</bold>
     </font>
    </property>
    <property name="autoFillBackground">
@@ -387,6 +383,9 @@
     <number>8</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_6">
+    <property name="autoFillBackground">
+     <bool>true</bool>
+    </property>
     <layout class="QVBoxLayout">
      <property name="spacing">
       <number>0</number>
@@ -396,6 +395,9 @@
      </property>
      <item>
       <widget class="QFrame" name="frame_3">
+       <property name="autoFillBackground">
+        <bool>true</bool>
+       </property>
        <property name="frameShape">
         <enum>QFrame::Panel</enum>
        </property>
@@ -413,9 +415,15 @@
          <widget class="QTextBrowser" name="programOut">
           <property name="font">
            <font>
-            <family>AlArabiya</family>
+            <family>Verdana</family>
             <pointsize>8</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
            </font>
+          </property>
+          <property name="autoFillBackground">
+           <bool>true</bool>
           </property>
           <property name="frameShape">
            <enum>QFrame::NoFrame</enum>
@@ -426,6 +434,9 @@
          <widget class="QLineEdit" name="programIn">
           <property name="enabled">
            <bool>false</bool>
+          </property>
+          <property name="autoFillBackground">
+           <bool>true</bool>
           </property>
           <property name="frame">
            <bool>false</bool>
@@ -441,8 +452,11 @@
   <widget class="QDockWidget" name="dockTypesVisible">
    <property name="font">
     <font>
-     <family>AlArabiya</family>
+     <family>Verdana</family>
      <pointsize>8</pointsize>
+     <weight>50</weight>
+     <italic>false</italic>
+     <bold>false</bold>
     </font>
    </property>
    <property name="autoFillBackground">
@@ -455,6 +469,9 @@
     <number>1</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_9">
+    <property name="autoFillBackground">
+     <bool>true</bool>
+    </property>
     <layout class="QVBoxLayout">
      <property name="spacing">
       <number>0</number>
@@ -464,6 +481,9 @@
      </property>
      <item>
       <widget class="QFrame" name="frame_3b">
+       <property name="autoFillBackground">
+        <bool>true</bool>
+       </property>
        <property name="frameShape">
         <enum>QFrame::Panel</enum>
        </property>
@@ -478,9 +498,15 @@
          <widget class="QTreeWidget" name="typesVisible">
           <property name="font">
            <font>
-            <family>AlArabiya</family>
+            <family>Verdana</family>
             <pointsize>8</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
            </font>
+          </property>
+          <property name="autoFillBackground">
+           <bool>true</bool>
           </property>
           <property name="frameShape">
            <enum>QFrame::NoFrame</enum>
@@ -512,8 +538,11 @@
   <widget class="QDockWidget" name="entityInfoDock">
    <property name="font">
     <font>
-     <family>AlArabiya</family>
+     <family>Verdana</family>
      <pointsize>8</pointsize>
+     <weight>50</weight>
+     <italic>false</italic>
+     <bold>false</bold>
     </font>
    </property>
    <property name="autoFillBackground">
@@ -526,6 +555,9 @@
     <number>2</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_9f">
+    <property name="autoFillBackground">
+     <bool>true</bool>
+    </property>
     <layout class="QVBoxLayout">
      <property name="spacing">
       <number>0</number>
@@ -535,6 +567,9 @@
      </property>
      <item>
       <widget class="QFrame" name="frame_3f">
+       <property name="autoFillBackground">
+        <bool>true</bool>
+       </property>
        <property name="frameShape">
         <enum>QFrame::Panel</enum>
        </property>
@@ -546,35 +581,13 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QTreeWidget" name="entityInfo">
-          <property name="font">
-           <font>
-            <family>AlArabiya</family>
-            <pointsize>8</pointsize>
-           </font>
+         <widget class="QWebView" name="entityInfo">
+          <property name="enabled">
+           <bool>true</bool>
           </property>
-          <property name="frameShape">
-           <enum>QFrame::NoFrame</enum>
+          <property name="autoFillBackground">
+           <bool>true</bool>
           </property>
-          <property name="indentation">
-           <number>10</number>
-          </property>
-          <property name="headerHidden">
-           <bool>false</bool>
-          </property>
-          <property name="columnCount">
-           <number>2</number>
-          </property>
-          <column>
-           <property name="text">
-            <string>Property</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Value</string>
-           </property>
-          </column>
          </widget>
         </item>
        </layout>
@@ -586,8 +599,11 @@
   <widget class="QDockWidget" name="dockLanguage">
    <property name="font">
     <font>
-     <family>AlArabiya</family>
+     <family>Verdana</family>
      <pointsize>8</pointsize>
+     <weight>50</weight>
+     <italic>false</italic>
+     <bold>false</bold>
     </font>
    </property>
    <property name="autoFillBackground">
@@ -600,6 +616,9 @@
     <number>1</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_9b">
+    <property name="autoFillBackground">
+     <bool>true</bool>
+    </property>
     <layout class="QVBoxLayout">
      <property name="spacing">
       <number>0</number>
@@ -609,6 +628,9 @@
      </property>
      <item>
       <widget class="QFrame" name="frame_3bb">
+       <property name="autoFillBackground">
+        <bool>true</bool>
+       </property>
        <property name="frameShape">
         <enum>QFrame::Panel</enum>
        </property>
@@ -623,9 +645,15 @@
          <widget class="QTreeWidget" name="language">
           <property name="font">
            <font>
-            <family>AlArabiya</family>
+            <family>Verdana</family>
             <pointsize>8</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
            </font>
+          </property>
+          <property name="autoFillBackground">
+           <bool>true</bool>
           </property>
           <property name="frameShape">
            <enum>QFrame::NoFrame</enum>
@@ -660,8 +688,11 @@
   <widget class="QDockWidget" name="dockPlugins">
    <property name="font">
     <font>
-     <family>AlArabiya</family>
+     <family>Verdana</family>
      <pointsize>8</pointsize>
+     <weight>50</weight>
+     <italic>false</italic>
+     <bold>false</bold>
     </font>
    </property>
    <property name="autoFillBackground">
@@ -674,6 +705,9 @@
     <number>2</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_9c">
+    <property name="autoFillBackground">
+     <bool>true</bool>
+    </property>
     <layout class="QVBoxLayout">
      <property name="spacing">
       <number>0</number>
@@ -683,6 +717,9 @@
      </property>
      <item>
       <widget class="QFrame" name="frame_3bc">
+       <property name="autoFillBackground">
+        <bool>true</bool>
+       </property>
        <property name="frameShape">
         <enum>QFrame::Panel</enum>
        </property>
@@ -697,9 +734,15 @@
          <widget class="QTreeWidget" name="pluginsLoaded">
           <property name="font">
            <font>
-            <family>AlArabiya</family>
+            <family>Verdana</family>
             <pointsize>8</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
            </font>
+          </property>
+          <property name="autoFillBackground">
+           <bool>true</bool>
           </property>
           <property name="frameShape">
            <enum>QFrame::NoFrame</enum>
@@ -731,8 +774,11 @@
   <widget class="QDockWidget" name="dockWidget_6">
    <property name="font">
     <font>
-     <family>AlArabiya</family>
+     <family>Verdana</family>
      <pointsize>8</pointsize>
+     <weight>50</weight>
+     <italic>false</italic>
+     <bold>false</bold>
     </font>
    </property>
    <property name="autoFillBackground">
@@ -748,6 +794,9 @@
     <number>2</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_7">
+    <property name="autoFillBackground">
+     <bool>true</bool>
+    </property>
     <layout class="QVBoxLayout">
      <property name="spacing">
       <number>0</number>
@@ -756,21 +805,30 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="QTextBrowser" name="programCode">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>3</verstretch>
-        </sizepolicy>
+      <widget class="QPlainTextEdit" name="programCode">
+       <property name="enabled">
+        <bool>true</bool>
        </property>
-       <property name="font">
-        <font>
-         <family>AlArabiya</family>
-         <pointsize>8</pointsize>
-        </font>
+       <property name="autoFillBackground">
+        <bool>true</bool>
+       </property>
+       <property name="styleSheet">
+        <string>font: 7pt &quot;Monospace&quot;;</string>
        </property>
        <property name="frameShape">
         <enum>QFrame::Panel</enum>
+       </property>
+       <property name="lineWidth">
+        <number>1</number>
+       </property>
+       <property name="tabChangesFocus">
+        <bool>true</bool>
+       </property>
+       <property name="lineWrapMode">
+        <enum>QPlainTextEdit::NoWrap</enum>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -780,8 +838,11 @@
   <widget class="QToolBar" name="toolBar">
    <property name="font">
     <font>
-     <family>AlArabiya</family>
+     <family>Verdana</family>
      <pointsize>8</pointsize>
+     <weight>50</weight>
+     <italic>false</italic>
+     <bold>false</bold>
     </font>
    </property>
    <property name="windowTitle">
@@ -962,6 +1023,11 @@
  </widget>
  <layoutdefault spacing="0" margin="0"/>
  <customwidgets>
+  <customwidget>
+   <class>QWebView</class>
+   <extends>QWidget</extends>
+   <header>QtWebKit/QWebView</header>
+  </customwidget>
   <customwidget>
    <class>Martta::CodeView</class>
    <extends>QWidget</extends>
