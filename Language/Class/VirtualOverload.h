@@ -26,6 +26,11 @@
 namespace Martta
 {
 
+inline String stripId(String const& _html)
+{
+	return String(_html).replace(L"id=", L"baseid=");
+}
+
 class VirtualOverload: public VirtualMethod
 {
 	MARTTA_OBJECT(VirtualMethod)
@@ -46,9 +51,13 @@ protected:
 	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 
+	virtual String						defineNameHtml() const { return m_base ? stripId(m_base->defineNameHtml()) : String::null; }
+	virtual String						defineReturnHtml() const { return m_base ? stripId(m_base->defineReturnHtml()) : String::null; }
+	virtual String						defineArgListHtml() const { return m_base ? stripId(m_base->defineArgListHtml()) : String::null; }
+
 	virtual String						defineEditHtml(CodeScene*) const;
 
-	virtual void						apresLoad() { AssertNR(m_base.isUsable()); addDependency(m_base); Super::apresLoad(); }
+	virtual void						apresLoad() { if (m_base) addDependency(m_base); Super::apresLoad(); }
 
 	virtual inline int					argumentCount() const { return m_base.isUsable() ? m_base->argumentCount() : 0; }
 	virtual inline Argument*			argument(int _index) const { AssertNR(_index < argumentCount()); return m_base.isUsable() ? m_base->argument(_index) : 0; }

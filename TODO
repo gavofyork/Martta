@@ -1,4 +1,6 @@
-BRINGBACK VirtualOverload::defineHtml, ::defineEditHtml.
+BUG Variable 'Foo f' is bad (but isn't).
+BUG Changing return value of Bar::foo doesn't reflect in Foo::foo, return statement doesn't change in it.
+BRINGBACK ::defineEditHtml.
 BRINGBACK EnumNamer/Class expansion.
 
 BRINGBACK All tests incl. Ser/Deser.

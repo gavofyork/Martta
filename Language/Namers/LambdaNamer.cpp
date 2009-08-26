@@ -64,10 +64,13 @@ String LambdaNamer::defineBodyHtml() const
 String LambdaNamer::defineMidHtml(String const& _middle) const
 {
 	String info;
-	if (int n = body()->cardinalChildrenOf<Primary>().count() + body()->cardinalChildrenOf<Untyped>().count())
-		info = L" (" + String::number(n) + L" statement" + (n > 1 ? L"s" : L"") + L")";
-	else
-		info = " (empty)";
+	if (body())
+	{
+		if (int n = body()->cardinalChildrenOf<Primary>().count() + body()->cardinalChildrenOf<Untyped>().count())
+			info = L" (" + String::number(n) + L" statement" + (n > 1 ? L"s" : L"") + L")";
+		else
+			info = " (empty)";
+	}
 	return String(_middle + L"<span id=\"%1-info\" class=\"minor\">" + info + L"</span>").arg((int)self());
 }
 

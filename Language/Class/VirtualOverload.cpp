@@ -69,7 +69,12 @@ List<VirtualMethod*> VirtualOverload::possibilities() const
 			ret << i;
 	return ret;
 }
-/*
+
+/*String VirtualOverload::defineHtml() const
+{
+	return ;
+}
+
 String VirtualOverload::defineEditLayout(ViewKeys const& _viewKeys, VirtualMethod*) const
 {
 	// having the margin here is horrible, but it'll do for now

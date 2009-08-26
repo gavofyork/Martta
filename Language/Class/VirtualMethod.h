@@ -36,7 +36,7 @@ public:
 
 protected:
 	virtual String						memberInterfaceCode() const;
-	virtual String						definePreHtml() const { return Super::definePreHtml() + L"<span class=\"minor\">VIRTUAL</span> "; }
+	virtual String						defineEnclosureHtml(String const& _part, String const& _middle) const { return Super::defineEnclosureHtml(_part, (_part == L"head" ? L"<span class=\"minor\">VIRTUAL</span> " : L"") + _middle); }
 };
 
 }

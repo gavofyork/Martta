@@ -513,15 +513,15 @@ inline QDebug operator<<(QDebug _out, const Martta::Entity* _item)
 template<class T, class U>
 void Martta::Entity::setDependency(T& _dependencyVariable, U const& _dependency)
 {
-	Entity* old = _dependencyVariable->asKind<Entity>();
+	Entity* old = _dependencyVariable->tryKind<Entity>();
 //	AssertNR(!_dependency || _dependency->asKind<Entity>()->isInModel());	// Can also be a SimpleEntity - probably best to virtualise.
-	AssertNR(!old || old->asKind<Entity>()->isInModel());
+	AssertNR(!old || old->isInModel());
 	if (old)
 		removeDependency(old);
 	_dependencyVariable = _dependency;
 	if (_dependency)
 		addDependency(_dependency->asKind<Entity>());
-	if (old != _dependency->asKind<Entity>())
+	if (old != _dependency->tryKind<Entity>())
 		changed();
 }
 
