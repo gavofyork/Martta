@@ -1,5 +1,5 @@
-BUG Variable 'Foo f' is bad (but isn't).
 BUG Changing return value of Bar::foo doesn't reflect in Foo::foo, return statement doesn't change in it.
+BUG Entity Type twice in Statement info.
 BRINGBACK ::defineEditHtml.
 BRINGBACK EnumNamer/Class expansion.
 
@@ -30,6 +30,7 @@ RELEASE M1 (TBD)
 
 ================================================================================
 
+TODO Allow object to be referenced multiple times in HTML for use in virtual overload.
 TODO Replace node + this with just node.
 TODO Cache includes, so don't take so long to load.
 TODO SearchReferenced (\)

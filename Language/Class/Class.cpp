@@ -18,6 +18,9 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include <msStringList.h>
+using namespace MarttaSupport;
+
 #include "VirtualPure.h"	// < interface away to VirtualPure::whacksParent() const { return true; } from Member::whacksParent() const { return false; }?
 
 #include "MemberVariable.h"
@@ -234,13 +237,27 @@ List<Declaration*> Class::members(bool _isConst, Access _access) const
 	foreach (MemberValue* i, childrenAs<MemberValue>(Artificials))
 		if ((i->isConst() || !_isConst) && i->access() <= _access)
 			ret += i;
+	StringList names;
+	foreach (Declaration* d, ret)
+		names << d->name();
+
+	List<Declaration*> buf;
 	foreach (Base* i, cardinalChildrenOf<Base>())
+	{
 		if (!i->classType())
 			continue;
 		else if (_access == Private || (_access == Protected && i->access() <= Protected))
-			ret << i->classType()->members(_isConst, Protected);
+			buf = i->classType()->members(_isConst, Protected);
 		else if (_access == Public && i->access() <= Public)
-			ret << i->classType()->members(_isConst, Public);
+			buf = i->classType()->members(_isConst, Public);
+		StringList tba;
+		foreach (Declaration* d, filterEntitiesInv<Constructor>(buf))
+			if (!names.contains(d->name()))
+			{	tba << d->name();
+				ret << d;
+			}
+		names += tba;
+	}
 	return ret;
 }
 
