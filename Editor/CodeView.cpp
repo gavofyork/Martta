@@ -219,23 +219,18 @@ void CodeView::checkInvalids()
 
 void CodeView::paintEvent(QPaintEvent* _ev)
 {
-	TIME_STATEMENT("refresh")
-		refresh();
-	TIME_STATEMENT("checkInvalids")
-		checkInvalids();
+	refresh();
+	checkInvalids();
 	Entity* c = current();
 
-	TIME_STATEMENT("brackets")
 	foreach (Position i, m_bracketed)
 		if (!i.exists() || (i.entity() != c && !c->hasAncestor(i.entity())))
 			m_bracketed.removeAll(i);
 
-	TIME_STATEMENT("precurrent")
 	if (c)
 	{
 		QPainter p(this);
 
-		TIME_STATEMENT(fillRect)
 		p.fillRect(rect(), QColor(255, 255, 255, 235));
 
 //		p.setRenderHint(QPainter::Antialiasing, true);
@@ -248,14 +243,12 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 			g.setColorAt(1.f, editDelegate() ? QColor(255, 128, 0, 32) : QColor(0, 128, 255, 48));
 			p.setPen(Qt::NoPen);
 			p.setBrush(g);
-			TIME_STATEMENT(drawSelRect)
-				p.drawRect(br);
+			p.drawRect(br);
 		}
 	}
-	TIME_STATEMENT("WVpaintEvent")
+//	TIME_STATEMENT("WVpaintEvent")
 		QWebView::paintEvent(_ev);
 
-	TIME_STATEMENT("postcurrent")
 	if (c)
 	{
 		QPainter p(this);
