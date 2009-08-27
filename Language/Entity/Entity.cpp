@@ -349,21 +349,6 @@ void Entity::clearEditing()
 }
 
 // Keypress/UI event handlers.
-void Entity::activateEvent(CodeScene* _s)
-{
-	if (!activated(_s) && parent())
-		parent()->activateEvent(_s);
-}
-bool Entity::activated(CodeScene* _s)
-{
-	if (onActivated(_s))
-		return true;
-	else
-	{
-		_s->setEditing(this);
-		return _s->isEditing(this);
-	}
-}
 List<Entity*> Entity::savedChildren() const
 {
 	List<Entity*> ret;
@@ -447,8 +432,6 @@ bool Entity::keyPressed(KeyEvent const* _e)
 	}
 	else if (_e->codeScene()->isCurrent(this) && _e->text() == TabKey && !_e->codeScene()->isEditing(this) && !isFixed())
 		_e->codeScene()->setEditing(this);
-	else if (_e->text() == TabKey)
-		activated(_e->codeScene());
 	else
 		return false;
 	return true;

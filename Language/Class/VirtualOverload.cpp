@@ -64,16 +64,40 @@ List<VirtualMethod*> VirtualOverload::possibilities() const
 			ret << i;
 	return ret;
 }
-/*
-String VirtualOverload::defineEditLayout(ViewKeys const& _viewKeys, VirtualMethod*) const
+
+static String s_VirtualOverload_inEditReal = String::null;
+static VirtualMethod* s_VirtualOverload_inEditMethod = 0;
+
+String VirtualOverload::defineNameHtml() const
 {
-	// having the margin here is horrible, but it'll do for now
-	return "m24,0,0,0;^;ycode;'virtual';Mo;>name;ynormal;%1;Mo" + String(_viewKeys["expanded"].toBool() ? String(body()->cardinalChildCount() ? ";n;i;%1" : ";%1").arg(Body) : "");
+	if ((!s_VirtualOverload_inEditReal.isEmpty() || s_VirtualOverload_inEditMethod) && s_VirtualOverload_inEditMethod != this)
+		return s_VirtualOverload_inEditMethod ? s_VirtualOverload_inEditReal + L":" + stripId(s_VirtualOverload_inEditMethod->defineNameHtml()) : s_VirtualOverload_inEditReal;
+	else
+		return m_base ? stripId(m_base->defineNameHtml()) : String::null;
 }
-*/
-String VirtualOverload::defineEditHtml(CodeScene*) const
+
+String VirtualOverload::defineReturnHtml() const
 {
-	return String::null;
+	if (s_VirtualOverload_inEditMethod && s_VirtualOverload_inEditMethod != this)
+		return s_VirtualOverload_inEditMethod ? stripId(s_VirtualOverload_inEditMethod->defineReturnHtml()) : String::null;
+	return m_base ? stripId(m_base->defineReturnHtml()) : String::null;
+}
+
+String VirtualOverload::defineArgListHtml() const
+{
+	if (s_VirtualOverload_inEditMethod && s_VirtualOverload_inEditMethod != this)
+		return s_VirtualOverload_inEditMethod ? stripId(s_VirtualOverload_inEditMethod->defineArgListHtml()) : String::null;
+	return m_base ? stripId(m_base->defineArgListHtml()) : String::null;
+}
+
+String VirtualOverload::defineEditHtml(CodeScene* _s) const
+{
+	s_VirtualOverload_inEditReal = _s->editDelegate(this)->real();
+	s_VirtualOverload_inEditMethod = static_cast<CompletionDelegate<VirtualOverload, VirtualMethod*>*>(_s->editDelegate(this))->selection();
+	String ret = defineHtml();
+	s_VirtualOverload_inEditReal = String::null;
+	s_VirtualOverload_inEditMethod = 0;
+	return ret;
 }
 
 EditDelegateFace* VirtualOverload::newDelegate(CodeScene* _s)

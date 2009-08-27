@@ -20,23 +20,22 @@
 
 #pragma once
 
-#include "Virtual.h"
-#include "MemberLambda.h"
+#include "VirtualMethod.h"
 
 namespace Martta
 {
 
 // Only has ReturnType, ArgumentVariable...
-class VirtualPure: public MemberLambda, public_interface Virtual
+class VirtualPure: public VirtualMethod
 {
-	MARTTA_OBJECT(MemberLambda)
-	MARTTA_INHERITS(Virtual, 0)
+	MARTTA_OBJECT(VirtualMethod)
 
 public:
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 
 protected:
 	virtual int							minRequired(int _i) const { return _i == Body ? 0 : Super::minRequired(_i); }
+	virtual String						defineMidHtml(String const& _middle) const { return _middle + L" = 0"; }
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual String						memberInterfaceCode() const;
 	virtual String						memberImplementationCode() const { return String::null; }

@@ -85,7 +85,7 @@ String MemberLambda::memberDefineHtml() const
 
 String MemberLambda::definePreHtml() const
 {
-	return String(L"<div class=\"ConstLabel-%1constblock\"\">").arg(isConst() ? L"" : L"non");
+	return String(L"<div class=\"ConstLabel-%1constblock\">").arg(isConst() ? L"" : L"non");
 }
 
 String MemberLambda::definePostHtml() const

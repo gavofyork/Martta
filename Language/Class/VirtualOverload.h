@@ -28,7 +28,7 @@ namespace Martta
 
 inline String stripId(String const& _html)
 {
-	return String(_html).replace(L"id=", L"baseid=");
+	return String(_html).replace(L"id=", L"iXd=");
 }
 
 class VirtualOverload: public VirtualMethod
@@ -51,9 +51,9 @@ protected:
 	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 
-	virtual String						defineNameHtml() const { return m_base ? stripId(m_base->defineNameHtml()) : String::null; }
-	virtual String						defineReturnHtml() const { return m_base ? stripId(m_base->defineReturnHtml()) : String::null; }
-	virtual String						defineArgListHtml() const { return m_base ? stripId(m_base->defineArgListHtml()) : String::null; }
+	virtual String						defineNameHtml() const;
+	virtual String						defineReturnHtml() const;
+	virtual String						defineArgListHtml() const;
 
 	virtual String						defineEnclosureHtml(String const& _part, String const& _middle) const { return Super::defineEnclosureHtml(_part, (_part == L"head" ? L"<span class=\"minor\">OVERRIDE</span> " : L"") + _middle); }
 	virtual String						defineEditHtml(CodeScene*) const;

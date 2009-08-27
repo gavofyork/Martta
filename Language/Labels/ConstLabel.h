@@ -38,7 +38,6 @@ protected:
 	virtual String						defineHtml() const;
 	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual String						code() const { return m_isConst ? " const" : ""; }
-	virtual bool						onActivated(CodeScene*) { setIsConst(!m_isConst); return true; }
 	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p[L"isConst"] = String::number(m_isConst); }
 	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_isConst = _p[L"isConst"].toBool(); }
 

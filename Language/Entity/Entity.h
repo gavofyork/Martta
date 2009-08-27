@@ -365,8 +365,6 @@ public:
 	virtual void						archive() { Hash<String, String> h; properties(h); setProperties(h); }	// Should (at least) force all ModelPtrs to revert to textual form.
 
 	// We've been double-clicked.
-	bool								activated(CodeScene* _s);
-	virtual bool						onActivated(CodeScene*) { return false; }
 	virtual bool						keyPressed(KeyEvent const*);
 	static bool							keyPressedOnPosition(Position const&, KeyEvent const*) { return false; }
 
@@ -386,7 +384,6 @@ public:
 	virtual EditDelegateFace*			newDelegate(CodeScene*) { return 0; }
 
 	static void							keyPressEventStarter(KeyEvent* _e, bool _abortive = false);
-	void								activateEvent(CodeScene* _s);
 
 	/// Static helpers.
 	inline static bool					isTemporary(Entity* _e) { SafePointer<Entity> p(_e); p->clearEditing(); return !p; }

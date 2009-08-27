@@ -57,7 +57,7 @@ String LambdaNamer::defineArgListHtml() const
 String LambdaNamer::defineBodyHtml() const
 {
 	if (!body())
-		return L" = 0";
+		return String::null;
 	return String(L"<div id=\"%1-body\" ondblclick=\"event.stopPropagation()\" style=\"display: none\">").arg((int)self()) + toHtml(body()) + L"</div>";
 }
 
