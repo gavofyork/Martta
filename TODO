@@ -1,5 +1,4 @@
 BUG name display when editing VO.
-BUG need better way of showing error - red on public method makes it look private.
 BUG tab on pre-defined VO kills selection - no acceptables?
 BRINGBACK EnumNamer/Class expansion.
 
