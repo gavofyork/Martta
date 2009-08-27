@@ -156,9 +156,9 @@ void Class::onChildrenInitialised()
 
 void Class::onDependencyAdded(Entity* _e)
 {
-	if (_e->index() >= 0 && (_e->isKind<MethodOperator>() || _e->isKind<ConversionOperator>() || _e->isKind<Constructor>()))
-		if (checkImplicitConstructors())
-			changed(Logically);
+	if (((_e->index() >= 0 && (_e->isKind<MethodOperator>() || _e->isKind<ConversionOperator>() || _e->isKind<Constructor>())) && checkImplicitConstructors())
+		|| updateWhacked())
+		changed(Logically);
 	if (_e->isKind<Member>())
 		rejigDeps();
 }
@@ -166,20 +166,38 @@ void Class::onDependencyAdded(Entity* _e)
 void Class::onDependencyRemoved(Entity* _e, int _oi)
 {
 	// TODO: Will it remove the Access label dep? Even if the member is only moved to another class?
-	if (_oi >= 0 && (_e->isKind<MethodOperator>() || _e->isKind<ConversionOperator>() || _e->isKind<Constructor>()))
-		if (checkImplicitConstructors())
-			changed(Logically);
+	if (((_oi >= 0 && (_e->isKind<MethodOperator>() || _e->isKind<ConversionOperator>() || _e->isKind<Constructor>())) && checkImplicitConstructors())
+		|| updateWhacked())
+		changed(Logically);
 	if (_e->isKind<Member>())
 		rejigDeps();
 }
 
 void Class::onDependencyChanged(int, Entity* _e)
 {
-	if (_e->isKind<Base>() || (_e->index() >= 0 && (_e->isKind<MethodOperator>() || _e->isKind<ConversionOperator>() || _e->isKind<Constructor>())))
-		if (checkImplicitConstructors())
-			changed(Logically);
+	if (((_e->isKind<Base>() || (_e->index() >= 0 && (_e->isKind<MethodOperator>() || _e->isKind<ConversionOperator>() || _e->isKind<Constructor>()))) && checkImplicitConstructors())
+		|| updateWhacked())
+		changed(Logically);
 	if (_e->isKind<TextLabel>() || _e->isKind<AccessLabel>())
 		changed(Visually);
+}
+
+bool Class::updateWhacked() const
+{
+	int owc = m_whackerCount;
+	m_whackerCount = 0;
+	foreach (Member* i, members(false, NoAccess))
+		if (i->whacksContainer())
+			m_whackerCount++;
+	return m_whackerCount != owc;
+}
+
+String Class::informationHtml() const
+{
+	Pairs p(L"Class", true);
+	p << L"Whacking members:" << String::number(m_whackerCount);
+	p << L"All visible members:" << String::number(members(false, NoAccess).count());
+	return Super::informationHtml() + p;
 }
 
 Kinds Class::allowedKinds(int _i) const
@@ -228,9 +246,9 @@ List<Declaration*> Class::utilised() const
 	return ret;
 }
 
-List<Declaration*> Class::members(bool _isConst, Access _access) const
+List<Member*> Class::members(bool _isConst, Access _access) const
 {
-	List<Declaration*> ret;
+	List<Member*> ret;
 	foreach (Member* i, cardinalChildrenOf<Member>())
 		if (i->access() <= _access && (!i->isKind<MemberValue>() || i->asKind<MemberValue>()->isConst() || !_isConst))
 			ret += i;
@@ -238,21 +256,23 @@ List<Declaration*> Class::members(bool _isConst, Access _access) const
 		if ((i->isConst() || !_isConst) && i->access() <= _access)
 			ret += i;
 	StringList names;
-	foreach (Declaration* d, ret)
+	foreach (Member* d, ret)
 		names << d->name();
 
-	List<Declaration*> buf;
+	List<Member*> buf;
 	foreach (Base* i, cardinalChildrenOf<Base>())
 	{
 		if (!i->classType())
 			continue;
+		else if (_access == NoAccess)
+			buf = i->classType()->members(_isConst, NoAccess);
 		else if (_access == Private || (_access == Protected && i->access() <= Protected))
 			buf = i->classType()->members(_isConst, Protected);
 		else if (_access == Public && i->access() <= Public)
 			buf = i->classType()->members(_isConst, Public);
 		StringList tba;
-		foreach (Declaration* d, filterEntitiesInv<Constructor>(buf))
-			if (!names.contains(d->name()))
+		foreach (Member* d, filterEntitiesInv<Constructor>(buf))
+			if (!names.contains(d->name()))	// only for equivalent params?
 			{	tba << d->name();
 				ret << d;
 			}
@@ -345,7 +365,7 @@ List<ValueDefiner*> Class::applicableMembers(Entity const* _s, bool _isConst) co
 
 bool Class::canStandAlone() const
 {
-	return !childCountOf<VirtualPure>();
+	return !m_whackerCount;
 }
 
 bool Class::keyPressed(KeyEvent const* _e)

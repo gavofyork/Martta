@@ -1,10 +1,8 @@
+BUG VirtualPure in base class doesn't whack class construction.
+TODO Use VariableNamer::isInValidState for other Variable types, move more into VN::is...().
 BRINGBACK EnumNamer/Class expansion.
 
 BRINGBACK All tests incl. Ser/Deser.
-
-Unary operation should apply to climb Statement tree until it finds something.
-Interfacify ModifyingType (clashes with PhysicalType over ListType etc.)
-- NewOperation/DeleteOperation - interface with Type classes.
 
 OPTIMISE Moving is crazily slow over statements.
 - To fix change key press dispatch method:
@@ -27,6 +25,9 @@ RELEASE M1 (TBD)
 
 ================================================================================
 
+TODO Unary operation should apply to climb Statement tree until it finds something.
+TODO Interfacify ModifyingType (clashes with PhysicalType over ListType etc.)
+- NewOperation/DeleteOperation - interface with Type classes.
 OPTIMISE onDependencyChanged gets index with special indices for parent, ancestral and freeforms.
 TODO Allow object to be referenced multiple times in HTML for use in virtual overload.
 TODO Replace node + this with just node.

@@ -60,7 +60,7 @@ bool DefaultConstructedVariable::keyPressed(KeyEvent const* _e)
 bool DefaultConstructedVariable::isInValidState() const
 {
 	mInfo() << actualType()->name() << actualType()->hasDefaultConstructor();
-	return Super::isInValidState() && actualType()->hasDefaultConstructor();
+	return Super::isInValidState() && actualType()->hasDefaultConstructor() && VariableNamer::isInValidState();
 }
 
 }

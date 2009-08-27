@@ -45,6 +45,8 @@ public:
 	virtual String						interfaceCode() const;
 	virtual String						implementationCode() const { return memberImplementationCode(); }
 
+	virtual bool						whacksContainer() const { return false; }
+
 protected:
 	// New virtuals.
 	virtual String						memberInterfaceCode() const { return String::null; }

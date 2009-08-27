@@ -33,9 +33,11 @@ class Class: public TopLevelType
 public:
 	enum { Artificials = FirstNamed, EndOfNamed };
 
+	Class(): m_whackerCount(0) {}
+
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 
-	List<Declaration*>					members(bool _isConst = false, Access _access = Private) const;
+	List<Member*>						members(bool _isConst = false, Access _access = Private) const;
 	template<class T> inline List<T*>	membersOf(bool _isConst = false, Access _access = Private) const { return filterEntities<T>(members(_isConst, _access)); }
 
 	Access								baseAccess(Class* _c) const;
@@ -49,7 +51,7 @@ protected:
 	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual List<Declaration*>			utilised() const;
 	virtual void						onDependencyChanged(int, Entity* _e);
-	virtual void						apresLoad() { rejigDeps(); checkImplicitConstructors(); }
+	virtual void						apresLoad() { rejigDeps(); checkImplicitConstructors(); updateWhacked(); }
 	virtual void						onDependencyAdded(Entity* _e);
 	virtual void						onDependencyRemoved(Entity* _e, int);
 	// A child has been added to the class somewhere in the middle, probably. Either way we need to rejig deps to get the new access label tracked.
@@ -62,10 +64,14 @@ protected:
 	virtual Types						assignableTypes() const;
 	virtual List<ValueDefiner*>			applicableMembers(Entity const* _s, bool _isConst) const;
 	virtual bool						canStandAlone() const;
+	virtual String						informationHtml() const;
 
 private:
 	bool								checkImplicitConstructors();
 	void								rejigDeps();
+	bool								updateWhacked() const;
+
+	mutable int							m_whackerCount;
 };
 
 }

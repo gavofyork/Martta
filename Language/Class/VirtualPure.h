@@ -39,6 +39,8 @@ protected:
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual String						memberInterfaceCode() const;
 	virtual String						memberImplementationCode() const { return String::null; }
+
+	virtual bool						whacksContainer() const { return true; }
 };
 
 }
