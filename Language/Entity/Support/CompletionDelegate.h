@@ -61,11 +61,12 @@ template<class T, class R>
 class CompletionDelegate: public EditDelegate<T>
 {
 public:
-	CompletionDelegate(T* _e, CodeScene* _s):
+	CompletionDelegate(T* _e, CodeScene* _s, bool _allowEmpty = true):
 		EditDelegate<T>		(_e, _s),
 		m_selection			(EditDelegate<T>::subject()->get()),
 		m_name				(NameTrait<R>::name(m_selection)),
-		m_cycled			(-1)
+		m_cycled			(-1),
+		m_allowEmpty		(_allowEmpty)
 	{
 		m_immediateCommits = _e->isPlaceholder();
 		m_possibilities = EditDelegate<T>::subject()->possibilities();
@@ -96,15 +97,17 @@ public:
 	virtual bool keyPressed(KeyEvent const* _e)
 	{
 		bool resetCycled = true;
-		if (_e->text() == L"\b" && _e->modifiers() == ControlModifier && m_name.size() > 1)
+		if (_e->text() == BackspaceKey && _e->modifiers() == ControlModifier && m_name.size() > 1)
 			m_name.chop(1);
-		else if (_e->text() == L"\b" && _e->modifiers() != ControlModifier && nameStarts(m_possibilities, m_name.left(1)).size() != m_potentials.size())
+		else if (_e->text() == BackspaceKey && _e->modifiers() != ControlModifier && nameStarts(m_possibilities, m_name.left(1)).size() != m_potentials.size())
 		{
 			int potentials = m_potentials.size();
 			while (nameStarts(m_possibilities, m_name).size() == potentials && m_name.length())
 				m_name.chop(1);
 		}
-		else if (_e->text() == L"\b")
+		else if (_e->text() == BackspaceKey && m_allowEmpty && !m_name.isEmpty())
+			m_name.clear();
+		else if (_e->text() == BackspaceKey)
 		{
 //			CodeScene* cs = EditDelegate<T>::codeScene();
 //			Position p = EditDelegate<T>::subject()->over();
@@ -163,6 +166,7 @@ private:
 	List<R>						m_possibilities;
 	List<R>						m_potentials;
 	bool						m_immediateCommits;
+	bool						m_allowEmpty;
 };
 
 }
