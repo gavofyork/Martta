@@ -109,9 +109,10 @@ public:
 			m_name.clear();
 		else if (_e->text() == BackspaceKey)
 		{
-//			CodeScene* cs = EditDelegate<T>::codeScene();
-//			Position p = EditDelegate<T>::subject()->over();
+			CodeScene* cs = EditDelegate<T>::codeScene();
+			cs->rememberCurrent();
 			EditDelegate<T>::subject()->deleteAndRefill();
+			cs->restoreCurrent();
 			return true;
 		}
 		else if (_e->text().length() == 1 && _e->text()[0].isLetter())

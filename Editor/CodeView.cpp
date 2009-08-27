@@ -313,8 +313,8 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 	if (m_showInvalids)
 	{
 		QPainter p(this);
-		p.setPen(QPen(QColor(255, 0, 0, 128), 1, Qt::DotLine));
-		p.setBrush(QColor(255, 0, 0, 32));
+		p.setPen(QPen(QColor(255, 0, 0, 128), 1.5f, Qt::DotLine));
+		p.setBrush(QBrush(QColor(0, 0, 0, 64), Qt::BDiagPattern));
 		foreach (Entity* e, m_invalids)
 		{
 			QRect b = bounds(e);

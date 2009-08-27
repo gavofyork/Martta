@@ -62,15 +62,18 @@ List<VirtualMethod*> VirtualOverload::possibilities() const
 	foreach (VirtualMethod* i, parentAs<Class>()->membersOf<VirtualMethod>())
 		if (i->parent() != parent())
 			ret << i;
+		else if (i == this && m_base)
+			ret << m_base;
 	return ret;
 }
 
+static bool s_VirtualOverload_inEdit = false;
 static String s_VirtualOverload_inEditReal = String::null;
 static VirtualMethod* s_VirtualOverload_inEditMethod = 0;
 
 String VirtualOverload::defineNameHtml() const
 {
-	if ((!s_VirtualOverload_inEditReal.isEmpty() || s_VirtualOverload_inEditMethod) && s_VirtualOverload_inEditMethod != this)
+	if (s_VirtualOverload_inEdit)
 		return s_VirtualOverload_inEditMethod ? s_VirtualOverload_inEditReal + L":" + stripId(s_VirtualOverload_inEditMethod->defineNameHtml()) : s_VirtualOverload_inEditReal;
 	else
 		return m_base ? stripId(m_base->defineNameHtml()) : String::null;
@@ -78,23 +81,25 @@ String VirtualOverload::defineNameHtml() const
 
 String VirtualOverload::defineReturnHtml() const
 {
-	if (s_VirtualOverload_inEditMethod && s_VirtualOverload_inEditMethod != this)
+	if (s_VirtualOverload_inEdit)
 		return s_VirtualOverload_inEditMethod ? stripId(s_VirtualOverload_inEditMethod->defineReturnHtml()) : String::null;
 	return m_base ? stripId(m_base->defineReturnHtml()) : String::null;
 }
 
 String VirtualOverload::defineArgListHtml() const
 {
-	if (s_VirtualOverload_inEditMethod && s_VirtualOverload_inEditMethod != this)
+	if (s_VirtualOverload_inEdit)
 		return s_VirtualOverload_inEditMethod ? stripId(s_VirtualOverload_inEditMethod->defineArgListHtml()) : String::null;
 	return m_base ? stripId(m_base->defineArgListHtml()) : String::null;
 }
 
 String VirtualOverload::defineEditHtml(CodeScene* _s) const
 {
+	s_VirtualOverload_inEdit = true;
 	s_VirtualOverload_inEditReal = _s->editDelegate(this)->real();
 	s_VirtualOverload_inEditMethod = static_cast<CompletionDelegate<VirtualOverload, VirtualMethod*>*>(_s->editDelegate(this))->selection();
 	String ret = defineHtml();
+	s_VirtualOverload_inEdit = false;
 	s_VirtualOverload_inEditReal = String::null;
 	s_VirtualOverload_inEditMethod = 0;
 	return ret;

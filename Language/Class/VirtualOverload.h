@@ -47,9 +47,10 @@ protected:
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual String						name() const { return m_base.isUsable() ? m_base->name() : String::null; }
 	virtual String						codeName() const { return m_base ? m_base->codeName() : String::null; }
-	virtual bool						isInValidState() const { return m_base.isUsable(); }
+	virtual bool						isInValidState() const { return m_base; }
 	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
+	virtual bool						isSuperfluous() const { return !m_base; }
 
 	virtual String						defineNameHtml() const;
 	virtual String						defineReturnHtml() const;
