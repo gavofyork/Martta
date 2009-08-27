@@ -316,11 +316,12 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 		p.setPen(QPen(QColor(255, 0, 0, 128), 1.5f, Qt::DotLine));
 		p.setBrush(QBrush(QColor(0, 0, 0, 64), Qt::BDiagPattern));
 		foreach (Entity* e, m_invalids)
-		{
-			QRect b = bounds(e);
-			if (_ev->region().contains(b))
-				p.drawRect(b);
-		}
+			if (e != c || !editDelegate())
+			{
+				QRect b = bounds(e);
+				if (_ev->region().contains(b))
+					p.drawRect(b);
+			}
 	}
 	if ((m_showChanges || m_showOneChange) && !ChangeMan::get()->changesDone().isEmpty())
 	{

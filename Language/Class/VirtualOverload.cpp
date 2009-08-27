@@ -69,12 +69,18 @@ List<VirtualMethod*> VirtualOverload::possibilities() const
 
 static bool s_VirtualOverload_inEdit = false;
 static String s_VirtualOverload_inEditReal = String::null;
+static String s_VirtualOverload_inEditUnreal = String::null;
 static VirtualMethod* s_VirtualOverload_inEditMethod = 0;
 
 String VirtualOverload::defineNameHtml() const
 {
 	if (s_VirtualOverload_inEdit)
-		return s_VirtualOverload_inEditMethod ? s_VirtualOverload_inEditReal + L":" + stripId(s_VirtualOverload_inEditMethod->defineNameHtml()) : s_VirtualOverload_inEditReal;
+	{
+		String cap = s_VirtualOverload_inEditReal + L"<span class=\"unreal\">" + s_VirtualOverload_inEditUnreal + L"</span>";
+		if (s_VirtualOverload_inEditMethod)
+			return stripId(s_VirtualOverload_inEditMethod->defineNameHtml()).replace(s_VirtualOverload_inEditReal + s_VirtualOverload_inEditUnreal, cap);
+		return cap;
+	}
 	else
 		return m_base ? stripId(m_base->defineNameHtml()) : String::null;
 }
@@ -97,10 +103,12 @@ String VirtualOverload::defineEditHtml(CodeScene* _s) const
 {
 	s_VirtualOverload_inEdit = true;
 	s_VirtualOverload_inEditReal = _s->editDelegate(this)->real();
+	s_VirtualOverload_inEditUnreal = _s->editDelegate(this)->unreal();
 	s_VirtualOverload_inEditMethod = static_cast<CompletionDelegate<VirtualOverload, VirtualMethod*>*>(_s->editDelegate(this))->selection();
 	String ret = defineHtml();
 	s_VirtualOverload_inEdit = false;
 	s_VirtualOverload_inEditReal = String::null;
+	s_VirtualOverload_inEditUnreal = String::null;
 	s_VirtualOverload_inEditMethod = 0;
 	return ret;
 }
