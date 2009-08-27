@@ -38,7 +38,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(MemberReferenced);
 
-static ReferencedValueSet<MemberReferenced> s_memberReferencedRegistrand;
+static ReferencedValueSet<FloatingMemberReferenced> s_memberReferencedRegistrand;
 
 bool MemberReferenced::keyPressed(KeyEvent const* _e)
 {

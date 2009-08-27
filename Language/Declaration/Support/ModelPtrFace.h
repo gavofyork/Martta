@@ -39,7 +39,7 @@ public:
 
 	inline ModelPtrFace& operator=(ModelPtrFace const& _c) { if (_c.m_cache) set(_c.m_cache); else set(_c.m_key); return *this; }
 
-	inline operator bool() const { return !isNull(); }
+	inline operator bool() const { return isUsable(); }
 
 	inline bool operator==(ModelPtrFace const& _c) const { return m_cache == _c.m_cache && m_key == _c.m_key; }
 	inline bool operator!=(ModelPtrFace const& _c) const { return !operator==(_c); }
