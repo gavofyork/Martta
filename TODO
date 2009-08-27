@@ -1,4 +1,3 @@
-BUG Entity Type twice in Statement info.
 BUG backspace when editing VO.
 BUG name display when editing VO.
 BUG need better way of showing error - red on public method makes it look private.

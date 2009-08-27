@@ -48,7 +48,7 @@ protected:
 	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); Identifiable::properties(_p); }
 	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); Identifiable::setProperties(_p); }
 
-	virtual String						informationHtml() const { return Super::informationHtml() + VariableNamer::informationHtml(); }
+	virtual String						informationHtml() const { return Super::informationHtml(); }
 
 	// From Statement via BareTyped
 	virtual String						code() const;
