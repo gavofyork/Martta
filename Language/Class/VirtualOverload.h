@@ -55,14 +55,17 @@ protected:
 	virtual String						defineReturnHtml() const { return m_base ? stripId(m_base->defineReturnHtml()) : String::null; }
 	virtual String						defineArgListHtml() const { return m_base ? stripId(m_base->defineArgListHtml()) : String::null; }
 
+	virtual String						defineEnclosureHtml(String const& _part, String const& _middle) const { return Super::defineEnclosureHtml(_part, (_part == L"head" ? L"<span class=\"minor\">OVERRIDE</span> " : L"") + _middle); }
 	virtual String						defineEditHtml(CodeScene*) const;
 
-	virtual void						apresLoad() { if (m_base) addDependency(m_base); Super::apresLoad(); }
+	virtual void						apresLoad() { if (m_base) set(m_base); Super::apresLoad(); }
 
 	virtual inline int					argumentCount() const { return m_base.isUsable() ? m_base->argumentCount() : 0; }
 	virtual inline Argument*			argument(int _index) const { AssertNR(_index < argumentCount()); return m_base.isUsable() ? m_base->argument(_index) : 0; }
 	virtual Type						returns() const;
 	virtual inline bool					isConst() const { return m_base.isUsable() ? m_base->isConst() : false; }
+
+	virtual void						onDependencyChanged(int _a, Entity* _e) { if (_e->tryKind<VirtualMethod>() == m_base) changed(); else return Super::onDependencyChanged(_a, _e); }
 
 	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p[L"base"] = m_base.key(); }
 	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_base.restoreFrom(_p[L"base"]); }

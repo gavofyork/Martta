@@ -1,4 +1,3 @@
-BUG Changing return value of Bar::foo doesn't reflect in Foo::foo, return statement doesn't change in it.
 BUG Entity Type twice in Statement info.
 BRINGBACK ::defineEditHtml.
 BRINGBACK EnumNamer/Class expansion.

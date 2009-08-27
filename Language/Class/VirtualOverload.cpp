@@ -36,11 +36,6 @@ Type VirtualOverload::returns() const
 	return m_base.isUsable() ? m_base->returns() : Type();
 }
 
-/*String VirtualOverload::memberLambdaDefineLayout(ViewKeys const& _viewKeys) const
-{
-	return ("yminor;'VIRTUAL';Mo;>name;ycode;'" + (m_base ? m_base->asKind<LambdaNamer>()->basicCode(LambdaNamer::InsideScope) : String("[]")) + "';Mo" + String(_viewKeys["expanded"].toBool() ? body()->cardinalChildCount() ? ";n;i;0" : ";0" : ""));
-}*/
-
 Kinds VirtualOverload::allowedKinds(int _i) const
 {
 	if (_i == Identity || _i == Constness || _i == Returned)
@@ -69,12 +64,7 @@ List<VirtualMethod*> VirtualOverload::possibilities() const
 			ret << i;
 	return ret;
 }
-
-/*String VirtualOverload::defineHtml() const
-{
-	return ;
-}
-
+/*
 String VirtualOverload::defineEditLayout(ViewKeys const& _viewKeys, VirtualMethod*) const
 {
 	// having the margin here is horrible, but it'll do for now
