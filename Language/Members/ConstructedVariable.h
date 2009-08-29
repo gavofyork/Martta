@@ -40,7 +40,7 @@ private:
 	virtual Kinds						allowedKinds(int _index) const;
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual void						onDependencyChanged(int, Entity*) { changed(Logically); }
-	virtual String						defineHtml() const { return defineVariableHtml() + L" <^span class=\"symbol\">(</span>" + toHtml(child(OurConstruction)) + L"<span class=\"symbol\">)</span>"; }
+	virtual String						defineHtml() const { return defineVariableHtml() + L" <^><span class=\"symbol\">(</span>" + toHtml(child(OurConstruction)) + L"<span class=\"symbol\">)</span>"; }
 	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); Identifiable::properties(_p); }
 	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); Identifiable::setProperties(_p); }

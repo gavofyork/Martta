@@ -121,7 +121,7 @@ String MemberReferenced::defineEditHtml(CodeScene* _cs) const
 		String ret = d->real() + L"<span class=\"unreal\">" + d->unreal() + L"</span>";
 		if (!s)
 			ret = MemberVariable().labelHtml(ret);
-		return editHtmlHelper(s, ret);
+		return editHtmlHelper(s, ret) + tagOf(L"minor", d->comment());
 	}
 	return String::null;
 }

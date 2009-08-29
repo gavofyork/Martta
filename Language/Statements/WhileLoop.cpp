@@ -59,7 +59,7 @@ String WhileLoop::code() const
 
 String WhileLoop::defineHtml() const
 {
-	return L" <^span class=\"keyword\">while</span> <span class=\"minor symbol\">(</span>" + toHtml(child(Condition)) + L"<span class=\"minor symbol\">)</span><br/>" + Corporal::defineHtml(true);
+	return L" <^><span class=\"keyword\">while</span> <span class=\"minor symbol\">(</span>" + toHtml(child(Condition)) + L"<span class=\"minor symbol\">)</span><br/>" + Corporal::defineHtml(true);
 }
 
 Kinds UntilLoop::allowedKinds(int _index) const
@@ -79,7 +79,7 @@ String UntilLoop::code() const
 
 String UntilLoop::defineHtml() const
 {
-	return L"<^span class=\"keyword\">until</span> <span class=\"minor symbol\">(</span>" + toHtml(child(Condition)) + L"<span class=\"minor symbol\">)</span><br/>" + Corporal::defineHtml(true);
+	return L"<^><span class=\"keyword\">until</span> <span class=\"minor symbol\">(</span>" + toHtml(child(Condition)) + L"<span class=\"minor symbol\">)</span><br/>" + Corporal::defineHtml(true);
 }
 
 }

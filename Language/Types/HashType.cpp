@@ -169,7 +169,7 @@ String HashType::code(String const& _middle) const
 
 String HashType::defineHtml() const
 {
-	return toHtml(child(ValueType)) + L"<^span class=\"symbol\">" + typeHtml(L"#") + L"</span>" + toHtml(child(KeyType));
+	return toHtml(child(ValueType)) + L"<^><span class=\"symbol\">" + typeHtml(L"#") + L"</span>" + toHtml(child(KeyType));
 }
 
 }

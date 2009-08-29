@@ -63,38 +63,14 @@ String WebStylist::editHtml(Entity const* _e, CodeScene* _cs)
 	return refineHtml(defineEditHtml(_e, _cs), true, true, L"editing");
 }
 
-String WebStylist::refineHtml(String const& _html, bool _allowThis, bool _forceThis, String const& _addClass)
+String WebStylist::refineHtml(String const& _html, bool _allowThis, bool _forceThis, String const&)
 {
 	String ret = _html;
-	if (!ret.startsWith(L"<^") && _forceThis)
-		ret = L"<span id=\"this\" class=\"" + _addClass + "\">" + ret + L"</span>";
-
-	ret.replace(L"<^>", _allowThis ? L"<span id=\"this\"></span>" : L"");
+	if (!ret.contains(L"<^>") && _forceThis)
+		ret = L"<span id=\"this\"></span>" + ret;
+	else
+		ret.replace(L"<^>", _allowThis ? L"<span id=\"this\"></span>" : L"");
 	int i;
-	if ((i = ret.indexOf(L"<^")) > -1)
-	{
-		int c = ret.indexOf(L'>', i);
-		int t = min((uint)ret.indexOf(L' ', i), (uint)c);
-		// abc<^div >
-		// 0123456789
-		//    i    tc
-		int a = ret.indexOf(L" class=\"", i);
-		bool alreadyClass = (a != -1 && a < c);
-		if (t != -1 && _allowThis)
-		{
-			if (alreadyClass)
-				ret.replace(t, 0, L" id=\"this\"");
-			else
-				ret.replace(t, 0, L" id=\"this\" class=\"" + _addClass + "\"");
-		}
-		if (alreadyClass)
-		{
-			a = ret.indexOf(L" class=\"", i);
-			ret.replace(a + 8, 0, _addClass + L" ");
-		}
-		ret.replace(i + 1, 1, String::null);
-	}
-
 	while ((i = ret.indexOf(L"=\"data://")) != -1)
 	{
 		int t = ret.indexOf(L'\"', i+6);
@@ -130,10 +106,9 @@ String WebStylist::defineHtml(Entity const* _e)
 
 String WebStylist::defineEditHtml(Entity const* _e, CodeScene* _cs)
 {
-	String ret;
 	if (WebViewable const* v = _e->tryKind<WebViewable>())
-		ret = v->defineEditHtml(_cs);
-	return ret;
+		return v->defineEditHtml(_cs);
+	return String::null;
 }
 
 }

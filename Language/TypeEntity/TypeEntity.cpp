@@ -39,7 +39,7 @@ Types TypeEntity::assignableTypes() const
 
 String TypeEntity::defineHtml() const
 {
-	return L"<^span class=\"TypeEntity\">&empty;</span>";
+	return L"<^><span class=\"TypeEntity\">&empty;</span>";
 }
 
 bool TypeEntity::keyPressed(KeyEvent const* _e)

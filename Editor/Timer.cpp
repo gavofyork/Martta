@@ -66,6 +66,7 @@ wchar_t const* translateKey(int _e)
 	case Qt::Key_Backspace:
 		return ::Martta::BackspaceKey;
 	case Qt::Key_Tab:
+	case Qt::Key_Backtab:
 		return ::Martta::TabKey;
 	case Qt::Key_Left:
 		return ::Martta::LeftKey;

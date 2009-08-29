@@ -19,10 +19,10 @@ function isInvisible(node)
 }
 function ensureViewable(_e)
 {
-	if (_e.getBoundingClientRect().top - 10 < 0)
-		window.scroll(window.scrollX, window.scrollY + _e.getBoundingClientRect().top - 10);
 	if (_e.getBoundingClientRect().bottom + 20 > window.innerHeight)
 		window.scroll(window.scrollX, _e.getBoundingClientRect().bottom + window.scrollY - window.innerHeight + 20);
+	if (_e.getBoundingClientRect().top - 10 < 0)
+		window.scroll(window.scrollX, window.scrollY + _e.getBoundingClientRect().top - 10);
 }
 function onlyThese(node)
 {
@@ -370,7 +370,7 @@ function procMouseDown(event)
 function changeEditContent(_e, _c)
 {
 	var e = document.getElementById(_e);
-	thisNode(e).outerHTML = _c;
+	e.innerHTML = _c;
 	setReferenceNode(e, false);
 }
 function restoreCurrent(_x, _y, _parent)

@@ -34,7 +34,7 @@ MARTTA_REGISTER_CSS(AccessLabel,
 
 String AccessLabel::defineHtml() const
 {
-	return String(L"<^span>%1</span>").arg(Martta::code(m_access));
+	return String(L"<^>") + Martta::code(m_access);
 }
 
 bool AccessLabel::keyPressed(KeyEvent const* _e)

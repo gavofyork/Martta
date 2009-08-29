@@ -48,7 +48,7 @@ public:
 	}
 	virtual String						defineEditHtml(Named*, String const& _mid)
 	{
-		return L"<^span class=\"keyword\">" + m_lastType->typeHtml(_mid) + L"</span>";
+		return L"<span class=\"keyword\">" + m_lastType->typeHtml(_mid) + L"</span>";
 	}
 	Type m_lastType;
 	SimpleNamed m_ourNamed;

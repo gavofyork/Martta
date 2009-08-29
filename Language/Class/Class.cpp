@@ -383,7 +383,7 @@ bool Class::keyPressed(KeyEvent const* _e)
 
 String Class::defineHtml() const
 {
-	String ret = L"<^div><span class=\"keyword\">class</span> " + toHtml(child(Identity));
+	String ret = L"<^><div><span class=\"keyword\">class</span> " + toHtml(child(Identity));
 	ret += L"<div class=\"block\">";
 	ret += toHtml(castEntities<Entity>(cardinalChildrenOf<Base>()), L"", L"div");
 	ret += L"<div class=\"deblock minor symbol\">{</div>";

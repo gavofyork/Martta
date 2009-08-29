@@ -93,6 +93,14 @@ public:
 	{
 		return (m_cycled >= 0 && m_cycled < m_potentials.size() ? NameTrait<R>::name(m_potentials[m_cycled]).mid(m_name.length()) : m_completion);
 	}
+	virtual String comment() const
+	{
+		if (m_potentials.count() == 0)
+			return L"?!";
+		else if (m_potentials.count() > 1)
+			return String(L" (of %1)").arg(m_potentials.count());
+		return String::null;
+	}
 	virtual bool keyPressed(KeyEvent const* _e)
 	{
 		bool resetCycled = true;
@@ -116,11 +124,11 @@ public:
 		}
 		else if (_e->text().length() == 1 && _e->text()[0].isLetter())
 			m_name += _e->text();
-		else if (_e->text() == L"\t")
+		else if (_e->text() == TabKey)
 			if (m_completion.isEmpty())
-				if (m_potentials.size() && m_cycled < m_potentials.size() - 1)
-					m_cycled++, resetCycled = false;
-				else{}
+//				if (m_potentials.size() && m_cycled >= m_potentials.size() - 1)
+					m_cycled = (m_cycled + 1 + m_potentials.size() + 1 + (_e->modifiers() == ShiftModifier ? -1 : 1)) % (m_potentials.size() + 1) - 1, resetCycled = false;
+//				else{}
 			else
 				m_name += m_completion;
 		else

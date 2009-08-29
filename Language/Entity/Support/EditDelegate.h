@@ -39,6 +39,7 @@ public:
 
 	virtual String				real() const { return String::null; }
 	virtual String				unreal() const { return String::null; }
+	virtual String				comment() const { return String::null; }
 	Entity*						subject() const { return m_subject; }
 
 	void						initialised() { /*m_immediateCommits = !isValid();*/ }

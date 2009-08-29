@@ -63,13 +63,13 @@ String IntegerLiteral::defineHtml() const
 	ret = ret.mid(1);
 	if (m_signed)
 		ret = (m_value < 0 ? "-" : "") + ret;
-	return String(L"<^span><span class=\"IntegerLiteral Literal\">%1</span><span class=\"keyword\">%2%3</span></span>").arg(ret).arg(m_signed ? L"" : L"u").arg(m_range == ShortRange ? L"s" : m_range == LongRange ? L"l" : m_range == LonglongRange ? L"ll" : L"");
+	return String(L"<^><span class=\"IntegerLiteral Literal\">%1</span><span class=\"keyword\">%2%3</span>").arg(ret).arg(m_signed ? L"" : L"u").arg(m_range == ShortRange ? L"s" : m_range == LongRange ? L"l" : m_range == LonglongRange ? L"ll" : L"");
 }
 
 String IntegerLiteral::defineEditHtml(CodeScene* _cs) const
 {
 	if (EditDelegateFace* d = _cs->editDelegate(this))
-		return String(L"<^span><span class=\"Literal IntegerLiteral\">%1<span class=\"unreal\">%4</span></span><span class=\"keyword\">%2%3</span></span>").arg(d->real()).arg(m_signed ? "" : "u").arg((m_range == ShortRange ? L"s" : m_range == LongRange ? L"l" : m_range == LonglongRange ? L"ll" : L"")).arg(d->unreal());
+		return String(L"<span class=\"Literal IntegerLiteral\">%1<span class=\"unreal\">%4</span></span><span class=\"keyword\">%2%3</span>").arg(d->real()).arg(m_signed ? "" : "u").arg((m_range == ShortRange ? L"s" : m_range == LongRange ? L"l" : m_range == LonglongRange ? L"ll" : L"")).arg(d->unreal());
 	return String::null;
 }
 

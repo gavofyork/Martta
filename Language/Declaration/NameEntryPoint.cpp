@@ -55,8 +55,8 @@ String NameEntryPoint::defineEditHtml(CodeScene* _cs) const
 			if (Named* n = static_cast<CompletionDelegate<Entity, Named*>*>(d)->selection())
 				foreach (IdentifierSet* i, IdentifierSetRegistrar::get()->allSets())
 					if (i->identifiableAt(self()->over()).contains(n))
-						return i->defineEditHtml(n, ret);
-			return L"<^span>" + ret + L"</span>";
+						return i->defineEditHtml(n, ret) + tagOf(L"minor", d->comment());
+			return ret + tagOf(L"minor", d->comment());
 		}
 	return defineHtml();
 }

@@ -84,7 +84,7 @@ Kinds Base::allowedKinds(int _i) const
 
 String Base::defineHtml() const
 {
-	return L"<^span class=\"keyword\">inherits</span> " + toHtml(child(Superclass)) + L" <span class=\"keyword\">as</span> "+ toHtml(child(Accessibility));
+	return L"<^><span class=\"keyword\">inherits</span> " + toHtml(child(Superclass)) + L" <span class=\"keyword\">as</span> "+ toHtml(child(Accessibility));
 }
 
 }

@@ -44,9 +44,9 @@ public:
 	{
 		_pos.place((new BoolLiteral(_n == &m_true))->prepareChildren())->dropCursor();
 	}
-	virtual String						defineEditHtml(Named* n, String const& _mid)
+	virtual String						defineEditHtml(Named*, String const& _mid)
 	{
-		return L"<span class=\"keyword\">" + _mid + L"<span class=\"unreal\">" + n->name().mid(_mid.length()) + L"</span></span>";
+		return L"<span class=\"keyword\">" + _mid + "</span>";
 	}
 private:
 	SimpleNamed m_true;
@@ -74,7 +74,7 @@ bool BoolLiteral::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 
 String BoolLiteral::defineHtml() const
 {
-	return L"<^span class=\"keyword\">" + type()->typeHtml(m_value ? L"true" : L"false") + L"</span>";
+	return L"<span class=\"keyword\">" + type()->typeHtml(m_value ? L"true" : L"false") + L"</span>";
 }
 
 }

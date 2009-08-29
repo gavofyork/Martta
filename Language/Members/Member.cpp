@@ -57,7 +57,7 @@ String Member::interfaceCode() const
 
 String Member::defineHtml() const
 {
-	return L"<^div>" + memberDefineHtml() + L"</div>";
+	return L"<^>" + memberDefineHtml();
 }
 
 bool Member::keyPressed(KeyEvent const* _e)

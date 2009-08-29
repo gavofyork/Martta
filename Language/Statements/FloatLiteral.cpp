@@ -48,12 +48,12 @@ bool FloatLiteral::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 
 String FloatLiteral::defineHtml() const
 {
-	return String(L"<^span><span class=\"FloatLiteral Literal\">%2</span><span class=\"keyword\">%1</span></span>").arg(m_precision == SinglePrecision ? L"f" : m_precision == DoublePrecision ? L"" : L"ld").arg(m_value);
+	return String(L"<^><span class=\"FloatLiteral Literal\">%2</span><span class=\"keyword\">%1</span>").arg(m_precision == SinglePrecision ? L"f" : m_precision == DoublePrecision ? L"" : L"ld").arg(m_value);
 }
 
 String FloatLiteral::defineEditHtml(CodeScene* _cs) const
 {
-	return String(L"<^span><span class=\"FloatLiteral Literal\">%2</span><span class=\"keyword\">%1</span></span>").arg(m_precision == SinglePrecision ? L"f" : m_precision == DoublePrecision ? L"" : L"ld").arg(_cs->editDelegate(this)->real());
+	return String(L"<span class=\"FloatLiteral Literal\">%2</span><span class=\"keyword\">%1</span>").arg(m_precision == SinglePrecision ? L"f" : m_precision == DoublePrecision ? L"" : L"ld").arg(_cs->editDelegate(this)->real());
 }
 
 EditDelegateFace* FloatLiteral::newDelegate(CodeScene* _s)

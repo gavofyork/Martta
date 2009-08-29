@@ -48,7 +48,7 @@ template<class T>
 class SimpleIdentifierSet: public IdentifierSet
 {
 public:
-	SimpleIdentifierSet(wchar_t const* _name, wchar_t const* _preHtml = L"<^span class=\"keyword\">", wchar_t const* _postHtml = L"</span>"):
+	SimpleIdentifierSet(wchar_t const* _name, wchar_t const* _preHtml = L"<span class=\"keyword\">", wchar_t const* _postHtml = L"</span>"):
 		m_ourNamed	(_name),
 		m_preHtml	(_preHtml),
 		m_postHtml	(_postHtml)

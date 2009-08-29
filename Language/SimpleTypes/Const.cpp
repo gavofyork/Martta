@@ -70,7 +70,7 @@ bool Const::keyPressed(KeyEvent const* _e)
 
 String Const::defineHtml() const
 {
-	return toHtml(child(Original)) + L"<^span class=\"Const-Fader\"><span class=\"Const\">CONST</span></span>";
+	return toHtml(child(Original)) + L"<^><span class=\"Const-Fader\"><span class=\"Const\">CONST</span></span>";
 }
 
 Kinds Const::deniedKinds(int _i) const

@@ -79,7 +79,7 @@ public:
 	}
 	virtual String						defineEditHtml(Named*, String const& _mid)
 	{
-		return L"<^span>" + BuiltinType().fullHtml(_mid) + L"</span>";
+		return L"<^>" + BuiltinType().fullHtml(_mid);
 	}
 	List<Named*> m_nameds;
 };
@@ -163,7 +163,7 @@ bool BuiltinType::defineSimilarityFrom(TypeEntity const* _f, Castability _c) con
 
 String BuiltinType::defineHtml() const
 {
-	return L"<^span class=\"TypeEntity\">" + typeHtml((id() == (uint)-1) ? L"&empty;" : name(id())) + L"</span>";
+	return L"<^><span class=\"TypeEntity\">" + typeHtml((id() == (uint)-1) ? L"&empty;" : name(id())) + L"</span>";
 }
 
 template<>
@@ -198,7 +198,7 @@ List<int> BuiltinType::possibilities() const
 String BuiltinType::defineEditHtml(CodeScene* _cs) const
 {
 	if (EditDelegateFace* d = _cs->editDelegate(this))
-		return fullHtml(d->real() + L"<span class=\"unreal\">" + d->unreal() + L"</span>");
+		return fullHtml(d->real() + L"<span class=\"unreal\">" + d->unreal() + L"</span>" + tagOf(L"minor", d->comment()));
 	return String::null;
 }
 

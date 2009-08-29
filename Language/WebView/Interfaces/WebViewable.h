@@ -43,6 +43,7 @@ public:
 	virtual String							defineEditHtml(CodeScene* _cs) const;
 
 	static String							htmlEscape(String const& _s);
+	inline static String					tagOf(String const& _classes, String const& _mid, String const& _tag = L"span") { return L"<" + _tag + " class=\"" + _classes + "\">" + _mid + L"</" + _tag + L">"; }
 	static String							cssBorder(String const& _name, Rgb _col);
 
 protected:

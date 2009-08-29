@@ -91,7 +91,7 @@ void ExplicitType::apresLoad()
 
 String ExplicitType::defineHtml() const
 {
-	return L"<^span class=\"TypeEntity\">" + typeHtml(m_subject.isUsable() ? m_subject->name() : L"&empty;") + L"</span>";
+	return L"<^><span class=\"TypeEntity\">" + typeHtml(m_subject.isUsable() ? m_subject->name() : L"&empty;") + L"</span>";
 }
 
 List<TypeDefinition*> ExplicitType::possibilities() const
@@ -111,7 +111,7 @@ List<TypeDefinition*> ExplicitType::possibilities() const
 String ExplicitType::defineEditHtml(CodeScene* _cs) const
 {
 	if (EditDelegateFace* d = _cs->editDelegate(this))
-		return L"<^span class=\"TypeEntity\">" + typeHtml(d->real() + L"<span class=\"unreal\">" + d->unreal() + L"</span>") + L"</span>";
+		return tagOf(L"TypeEntity", typeHtml(d->real() + tagOf(L"unreal", d->unreal()))) + tagOf(L"minor", d->comment());
 	return String::null;
 }
 

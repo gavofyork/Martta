@@ -31,7 +31,7 @@ class BreakStatement: public Untyped
 
 private:
 	virtual String						code() const { return "break;"; }
-	virtual String						defineHtml() const { return "<^span class=\"keyword\">break</span>"; }
+	virtual String						defineHtml() const { return "<^><span class=\"keyword\">break</span>"; }
 };
 
 }

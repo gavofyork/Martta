@@ -40,7 +40,7 @@ protected:
 	virtual Kinds						allowedKinds(int _index) const;
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual void						onDependencyChanged(int, Entity*) { changed(Logically); }
-	virtual String						defineHtml() const { return L"<^span>" + defineVariableHtml() + L"</span>"; }
+	virtual String						defineHtml() const { return L"<^>" + defineVariableHtml(); }
 	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual bool						isInValidState() const;
 	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); Identifiable::properties(_p); }

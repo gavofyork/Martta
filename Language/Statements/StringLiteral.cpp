@@ -40,7 +40,7 @@ bool StringLiteral::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 
 String StringLiteral::defineHtml() const
 {
-	return String(L"<^span><span class=\"symbol\">&ldquo;</span><span class=\"StringLiteral Literal\">%1</span><span class=\"symbol\">&rdquo;</span></span>").arg(htmlEscape(String(m_value)));
+	return String(L"<^><span class=\"symbol\">&ldquo;</span><span class=\"StringLiteral Literal\">%1</span><span class=\"symbol\">&rdquo;</span>").arg(htmlEscape(String(m_value)));
 }
 
 bool StringLiteral::keyPressed(KeyEvent const* _e)

@@ -27,7 +27,7 @@ MARTTA_OBJECT_CPP(ConstLabel);
 
 String ConstLabel::defineHtml() const
 {
-	return String(L"<^span class=\"keyword\">%1</span>").arg(m_isConst ? L"const" : L"mutable");
+	return String(L"<^><span class=\"keyword\">%1</span>").arg(m_isConst ? L"const" : L"mutable");
 }
 
 bool ConstLabel::keyPressed(KeyEvent const* _e)
