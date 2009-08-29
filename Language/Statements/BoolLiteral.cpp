@@ -46,7 +46,7 @@ public:
 	}
 	virtual String						defineEditHtml(Named*, String const& _mid)
 	{
-		return L"<span class=\"keyword\">" + _mid + "</span>";
+		return L"<span class=\"keyword\">" + Type(Bool)->typeHtml(_mid) + "</span>";
 	}
 private:
 	SimpleNamed m_true;
@@ -74,7 +74,7 @@ bool BoolLiteral::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 
 String BoolLiteral::defineHtml() const
 {
-	return L"<span class=\"keyword\">" + type()->typeHtml(m_value ? L"true" : L"false") + L"</span>";
+	return L"<^><span class=\"keyword\">" + type()->typeHtml(m_value ? L"true" : L"false") + L"</span>";
 }
 
 }

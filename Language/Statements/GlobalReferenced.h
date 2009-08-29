@@ -36,7 +36,7 @@ public:
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 
 	virtual List<ValueDefiner*>			possibilities() const { return possibilities(over()); }
-	virtual String						defineEditHtml(CodeScene* _cs);
+	virtual String						defineEditHtml(CodeScene* _cs) const;
 
 protected:
 	virtual String						defineHtml() const;
