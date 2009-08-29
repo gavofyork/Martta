@@ -22,6 +22,10 @@
 
 #include "Declaration.h"
 
+#ifndef M_API_CStuff
+#define M_API_CStuff M_OUTAPI
+#endif
+
 namespace Martta
 {
 
@@ -33,7 +37,7 @@ namespace Martta
  *
  * Aside from that it should also encompass all the implementation of the project in question.
  */
-class Root: public Declaration
+class M_API_CStuff Root: public Declaration
 {
 	MARTTA_OBJECT(Declaration)
 

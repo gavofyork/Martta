@@ -25,6 +25,10 @@
 #include "WebInformer.h"
 #include "Entity.h"
 
+#ifndef M_API_Declaration
+#define M_API_Declaration M_OUTAPI
+#endif
+
 namespace Martta
 {
 
@@ -34,7 +38,7 @@ class ValueDefiner;
  * Class for anything individually referencable in the language.
  * Currently this includes only functions, variables, types and enumeration values.
  */
-class Declaration: public Entity, public_interface Identifiable, public_interface WebViewable, public_interface WebInformer
+class M_API_Declaration Declaration: public Entity, public_interface Identifiable, public_interface WebViewable, public_interface WebInformer
 {
 	MARTTA_PLACEHOLDER(Entity)
 	MARTTA_INHERITS(Identifiable, 0)

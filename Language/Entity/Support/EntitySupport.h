@@ -26,6 +26,10 @@
 #include <msList.h>
 using namespace MarttaSupport;
 
+#ifndef M_API_Entity
+#define M_API_Entity M_OUTAPI
+#endif
+
 namespace Martta
 {
 

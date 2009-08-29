@@ -383,7 +383,6 @@ bool DeclarationsHandler::startElement(QString const&, QString const& _n, QStrin
 	else if (_n == "Field")
 	{
 		AssertNR(parent);
-		mInfo() << parent;
 		foreach(Resolver* i, m_resolvers)
 		{
 			bool it = i->isType();

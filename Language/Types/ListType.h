@@ -23,13 +23,17 @@
 #include "Subscriptable.h"
 #include "ModifyingType.h"
 
+#ifndef M_API_Types
+#define M_API_Types M_OUTAPI
+#endif
+
 namespace Martta
 {
 
 class BuiltinOperator;
 class BuiltinMethod;
 
-class ListType: public ModifyingType, public_interface Subscriptable
+class M_API_Types ListType: public ModifyingType, public_interface Subscriptable
 {
 	MARTTA_INITIALISED_OBJECT(ModifyingType)
 	MARTTA_INHERITS(Subscriptable, 0)

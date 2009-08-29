@@ -22,10 +22,14 @@
 
 #include "Statement.h"
 
+#ifndef M_API_Statement
+#define M_API_Statement M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class Untyped: public Statement
+class M_API_Statement Untyped: public Statement
 {
 	MARTTA_PLACEHOLDER(Statement)
 

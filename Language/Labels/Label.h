@@ -23,10 +23,14 @@
 #include "WebViewable.h"
 #include "Entity.h"
 
+#ifndef M_API_Labels
+#define M_API_Labels M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class Label: public Entity, public_interface WebViewable
+class M_API_Labels Label: public Entity, public_interface WebViewable
 {
 	MARTTA_PLACEHOLDER(Entity)
 	MARTTA_INHERITS(WebViewable, 0)

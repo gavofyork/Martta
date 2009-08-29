@@ -25,12 +25,16 @@
 #include "Type.h"
 #include "PhysicalType.h"
 
+#ifndef M_API_Types
+#define M_API_Types M_OUTAPI
+#endif
+
 namespace Martta
 {
 
 class ExplicitTypeSet;
 
-class ExplicitType: public PhysicalType
+class M_API_Types ExplicitType: public PhysicalType
 {
 	MARTTA_OBJECT(PhysicalType)
 

@@ -23,10 +23,14 @@
 #include "VariableNamer.h"
 #include "Primary.h"
 
+#ifndef M_API_Variables
+#define M_API_Variables M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class DefaultConstructedVariable: public Primary, public_interface VariableNamer
+class M_API_Variables DefaultConstructedVariable: public Primary, public_interface VariableNamer
 {
 	MARTTA_OBJECT(Primary)
 	MARTTA_INHERITS(VariableNamer, 0)

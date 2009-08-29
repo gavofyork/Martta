@@ -4,7 +4,7 @@ DEPENDPATH *= $$join(OURDIRS, " $$TWD/", "$$TWD/")
 INCLUDEPATH *= $$join(OURDIRS, " $$TWD/", "$$TWD/")
 contains(TARGET, $$basename(TWD)): contains(TEMPLATE, lib) {
 	QMAKE_POST_LINK += echo $${TARGET} $$DEPS > $${DESTDIR}/$(TARGET).dep
-	mac: QMAKE_LFLAGS += -install_name @rpath/$(TARGET)
+	macx: QMAKE_LFLAGS += -install_name @rpath/$(TARGET)
 }
 !contains(TARGET, $$basename(TWD)): !contains(NO_SOURCES, 1): LIBS *= -l$$basename(TWD)
 for(a, DEPS): !contains(DONE, $${a}) {

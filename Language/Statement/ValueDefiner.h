@@ -24,10 +24,14 @@
 #include "TypeNamer.h"
 #include "Identifiable.h"
 
+#ifndef M_API_Statement
+#define M_API_Statement M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class ValueDefiner: public_interface Identifiable, public_interface TypeNamer
+class M_API_Statement ValueDefiner: public_interface Identifiable, public_interface TypeNamer
 {
 	MARTTA_INTERFACE
 	MARTTA_INHERITS(Identifiable, 0)

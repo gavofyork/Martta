@@ -23,10 +23,14 @@
 #include "Artificial.h"
 #include "Constructor.h"
 
+#ifndef M_API_Class
+#define M_API_Class M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class ArtificialDefaultConstructor: public Constructor, public_interface Artificial
+class M_API_Class ArtificialDefaultConstructor: public Constructor, public_interface Artificial
 {
 	MARTTA_OBJECT(Constructor)
 	MARTTA_INHERITS(Artificial, 0)

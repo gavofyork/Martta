@@ -22,10 +22,14 @@
 
 #include "UnaryOperation.h"
 
+#ifndef M_API_Statements
+#define M_API_Statements M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class DereferenceOperation: public UnaryOperation
+class M_API_Statements DereferenceOperation: public UnaryOperation
 {
 	MARTTA_OBJECT(UnaryOperation)
 

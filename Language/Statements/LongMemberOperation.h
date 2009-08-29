@@ -22,10 +22,14 @@
 
 #include "GenericMemberOperation.h"
 
+#ifndef M_API_Statements
+#define M_API_Statements M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class LongMemberOperation: public GenericMemberOperation
+class M_API_Statements LongMemberOperation: public GenericMemberOperation
 {
 	MARTTA_OBJECT(GenericMemberOperation)
 

@@ -58,12 +58,12 @@ private:
 	uint m_value;
 };
 
-#define MS_DECLARE_FLAGS(Flag) MS_DECLARE_FLAGS_TYPE(Flag); MS_DECLARE_FLAGS_OPERATORS(Flag)
+#define M_DECLARE_FLAGS(Flag) M_DECLARE_FLAGS_TYPE(Flag); M_DECLARE_FLAGS_OPERATORS(Flag)
 
-#define MS_DECLARE_FLAGS_TYPE(Flag) \
+#define M_DECLARE_FLAGS_TYPE(Flag) \
 typedef Flags<Flag> Flag ## s
 
-#define MS_DECLARE_FLAGS_OPERATORS(Flag) \
+#define M_DECLARE_FLAGS_OPERATORS(Flag) \
 m_inline Flag ## s operator|(Flag _a, Flag _b) { return Flag ## s(_a|_b); } \
 m_inline Flag ## s operator|(Flag _a, Flag ## s _b) { return _b | _a; } \
 enum{}

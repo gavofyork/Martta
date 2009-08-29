@@ -22,10 +22,14 @@
 
 #include "Referenced.h"
 
+#ifndef M_API_Statements
+#define M_API_Statements M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class ArgumentReferenced: public Referenced
+class M_API_Statements ArgumentReferenced: public Referenced
 {
 	MARTTA_OBJECT(Referenced)
 	

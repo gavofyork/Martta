@@ -25,6 +25,10 @@ using namespace MarttaSupport;
 
 #include "Operator.h"
 
+#ifndef M_API_Operator
+#define M_API_Operator M_OUTAPI
+#endif
+
 namespace Martta
 {
 

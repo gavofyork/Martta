@@ -25,12 +25,16 @@
 #include "Named.h"
 #include "Meta.h"
 
+#ifndef M_API_Declaration
+#define M_API_Declaration M_OUTAPI
+#endif
+
 namespace Martta
 {
 
 class IdentifierSet;
 
-class NameEntryPoint: public_interface WebViewable
+class M_API_Declaration NameEntryPoint: public_interface WebViewable
 {
 	MARTTA_INTERFACE
 	MARTTA_INHERITS(WebViewable, 0)

@@ -28,6 +28,10 @@ using namespace MarttaSupport;
 #include "Labelled.h"
 #include "Identifiable.h"
 
+#ifndef M_API_Types
+#define M_API_Types M_OUTAPI
+#endif
+
 namespace Martta
 {
 
@@ -41,7 +45,7 @@ typedef List<Type> Types;
  * Types may be named or anonymous.
  * This includes typedefs, unions, structs and enums.
  */
-class TypeDefinition: public_interface Identifiable, public_interface Labelled
+class M_API_Types TypeDefinition: public_interface Identifiable, public_interface Labelled
 {
 	MARTTA_INTERFACE
 	MARTTA_INHERITS(Identifiable, 0)

@@ -25,10 +25,14 @@
 #include "Pointer.h"
 #include "Literal.h"
 
+#ifndef M_API_Statements
+#define M_API_Statements M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class StringLiteral: public Literal
+class M_API_Statements StringLiteral: public Literal
 {
 	MARTTA_OBJECT(Literal)
 

@@ -25,10 +25,14 @@
 #include "ValueDefiner.h"
 #include "Typed.h"
 
+#ifndef M_API_Statements
+#define M_API_Statements M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class Referenced: public Typed
+class M_API_Statements Referenced: public Typed
 {
 	MARTTA_PLACEHOLDER(Typed)
 
@@ -62,7 +66,7 @@ protected:
 };
 
 template<class T>
-class ReferencedValueSet: public IdentifierSet
+class M_API_Statements ReferencedValueSet: public IdentifierSet
 {
 public:
 	virtual String						setId() const { return Kind::of<T>().name(); }

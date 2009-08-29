@@ -23,10 +23,14 @@
 #include "WebViewable.h"
 #include "Meta.h"
 
+#ifndef M_API_Statement
+#define M_API_Statement M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class Corporal: public_interface WebViewable
+class M_API_Statement Corporal: public_interface WebViewable
 {
 	MARTTA_INTERFACE
 	MARTTA_INHERITS(WebViewable, 0)

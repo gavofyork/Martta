@@ -22,10 +22,14 @@
 
 #include "BinaryOperation.h"
 
+#ifndef M_API_Statements
+#define M_API_Statements M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class GenericMemberOperation: public BinaryOperation
+class M_API_Statements GenericMemberOperation: public BinaryOperation
 {
 	MARTTA_PLACEHOLDER(BinaryOperation)
 

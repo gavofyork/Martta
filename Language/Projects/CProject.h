@@ -24,12 +24,16 @@
 #include "Project.h"
 #include "Namespace.h"
 
+#ifndef M_API_Projects
+#define M_API_Projects M_OUTAPI
+#endif
+
 namespace Martta
 {
 
 class CProject;
 
-class CProjectDependency: public Entity
+class M_API_Projects CProjectDependency: public Entity
 {
 	MARTTA_OBJECT(Entity)
 
@@ -37,7 +41,7 @@ private:
 	ModelPtr<CProject> m_subject;
 };
 
-class CProject: public Namespace, public_interface Project
+class M_API_Projects CProject: public Namespace, public_interface Project
 {
 	MARTTA_OBJECT(Namespace)
 	MARTTA_INHERITS(Project, 0)

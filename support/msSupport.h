@@ -25,12 +25,16 @@
  * ***** END LICENSE BLOCK ***** */
 #pragma once
 
-#ifndef _MSC_VER
-#define M_EXPORT __attribute__((visibility("default")))
-#define M_NOEXPORT __attribute__((visibility("hidden")))
-#else
+#if defined(_MSC_VER)
 #define M_EXPORT
 #define M_NOEXPORT
+#define M_INAPI __declspec( dllexport )
+#define M_OUTAPI __declspec( dllimport )
+#else
+#define M_EXPORT __attribute__((visibility("default")))
+#define M_NOEXPORT __attribute__((visibility("hidden")))
+#define M_INAPI
+#define M_OUTAPI
 #endif
 
 #define m_privateinline M_NOEXPORT inline
@@ -95,7 +99,7 @@ m_inline T min(T const& _a, T const& _b) { return (_b < _a) ? _b : _a; }
 template<typename T>
 m_inline T sign(T const& _x) { return _x < 0 ? -1 : _x > 0 ? 1 : 0; }
 
-//#define m_inline MS_EXPORT m_inline
+//#define m_inline M_EXPORT m_inline
 template<typename T>
 m_inline void swap(T& _a, T& _b) { T t(_a); _a = _b; _b = t; }
 
@@ -132,7 +136,7 @@ m_inline uint floorLog2(uint _a)
 
 template<typename T> class isSimple { public: enum { value = false }; typedef T* StorageType; };
 template<typename T> class isSimple<T*> { public: enum { value = true }; typedef T* StorageType; };
-#define DECLARE_SIMPLE_TYPE(T) template<> class isSimple<T> { public: enum { value = true }; typedef T StorageType; };
+#define M_DECLARE_SIMPLE_TYPE(T) template<> class isSimple<T> { public: enum { value = true }; typedef T StorageType; };
 template<> class isSimple<bool> { public: enum { value = true }; typedef bool StorageType; };
 template<> class isSimple<wchar_t> { public: enum { value = true }; typedef wchar_t StorageType; };
 template<> class isSimple<signed char> { public: enum { value = true }; typedef signed char StorageType; };
@@ -163,7 +167,7 @@ template<class T> m_inline void setRef(typename isSimple<T>::StorageType& _d, T 
 		*(T**)&_d = new T(_src);
 }
 
-#define MS_TEST_METHOD_EXISTANCE(bar)\
+#define M_TEST_METHOD_EXISTANCE(bar)\
 enum bar##MethodExistsTrue {};\
 enum bar##MethodExistsFalse {};\
 template<class T, void (T::*)()> struct bar##MethodExistsStruct {};\
@@ -173,7 +177,7 @@ template<class T> m_inline void __TEST_##bar(T& _a, bar##MethodExistsTrue&) { _a
 template<class T> m_inline void __TEST_##bar(T&, bar##MethodExistsFalse&){}\
 template<class T> m_inline void bar(T& _a) { __TEST_##bar(_a, bar##IfMethodExists<T>(0)); }
 
-#define MS_TEST_METHOD_EXISTANCE_1(bar)\
+#define M_TEST_METHOD_EXISTANCE_1(bar)\
 enum bar##MethodExistsTrue1 {};\
 enum bar##MethodExistsFalse1 {};\
 template<class T, class A, void (T::*)(A)> struct bar##MethodExistsStruct1 {};\

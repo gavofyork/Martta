@@ -23,10 +23,14 @@
 #include "ValueDefiner.h"
 #include "Member.h"
 
+#ifndef M_API_Members
+#define M_API_Members M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class MemberValue: public Member, public_interface ValueDefiner
+class M_API_Members MemberValue: public Member, public_interface ValueDefiner
 {
 	MARTTA_PLACEHOLDER(Member)
 	MARTTA_INHERITS(ValueDefiner, 0)

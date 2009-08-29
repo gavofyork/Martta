@@ -22,10 +22,14 @@
 
 #include "TypeEntity.h"
 
+#ifndef M_API_SimpleTypes
+#define M_API_SimpleTypes M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class PhysicalType: public TypeEntity
+class M_API_SimpleTypes PhysicalType: public TypeEntity
 {
 	MARTTA_PLACEHOLDER(TypeEntity)
 

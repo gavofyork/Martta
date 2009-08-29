@@ -22,10 +22,14 @@
 
 #include "Label.h"
 
+#ifndef M_API_Labels
+#define M_API_Labels M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class ConstLabel: public Label
+class M_API_Labels ConstLabel: public Label
 {
 	MARTTA_OBJECT(Label)
 

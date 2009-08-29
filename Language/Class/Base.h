@@ -24,12 +24,16 @@
 #include "WebViewable.h"
 #include "Entity.h"
 
+#ifndef M_API_Class
+#define M_API_Class M_OUTAPI
+#endif
+
 namespace Martta
 {
 
 class Class;
 
-class Base: public Entity, public_interface WebViewable
+class M_API_Class Base: public Entity, public_interface WebViewable
 {
 	MARTTA_OBJECT(Entity)
 	MARTTA_INHERITS(WebViewable, 0)

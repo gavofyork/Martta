@@ -23,10 +23,14 @@
 #include "Conditional.h"
 #include "Loop.h"
 
+#ifndef M_API_Statements
+#define M_API_Statements M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class WhileLoop: public Loop, public_interface Conditional
+class M_API_Statements WhileLoop: public Loop, public_interface Conditional
 {
 	MARTTA_OBJECT(Loop)
 	MARTTA_INHERITS(Conditional, 0)
@@ -45,7 +49,7 @@ private:
 	virtual List<int> const&			defineDeclarationOrder() const { static const List<int> r = List<int>() << Condition << Body; return r; }
 };
 
-class UntilLoop: public WhileLoop
+class M_API_Statements UntilLoop: public WhileLoop
 {
 	MARTTA_OBJECT(WhileLoop)
 

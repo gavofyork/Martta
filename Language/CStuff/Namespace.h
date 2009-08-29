@@ -22,10 +22,14 @@
 
 #include "TopLevel.h"
 
+#ifndef M_API_CStuff
+#define M_API_CStuff M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class Namespace: public TopLevel
+class M_API_CStuff Namespace: public TopLevel
 {
 	MARTTA_OBJECT(TopLevel)
 

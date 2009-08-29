@@ -24,13 +24,17 @@
 #include <msList.h>
 using namespace MarttaSupport;
 
+#ifndef M_API_Entity
+#define M_API_Entity M_OUTAPI
+#endif
+
 namespace Martta
 {
 
 class SafePointerTarget;
 template<class T, bool F> class SafePointer;
 
-class SafePointerFace
+class M_API_Entity SafePointerFace
 {
 	friend class SafePointerTarget;
 	template<class T, bool F> friend class SafePointer;
@@ -67,7 +71,7 @@ private:
 	inline T* get() const { return static_cast<T*>(m_pointer); }
 };
 
-class SafePointerTarget
+class M_API_Entity SafePointerTarget
 {
 	friend class SafePointerFace;
 

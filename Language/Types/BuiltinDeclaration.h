@@ -23,10 +23,14 @@
 #include "ValueDefiner.h"
 #include "Declaration.h"
 
+#ifndef M_API_Types
+#define M_API_Types M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class BuiltinDeclaration: public Declaration, public_interface ValueDefiner
+class M_API_Types BuiltinDeclaration: public Declaration, public_interface ValueDefiner
 {
 	MARTTA_OBJECT(Declaration)
 	MARTTA_INHERITS(ValueDefiner, 0)

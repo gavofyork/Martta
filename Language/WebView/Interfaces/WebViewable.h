@@ -27,12 +27,16 @@ using namespace MarttaSupport;
 
 #include "Meta.h"
 
+#ifndef M_API_WebView
+#define M_API_WebView M_OUTAPI
+#endif
+
 namespace Martta
 {
 
 class CodeScene;
 
-class WebViewable
+class M_API_WebView WebViewable
 {
 	MARTTA_INTERFACE
 

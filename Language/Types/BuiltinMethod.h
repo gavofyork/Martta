@@ -22,10 +22,14 @@
 
 #include "BuiltinDeclaration.h"
 
+#ifndef M_API_Types
+#define M_API_Types M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class BuiltinMethod: public BuiltinDeclaration
+class M_API_Types BuiltinMethod: public BuiltinDeclaration
 {
 	MARTTA_OBJECT(BuiltinDeclaration)
 

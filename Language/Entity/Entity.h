@@ -31,20 +31,16 @@
 #include "CodeScene.h"
 #include "SafePointer.h"
 
+#ifndef M_API_Entity
+#define M_API_Entity M_OUTAPI
+#endif
+
 namespace Martta
 {
 
 class EditDelegateFace;
 
-/**
- * Note regarding rootEntity/null-Context: You can never depend on something which does not share the
- * same Root object as you. Objects yet to be inserted into the program have a nullContext and thus
- * no Root. If you make objects within the scene children of such objects they will be moved
- * out of scene, and thus can have no interactions (i.e. dependencies/references) with objects within the
- * scene. This applies even if the situation is temporary, since the check/changes happen at move
- * time.
- */
-class Entity: public Nothing, public SafePointerTarget, virtual public Dier, public_interface ChildValidifier, public_interface Depender, public_interface Dependee
+class M_API_Entity Entity: public Nothing, public SafePointerTarget, virtual public Dier, public_interface ChildValidifier, public_interface Depender, public_interface Dependee
 {
 	MARTTA_COMMON(Nothing)
 	MARTTA_INHERITS(ChildValidifier, 0)

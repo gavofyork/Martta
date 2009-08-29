@@ -23,10 +23,14 @@
 #include "Declaration.h"
 #include "Labelled.h"
 
+#ifndef M_API_CStuff
+#define M_API_CStuff M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class TopLevel: public Declaration, public_interface Labelled
+class M_API_CStuff TopLevel: public Declaration, public_interface Labelled
 {
 	MARTTA_PLACEHOLDER(Declaration)
 	MARTTA_INHERITS(Labelled, 0)

@@ -23,10 +23,14 @@
 #include "VariableNamer.h"
 #include "BareTyped.h"
 
+#ifndef M_API_Variables
+#define M_API_Variables M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class AssignedVariable: public BareTyped, public_interface VariableNamer
+class M_API_Variables AssignedVariable: public BareTyped, public_interface VariableNamer
 {
 	MARTTA_OBJECT(BareTyped)
 	MARTTA_INHERITS(VariableNamer, 0)

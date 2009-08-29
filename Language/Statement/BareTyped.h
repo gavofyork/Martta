@@ -24,10 +24,14 @@
 #include "WebInformer.h"
 #include "TypeNamer.h"
 
+#ifndef M_API_Statement
+#define M_API_Statement M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class BareTyped: public Primary, public_interface TypeNamer, public_interface WebInformer
+class M_API_Statement BareTyped: public Primary, public_interface TypeNamer, public_interface WebInformer
 {
 	MARTTA_PLACEHOLDER(Primary)
 	MARTTA_INHERITS(TypeNamer, 0)

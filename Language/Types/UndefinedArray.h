@@ -22,10 +22,14 @@
 
 #include "AddressType.h"
 
+#ifndef M_API_Types
+#define M_API_Types M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class UndefinedArray: public AddressType
+class M_API_Types UndefinedArray: public AddressType
 {
 	MARTTA_OBJECT(AddressType)
 

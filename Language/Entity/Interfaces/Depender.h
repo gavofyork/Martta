@@ -26,10 +26,14 @@
 #include "Familial.h"
 #include "ChangeMan.h"
 
+#ifndef M_API_Entity
+#define M_API_Entity M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class Depender: public_interface Familial
+class M_API_Entity Depender: public_interface Familial
 {
 	MARTTA_INTERFACE
 	MARTTA_INHERITS(Familial, 0)

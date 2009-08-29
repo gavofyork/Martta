@@ -26,6 +26,10 @@ using namespace MarttaSupport;
 #include "Kind.h"
 #include "Type.h"
 
+#ifndef M_API_Types
+#define M_API_Types M_OUTAPI
+#endif
+
 namespace Martta
 {
 

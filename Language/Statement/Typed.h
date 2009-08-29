@@ -22,10 +22,14 @@
 
 #include "BareTyped.h"
 
+#ifndef M_API_Statement
+#define M_API_Statement M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class Typed: public BareTyped
+class M_API_Statement Typed: public BareTyped
 {
 	MARTTA_PLACEHOLDER(BareTyped)
 

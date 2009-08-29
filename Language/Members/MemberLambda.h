@@ -23,12 +23,16 @@
 #include "LambdaNamer.h"
 #include "MemberValue.h"
 
+#ifndef M_API_Members
+#define M_API_Members M_OUTAPI
+#endif
+
 namespace Martta
 {
 
 // Just for non-static callables
 
-class MemberLambda: public MemberValue, public_interface LambdaNamer
+class M_API_Members MemberLambda: public MemberValue, public_interface LambdaNamer
 {
 	MARTTA_PLACEHOLDER(MemberValue)
 	MARTTA_INHERITS(LambdaNamer, 0)

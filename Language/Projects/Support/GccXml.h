@@ -25,6 +25,10 @@
 
 class QXmlContentHandler;
 
+#ifndef M_API_Projects
+#define M_API_Projects M_OUTAPI
+#endif
+
 namespace Martta
 {
 

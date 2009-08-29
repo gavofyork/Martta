@@ -22,11 +22,15 @@
 
 #include "VirtualMethod.h"
 
+#ifndef M_API_Class
+#define M_API_Class M_OUTAPI
+#endif
+
 namespace Martta
 {
 
 // Only has ReturnType, ArgumentVariable...
-class VirtualPure: public VirtualMethod
+class M_API_Class VirtualPure: public VirtualMethod
 {
 	MARTTA_OBJECT(VirtualMethod)
 

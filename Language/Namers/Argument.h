@@ -23,10 +23,14 @@
 #include "VariableNamer.h"
 #include "Declaration.h"
 
+#ifndef M_API_Namers
+#define M_API_Namers M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class Argument: public Declaration, public_interface VariableNamer
+class M_API_Namers Argument: public Declaration, public_interface VariableNamer
 {
 	MARTTA_OBJECT(Declaration)
 	MARTTA_INHERITS(VariableNamer, 0)

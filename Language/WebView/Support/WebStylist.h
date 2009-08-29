@@ -27,6 +27,10 @@ using namespace MarttaSupport;
 
 #include "EntitySupport.h"
 
+#ifndef M_API_WebView
+#define M_API_WebView M_OUTAPI
+#endif
+
 namespace Martta
 {
 

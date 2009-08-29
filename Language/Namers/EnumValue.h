@@ -24,10 +24,14 @@
 #include "WebViewable.h"
 #include "Declaration.h"
 
+#ifndef M_API_Namers
+#define M_API_Namers M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class EnumValue: public Declaration, public_interface ValueDefiner, public_interface WebViewable
+class M_API_Namers EnumValue: public Declaration, public_interface ValueDefiner, public_interface WebViewable
 {
 	MARTTA_OBJECT(Declaration)
 	MARTTA_INHERITS(ValueDefiner, 0)

@@ -24,10 +24,14 @@
 #include "Compound.h"
 #include "TopLevel.h"
 
+#ifndef M_API_CStuff
+#define M_API_CStuff M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class Function: public TopLevel, public_interface LambdaNamer
+class M_API_CStuff Function: public TopLevel, public_interface LambdaNamer
 {
 	MARTTA_OBJECT(TopLevel)
 	MARTTA_INHERITS(LambdaNamer, 0)

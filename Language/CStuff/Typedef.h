@@ -22,12 +22,16 @@
 
 #include "TopLevelType.h"
 
+#ifndef M_API_CStuff
+#define M_API_CStuff M_OUTAPI
+#endif
+
 namespace Martta
 {
 
 class TypedefResolver;
 
-class Typedef: public TopLevelType
+class M_API_CStuff Typedef: public TopLevelType
 {
 	MARTTA_OBJECT(TopLevelType)
 

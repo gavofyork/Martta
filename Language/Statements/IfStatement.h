@@ -24,10 +24,14 @@
 #include "Conditional.h"
 #include "Untyped.h"
 
+#ifndef M_API_Statements
+#define M_API_Statements M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class IfStatement: public Untyped, public_interface Corporal, public_interface Conditional
+class M_API_Statements IfStatement: public Untyped, public_interface Corporal, public_interface Conditional
 {
 	MARTTA_OBJECT(Untyped)
 
@@ -47,7 +51,7 @@ protected:
 	virtual bool						requiresSemicolon() const { return false; }
 };
 
-class UnlessStatement: public IfStatement
+class M_API_Statements UnlessStatement: public IfStatement
 {
 	MARTTA_OBJECT(IfStatement)
 

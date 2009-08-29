@@ -22,10 +22,14 @@
 
 #include "Base.h"
 
+#ifndef M_API_Class
+#define M_API_Class M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class VirtualBase: public Base
+class M_API_Class VirtualBase: public Base
 {
 	MARTTA_OBJECT(Base)
 

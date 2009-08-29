@@ -22,10 +22,14 @@
 
 #include "ModifyingType.h"
 
+#ifndef M_API_SimpleTypes
+#define M_API_SimpleTypes M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class Const: public ModifyingType
+class M_API_SimpleTypes Const: public ModifyingType
 {
 	MARTTA_OBJECT(ModifyingType)
 

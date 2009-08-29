@@ -27,6 +27,10 @@ using namespace MarttaSupport;
 
 #include "Identifiable.h"
 
+#ifndef M_API_Declaration
+#define M_API_Declaration M_OUTAPI
+#endif
+
 namespace Martta
 {
 

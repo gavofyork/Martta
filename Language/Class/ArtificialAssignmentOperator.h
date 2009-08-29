@@ -23,10 +23,14 @@
 #include "Artificial.h"
 #include "MethodOperator.h"
 
+#ifndef M_API_Class
+#define M_API_Class M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class ArtificialAssignmentOperator: public MethodOperator, public_interface Artificial
+class M_API_Class ArtificialAssignmentOperator: public MethodOperator, public_interface Artificial
 {
 	MARTTA_OBJECT(MethodOperator)
 	MARTTA_INHERITS(Artificial, 0)

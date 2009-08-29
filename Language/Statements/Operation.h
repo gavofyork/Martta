@@ -26,10 +26,14 @@ using MarttaSupport::MultiHash;
 #include "Operator.h"
 #include "Evaluation.h"
 
+#ifndef M_API_Statements
+#define M_API_Statements M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class Operation: public Evaluation
+class M_API_Statements Operation: public Evaluation
 {
 	MARTTA_PLACEHOLDER(Evaluation)
 

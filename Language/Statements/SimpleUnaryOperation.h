@@ -24,10 +24,14 @@
 #include "ModelPtr.h"
 #include "UnaryOperation.h"
 
+#ifndef M_API_Statements
+#define M_API_Statements M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class SimpleUnaryOperation: public UnaryOperation
+class M_API_Statements SimpleUnaryOperation: public UnaryOperation
 {
 	MARTTA_OBJECT(UnaryOperation)
 

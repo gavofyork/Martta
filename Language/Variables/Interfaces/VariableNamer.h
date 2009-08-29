@@ -24,10 +24,14 @@
 #include "WebViewable.h"
 #include "ValueDefiner.h"
 
+#ifndef M_API_Variables
+#define M_API_Variables M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class VariableNamer: public_interface ValueDefiner, public_interface Labelled, public_interface WebViewable
+class M_API_Variables VariableNamer: public_interface ValueDefiner, public_interface Labelled, public_interface WebViewable
 {
 	MARTTA_INTERFACE
 	MARTTA_INHERITS(ValueDefiner, 0)

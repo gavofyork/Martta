@@ -22,10 +22,14 @@
 
 #include "Operation.h"
 
+#ifndef M_API_Statements
+#define M_API_Statements M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class UnaryOperation: public Operation
+class M_API_Statements UnaryOperation: public Operation
 {
 	MARTTA_PLACEHOLDER(Operation)
 

@@ -24,10 +24,14 @@
 #include "WebInformer.h"
 #include "Type.h"
 
+#ifndef M_API_TypeEntity
+#define M_API_TypeEntity M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class TypeNamer: public_interface WebInformer
+class M_API_TypeEntity TypeNamer: public_interface WebInformer
 {
 	MARTTA_INTERFACE
 	MARTTA_INHERITS(WebInformer, 0)

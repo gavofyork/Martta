@@ -26,10 +26,14 @@ using namespace MarttaSupport;
 
 #include "Meta.h"
 
+#ifndef M_API_Project
+#define M_API_Project M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class Project
+class M_API_Project Project
 {
 	MARTTA_INTERFACE
 

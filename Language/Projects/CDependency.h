@@ -26,10 +26,14 @@ using namespace MarttaSupport;
 
 #include "Entity.h"
 
+#ifndef M_API_Projects
+#define M_API_Projects M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class CDependency: public Entity
+class M_API_Projects CDependency: public Entity
 {
 	MARTTA_OBJECT(Entity)
 

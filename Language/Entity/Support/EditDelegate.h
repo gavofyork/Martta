@@ -22,6 +22,10 @@
 
 #include "SafePointer.h"
 
+#ifndef M_API_Entity
+#define M_API_Entity M_OUTAPI
+#endif
+
 namespace Martta
 {
 
@@ -60,7 +64,7 @@ protected:
 };
 
 template<class T>
-class EditDelegate: public EditDelegateFace
+class M_API_Entity EditDelegate: public EditDelegateFace
 {
 public:
 	EditDelegate(T* _e, CodeScene* _s, bool _immediateCommits = false): EditDelegateFace(_e, _s, _immediateCommits) {}

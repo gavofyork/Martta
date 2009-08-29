@@ -22,10 +22,14 @@
 
 #include "Referenced.h"
 
+#ifndef M_API_Class
+#define M_API_Class M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class MemberReferenced: public Referenced
+class M_API_Class MemberReferenced: public Referenced
 {
 	MARTTA_OBJECT(Referenced)
 
@@ -44,7 +48,7 @@ protected:
 	virtual void						onDependencyChanged(int _a, Entity* _d) { if (_d->isKind<MemberLambda>() || _d->isKind<Class>()) changed(Logically); Super::onDependencyChanged(_a, _d); }
 };
 
-class FloatingMemberReferenced: public MemberReferenced
+class M_API_Class FloatingMemberReferenced: public MemberReferenced
 {
 	MARTTA_OBJECT(MemberReferenced)
 

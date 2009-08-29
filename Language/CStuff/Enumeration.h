@@ -24,13 +24,17 @@
 #include "EnumerationNamer.h"
 #include "TopLevelType.h"
 
+#ifndef M_API_CStuff
+#define M_API_CStuff M_OUTAPI
+#endif
+
 namespace Martta
 {
 
 class EnumValue;
 class EnumerationResolver;
 
-class Enumeration: public TopLevelType, public_interface EnumerationNamer
+class M_API_CStuff Enumeration: public TopLevelType, public_interface EnumerationNamer
 {
 	MARTTA_OBJECT(TopLevelType)
 	MARTTA_INHERITS(EnumerationNamer, 0)

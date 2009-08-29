@@ -24,10 +24,14 @@
 #include "WebViewable.h"
 #include "ValueDefiner.h"
 
+#ifndef M_API_Namers
+#define M_API_Namers M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class EnumerationNamer: public_interface TypeDefinition, public_interface WebViewable
+class M_API_Namers EnumerationNamer: public_interface TypeDefinition, public_interface WebViewable
 {
 	MARTTA_INTERFACE
 	MARTTA_INHERITS(TypeDefinition, 0)

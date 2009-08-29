@@ -23,10 +23,14 @@
 #include "Solution.h"
 #include "Root.h"
 
+#ifndef M_API_Projects
+#define M_API_Projects M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class CSolution: public Root, public_interface Solution
+class M_API_Projects CSolution: public Root, public_interface Solution
 {
 	MARTTA_OBJECT(Root)
 	MARTTA_INHERITS(Solution, 0)

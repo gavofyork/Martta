@@ -25,13 +25,17 @@
 #include "Type.h"
 #include "ValueDefiner.h"
 
+#ifndef M_API_Namers
+#define M_API_Namers M_OUTAPI
+#endif
+
 namespace Martta
 {
 
 class Argument;
 class Compound;
 
-class LambdaNamer: public_interface ValueDefiner, public_interface WebViewable
+class M_API_Namers LambdaNamer: public_interface ValueDefiner, public_interface WebViewable
 {
 	MARTTA_INTERFACE
 	MARTTA_INHERITS(ValueDefiner, 0)
@@ -55,8 +59,8 @@ public:
 
 	// From ValueDefiner. Do be careful though - if you've got a mixin situation where one side is pure virtual
 	// still, explicitly scope this side on the call or you'll crash.
-	// e.g. class B: public Entity, public_interface TypeNamer { MARTTA_OBJECT(Entity) MARTTA_INHERITS(TypeNamer, 0) };
-	// class X: public B, public_interface LambdaNamer { MARTTA_OBJECT(B) MARTTA_INHERITS(LambdaNamer, 0)
+	// e.g. class M_API_Namers B: public Entity, public_interface TypeNamer { MARTTA_OBJECT(Entity) MARTTA_INHERITS(TypeNamer, 0) };
+	// class M_API_Namers X: public B, public_interface LambdaNamer { MARTTA_OBJECT(B) MARTTA_INHERITS(LambdaNamer, 0)
 	//     virtual Type type() const { return LambdaNamer::type().topWith<Const>(); };
 	//
 	//                                        ^^^^^^^^^^^^^

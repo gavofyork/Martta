@@ -23,6 +23,10 @@
 #include "Subscriptable.h"
 #include "ModifyingType.h"
 
+#ifndef M_API_Types
+#define M_API_Types M_OUTAPI
+#endif
+
 namespace Martta
 {
 
@@ -30,7 +34,7 @@ class BuiltinMethod;
 class BuiltinDeclaration;
 class BuiltinOperator;
 
-class StringType: public TypeEntity, public_interface Subscriptable
+class M_API_Types StringType: public TypeEntity, public_interface Subscriptable
 {
 	MARTTA_INITIALISED_OBJECT(TypeEntity)
 	MARTTA_INHERITS(Subscriptable, 0)

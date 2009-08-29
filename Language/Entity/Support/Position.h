@@ -27,6 +27,10 @@ using MarttaSupport::TextStream;
 #include "SafePointer.h"
 #include "Kind.h"
 
+#ifndef M_API_Entity
+#define M_API_Entity M_OUTAPI
+#endif
+
 namespace Martta
 {
 

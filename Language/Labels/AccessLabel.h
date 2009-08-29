@@ -25,6 +25,10 @@ using namespace MarttaSupport;
 
 #include "Label.h"
 
+#ifndef M_API_Labels
+#define M_API_Labels M_OUTAPI
+#endif
+
 namespace Martta
 {
 
@@ -48,7 +52,7 @@ inline char const* code(Access _i)
 	}
 }
 
-class AccessLabel: public Label
+class M_API_Labels AccessLabel: public Label
 {
 	MARTTA_OBJECT(Label)
 

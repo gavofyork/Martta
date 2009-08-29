@@ -22,11 +22,15 @@
 
 #include "Named.h"
 
+#ifndef M_API_Declaration
+#define M_API_Declaration M_OUTAPI
+#endif
+
 namespace Martta
 {
 
 // Don't forget to use import/export functions!
-class Identifiable: public Named
+class M_API_Declaration Identifiable: public Named
 {
 	MARTTA_INTERFACE
 

@@ -23,6 +23,10 @@
 #include "ModelPtr.h"
 #include "VirtualMethod.h"
 
+#ifndef M_API_Class
+#define M_API_Class M_OUTAPI
+#endif
+
 namespace Martta
 {
 
@@ -31,7 +35,7 @@ inline String stripId(String const& _html)
 	return String(_html).replace(L"id=", L"iXd=");
 }
 
-class VirtualOverload: public VirtualMethod
+class M_API_Class VirtualOverload: public VirtualMethod
 {
 	MARTTA_OBJECT(VirtualMethod)
 

@@ -24,10 +24,14 @@
 #include "VariableNamer.h"
 #include "TopLevel.h"
 
+#ifndef M_API_CStuff
+#define M_API_CStuff M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class Variable: public TopLevel, public_interface VariableNamer
+class M_API_CStuff Variable: public TopLevel, public_interface VariableNamer
 {
 	MARTTA_OBJECT(TopLevel)
 	MARTTA_INHERITS(VariableNamer, 0)

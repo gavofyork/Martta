@@ -20,6 +20,10 @@
 
 #pragma once
 
+#ifndef M_API_CTypes
+#define M_API_CTypes M_OUTAPI
+#endif
+
 namespace Martta
 {
 

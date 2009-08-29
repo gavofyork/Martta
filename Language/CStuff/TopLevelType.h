@@ -23,10 +23,14 @@
 #include "TypeDefinition.h"
 #include "TopLevel.h"
 
+#ifndef M_API_CStuff
+#define M_API_CStuff M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class TopLevelType: public TopLevel, public_interface TypeDefinition
+class M_API_CStuff TopLevelType: public TopLevel, public_interface TypeDefinition
 {
 	MARTTA_PLACEHOLDER(TopLevel)
 	MARTTA_INHERITS(TypeDefinition, 0)

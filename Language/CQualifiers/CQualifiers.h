@@ -27,6 +27,10 @@
 #include <msFlags.h>
 using namespace MarttaSupport;
 
+#ifndef M_API_CQualifiers
+#define M_API_CQualifiers M_OUTAPI
+#endif
+
 namespace Martta
 {
 
@@ -44,7 +48,7 @@ enum Qualifier
 	FunctionMask = Static|Extern|Restrict|Inline|Explicit,
 	QualifierMask = Static|Extern|Mutable|Volatile|Restrict|Inline|Explicit
 };
-MS_DECLARE_FLAGS(Qualifier);
+M_DECLARE_FLAGS(Qualifier);
 
 inline char const* code(Qualifier _q)
 {

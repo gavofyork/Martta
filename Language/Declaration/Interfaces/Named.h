@@ -25,6 +25,10 @@ using namespace MarttaSupport;
 
 #include "Meta.h"
 
+#ifndef M_API_Declaration
+#define M_API_Declaration M_OUTAPI
+#endif
+
 namespace Martta
 {
 
@@ -37,7 +41,7 @@ public:
 	virtual ~Named() {}
 };
 
-class SimpleNamed: public Named
+class M_API_Declaration SimpleNamed: public Named
 {
 public:
 	SimpleNamed(String const& _name): m_name(_name) {}

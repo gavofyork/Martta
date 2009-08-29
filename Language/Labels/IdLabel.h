@@ -22,10 +22,14 @@
 
 #include "Label.h"
 
+#ifndef M_API_Labels
+#define M_API_Labels M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class IdLabel: public Label
+class M_API_Labels IdLabel: public Label
 {
 	MARTTA_PLACEHOLDER(Label)
 	

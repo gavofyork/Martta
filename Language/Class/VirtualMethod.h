@@ -23,10 +23,14 @@
 #include "Virtual.h"
 #include "Method.h"
 
+#ifndef M_API_Class
+#define M_API_Class M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class VirtualMethod: public Method, public_interface Virtual
+class M_API_Class VirtualMethod: public Method, public_interface Virtual
 {
 	MARTTA_OBJECT(Method)
 	MARTTA_INHERITS(Virtual, 0)

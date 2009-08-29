@@ -23,10 +23,14 @@
 #include "Subscriptable.h"
 #include "ModifyingType.h"
 
+#ifndef M_API_Types
+#define M_API_Types M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class AddressType: public ModifyingType, public_interface Subscriptable
+class M_API_Types AddressType: public ModifyingType, public_interface Subscriptable
 {
 	MARTTA_INITIALISED_PLACEHOLDER(ModifyingType)
 	MARTTA_INHERITS(Subscriptable, 0)

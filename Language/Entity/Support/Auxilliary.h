@@ -24,6 +24,10 @@
 #include "AuxilliaryFace.h"
 #include "AuxilliaryRegistrar.h"
 
+#ifndef M_API_Entity
+#define M_API_Entity M_OUTAPI
+#endif
+
 namespace Martta
 {
 
@@ -34,7 +38,7 @@ template<class T> struct GetCount
 };
 
 template<class T>
-class Auxilliary: public AuxilliaryFace
+class M_API_Entity Auxilliary: public AuxilliaryFace
 {
 public:
 	Auxilliary(char const* _name, bool _isPlaceholder): m_name(_name), m_isPlaceholder(_isPlaceholder) { AuxilliaryRegistrar::get()->registerAuxilliary(this); }
@@ -56,7 +60,7 @@ private:
 };
 
 template<class T>
-class InterfaceAuxilliary: public AuxilliaryFace
+class M_API_Entity InterfaceAuxilliary: public AuxilliaryFace
 {
 public:
 	InterfaceAuxilliary(char const* _name): m_name(_name) { AuxilliaryRegistrar::get()->registerAuxilliary(this); }

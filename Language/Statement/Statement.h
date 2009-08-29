@@ -26,13 +26,17 @@
 #include "TypedOwner.h"
 #include "Entity.h"
 
+#ifndef M_API_Statement
+#define M_API_Statement M_OUTAPI
+#endif
+
 namespace Martta
 {
 
 class ValueDefiner;
 class Typed;
 
-class Statement: public Entity, public_interface TypedOwner, public_interface NameEntryPoint, public_interface WebViewable, public_interface WebInformer
+class M_API_Statement Statement: public Entity, public_interface TypedOwner, public_interface NameEntryPoint, public_interface WebViewable, public_interface WebInformer
 {
 	MARTTA_PLACEHOLDER(Entity)
 	MARTTA_INHERITS(TypedOwner, 0)

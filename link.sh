@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# For windows, this is obligatory.
 COMPOSED=1
 
 if [[ "x$1" == "x" ]]; then
@@ -114,6 +115,7 @@ include($name.pri)
 HEADERS += $headers
 unix:HEADERS += $distfiles
 SOURCES += $sources
+DEFINES += M_API_$name=M_INAPI
 $(for (( i=4 ; i<$#+1 ; i++ )); do echo ${!i}; done;)
 EOF
 if [[ "x$data" != "x" ]]; then
@@ -122,7 +124,7 @@ INSTALL_DATA.files = $data
 INSTALL_DATA.path = Data
 INSTALLS += INSTALL_DATA
 !win32:DATA.commands = @echo "Copying data..." && mkdir -p "\$\$DESTDIR/Data" && cp \$\$INSTALL_DATA.files "\$\$DESTDIR/Data"
-win32:DATA.commands = @echo "Copying data..." && md "\$\$DESTDIR/Data" && $(for i in $data; do echo copy \"$i\" \"\$\$DESTDIR/Data\"; done)
+win32:DATA.commands = @echo "Copying data..." && md "\$\$DESTDIR/Data" && $(for i in $data; do echo -n copy \"$i\" \"\$\$DESTDIR/Data\"; done)
 QMAKE_EXTRA_TARGETS += DATA
 PRE_TARGETDEPS += DATA
 EOF
@@ -183,7 +185,7 @@ DEPENDPATH *= \$\$join(OURDIRS, " \$\$TWD/", "\$\$TWD/")
 INCLUDEPATH *= \$\$join(OURDIRS, " \$\$TWD/", "\$\$TWD/")
 contains(TARGET, \$\$basename(TWD)): contains(TEMPLATE, lib) {
 	QMAKE_POST_LINK += echo \$\${TARGET} \$\$DEPS > \$\${DESTDIR}/\$(TARGET).dep
-	macx: QMAKE_LFLAGS += -install_name @rpath/$(TARGET)
+	macx: QMAKE_LFLAGS += -install_name @rpath/\$(TARGET)
 }
 !contains(TARGET, \$\$basename(TWD)): !contains(NO_SOURCES, 1): LIBS *= -l\$\$basename(TWD)
 for(a, DEPS): !contains(DONE, \$\${a}) {

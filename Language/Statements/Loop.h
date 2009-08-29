@@ -23,10 +23,14 @@
 #include "Corporal.h"
 #include "Untyped.h"
 
+#ifndef M_API_Statements
+#define M_API_Statements M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class Loop: public Untyped, public_interface Corporal
+class M_API_Statements Loop: public Untyped, public_interface Corporal
 {
 	MARTTA_OBJECT(Untyped)
 	MARTTA_INHERITS(Corporal, 0)

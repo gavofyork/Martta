@@ -23,10 +23,14 @@
 #include "VariableNamer.h"
 #include "MemberValue.h"
 
+#ifndef M_API_Members
+#define M_API_Members M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class MemberVariable: public MemberValue, public_interface VariableNamer
+class M_API_Members MemberVariable: public MemberValue, public_interface VariableNamer
 {
 	MARTTA_OBJECT(MemberValue)
 	MARTTA_INHERITS(VariableNamer, 0)

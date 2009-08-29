@@ -25,6 +25,10 @@ using MarttaSupport::TextStream;
 
 #include "TypeEntity.h"
 
+#ifndef M_API_TypeEntity
+#define M_API_TypeEntity M_OUTAPI
+#endif
+
 namespace Martta
 {
 

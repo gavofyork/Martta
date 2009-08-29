@@ -24,6 +24,10 @@
 #include <QtCore>
 #include <QtXml>
 
+#ifndef M_API_Projects
+#define M_API_Projects M_OUTAPI
+#endif
+
 namespace Martta
 {
 
@@ -40,7 +44,7 @@ inline QString qs(String const& _s)
 	return QString::fromWCharArray(_s.data(), _s.length());
 }
 
-class DeclarationsHandler: public QXmlContentHandler
+class M_API_Projects DeclarationsHandler: public QXmlContentHandler
 {
 public:
 	DeclarationsHandler(Entity* _d): m_d(_d) {}

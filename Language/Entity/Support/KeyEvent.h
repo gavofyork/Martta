@@ -23,6 +23,10 @@
 #include "SafePointer.h"
 #include "Position.h"
 
+#ifndef M_API_Entity
+#define M_API_Entity M_OUTAPI
+#endif
+
 namespace Martta
 {
 

@@ -22,10 +22,14 @@
 
 #include "MemberLambda.h"
 
+#ifndef M_API_Members
+#define M_API_Members M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class Method: public MemberLambda
+class M_API_Members Method: public MemberLambda
 {
 	MARTTA_OBJECT(MemberLambda)
 

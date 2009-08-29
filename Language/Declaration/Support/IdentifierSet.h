@@ -26,6 +26,10 @@ using namespace MarttaSupport;
 
 #include "Named.h"
 
+#ifndef M_API_Declaration
+#define M_API_Declaration M_OUTAPI
+#endif
+
 namespace Martta
 {
 
@@ -45,7 +49,7 @@ public:
 };
 
 template<class T>
-class SimpleIdentifierSet: public IdentifierSet
+class M_API_Declaration SimpleIdentifierSet: public IdentifierSet
 {
 public:
 	SimpleIdentifierSet(wchar_t const* _name, wchar_t const* _preHtml = L"<span class=\"keyword\">", wchar_t const* _postHtml = L"</span>"):

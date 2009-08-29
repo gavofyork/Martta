@@ -23,10 +23,14 @@
 #include "AccessLabel.h"
 #include "TopLevelType.h"
 
+#ifndef M_API_Class
+#define M_API_Class M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class Class: public TopLevelType
+class M_API_Class Class: public TopLevelType
 {
 	MARTTA_OBJECT(TopLevelType)
 

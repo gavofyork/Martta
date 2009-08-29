@@ -24,12 +24,16 @@
 #include "ModelPtr.h"
 #include "BinaryOperation.h"
 
+#ifndef M_API_Statements
+#define M_API_Statements M_OUTAPI
+#endif
+
 namespace Martta
 {
 
 class ValueDefiner;
 
-class SimpleBinaryOperation: public BinaryOperation
+class M_API_Statements SimpleBinaryOperation: public BinaryOperation
 {
 	MARTTA_OBJECT(BinaryOperation)
 

@@ -22,10 +22,14 @@
 
 #include "TypeEntity.h"
 
+#ifndef M_API_Types
+#define M_API_Types M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class MemberTemplateType: public TypeEntity
+class M_API_Types MemberTemplateType: public TypeEntity
 {
 	MARTTA_OBJECT(TypeEntity)
 

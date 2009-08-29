@@ -22,10 +22,14 @@
 
 #include "Meta.h"
 
+#ifndef M_API_Entity
+#define M_API_Entity M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class ChildValidifier
+class M_API_Entity ChildValidifier
 {
 	MARTTA_INTERFACE
 

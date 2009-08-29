@@ -23,10 +23,14 @@
 #include "EntitySupport.h"
 #include "Meta.h"
 
+#ifndef M_API_Labels
+#define M_API_Labels M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class Labelled
+class M_API_Labels Labelled
 {
 	MARTTA_INTERFACE
 

@@ -22,10 +22,14 @@
 
 #include "Typed.h"
 
+#ifndef M_API_Members
+#define M_API_Members M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class ThisPointer: public Typed
+class M_API_Members ThisPointer: public Typed
 {
 	MARTTA_OBJECT(Typed)
 

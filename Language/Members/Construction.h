@@ -24,10 +24,14 @@
 #include "Constructor.h"
 #include "Invocation.h"
 
+#ifndef M_API_Members
+#define M_API_Members M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class Construction: public Invocation
+class M_API_Members Construction: public Invocation
 {
 	MARTTA_OBJECT(Invocation)
 

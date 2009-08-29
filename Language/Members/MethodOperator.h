@@ -23,10 +23,14 @@
 #include "Operator.h"
 #include "MemberLambda.h"
 
+#ifndef M_API_Members
+#define M_API_Members M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class MethodOperator: public MemberLambda
+class M_API_Members MethodOperator: public MemberLambda
 {
 	MARTTA_OBJECT(MemberLambda)
 

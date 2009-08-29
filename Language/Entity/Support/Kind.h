@@ -27,13 +27,17 @@ using namespace MarttaSupport;
 #include "AuxilliaryRegistrar.h"
 #include "AuxilliaryFace.h"
 
+#ifndef M_API_Entity
+#define M_API_Entity M_OUTAPI
+#endif
+
 namespace Martta
 {
 
 class Entity;
 class Kind;
 
-class Kinds: public List<Kind>
+class M_API_Entity Kinds: public List<Kind>
 {
 public:
 	Kinds() {}

@@ -23,6 +23,10 @@
 #include "AccessLabel.h"
 #include "Declaration.h"
 
+#ifndef M_API_Members
+#define M_API_Members M_OUTAPI
+#endif
+
 namespace Martta
 {
 
@@ -31,7 +35,7 @@ class TypeDefintion;
 /**
  * Class for any entity that can be found inside a class (i.e. with an access attribute).
  */
-class Member: public Declaration
+class M_API_Members Member: public Declaration
 {
 	MARTTA_PLACEHOLDER(Declaration)
 

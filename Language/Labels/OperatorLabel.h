@@ -23,10 +23,14 @@
 #include "Operator.h"
 #include "IdLabel.h"
 
+#ifndef M_API_Labels
+#define M_API_Labels M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class OperatorLabel: public IdLabel
+class M_API_Labels OperatorLabel: public IdLabel
 {
 	MARTTA_OBJECT(IdLabel)
 

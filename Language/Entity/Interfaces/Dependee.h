@@ -23,10 +23,14 @@
 #include "Dier.h"
 #include "ChangeMan.h"
 
+#ifndef M_API_Entity
+#define M_API_Entity M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class Dependee: virtual public Dier
+class M_API_Entity Dependee: virtual public Dier
 {
 	MARTTA_INTERFACE
 

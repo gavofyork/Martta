@@ -30,7 +30,11 @@ using namespace MarttaSupport;
 #include "SpecialKeys.h"
 #include "EditDelegate.h"
 
-MS_TEST_METHOD_EXISTANCE_1(committed)
+M_TEST_METHOD_EXISTANCE_1(committed)
+
+#ifndef M_API_Entity
+#define M_API_Entity M_OUTAPI
+#endif
 
 namespace Martta
 {
@@ -58,7 +62,7 @@ template<class S> inline List<S> nameStarts(List<S> const& _l, String const& _s)
 // Might exist: T::committed()
 
 template<class T, class R>
-class CompletionDelegate: public EditDelegate<T>
+class M_API_Entity CompletionDelegate: public EditDelegate<T>
 {
 public:
 	CompletionDelegate(T* _e, CodeScene* _s, bool _allowEmpty = true):

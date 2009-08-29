@@ -24,6 +24,10 @@
 #include "CTypes.h"
 #include "PhysicalType.h"
 
+#ifndef M_API_Types
+#define M_API_Types M_OUTAPI
+#endif
+
 namespace Martta
 {
 
@@ -35,7 +39,7 @@ class BuiltinTypeSet;
 
 template<class T> class NameTrait;
 
-class BuiltinType: public PhysicalType
+class M_API_Types BuiltinType: public PhysicalType
 {
 	MARTTA_INITIALISED_OBJECT(PhysicalType)
 

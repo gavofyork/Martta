@@ -22,10 +22,14 @@
 
 #include "Untyped.h"
 
+#ifndef M_API_Statement
+#define M_API_Statement M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class Compound: public Untyped
+class M_API_Statement Compound: public Untyped
 {
 	MARTTA_OBJECT(Untyped)
 
@@ -47,7 +51,7 @@ protected:
 	static String						statementsToHtml(List<Statement*> const& _es);
 };
 
-class HardCompound: public Compound
+class M_API_Statement HardCompound: public Compound
 {
 	MARTTA_OBJECT(Compound)
 

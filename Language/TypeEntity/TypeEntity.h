@@ -27,6 +27,10 @@ using namespace MarttaSupport;
 #include "TypedOwner.h"
 #include "Entity.h"
 
+#ifndef M_API_TypeEntity
+#define M_API_TypeEntity M_OUTAPI
+#endif
+
 namespace Martta
 {
 
@@ -37,7 +41,7 @@ class Type;
 class TypeEntity;
 template<class T> class TypeConstructor;
 
-class TypeEntity: public Entity, public_interface TypedOwner, public_interface WebViewable
+class M_API_TypeEntity TypeEntity: public Entity, public_interface TypedOwner, public_interface WebViewable
 {
 	MARTTA_PLACEHOLDER(Entity)
 	MARTTA_INHERITS(TypedOwner, 0)

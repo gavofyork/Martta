@@ -23,6 +23,10 @@
 #include "WebViewable.h"
 #include "TypeEntity.h"
 
+#ifndef M_API_TypeEntity
+#define M_API_TypeEntity M_OUTAPI
+#endif
+
 namespace Martta
 {
 
@@ -30,7 +34,7 @@ namespace Martta
 // means that in derived classes which need other children (e.g. Array, Memberify) they have
 // to ensure that the 'child' is in place before any secondary entities are added.
 
-class ModifyingType: public TypeEntity, public_interface WebViewable
+class M_API_TypeEntity ModifyingType: public TypeEntity, public_interface WebViewable
 {
 	MARTTA_PLACEHOLDER(TypeEntity)
 	MARTTA_INHERITS(WebViewable, 0)

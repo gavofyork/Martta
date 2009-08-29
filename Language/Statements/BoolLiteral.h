@@ -23,10 +23,14 @@
 #include "BuiltinType.h"
 #include "Literal.h"
 
+#ifndef M_API_Statements
+#define M_API_Statements M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class BoolLiteral: public Literal
+class M_API_Statements BoolLiteral: public Literal
 {
 	MARTTA_OBJECT(Literal)
 

@@ -22,10 +22,14 @@
 
 #include "Evaluation.h"
 
+#ifndef M_API_Statements
+#define M_API_Statements M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class Invocation: public Evaluation
+class M_API_Statements Invocation: public Evaluation
 {
 	MARTTA_OBJECT(Evaluation)
 

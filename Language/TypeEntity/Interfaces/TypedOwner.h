@@ -26,13 +26,17 @@ using MarttaSupport::List;
 #include "WebInformer.h"
 #include "ChildValidifier.h"
 
+#ifndef M_API_TypeEntity
+#define M_API_TypeEntity M_OUTAPI
+#endif
+
 namespace Martta
 {
 
 class Type;
 typedef List<Type> Types;
 
-class TypedOwner: public_interface ChildValidifier, public_interface WebInformer
+class M_API_TypeEntity TypedOwner: public_interface ChildValidifier, public_interface WebInformer
 {
 	MARTTA_INTERFACE
 	MARTTA_INHERITS(ChildValidifier, 0)

@@ -24,11 +24,15 @@
 #include "ModelPtrFace.h"
 #include "Entity.h"
 
+#ifndef M_API_Declaration
+#define M_API_Declaration M_OUTAPI
+#endif
+
 namespace Martta
 {
 
 template<class T>
-class ModelPtr: public ModelPtrFace
+class M_API_Declaration ModelPtr: public ModelPtrFace
 {
 public:
 	inline ModelPtr(T* _t = 0): ModelPtrFace(_t) {}

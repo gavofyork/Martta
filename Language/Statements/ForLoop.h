@@ -23,10 +23,14 @@
 #include "Conditional.h"
 #include "Loop.h"
 
+#ifndef M_API_Statements
+#define M_API_Statements M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class ForLoop: public Loop, public_interface Conditional
+class M_API_Statements ForLoop: public Loop, public_interface Conditional
 {
 	MARTTA_OBJECT(Loop)
 	MARTTA_INHERITS(Conditional, 0)

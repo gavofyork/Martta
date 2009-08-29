@@ -24,10 +24,14 @@
 #include "ExplicitType.h"
 #include "ModifyingType.h"
 
+#ifndef M_API_Types
+#define M_API_Types M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class Memberify: public ModifyingType
+class M_API_Types Memberify: public ModifyingType
 {
 	MARTTA_OBJECT(ModifyingType)
 

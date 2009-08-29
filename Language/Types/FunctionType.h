@@ -23,6 +23,10 @@
 #include "Type.h"
 #include "PhysicalType.h"
 
+#ifndef M_API_Types
+#define M_API_Types M_OUTAPI
+#endif
+
 namespace Martta
 {
 
@@ -30,7 +34,7 @@ namespace Martta
 // child(Returned) is return type.
 // child(n) is argument n
 // For ... functions, m_ellipsis is set.
-class FunctionType: public PhysicalType
+class M_API_Types FunctionType: public PhysicalType
 {
 	MARTTA_OBJECT(PhysicalType)
 

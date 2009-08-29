@@ -22,10 +22,14 @@
 
 #include "Function.h"
 
+#ifndef M_API_Projects
+#define M_API_Projects M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class MainFunction: public Function
+class M_API_Projects MainFunction: public Function
 {
 	MARTTA_OBJECT(Function)
 

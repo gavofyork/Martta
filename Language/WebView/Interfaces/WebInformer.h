@@ -25,10 +25,14 @@ using namespace MarttaSupport;
 
 #include "Meta.h"
 
+#ifndef M_API_WebView
+#define M_API_WebView M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class WebInformer
+class M_API_WebView WebInformer
 {
 	MARTTA_INTERFACE
 

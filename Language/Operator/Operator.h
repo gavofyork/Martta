@@ -25,6 +25,10 @@
 #include <msSupport.h>
 using namespace MarttaSupport;
 
+#ifndef M_API_Operator
+#define M_API_Operator M_OUTAPI
+#endif
+
 namespace Martta
 {
 

@@ -23,11 +23,15 @@
 #include "VariableNamer.h"
 #include "Primary.h"
 
+#ifndef M_API_Members
+#define M_API_Members M_OUTAPI
+#endif
+
 namespace Martta
 {
 
 /// Has two children; one of type Variable, and a second of Construction.
-class ConstructedVariable: public Primary, public_interface VariableNamer
+class M_API_Members ConstructedVariable: public Primary, public_interface VariableNamer
 {
 	MARTTA_OBJECT(Primary)
 	MARTTA_INHERITS(VariableNamer, 0)

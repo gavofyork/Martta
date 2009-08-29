@@ -23,10 +23,14 @@
 #include "WebViewable.h"
 #include "IdLabel.h"
 
+#ifndef M_API_Labels
+#define M_API_Labels M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class TextLabel: public IdLabel, public_interface WebViewable
+class M_API_Labels TextLabel: public IdLabel, public_interface WebViewable
 {
 	MARTTA_OBJECT(IdLabel)
 	MARTTA_INHERITS(WebViewable, 0)

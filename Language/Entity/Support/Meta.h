@@ -23,6 +23,10 @@
 #include "Auxilliary.h"
 #include "Kind.h"
 
+#ifndef M_API_Entity
+#define M_API_Entity M_OUTAPI
+#endif
+
 namespace Martta
 {
 
@@ -44,8 +48,8 @@ template<class T, class F> T tryCast(F _f) { return tryCastPrivate::XL<T, F, try
 #define MARTTA_BASIC \
 public: \
 	template<class T> friend struct Martta::GetCount; \
-	template<class T> friend class Martta::Auxilliary; \
-	template<class T> friend class Martta::InterfaceAuxilliary; \
+	template<class T> friend class M_API_Entity Martta::Auxilliary; \
+	template<class T> friend class M_API_Entity Martta::InterfaceAuxilliary; \
 	inline virtual Kind					kind() const { return this ? staticKind : Kind(Nothing::staticAuxilliary()); } \
 	static Kind							staticKind; \
 	static AuxilliaryFace const*		staticAuxilliary(); \

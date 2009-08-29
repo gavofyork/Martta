@@ -24,10 +24,14 @@
 #include "Labelled.h"
 #include "Member.h"
 
+#ifndef M_API_Members
+#define M_API_Members M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class MemberEnumeration: public Member, public_interface EnumerationNamer, public_interface Labelled
+class M_API_Members MemberEnumeration: public Member, public_interface EnumerationNamer, public_interface Labelled
 {
 	MARTTA_OBJECT(Member)
 	MARTTA_INHERITS(EnumerationNamer, 0)
