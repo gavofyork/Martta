@@ -128,7 +128,7 @@ public:
 	Resolver(Entity* _s, QXmlAttributes const& _a, bool _isNamed = true): m_subject(_s)
 	{
 		if (_isNamed)
-			m_subject->adopt(Entity::evaluate(String(L"TextLabel[text=%1]").arg(qs(properName(_a)))));
+			m_subject->adoptWithShove(Entity::evaluate(String(L"TextLabel[text=%1]").arg(qs(properName(_a)))));
 	}
 	virtual ~Resolver() {}
 
@@ -155,15 +155,14 @@ public:
 	{
 		// TODO: Will have to handle defaults for C++ stuff (i.e. know if it has a default).
 		m_argIds << _a.value("type");
-		m_subject->back().place(Entity::evaluate(String(L"Argument{TextLabel[name=%1]}").arg(qs(_a.value("name")))));
+		m_subject->adopt(Entity::evaluate(String(L"Argument{TextLabel[name=%1]}").arg(qs(_a.value("name")))));
 	}
 
 	void addEllipsis() { Hash<String, String> p; p[L"ellipsis"] = L"true"; m_subject->setProperties(p); }
 
 	virtual void resolve(DeclarationsHandler* _h)
 	{
-		Entity* e = _h->resolveType(m_returnsId);
-		m_subject->firstFor(e->kind()).place(e);
+		m_subject->adopt(_h->resolveType(m_returnsId));
 		for (int i = 0; i < m_argIds.size(); i++)
 			m_subject->child(i)->adopt(_h->resolveType(m_argIds[i]));
 	}
@@ -187,8 +186,7 @@ public:
 
 	virtual void resolve(DeclarationsHandler* _h)
 	{
-		Entity* t = _h->resolveType(m_typeId);
-		m_subject->firstFor(t->kind()).place(t);
+		m_subject->adopt(_h->resolveType(m_typeId));
 	}
 
 protected:
@@ -249,8 +247,7 @@ public:
 	{
 		TypeResolver::resolve(_h);
 		Entity* td;
-		Entity* t = _h->resolveType(m_typeId, &td);
-		m_subject->adopt(t);
+		m_subject->adopt(_h->resolveType(m_typeId, &td));
 
 		if (_h->nameOfType(td) == m_name)
 		{
@@ -296,15 +293,10 @@ Entity* DeclarationsHandler::resolveType(QString const& _typeId, Entity** _td)
 		return Entity::evaluate(String("ExplicitType[key=0x%1]").arg((void*)m_types[_typeId]));
 	}
 	else if (m_simples.contains(_typeId))
-	{
 		return Entity::evaluate(String(L"BuiltinType[id=%1]").arg(m_simples[_typeId]));
-	}
 	else if (m_functionTypes.contains(_typeId))
 	{
 		bool ellipsis = !m_functionTypes[_typeId]->m_argIds.isEmpty() && m_functionTypes[_typeId]->m_argIds.last().isEmpty();
-		foreach (QString i, m_functionTypes[_typeId]->m_argIds)
-			qDebug() << i;
-		qDebug() << m_functionTypes[_typeId]->m_argIds;
 		Entity* r = resolveType(m_functionTypes[_typeId]->m_returnsId);
 		r = r->insert(Entity::evaluate(String(L"FunctionType[ellipsis=%1][wild=false]").arg(ellipsis)));
 		foreach(QString i, m_functionTypes[_typeId]->m_argIds)
@@ -313,15 +305,11 @@ Entity* DeclarationsHandler::resolveType(QString const& _typeId, Entity** _td)
 			else
 			{
 				AssertEqNR(r->cardinalChildCount(), m_functionTypes[_typeId]->m_argIds.count() - 1)
-				r->debugTree();
-				qDebug() << m_functionTypes[_typeId]->m_argIds.count();
 			}
 		return r;
 	}
 	else if (m_pointers.contains(_typeId))
-	{
 		return resolveType(m_pointers[_typeId]->m_type)->insert(Entity::evaluate(L"Pointer"));
-	}
 	else if (m_cvQualifieds.contains(_typeId))
 	{
 		Entity* r = resolveType(m_cvQualifieds[_typeId]->m_type);
@@ -355,20 +343,15 @@ bool DeclarationsHandler::startElement(QString const&, QString const& _n, QStrin
 	QString conId = _a.value("context");
 	AssertNR(conId.isEmpty() || m_contexts.contains(conId));
 	Entity* parent = m_contexts[conId];
+	AssertNR(conId.isEmpty() || parent);
 
 	if (false) {}
 	else if (_n == "PointerType")
-	{
 		m_pointers[_a.value("id")] = new PointerType(_a);
-	}
 	else if (_n == "ArrayType")
-	{
 		m_arrays[_a.value("id")] = new ArrayType(_a);
-	}
 	else if (_n == "CvQualifiedType")
-	{
 		m_cvQualifieds[_a.value("id")] = new CvQualifiedType(_a);
-	}
 	else if (_n == "FundamentalType")
 	{
 		QStringList n = _a.value("name").split(" ");
@@ -399,6 +382,8 @@ bool DeclarationsHandler::startElement(QString const&, QString const& _n, QStrin
 	}
 	else if (_n == "Field")
 	{
+		AssertNR(parent);
+		mInfo() << parent;
 		foreach(Resolver* i, m_resolvers)
 		{
 			bool it = i->isType();
@@ -430,6 +415,7 @@ bool DeclarationsHandler::startElement(QString const&, QString const& _n, QStrin
 	}
 	else if (_n == "Function" && (!_a.value("mangled").isEmpty() || !_a.value("name").startsWith("_")))
 	{
+		AssertNR(parent);
 		m_resolvers << (m_lastFunction = new FunctionResolver(&m_functions[_a.value("id")], _a));
 		parent->adopt(m_functions[_a.value("id")]);
 		m_contexts[_a.value("id")] = m_functions[_a.value("id")];
@@ -483,13 +469,9 @@ bool DeclarationsHandler::startElement(QString const&, QString const& _n, QStrin
 	else if (_n == "Namespace")
 	{
 		if (_a.value("name") == "::")
-		{
 			m_contexts[_a.value("id")] = m_d;
-		}
 		else
-		{
 			AssertNR(_a.value("members").isEmpty());
-		}
 	}
 	return true;
 }
@@ -517,13 +499,17 @@ bool DeclarationsHandler::endDocument()
 
 	{
 		// Clean up all temporaries that the resolution process depended on.
-		foreach(ArrayType* i, m_arrays.values()) delete i;
+		foreach(ArrayType* i, m_arrays.values())
+			delete i;
 		m_arrays.clear();
-		foreach(CvQualifiedType* i, m_cvQualifieds.values()) delete i;
+		foreach(CvQualifiedType* i, m_cvQualifieds.values())
+			delete i;
 		m_cvQualifieds.clear();
-		foreach(PointerType* i, m_pointers.values()) delete i;
+		foreach(PointerType* i, m_pointers.values())
+			delete i;
 		m_pointers.clear();
-		foreach(IncomingFunctionType* i, m_functionTypes.values()) delete i;
+		foreach(IncomingFunctionType* i, m_functionTypes.values())
+			delete i;
 		m_functionTypes.clear();
 	}
 	return true;

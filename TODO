@@ -1,21 +1,18 @@
-TODO Bools
-TODO Use VariableNamer::isInValidState for other Variable types, move more into VN::is...().
+BUG DeclarationsHandler is keeping old placeholders when generating its tree.
 
+TODO Use VariableNamer::isInValidState for other Variable types, move more into VN::is...().
+TODO Windows compiling - get the 
+
+OPTIMISE StringLiteral editing - commit takes too long.
 OPTIMISE Moving is crazily slow over statements.
 - To fix change key press dispatch method:
   - All allowedKinds on Position and execute the Auxilliary's dispatchKeyPress.
   - Do recursively but prune on denied Kinds.
   - Remove all allowedToBeKind (or other Kind-checking) in handlers.
-OPTIMISE onDependencyChanged gets index with special indices for parent, ancestral and freeforms.
+OPTIMISE onDependencyChanged gets index w/ special indices for parent, ancestral & freeforms.
 
-BRINGBACK EnumNamer/Class expansion.
+QUICK EnumNamer/Class expansion.
 
-BRINGBACK All tests incl. Ser/Deser.
-
-BUG current() bad in onCurrentAboutToChange.
-BUG DeclarationsHandler is keeping old placeholders when generating its tree.
-BUG GONE? Can edit a main function sometimes.
-EMAIL Kill selections.
 
 --------------------------------------------------------------------------------
 
@@ -27,7 +24,9 @@ RELEASE M1 (TBD)
 
 ================================================================================
 
-OPTIMISE FloatLiteral, on commit, takes just too long.
+BUG? current() bad in onCurrentAboutToChange.
+EMAIL Kill selections.
+BRINGBACK All tests incl. Ser/Deser.
 TODO Unary operation should apply to climb Statement tree until it finds something.
 TODO Interfacify ModifyingType (clashes with PhysicalType over ListType etc.)
 - NewOperation/DeleteOperation - interface with Type classes.

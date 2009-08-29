@@ -67,14 +67,16 @@ public:
 	inline Entity(): Dier(), ChildValidifier(), Depender(), Dependee(), SafePointerTarget(), m_parent(0), m_index(UndefinedIndex) {}
 	inline Entity(Entity const&): Dier(), ChildValidifier(), Familial(), Depender(), Dependee(), SafePointerTarget() { AssertNR(false); }
 
-	static void							initialiseClass() {}
-	static void							finaliseClass() {}
+	static inline void					initialiseClass() {}
+	static inline void					finaliseClass() {}
 
 	void								silentMove(Position const& _to);
-	void								silentRemove() { silentMove(Nowhere); }
+	inline void							silentRemove() { silentMove(Nowhere); }
 	void								move(Position const& _newPosition);
 	/// Same as move() except that if the destination is a placeholder we replace it. Favour this over move() generally.
 	void								put(Position const& _newPosition);
+	/// Same as put() except that if the destination index is named any entity is replaced.
+	void								shove(Position const& _newPosition);
 
 	inline int							index() const { return m_index; }
 	inline Entity*						parent() const { return m_parent; }
@@ -215,7 +217,8 @@ public:
 
 	/**
 	 * kill()s the deletes the object but informs any dependent it is dieing first. If you just want to kill an
-	 * entity in the tree, use this rather than killAndDelete().
+	 * entity in the tree, use this rather than killAndDelete(). This will not replace the position with another
+	 * entity, even if it leaves the tree in an invalid state. To keep everything valid, just use deleteAndRefill().
 	 */
 	inline void							killAndDeleteWithNotification() { move(Nowhere); inLimbo(); killAndDelete(); }
 
@@ -240,16 +243,25 @@ public:
 	 * Will assert against failure.
 	 * Order of preference according to firstFor().
 	 * Our children are preserved.
+	 *
+	 * If an entity already exists in our future, non-cardinal, position (as a child of @a _e ), then it
+	 * will be replaced (silently) by us. To be safe, guarantee that there is nothing in the destination
+	 * index prior to this operation.
 	 */
 	Entity*								insert(Entity* _e, int _preferedIndex = NonePrefered);
 	template<class T> inline T*			insert(int _preferedIndex = NonePrefered) { T* r = new T; insert(r, _preferedIndex); return r; }
 
 	/**
-	 * Adopts a new child entity. Puts it in the best position according to firstFor().
+	 * Adopts a new child entity. Puts it in the best position according to firstFor(). Will replace any
+	 * entity is the best position happens to be named.
 	 *
 	 * To check if the child has been inserted, compare the child's parent() after this call.
 	 */
-	inline void							adopt(Entity* _ch) { firstFor(_ch->kind()).place(_ch); }
+	inline void							adopt(Entity* _ch) { _ch->put(firstFor(_ch->kind())); }
+	/**
+	 * Same as adopt() except that shove() semantics are used rather than put().
+	 */
+	inline void							adoptWithShove(Entity* _ch) { _ch->shove(firstFor(_ch->kind())); }
 
 	/**
 	 * Attempts to make this the child of @a _e (at the first allowable place).

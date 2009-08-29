@@ -746,9 +746,18 @@ void Entity::put(Position const& _newPosition)
 {
 	AssertNR(this);
 	if (_newPosition.exists() && _newPosition->isPlaceholder())
-		_newPosition->replace(this);	// TODO: handle brood-move/replace.
+		_newPosition->replace(this);	// TODO: handle in-brood replace.
 	else
 		move(_newPosition);
+}
+
+void Entity::shove(Position const& _newPosition)
+{
+	AssertNR(this);
+	if (_newPosition.exists() && _newPosition->index() < 0)
+		_newPosition->replace(this);
+	else
+		put(_newPosition);
 }
 
 void Entity::move(Position const& _newPosition)
@@ -843,7 +852,10 @@ Entity* Entity::insert(Entity* _e, int _preferedIndex)
 	{
 		// Everything going according to plan.
 		// P -n-> this   BECOMES   P -n-> _e -ip.i-> this
-		ip.insertSilent(this);
+		if (ip.exists() && (ip->isPlaceholder() || ip->index() < 0))
+			ip->killAndDelete(this);
+		silentMove(ip);
+
 		_e->childAdded(m_index);
 		if (_e->parent())
 			_e->parent()->childSwitched(_e, this);
