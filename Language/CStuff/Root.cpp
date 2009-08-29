@@ -29,8 +29,6 @@ MARTTA_OBJECT_CPP(Root);
 
 Kinds Root::allowedKinds(int _i) const
 {
-	if (_i >= 0)
-		return Kind::of<Namespace>();		//TODO get rid of.
 	if (_i == Included)
 		return Kind::of<TopLevel>();
 	return Super::allowedKinds(_i);
