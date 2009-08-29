@@ -1,5 +1,3 @@
-
-TODO Use VariableNamer::isInValidState for other Variable types, move more into VN::is...().
 TODO Windows compiling - get the 
 
 OPTIMISE StringLiteral editing - commit takes too long.

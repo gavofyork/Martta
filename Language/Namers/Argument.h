@@ -46,6 +46,7 @@ protected:
 	virtual bool						isSuperfluous() const;
 	virtual String						defineLabelHtml(String const& _text) const;
 	virtual String						defineLabelCode(String const& _text) const { return L"_" + camelCase(_text); }
+	virtual bool						isInValidState() const { return Super::isInValidState() && VariableNamer::isInValidState(); }
 };
 
 }

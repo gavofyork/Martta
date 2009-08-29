@@ -47,6 +47,7 @@ protected:
 	virtual Type						type() const { return MemberValue::memberifiedType(VariableNamer::type()); }
 	virtual String						defineLabelHtml(String const& _text) const;
 	virtual String						defineLabelCode(String const& _text) const { return L"m_" + camelCase(_text); }
+	virtual bool						isInValidState() const { return Super::isInValidState() && VariableNamer::isInValidState(); }
 };
 
 }

@@ -44,6 +44,7 @@ private:
 	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); Identifiable::properties(_p); }
 	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); Identifiable::setProperties(_p); }
+	virtual bool						isInValidState() const { return Super::isInValidState() && VariableNamer::isInValidState(); }
 
 	virtual String						informationHtml() const { return Super::informationHtml() + VariableNamer::informationHtml(); }
 

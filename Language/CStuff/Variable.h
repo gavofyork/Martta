@@ -48,6 +48,7 @@ protected:
 	virtual String						implementationCode() const { return VariableNamer::implementationCode(); }
 	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p[L"qualifiers"] = String::number((uint)m_qualifiers); }
 	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_qualifiers = Qualifiers(_p[L"qualifiers"].toUint()); }
+	virtual bool						isInValidState() const { return Super::isInValidState() && VariableNamer::isInValidState(); }
 
 private:
 	Qualifiers							m_qualifiers;
