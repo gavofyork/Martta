@@ -767,6 +767,23 @@ void MainWindow::updateProgramCode()
 		programCode->setPlainText(qs(p->finalCode()));
 }
 
+bool hasSuperChild(Entity* _p, Entity* _e)
+{
+	if (_p == _e)
+		return true;
+	foreach (Entity* i, _p->children())
+		if (hasSuperChild(i, _e))
+			return true;
+	return false;
+}
+
+QString MainWindow::summary(Entity* _e)
+{
+	if (_e && hasSuperChild(m_solution->self(), _e))
+		return qs(_e->summary());
+	return "NULL";
+}
+
 void MainWindow::delayedUpdate()
 {
 	m_updateTimer->deleteLater();
@@ -793,6 +810,35 @@ void MainWindow::delayedUpdate()
 	{
 		updateProgramCode();
 		ChangeMan::get()->resetChanged();
+	}
+
+	changes->clear();
+	foreach (ChangeMan::Entry i, ChangeMan::get()->changesDone())
+	{
+		switch (i.m_op)
+		{
+		case ChangeMan::DependencyChanged:
+			new QTreeWidgetItem(changes, QStringList() << summary(i.m_depender) + ": DepChanged" << summary(i.m_object1) + QString(", Aspect: %1").arg(i.m_aspect));
+		break;
+		case ChangeMan::DependencySwitched:
+			new QTreeWidgetItem(changes, QStringList() << summary(i.m_depender) + ": DepSwitched" << "Coming: " + summary(i.m_object1) + ", Going: " + summary(i.m_object2));
+		break;
+		case ChangeMan::DependencyAdded:
+			new QTreeWidgetItem(changes, QStringList() << summary(i.m_depender) + ": DepAdded" << "Coming: " + summary(i.m_object1));
+		break;
+		case ChangeMan::EntityChildrenInitialised:
+			new QTreeWidgetItem(changes, QStringList() << summary(i.m_depender) + ": ChildrenInit'd");
+		break;
+		case ChangeMan::DependencyRemoved:
+			new QTreeWidgetItem(changes, QStringList() << summary(i.m_depender) + ": DepRemoved" << "Going: " + summary(i.m_object1));
+		break;
+		case ChangeMan::ChildMoved:
+			new QTreeWidgetItem(changes, QStringList() << summary(i.m_depender) + ": ChildMoved" << summary(i.m_object1) + QString(", From: #%1").arg(i.m_index));
+		break;
+		case ChangeMan::IndexChanged:
+			new QTreeWidgetItem(changes, QStringList() << summary(i.m_depender) + ": IndexChanged" << QString("#%1").arg(i.m_index));
+		break;
+		}
 	}
 }
 

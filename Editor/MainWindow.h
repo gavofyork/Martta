@@ -141,6 +141,8 @@ private:
 	inline QList<Project*>	projects() const { return m_projects.keys(); }
 	inline Project*			project() const { return codeView->subject()->tryKind<Project>(); }
 
+	QString					summary(Entity* _e);
+
 	QList<QLibrary*>		m_libraries;
 
 	QHash<Project*, QString>m_projects;
