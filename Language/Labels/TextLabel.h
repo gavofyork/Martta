@@ -50,6 +50,8 @@ public:
 
 protected:
 	virtual void						apresLoad();
+	virtual int							familyDependencies() const;
+	virtual void						onDependencyChanged(int _a, Entity* _e) { if (_a == Logically) changed(Visually); Super::onDependencyChanged(_a, _e); }
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 	virtual String						defineHtml() const;
 	virtual String						defineEditHtml(CodeScene* _cs) const;

@@ -1,5 +1,4 @@
-TODO Windows compiling - get the 
-
+OPTIMISE New project far too slow.
 OPTIMISE StringLiteral editing - commit takes too long.
 OPTIMISE Moving is crazily slow over statements.
 - To fix change key press dispatch method:
@@ -10,6 +9,7 @@ OPTIMISE onDependencyChanged gets index w/ special indices for parent, ancestral
 
 QUICK EnumNamer/Class expansion.
 
+BUG Class anon name is black
 
 --------------------------------------------------------------------------------
 

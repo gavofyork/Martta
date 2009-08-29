@@ -47,8 +47,13 @@ String TextLabel::code() const
 
 void TextLabel::apresLoad()
 {
-	if (m_text.startsWith("ANON"))
+	if (m_text.startsWith("_ANON"))
 		m_text = String::null;
+}
+
+int TextLabel::familyDependencies() const
+{
+	return parentIs<Labelled>() ? DependsOnParent : DependsOnNothing;
 }
 
 String TextLabel::name() const
