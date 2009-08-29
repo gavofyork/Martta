@@ -47,7 +47,7 @@ protected:
 	virtual int							minRequired(int _i) const { return _i == OurType ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual int							familyDependencies() const { return DependsOnChildren; }
-	virtual void						onDependencyChanged(int, Entity*) { changed(Logically); }
+	virtual void						onDependencyChanged(int _a, Entity* _e) { VariableNamer::onDependencyChanged(_a, _e); Super::onDependencyChanged(_a, _e); }
 	virtual String						interfaceCode() const { return Martta::code(m_qualifiers & VariableMask) + VariableNamer::interfaceCode(); }
 	virtual String						implementationCode() const { return VariableNamer::implementationCode(); }
 	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p[L"qualifiers"] = String::number((uint)m_qualifiers); }

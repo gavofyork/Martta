@@ -43,7 +43,7 @@ protected:
 	virtual int							minRequired(int _i) const { return _i == OurType || _i == Identity ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _index) const;
 	virtual int							familyDependencies() const { return DependsOnChildren; }
-	virtual void						onDependencyChanged(int _a, Entity* _e) { if (_e == child(OurType)) changed(Logically); if (_e == child(Identity)) changed(Visually); Super::onDependencyChanged(_a, _e); }
+	virtual void						onDependencyChanged(int _a, Entity* _e) { VariableNamer::onDependencyChanged(_a, _e); Super::onDependencyChanged(_a, _e); }
 	virtual String						defineHtml() const { return L"<^>" + defineVariableHtml(); }
 	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual bool						isInValidState() const;
