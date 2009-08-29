@@ -239,8 +239,8 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 		if (_ev->region().contains(br))
 		{
 			QLinearGradient g(br.topLeft(), br.bottomLeft());
-			g.setColorAt(0.f, editDelegate() ? QColor(255, 128, 0, 80) : QColor(0, 128, 255, 16));
-			g.setColorAt(1.f, editDelegate() ? QColor(255, 128, 0, 32) : QColor(0, 128, 255, 48));
+			g.setColorAt(0.f, editDelegate() ? QColor(224, 0, 0, 64) : QColor(0, 128, 255, 16));
+			g.setColorAt(1.f, editDelegate() ? QColor(224, 0, 0, 16) : QColor(0, 128, 255, 48));
 			p.setPen(Qt::NoPen);
 			p.setBrush(g);
 			p.drawRect(br);
@@ -277,13 +277,13 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 		if (_ev->region().contains(br + 3))
 		{
 			p.setBrush(Qt::NoBrush);
-			p.setPen(editDelegate() ? QColor(255, 0, 0, 128) : QColor(0, 0, 0, 128));
+			p.setPen(editDelegate() ? QColor(255, 0, 0, 128) : QColor(0, 64, 128, 128));
 			p.drawRect(br);
-			p.setPen(editDelegate() ? QColor(255, 0, 0, 64) : QColor(0, 0, 0, 64));
+			p.setPen(editDelegate() ? QColor(255, 0, 0, 64) : QColor(0, 64, 128, 64));
 			p.drawRect(br + 1.f);
-			p.setPen(editDelegate() ? QColor(255, 0, 0, 32) : QColor(0, 0, 0, 32));
+			p.setPen(editDelegate() ? QColor(255, 0, 0, 32) : QColor(0, 64, 128, 32));
 			p.drawRect(br + 2.f);
-			p.setPen(editDelegate() ? QColor(255, 0, 0, 16) : QColor(0, 0, 0, 16));
+			p.setPen(editDelegate() ? QColor(255, 0, 0, 16) : QColor(0, 64, 128, 16));
 			p.drawRect(br + 3.f);
 		}
 
