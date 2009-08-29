@@ -29,7 +29,7 @@ MARTTA_OBJECT_CPP(FloatLiteral);
 
 bool FloatLiteral::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
-	if (_p.exists() && _p->isKind<IntegerLiteral>() && _e->text() == ".")
+	if (_p.exists() && _p->isKind<IntegerLiteral>() && _e->text() == L".")
 	{
 		FloatLiteral* l = new FloatLiteral;
 		l->setValue(_p->asKind<IntegerLiteral>()->value());
@@ -48,7 +48,12 @@ bool FloatLiteral::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 
 String FloatLiteral::defineHtml() const
 {
-	return String(L"<^span class=\"FloatLiteral Literal\">%2%1</span>").arg(m_precision == SinglePrecision ? L"f" : m_precision == DoublePrecision ? L"" : L"ld").arg(m_value);
+	return String(L"<^span><span class=\"FloatLiteral Literal\">%2</span><span class=\"keyword\">%1</span></span>").arg(m_precision == SinglePrecision ? L"f" : m_precision == DoublePrecision ? L"" : L"ld").arg(m_value);
+}
+
+String FloatLiteral::defineEditHtml(CodeScene* _cs) const
+{
+	return String(L"<^span><span class=\"FloatLiteral Literal\">%2</span><span class=\"keyword\">%1</span></span>").arg(m_precision == SinglePrecision ? L"f" : m_precision == DoublePrecision ? L"" : L"ld").arg(_cs->editDelegate(this)->real());
 }
 
 EditDelegateFace* FloatLiteral::newDelegate(CodeScene* _s)
@@ -56,22 +61,22 @@ EditDelegateFace* FloatLiteral::newDelegate(CodeScene* _s)
 	class Delegate: public EditDelegate<FloatLiteral>
 	{
 	public:
-		Delegate(FloatLiteral* _e, CodeScene* _s): EditDelegate<FloatLiteral>(_e, _s), m_entry(String("%1").arg(_e->m_value))
+		Delegate(FloatLiteral* _e, CodeScene* _s): EditDelegate<FloatLiteral>(_e, _s, false), m_entry(String::number(_e->m_value))
 		{
-			if (!m_entry.contains("."))
-				m_entry += ".";
+			if (!m_entry.contains(L'.'))
+				m_entry += L".";
 		}
 		virtual bool keyPressed(KeyEvent const* _e)
 		{
-			if (_e->text() == L"\b" && m_entry.size() > 1)
+			if (_e->text() == BackspaceKey && m_entry.size() > 1)
 				m_entry = m_entry.left(m_entry.size() - 1);
 			else if ((_e->text().length() == 1 && _e->text()[0].isNumber()) || (_e->text() == "." && !m_entry.contains(".")))
 				m_entry += _e->text();
-			else if (_e->text() == "f")
+			else if (_e->text() == L"f")
 				subject()->setPrecision(SinglePrecision);
-			else if (_e->text() == "d")
+			else if (_e->text() == L"d")
 				subject()->setPrecision(DoublePrecision);
-			else if (_e->text() == "l")
+			else if (_e->text() == L"l")
 				subject()->setPrecision(LongDoublePrecision);
 			else
 				return false;
@@ -87,7 +92,12 @@ EditDelegateFace* FloatLiteral::newDelegate(CodeScene* _s)
 			m_entry.toDouble(&ret);
 			return ret;
 		}
+		virtual String real() const
+		{
+			return m_entry;
+		}
 
+	private:
 		String m_entry;
 	};
 	return new Delegate(this, _s);

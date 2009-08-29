@@ -47,7 +47,7 @@ protected:
 	virtual void						onDependencySwitched(Entity*, Entity*);
 	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); Identifiable::properties(_p); }
 	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); Identifiable::setProperties(_p); }
-
+	virtual bool						isInValidState() const;
 	virtual String						informationHtml() const { return Super::informationHtml(); }
 
 	// From Statement via BareTyped

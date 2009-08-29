@@ -28,7 +28,7 @@ MARTTA_OBJECT_CPP(StringLiteral);
 
 bool StringLiteral::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
-	if (_p.exists() && _p->isPlaceholder() && _e->text() == "\"")
+	if (_p.exists() && _p->isPlaceholder() && _e->text() == L"\"")
 	{
 		Entity* l = _p.place(new StringLiteral);
 		_e->codeScene()->setEditing(l);
@@ -62,9 +62,9 @@ EditDelegateFace* StringLiteral::newDelegate(CodeScene* _s)
 		Delegate(StringLiteral* _e, CodeScene* _s): EditDelegate<StringLiteral>(_e, _s) {}
 		virtual bool keyPressed(KeyEvent const* _e)
 		{
-			if (_e->text() == L"\b" && subject()->m_value.length())
+			if (_e->text() == BackspaceKey && subject()->m_value.length())
 				subject()->m_value.chop(1);
-			else if ((_e->text()[0].isGraph() && _e->text() != L"\"") || _e->text()[0] == L' ' || _e->text()[0] == L'\t')
+			else if ((_e->text()[0].isGraph() && _e->text() != L"\"") || _e->text() == L" " || _e->text() == TabKey)
 				subject()->m_value += _e->text();
 			else
 				return false;

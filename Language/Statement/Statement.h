@@ -61,6 +61,7 @@ protected:
 	virtual void						appendDefinedUptoHere(int, List<ValueDefiner*>*) const;
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s) { return NameEntryPoint::newDelegate<Statement>(_s); }
 	virtual bool						keyPressed(KeyEvent const* _e);
+	virtual bool						isChildInValidState(int _index) const { return Super::isChildInValidState(_index) && !child(_index)->isPlaceholder(); }
 
 	virtual String						informationHtml() const;
 };

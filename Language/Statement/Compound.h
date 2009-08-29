@@ -40,6 +40,7 @@ protected:
 	virtual String						defineHtml() const;
 	virtual void						appendDefinedUptoHere(int _i, List<ValueDefiner*>* _list) const;
 	virtual bool						isSuperfluous() const { return cardinalChildCount() == 1 && child(0)->kind() == Kind::of<Statement>() && !isNecessary(); }
+	virtual bool						isChildInValidState(int _i) const { return Super::isChildInValidState(_i) || (cardinalChildCount() == 1 && _i == 0 && Statement::Super::isChildInValidState(_i)); }
 	virtual bool						requiresSemicolon() const { return false; }
 
 	static String						statementsToHtml(List<Entity*> const& _es);

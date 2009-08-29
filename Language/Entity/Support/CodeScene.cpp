@@ -114,6 +114,7 @@ void CodeScene::setEditing(Entity* _e)
 		{
 			m_editDelegate->initialised();
 			relayout(current());
+			killStrobe();	// or we'll kill editing with the next keypress when the edit delegate doesn't accept it.
 		}
 	}
 }

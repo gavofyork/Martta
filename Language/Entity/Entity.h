@@ -73,7 +73,7 @@ public:
 	void								silentMove(Position const& _to);
 	void								silentRemove() { silentMove(Nowhere); }
 	void								move(Position const& _newPosition);
-	/// Same as move() except that if the destination is a placeholder we replace it,
+	/// Same as move() except that if the destination is a placeholder we replace it. Favour this over move() generally.
 	void								put(Position const& _newPosition);
 
 	inline int							index() const { return m_index; }
@@ -145,9 +145,9 @@ public:
 	template<class T> List<T*>			selfAndAncestorsChildrenOf() const { List<T*> ret = childrenOf<T>(); return parent() ? ret + parent()->selfAndAncestorsChildrenOf<T>() : ret; }
 	template<class T> List<T*>			superChildrenOf() const { List<T*> ret; ret << childrenOf<T>(); foreach (Entity* e, children()) ret << e->superChildrenOf<T>(); return ret; }
 
-	inline int							nonPlaceholderCount() const { int ret = 0; foreach (Entity* i, m_cardinalChildren) if (!i->isPlaceholder()) ret++; return ret; }
-	inline List<Entity*>				nonPlaceholders() const { List<Entity*> ret; foreach (Entity* i, m_cardinalChildren) if (!i->isPlaceholder()) ret += i; return ret; }
-	inline Entity*						nonPlaceholder(int _i) const { int c = 0; foreach (Entity* i, m_cardinalChildren) if (c++ == _i) return i; AssertNR(false); return 0; }
+	inline int							properCount() const { int ret = 0; foreach (Entity* i, m_cardinalChildren) if (!i->isPlaceholder()) ret++; return ret; }
+	inline List<Entity*>				properts() const { List<Entity*> ret; foreach (Entity* i, m_cardinalChildren) if (!i->isPlaceholder()) ret += i; return ret; }
+	inline Entity*						proper(int _i) const { int c = 0; foreach (Entity* i, m_cardinalChildren) if (c++ == _i) return i; AssertNR(false); return 0; }
 
 	virtual bool						usurpsChild(Entity const*) const { return false; }
 	bool								isUsurped() const { return m_parent->usurpsChild(this); }
@@ -208,13 +208,14 @@ public:
 	void								kill(Entity* _substitute = 0);
 
 	/**
-	 * kill()s and deletes the object.
-	 *
-	 * Convenience function for "kill(); delete this;".
+	 * kill()s and then deletes the object. Rewires any rewirable safe pointers to the substitute if non-zero.
+	 * Does not inform any dependent objects that the switch/removal has occured---this is up to the caller.
 	 */
 	inline void							killAndDelete(Entity* _substitute = 0) { kill(_substitute); delete this; }
+
 	/**
-	 * kill()s the deletes the object but informs any dependent it is dieing first.
+	 * kill()s the deletes the object but informs any dependent it is dieing first. If you just want to kill an
+	 * entity in the tree, use this rather than killAndDelete().
 	 */
 	inline void							killAndDeleteWithNotification() { move(Nowhere); inLimbo(); killAndDelete(); }
 
@@ -304,7 +305,7 @@ public:
 	// TODO: figure out if parentheses are needed
 	// TODO: Consider moving to somewhere more specialised.
 	virtual bool						doINeedParenthesising(Entity const* _child) const { (void)_child; return false; }
-	/// @returns true if this object isn't actually a real language entity.
+	/// @returns true if this object isn't actually a proper language entity.
 	/// Overrides automatically handled in derivations by MARTTA_OBJECT(_INTERFACE) macros. Do not reimplement.
 	virtual bool						isPlaceholder() const { return kind().isPlaceholder(); }
 	/// Checked after change; if true is returned, this may be deleted.

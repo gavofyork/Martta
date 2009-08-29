@@ -18,12 +18,42 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "IdentifierSet.h"
 #include "BoolLiteral.h"
 
 namespace Martta
 {
 
 MARTTA_OBJECT_CPP(BoolLiteral);
+
+class BoolIdentifierSet: public IdentifierSet
+{
+public:
+	BoolIdentifierSet():
+		m_true	(L"true"),
+		m_false	(L"false")
+	{}
+	virtual String						setId() const { return L"Martta::BoolLiteral"; }
+	virtual List<Named*>				identifiableAt(Position const& _p)
+	{
+		if (_p.allowedToBeKind<BoolLiteral>())
+			return List<Named*>() << &m_true << &m_false;
+		return List<Named*>();
+	}
+	virtual void						acceptAt(Position const& _pos, Named* _n)
+	{
+		_pos.place((new BoolLiteral(_n == &m_true))->prepareChildren())->dropCursor();
+	}
+	virtual String						defineEditHtml(Named* n, String const& _mid)
+	{
+		return L"<span class=\"keyword\">" + _mid + L"<span class=\"unreal\">" + n->name().mid(_mid.length()) + L"</span></span>";
+	}
+private:
+	SimpleNamed m_true;
+	SimpleNamed m_false;
+};
+
+static BoolIdentifierSet s_boolIdentifierSet;
 
 bool BoolLiteral::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {

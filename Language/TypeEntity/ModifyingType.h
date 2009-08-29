@@ -53,7 +53,6 @@ protected:
 	virtual String						modifierHtml() const { return String::null; }
 	virtual TypeEntity*					newClone() const { return new ModifyingType; }
 	virtual TypeEntity*					bottom() { return childIs<TypeEntity>(Original) ? childAs<TypeEntity>(Original) : this; }
-	virtual bool						canStandAlone() const { return original() ? original()->canStandAlone() : false; }
 	virtual List<Declaration*>			utilisedX() const { return original() ? original()->utilised() : Super::utilised(); }
 };
 

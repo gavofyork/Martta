@@ -62,13 +62,12 @@ class CompletionDelegate: public EditDelegate<T>
 {
 public:
 	CompletionDelegate(T* _e, CodeScene* _s, bool _allowEmpty = true):
-		EditDelegate<T>		(_e, _s),
+		EditDelegate<T>		(_e, _s, _e->isPlaceholder()),
 		m_selection			(EditDelegate<T>::subject()->get()),
 		m_name				(NameTrait<R>::name(m_selection)),
 		m_cycled			(-1),
 		m_allowEmpty		(_allowEmpty)
 	{
-		m_immediateCommits = _e->isPlaceholder();
 		m_possibilities = EditDelegate<T>::subject()->possibilities();
 		updateCompletion();
 	}
@@ -166,7 +165,6 @@ private:
 	int							m_cycled;
 	List<R>						m_possibilities;
 	List<R>						m_potentials;
-	bool						m_immediateCommits;
 	bool						m_allowEmpty;
 };
 

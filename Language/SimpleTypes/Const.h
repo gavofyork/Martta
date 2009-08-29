@@ -43,7 +43,8 @@ protected:
 	virtual String						defineHtml() const;
 	virtual TypeEntity*					newClone() const { return new Const; }
 	virtual Kinds						deniedKinds(int _i) const;
-	virtual bool						canStandAlone() const { return false; }
+//	virtual bool						canStandAlone() const { return false; }
+	virtual bool						canStandAlone() const { return original() ? original()->canStandAlone() : false; }
 	virtual bool						defineSimilarityFrom(TypeEntity const* _f, Castability _c) const;
 	virtual bool						defineSimilarityTo(TypeEntity const* _t, Castability _c) const;
 	virtual bool						keyPressed(KeyEvent const* _e);

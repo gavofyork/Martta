@@ -71,7 +71,7 @@ bool ExplicitType::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 
 bool ExplicitType::keyPressed(KeyEvent const* _e)
 {
-	if (_e->text().length() == 1 && (_e->text()[0].isUpper() || _e->text()[0] == L':'))
+	if (_e->text().length() == 1 && (_e->text()[0].isLetter() || _e->text()[0] == L':'))
 	{
 		_e->codeScene()->setEditing(this);
 		if (_e->codeScene()->isEditing(this))

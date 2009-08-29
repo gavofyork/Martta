@@ -32,7 +32,7 @@ class Entity;
 class EditDelegateFace
 {
 public:
-	EditDelegateFace(Entity* _e, CodeScene* _s);
+	EditDelegateFace(Entity* _e, CodeScene* _s, bool _immediateCommits = false);
 	virtual ~EditDelegateFace();
 
 	CodeScene*					codeScene() const;
@@ -41,7 +41,7 @@ public:
 	virtual String				unreal() const { return String::null; }
 	Entity*						subject() const { return m_subject; }
 
-	void						initialised() { m_immediateCommits = !isValid(); }
+	void						initialised() { /*m_immediateCommits = !isValid();*/ }
 	void						lazyCommit() { if (m_immediateCommits) tryCommit(); }
 	void						tryCommit() { if (isValid()) commit(); }
 
@@ -62,7 +62,7 @@ template<class T>
 class EditDelegate: public EditDelegateFace
 {
 public:
-	EditDelegate(T* _e, CodeScene* _s): EditDelegateFace(_e, _s) {}
+	EditDelegate(T* _e, CodeScene* _s, bool _immediateCommits = false): EditDelegateFace(_e, _s, _immediateCommits) {}
 
 	T* subject() const { return m_subject ? static_cast<T*>(&*m_subject) : 0; }
 };

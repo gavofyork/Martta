@@ -1,13 +1,16 @@
+TODO Bools
 TODO Use VariableNamer::isInValidState for other Variable types, move more into VN::is...().
-BRINGBACK EnumNamer/Class expansion.
-
-BRINGBACK All tests incl. Ser/Deser.
 
 OPTIMISE Moving is crazily slow over statements.
 - To fix change key press dispatch method:
   - All allowedKinds on Position and execute the Auxilliary's dispatchKeyPress.
   - Do recursively but prune on denied Kinds.
   - Remove all allowedToBeKind (or other Kind-checking) in handlers.
+OPTIMISE onDependencyChanged gets index with special indices for parent, ancestral and freeforms.
+
+BRINGBACK EnumNamer/Class expansion.
+
+BRINGBACK All tests incl. Ser/Deser.
 
 BUG current() bad in onCurrentAboutToChange.
 BUG DeclarationsHandler is keeping old placeholders when generating its tree.
@@ -24,10 +27,10 @@ RELEASE M1 (TBD)
 
 ================================================================================
 
+OPTIMISE FloatLiteral, on commit, takes just too long.
 TODO Unary operation should apply to climb Statement tree until it finds something.
 TODO Interfacify ModifyingType (clashes with PhysicalType over ListType etc.)
 - NewOperation/DeleteOperation - interface with Type classes.
-OPTIMISE onDependencyChanged gets index with special indices for parent, ancestral and freeforms.
 TODO Allow object to be referenced multiple times in HTML for use in virtual overload.
 TODO Replace node + this with just node.
 TODO Cache includes, so don't take so long to load.
@@ -175,8 +178,6 @@ WISH References leave hopeful names behind when invalid.
 WISH Same with invocations when function arg is deleted, return when return type is removed.
 
 MINOR double - int gets -(int, int) not -(double, double)
-MINOR Statements to reject placeholders.
-TODO virtual overload properly.
 WISH Code metrics and distribution etc.
 WISH Look into Dynagraph/Boost or GraphViz for graphing the code.
 WISH Anonymous -> metasyntactic variable. Must work with libraries.

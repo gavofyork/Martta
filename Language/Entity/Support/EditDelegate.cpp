@@ -25,10 +25,10 @@
 namespace Martta
 {
 
-EditDelegateFace::EditDelegateFace(Entity* _e, CodeScene* _s):
+EditDelegateFace::EditDelegateFace(Entity* _e, CodeScene* _s, bool _immediateCommits):
 	m_subject			(_e),
 	m_codeScene			(_s),
-	m_immediateCommits	(_e->isPlaceholder())
+	m_immediateCommits	(_immediateCommits)
 {
 	m_codeScene->rememberMe(this);
 }

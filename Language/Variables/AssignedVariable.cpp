@@ -88,4 +88,9 @@ bool AssignedVariable::keyPressed(KeyEvent const* _e)
 	return true;
 }
 
+bool AssignedVariable::isInValidState() const
+{
+	return Super::isInValidState() && VariableNamer::isInValidState();
+}
+
 }

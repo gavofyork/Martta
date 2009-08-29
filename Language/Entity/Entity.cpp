@@ -424,8 +424,8 @@ bool Entity::keyPressed(KeyEvent const* _e)
 	else if (_e->codeScene()->isCurrent(this) && _e->text() == DeleteKey && !isFixed())
 	{
 		_e->codeScene()->rememberCurrent();
-		if (nonPlaceholderCount() == 1 && over().allowedToBeKind(nonPlaceholder(0)->kind()))
-			deleteAndRefill(nonPlaceholder(0), false);	// SEE ABOVE.
+		if (properCount() == 1 && over().allowedToBeKind(proper(0)->kind()))
+			deleteAndRefill(proper(0), false);	// SEE ABOVE.
 		else
 			deleteAndRefill(0, false);	// SEE ABOVE.
 		_e->codeScene()->restoreCurrent();

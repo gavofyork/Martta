@@ -32,17 +32,15 @@ bool IntegerLiteral::keyPressedOnPosition(Position const& _p, KeyEvent const* _e
 {
 	if (_p.exists() && _e->text().length() == 2 && _e->text()[0] == L'-' && _e->text()[1].isNumber() && _p->isPlaceholder())
 	{
-		IntegerLiteral* l = new IntegerLiteral;
+		IntegerLiteral* l = new IntegerLiteral(_e->text().toInt());
 		_e->noteStrobeCreation(l, _p.entity());
 		_p.place(l);
-		l->setValue(_e->text().toDouble());
 		_e->codeScene()->setEditing(l);
 	}
 	else if (_p.exists() && _p->isPlaceholder() && _e->text().length() == 1 && _e->text()[0].isNumber())
 	{
-		IntegerLiteral* l = new IntegerLiteral;
+		IntegerLiteral* l = new IntegerLiteral(_e->text().toInt());
 		_p.place(l);
-		l->setValue(_e->text().toDouble());
 		_e->codeScene()->setEditing(l);
 	}
 	else if (_p.exists() && _p->isKind<IntegerLiteral>() && _e->text().length() == 1 && _e->text()[0].isNumber())
@@ -59,19 +57,19 @@ String IntegerLiteral::defineHtml() const
 {
 	double value;
 	modf(m_value, &value);
-	String ret = (value > 0 || value < 0) ? "" : ",0";
+	String ret = (value > 0 || value < 0) ? L"" : L",0";
 	for (int v = value < 0 ? -value : value; v >= 1; v /= 1000)
-		ret = (",%1" + ret).arg((uint)fmod((double)v, 1000.0), v >= 1000 ? 3 : 0, 10, '0');
+		ret = (L",%1" + ret).arg((uint)fmod((double)v, 1000.0), v >= 1000 ? 3 : 0, 10, '0');
 	ret = ret.mid(1);
 	if (m_signed)
 		ret = (m_value < 0 ? "-" : "") + ret;
-	return String("<^span class=\"IntegerLiteral Literal\">%1%2%3</span>").arg(ret).arg(m_signed ? "" : "u").arg(m_range == ShortRange ? "s" : m_range == LongRange ? "l" : m_range == LonglongRange ? "ll" : "");
+	return String(L"<^span><span class=\"IntegerLiteral Literal\">%1</span><span class=\"keyword\">%2%3</span></span>").arg(ret).arg(m_signed ? L"" : L"u").arg(m_range == ShortRange ? L"s" : m_range == LongRange ? L"l" : m_range == LonglongRange ? L"ll" : L"");
 }
 
 String IntegerLiteral::defineEditHtml(CodeScene* _cs) const
 {
 	if (EditDelegateFace* d = _cs->editDelegate(this))
-		return String("<^span class=\"Literal IntegerLiteral\">%1<span class=\"unreal\">%4</span>%2%3</span>").arg(d->real()).arg(m_signed ? "" : "u").arg((m_range == ShortRange ? "s" : m_range == LongRange ? "l" : m_range == LonglongRange ? "ll" : "")).arg(d->unreal());
+		return String(L"<^span><span class=\"Literal IntegerLiteral\">%1<span class=\"unreal\">%4</span></span><span class=\"keyword\">%2%3</span></span>").arg(d->real()).arg(m_signed ? "" : "u").arg((m_range == ShortRange ? L"s" : m_range == LongRange ? L"l" : m_range == LonglongRange ? L"ll" : L"")).arg(d->unreal());
 	return String::null;
 }
 
@@ -80,32 +78,32 @@ EditDelegateFace* IntegerLiteral::newDelegate(CodeScene* _s)
 	class Delegate: public EditDelegate<IntegerLiteral>
 	{
 	public:
-		Delegate(IntegerLiteral* _e, CodeScene* _s): EditDelegate<IntegerLiteral>(_e, _s), m_entry (String::number(_e->m_value))
+		Delegate(IntegerLiteral* _e, CodeScene* _s): EditDelegate<IntegerLiteral>(_e, _s), m_entry(String::number(_e->m_value))
 		{
 			if (!subject()->m_signed)
 				m_entry.remove("-");
 		}
 		virtual bool keyPressed(KeyEvent const* _e)
 		{
-			if (_e->text() == L"\b" && m_entry.size())
+			if (_e->text() == BackspaceKey && m_entry.size())
 				m_entry = m_entry.left(m_entry.size() - 1);
 			else if (_e->text().length() == 1 && _e->text()[0].isNumber())
 				m_entry += _e->text();
-			else if (_e->text() == "s" && subject()->range() == ShortRange)
+			else if (_e->text() == L"s" && subject()->range() == ShortRange)
 				subject()->setRange(NaturalRange);
-			else if (_e->text() == "s")
+			else if (_e->text() == L"s")
 				subject()->setRange(ShortRange);
-			else if (_e->text() == "l" && subject()->range() == LongRange)
+			else if (_e->text() == L"l" && subject()->range() == LongRange)
 				subject()->setRange(LonglongRange);
-			else if (_e->text() == "l" && subject()->range() == LonglongRange)
+			else if (_e->text() == L"l" && subject()->range() == LonglongRange)
 				subject()->setRange(NaturalRange);
-			else if (_e->text() == "l")
+			else if (_e->text() == L"l")
 				subject()->setRange(LongRange);
-			else if (_e->text() == "u")
+			else if (_e->text() == L"u")
 			{
 				subject()->setSignedness(!subject()->signedness());
 				if (!subject()->m_signed)
-					m_entry.remove("-");
+					m_entry.remove(L"-");
 			}
 			else
 				return false;
