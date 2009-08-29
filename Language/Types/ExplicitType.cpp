@@ -91,7 +91,7 @@ void ExplicitType::apresLoad()
 
 String ExplicitType::defineHtml() const
 {
-	return L"<^><span class=\"TypeEntity\">" + typeHtml(m_subject.isUsable() ? m_subject->name() : L"&empty;") + L"</span>";
+	return L"<^>" + tagOf(L"TypeEntity", typeHtml(m_subject.isUsable() ? m_subject->name() : L"&empty;"));
 }
 
 List<TypeDefinition*> ExplicitType::possibilities() const
