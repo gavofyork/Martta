@@ -121,7 +121,8 @@ cat >> $dest/$name.pro << EOF
 INSTALL_DATA.files = $data
 INSTALL_DATA.path = Data
 INSTALLS += INSTALL_DATA
-DATA.commands = @echo "Copying data..." && mkdir -p "\$\$DESTDIR/Data" && cp \$\$INSTALL_DATA.files "\$\$DESTDIR/Data"
+!win32:DATA.commands = @echo "Copying data..." && mkdir -p "\$\$DESTDIR/Data" && cp \$\$INSTALL_DATA.files "\$\$DESTDIR/Data"
+win32:DATA.commands = @echo "Copying data..." && md "\$\$DESTDIR/Data" && $(for i in $data; do echo copy \"$i\" \"\$\$DESTDIR/Data\"; done)
 QMAKE_EXTRA_TARGETS += DATA
 PRE_TARGETDEPS += DATA
 EOF
@@ -158,16 +159,16 @@ CONFIG *= release
 debug:DEFINES *= DEBUG
 release:DEFINES *= RELEASE
 unix:DEFINES += M_UNIX
-mac:DEFINES += M_MAC
-win:DEFINES += M_WIN
-!mac:unix:DEFINES += M_LINUX
+macx:DEFINES += M_MAC
+win32:DEFINES += M_WIN
+!macx:unix:DEFINES += M_LINUX
 TEMPLATE = lib
 VERSION = 0.1.0
 BASE = \$\$PWD
 OBJECTS_DIR = \$\$BASE/build
 DEPENDPATH += $support
 INCLUDEPATH += $support
-QMAKE_LIBDIR += $support
+QMAKE_LIBDIR += $support \$\$BASE/../plugins
 LIBS += -lsupport
 DESTDIR = \$\$BASE/../plugins
 EOF
@@ -182,7 +183,7 @@ DEPENDPATH *= \$\$join(OURDIRS, " \$\$TWD/", "\$\$TWD/")
 INCLUDEPATH *= \$\$join(OURDIRS, " \$\$TWD/", "\$\$TWD/")
 contains(TARGET, \$\$basename(TWD)): contains(TEMPLATE, lib) {
 	QMAKE_POST_LINK += echo \$\${TARGET} \$\$DEPS > \$\${DESTDIR}/\$(TARGET).dep
-	mac: QMAKE_LFLAGS += -install_name @rpath/$(TARGET)
+	macx: QMAKE_LFLAGS += -install_name @rpath/$(TARGET)
 }
 !contains(TARGET, \$\$basename(TWD)): !contains(NO_SOURCES, 1): LIBS *= -l\$\$basename(TWD)
 for(a, DEPS): !contains(DONE, \$\${a}) {
