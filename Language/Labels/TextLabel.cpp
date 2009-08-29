@@ -70,7 +70,7 @@ String TextLabel::defineHtml() const
 {
 	if (name().isEmpty())
 		return L"<^><span class=\"minor\">[ANONYMOUS]</span>";
-	return String("<^><span class=\"TextLabel-%1\">").arg(isNamed() ? L"named" : L"unnamed") + tryParent<Labelled>()->labelHtml(name()) + L"</span>";
+	return L"<^>" + tryParent<Labelled>()->labelHtml(String(L"<span class=\"TextLabel-%1\">").arg(isNamed() ? L"named" : L"unnamed") + name() + L"</span>");
 }
 
 String TextLabel::defineEditHtml(CodeScene* _cs) const
