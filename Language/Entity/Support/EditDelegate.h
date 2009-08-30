@@ -33,7 +33,7 @@ class CodeScene;
 class KeyEvent;
 class Entity;
 
-class EditDelegateFace
+class M_API_Entity EditDelegateFace
 {
 public:
 	EditDelegateFace(Entity* _e, CodeScene* _s, bool _immediateCommits = false);
@@ -64,7 +64,7 @@ protected:
 };
 
 template<class T>
-class M_API_Entity EditDelegate: public EditDelegateFace
+class EditDelegate: public EditDelegateFace
 {
 public:
 	EditDelegate(T* _e, CodeScene* _s, bool _immediateCommits = false): EditDelegateFace(_e, _s, _immediateCommits) {}

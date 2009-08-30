@@ -20,6 +20,8 @@
 
 #pragma once
 
+#include <mssupport.h>
+
 #ifndef M_API_Entity
 #define M_API_Entity M_OUTAPI
 #endif
@@ -31,7 +33,7 @@ class Entity;
 class KeyEvent;
 class Position;
 
-class AuxilliaryFace
+class M_API_Entity AuxilliaryFace
 {
 public:
 	virtual ~AuxilliaryFace() {}

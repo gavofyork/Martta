@@ -19,6 +19,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 #pragma once
+#include <mssupport.h>
 
 #ifndef M_API_Entity
 #define M_API_Entity M_OUTAPI
@@ -29,7 +30,7 @@ namespace Martta
 
 class Dependee;
 
-class Dier
+class M_API_Entity Dier
 {
 protected:
 	virtual void						oneFootInTheGrave(Dependee* = 0) {}

@@ -19,3 +19,6 @@ INCLUDEPATH += ../../support
 QMAKE_LIBDIR += ../../support $$BASE/../plugins
 LIBS += -lsupport
 DESTDIR = $$BASE/../plugins
+win32:QMAKE_CXXFLAGS += /Zc:wchar_t /Warning:disable(4305) /Warning:disable(4800) /Warning:disable(4100)
+
+

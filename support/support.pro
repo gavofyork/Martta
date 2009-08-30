@@ -7,6 +7,7 @@ CONFIG -= release \
     stl \
     qt
 
+win32:QMAKE_CXXFLAGS += /Zc:wchar_t
 # SET THE CONFIG HERE!
 CONFIG += debug \
     warn_on \
@@ -20,7 +21,7 @@ debug:DEFINES += DEBUG
 release:DEFINES += RELEASE
 unix:DEFINES += M_UNIX
 mac:DEFINES += M_MAC
-win:DEFINES += M_WIN
+win32:DEFINES += M_WIN
 !mac:unix:DEFINES += M_LINUX
 mac:QMAKE_LFLAGS += -Wl,-Sp
 mac:QMAKE_CXXFLAGS_DEBUG += -fasm-blocks

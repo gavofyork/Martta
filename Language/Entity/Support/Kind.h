@@ -37,7 +37,7 @@ namespace Martta
 class Entity;
 class Kind;
 
-class M_API_Entity Kinds: public List<Kind>
+class Kinds: public List<Kind>
 {
 public:
 	Kinds() {}
@@ -60,7 +60,7 @@ public:
 	Kinds onlyObjects() const;
 };
 
-class Kind
+class M_API_Entity Kind
 {
 	friend class Entity;
 

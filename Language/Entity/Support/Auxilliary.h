@@ -38,7 +38,7 @@ template<class T> struct GetCount
 };
 
 template<class T>
-class M_API_Entity Auxilliary: public AuxilliaryFace
+class Auxilliary: public AuxilliaryFace
 {
 public:
 	Auxilliary(char const* _name, bool _isPlaceholder): m_name(_name), m_isPlaceholder(_isPlaceholder) { AuxilliaryRegistrar::get()->registerAuxilliary(this); }
@@ -60,7 +60,7 @@ private:
 };
 
 template<class T>
-class M_API_Entity InterfaceAuxilliary: public AuxilliaryFace
+class InterfaceAuxilliary: public AuxilliaryFace
 {
 public:
 	InterfaceAuxilliary(char const* _name): m_name(_name) { AuxilliaryRegistrar::get()->registerAuxilliary(this); }
