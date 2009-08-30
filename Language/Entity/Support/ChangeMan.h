@@ -136,7 +136,7 @@ public:
 	List<Entry>&						changesDone() { return m_changesDone; }
 
 private:
-	ChangeMan(): m_asleep(false), m_hasChanged(false) {}
+	ChangeMan(): m_asleep(false), m_hasChanged(false), m_processingQueue(false) {}
 	virtual ~ChangeMan() {}
 
 	void								processQueue();
@@ -155,6 +155,7 @@ private:
 	bool								m_hasChanged;
 
 	List<ChangeListener*>				m_listeners;
+	bool								m_processingQueue;
 
 	static ChangeMan*					s_this;
 };

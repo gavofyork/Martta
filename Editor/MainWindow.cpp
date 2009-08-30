@@ -705,6 +705,7 @@ void MainWindow::on_actClearChanges_triggered()
 {
 	ChangeMan::get()->changesDone().clear();
 	codeView->update();
+	delayedUpdate();
 }
 
 void MainWindow::resetSubject()

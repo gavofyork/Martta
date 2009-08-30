@@ -115,7 +115,6 @@ bool ChangeMan::changed(Dependee* _changer, int _aspect)
 	processQueue();
 	m_hasChanged = true;
 
-	m_changing.removeLast();
 	return true;
 }
 
@@ -176,12 +175,19 @@ void ChangeMan::processEntry(Entry const& _e)
 
 void ChangeMan::processQueue()
 {
+	bool pc = m_processingQueue;
+	m_processingQueue = true;
+
 	while (m_changeQueue.size())
 	{
 		Entry e = m_changeQueue.takeFirst();
-		processEntry(e);
 		m_changesDone << e;
+		processEntry(e);
 	}
+
+	m_processingQueue = pc;
+	if (!m_processingQueue)
+		m_changing.clear();
 }
 
 void ChangeMan::childrenInitialised(Depender* _this)

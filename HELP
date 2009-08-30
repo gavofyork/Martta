@@ -1,0 +1,16 @@
+Martta M1
+
+Martta is a pure-plugin visual program construction tool. Currently it supports a subset of the C++ language.
+
+Martta Milestone 1 is a technology preview release. It has numerous problems not least of which is the difficult to learn GUI. This guide serves as a small help in guiding you through Martta's main features.
+
+To get the most out of Martta it is very important to keep in mind that it is not a text editor. Navigation and editing features, you will find, are much more similar to those in visual document editors than text editors. 
+
+1. Starting
+
+Run the Martta executable.
+
+2. Navigation
+
+Martta always tries to have some 
+The cursor keys will move the selection 

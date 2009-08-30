@@ -6,8 +6,7 @@ OPTIMISE Moving is crazily slow over statements.
   - Do recursively but prune on denied Kinds.
   - Remove all allowedToBeKind (or other Kind-checking) in handlers.
 OPTIMISE onDependencyChanged gets index w/ special indices for parent, ancestral & freeforms.
-OPTIMISE delete type field/variable and far too many changes.
-
+OPTIMISE delete type of field still slow.
 QUICK EnumNamer/Class expansion.
 
 --------------------------------------------------------------------------------

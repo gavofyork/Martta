@@ -54,7 +54,7 @@ protected:
 	virtual String						defineEditHtml(CodeScene* _cs) const;
 	virtual bool						isSuperfluous() const;
 	virtual void						apresLoad() { if (m_subject) addDependency(m_subject->self()); Super::apresLoad(); }
-	virtual void						onDependencyChanged(int _a, Entity* _d) { if (_d->tryKind<ValueDefiner>() == m_subject) changed(); Super::onDependencyChanged(_a, _d); }
+	virtual void						onDependencyChanged(int _a, Entity* _d) { if (_d->tryKind<ValueDefiner>() == m_subject) changed(_a); Super::onDependencyChanged(_a, _d); }
 	virtual void						onDependencySwitched(Entity* _t, Entity* _old);
 	virtual void						onDependencyRemoved(Entity* _old, int);
 	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p[L"subject"] = m_subject.key(); _p[L"hopeful"] = m_hopeful; }

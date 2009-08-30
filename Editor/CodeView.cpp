@@ -219,6 +219,7 @@ void CodeView::checkInvalids()
 
 void CodeView::paintEvent(QPaintEvent* _ev)
 {
+	TIME_FUNCTION;
 	refresh();
 	checkInvalids();
 	Entity* c = current();
@@ -246,7 +247,7 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 			p.drawRect(br);
 		}
 	}
-//	TIME_STATEMENT("WVpaintEvent")
+	TIME_STATEMENT("WVpaintEvent")
 		QWebView::paintEvent(_ev);
 
 	if (c)
