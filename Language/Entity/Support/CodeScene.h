@@ -40,7 +40,7 @@ class EditDelegateFace;
 class Position;
 class Entity;
 
-class DataFinder
+class M_API_Entity DataFinder
 {
 public:
 	static DataFinder*			get() { return s_this ? s_this : (s_this = new DataFinder); }
@@ -54,7 +54,7 @@ private:
 	static DataFinder*			s_this;
 };
 
-class CodeScene
+class M_API_Entity CodeScene
 {
 public:
 	CodeScene();

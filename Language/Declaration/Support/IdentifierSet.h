@@ -36,7 +36,7 @@ namespace Martta
 class Position;
 
 // Declare a single static instance of the derived class in its CPP file to register it.
-class IdentifierSet
+class M_API_Declaration IdentifierSet
 {
 public:
 	IdentifierSet();
@@ -49,7 +49,7 @@ public:
 };
 
 template<class T>
-class M_API_Declaration SimpleIdentifierSet: public IdentifierSet
+class SimpleIdentifierSet: public IdentifierSet
 {
 public:
 	SimpleIdentifierSet(wchar_t const* _name, wchar_t const* _preHtml = L"<span class=\"keyword\">", wchar_t const* _postHtml = L"</span>"):

@@ -32,7 +32,7 @@
 namespace MarttaSupport
 {
 
-class Rgb
+class M_API_support Rgb
 {
 public:
 	m_inline Rgb(): m_value(0xff000000) {}

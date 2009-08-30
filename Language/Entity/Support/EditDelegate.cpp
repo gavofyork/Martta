@@ -48,7 +48,7 @@ CodeScene* EditDelegateFace::codeScene() const
 bool EditDelegateFace::keyPressed(KeyEvent const* _e)
 {
 	if (_e->text() == DeleteKey)
-		return subject()->keyPressed(_e);
+		return entity()->keyPressed(_e);
 	else if (_e->text() == EscapeKey)
 		_e->codeScene()->setEditing(0);
 	else

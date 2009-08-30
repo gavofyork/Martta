@@ -88,7 +88,9 @@ protected:
 };
 
 // S is a TypeDefinition;
+#ifndef _MSC_VER
 template<>
+#endif
 template<class S>
 struct TypeConstructor<S*>
 {

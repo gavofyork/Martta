@@ -34,7 +34,7 @@ class Entity;
 class CodeScene;
 class Position;
 
-class KeyEvent
+class M_API_Entity KeyEvent
 {
 public:
 	KeyEvent(String const& _text = String::null, int _modifiers = 0, Entity* _focus = 0, bool _isFocused = false, bool _focusIsPlaceholder = false, int _focalIndex = -1, CodeScene* _codeScene = 0);

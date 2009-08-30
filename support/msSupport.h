@@ -25,6 +25,10 @@
  * ***** END LICENSE BLOCK ***** */
 #pragma once
 
+#ifdef _MSC_VER
+#include <wchar.h>
+#endif
+
 #if defined(_MSC_VER)
 #define M_EXPORT
 #define M_NOEXPORT
@@ -35,6 +39,10 @@
 #define M_NOEXPORT __attribute__((visibility("hidden")))
 #define M_INAPI
 #define M_OUTAPI
+#endif
+
+#ifndef M_API_support
+#define M_API_support M_OUTAPI
 #endif
 
 #define m_privateinline M_NOEXPORT inline
@@ -62,7 +70,7 @@ class StringList;
 
 #if defined(DEBUG)
 
-void assertFailed(int, char const*, char const*, char const*, char const*);
+M_API_support void assertFailed(int, char const*, char const*, char const*, char const*);
 #if defined(__GNUC__)
 #define Assert(X, R) if ((X)) {} else MarttaSupport::assertFailed(__LINE__, __FILE__, __PRETTY_FUNCTION__, #X, R)
 #else
@@ -142,7 +150,9 @@ template<> class isSimple<wchar_t> { public: enum { value = true }; typedef wcha
 template<> class isSimple<signed char> { public: enum { value = true }; typedef signed char StorageType; };
 template<> class isSimple<unsigned char> { public: enum { value = true }; typedef unsigned char StorageType; };
 template<> class isSimple<signed short> { public: enum { value = true }; typedef signed short StorageType; };
+#ifndef _MSC_VER
 template<> class isSimple<unsigned short> { public: enum { value = true }; typedef unsigned short StorageType; };
+#endif
 template<> class isSimple<signed int> { public: enum { value = true }; typedef signed int StorageType; };
 template<> class isSimple<unsigned int> { public: enum { value = true }; typedef unsigned int StorageType; };
 template<> class isSimple<signed long> { public: enum { value = true }; typedef signed long StorageType; };

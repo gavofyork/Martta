@@ -21,7 +21,7 @@
 #pragma once
 
 #include <msTextStream.h>
-using MarttaSupport::TextStream;
+using namespace MarttaSupport;
 
 #include "TypeEntity.h"
 
@@ -43,7 +43,7 @@ struct TypeConstructor
 	static void construct(Type* _this, T _tree);
 };
 
-class Type
+class M_API_TypeEntity Type
 {
 	friend class ModifyingType;
 	friend class TypeEntity;

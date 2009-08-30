@@ -36,7 +36,7 @@ namespace Martta
 
 class KeepCurrent;
 
-class WebStylist
+class M_API_WebView WebStylist
 {
 	friend class KeepCurrent;
 

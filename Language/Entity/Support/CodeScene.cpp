@@ -57,14 +57,14 @@ void CodeScene::killStrobe()
 
 Entity* CodeScene::editEntity() const
 {
-	return editDelegate() ? m_editDelegate->subject() : 0;
+	return editDelegate() ? m_editDelegate->entity() : 0;
 }
 
 EditDelegateFace* CodeScene::editDelegate() const
 {
 	if (!m_editDelegate)
 		return 0;
-	if (!m_editDelegate->subject())
+	if (!m_editDelegate->entity())
 		delete m_editDelegate;
 	// Note the destructor of the edit delegate tell us that it's dead so m_editDelegate is always correct.
 	return m_editDelegate;
@@ -79,7 +79,7 @@ void CodeScene::setEditing(Entity* _e)
 
 	if (editDelegate())
 	{
-		SafePointer<Entity> edited = m_editDelegate->subject();
+		SafePointer<Entity> edited = m_editDelegate->entity();
 		SafePointer<Entity> cur = current();
 		// If the edit delegate is half-way to destruction, we can allow it to have a null subject.
 //		AssertNR(edited == cur || cur->usurpsChild(edited) || !edited);

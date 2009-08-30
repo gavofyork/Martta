@@ -22,7 +22,7 @@
 
 #include <climits>
 #include <msTextStream.h>
-using MarttaSupport::TextStream;
+using namespace MarttaSupport;
 
 #include "SafePointer.h"
 #include "Kind.h"
@@ -38,7 +38,7 @@ static const int UndefinedIndex = INT_MAX;
 
 class Entity;
 
-class Position
+class M_API_Entity Position
 {
 	friend class Entity;
 	friend TextStream& operator<<(TextStream& _out, Position const& _item);

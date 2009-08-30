@@ -95,7 +95,9 @@ protected:
 		foreach (SafePointerFace* i, m_safePointers)
 			i->m_pointer = 0;
 	}
-	List<SafePointerFace*>					m_safePointers;
+
+private:
+	List<SafePointerFace*>				m_safePointers;
 };
 
 void SafePointerFace::set(SafePointerTarget* _e)

@@ -38,21 +38,21 @@ template<class T> struct GetCount
 };
 
 template<class T>
-class Auxilliary: public AuxilliaryFace
+class TestAuxilliary: public AuxilliaryFace
 {
 public:
-	Auxilliary(char const* _name, bool _isPlaceholder): m_name(_name), m_isPlaceholder(_isPlaceholder) { AuxilliaryRegistrar::get()->registerAuxilliary(this); }
-	virtual bool						isInterface() const { return false; }
-	virtual bool						isPlaceholder() const { return m_isPlaceholder; }
+	TestAuxilliary(char const* _name): m_name(_name) { AuxilliaryRegistrar::get()->registerAuxilliary(this); }
+	virtual bool						isInterface() const { return true; }
+	virtual bool						isPlaceholder() const { return false; }
 	virtual char const*					name() const { return m_name; }
-	virtual bool						dispatchKeyPress(Position const& _p, KeyEvent const* _e) const;
-	virtual void						initialise() const { T::initialiseClass(); }
-	virtual void						finalise() const { T::finaliseClass(); }
-	virtual AuxilliaryFace const*		superAuxilliary() const { return T::Super::staticAuxilliary(); }
-	virtual AuxilliaryFace const*		interfaceAuxilliary(int _i) const { return T::template ASHelper<GetCount<T>::Value>::altSupers()[_i]; }
-	virtual int							interfaceAuxilliaryCount() const { return GetCount<T>::Value; }
-	virtual Entity*						create() const { return new T; }
-	virtual void const*					offset(Entity const* _e) const { return reinterpret_cast<void const*>(static_cast<T const*>(_e)); }
+	virtual bool						dispatchKeyPress(Position const& _p, KeyEvent const* _e) const { return false; }
+	virtual void						initialise() const {}
+	virtual void						finalise() const {}
+	virtual AuxilliaryFace const*		superAuxilliary() const { return 0; }
+	virtual AuxilliaryFace const*		interfaceAuxilliary(int _i) const { return 0; }
+	virtual int							interfaceAuxilliaryCount() const { return 0; }
+	virtual Entity*						create() const { return 0; }
+	virtual void const*					offset(Entity const* _e) const { return 0; }
 
 private:
 	char const*							m_name;
@@ -60,29 +60,71 @@ private:
 };
 
 template<class T>
+class InterfacerAuxilliary: public AuxilliaryFace
+{
+public:
+	inline InterfacerAuxilliary(char const* _name): m_name(_name) { AuxilliaryRegistrar::get()->registerAuxilliary(this); }
+	virtual inline bool						isInterface() const { return true; }
+	virtual inline bool						isPlaceholder() const { return false; }	// Undefined.
+	virtual inline char const*					name() const { return m_name; }
+	virtual inline bool						dispatchKeyPress(Position const&, KeyEvent const*) const { return false; }
+	virtual inline void						initialise() const {}
+	virtual inline void						finalise() const {}
+	virtual inline AuxilliaryFace const*		superAuxilliary() const { return 0; }
+	virtual inline AuxilliaryFace const*		interfaceAuxilliary(int _i) const { return T::template ASHelper<GetCount<T>::Value>::altSupers()[_i]; }
+	virtual inline int							interfaceAuxilliaryCount() const { return GetCount<T>::Value; }
+	virtual inline Entity*						create() const { return 0; }
+	virtual inline void const*					offset(Entity const*) const { return 0; }
+private:
+	char const*							m_name;
+};
+
+template<class T>
 class InterfaceAuxilliary: public AuxilliaryFace
 {
 public:
-	InterfaceAuxilliary(char const* _name): m_name(_name) { AuxilliaryRegistrar::get()->registerAuxilliary(this); }
-	virtual bool						isInterface() const { return true; }
-	virtual bool						isPlaceholder() const { return false; }	// Undefined.
-	virtual char const*					name() const { return m_name; }
-	virtual bool						dispatchKeyPress(Position const&, KeyEvent const*) const { return false; }
-	virtual void						initialise() const {}
-	virtual void						finalise() const {}
-	virtual AuxilliaryFace const*		superAuxilliary() const { return 0; }
-	virtual AuxilliaryFace const*		interfaceAuxilliary(int _i) const { return T::template ASHelper<GetCount<T>::Value>::altSupers()[_i]; }
-	virtual int							interfaceAuxilliaryCount() const { return GetCount<T>::Value; }
-	virtual Entity*						create() const { return 0; }
-	virtual void const*					offset(Entity const*) const { return 0; }
+	inline InterfaceAuxilliary(char const* _name): m_name(_name) { AuxilliaryRegistrar::get()->registerAuxilliary(this); }
+	virtual inline bool						isInterface() const { return true; }
+	virtual inline bool						isPlaceholder() const { return false; }	// Undefined.
+	virtual inline char const*					name() const { return m_name; }
+	virtual inline bool						dispatchKeyPress(Position const&, KeyEvent const*) const { return false; }
+	virtual inline void						initialise() const {}
+	virtual inline void						finalise() const {}
+	virtual inline AuxilliaryFace const*		superAuxilliary() const { return 0; }
+	virtual inline AuxilliaryFace const*		interfaceAuxilliary(int _i) const { return /*T::template ASHelper<GetCount<T>::Value>::altSupers()[_i]*/0; }
+	virtual inline int							interfaceAuxilliaryCount() const { return /*GetCount<T>::Value*/0; }
+	virtual inline Entity*						create() const { return 0; }
+	virtual inline void const*					offset(Entity const*) const { return 0; }
 private:
 	char const*							m_name;
+};
+
+template<class T>
+class Auxilliary: public AuxilliaryFace
+{
+public:
+	inline Auxilliary(char const* _name, bool _isPlaceholder): m_name(_name), m_isPlaceholder(_isPlaceholder) { AuxilliaryRegistrar::get()->registerAuxilliary(this); }
+	virtual inline bool						isInterface() const { return false; }
+	virtual inline bool						isPlaceholder() const { return m_isPlaceholder; }
+	virtual inline char const*					name() const { return m_name; }
+	virtual inline bool						dispatchKeyPress(Position const& _p, KeyEvent const* _e) const;
+	virtual inline void						initialise() const { T::initialiseClass(); }
+	virtual inline void						finalise() const { T::finaliseClass(); }
+	virtual inline AuxilliaryFace const*		superAuxilliary() const { return T::Super::staticAuxilliary(); }
+	virtual inline AuxilliaryFace const*		interfaceAuxilliary(int _i) const { return T::template ASHelper<GetCount<T>::Value>::altSupers()[_i]; }
+	virtual inline int							interfaceAuxilliaryCount() const { return GetCount<T>::Value; }
+	virtual inline Entity*						create() const { return new T; }
+	virtual inline void const*					offset(Entity const* _e) const { return reinterpret_cast<void const*>(static_cast<T const*>(_e)); }
+
+private:
+	char const*							m_name;
+	bool								m_isPlaceholder;
 };
 
 }
 
 template<class T>
-bool Martta::Auxilliary<T>::dispatchKeyPress(Position const& _p, KeyEvent const* _e) const
+inline bool Martta::Auxilliary<T>::dispatchKeyPress(Position const& _p, KeyEvent const* _e) const
 {
 	if (_p.allowedToBeKind<T>() && T::keyPressedOnPosition(_p, _e))
 		return true;

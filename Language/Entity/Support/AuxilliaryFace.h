@@ -33,7 +33,7 @@ class Entity;
 class KeyEvent;
 class Position;
 
-class M_API_Entity AuxilliaryFace
+class AuxilliaryFace
 {
 public:
 	virtual ~AuxilliaryFace() {}

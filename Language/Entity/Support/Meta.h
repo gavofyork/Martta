@@ -30,10 +30,10 @@
 namespace Martta
 {
 
-int registerName(int _n, char const* _class, char const* _name);
+int M_API_Entity registerName(int _n, char const* _class, char const* _name);
 
 class Entity;
-class Nothing { public: static AuxilliaryFace const* staticAuxilliary() { return 0; } void const* tryInterface(Kind) const { return 0; } };
+class M_API_Entity Nothing { public: static AuxilliaryFace const* staticAuxilliary() { return 0; } void const* tryInterface(Kind) const { return 0; } };
 
 namespace tryCastPrivate
 {
@@ -48,8 +48,8 @@ template<class T, class F> T tryCast(F _f) { return tryCastPrivate::XL<T, F, try
 #define MARTTA_BASIC \
 public: \
 	template<class T> friend struct Martta::GetCount; \
-	template<class T> friend class M_API_Entity Martta::Auxilliary; \
-	template<class T> friend class M_API_Entity Martta::InterfaceAuxilliary; \
+	template<class T> friend class Martta::Auxilliary; \
+	template<class T> friend class Martta::InterfaceAuxilliary; \
 	inline virtual Kind					kind() const { return this ? staticKind : Kind(Nothing::staticAuxilliary()); } \
 	static Kind							staticKind; \
 	static AuxilliaryFace const*		staticAuxilliary(); \

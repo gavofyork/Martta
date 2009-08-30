@@ -7,12 +7,13 @@ CONFIG -= release \
     stl \
     qt
 
-win32:QMAKE_CXXFLAGS += /Zc:wchar_t
+win32:QMAKE_CXXFLAGS += /wd4800
+
 # SET THE CONFIG HERE!
 CONFIG += debug \
     warn_on \
     thread \
-    staticlib
+    sharedlib
 profile { 
     DEFINES += PROFILE
     CONFIG += release
@@ -42,10 +43,12 @@ unix {
             -g0
     }
 }
+DEFINES += M_API_support=M_INAPI
 TARGET = support
 DEPENDPATH += .
 INCLUDEPATH += .
 OBJECTS_DIR = build
+win32:DESTDIR = ./.
 
 # Input
 HEADERS += msSupport.h \

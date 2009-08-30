@@ -30,7 +30,7 @@
 namespace Martta
 {
 
-class DelayedActor
+class M_API_Entity DelayedActor
 {
 public:
 	virtual ~DelayedActor() {}
@@ -38,7 +38,7 @@ public:
 	virtual void						prime() = 0;
 };
 
-class CullManager
+class M_API_Entity CullManager
 {
 public:
 	static inline CullManager*			get() { return s_this ? s_this : (s_this = new CullManager); } 

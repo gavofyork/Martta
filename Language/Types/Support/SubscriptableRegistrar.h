@@ -35,7 +35,7 @@ namespace Martta
 
 class SubscriptOperation;
 
-class SubscriptableRegistrar
+class M_API_Types SubscriptableRegistrar
 {
 	friend class SubscriptOperation;
 	

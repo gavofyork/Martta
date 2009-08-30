@@ -32,7 +32,7 @@ namespace Martta
 class Depender;
 class Dependee;
 
-class ChangeListener
+class M_API_Entity ChangeListener
 {
 public:
 	ChangeListener();
@@ -53,7 +53,7 @@ public:
 	virtual void						onAncestorRemoved(Entity* _e, Entity* _old) { (void)(_e); (void)(_old); }
 };
 
-class ChangeMan
+class M_API_Entity ChangeMan
 {
 	friend class ChangeListener; // To keep adding/removing listeners out of the API.
 

@@ -37,7 +37,7 @@ namespace Martta
 class Entity;
 class Kind;
 
-class Kinds: public List<Kind>
+class M_API_Entity Kinds: public List<Kind>
 {
 public:
 	Kinds() {}

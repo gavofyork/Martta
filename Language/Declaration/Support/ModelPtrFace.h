@@ -32,7 +32,7 @@ namespace Martta
 class Identifiable;
 class ModelPtrRegistrar;
 
-class ModelPtrFace
+class M_API_Declaration ModelPtrFace
 {
 	friend class ModelPtrRegistrar;
 

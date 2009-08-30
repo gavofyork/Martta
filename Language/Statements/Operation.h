@@ -21,7 +21,7 @@
 #pragma once
 
 #include <msHash.h>
-using MarttaSupport::MultiHash;
+using namespace MarttaSupport;
 
 #include "Operator.h"
 #include "Evaluation.h"

@@ -42,7 +42,7 @@ enum Associativity
 	RightAssociativity
 };
 
-class Operator
+class M_API_Operator Operator
 {
 	friend inline uint hashOf(Operator const&);
 
