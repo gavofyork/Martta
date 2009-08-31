@@ -30,10 +30,10 @@
 namespace Martta
 {
 
-int registerName(int _n, char const* _class, char const* _name);
+int M_API_Entity registerName(int _n, char const* _class, char const* _name);
 
 class Entity;
-class Nothing { public: static AuxilliaryFace const* staticAuxilliary() { return 0; } void const* tryInterface(Kind) const { return 0; } };
+class M_API_Entity Nothing { public: static AuxilliaryFace const* staticAuxilliary() { return 0; } void const* tryInterface(Kind) const { return 0; } };
 
 namespace tryCastPrivate
 {
@@ -48,8 +48,8 @@ template<class T, class F> T tryCast(F _f) { return tryCastPrivate::XL<T, F, try
 #define MARTTA_BASIC \
 public: \
 	template<class T> friend struct Martta::GetCount; \
-	template<class T> friend class M_API_Entity Martta::Auxilliary; \
-	template<class T> friend class M_API_Entity Martta::InterfaceAuxilliary; \
+	template<class T> friend class Martta::Auxilliary; \
+	template<class T> friend class Martta::InterfaceAuxilliary; \
 	inline virtual Kind					kind() const { return this ? staticKind : Kind(Nothing::staticAuxilliary()); } \
 	static Kind							staticKind; \
 	static AuxilliaryFace const*		staticAuxilliary(); \
@@ -59,7 +59,7 @@ private: \
 	template<int m = -1, typename T = void>	struct AltSuperCount { static const int count = AltSuperCount<m + 1, typename AltSuper<m + 1>::TheType>::count; }; \
 	template<int m>						struct AltSuperCount<m, Nothing> { static const int count = m; }; \
 	template<int m, int d = 0>			struct ASHelper { static AuxilliaryFace const** altSupers() { static AuxilliaryFace const* r[m]; r[m - 1] = AltSuper<m - 1>::TheType::staticAuxilliary(); memcpy(r, ASHelper<m - 1>::altSupers(), (m - 1) * sizeof(AuxilliaryFace const*)); return r; } }; \
-	template<int d>						struct ASHelper<0, d> { static AuxilliaryFace const** altSupers() { static AuxilliaryFace const* r[0]; return r; } }; \
+	template<int d>						struct ASHelper<0, d> { static AuxilliaryFace const** altSupers() { static AuxilliaryFace const* r[1]; return r; } }; \
 	template<int m, typename T>			struct ASTHelper { typedef typename AltSuper<m - 1>::TheType H; static void const* altSupers(T const* _this, Kind _k) { /*mDebug() << "[" << T::staticKind.name() << "] Searching on " << m << "-1th entry: " << H::staticKind.name() << " for " << _k.name();*/ return H::staticKind.isKind(_k) ? tryCast<H const*>(_this)->tryInterface(_k) : ASTHelper<m - 1, T>::altSupers(_this, _k); } }; \
 	template<typename T>				struct ASTHelper<0, T> { static void const* altSupers(T const*, Kind) { /*mDebug() << "[" << T::staticKind.name() << "] Unable to find."; */return 0; } }; \
 	virtual void const*					toInterface(Kind _k) const { return tryInterface(_k); }

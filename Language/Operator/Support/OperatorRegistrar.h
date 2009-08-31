@@ -34,7 +34,7 @@ namespace Martta
 
 class ValueDefiner;
 
-class OperatorRegistrar
+class M_API_Operator OperatorRegistrar
 {
 
 public:
@@ -45,6 +45,8 @@ public:
 	inline void							registerOperator(Operator _o, ValueDefiner* _v) { m_operatorCatalogue.insert(_o, _v); }
 	inline void							unregisterOperator(Operator _o, ValueDefiner* _v) { m_operatorCatalogue.removeOne(_o, _v); }
 	
+	void testIt();
+
 private:
 	MultiHash<Operator, ValueDefiner*>	m_operatorCatalogue;
 	

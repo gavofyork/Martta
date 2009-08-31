@@ -37,7 +37,7 @@ namespace Martta
 class ModelPtrFace;
 class Identifiable;
 
-class ModelPtrRegistrar
+class M_API_Declaration ModelPtrRegistrar
 {
 public:
 	ModelPtrRegistrar() { s_this = this; }

@@ -28,7 +28,7 @@ namespace MarttaSupport
 
 #if defined(RELEASE) || defined(PROFILE)
 
-struct NullOut
+struct M_API_support NullOut
 {
 	template<class T> m_inline NullOut& operator<<(T) { return *(NullOut*)0; }
 };
@@ -42,7 +42,7 @@ struct NullOut
 
 void debugOutput(wchar_t const* _t);
 
-class DebugStream
+class M_API_support DebugStream
 {
 public:
 	enum Channel { Info = 0, Debug, Warning, Critical, FailedAssert };

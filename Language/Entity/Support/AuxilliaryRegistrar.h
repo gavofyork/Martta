@@ -25,11 +25,7 @@
 #include <msString.h>
 #include <msList.h>
 #include <msHash.h>
-using MarttaSupport::List;
-using MarttaSupport::Hash;
-using MarttaSupport::MultiHash;
-using MarttaSupport::String;
-using MarttaSupport::StringList;
+using namespace MarttaSupport;
 
 #ifndef M_API_Entity
 #define M_API_Entity M_OUTAPI
@@ -38,9 +34,9 @@ using MarttaSupport::StringList;
 namespace Martta
 {
 
-int registerName(int _n, char const* _name);
+M_API_Entity int registerName(int _n, char const* _name);
 
-class AuxilliaryRegistrar
+class M_API_Entity AuxilliaryRegistrar
 {
 public:
 	AuxilliaryRegistrar(): m_isInitialised(false) {}

@@ -40,20 +40,20 @@ public:
 	typedef T First;
 	typedef S Second;
 
-	Pair() {}
-	Pair(T const& _first, S const& _second): m_first(_first), m_second(_second) {}
-	Pair(Pair<T, S> const& _other): m_first(_other.m_first), m_second(_other.m_second) {}
+	m_inline Pair() {}
+	m_inline Pair(T const& _first, S const& _second): m_first(_first), m_second(_second) {}
+	m_inline Pair(Pair<T, S> const& _other): m_first(_other.m_first), m_second(_other.m_second) {}
 
-	Pair<T, S> operator=(Pair<T, S> const& _other) { m_first = _other.m_first; m_second = _other.m_second; }
+	m_inline Pair<T, S> operator=(Pair<T, S> const& _other) { m_first = _other.m_first; m_second = _other.m_second; }
 
-	T& key() { return m_first; }
-	S& value() { return m_second; }
-	T& first() { return m_first; }
-	S& second() { return m_second; }
-	T const& key() const { return m_first; }
-	S const& value() const { return m_second; }
-	T const& first() const { return m_first; }
-	S const& second() const { return m_second; }
+	m_inline T& key() { return m_first; }
+	m_inline S& value() { return m_second; }
+	m_inline T& first() { return m_first; }
+	m_inline S& second() { return m_second; }
+	m_inline T const& key() const { return m_first; }
+	m_inline S const& value() const { return m_second; }
+	m_inline T const& first() const { return m_first; }
+	m_inline S const& second() const { return m_second; }
 
 	m_inline bool operator==(Pair<T, S> const& _c) const { return m_first == _c.m_first && m_second == _c.m_second; }
 	m_inline bool operator!=(Pair<T, S> const& _c) const { return !operator==(_c); }
@@ -223,10 +223,10 @@ public:
 		m_inline T& value() const { return m_node->value(); }
 		m_inline Iterator operator+(int _n) const { return Iterator(*this).operator+=(_n); }
 		m_inline Iterator operator++(int) { Iterator ret(*this); operator++(); return ret; }
-		Iterator& operator++();
+		m_inline Iterator& operator++();
 		m_inline Iterator& operator+=(int _n) { for (int i = 0; i < _n; i++) operator++(); return *this; }
 		m_inline Iterator operator-(int _n) const { return Iterator(*this).operator-=(_n); }
-		Iterator& operator--();
+		m_inline Iterator& operator--();
 		m_inline Iterator operator--(int) { Iterator ret(*this); operator--(); return ret; }
 		m_inline Iterator& operator-=(int _n) {  for (int i = 0; i < _n; i++) operator--(); return *this; }
 		m_inline bool operator==(Iterator const& _i) { return m_node == _i.m_node; }
@@ -253,10 +253,10 @@ public:
 		m_inline T const& value() const { return m_node->value(); }
 		m_inline ConstIterator operator+(int _n) const { return ConstIterator(*this).operator+=(_n); }
 		m_inline ConstIterator operator++(int) { ConstIterator ret(*this); operator++(); return ret; }
-		ConstIterator& operator++();
+		m_inline ConstIterator& operator++();
 		m_inline ConstIterator& operator+=(int _n) { for (int i = 0; i < _n; i++) operator++(); return *this; }
 		m_inline ConstIterator operator-(int _n) const { return ConstIterator(*this).operator-=(_n); }
-		ConstIterator& operator--();
+		m_inline ConstIterator& operator--();
 		m_inline ConstIterator operator--(int) { ConstIterator ret(*this); operator--(); return ret; }
 		m_inline ConstIterator& operator-=(int _n) {  for (int i = 0; i < _n; i++) operator--(); return *this; }
 		m_inline bool operator==(ConstIterator const& _i) { return m_node == _i.m_node; }
@@ -281,7 +281,7 @@ public:
 		m_inline Box(): m_nodes(0), m_capacity(0), m_count(0) {}
 		m_inline Box(Box const& _b): m_nodes(_b.m_nodes), m_capacity(_b.m_capacity), m_count(_b.m_count) { Box& b = const_cast<Box&>(_b); b.m_nodes = 0; b.m_capacity = b.m_count = 0; }
 		m_inline Box(GeneralHash const& _h);
-		~Box();
+		m_inline ~Box();
 		m_inline Box& operator=(Box const& _b) { this->~Box(); m_nodes = _b.m_nodes; m_capacity = _b.m_capacity; m_count = _b.m_count; Box& b = const_cast<Box&>(_b); b.m_nodes = 0; b.m_capacity = b.m_count = 0; return *this; }
 		m_inline bool isEmpty() const { return m_nodes; }
 
@@ -295,7 +295,7 @@ public:
 	typedef ConstIterator const_iterator;
 
 	m_inline GeneralHash(): m_count(0), m_autoGrow(true), m_autoShrink(true) { allocate(Min); }
-	~GeneralHash();
+	m_inline ~GeneralHash();
 
 	// Non-templated CC/AO for overriding defaults.
 	m_inline GeneralHash(GeneralHash const& _other): m_count(0), m_autoGrow(true), m_autoShrink(true) { copy(_other); }
@@ -319,7 +319,7 @@ public:
 	m_inline bool operator!=(GeneralHash<Key, T, Min2, AlwaysMulti2, ImplicitKey2> const& _other) const { return !operator==(_other); }
 
 	template<uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
-	bool operator==(GeneralHash<Key, T, Min2, AlwaysMulti2, ImplicitKey2> const& _other) const;
+	m_inline bool operator==(GeneralHash<Key, T, Min2, AlwaysMulti2, ImplicitKey2> const& _other) const;
 
 	m_inline bool autoGrow() const { return m_autoGrow; }
 	m_inline bool autoShrink() const { return m_autoShrink; }
@@ -335,31 +335,31 @@ public:
 	m_inline T const operator[](Key const& _key) const { return value(_key); }
 
 	m_inline bool contains(Key const& _key) const { return findNode(_key); }
-	bool contains(Key const& _key, T const& _value) const;
+	m_inline bool contains(Key const& _key, T const& _value) const;
 	m_inline int count() const { return m_count; }
 	m_inline bool isEmpty() const { return !m_count; }
 	m_inline int size() const { return m_count; }
-	int count(Key const& _key) const;
+	m_inline int count(Key const& _key) const;
 
-	void clear();
-	Iterator insert(Key const& _key, T const& _value);
-	Iterator insertMulti(Key const& _key, T const& _value);
-	int remove(Key const& _key);
-	int remove(Key const& _key, T const& _value) { int r = 0; while (removeOne(_key, _value)) r++; return r; }
-	int removeOne(Key const& _key);
-	int removeOne(Key const& _key, T const& _value);
-	T take(Key const& _key);
+	m_inline void clear();
+	m_inline Iterator insert(Key const& _key, T const& _value);
+	m_inline Iterator insertMulti(Key const& _key, T const& _value);
+	m_inline int remove(Key const& _key);
+	m_inline int remove(Key const& _key, T const& _value) { int r = 0; while (removeOne(_key, _value)) r++; return r; }
+	m_inline int removeOne(Key const& _key);
+	m_inline int removeOne(Key const& _key, T const& _value);
+	m_inline T take(Key const& _key);
 
-	Key const key(T const& _value) const;
-	Key const key(T const& _value, Key const& _defaultKey) const;
-	List<Key> keys(T const& _value) const;
-	List<Key> keys() const;
-	List<Key> uniqueKeys() const;
+	m_inline Key const key(T const& _value) const;
+	m_inline Key const key(T const& _value, Key const& _defaultKey) const;
+	m_inline List<Key> keys(T const& _value) const;
+	m_inline List<Key> keys() const;
+	m_inline List<Key> uniqueKeys() const;
 
 	m_inline T const value(const Key& _key) const;
 	m_inline T const value(const Key& _key, T const& _defaultValue) const;
-	List<T> values() const;
-	List<T> values(Key const& _key) const;
+	m_inline List<T> values() const;
+	m_inline List<T> values(Key const& _key) const;
 
 
 	m_inline GeneralHash<T, Key, Min, AlwaysMulti, ImplicitKey> inverted() const;
@@ -376,10 +376,10 @@ public:
 	m_inline ConstIterator constFind(Key const& _key, T const& _value) const;
 	m_inline ConstIterator find(Key const& _key, T const& _value) const { return constFind(_key, _value); }
 	m_inline Iterator find(Key const& _key, T const& _value);
-	Iterator erase(Iterator _pos);
+	m_inline Iterator erase(Iterator _pos);
 
 	template<uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
-	GeneralHash& unite(GeneralHash<Key, T, Min2, AlwaysMulti2, ImplicitKey2> const& _other);
+	m_inline GeneralHash& unite(GeneralHash<Key, T, Min2, AlwaysMulti2, ImplicitKey2> const& _other);
 
 protected:
 	// useful for assignment operators.
@@ -403,27 +403,27 @@ private:
 
 	// copy will call allocate() first, so if you're not in a constructor you probably want liveCopy().
 	template<uint Min2, bool AlwaysMulti2, bool ImplicitKey2>
-	void copy(GeneralHash<Key, T, Min2, AlwaysMulti2, ImplicitKey2> const& _other);
+	m_inline void copy(GeneralHash<Key, T, Min2, AlwaysMulti2, ImplicitKey2> const& _other);
 
-	void moveAndDelete(Node* _n, uint _c);
-	void reinsertNode(Node* _n, bool _pleaseDelete);
+	m_inline void moveAndDelete(Node* _n, uint _c);
+	m_inline void reinsertNode(Node* _n, bool _pleaseDelete);
 	m_privateinline int indexOf(Key const& _key) const { return hashOf(_key) & (m_capacity - 1); }
-	void resizeToPowerOfTwo(uint _size);
+	m_inline void resizeToPowerOfTwo(uint _size);
 	// Find most recent node of key _key.
 	m_privateinline Node* findNode(Key const& _key) const { return findNode(m_nodes + indexOf(_key), _key); }
 	// Find most recent node of key _key, given the master node _m. Slightly faster if master node is provided.
-	Node* findNode(Node* _m, Key const& _key) const;
-	Node* findNode(Node* _m, Key const& _key, T const& _value) const;
-	void allocate(uint _s);
-	void deallocate(Node*& _n);
+	m_inline Node* findNode(Node* _m, Key const& _key) const;
+	m_inline Node* findNode(Node* _m, Key const& _key, T const& _value) const;
+	m_inline void allocate(uint _s);
+	m_inline void deallocate(Node*& _n);
 
 	// Resizes the hash if necessary
-	void checkSize();
+	m_inline void checkSize();
 
 #if defined(QT_DEBUG) || defined(QT_NO_DEBUG)
-	QDebug streamToDebug(QDebug _stream) const;
+	m_inline QDebug streamToDebug(QDebug _stream) const;
 #endif
-	TextStream& streamToDebug(TextStream& _stream) const;
+	m_inline TextStream& streamToDebug(TextStream& _stream) const;
 
 	Node* m_nodes;
 	uint m_capacity;
@@ -513,7 +513,7 @@ public:
 	m_inline ImplicitMultiHash& operator=(typename GeneralHash<Key, T, Min2, AlwaysMulti2, true>::Box const& _b) { GeneralHash<Key, T, Min, true, true>::operator=(_b); return *this; }*/
 };
 
-template<class T> List<T> solve(List<T> const& _q, MultiHash<T, T> const& _deps)
+template<class T> m_inline List<T> solve(List<T> const& _q, MultiHash<T, T> const& _deps)
 {
 	List<T> q = _q;
 	List<T> ret;

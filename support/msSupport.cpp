@@ -33,7 +33,14 @@ void assertFailed(int _line, char const* _file, char const* _function, char cons
 	else
 	{
 		DebugStream(DebugStream::FailedAssert) << _line << "@" << _file << "(" << _function << "): Assert(" << _failed << ") " << _reason;
+#ifndef M_WIN
 		asm ("int $0x03");
+#else
+		__asm
+		{
+			int 3
+		}
+#endif
 	}
 }
 #endif

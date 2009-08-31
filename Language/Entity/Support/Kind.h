@@ -60,7 +60,7 @@ public:
 	Kinds onlyObjects() const;
 };
 
-class Kind
+class M_API_Entity Kind
 {
 	friend class Entity;
 

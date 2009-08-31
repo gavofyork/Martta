@@ -21,6 +21,7 @@
 #include "AssignedVariable.h"
 #include "DefaultConstructedVariable.h"
 #include "TypeEntity.h"
+#include "VariablePlacer.h"
 
 namespace Martta
 {

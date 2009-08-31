@@ -62,7 +62,7 @@ template<class S> inline List<S> nameStarts(List<S> const& _l, String const& _s)
 // Might exist: T::committed()
 
 template<class T, class R>
-class M_API_Entity CompletionDelegate: public EditDelegate<T>
+class CompletionDelegate: public EditDelegate<T>
 {
 public:
 	CompletionDelegate(T* _e, CodeScene* _s, bool _allowEmpty = true):
@@ -96,6 +96,10 @@ public:
 	virtual String unreal() const
 	{
 		return (m_cycled >= 0 && m_cycled < m_potentials.size() ? NameTrait<R>::name(m_potentials[m_cycled]).mid(m_name.length()) : m_completion);
+	}
+	virtual void* current() const 
+	{
+		return reinterpret_cast<void*>(m_selection);
 	}
 	virtual String comment() const
 	{

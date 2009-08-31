@@ -20,6 +20,9 @@
 
 #pragma once
 
+#include <msSupport.h>
+using namespace MarttaSupport;
+
 #ifndef M_API_Variables
 #define M_API_Variables M_OUTAPI
 #endif
@@ -30,7 +33,7 @@ namespace Martta
 class Position;
 class TypeEntity;
 
-bool canPlaceVariable(Position const& _p);
-void placeVariable(Position const& _p, TypeEntity* _t);
+M_API_Variables bool canPlaceVariable(Position const& _p);
+M_API_Variables void placeVariable(Position const& _p, TypeEntity* _t);
 
 }

@@ -52,7 +52,7 @@ String NameEntryPoint::defineEditHtml(CodeScene* _cs) const
 		if (EditDelegateFace* d = _cs->editDelegate(self()))
 		{
 			String ret = d->real() + L"<span class=\"unreal\">" + d->unreal() + L"</span>";
-			if (Named* n = static_cast<CompletionDelegate<Entity, Named*>*>(d)->selection())
+			if (Named* n = reinterpret_cast<Named*>(d->current()))
 				foreach (IdentifierSet* i, IdentifierSetRegistrar::get()->allSets())
 					if (i->identifiableAt(self()->over()).contains(n))
 						return i->defineEditHtml(n, ret) + tagOf(L"minor", d->comment());

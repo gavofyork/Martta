@@ -32,7 +32,7 @@ using namespace MarttaSupport;
 namespace Martta
 {
 
-class Named
+class M_API_Declaration Named
 {
 public:
 	virtual String								name() const { return String::null; }

@@ -26,12 +26,16 @@
 
 #pragma once
 
+#ifdef _MSC_VER
+#include "wchar.h"
+#endif
+
 #include "msSupport.h"
 
 namespace MarttaSupport
 {
 
-class Char
+class M_API_support Char
 {
 public:
 	m_inline Char(): m_value(0) {}
@@ -102,7 +106,7 @@ m_inline bool operator!=(char _a, Char _b)
 	return _b.operator!=(_a);
 }
 
-class M_EXPORT String
+class M_EXPORT M_API_support String
 {
 public:
 	class Box;
@@ -368,8 +372,8 @@ m_inline const String operator+(char _ch, String const& _s) { return String(_s).
 m_inline const String operator+(String const& _s, wchar_t _ch) { return String(_s) += _ch; }
 m_inline const String operator+(wchar_t _ch, String const& _s) { return String(_s).prepend(_ch); }
 
-String times(int _s, int _omte, String const& _btwn);
-String camelCase(String const& _t, bool _upperFirst = false);
+M_API_support String times(int _s, int _omte, String const& _btwn);
+M_API_support String camelCase(String const& _t, bool _upperFirst = false);
 
 }
 

@@ -33,7 +33,7 @@ class CodeScene;
 class KeyEvent;
 class Entity;
 
-class EditDelegateFace
+class M_API_Entity EditDelegateFace
 {
 public:
 	EditDelegateFace(Entity* _e, CodeScene* _s, bool _immediateCommits = false);
@@ -44,7 +44,8 @@ public:
 	virtual String				real() const { return String::null; }
 	virtual String				unreal() const { return String::null; }
 	virtual String				comment() const { return String::null; }
-	Entity*						subject() const { return m_subject; }
+	virtual void*				current() const { return 0; }
+	Entity*						entity() const { return m_subject; }
 
 	void						initialised() { /*m_immediateCommits = !isValid();*/ }
 	void						lazyCommit() { if (m_immediateCommits) tryCommit(); }
@@ -58,18 +59,19 @@ protected:
 	virtual bool				isValid() const { return true; }
 	virtual void				commit() {}
 
+private:
 	SafePointer<Entity, true>	m_subject;
 	CodeScene*					m_codeScene;
 	bool						m_immediateCommits;
 };
 
 template<class T>
-class M_API_Entity EditDelegate: public EditDelegateFace
+class EditDelegate: public EditDelegateFace
 {
 public:
 	EditDelegate(T* _e, CodeScene* _s, bool _immediateCommits = false): EditDelegateFace(_e, _s, _immediateCommits) {}
 
-	T* subject() const { return m_subject ? static_cast<T*>(&*m_subject) : 0; }
+	T* subject() const { return entity() ? static_cast<T*>(&*entity()) : 0; }
 };
 
 }

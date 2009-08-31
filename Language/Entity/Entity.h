@@ -474,8 +474,8 @@ private:
 	Hash<int, Entity*>					m_namedChildren;
 };
 
-extern int s_news;
-extern int s_deletes;
+M_API_Entity extern int s_news;
+M_API_Entity extern int s_deletes;
 
 inline MarttaSupport::TextStream& operator<<(MarttaSupport::TextStream& _out, const Kind& _item)
 {

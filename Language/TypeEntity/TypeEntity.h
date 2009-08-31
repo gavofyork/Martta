@@ -39,7 +39,7 @@ class ModifyingType;
 class ValueDefiner;
 class Type;
 class TypeEntity;
-template<class T> class TypeConstructor;
+template<class T> struct TypeConstructor;
 
 class M_API_TypeEntity TypeEntity: public Entity, public_interface TypedOwner, public_interface WebViewable
 {
@@ -48,7 +48,7 @@ class M_API_TypeEntity TypeEntity: public Entity, public_interface TypedOwner, p
 	MARTTA_INHERITS(WebViewable, 1)
 
 	friend class Type;
-	template<class T> friend class TypeConstructor;
+	template<class T> friend struct TypeConstructor;
 	friend class ModifyingType;
 
 public:

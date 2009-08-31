@@ -20,9 +20,38 @@
 
 #include <cstdio>
 
+#ifdef M_WIN
+#include <iostream>
+using namespace std;
+
+#include <QStringList>
+#include <QProcess>
+#include <QRegExp>
+#include <QTemporaryFile>
+#include <QDir>
+#include <QTextStream>
+#endif
+
 #include <msList.h>
+#include <msString.h>
 #include <msStringList.h>
 using namespace MarttaSupport;
+
+#ifdef M_WIN
+inline String xqs(QString const& _qs)
+{
+	String ret;
+	ret.resize(_qs.length());
+	wchar_t* d = ret.data();
+	_qs.toWCharArray(d);
+	ret.dataChanged(d);
+	return ret;
+}
+inline QString xqs(String const& _s)
+{
+	return QString::fromWCharArray(_s.data(), _s.length());
+}
+#endif
 
 #include "Function.h"
 #include "CDependency.h"
@@ -147,11 +176,12 @@ List<StringList> CProject::steps() const
 		QTemporaryFile tempBat(QDir::tempPath() + "\\XXXXXX.bat");
 		tempBat.open();
 		tempBat.setAutoRemove(false);
-		m_tempBatName = qs(tempBat.fileName());
+		m_tempBatName = xqs(tempBat.fileName());
 	}
+	QFile tempBat(xqs(m_tempBatName));
 	QTextStream s(&tempBat);
 	s << "call \"%" << r.cap(1) << "%vsvars32.bat\"" << endl;
-	s << "cl \"" << qs(ccArgs.join(L"\" \"")) << "\"" << endl;
+	s << "cl \"" << xqs(ccArgs.join(L"\" \"")) << "\"" << endl;
 	tempBat.close();
 
 	StringList batArgs;

@@ -59,7 +59,7 @@ protected:
 #define MARTTA_REGISTER_CSS(EntityClass, CSS) \
 	static CssRegisterer s_css_ ## EntityClass ## __LINE__ (EntityClass::staticAuxilliary(), CSS)
 
-class CssRegisterer
+class M_API_WebView CssRegisterer
 {
 public:
 	CssRegisterer(AuxilliaryFace const* _f, String const& _css);

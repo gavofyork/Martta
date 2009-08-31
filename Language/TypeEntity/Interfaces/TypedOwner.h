@@ -21,7 +21,7 @@
 #pragma once
 
 #include <msList.h>
-using MarttaSupport::List;
+using namespace MarttaSupport;
 
 #include "WebInformer.h"
 #include "ChildValidifier.h"

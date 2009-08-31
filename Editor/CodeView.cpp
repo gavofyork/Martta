@@ -45,7 +45,9 @@ CodeView::CodeView(QWidget* _parent):
 	init();
 	connect(this, SIGNAL(selectionChanged()), SLOT(onSelectionChanged()));
 	setAttribute(Qt::WA_OpaquePaintEvent, false);
+#ifndef Q_WS_WIN
 	setRenderHints(QPainter::TextAntialiasing | QPainter::Antialiasing);
+#endif
 }
 
 CodeView::~CodeView()

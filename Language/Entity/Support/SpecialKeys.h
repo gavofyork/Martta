@@ -33,19 +33,19 @@ enum
 	ControlModifier = 0x02
 };
 
-extern const wchar_t* DeleteKey;
-extern const wchar_t* EscapeKey;
-extern const wchar_t* InsertKey;
-extern const wchar_t* PageUpKey;
-extern const wchar_t* PageDownKey;
-extern const wchar_t* HomeKey;
-extern const wchar_t* EndKey;
-extern const wchar_t* ReturnKey;
-extern const wchar_t* BackspaceKey;
-extern const wchar_t* TabKey;
-extern const wchar_t* LeftKey;
-extern const wchar_t* UpKey;
-extern const wchar_t* DownKey;
-extern const wchar_t* RightKey;
+M_API_Entity extern const wchar_t* DeleteKey;
+M_API_Entity extern const wchar_t* EscapeKey;
+M_API_Entity extern const wchar_t* InsertKey;
+M_API_Entity extern const wchar_t* PageUpKey;
+M_API_Entity extern const wchar_t* PageDownKey;
+M_API_Entity extern const wchar_t* HomeKey;
+M_API_Entity extern const wchar_t* EndKey;
+M_API_Entity extern const wchar_t* ReturnKey;
+M_API_Entity extern const wchar_t* BackspaceKey;
+M_API_Entity extern const wchar_t* TabKey;
+M_API_Entity extern const wchar_t* LeftKey;
+M_API_Entity extern const wchar_t* UpKey;
+M_API_Entity extern const wchar_t* DownKey;
+M_API_Entity extern const wchar_t* RightKey;
 
 }

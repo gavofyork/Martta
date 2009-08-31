@@ -19,9 +19,9 @@ profile {
 debug:DEFINES *= DEBUG
 release:DEFINES *= RELEASE
 unix:DEFINES += M_UNIX
-mac:DEFINES += M_MAC
-win:DEFINES += M_WIN
-!mac:unix: CONFIG += linux
+macx:DEFINES += M_MAC
+win32:DEFINES += M_WIN
+!macx:unix: CONFIG += linux
 linux:DEFINES += M_LINUX
 DEPS = Project WebView
 QT += svg \
@@ -42,13 +42,13 @@ QMAKE_LIBDIR += ../support \
 INCLUDEPATH *= ../support
 DEPENDPATH += .
 linux:QMAKE_LFLAGS += -Wl,-rpath,../plugins
-mac:QMAKE_LFLAGS += -Wl,-macosx_version_min,10.5 -Wl,-rpath,$$PWD/../plugins
+macx:QMAKE_LFLAGS += -Wl,-macosx_version_min,10.5 -Wl,-rpath,$$PWD/../plugins
 DEFINES += MARTTA_PLUGINS_PATH=\\\"$$PWD/../plugins\\\"
 TARGET = Martta
 DISTFILES += ../TODO
 RESOURCES += CodeView.qrc
 FORMS += MainWindow.ui
-mac:ICON = Martta.icns
+macx:ICON = Martta.icns
 include(files.pro)
 QMAKE_BUNDLE_DATA += SUPPORT
 SUPPORT.version = Versions
@@ -57,7 +57,7 @@ SUPPORT.files = $$SUPPORT_HEADERS \
 SUPPORT.path = Support
 win32 {
 	SUPPORT.files += ../support/support.lib
-	LIBS += ../support/Debug/support.lib
+	LIBS += ../support/support.lib
 }
 unix {
 	SUPPORT.files += ../support/libsupport.a

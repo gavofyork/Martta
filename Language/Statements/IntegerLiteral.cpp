@@ -58,11 +58,11 @@ String IntegerLiteral::defineHtml() const
 	double value;
 	modf(m_value, &value);
 	String ret = (value > 0 || value < 0) ? L"" : L",0";
-	for (int v = value < 0 ? -value : value; v >= 1; v /= 1000)
+	for (int v = (int)(value < 0.0 ? -value : value); v >= 1; v /= 1000)
 		ret = (L",%1" + ret).arg((uint)fmod((double)v, 1000.0), v >= 1000 ? 3 : 0, 10, '0');
 	ret = ret.mid(1);
 	if (m_signed)
-		ret = (m_value < 0 ? "-" : "") + ret;
+		ret = ((m_value < 0.0) ? "-" : "") + ret;
 	return String(L"<^><span class=\"IntegerLiteral Literal\">%1</span><span class=\"keyword\">%2%3</span>").arg(ret).arg(m_signed ? L"" : L"u").arg(m_range == ShortRange ? L"s" : m_range == LongRange ? L"l" : m_range == LonglongRange ? L"ll" : L"");
 }
 

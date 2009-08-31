@@ -20,6 +20,8 @@
 
 #pragma once
 
+#include <mssupport.h>
+
 #ifndef M_API_Entity
 #define M_API_Entity M_OUTAPI
 #endif

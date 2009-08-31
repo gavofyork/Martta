@@ -29,7 +29,7 @@
 namespace MarttaSupport
 {
 
-template<typename T> List<T>::Box::~Box()
+template<typename T> inline List<T>::Box::~Box()
 {
 	if (!isTrivial)
 	{
@@ -40,7 +40,7 @@ template<typename T> List<T>::Box::~Box()
 	delete [] m_data;
 }
 
-template<typename T> typename List<T>::Box& List<T>::Box::operator=(List<T> const& _return)
+template<typename T> inline typename List<T>::Box& List<T>::Box::operator=(List<T> const& _return)
 {
 	this->~Box();
 	m_data = _return.m_data;
@@ -52,7 +52,7 @@ template<typename T> typename List<T>::Box& List<T>::Box::operator=(List<T> cons
 	return *this;
 }
 
-template<typename T> typename List<T>::Box& List<T>::Box::operator=(Box const& _move)
+template<typename T> inline typename List<T>::Box& List<T>::Box::operator=(Box const& _move)
 {
 	this->~Box();
 	m_data = _move.m_data;
@@ -64,7 +64,7 @@ template<typename T> typename List<T>::Box& List<T>::Box::operator=(Box const& _
 	return *this;
 }
 
-template<class T> List<T>::List(List<T> const& _other):
+template<class T> inline List<T>::List(List<T> const& _other):
 	m_data		(0),
 	m_count		(0),
 	m_reserved	(0)
@@ -80,7 +80,7 @@ template<class T> List<T>::List(List<T> const& _other):
 			*--d = *--s;
 }
 
-template<class T> List<T>& List<T>::operator=(Box const& _returned)
+template<class T> inline List<T>& List<T>::operator=(Box const& _returned)
 {
 	clear();
 	m_data = _returned.m_data;
@@ -92,7 +92,7 @@ template<class T> List<T>& List<T>::operator=(Box const& _returned)
 	return *this;
 }
 
-template<class T> void List<T>::append(T const& _value)
+template<class T> inline void List<T>::append(T const& _value)
 {
 	if (m_reserved == m_count)
 		grow();
@@ -103,7 +103,7 @@ template<class T> void List<T>::append(T const& _value)
 	m_count++;
 }
 
-template<class T> void List<T>::clear()
+template<class T> inline void List<T>::clear()
 {
 	if (!isTrivial)
 	{
@@ -117,7 +117,7 @@ template<class T> void List<T>::clear()
 	m_reserved = 0;
 }
 
-template<class T> bool List<T>::contains(T const& _value) const
+template<class T> inline bool List<T>::contains(T const& _value) const
 {
 	ST* i = m_data + m_count;
 	while (i != m_data)
@@ -126,7 +126,7 @@ template<class T> bool List<T>::contains(T const& _value) const
 	return false;
 }
 
-template<class T> int List<T>::count(T const& _value) const
+template<class T> inline int List<T>::count(T const& _value) const
 {
 	int ret = 0;
 	ST* i = m_data + m_count;
@@ -136,7 +136,7 @@ template<class T> int List<T>::count(T const& _value) const
 	return ret;
 }
 
-template<class T> List<T> List<T>::mid(int _pos, int _length) const
+template<class T> inline List<T> List<T>::mid(int _pos, int _length) const
 {
 	_length = (_length < 0) ? m_count - _pos : _length;
 	List<T> ret;
@@ -153,7 +153,7 @@ template<class T> List<T> List<T>::mid(int _pos, int _length) const
 	return ret;
 }
 
-template<class T> typename List<T>::Iterator List<T>::erase(typename List<T>::Iterator _pos)
+template<class T> inline typename List<T>::Iterator List<T>::erase(typename List<T>::Iterator _pos)
 {
 	AssertNR(_pos.m_ptr >= m_data);
 	AssertNR(_pos.m_ptr < m_data + m_count);
@@ -164,7 +164,7 @@ template<class T> typename List<T>::Iterator List<T>::erase(typename List<T>::It
 	return _pos;
 }
 
-template<class T> typename List<T>::Iterator List<T>::erase(typename List<T>::Iterator _begin, typename List<T>::Iterator _end)
+template<class T> inline typename List<T>::Iterator List<T>::erase(typename List<T>::Iterator _begin, typename List<T>::Iterator _end)
 {
 	AssertNR(_end.m_ptr > _begin.m_ptr);
 	AssertNR(_begin.m_ptr >= m_data);
@@ -177,7 +177,7 @@ template<class T> typename List<T>::Iterator List<T>::erase(typename List<T>::It
 	return _begin;
 }
 
-template<class T> int List<T>::indexOf(const T& _value, int _from) const
+template<class T> inline int List<T>::indexOf(const T& _value, int _from) const
 {
 	ST* e = m_data + m_count;
 	ST* i = m_data + _from;
@@ -187,7 +187,7 @@ template<class T> int List<T>::indexOf(const T& _value, int _from) const
 	return -1;
 }
 
-template<class T> void List<T>::insert(int _i, const T& _value)
+template<class T> inline void List<T>::insert(int _i, const T& _value)
 {
 	AssertNR(_i <= m_count);
 	if (m_reserved == m_count)
@@ -200,7 +200,7 @@ template<class T> void List<T>::insert(int _i, const T& _value)
 		star(m_data[_i]) = _value;
 }
 
-template<class T> m_inline typename List<T>::Iterator List<T>::insert(typename List<T>::Iterator _before, const T& _value)
+template<class T> inline typename List<T>::Iterator List<T>::insert(typename List<T>::Iterator _before, const T& _value)
 {
 	AssertNR(_before.m_ptr >= m_data);
 	AssertNR(_before.m_ptr < m_data + m_count);
@@ -209,7 +209,7 @@ template<class T> m_inline typename List<T>::Iterator List<T>::insert(typename L
 	return m_data + i;
 }
 
-template<class T> int List<T>::lastIndexOf(const T& _value, int _from) const
+template<class T> inline int List<T>::lastIndexOf(const T& _value, int _from) const
 {
 	AssertNR(_from >= -1 && _from < m_count);
 	ST* i = m_data + (_from < 0 ? m_count : (_from + 1));
@@ -219,7 +219,7 @@ template<class T> int List<T>::lastIndexOf(const T& _value, int _from) const
 	return -1;
 }
 
-template<class T> void List<T>::move(int _from, int _to)
+template<class T> inline void List<T>::move(int _from, int _to)
 {
 	AssertNR(_from >= 0 && _from < m_count);
 	AssertNR(_to >= 0 && _to < m_count);
@@ -233,7 +233,7 @@ template<class T> void List<T>::move(int _from, int _to)
 	m_data[_to] = x;
 }
 
-template<class T> void List<T>::prepend(const T& _value)
+template<class T> inline void List<T>::prepend(const T& _value)
 {
 	if (m_reserved == m_count)
 		grow();
@@ -245,7 +245,7 @@ template<class T> void List<T>::prepend(const T& _value)
 	m_count++;
 }
 
-template<class T> int List<T>::removeAll(const T& _value)
+template<class T> inline int List<T>::removeAll(const T& _value)
 {
 	int ret = 0;
 	ST* i = m_data + m_count;
@@ -258,7 +258,7 @@ template<class T> int List<T>::removeAll(const T& _value)
 	return ret;
 }
 
-template<class T> bool List<T>::removeOne(T const& _value)
+template<class T> inline bool List<T>::removeOne(T const& _value)
 {
 	ST* i = m_data + m_count;
 	while (i != m_data)
@@ -270,7 +270,7 @@ template<class T> bool List<T>::removeOne(T const& _value)
 	return false;
 }
 
-template<class T> void List<T>::reserve(int _n)
+template<class T> inline void List<T>::reserve(int _n)
 {
 	if (m_reserved >= _n)
 		return;
@@ -286,7 +286,7 @@ template<class T> void List<T>::reserve(int _n)
 	m_reserved = _n;
 }
 
-template<class T> List<int>& List<T>::reverse()
+template<class T> inline List<T>& List<T>::reverse()
 {
 	ST* i = m_data - 1;
 	ST* j = m_data + m_count;
@@ -295,7 +295,7 @@ template<class T> List<int>& List<T>::reverse()
 	return *this;
 }
 
-template<class T> m_inline void List<T>::swap(int _i, int _j)
+template<class T> inline void List<T>::swap(int _i, int _j)
 {
 	AssertNR(_i >= 0 && _i < m_count);
 	AssertNR(_j >= 0 && _j < m_count);
@@ -306,7 +306,7 @@ template<class T> m_inline void List<T>::swap(int _i, int _j)
 	m_data[_j] = x;
 }
 
-template<class T> m_inline T List<T>::takeAt(int _i)
+template<class T> inline T List<T>::takeAt(int _i)
 {
 	AssertNR(_i >= 0 && _i < m_count);
 	T ret = star(m_data[_i]);
@@ -314,7 +314,7 @@ template<class T> m_inline T List<T>::takeAt(int _i)
 	return ret;
 }
 
-template<class T> List<T>& List<T>::operator=(List<T> const& _other)
+template<class T> inline List<T>& List<T>::operator=(List<T> const& _other)
 {
 	reserve(_other.m_count);
 	if (isTrivial)
@@ -336,7 +336,7 @@ template<class T> List<T>& List<T>::operator=(List<T> const& _other)
 	return *this;
 }
 
-template<class T> List<T>& List<T>::operator+=(List<T> const& _other)
+template<class T> inline List<T>& List<T>::operator+=(List<T> const& _other)
 {
 	if (m_reserved < m_count + _other.m_count)
 		reserve(m_count + _other.m_count);
@@ -353,7 +353,7 @@ template<class T> List<T>& List<T>::operator+=(List<T> const& _other)
 	return *this;
 }
 
-template<class T> bool List<T>::operator==(List<T> const& _other) const
+template<class T> inline bool List<T>::operator==(List<T> const& _other) const
 {
 	if (m_count != _other.m_count)
 		return false;
@@ -365,7 +365,7 @@ template<class T> bool List<T>::operator==(List<T> const& _other) const
 	return true;
 }
 
-template<class T> void List<T>::grow(int _minimum)
+template<class T> inline void List<T>::grow(int _minimum)
 {
 	int r = m_reserved;
 	if (r < 10)
@@ -377,38 +377,38 @@ template<class T> void List<T>::grow(int _minimum)
 	reserve(max(r, _minimum));
 }
 
-template<class T> m_inline bool List<T>::Iterator::operator==(ConstIterator const& _i)
+template<class T> inline bool List<T>::Iterator::operator==(ConstIterator const& _i)
 {
 	return m_ptr == _i.m_ptr;
 }
 
-template<class T> m_inline bool List<T>::Iterator::operator!=(ConstIterator const& _i)
+template<class T> inline bool List<T>::Iterator::operator!=(ConstIterator const& _i)
 {
 	return m_ptr == _i.m_ptr;
 }
 
-template<class T> m_inline bool List<T>::Iterator::operator<(ConstIterator const& _other) const
+template<class T> inline bool List<T>::Iterator::operator<(ConstIterator const& _other) const
 {
 	return m_ptr < _other.m_ptr;
 }
 
-template<class T> m_inline bool List<T>::Iterator::operator<=(ConstIterator const& _other) const
+template<class T> inline bool List<T>::Iterator::operator<=(ConstIterator const& _other) const
 {
 	return m_ptr <= _other.m_ptr;
 }
 
-template<class T> m_inline bool List<T>::Iterator::operator>(ConstIterator const& _other) const
+template<class T> inline bool List<T>::Iterator::operator>(ConstIterator const& _other) const
 {
 	return m_ptr > _other.m_ptr;
 }
 
-template<class T> m_inline bool List<T>::Iterator::operator>=(ConstIterator const& _other) const
+template<class T> inline bool List<T>::Iterator::operator>=(ConstIterator const& _other) const
 {
 	return m_ptr >= _other.m_ptr;
 }
 
 #if defined(QT_DEBUG) //|| defined(QT_NO_DEBUG)
-template<class T> QDebug List<T>::streamToDebug(QDebug _stream) const
+template<class T> inline QDebug List<T>::streamToDebug(QDebug _stream) const
 {
 	_stream << "{";
 	bool first = true;
@@ -426,7 +426,7 @@ template<class T> QDebug List<T>::streamToDebug(QDebug _stream) const
 }
 #endif
 
-template<class T> TextStream& List<T>::streamToDebug(TextStream& _stream) const
+template<class T> inline TextStream& List<T>::streamToDebug(TextStream& _stream) const
 {
 	_stream << "{";
 	bool first = true;

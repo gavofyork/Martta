@@ -35,7 +35,7 @@ namespace Martta
 
 class AuxilliaryFace;
 
-class WebStylistRegistrar
+class M_API_WebView WebStylistRegistrar
 {
 public:
 	WebStylistRegistrar(): m_changed(false) {}

@@ -20,6 +20,9 @@
 
 #pragma once
 
+#include <msString.h>
+using namespace MarttaSupport;
+
 #include "ModelPtr.h"
 #include "Project.h"
 #include "Namespace.h"
@@ -67,9 +70,9 @@ protected:
 	virtual Kinds						allowedKinds(int _i) const;
 
 private:
-	String								m_tempPath;
+	mutable String						m_tempPath;
 	String								m_supportPath;
-	String								m_tempBatName;
+	mutable String						m_tempBatName;
 };
 
 }

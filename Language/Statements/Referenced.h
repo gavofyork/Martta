@@ -66,7 +66,7 @@ protected:
 };
 
 template<class T>
-class M_API_Statements ReferencedValueSet: public IdentifierSet
+class ReferencedValueSet: public IdentifierSet
 {
 public:
 	virtual String						setId() const { return Kind::of<T>().name(); }

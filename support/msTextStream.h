@@ -26,7 +26,7 @@
 namespace MarttaSupport
 {
 
-class TextStream
+class M_API_support TextStream
 {
 public:
 	TextStream(String* _buffer): m_buffer(*_buffer) {}
@@ -47,7 +47,9 @@ public:
 	m_inline TextStream& operator<<(void const* _c) { m_buffer += String::number((unsigned long)_c); return *this; }
 
 	m_inline TextStream& operator<<(char _c) { m_buffer += _c; return *this; }
+#ifndef _MSC_VER
 	m_inline TextStream& operator<<(wchar_t _c) { m_buffer += _c; return *this; }
+#endif
 	m_inline TextStream& operator<<(char const* _c) { m_buffer += String(_c); return *this; }
 	m_inline TextStream& operator<<(wchar_t const* _c) { m_buffer += _c; return *this; }
 	m_inline TextStream& operator<<(String const& _c) { m_buffer += _c; return *this; }

@@ -18,12 +18,28 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include <msString.h>
+#include <msStringList.h>
+
 #include "OperatorRegistrar.h"
 
 namespace Martta
 {
 
 OperatorRegistrar* OperatorRegistrar::s_this = 0;
+
+void OperatorRegistrar::testIt()
+{
+	m_operatorCatalogue.insert(Operator(Operator::Ampers), 0);
+	String s;
+	s.replace(L"Boo", L"boo");
+	StringList sl;
+	sl.append(s);
+	List<String> sL;
+	sL.append(s);
+	List<Operator> ol;
+	ol.append(Operator());
+}
 
 }
 

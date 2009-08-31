@@ -20,13 +20,14 @@
 
 #pragma once
 
+#include "msSupport.h"
 #include "msString.h"
 #include "msList.h"
 
 namespace MarttaSupport
 {
 
-class StringList: public List<String>
+class M_API_support StringList: public List<String>
 {
 public:
 	StringList() {}

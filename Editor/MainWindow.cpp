@@ -73,7 +73,9 @@ MainWindow::MainWindow(QWidget* _p, Qt::WindowFlags _f):
 #ifdef Q_WS_MAC
 	setUnifiedTitleAndToolBarOnMac(true);
 #endif
+#ifndef Q_WS_WIN
 	setAttribute(Qt::WA_TranslucentBackground, true);
+#endif
 	centralWidget()->setAttribute(Qt::WA_OpaquePaintEvent, false);
 
 	QSettings s;
