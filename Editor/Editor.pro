@@ -41,6 +41,17 @@ QMAKE_LIBDIR += ../support \
 	../plugins
 INCLUDEPATH *= ../support
 DEPENDPATH += .
+
+
+win32:DLLs.commands = @echo Copying libraries...\
+	&& copy ..\\support\\support.dll $$DESTDIR \
+	&& copy ..\\plugins\\Project.dll $$DESTDIR \
+	&& copy ..\\plugins\\WebView.dll $$DESTDIR \
+	&& copy ..\\plugins\\Entity.dll $$DESTDIR
+QMAKE_EXTRA_TARGETS += DLLs
+PRE_TARGETDEPS += DLLs
+
+win32:QMAKE_CXXFLAGS += \wd4100 \wd4250
 linux:QMAKE_LFLAGS += -Wl,-rpath,../plugins -Wl,-rpath,../support
 macx:QMAKE_LFLAGS += -Wl,-macosx_version_min,10.5 -Wl,-rpath,$$PWD/../plugins -Wl,-rpath,$$PWD/../support
 DEFINES += MARTTA_PLUGINS_PATH=\\\"$$PWD/../plugins\\\"
@@ -56,7 +67,7 @@ SUPPORT.version = Versions
 SUPPORT.files = $$SUPPORT_HEADERS \
 	$$SUPPORT_INLINES
 SUPPORT.path = Support
-win32: SUPPORT.files += ../support/support.lib
+win32: SUPPORT.files += ../support/support.dll ../support/support.lib
 linux: SUPPORT.files += ../support/libsupport.so
 macx: SUPPORT.files += ../support/libsupport.dylib
 

@@ -98,7 +98,8 @@ for f in $files; do
 	fi
 done
 
-if [[ $COMPOSED && "x$sources" != "x" ]]; then
+# Previously this was only created when there were sources, but windows can't handle compiling a nothing program.
+if [[ $COMPOSED ]]; then
 	echo "// Auto-generated composed file" > $dest/.$name-composed.cpp
 	for i in $sources; do
 		echo "#include \"$i\"" >> $dest/.$name-composed.cpp
@@ -124,7 +125,7 @@ INSTALL_DATA.files = $data
 INSTALL_DATA.path = Data
 INSTALLS += INSTALL_DATA
 !win32:DATA.commands = @echo "Copying data..." && mkdir -p "\$\$DESTDIR/Data" && cp \$\$INSTALL_DATA.files "\$\$DESTDIR/Data"
-win32:DATA.commands = @echo "Copying data..." && md "\$\$DESTDIR/Data" && $(for i in $data; do echo -n copy \"$i\" \"\$\$DESTDIR/Data\"; done)
+win32:DATA.commands = @echo Copying data.. && md \$\$replace(DESTDIR, "/", "\\\\")\\\\Data\\\\TBD && $(for i in $data; do echo -n copy ${i/\//\\\\} \\\$\\\$replace(DESTDIR, \"/\", \"\\\\\")\\\\Data \&\&; done) rd \$\$replace(DESTDIR, "/", "\\\\")\\\\Data\\\\TBD
 QMAKE_EXTRA_TARGETS += DATA
 PRE_TARGETDEPS += DATA
 EOF

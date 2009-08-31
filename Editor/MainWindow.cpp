@@ -175,6 +175,8 @@ void MainWindow::loadPlugins()
 
 	progress.setValue(2);
 
+	QString oldCur = QDir::currentPath();
+	QDir::setCurrent(MARTTA_PLUGINS_PATH);
 	pluginsLoaded->clear();
 	QSet<QString> loaded;
 	int lastSize = -1;
@@ -188,22 +190,25 @@ void MainWindow::loadPlugins()
 				progress.setLabelText("Loading & linking " + s + "...");
 				m_libraries.append(new QLibrary(s));
 				if (m_libraries.last()->load())
-				{
-					loaded += s;
 					new QTreeWidgetItem(pluginsLoaded, QStringList() << s << QStringList(depTree[s].toList()).join(", "));
-				}
 				else
-					Assert(false, "Error loading " + qs(s) + ": " + qs(m_libraries.last()->errorString()));
+				{
+					QString errorStr = m_libraries.last()->errorString();
+					QMessageBox::warning(this, "Module Error", "Error loading " + s + ": " + m_libraries.last()->errorString(), QMessageBox::Ok);
+				}
+				loaded += s;
 				depTree.remove(s);
 				progress.setValue(progress.value() + 1);
 			}
 	}
+	QDir::setCurrent(oldCur);
 
 	if (depTree.size())
 	{
-		qDebug() << "Unknown dependencies:";
+		QString unk = "Unknown dependencies:";
 		foreach (QString s, depTree.keys())
-			qDebug() << s << QStringList(depTree[s].toList()).join(", ");
+			unk += "\n" + s + ": " + QStringList(depTree[s].toList()).join(", ");
+		QMessageBox::warning(this, "Load errors", unk, QMessageBox::Ok);
 	}
 
 	progress.setLabelText("Caching data...");

@@ -9,6 +9,11 @@ INSTALL_DATA.files =  Support/in.svg Support/out.svg Support/GlobalReferenced.sv
 INSTALL_DATA.path = Data
 INSTALLS += INSTALL_DATA
 !win32:DATA.commands = @echo "Copying data..." && mkdir -p "$$DESTDIR/Data" && cp $$INSTALL_DATA.files "$$DESTDIR/Data"
-win32:DATA.commands = @echo "Copying data..." && md "$$DESTDIR/Data" && copy "Support/in.svg" "$$DESTDIR/Data" copy "Support/out.svg" "$$DESTDIR/Data" copy "Support/GlobalReferenced.svg" "$$DESTDIR/Data"
+win32:DATA.commands = @echo Copying data.. && \
+	md $$replace(DESTDIR, "/", "\\")\\Data\\TBD && \
+	copy Support\\in.svg $$replace(DESTDIR, "/", "\\")\\Data && \
+	copy Support\\out.svg $$replace(DESTDIR, "/", "\\")\\Data && \
+	copy Support\\GlobalReferenced.svg $$replace(DESTDIR, "/", "\\")\\Data && \
+	rd $$replace(DESTDIR, "/", "\\")\\Data\\TBD
 QMAKE_EXTRA_TARGETS += DATA
 PRE_TARGETDEPS += DATA
