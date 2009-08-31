@@ -67,6 +67,10 @@ bool Compound::keyPressed(KeyEvent const* _e)
 	{
 		_e->focus()->replace(child(_e->focalIndex() + 1));
 	}
+	else if (_e->text() == L";" && _e->focalIndex() != UndefinedIndex)
+	{
+		child(_e->focalIndex())->setCurrent();
+	}
 	else if (_e->text() == "{")
 	{
 		child(0)->setCurrent();

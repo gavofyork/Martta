@@ -29,21 +29,21 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(VirtualOverload);
+MARTTA_OBJECT_CPP(VirtualOverride);
 
-Type VirtualOverload::returns() const
+Type VirtualOverride::returns() const
 {
 	return m_base.isUsable() ? m_base->returns() : Type();
 }
 
-Kinds VirtualOverload::allowedKinds(int _i) const
+Kinds VirtualOverride::allowedKinds(int _i) const
 {
 	if (_i == Identity || _i == Constness || _i == Returned)
 		return Kinds();
 	return Super::allowedKinds(_i);
 }
 
-bool VirtualOverload::keyPressed(KeyEvent const* _e)
+bool VirtualOverride::keyPressed(KeyEvent const* _e)
 {
 	if (_e->text().length() == 1 && _e->text()[0].isLower())
 	{
@@ -56,7 +56,7 @@ bool VirtualOverload::keyPressed(KeyEvent const* _e)
 	return true;
 }
 
-List<VirtualMethod*> VirtualOverload::possibilities() const
+List<VirtualMethod*> VirtualOverride::possibilities() const
 {
 	List<VirtualMethod*> ret;
 	foreach (VirtualMethod* i, parentAs<Class>()->membersOf<VirtualMethod>())
@@ -67,58 +67,58 @@ List<VirtualMethod*> VirtualOverload::possibilities() const
 	return ret;
 }
 
-static bool s_VirtualOverload_inEdit = false;
-static String s_VirtualOverload_inEditReal = String::null;
-static String s_VirtualOverload_inEditUnreal = String::null;
-static String s_VirtualOverload_inEditComment = String::null;
-static VirtualMethod* s_VirtualOverload_inEditMethod = 0;
+static bool s_VirtualOverride_inEdit = false;
+static String s_VirtualOverride_inEditReal = String::null;
+static String s_VirtualOverride_inEditUnreal = String::null;
+static String s_VirtualOverride_inEditComment = String::null;
+static VirtualMethod* s_VirtualOverride_inEditMethod = 0;
 
-String VirtualOverload::defineNameHtml() const
+String VirtualOverride::defineNameHtml() const
 {
-	if (s_VirtualOverload_inEdit)
+	if (s_VirtualOverride_inEdit)
 	{
-		String cap = s_VirtualOverload_inEditReal + L"<span class=\"unreal\">" + s_VirtualOverload_inEditUnreal + L"</span>";
-		if (s_VirtualOverload_inEditMethod)
-			return stripId(s_VirtualOverload_inEditMethod->defineNameHtml()).replace(s_VirtualOverload_inEditReal + s_VirtualOverload_inEditUnreal, cap);
-		return cap + tagOf(L"minor", s_VirtualOverload_inEditComment);
+		String cap = s_VirtualOverride_inEditReal + L"<span class=\"unreal\">" + s_VirtualOverride_inEditUnreal + L"</span>";
+		if (s_VirtualOverride_inEditMethod)
+			return stripId(s_VirtualOverride_inEditMethod->defineNameHtml()).replace(s_VirtualOverride_inEditReal + s_VirtualOverride_inEditUnreal, cap);
+		return cap + tagOf(L"minor", s_VirtualOverride_inEditComment);
 	}
 	else
 		return m_base ? stripId(m_base->defineNameHtml()) : String::null;
 }
 
-String VirtualOverload::defineReturnHtml() const
+String VirtualOverride::defineReturnHtml() const
 {
-	if (s_VirtualOverload_inEdit)
-		return s_VirtualOverload_inEditMethod ? stripId(s_VirtualOverload_inEditMethod->defineReturnHtml()) : String::null;
+	if (s_VirtualOverride_inEdit)
+		return s_VirtualOverride_inEditMethod ? stripId(s_VirtualOverride_inEditMethod->defineReturnHtml()) : String::null;
 	return m_base ? stripId(m_base->defineReturnHtml()) : String::null;
 }
 
-String VirtualOverload::defineArgListHtml() const
+String VirtualOverride::defineArgListHtml() const
 {
-	if (s_VirtualOverload_inEdit)
-		return s_VirtualOverload_inEditMethod ? stripId(s_VirtualOverload_inEditMethod->defineArgListHtml()) : String::null;
+	if (s_VirtualOverride_inEdit)
+		return s_VirtualOverride_inEditMethod ? stripId(s_VirtualOverride_inEditMethod->defineArgListHtml()) : String::null;
 	return m_base ? stripId(m_base->defineArgListHtml()) : String::null;
 }
 
-String VirtualOverload::defineEditHtml(CodeScene* _s) const
+String VirtualOverride::defineEditHtml(CodeScene* _s) const
 {
-	s_VirtualOverload_inEdit = true;
-	s_VirtualOverload_inEditReal = _s->editDelegate(this)->real();
-	s_VirtualOverload_inEditUnreal = _s->editDelegate(this)->unreal();
-	s_VirtualOverload_inEditComment = _s->editDelegate(this)->comment();
-	s_VirtualOverload_inEditMethod = static_cast<CompletionDelegate<VirtualOverload, VirtualMethod*>*>(_s->editDelegate(this))->selection();
+	s_VirtualOverride_inEdit = true;
+	s_VirtualOverride_inEditReal = _s->editDelegate(this)->real();
+	s_VirtualOverride_inEditUnreal = _s->editDelegate(this)->unreal();
+	s_VirtualOverride_inEditComment = _s->editDelegate(this)->comment();
+	s_VirtualOverride_inEditMethod = static_cast<CompletionDelegate<VirtualOverride, VirtualMethod*>*>(_s->editDelegate(this))->selection();
 	String ret = defineHtml();
-	s_VirtualOverload_inEdit = false;
-	s_VirtualOverload_inEditReal = String::null;
-	s_VirtualOverload_inEditUnreal = String::null;
-	s_VirtualOverload_inEditComment = String::null;
-	s_VirtualOverload_inEditMethod = 0;
+	s_VirtualOverride_inEdit = false;
+	s_VirtualOverride_inEditReal = String::null;
+	s_VirtualOverride_inEditUnreal = String::null;
+	s_VirtualOverride_inEditComment = String::null;
+	s_VirtualOverride_inEditMethod = 0;
 	return ret;
 }
 
-EditDelegateFace* VirtualOverload::newDelegate(CodeScene* _s)
+EditDelegateFace* VirtualOverride::newDelegate(CodeScene* _s)
 {
-	return new CompletionDelegate<VirtualOverload, VirtualMethod*>(this, _s);
+	return new CompletionDelegate<VirtualOverride, VirtualMethod*>(this, _s);
 }
 
 }

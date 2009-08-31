@@ -56,12 +56,6 @@ public:
 
 static ThisPointerSet s_thisPointerSet;
 
-bool ThisPointer::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
-{
-	// TODO: only when has ancestor of Member
-	return simplePlaceholderKeyPressHandler<ThisPointer>(_p, _e, "T");
-}
-
 Type ThisPointer::type() const
 {
 	if (!hasAncestor<MemberLambda>())

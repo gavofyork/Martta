@@ -35,12 +35,12 @@ inline String stripId(String const& _html)
 	return String(_html).replace(L"id=", L"iXd=");
 }
 
-class M_API_Class VirtualOverload: public VirtualMethod
+class M_API_Class VirtualOverride: public VirtualMethod
 {
 	MARTTA_OBJECT(VirtualMethod)
 
 public:
-	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePositionKeyPressHandler<VirtualOverload>(_p, _e, "L"); }
+	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePositionKeyPressHandler<VirtualOverride>(_p, _e, "R"); }
 
 	VirtualMethod*						get() const { return m_base; }
 	void								set(VirtualMethod* _m) { setDependency(m_base, _m); }

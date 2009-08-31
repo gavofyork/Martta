@@ -8,9 +8,101 @@ To get the most out of Martta it is very important to keep in mind that it is no
 
 1. Starting
 
-Run the Martta executable.
+Run the Martta executable. Select File->New Solution.
 
 2. Navigation
 
-Martta always tries to have some 
-The cursor keys will move the selection 
+In the main window you'll see a number of D'n'D-enabled information panes together with the document. Though this document appears similar to a textual C++ program it is not; rather it is a C++-like rendering of a Martta program. It cannot be navigated character-by-character like a text document and you will see no vertical line for the cursor. The view is made up of several program components (or "entities"), hierarchical in structure, similar to a C++ parse tree. Entities may be normal C++ concepts such as variables, types, classes and statements, but may also be slightly stranger concepts such as text labels, .
+
+Clicking on an entity will select it, giving it a blue box and the line it is on a blue background. Martta always tries to have an entity selected. You can see information pertaining to the selected entity in the "Entity Information" pane.
+
+The cursor keys may be use to move the selected entity. Page up/down function as hierarchy traversal tools, with page up selecting the "parent" of the selection and down selecting a "child". Functions are expandable - to expand a function either double-click on it or select it and press the '{' key. To close it you may double-click it or press the '}' key on it.
+
+" " next, ";" select line.
+
+3. A Simple Program
+
+Incl. Editing mode of symbols, Tab-completion. Space or symbol will often end editing.
+
+4. Running
+
+5. Editing
+
+Incl. Errors.
+
+6. Reference
+
+Tab Edit entity.
+Del Delete entity.
+Escape to finish editing.
+
+Outside a class:
+L New class.
+E New enumeration.
+
+Within a class:
+0 New pure virtual method.
+R New virtual-override method.
+V New virtual method.
+M New (non-virtual) method.
+F New field (i.e. member variable).
+E New enumeration.
+B New base class.
+
+Over a member or base:
+U/I/O Make public/private/protected.
+! Toggle const-ness (methods only).
+, Add parameter (methods/function only).
+
+Over types:
+a-z Make a fundamental (built-in) type, e.g. "int".
+A-Z Make a referenced type, e.g. "Foo" (where Foo is a class/enum etc.).
+[ Make a basic C-style array.
+# Make a hash type.
+[[ Make a list type.
+string Make a string type.
+*/& Make a pointer/reference type.
+
+Over text-labels:
+a-z Change text-label's content.
+
+Within a function-body:
+a-z Create value, variable declaration or structure, e.g. "for" (makes a for loop), "foo" (makes a variable declaration of type Foo), "f" (makes symbol refering to variable f).
+0-9 Create numeric literal. When created, use:
+	. to switch into floating-point literal.
+	s/l to change between short, natural, long and longlong variants (integers only).
+	u to toggle signedness (integers only).
+	f/d/l to change between float, double and longdouble variants (floats only).
+" Create string literal. Use " or Escape to finish editing.
+_ Create symbol to refer to an argument.
+M Create symbol to refer to a member (inside non-static methods only).
+: Create symbol to refer to a value from an included C-header, e.g. ":printf".
+L Create symbol to refer to a local variable.
+( Create an invocation (only when over an entity of a function type). Use , to create a new argument and ) to select entire invocation.
+V Create variable declaration (use = to switch to an assigned variable decaration).
+F Create for loop.
+W Create while loop.
+U Create until loop.
+B Create break statement.
+... Create unconditional loop.
+? Create if statement.
+!? Create unless statement.
+. Create member operation.
+-> Create long (dereferencing) member operation.
+D Create delete operation.
+N Create new operation.
++,-,++,--,*,/,~,!,%,&,&,|,||,<,>,<=,>=,=,==,-=,+=,*=,/=,<<,>>,<<=,>>=,|=,&=,^,^= Create operation for given symbol.
+( Create bracketed expression (forward-facing). Use ) optionally to end bracketed portion before end of statement. e.g. 5*(9-6*2; will be displayed 5*(9-(6*2)), equal to -15.
+) Create bracketed expression (backward-facing). e.g. 5*9-6)*2; will be displayed ((5*9)-6)*2, equal to 78.
+[ Create subscript operation.
+; Select current top-level-statement (i.e. statement whose parent is the nearest compound).
+
+While editing an entity:
+Backspace Remove last character, or delete if nothing left.
+Escape End editing.
+
+While editing an entity for which there are a finite number of possibilities (e.g. types, symbol references):
+Tab Complete to "split" point (i.e. common point shared by all possible values given text already entered). If already at this "split" point, cycle forward between possibilities.
+Shift-Tab Cycle backward between possibilities.
+Backspace Remove portion of entry to previous split point, or delete entity if nothing left.
+Shift-Backspace Remove last character of entry, or delete if nothing left.

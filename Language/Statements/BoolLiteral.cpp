@@ -55,23 +55,6 @@ private:
 
 static BoolIdentifierSet s_boolIdentifierSet;
 
-bool BoolLiteral::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
-{
-	if (_p.exists() && _p->isPlaceholder() && (_e->text() == "I" || _e->text() == "O"))
-	{
-		BoolLiteral* l = new BoolLiteral(_e->text() == "I");
-		_p.place(l);
-		l->setCurrent();
-	}
-	else if (_p.exists() && _p->isKind<BoolLiteral>() && (_e->text() == "I" || _e->text() == "O"))
-	{
-		_p->asKind<BoolLiteral>()->setValue(_e->text() == "I");
-	}
-	else
-		return false;
-	return true;
-}
-
 String BoolLiteral::defineHtml() const
 {
 	return L"<^><span class=\"keyword\">" + type()->typeHtml(m_value ? L"true" : L"false") + L"</span>";

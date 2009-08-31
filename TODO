@@ -8,6 +8,11 @@ OPTIMISE Moving is crazily slow over statements.
 OPTIMISE onDependencyChanged gets index w/ special indices for parent, ancestral & freeforms.
 OPTIMISE delete type of field still slow.
 QUICK EnumNamer/Class expansion.
+RENAME ExplicitType to ReferencedType.
+RENAME Referenced to ReferencedValue.
+RENAME MemberVariable Field.
+QUICK [a-z] on TypeEntity should work for Explicits too
+- make TypeEntity a NameEntryPoint?
 
 --------------------------------------------------------------------------------
 
@@ -57,6 +62,25 @@ RELEASE M2 (TBD)
 
 ================================================================================
 
+Actionify everything.
+- Provide Undo algorithms.
+- Or perhaps just save the diff.
+- Never delete anything from the model in a dependency handler.
+  - Have a list of entities that are invalid kinds for their position.
+  - Or just move to "recycle bin".
+- Nice visualisation as a line with arrows between the action of each keypress.
+  - Goes along the top.
+  - e.g. "Create IntegeralLiteral 6" -> "Create SimpleBinaryOperation *" -> "Create Referenced (int i)"
+  - That way backspace deletes these things. 
+- Pluginable actions
+- Use deniedKinds when determining legitimacy of keyPress. Will need passing down with dispatchKeyPress.
+
+--------------------------------------------------------------------------------
+
+RELEASE M3 (TBD)
+
+================================================================================
+
 Templates
 - Need to pass a template types hash through to the TypeEntity's isSimilarTo/isEquivalentTo.
   - Initialised by Type's isSimilarTo.
@@ -87,7 +111,7 @@ Default argument values.
 
 --------------------------------------------------------------------------------
 
-RELEASE M3 (TBD)
+RELEASE M4 (TBD)
 
 ================================================================================
 
@@ -99,22 +123,6 @@ Multiple-selection.
 - Insertion of Entities, either as parent or as sibling.
 - Move entities with D'n'D.
 Allow for entity insertion & appending.
-
---------------------------------------------------------------------------------
-
-RELEASE M4 (TBD)
-
-================================================================================
-
-Actionify everything.
-- Provide Undo algorithms.
-- Or perhaps just save the diff.
-- Nice visualisation as a line with arrows between the action of each keypress.
-  - Goes along the top.
-  - e.g. "Create IntegeralLiteral 6" -> "Create SimpleBinaryOperation *" -> "Create Referenced (int i)"
-  - That way backspace deletes these things. 
-- Pluginable actions
-- Use deniedKinds when determining legitimacy of keyPress. Will need passing down with dispatchKeyPress.
 
 --------------------------------------------------------------------------------
 

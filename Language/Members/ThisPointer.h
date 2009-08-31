@@ -34,8 +34,6 @@ class M_API_Members ThisPointer: public Typed
 	MARTTA_OBJECT(Typed)
 
 public:
-	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
-
 	virtual String						defineHtml() const { return L"<^><span class=\"keyword\">" + type()->typeHtml(L"this") + L"</span>"; }
 
 protected:
