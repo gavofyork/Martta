@@ -84,7 +84,10 @@ void CodeView::rememberCurrent()
 void CodeView::restoreCurrent()
 {
 	refresh();
+	bool s = m_silent;
+	m_silent = true;
 	page()->mainFrame()->evaluateJavaScript(QString("restoreCurrent(%1, %2, %3)").arg(m_remembered.x()).arg(m_remembered.y()).arg((int)&*m_rememberedParent));
+	m_silent = s;
 }
 
 void CodeView::setCurrent(Entity const* _s)
