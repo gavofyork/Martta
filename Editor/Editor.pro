@@ -41,9 +41,10 @@ QMAKE_LIBDIR += ../support \
 	../plugins
 INCLUDEPATH *= ../support
 DEPENDPATH += .
-linux:QMAKE_LFLAGS += -Wl,-rpath,../plugins
-macx:QMAKE_LFLAGS += -Wl,-macosx_version_min,10.5 -Wl,-rpath,$$PWD/../plugins
+linux:QMAKE_LFLAGS += -Wl,-rpath,../plugins -Wl,-rpath,../support
+macx:QMAKE_LFLAGS += -Wl,-macosx_version_min,10.5 -Wl,-rpath,$$PWD/../plugins -Wl,-rpath,$$PWD/../support
 DEFINES += MARTTA_PLUGINS_PATH=\\\"$$PWD/../plugins\\\"
+LIBS += -lsupport
 TARGET = Martta
 DISTFILES += ../TODO
 RESOURCES += CodeView.qrc
@@ -55,14 +56,9 @@ SUPPORT.version = Versions
 SUPPORT.files = $$SUPPORT_HEADERS \
 	$$SUPPORT_INLINES
 SUPPORT.path = Support
-win32 {
-	SUPPORT.files += ../support/support.lib
-	LIBS += ../support/support.lib
-}
-unix {
-	SUPPORT.files += ../support/libsupport.a
-	LIBS += ../support/libsupport.a
-}
+win32: SUPPORT.files += ../support/support.lib
+linux: SUPPORT.files += ../support/libsupport.so
+macx: SUPPORT.files += ../support/libsupport.dylib
 
 # Input
 HEADERS += CodeView.h \

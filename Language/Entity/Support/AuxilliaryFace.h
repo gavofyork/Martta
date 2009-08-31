@@ -20,7 +20,8 @@
 
 #pragma once
 
-#include <mssupport.h>
+#include <msSupport.h>
+using namespace MarttaSupport;
 
 #ifndef M_API_Entity
 #define M_API_Entity M_OUTAPI
