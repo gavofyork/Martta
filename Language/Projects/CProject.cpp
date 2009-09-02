@@ -64,7 +64,11 @@ MARTTA_OBJECT_CPP(CProject);
 MARTTA_OBJECT_CPP(CProjectDependency);
 
 CProject::CProject():
+#ifdef M_UNIX
 	m_tempPath		(L"/tmp")
+#else
+	m_tempPath		(L"C:\\Temp")
+#endif
 {
 	/*
 	// TODO: make a temp path
@@ -137,7 +141,7 @@ List<StringList> CProject::steps() const
 	String bin = m_tempPath + "/" + targetName();
 
 	StringList ccArgs;
-#ifdef _MSC_VER
+#ifdef M_WIN
 	ccArgs << src;
 	ccArgs << L"/Fe" + bin;
 	ccArgs << L"/nologo";
@@ -146,7 +150,8 @@ List<StringList> CProject::steps() const
 	ccArgs << L"g++";
 	ccArgs << src;
 	ccArgs << L"-o" << bin;
-	ccArgs << supportPath() + L"libsupport.a";
+	ccArgs << L"-lsupport";
+	ccArgs << L"-L" + supportPath();
 #endif
 
 	foreach (String i, libs())
@@ -155,7 +160,7 @@ List<StringList> CProject::steps() const
 	// output to file
 	{
 		String c = finalCode();
-#ifdef _MSC_VER
+#ifdef M_WIN
 		c.replace("/usr/include/", "");
 #endif
 		FILE* f = fopen(src.toCString(), "w");
@@ -179,6 +184,7 @@ List<StringList> CProject::steps() const
 		m_tempBatName = xqs(tempBat.fileName());
 	}
 	QFile tempBat(xqs(m_tempBatName));
+	tempBat.open(QIODevice::WriteOnly | QIODevice::Truncate);
 	QTextStream s(&tempBat);
 	s << "call \"%" << r.cap(1) << "%vsvars32.bat\"" << endl;
 	s << "cl \"" << xqs(ccArgs.join(L"\" \"")) << "\"" << endl;
