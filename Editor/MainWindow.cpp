@@ -326,7 +326,10 @@ void MainWindow::stepFinished()
 	}
 	else if (m_buildAndRun->exitStatus() || m_buildAndRun->exitCode())
 	{
-		QMessageBox::critical(this, "Build failed", tr("Could not build executable. Build step '%1' returned with: '%2'").arg(qs(step.join(L' '))).arg(m_buildAndRun->readAllStandardError().data()));
+		String error = m_buildAndRun->readAllStandardError().data();
+		if(error.isEmpty()) error = m_buildAndRun->readAllStandardOutput().data();
+		
+		QMessageBox::critical(this, "Build failed", tr("Could not build executable. Build step '%1' returned with: '%2'").arg(qs(step.join(L' '))).arg(qs(error)));
 		m_buildAndRun->deleteLater();
 		m_buildAndRun = 0;
 		actExecute->setEnabled(true);
@@ -606,7 +609,7 @@ void MainWindow::updateSolutionSupportPath()
 	CFRelease(macPath);
 #endif
 #ifdef Q_WS_WIN
-	m_solution->setSupportPath(qs(QCoreApplication::applicationDirPath() + "/Support/"));
+	m_solution->setSupportPath(qs(QCoreApplication::applicationDirPath() + "/../Support/"));
 #endif
 #ifdef Q_WS_X11
 	m_solution->setSupportPath(qs(QCoreApplication::applicationDirPath() + "/../support/"));

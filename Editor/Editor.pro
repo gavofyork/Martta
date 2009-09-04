@@ -41,7 +41,7 @@ QMAKE_LIBDIR += ../support \
 	../plugins
 INCLUDEPATH *= ../support
 DEPENDPATH += .
-
+win32:DESTDIR = .\.
 
 win32:DLLs.commands = @echo Copying libraries...\
 	&& copy ..\\support\\support.dll $$DESTDIR \

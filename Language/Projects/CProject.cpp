@@ -64,7 +64,12 @@ MARTTA_OBJECT_CPP(CProject);
 MARTTA_OBJECT_CPP(CProjectDependency);
 
 CProject::CProject():
+#ifdef M_WIN
+	//Inadeqate. Need to get this working properly quickly.
+	m_tempPath		(L"C:/temp")
+#else
 	m_tempPath		(L"/tmp")
+#endif
 {
 	/*
 	// TODO: make a temp path
@@ -179,6 +184,7 @@ List<StringList> CProject::steps() const
 		m_tempBatName = xqs(tempBat.fileName());
 	}
 	QFile tempBat(xqs(m_tempBatName));
+	tempBat.open(QIODevice::WriteOnly | QIODevice::Truncate);
 	QTextStream s(&tempBat);
 	s << "call \"%" << r.cap(1) << "%vsvars32.bat\"" << endl;
 	s << "cl \"" << xqs(ccArgs.join(L"\" \"")) << "\"" << endl;

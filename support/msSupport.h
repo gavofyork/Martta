@@ -130,7 +130,7 @@ m_inline uint floorLog2(uint _a)
 {
 	uint rett;
 #ifdef _MSC_VER
-	_asm
+	__asm
 	{
 			mov	eax, _a
 			bsr	eax, eax

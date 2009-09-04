@@ -21,5 +21,3 @@ QMAKE_LIBDIR += ../../support $$BASE/../plugins
 LIBS += -lsupport
 DESTDIR = $$BASE/../plugins
 win32:QMAKE_CXXFLAGS += /wd4305 /wd4800 /wd4100 /wd4251 /wd4250 /wd4355
-
-
