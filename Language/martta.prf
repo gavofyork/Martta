@@ -11,8 +11,7 @@ macx:DEFINES += M_MAC
 win32:DEFINES += M_WIN
 !macx:unix:DEFINES += M_LINUX
 TEMPLATE = lib
-# commented out until we can do something about the trailing zero getting recognised by things that need to link to it.
-!win32:VERSION = 0.1.0
+VERSION = 0.1.0
 BASE = $$PWD
 OBJECTS_DIR = $$BASE/build
 DEPENDPATH += ../../support
@@ -20,6 +19,3 @@ INCLUDEPATH += ../../support
 QMAKE_LIBDIR += ../../support $$BASE/../plugins
 LIBS += -lsupport
 DESTDIR = $$BASE/../plugins
-win32:QMAKE_CXXFLAGS += /wd4305 /wd4800 /wd4100 /wd4251 /wd4250 /wd4355
-
-

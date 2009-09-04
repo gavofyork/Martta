@@ -120,12 +120,18 @@ DEFINES += M_API_$name=M_INAPI
 $(for (( i=4 ; i<$#+1 ; i++ )); do echo ${!i}; done;)
 EOF
 if [[ "x$data" != "x" ]]; then
+mds=""
+for i in $data
+do
+	j=${i/\//\\\\}
+	mds="$mds copy $j \$\$replace(DESTDIR, \"/\", \"\\\\\")\\\\Data \&\&"
+done
 cat >> $dest/$name.pro << EOF
 INSTALL_DATA.files = $data
 INSTALL_DATA.path = Data
 INSTALLS += INSTALL_DATA
 !win32:DATA.commands = @echo "Copying data..." && mkdir -p "\$\$DESTDIR/Data" && cp \$\$INSTALL_DATA.files "\$\$DESTDIR/Data"
-win32:DATA.commands = @echo Copying data.. && md \$\$replace(DESTDIR, "/", "\\\\")\\\\Data\\\\TBD && $(for i in $data; do echo -n copy ${i/\//\\\\} \\\$\\\$replace(DESTDIR, \"/\", \"\\\\\")\\\\Data \&\&; done) rd \$\$replace(DESTDIR, "/", "\\\\")\\\\Data\\\\TBD
+win32:DATA.commands = @echo Copying data.. && md \$\$replace(DESTDIR, "/", "\\\\")\\\\Data\\\\TBD && $mds rd \$\$replace(DESTDIR, "/", "\\\\")\\\\Data\\\\TBD
 QMAKE_EXTRA_TARGETS += DATA
 PRE_TARGETDEPS += DATA
 EOF

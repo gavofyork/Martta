@@ -143,6 +143,8 @@ private:
 
 	QString					summary(Entity* _e);
 
+	String					m_pluginsPath;
+
 	QList<QLibrary*>		m_libraries;
 
 	QHash<Project*, QString>m_projects;
