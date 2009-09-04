@@ -53,10 +53,12 @@ void CullActor::prime()
 class RealDataFinder: public DataFinder
 {
 public:
+	RealDataFinder(String _s): m_pluginsPath(_s) {}
 	virtual String				fullPathOf(String const& _f)
 	{
-		return MARTTA_PLUGINS_PATH "/Data/" + _f;
+		return m_pluginsPath + "/Data/" + _f;
 	}
+	String m_pluginsPath;
 };
 
 MainWindow::MainWindow(QWidget* _p, Qt::WindowFlags _f):
@@ -65,8 +67,13 @@ MainWindow::MainWindow(QWidget* _p, Qt::WindowFlags _f):
 	m_updateTimer		(0),
 	m_buildAndRun		(0)
 {
-	qApp->addLibraryPath(MARTTA_PLUGINS_PATH);
-	DataFinder::set(new RealDataFinder);
+//#if M_WIN
+	m_pluginsPath = qs(qApp->applicationDirPath() + "/../plugins");
+/*#else
+	m_pluginsPath = MARTTA_PLUGINS_PATH;
+#endif*/
+	qApp->addLibraryPath(qs(m_pluginsPath));
+	DataFinder::set(new RealDataFinder(m_pluginsPath));
 
 	setupUi(this);
 
@@ -146,7 +153,7 @@ void MainWindow::loadPlugins()
 	setEnabled(false);
 
 	QStringList deps;
-	QFileInfoList list = QDir(MARTTA_PLUGINS_PATH).entryInfoList();
+	QFileInfoList list = QDir(qs(m_pluginsPath)).entryInfoList();
 	for (int i = 0; i < list.size(); ++i)
 		if (list.at(i).canonicalFilePath().endsWith(".dep"))
 			deps += list.at(i).canonicalFilePath();
@@ -176,7 +183,7 @@ void MainWindow::loadPlugins()
 	progress.setValue(2);
 
 	QString oldCur = QDir::currentPath();
-	QDir::setCurrent(MARTTA_PLUGINS_PATH);
+	QDir::setCurrent(qs(m_pluginsPath));
 	pluginsLoaded->clear();
 	QSet<QString> loaded;
 	int lastSize = -1;

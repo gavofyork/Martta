@@ -64,6 +64,7 @@ MARTTA_OBJECT_CPP(CProject);
 MARTTA_OBJECT_CPP(CProjectDependency);
 
 CProject::CProject():
+
 #ifdef M_WIN
 	//Inadeqate. Need to get this working properly quickly.
 	m_tempPath		(L"C:/temp")
@@ -142,7 +143,7 @@ List<StringList> CProject::steps() const
 	String bin = m_tempPath + "/" + targetName();
 
 	StringList ccArgs;
-#ifdef _MSC_VER
+#ifdef M_WIN
 	ccArgs << src;
 	ccArgs << L"/Fe" + bin;
 	ccArgs << L"/nologo";
@@ -151,7 +152,8 @@ List<StringList> CProject::steps() const
 	ccArgs << L"g++";
 	ccArgs << src;
 	ccArgs << L"-o" << bin;
-	ccArgs << supportPath() + L"libsupport.a";
+	ccArgs << L"-lsupport";
+	ccArgs << L"-L" + supportPath();
 #endif
 
 	foreach (String i, libs())
@@ -160,7 +162,7 @@ List<StringList> CProject::steps() const
 	// output to file
 	{
 		String c = finalCode();
-#ifdef _MSC_VER
+#ifdef M_WIN
 		c.replace("/usr/include/", "");
 #endif
 		FILE* f = fopen(src.toCString(), "w");
