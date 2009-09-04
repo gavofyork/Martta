@@ -129,7 +129,7 @@ mds=""
 for i in $data
 do
 	j=${i/\//\\\\}
-	mds="$mds copy $j \$\$replace(DESTDIR, \"/\", \"\\\\\")\\\\Data \&\&"
+	mds="$mds copy $j \$\$replace(DESTDIR, \"/\", \"\\\\\")\\\\Data &&"
 done
 cat >> $dest/$name.pro << EOF
 INSTALL_DATA.files = $data
