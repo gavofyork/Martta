@@ -98,6 +98,11 @@ for f in $files; do
 	fi
 done
 
+local nosources=""
+if [[ "x$sources" == "x" ]]; then
+	nosources=1
+fi
+
 # Previously this was only created when there were sources, but windows can't handle compiling a nothing program.
 if [[ $COMPOSED ]]; then
 	echo "// Auto-generated composed file" > $dest/.$name-composed.cpp
@@ -141,7 +146,7 @@ cat > $dest/$name.pri << EOF
 DEPS += $depends
 OURDIRS = $(for i in $paths; do echo $i; done | sort | uniq | xargs)
 TWD = \$\$PWD
-$(if [[ "x$sources" == "x" ]]; then echo NO_SOURCES = 1; fi)
+$(if [[ $nosources == 1 ]]; then echo NO_SOURCES = 1; fi)
 include(../dep.pri)
 EOF
 
@@ -172,7 +177,7 @@ macx:DEFINES += M_MAC
 win32:DEFINES += M_WIN
 !macx:unix:DEFINES += M_LINUX
 TEMPLATE = lib
-VERSION = 0.1.0
+!win32:VERSION = 0.1.0
 BASE = \$\$PWD
 OBJECTS_DIR = \$\$BASE/build
 DEPENDPATH += $support
