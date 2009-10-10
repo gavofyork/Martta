@@ -27,7 +27,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(Array);
+MARTTA_PROPER_CPP(Array);
 MARTTA_NAMED_CPP(Array, Length);
 
 TypeConcept* Array::newClone() const

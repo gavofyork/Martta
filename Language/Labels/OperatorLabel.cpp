@@ -23,7 +23,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(OperatorLabel);
+MARTTA_PROPER_CPP(OperatorLabel);
 
 String OperatorLabel::defineHtml() const
 {

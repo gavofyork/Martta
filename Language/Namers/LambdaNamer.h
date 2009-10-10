@@ -37,8 +37,8 @@ class Compound;
 
 class M_API_Namers LambdaNamer: public_super_interface ValueDefiner, public_interface WebViewable
 {
-	MARTTA_INTERFACE_INHERITS(ValueDefiner)
-	MARTTA_INHERITS(WebViewable, 0)
+	MARTTA_NOTION(ValueDefiner)
+	MARTTA_ALSO_INHERITS(WebViewable, 0)
 
 public:
 	MARTTA_NAMED(Body)
@@ -58,8 +58,8 @@ public:
 
 	// From ValueDefiner. Do be careful though - if you've got a mixin situation where one side is pure virtual
 	// still, explicitly scope this side on the call or you'll crash.
-	// e.g. class M_API_Namers B: public_super Concept, public_interface TypeNamer { MARTTA_OBJECT(Concept) MARTTA_INHERITS(TypeNamer, 0) };
-	// class M_API_Namers X: public_super B, public_interface LambdaNamer { MARTTA_OBJECT(B) MARTTA_INHERITS(LambdaNamer, 0)
+	// e.g. class M_API_Namers B: public_super Concept, public_interface TypeNamer { MARTTA_PROPER(Concept) MARTTA_ALSO_INHERITS(TypeNamer, 0) };
+	// class M_API_Namers X: public_super B, public_interface LambdaNamer { MARTTA_PROPER(B) MARTTA_ALSO_INHERITS(LambdaNamer, 0)
 	//     virtual Type type() const { return LambdaNamer::type().topWith<Const>(); };
 	//
 	//                                        ^^^^^^^^^^^^^

@@ -32,7 +32,7 @@ namespace Martta
 
 class M_API_Types Subscriptable: public_interface Concept
 {
-	MARTTA_INTERFACE
+	MARTTA_NOTION(Concept)
 
 public:
 	virtual Types						subscriptTypes() const { return Types(); }

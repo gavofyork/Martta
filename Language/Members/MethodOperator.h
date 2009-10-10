@@ -32,7 +32,7 @@ namespace Martta
 
 class M_API_Members MethodOperator: public_super MemberLambda
 {
-	MARTTA_OBJECT(MemberLambda)
+	MARTTA_PROPER(MemberLambda)
 
 public:
 	virtual Operator					id() const;

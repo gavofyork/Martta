@@ -35,7 +35,7 @@ namespace Martta
 
 class M_API_Projects CDependency: public_super Concept
 {
-	MARTTA_OBJECT(Concept)
+	MARTTA_PROPER(Concept)
 
 public:
 	String const&					name() const { return m_name; }

@@ -32,8 +32,8 @@ namespace Martta
 
 class M_API_Class ArtificialDefaultConstructor: public_super Constructor, public_interface Artificial
 {
-	MARTTA_OBJECT(Constructor)
-	MARTTA_INHERITS(Artificial, 0)
+	MARTTA_PROPER(Constructor)
+	MARTTA_ALSO_INHERITS(Artificial, 0)
 
 protected:
 	virtual int							minRequired(int) const { return 0; }

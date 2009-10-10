@@ -25,7 +25,7 @@
 namespace Martta
 {
 
-MARTTA_INTERFACE_CPP(Corporal);
+MARTTA_NOTION_CPP(Corporal);
 MARTTA_NAMED_CPP(Corporal, Body);
 
 String Corporal::defineHtml(bool) const

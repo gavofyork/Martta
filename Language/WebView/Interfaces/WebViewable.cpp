@@ -27,7 +27,7 @@
 namespace Martta
 {
 
-MARTTA_INTERFACE_CPP(WebViewable);
+MARTTA_NOTION_CPP(WebViewable);
 MARTTA_REGISTER_CSS(WebViewable,
 	"body { color: #666; font-size: 12px; font-family: Lucida Grande; background-color: transparent; }"
 	".keyword { font-weight: bold; }"

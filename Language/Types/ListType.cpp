@@ -34,7 +34,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(ListType);
+MARTTA_PROPER_CPP(ListType);
 MARTTA_NAMED_CPP(ListType, Length);
 
 List<BuiltinMethod*> ListType::s_members;

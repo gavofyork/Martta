@@ -28,7 +28,7 @@
 namespace Martta
 {
 
-MARTTA_INTERFACE_CPP(EnumerationNamer);
+MARTTA_NOTION_CPP(EnumerationNamer);
 
 String EnumerationNamer::interfaceCode() const
 {

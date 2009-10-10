@@ -31,7 +31,7 @@ namespace Martta
 
 class M_API_Statement Compound: public_super Untyped
 {
-	MARTTA_OBJECT(Untyped)
+	MARTTA_PROPER(Untyped)
 
 public:
 	virtual String						code() const;
@@ -53,7 +53,7 @@ protected:
 
 class M_API_Statement HardCompound: public_super Compound
 {
-	MARTTA_OBJECT(Compound)
+	MARTTA_PROPER(Compound)
 
 protected:
 	virtual String						defineHtml() const;

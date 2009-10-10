@@ -33,7 +33,7 @@ class TypedefResolver;
 
 class M_API_CStuff Typedef: public_super TopLevelType
 {
-	MARTTA_OBJECT(TopLevelType)
+	MARTTA_PROPER(TopLevelType)
 
 	friend class TypedefResolver;
 

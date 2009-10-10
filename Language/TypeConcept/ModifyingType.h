@@ -37,7 +37,7 @@ namespace Martta
 class M_API_TypeConcept ModifyingType: public_super TypeConcept, public_interface WebViewable
 {
 	MARTTA_PLACEHOLDER(TypeConcept)
-	MARTTA_INHERITS(WebViewable, 0)
+	MARTTA_ALSO_INHERITS(WebViewable, 0)
 
 public:
 	static const int& Original;

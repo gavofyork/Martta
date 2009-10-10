@@ -32,8 +32,8 @@ namespace Martta
 
 class M_API_Namers Argument: public_super Declaration, public_interface VariableNamer
 {
-	MARTTA_OBJECT(Declaration)
-	MARTTA_INHERITS(VariableNamer, 0)
+	MARTTA_PROPER(Declaration)
+	MARTTA_ALSO_INHERITS(VariableNamer, 0)
 
 protected:
 	virtual String						defineHtml() const { return defineVariableHtml(); }

@@ -24,7 +24,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(Pointer);
+MARTTA_PROPER_CPP(Pointer);
 
 bool Pointer::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {

@@ -26,7 +26,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(DefaultConstructedVariable);
+MARTTA_PROPER_CPP(DefaultConstructedVariable);
 
 bool DefaultConstructedVariable::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {

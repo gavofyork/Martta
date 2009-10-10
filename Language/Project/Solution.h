@@ -37,7 +37,7 @@ class Project;
 
 class M_API_Project Solution: public_interface Concept
 {
-	MARTTA_INTERFACE
+	MARTTA_NOTION(Concept)
 
 public:
 	virtual ~Solution() {}

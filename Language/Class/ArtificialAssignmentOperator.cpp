@@ -26,7 +26,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(ArtificialAssignmentOperator);	
+MARTTA_PROPER_CPP(ArtificialAssignmentOperator);	
 
 Type ArtificialAssignmentOperator::argumentType(int) const
 {

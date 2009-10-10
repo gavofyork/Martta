@@ -46,7 +46,7 @@ using namespace MarttaSupport;
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(Class);
+MARTTA_PROPER_CPP(Class);
 MARTTA_REGISTER_CSS(Class, ".Class-label { color: #000; font-weight: bold; text-shadow: -1px -1px 0px #f77; }");
 MARTTA_NAMED_CPP(Class, Artificials);
 

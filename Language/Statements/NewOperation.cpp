@@ -26,7 +26,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(NewOperation);
+MARTTA_PROPER_CPP(NewOperation);
 
 bool NewOperation::isValidState() const
 {

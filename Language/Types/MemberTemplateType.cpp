@@ -24,7 +24,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(MemberTemplateType);
+MARTTA_PROPER_CPP(MemberTemplateType);
 
 void MemberTemplateType::rejig()
 {

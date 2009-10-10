@@ -24,7 +24,7 @@
 namespace Martta
 {
 
-MARTTA_INTERFACE_CPP(Conditional);
+MARTTA_NOTION_CPP(Conditional);
 MARTTA_NAMED_CPP(Conditional, Condition);
 
 }

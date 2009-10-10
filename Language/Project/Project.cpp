@@ -25,7 +25,7 @@
 namespace Martta
 {
 
-MARTTA_INTERFACE_CPP(Project);
+MARTTA_NOTION_CPP(Project);
 
 String const& Project::supportPath() const
 {

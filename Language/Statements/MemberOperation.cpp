@@ -30,7 +30,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(MemberOperation);	
+MARTTA_PROPER_CPP(MemberOperation);	
 	
 Types MemberOperation::allowedTypes(int _index) const
 {

@@ -31,7 +31,7 @@ namespace Martta
 
 class M_API_Statements SubscriptOperation: public_super BinaryOperation
 {
-	MARTTA_OBJECT(BinaryOperation)
+	MARTTA_PROPER(BinaryOperation)
 
 public:
 	inline static bool					keyPressedOnPosition(Position const& _p, KeyEvent const* _e);

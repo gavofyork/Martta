@@ -33,7 +33,7 @@ class Class;
 
 class M_API_Members Destructor: public_super MemberLambda
 {
-	MARTTA_OBJECT(MemberLambda)
+	MARTTA_PROPER(MemberLambda)
 
 public:
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);

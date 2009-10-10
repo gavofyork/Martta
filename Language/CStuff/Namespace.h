@@ -31,7 +31,7 @@ namespace Martta
 
 class M_API_CStuff Namespace: public_super TopLevel
 {
-	MARTTA_OBJECT(TopLevel)
+	MARTTA_PROPER(TopLevel)
 
 public:
 	virtual bool						isGloballyIdentifiable() const { return true; }

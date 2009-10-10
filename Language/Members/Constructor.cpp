@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(Constructor);	
+MARTTA_PROPER_CPP(Constructor);	
 
 String Constructor::basicCode(FunctionCodeScope _ref) const
 {

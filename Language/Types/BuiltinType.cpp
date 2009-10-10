@@ -40,7 +40,7 @@ namespace Martta
 const int s_simpleIds[] = { Char, Int, Short|Int, Long|Int, Longlong|Int, Unsigned|Char, Unsigned|Int, Unsigned|Short|Int, Unsigned|Long|Int, Unsigned|Longlong|Int, Float, Double, Long|Double, Complex|Float, Complex|Double, Complex|Long|Double, Bool, Wchar, Void };
 const int s_simpleIdsCount = sizeof(s_simpleIds) / sizeof(s_simpleIds[0]);
 
-MARTTA_OBJECT_CPP(BuiltinType);
+MARTTA_PROPER_CPP(BuiltinType);
 
 List<BuiltinOperator*> BuiltinType::s_nonMembers;
 Hash<String, Kind> BuiltinType::s_recognisedExtras;

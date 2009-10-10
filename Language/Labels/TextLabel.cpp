@@ -28,7 +28,7 @@ using namespace MarttaSupport;
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(TextLabel);
+MARTTA_PROPER_CPP(TextLabel);
 MARTTA_REGISTER_CSS(TextLabel,
 	".TextLabel-named { color: #000 }"
 	".TextLabel-unnamed { color: #aaa }"

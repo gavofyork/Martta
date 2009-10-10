@@ -32,8 +32,8 @@ namespace Martta
 
 class M_API_Statements ForLoop: public_super Loop, public_interface Conditional
 {
-	MARTTA_OBJECT(Loop)
-	MARTTA_INHERITS(Conditional, 0)
+	MARTTA_PROPER(Loop)
+	MARTTA_ALSO_INHERITS(Conditional, 0)
 
 public:
 	MARTTA_NAMED(Initialiser)

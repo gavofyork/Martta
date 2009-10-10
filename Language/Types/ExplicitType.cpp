@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(ExplicitType);
+MARTTA_PROPER_CPP(ExplicitType);
 
 class ExplicitTypeSet: public IdentifierSet
 {

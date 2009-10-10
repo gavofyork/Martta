@@ -31,7 +31,7 @@ namespace Martta
 
 class M_API_Statements LongMemberOperation: public_super GenericMemberOperation
 {
-	MARTTA_OBJECT(GenericMemberOperation)
+	MARTTA_PROPER(GenericMemberOperation)
 
 public:
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);

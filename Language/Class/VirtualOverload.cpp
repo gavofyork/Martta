@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(VirtualOverride);
+MARTTA_PROPER_CPP(VirtualOverride);
 
 Type VirtualOverride::returns() const
 {

@@ -36,8 +36,8 @@ class EnumerationResolver;
 
 class M_API_CStuff Enumeration: public_super TopLevelType, public_interface EnumerationNamer
 {
-	MARTTA_OBJECT(TopLevelType)
-	MARTTA_INHERITS(EnumerationNamer, 0)
+	MARTTA_PROPER(TopLevelType)
+	MARTTA_ALSO_INHERITS(EnumerationNamer, 0)
 
 public:
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);

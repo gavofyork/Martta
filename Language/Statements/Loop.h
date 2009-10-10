@@ -32,8 +32,8 @@ namespace Martta
 
 class M_API_Statements Loop: public_super Untyped, public_interface Corporal
 {
-	MARTTA_OBJECT(Untyped)
-	MARTTA_INHERITS(Corporal, 0)
+	MARTTA_PROPER(Untyped)
+	MARTTA_ALSO_INHERITS(Corporal, 0)
 
 public:
 	virtual int							minRequired(int _i) const { return _i == Body ? 1 : Super::minRequired(_i); }

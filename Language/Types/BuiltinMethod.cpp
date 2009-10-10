@@ -23,6 +23,6 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(BuiltinMethod);
+MARTTA_PROPER_CPP(BuiltinMethod);
 
 }

@@ -32,8 +32,8 @@ namespace Martta
 
 class M_API_Variables DefaultConstructedVariable: public_super Primary, public_interface VariableNamer
 {
-	MARTTA_OBJECT(Primary)
-	MARTTA_INHERITS(VariableNamer, 0)
+	MARTTA_PROPER(Primary)
+	MARTTA_ALSO_INHERITS(VariableNamer, 0)
 
 public:
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);

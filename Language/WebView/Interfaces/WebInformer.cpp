@@ -24,7 +24,7 @@
 namespace Martta
 {
 
-MARTTA_INTERFACE_CPP(WebInformer);
+MARTTA_NOTION_CPP(WebInformer);
 
 String WebInformer::compileKinds(Kinds const& _t)
 {

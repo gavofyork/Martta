@@ -34,7 +34,7 @@ namespace Martta
 
 class M_API_Statements StringLiteral: public_super Literal
 {
-	MARTTA_OBJECT(Literal)
+	MARTTA_PROPER(Literal)
 
 public:
 	StringLiteral(String const& _string = String::null): m_value(_string) {}

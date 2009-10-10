@@ -24,7 +24,7 @@
 namespace Martta
 {
 	
-MARTTA_OBJECT_CPP(VirtualMethod);
+MARTTA_PROPER_CPP(VirtualMethod);
 
 String VirtualMethod::memberInterfaceCode() const
 {

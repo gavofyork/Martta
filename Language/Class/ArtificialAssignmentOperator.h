@@ -32,8 +32,8 @@ namespace Martta
 
 class M_API_Class ArtificialAssignmentOperator: public_super MethodOperator, public_interface Artificial
 {
-	MARTTA_OBJECT(MethodOperator)
-	MARTTA_INHERITS(Artificial, 0)
+	MARTTA_PROPER(MethodOperator)
+	MARTTA_ALSO_INHERITS(Artificial, 0)
 
 protected:
 	virtual Operator					id() const { return Operator::Equals; }

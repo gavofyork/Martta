@@ -32,8 +32,8 @@ namespace Martta
 
 class M_API_Types BuiltinDeclaration: public_super Declaration, public_interface ValueDefiner
 {
-	MARTTA_OBJECT(Declaration)
-	MARTTA_INHERITS(ValueDefiner, 0)
+	MARTTA_PROPER(Declaration)
+	MARTTA_ALSO_INHERITS(ValueDefiner, 0)
 	
 public:
 	virtual Type						type() const { return *childAs<TypeConcept>(0); }

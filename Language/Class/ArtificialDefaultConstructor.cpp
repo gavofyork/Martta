@@ -23,7 +23,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(ArtificialDefaultConstructor);
+MARTTA_PROPER_CPP(ArtificialDefaultConstructor);
 
 }
 

@@ -47,8 +47,8 @@ typedef List<Type> Types;
  */
 class M_API_Types TypeDefinition: public_interface Identifiable, public_interface Labelled
 {
-	MARTTA_INTERFACE_INHERITS(Identifiable)
-	MARTTA_INHERITS(Labelled, 0)
+	MARTTA_NOTION(Identifiable)
+	MARTTA_ALSO_INHERITS(Labelled, 0)
 
 public:
 	virtual String						code() const = 0;

@@ -37,7 +37,7 @@ inline String stripId(String const& _html)
 
 class M_API_Class VirtualOverride: public_super VirtualMethod
 {
-	MARTTA_OBJECT(VirtualMethod)
+	MARTTA_PROPER(VirtualMethod)
 
 public:
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePositionKeyPressHandler<VirtualOverride>(_p, _e, "R"); }

@@ -25,7 +25,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(Argument);
+MARTTA_PROPER_CPP(Argument);
 MARTTA_REGISTER_CSS(Argument,
 	L".Argument-Fader { margin-right: -15px; padding-right: 15px; padding-left: 4px; -webkit-border-top-left-radius: 7px; -webkit-border-bottom-left-radius: 7px; background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, 0.3)), to(rgba(0, 0, 0, 0))); }"
 	L".Argument { text-shadow: 1px 1px 1px #fff; color: #888; font-size: 70%; font-weight: bold; }"

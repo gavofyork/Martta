@@ -28,7 +28,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(BuiltinDeclaration);
+MARTTA_PROPER_CPP(BuiltinDeclaration);
 
 void BuiltinDeclaration::construct(TypeConcept const* _scope, int _id, bool _isConst, Type const& _returns, Types const& _args, char const* _key)
 {

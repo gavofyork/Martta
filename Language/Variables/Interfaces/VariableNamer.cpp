@@ -25,7 +25,7 @@
 namespace Martta
 {
 
-MARTTA_INTERFACE_CPP(VariableNamer);
+MARTTA_NOTION_CPP(VariableNamer);
 MARTTA_NAMED_CPP(VariableNamer, OurType);
 
 TypeConcept* VariableNamer::actualType() const

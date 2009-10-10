@@ -25,7 +25,7 @@
 namespace Martta
 {
 
-MARTTA_INTERFACE_CPP(TypeDefinition);
+MARTTA_NOTION_CPP(TypeDefinition);
 
 bool TypeDefinition::hasSingleCastOperator(TypeConcept const* _t, bool) const
 {

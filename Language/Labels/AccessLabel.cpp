@@ -23,7 +23,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(AccessLabel);
+MARTTA_PROPER_CPP(AccessLabel);
 MARTTA_REGISTER_CSS(AccessLabel,
 	".AccessLabel-publicblock { margin-left: -8px; border-width: 0 0 0 4px; border-color: #efefbf; border-style: solid; padding-left: 4px; }.AccessLabel-protectedblock { margin-left: -8px; border-width: 0 0 0 4px; border-color: #ffdfbf; border-style: solid; padding-left: 4px; }"
 	".AccessLabel-privateblock { margin-left: -8px; border-width: 0 0 0 4px; border-color: #ffbfbf; border-style: solid; padding-left: 4px; }"

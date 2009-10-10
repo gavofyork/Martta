@@ -32,8 +32,8 @@ namespace Martta
 
 class M_API_Statements WhileLoop: public_super Loop, public_interface Conditional
 {
-	MARTTA_OBJECT(Loop)
-	MARTTA_INHERITS(Conditional, 0)
+	MARTTA_PROPER(Loop)
+	MARTTA_ALSO_INHERITS(Conditional, 0)
 
 public:
 	inline static bool					keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePlaceholderKeyPressHandler<WhileLoop>(_p, _e, "W"); }
@@ -51,7 +51,7 @@ private:
 
 class M_API_Statements UntilLoop: public_super WhileLoop
 {
-	MARTTA_OBJECT(WhileLoop)
+	MARTTA_PROPER(WhileLoop)
 
 public:
 	inline static bool					keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePlaceholderKeyPressHandler<UntilLoop>(_p, _e, "U"); }

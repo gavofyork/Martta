@@ -24,6 +24,6 @@
 namespace Martta
 {
 
-MARTTA_INTERFACE_CPP(Artificial);	
+MARTTA_NOTION_CPP(Artificial);	
 
 }

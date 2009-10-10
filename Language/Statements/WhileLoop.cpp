@@ -29,8 +29,8 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(WhileLoop);
-MARTTA_OBJECT_CPP(UntilLoop);
+MARTTA_PROPER_CPP(WhileLoop);
+MARTTA_PROPER_CPP(UntilLoop);
 
 static SimpleIdentifierSet<WhileLoop> s_whileLoopSet(L"while");
 static SimpleIdentifierSet<UntilLoop> s_untilLoopSet(L"until");

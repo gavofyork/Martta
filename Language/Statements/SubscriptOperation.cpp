@@ -27,7 +27,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(SubscriptOperation);	
+MARTTA_PROPER_CPP(SubscriptOperation);	
 	
 String SubscriptOperation::code() const
 {

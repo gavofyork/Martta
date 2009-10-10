@@ -23,7 +23,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(VirtualBase);
+MARTTA_PROPER_CPP(VirtualBase);
 
 String VirtualBase::defineHtml() const
 {

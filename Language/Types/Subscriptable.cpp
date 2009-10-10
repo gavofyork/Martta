@@ -24,6 +24,6 @@
 namespace Martta
 {
 
-MARTTA_INTERFACE_CPP(Subscriptable);
+MARTTA_NOTION_CPP(Subscriptable);
 
 }

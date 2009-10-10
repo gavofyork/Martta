@@ -35,7 +35,7 @@ namespace Martta
 class M_API_Members MemberLambda: public_super MemberValue, public_interface LambdaNamer
 {
 	MARTTA_PLACEHOLDER(MemberValue)
-	MARTTA_INHERITS(LambdaNamer, 0)
+	MARTTA_ALSO_INHERITS(LambdaNamer, 0)
 
 public:
 	MARTTA_NAMED(Constness)

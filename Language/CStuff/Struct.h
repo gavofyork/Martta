@@ -33,7 +33,7 @@ class StructResolver;
 
 class M_API_CStuff Struct: public_super TopLevelType
 {
-	MARTTA_OBJECT(TopLevelType)
+	MARTTA_PROPER(TopLevelType)
 
 	friend class Concept;
 	friend class StructResolver;

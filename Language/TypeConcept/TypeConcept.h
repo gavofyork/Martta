@@ -44,8 +44,8 @@ template<class T> struct TypeConstructor;
 class M_API_TypeConcept TypeConcept: public_super Concept, public_interface TypedOwner, public_interface WebViewable
 {
 	MARTTA_PLACEHOLDER(Concept)
-	MARTTA_INHERITS(TypedOwner, 0)
-	MARTTA_INHERITS(WebViewable, 1)
+	MARTTA_ALSO_INHERITS(TypedOwner, 0)
+	MARTTA_ALSO_INHERITS(WebViewable, 1)
 
 	friend class Type;
 	template<class T> friend struct TypeConstructor;

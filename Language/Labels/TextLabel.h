@@ -32,8 +32,8 @@ namespace Martta
 
 class M_API_Labels TextLabel: public_super IdLabel, public_interface WebViewable
 {
-	MARTTA_OBJECT(IdLabel)
-	MARTTA_INHERITS(WebViewable, 0)
+	MARTTA_PROPER(IdLabel)
+	MARTTA_ALSO_INHERITS(WebViewable, 0)
 
 public:
 	TextLabel(String const& _t = String::null): m_text(_t) {}

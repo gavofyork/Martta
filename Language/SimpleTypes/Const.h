@@ -31,7 +31,7 @@ namespace Martta
 
 class M_API_SimpleTypes Const: public_super ModifyingType
 {
-	MARTTA_OBJECT(ModifyingType)
+	MARTTA_PROPER(ModifyingType)
 
 public:
 	Const() {}

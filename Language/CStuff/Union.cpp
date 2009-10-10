@@ -24,7 +24,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(Union);
+MARTTA_PROPER_CPP(Union);
 	
 Kinds Union::allowedKinds(int _i) const
 {

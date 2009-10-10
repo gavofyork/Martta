@@ -33,7 +33,7 @@ namespace Martta
 class M_API_CStuff TopLevel: public_super Declaration, public_interface Labelled
 {
 	MARTTA_PLACEHOLDER(Declaration)
-	MARTTA_INHERITS(Labelled, 0)
+	MARTTA_ALSO_INHERITS(Labelled, 0)
 
 public:
 	virtual int							minRequired(int _i) const { return _i == Identity ? 1 : Super::minRequired(_i); }

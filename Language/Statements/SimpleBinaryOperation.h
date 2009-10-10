@@ -35,7 +35,7 @@ class ValueDefiner;
 
 class M_API_Statements SimpleBinaryOperation: public_super BinaryOperation
 {
-	MARTTA_OBJECT(BinaryOperation)
+	MARTTA_PROPER(BinaryOperation)
 
 public:
 	SimpleBinaryOperation(Operator _o = Operator(), Type const& _left = Type(), Type const& _right = Type()): m_operator(_o), m_symbolCache(0) { setOperation(_o, _left, _right); }

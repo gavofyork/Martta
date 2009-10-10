@@ -26,7 +26,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(ArtificialCopyConstructor);	
+MARTTA_PROPER_CPP(ArtificialCopyConstructor);	
 
 Type ArtificialCopyConstructor::argumentType(int) const
 {

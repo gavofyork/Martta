@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(Invocation);
+MARTTA_PROPER_CPP(Invocation);
 MARTTA_NAMED_CPP(Invocation, Callee);
 
 Type Invocation::type() const

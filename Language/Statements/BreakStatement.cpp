@@ -24,7 +24,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(BreakStatement);
+MARTTA_PROPER_CPP(BreakStatement);
 
 static SimpleIdentifierSet<BreakStatement> s_breakStatementSet(L"break");
 

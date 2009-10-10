@@ -30,7 +30,7 @@ using namespace MarttaSupport;
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(ReturnStatement);
+MARTTA_PROPER_CPP(ReturnStatement);
 MARTTA_NAMED_CPP(ReturnStatement, Returned);
 
 static SimpleIdentifierSet<ReturnStatement> s_returnStatementSet(L"return");

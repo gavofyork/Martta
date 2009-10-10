@@ -28,7 +28,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(SimpleBinaryOperation);
+MARTTA_PROPER_CPP(SimpleBinaryOperation);
 
 bool SimpleBinaryOperation::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {

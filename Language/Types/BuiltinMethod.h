@@ -31,7 +31,7 @@ namespace Martta
 
 class M_API_Types BuiltinMethod: public_super BuiltinDeclaration
 {
-	MARTTA_OBJECT(BuiltinDeclaration)
+	MARTTA_PROPER(BuiltinDeclaration)
 
 public:
 	template<class T> inline static BuiltinMethod* create(String const& _name, bool _isConst, Type const& _returns, Types const& _args)

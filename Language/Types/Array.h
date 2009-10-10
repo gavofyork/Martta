@@ -31,7 +31,7 @@ namespace Martta
 
 class M_API_Types Array: public_super AddressType
 {
-	MARTTA_OBJECT(AddressType)
+	MARTTA_PROPER(AddressType)
 
 public:
 	MARTTA_NAMED(Length)

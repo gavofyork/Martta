@@ -26,7 +26,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(Loop);
+MARTTA_PROPER_CPP(Loop);
 
 static SimpleIdentifierSet<Loop> s_loopSet(L"forever");
 

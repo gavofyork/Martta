@@ -33,8 +33,8 @@ namespace Martta
 /// Has two children; one of type Variable, and a second of Construction.
 class M_API_Members ConstructedVariable: public_super Primary, public_interface VariableNamer
 {
-	MARTTA_OBJECT(Primary)
-	MARTTA_INHERITS(VariableNamer, 0)
+	MARTTA_PROPER(Primary)
+	MARTTA_ALSO_INHERITS(VariableNamer, 0)
 
 private:
 	MARTTA_NAMED(OurConstruction)

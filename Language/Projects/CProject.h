@@ -38,7 +38,7 @@ class CProject;
 
 class M_API_Projects CProjectDependency: public_super Concept
 {
-	MARTTA_OBJECT(Concept)
+	MARTTA_PROPER(Concept)
 
 private:
 	ModelPtr<CProject> m_subject;
@@ -46,8 +46,8 @@ private:
 
 class M_API_Projects CProject: public_super Namespace, public_interface Project
 {
-	MARTTA_OBJECT(Namespace)
-	MARTTA_INHERITS(Project, 0)
+	MARTTA_PROPER(Namespace)
+	MARTTA_ALSO_INHERITS(Project, 0)
 
 public:
 	MARTTA_NAMED(RequiredIncludes)

@@ -36,7 +36,7 @@ class ExplicitTypeSet;
 
 class M_API_Types ExplicitType: public_super PhysicalType
 {
-	MARTTA_OBJECT(PhysicalType)
+	MARTTA_PROPER(PhysicalType)
 
 	friend class TypeDefinition;
 	friend class ExplicitTypeSet;

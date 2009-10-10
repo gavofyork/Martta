@@ -23,7 +23,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(ConstLabel);
+MARTTA_PROPER_CPP(ConstLabel);
 
 String ConstLabel::defineHtml() const
 {

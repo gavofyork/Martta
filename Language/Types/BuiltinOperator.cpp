@@ -24,7 +24,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(BuiltinOperator);
+MARTTA_PROPER_CPP(BuiltinOperator);
 
 void BuiltinOperator::construct(int _id, Operator _o, Type const& _returns, Types const& _args, char const* _key)
 {

@@ -33,7 +33,7 @@ namespace Martta
 class M_API_Labels Label: public_super Concept, public_interface WebViewable
 {
 	MARTTA_PLACEHOLDER(Concept)
-	MARTTA_INHERITS(WebViewable, 0)
+	MARTTA_ALSO_INHERITS(WebViewable, 0)
 
 public:
 	// Potentially queries the parent's isChildInValidState() to check if we're valid.

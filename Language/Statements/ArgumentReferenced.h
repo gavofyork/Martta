@@ -31,7 +31,7 @@ namespace Martta
 
 class M_API_Statements ArgumentReferenced: public_super Referenced
 {
-	MARTTA_OBJECT(Referenced)
+	MARTTA_PROPER(Referenced)
 	
 public:
 	ArgumentReferenced(ValueDefiner* _subject = 0): Referenced(_subject) {}

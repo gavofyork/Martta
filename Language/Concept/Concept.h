@@ -272,7 +272,7 @@ public:
 	 */
 	void								deleteAndRefill(Concept* _e = 0, bool _moveToGrave = false);
 
-	virtual void const*					tryKindBlind(Kind _k) const { return _k == staticKind ? reinterpret_cast<void const*>(this) : _k.isInterface() ? toInterface(_k) : 0; }
+	virtual void const*					tryKindBlind(Kind _k) const { return _k == staticKind ? reinterpret_cast<void const*>(this) : toInterface(_k); }
 
 	template<class T> inline bool		isKind() const { return this && kind().isKind(T::staticKind); }
 	inline bool							isKind(Kind _k) const { return this && kind().isKind(_k); }
@@ -314,7 +314,7 @@ public:
 	// TODO: Consider moving to somewhere more specialised.
 	virtual bool						doINeedParenthesising(Concept const* _child) const { (void)_child; return false; }
 	/// @returns true if this object isn't actually a proper language entity.
-	/// Overrides automatically handled in derivations by MARTTA_OBJECT(_INTERFACE) macros. Do not reimplement.
+	/// Overrides automatically handled in derivations by MARTTA_PROPER(_INTERFACE) macros. Do not reimplement.
 	virtual bool						isPlaceholder() const { return kind().isPlaceholder(); }
 	/// Checked after change; if true is returned, this may be deleted.
 	virtual bool						isSuperfluous() const;

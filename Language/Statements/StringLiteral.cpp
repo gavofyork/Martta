@@ -24,7 +24,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(StringLiteral);
+MARTTA_PROPER_CPP(StringLiteral);
 
 bool StringLiteral::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {

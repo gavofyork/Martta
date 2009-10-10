@@ -28,6 +28,6 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(Method);
+MARTTA_PROPER_CPP(Method);
 
 }

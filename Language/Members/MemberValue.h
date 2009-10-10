@@ -33,7 +33,7 @@ namespace Martta
 class M_API_Members MemberValue: public_super Member, public_interface ValueDefiner
 {
 	MARTTA_PLACEHOLDER(Member)
-	MARTTA_INHERITS(ValueDefiner, 0)
+	MARTTA_ALSO_INHERITS(ValueDefiner, 0)
 
 public:
 	virtual bool						isConst() const { return true; }

@@ -35,7 +35,7 @@ class IdentifierSet;
 
 class M_API_Declaration NameEntryPoint: public_super_interface WebViewable
 {
-	MARTTA_INTERFACE_INHERITS(WebViewable)
+	MARTTA_NOTION(WebViewable)
 
 public:
 	Named*								get() const { return 0; }

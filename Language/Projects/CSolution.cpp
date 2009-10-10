@@ -31,7 +31,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(CSolution);
+MARTTA_PROPER_CPP(CSolution);
 
 Kinds CSolution::allowedKinds(int _i) const
 {

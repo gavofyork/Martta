@@ -32,7 +32,7 @@ namespace Martta
 
 class M_API_Statements ReturnStatement: public_super Untyped
 {
-	MARTTA_OBJECT(Untyped)
+	MARTTA_PROPER(Untyped)
 
 public:
 	MARTTA_NAMED(Returned)

@@ -26,7 +26,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(Typedef);
+MARTTA_PROPER_CPP(Typedef);
 MARTTA_NAMED_CPP(Typedef, Aliased);
 MARTTA_NAMED_CPP(Typedef, ShadowedStruct);
 

@@ -38,7 +38,7 @@ class CodeScene;
 
 class M_API_WebView WebViewable: public_interface Concept
 {
-	MARTTA_INTERFACE
+	MARTTA_NOTION(Concept)
 
 public:
 	virtual ~WebViewable() {}

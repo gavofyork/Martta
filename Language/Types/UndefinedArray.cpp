@@ -23,7 +23,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(UndefinedArray);
+MARTTA_PROPER_CPP(UndefinedArray);
 	
 String UndefinedArray::code(String const& _middle) const
 {

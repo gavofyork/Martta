@@ -33,7 +33,7 @@ namespace Martta
 
 class M_API_Statements IfStatement: public_super Untyped, public_interface Corporal, public_interface Conditional
 {
-	MARTTA_OBJECT(Untyped)
+	MARTTA_PROPER(Untyped)
 
 public:
 	MARTTA_NAMED(AltBody)
@@ -53,7 +53,7 @@ protected:
 
 class M_API_Statements UnlessStatement: public_super IfStatement
 {
-	MARTTA_OBJECT(IfStatement)
+	MARTTA_PROPER(IfStatement)
 
 public:
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);

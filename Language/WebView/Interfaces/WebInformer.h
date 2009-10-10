@@ -34,7 +34,7 @@ namespace Martta
 
 class M_API_WebView WebInformer: public_interface Concept
 {
-	MARTTA_INTERFACE
+	MARTTA_NOTION(Concept)
 
 public:
 	virtual ~WebInformer() {}

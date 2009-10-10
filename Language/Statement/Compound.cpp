@@ -26,8 +26,8 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(Compound);
-MARTTA_OBJECT_CPP(HardCompound);
+MARTTA_PROPER_CPP(Compound);
+MARTTA_PROPER_CPP(HardCompound);
 
 String Compound::code() const
 {

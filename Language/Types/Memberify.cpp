@@ -24,7 +24,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(Memberify);
+MARTTA_PROPER_CPP(Memberify);
 MARTTA_NAMED_CPP(Memberify, Scope);
 
 Memberify::Memberify(TypeDefinition* _scope, bool _isConst)

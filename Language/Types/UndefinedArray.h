@@ -31,7 +31,7 @@ namespace Martta
 
 class M_API_Types UndefinedArray: public_super AddressType
 {
-	MARTTA_OBJECT(AddressType)
+	MARTTA_PROPER(AddressType)
 
 protected:
 	virtual String						code(String const& _middle) const;

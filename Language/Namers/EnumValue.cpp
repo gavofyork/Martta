@@ -30,7 +30,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(EnumValue);
+MARTTA_PROPER_CPP(EnumValue);
 MARTTA_NAMED_CPP(EnumValue, Definition);
 
 Kinds EnumValue::allowedKinds(int _i) const

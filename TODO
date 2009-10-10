@@ -28,11 +28,7 @@ QUICK [a-z] on TypeConcept should work for Explicits too
 - make TypeConcept a NameEntryPoint?
 QUICK TypeConcept shouldn't inherit from TypedOwner - Just MemberTempateType and ArrayType.
 
-Get rid of interfaces
-- Make all Concept-derivations virtual pure.
-- Make Concept itself uninstantiatable; relieved with a MARTTA_INTERFACE or MARTTA_PROPER
-- Switch all interfaces into entities.
-- Kill virtualEndOfNamed.
+- Make Concept itself uninstantiatable; relieved with a MARTTA_PLACEHOLDER or MARTTA_PROPER
 New Component of .h/.cpp
 Concept component types.
 - Self-hosting.
@@ -44,6 +40,7 @@ RELEASE M2 (TBD)
 ================================================================================
 
 BUG? current() bad in onCurrentAboutToChange.
+BUG Add method, make return type good, still appears bad. Making name good/bad doesn't change anything.
 EMAIL Kill selections.
 BRINGBACK All tests incl. Ser/Deser.
 TODO Unary operation should apply to climb Statement tree until it finds something.

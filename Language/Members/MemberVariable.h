@@ -32,8 +32,8 @@ namespace Martta
 
 class M_API_Members MemberVariable: public_super MemberValue, public_interface VariableNamer
 {
-	MARTTA_OBJECT(MemberValue)
-	MARTTA_INHERITS(VariableNamer, 0)
+	MARTTA_PROPER(MemberValue)
+	MARTTA_ALSO_INHERITS(VariableNamer, 0)
 
 public:
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);

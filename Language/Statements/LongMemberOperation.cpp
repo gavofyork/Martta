@@ -30,7 +30,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(LongMemberOperation);	
+MARTTA_PROPER_CPP(LongMemberOperation);	
 
 Type LongMemberOperation::scope() const
 {

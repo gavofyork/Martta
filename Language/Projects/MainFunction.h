@@ -31,7 +31,7 @@ namespace Martta
 
 class M_API_Projects MainFunction: public_super Function
 {
-	MARTTA_OBJECT(Function)
+	MARTTA_PROPER(Function)
 
 protected:
 	virtual int							minRequired(int _i) const { return Super::minRequired(_i); }

@@ -28,9 +28,9 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(IfStatement);
+MARTTA_PROPER_CPP(IfStatement);
 MARTTA_NAMED_CPP(IfStatement, AltBody);
-MARTTA_OBJECT_CPP(UnlessStatement);
+MARTTA_PROPER_CPP(UnlessStatement);
 
 static SimpleIdentifierSet<IfStatement> s_ifSet(L"if");
 static SimpleIdentifierSet<UnlessStatement> s_unlessSet(L"unless");

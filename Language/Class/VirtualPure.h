@@ -32,7 +32,7 @@ namespace Martta
 // Only has ReturnType, ArgumentVariable...
 class M_API_Class VirtualPure: public_super VirtualMethod
 {
-	MARTTA_OBJECT(VirtualMethod)
+	MARTTA_PROPER(VirtualMethod)
 
 public:
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);

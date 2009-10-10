@@ -25,7 +25,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(Construction);
+MARTTA_PROPER_CPP(Construction);
 
 int Construction::minRequired(int _i) const
 {

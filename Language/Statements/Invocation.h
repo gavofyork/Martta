@@ -31,7 +31,7 @@ namespace Martta
 
 class M_API_Statements Invocation: public_super Evaluation
 {
-	MARTTA_OBJECT(Evaluation)
+	MARTTA_PROPER(Evaluation)
 
 public:
 	MARTTA_NAMED(Callee)

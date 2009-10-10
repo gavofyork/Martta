@@ -39,7 +39,7 @@ namespace Martta
  */
 class M_API_CStuff Root: public_super Declaration
 {
-	MARTTA_OBJECT(Declaration)
+	MARTTA_PROPER(Declaration)
 
 public:
 	MARTTA_NAMED(Included)

@@ -32,8 +32,8 @@ namespace Martta
 
 class M_API_Variables AssignedVariable: public_super BareTyped, public_interface VariableNamer
 {
-	MARTTA_OBJECT(BareTyped)
-	MARTTA_INHERITS(VariableNamer, 0)
+	MARTTA_PROPER(BareTyped)
+	MARTTA_ALSO_INHERITS(VariableNamer, 0)
 
 public:
 	MARTTA_NAMED(AssignedValue)

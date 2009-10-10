@@ -35,8 +35,8 @@ class Class;
 
 class M_API_Class Base: public_super Concept, public_interface WebViewable
 {
-	MARTTA_OBJECT(Concept)
-	MARTTA_INHERITS(WebViewable, 0)
+	MARTTA_PROPER(Concept)
+	MARTTA_ALSO_INHERITS(WebViewable, 0)
 
 public:
 	MARTTA_NAMED(Accessibility)

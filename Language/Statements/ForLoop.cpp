@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(ForLoop);
+MARTTA_PROPER_CPP(ForLoop);
 MARTTA_NAMED_CPP(ForLoop, Initialiser);
 MARTTA_NAMED_CPP(ForLoop, Ticker);
 

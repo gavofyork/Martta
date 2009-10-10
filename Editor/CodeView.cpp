@@ -198,7 +198,6 @@ void CodeView::refresh()
 			}
 		}
 	}
-	qDebug() << page()->mainFrame()->evaluateJavaScript("document.body.outerHTML").toString();
 	m_dirty.clear();
 }
 
@@ -246,7 +245,6 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 
 //		p.setRenderHint(QPainter::Antialiasing, true);
 		QRect br = bounds(c);
-		qDebug() << "Bounds of " << (int)c << ": " << br;
 		br = QRect(0, br.y(), width(), br.height());
 		if (_ev->region().contains(br))
 		{
@@ -373,9 +371,7 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 
 QRect CodeView::bounds(Concept const* _e) const
 {
-	mInfo() << (int)(_e) << " bounds...";
 	QStringList l = page()->mainFrame()->evaluateJavaScript(QString("bounds('%1')").arg((int)_e)).toString().split(" ");
-	qDebug() << l;
 	if (l.size() == 4)
 		return QRect(l[0].toInt(), l[1].toInt(), l[2].toInt(), l[3].toInt());
 	else

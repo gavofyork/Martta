@@ -33,9 +33,9 @@ namespace Martta
 
 class M_API_Namers EnumValue: public_super Declaration, public_interface ValueDefiner, public_interface WebViewable
 {
-	MARTTA_OBJECT(Declaration)
-	MARTTA_INHERITS(ValueDefiner, 0)
-	MARTTA_INHERITS(WebViewable, 1)
+	MARTTA_PROPER(Declaration)
+	MARTTA_ALSO_INHERITS(ValueDefiner, 0)
+	MARTTA_ALSO_INHERITS(WebViewable, 1)
 
 	friend class Concept;
 	friend class EnumValueResolver;

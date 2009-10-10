@@ -60,10 +60,10 @@ inline QString xqs(String const& _s)
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(CProject);
+MARTTA_PROPER_CPP(CProject);
 MARTTA_NAMED_CPP(CProject, RequiredIncludes);
 MARTTA_NAMED_CPP(CProject, MainFunction);
-MARTTA_OBJECT_CPP(CProjectDependency);
+MARTTA_PROPER_CPP(CProjectDependency);
 
 CProject::CProject():
 

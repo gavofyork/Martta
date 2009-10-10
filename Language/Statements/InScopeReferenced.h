@@ -31,7 +31,7 @@ namespace Martta
 
 class M_API_Statements InScopeReferenced: public_super Referenced
 {
-	MARTTA_OBJECT(Referenced)
+	MARTTA_PROPER(Referenced)
 	
 public:
 	InScopeReferenced(ValueDefiner* _subject = 0): Referenced(_subject) {}

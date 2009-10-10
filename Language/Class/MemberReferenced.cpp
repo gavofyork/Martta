@@ -36,9 +36,14 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(MemberReferenced);
+MARTTA_PROPER_CPP(MemberReferenced);
 
 static ReferencedValueSet<FloatingMemberReferenced> s_memberReferencedRegistrand;
+
+MemberReferenced::MemberReferenced(ValueDefiner* _subject):
+	Referenced(_subject)
+{
+}
 
 bool MemberReferenced::keyPressed(KeyEvent const* _e)
 {
@@ -133,7 +138,7 @@ String MemberReferenced::defineEditHtml(CodeScene* _cs) const
 		return true;
 	}*/
 
-MARTTA_OBJECT_CPP(FloatingMemberReferenced);
+MARTTA_PROPER_CPP(FloatingMemberReferenced);
 
 bool FloatingMemberReferenced::keyPressed(KeyEvent const* _e)
 {

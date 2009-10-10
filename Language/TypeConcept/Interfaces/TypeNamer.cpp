@@ -24,7 +24,7 @@
 namespace Martta
 {
 
-MARTTA_INTERFACE_CPP(TypeNamer)
+MARTTA_NOTION_CPP(TypeNamer)
 
 Types TypeNamer::ourAllowedTypes() const
 {

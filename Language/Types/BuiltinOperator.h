@@ -32,7 +32,7 @@ namespace Martta
 
 class M_API_Types BuiltinOperator: public_super BuiltinDeclaration
 {
-	MARTTA_OBJECT(BuiltinDeclaration)
+	MARTTA_PROPER(BuiltinDeclaration)
 	
 public:
 	template<class T> static BuiltinOperator* create(Operator _o, Type const& _returns, Types const& _args)

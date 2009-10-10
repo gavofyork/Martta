@@ -25,7 +25,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(AssignmentOperation);	
+MARTTA_PROPER_CPP(AssignmentOperation);	
 	
 String AssignmentOperation::code() const
 {

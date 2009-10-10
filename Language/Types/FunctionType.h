@@ -36,7 +36,7 @@ namespace Martta
 // For ... functions, m_ellipsis is set.
 class M_API_Types FunctionType: public_super PhysicalType
 {
-	MARTTA_OBJECT(PhysicalType)
+	MARTTA_PROPER(PhysicalType)
 
 public:
 	MARTTA_NAMED(Returned)

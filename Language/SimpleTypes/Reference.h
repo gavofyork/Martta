@@ -31,7 +31,7 @@ namespace Martta
 
 class M_API_SimpleTypes Reference: public_super ModifyingType
 {
-	MARTTA_OBJECT(ModifyingType)
+	MARTTA_PROPER(ModifyingType)
 
 public:
 	inline static bool					keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePositionKeyPressHandler<Reference>(_p, _e, "&", false); }

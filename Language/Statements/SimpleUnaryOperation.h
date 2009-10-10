@@ -33,7 +33,7 @@ namespace Martta
 
 class M_API_Statements SimpleUnaryOperation: public_super UnaryOperation
 {
-	MARTTA_OBJECT(UnaryOperation)
+	MARTTA_PROPER(UnaryOperation)
 
 public:
 	SimpleUnaryOperation(Operator _o = Operator(), Type const& _type = Type()): m_operator(_o), m_symbolCache(0) { setOperation(_o, _type); }

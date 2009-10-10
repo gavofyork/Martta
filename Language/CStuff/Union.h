@@ -33,7 +33,7 @@ class UnionResolver;
 
 class M_API_CStuff Union: public_super TopLevelType
 {
-	MARTTA_OBJECT(TopLevelType)
+	MARTTA_PROPER(TopLevelType)
 
 	friend class Concept;
 	friend class UnionResolver;

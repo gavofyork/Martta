@@ -37,7 +37,7 @@ typedef List<Type> Types;
 
 class M_API_TypeConcept TypedOwner: public_interface WebInformer
 {
-	MARTTA_INTERFACE_INHERITS(WebInformer)
+	MARTTA_NOTION(WebInformer)
 
 public:
 	virtual Types						allowedTypes(int) const;

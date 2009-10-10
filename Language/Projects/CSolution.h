@@ -32,8 +32,8 @@ namespace Martta
 
 class M_API_Projects CSolution: public_super Root, public_interface Solution
 {
-	MARTTA_OBJECT(Root)
-	MARTTA_INHERITS(Solution, 0)
+	MARTTA_PROPER(Root)
+	MARTTA_ALSO_INHERITS(Solution, 0)
 
 public:
 	virtual void						initialiseNew();

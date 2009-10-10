@@ -37,7 +37,7 @@ class BuiltinOperator;
 class M_API_Types StringType: public_super TypeConcept, public_interface Subscriptable
 {
 	MARTTA_INITIALISED_OBJECT(TypeConcept)
-	MARTTA_INHERITS(Subscriptable, 0)
+	MARTTA_ALSO_INHERITS(Subscriptable, 0)
 
 	friend class BuiltinMethod;
 	friend class BuiltinOperator;

@@ -23,6 +23,6 @@
 namespace Martta
 {
 
-MARTTA_INTERFACE_CPP(ValueDefiner);
+MARTTA_NOTION_CPP(ValueDefiner);
 
 }

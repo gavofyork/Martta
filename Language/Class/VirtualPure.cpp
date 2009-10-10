@@ -27,7 +27,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(VirtualPure);
+MARTTA_PROPER_CPP(VirtualPure);
 
 bool VirtualPure::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {

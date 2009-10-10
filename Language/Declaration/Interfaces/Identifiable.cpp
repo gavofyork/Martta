@@ -26,7 +26,7 @@
 namespace Martta
 {
 
-MARTTA_INTERFACE_CPP(Identifiable);
+MARTTA_NOTION_CPP(Identifiable);
 MARTTA_NAMED_CPP(Identifiable, Identity);
 
 Identifiable::~Identifiable()

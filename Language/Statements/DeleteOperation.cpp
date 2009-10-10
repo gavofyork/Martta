@@ -23,6 +23,6 @@
 namespace Martta
 {
 	
-MARTTA_OBJECT_CPP(DeleteOperation);
+MARTTA_PROPER_CPP(DeleteOperation);
 
 }

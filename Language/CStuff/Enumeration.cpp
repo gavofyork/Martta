@@ -26,7 +26,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(Enumeration);
+MARTTA_PROPER_CPP(Enumeration);
 
 bool Enumeration::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {

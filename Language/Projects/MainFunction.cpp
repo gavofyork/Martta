@@ -27,7 +27,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(MainFunction);
+MARTTA_PROPER_CPP(MainFunction);
 MARTTA_REGISTER_CSS(MainFunction, WebViewable::cssBorder(L".MainFunction-", Rgb(0xaacc99)));
 
 bool MainFunction::keyPressed(KeyEvent const* _e)

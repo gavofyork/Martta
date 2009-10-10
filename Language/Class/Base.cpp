@@ -26,7 +26,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(Base);
+MARTTA_PROPER_CPP(Base);
 MARTTA_NAMED_CPP(Base, Accessibility);
 MARTTA_NAMED_CPP(Base, Superclass);
 

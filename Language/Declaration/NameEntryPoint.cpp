@@ -28,7 +28,7 @@
 namespace Martta
 {
 
-MARTTA_INTERFACE_CPP(NameEntryPoint);
+MARTTA_NOTION_CPP(NameEntryPoint);
 
 List<Named*> NameEntryPoint::possibilities() const
 {

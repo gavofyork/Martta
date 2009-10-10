@@ -26,7 +26,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(ThisPointer);
+MARTTA_PROPER_CPP(ThisPointer);
 
 class ThisPointerSet: public IdentifierSet
 {

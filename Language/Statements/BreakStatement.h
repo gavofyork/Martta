@@ -31,7 +31,7 @@ namespace Martta
 
 class M_API_Statements BreakStatement: public_super Untyped
 {
-	MARTTA_OBJECT(Untyped)
+	MARTTA_PROPER(Untyped)
 
 private:
 	virtual String						code() const { return "break;"; }

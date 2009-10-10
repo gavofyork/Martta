@@ -31,7 +31,7 @@ namespace Martta
 
 class M_API_Statement Conditional: public_interface Concept
 {
-	MARTTA_INTERFACE
+	MARTTA_NOTION(Concept)
 
 public:
 	MARTTA_NAMED(Condition)

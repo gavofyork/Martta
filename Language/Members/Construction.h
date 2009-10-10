@@ -33,7 +33,7 @@ namespace Martta
 
 class M_API_Members Construction: public_super Invocation
 {
-	MARTTA_OBJECT(Invocation)
+	MARTTA_PROPER(Invocation)
 
 public:
 	Construction(Constructor* _c = 0) : m_subject(0) { setDependency(m_subject, _c); }

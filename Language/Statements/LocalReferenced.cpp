@@ -25,7 +25,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(LocalReferenced);
+MARTTA_PROPER_CPP(LocalReferenced);
 
 static ReferencedValueSet<LocalReferenced> s_localReferencedRegistrand;
 

@@ -32,7 +32,7 @@ namespace Martta
 
 class M_API_Statements BoolLiteral: public_super Literal
 {
-	MARTTA_OBJECT(Literal)
+	MARTTA_PROPER(Literal)
 
 public:
 	BoolLiteral(bool _value = false): m_value(_value) {}

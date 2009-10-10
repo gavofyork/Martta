@@ -23,7 +23,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(CDependency);
+MARTTA_PROPER_CPP(CDependency);
 
 String CDependency::code() const
 {

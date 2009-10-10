@@ -33,8 +33,8 @@ namespace Martta
 
 class M_API_CStuff Function: public_super TopLevel, public_interface LambdaNamer
 {
-	MARTTA_OBJECT(TopLevel)
-	MARTTA_INHERITS(LambdaNamer, 0)
+	MARTTA_PROPER(TopLevel)
+	MARTTA_ALSO_INHERITS(LambdaNamer, 0)
 
 public:
 	Function(): m_qualifiers(NoQualifiers), m_ellipsis(false) {}

@@ -32,7 +32,7 @@ namespace Martta
 
 class M_API_Statements FloatLiteral: public_super Literal
 {
-	MARTTA_OBJECT(Literal)
+	MARTTA_PROPER(Literal)
 
 public:
 	enum Precision { SinglePrecision, DoublePrecision, LongDoublePrecision };

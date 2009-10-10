@@ -32,8 +32,8 @@ namespace Martta
 
 class M_API_Class VirtualMethod: public_super Method, public_interface Virtual
 {
-	MARTTA_OBJECT(Method)
-	MARTTA_INHERITS(Virtual, 0)
+	MARTTA_PROPER(Method)
+	MARTTA_ALSO_INHERITS(Virtual, 0)
 
 public:
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePositionKeyPressHandler<VirtualMethod>(_p, _e, "V"); }

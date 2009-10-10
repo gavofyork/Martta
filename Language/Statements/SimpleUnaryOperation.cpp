@@ -27,7 +27,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(SimpleUnaryOperation);
+MARTTA_PROPER_CPP(SimpleUnaryOperation);
 
 bool SimpleUnaryOperation::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {

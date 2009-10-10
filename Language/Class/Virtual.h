@@ -31,7 +31,7 @@ namespace Martta
 
 class M_API_Class Virtual: public_interface Concept
 {
-	MARTTA_INTERFACE
+	MARTTA_NOTION(Concept)
 
 public:
 	virtual ~Virtual() {}

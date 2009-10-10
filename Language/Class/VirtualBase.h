@@ -31,7 +31,7 @@ namespace Martta
 
 class M_API_Class VirtualBase: public_super Base
 {
-	MARTTA_OBJECT(Base)
+	MARTTA_PROPER(Base)
 
 protected:
 	virtual String						code() const;

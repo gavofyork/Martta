@@ -36,7 +36,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(StringType);
+MARTTA_PROPER_CPP(StringType);
 
 List<BuiltinMethod*> StringType::s_members;
 List<BuiltinOperator*> StringType::s_nonMembers;

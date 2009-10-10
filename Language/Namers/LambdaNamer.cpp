@@ -30,7 +30,7 @@
 namespace Martta
 {
 
-MARTTA_INTERFACE_CPP(LambdaNamer);
+MARTTA_NOTION_CPP(LambdaNamer);
 MARTTA_NAMED_CPP(LambdaNamer, Body);
 MARTTA_NAMED_CPP(LambdaNamer, Name);
 MARTTA_NAMED_CPP(LambdaNamer, Returned);

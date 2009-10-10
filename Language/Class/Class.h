@@ -32,7 +32,7 @@ namespace Martta
 
 class M_API_Class Class: public_super TopLevelType
 {
-	MARTTA_OBJECT(TopLevelType)
+	MARTTA_PROPER(TopLevelType)
 
 public:
 	MARTTA_NAMED(Artificials)

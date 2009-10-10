@@ -33,7 +33,7 @@ namespace Martta
 class M_API_CStuff TopLevelType: public_super TopLevel, public_interface TypeDefinition
 {
 	MARTTA_PLACEHOLDER(TopLevel)
-	MARTTA_INHERITS(TypeDefinition, 0)
+	MARTTA_ALSO_INHERITS(TypeDefinition, 0)
 
 public:
 

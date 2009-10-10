@@ -35,7 +35,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(HashType);
+MARTTA_PROPER_CPP(HashType);
 MARTTA_NAMED_CPP(HashType, KeyType);
 MARTTA_NAME_ALIAS_CPP(HashType, ValueType, Original);
 

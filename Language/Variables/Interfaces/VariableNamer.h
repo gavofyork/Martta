@@ -33,9 +33,9 @@ namespace Martta
 
 class M_API_Variables VariableNamer: public_interface ValueDefiner, public_interface Labelled, public_interface WebViewable
 {
-	MARTTA_INTERFACE_INHERITS(ValueDefiner)
-	MARTTA_INHERITS(Labelled, 0)
-	MARTTA_INHERITS(WebViewable, 1)
+	MARTTA_NOTION(ValueDefiner)
+	MARTTA_ALSO_INHERITS(Labelled, 0)
+	MARTTA_ALSO_INHERITS(WebViewable, 1)
 
 public:
 	MARTTA_NAMED(OurType)

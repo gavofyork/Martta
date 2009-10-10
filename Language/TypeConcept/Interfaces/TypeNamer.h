@@ -32,7 +32,7 @@ namespace Martta
 
 class M_API_TypeConcept TypeNamer: public_super_interface WebInformer
 {
-	MARTTA_INTERFACE_INHERITS(WebInformer)
+	MARTTA_NOTION(WebInformer)
 
 public:
 	virtual ~TypeNamer() {}

@@ -31,7 +31,7 @@ namespace Martta
 
 class M_API_Members ConversionOperator: public_super MemberLambda
 {
-	MARTTA_OBJECT(MemberLambda)
+	MARTTA_PROPER(MemberLambda)
 
 public:
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);

@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(MethodOperator);
+MARTTA_PROPER_CPP(MethodOperator);
 	
 Operator MethodOperator::id() const
 {

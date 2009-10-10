@@ -33,7 +33,7 @@ namespace Martta
 
 class M_API_Types Memberify: public_super ModifyingType
 {
-	MARTTA_OBJECT(ModifyingType)
+	MARTTA_PROPER(ModifyingType)
 
 public:
 	MARTTA_NAMED(Scope)

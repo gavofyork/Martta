@@ -31,7 +31,7 @@ namespace Martta
 
 class M_API_Statement Corporal: public_super_interface WebViewable
 {
-	MARTTA_INTERFACE_INHERITS(WebViewable)
+	MARTTA_NOTION(WebViewable)
 
 public:
 	MARTTA_NAMED(Body)

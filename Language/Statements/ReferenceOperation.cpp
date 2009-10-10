@@ -26,7 +26,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(ReferenceOperation);
+MARTTA_PROPER_CPP(ReferenceOperation);
 
 String ReferenceOperation::code() const
 {

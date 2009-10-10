@@ -31,7 +31,7 @@ namespace Martta
 
 class M_API_Members ThisPointer: public_super Typed
 {
-	MARTTA_OBJECT(Typed)
+	MARTTA_PROPER(Typed)
 
 public:
 	virtual String						defineHtml() const { return L"<^><span class=\"keyword\">" + type()->typeHtml(L"this") + L"</span>"; }

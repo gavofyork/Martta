@@ -26,7 +26,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(AddressType);
+MARTTA_PROPER_CPP(AddressType);
 
 void AddressType::initialiseClass()
 {

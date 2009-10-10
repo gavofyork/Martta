@@ -32,8 +32,8 @@ namespace Martta
 
 class M_API_Statement ValueDefiner: public_interface Identifiable, public_interface TypeNamer
 {
-	MARTTA_INTERFACE_INHERITS(Identifiable)
-	MARTTA_INHERITS(TypeNamer, 0)
+	MARTTA_NOTION(Identifiable)
+	MARTTA_ALSO_INHERITS(TypeNamer, 0)
 
 public:
 	virtual String						identity() const { return type()->code(name()).replace(" ", "").replace("::", ";;"); }

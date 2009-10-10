@@ -25,7 +25,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(Function);
+MARTTA_PROPER_CPP(Function);
 
 Kinds Function::allowedKinds(int _i) const
 {

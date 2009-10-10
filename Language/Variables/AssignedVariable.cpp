@@ -27,7 +27,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(AssignedVariable);
+MARTTA_PROPER_CPP(AssignedVariable);
 MARTTA_NAMED_CPP(AssignedVariable, AssignedValue);
 
 Kinds AssignedVariable::allowedKinds(int _index) const

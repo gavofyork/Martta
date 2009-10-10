@@ -36,7 +36,7 @@ class BuiltinMethod;
 class M_API_Types ListType: public_super ModifyingType, public_interface Subscriptable
 {
 	MARTTA_INITIALISED_OBJECT(ModifyingType)
-	MARTTA_INHERITS(Subscriptable, 0)
+	MARTTA_ALSO_INHERITS(Subscriptable, 0)
 
 	friend class BuiltinMethod;
 	friend class BuiltinOperator;

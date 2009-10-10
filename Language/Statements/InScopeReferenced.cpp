@@ -24,7 +24,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(InScopeReferenced);
+MARTTA_PROPER_CPP(InScopeReferenced);
 
 static ReferencedValueSet<InScopeReferenced> s_inScopeReferencedRegistrand;
 

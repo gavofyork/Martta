@@ -32,7 +32,7 @@ namespace Martta
 
 class M_API_Statements IntegerLiteral: public_super Literal
 {
-	MARTTA_OBJECT(Literal)
+	MARTTA_PROPER(Literal)
 
 public:
 	enum Range { NaturalRange = Natural, ShortRange = Short, LongRange = Long, LonglongRange = Longlong };

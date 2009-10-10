@@ -31,7 +31,7 @@ namespace Martta
 
 class M_API_Labels ConstLabel: public_super Label
 {
-	MARTTA_OBJECT(Label)
+	MARTTA_PROPER(Label)
 
 public:
 	ConstLabel(bool _c = false): m_isConst(_c) {}

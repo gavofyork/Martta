@@ -33,8 +33,8 @@ namespace Martta
 
 class M_API_CStuff Variable: public_super TopLevel, public_interface VariableNamer
 {
-	MARTTA_OBJECT(TopLevel)
-	MARTTA_INHERITS(VariableNamer, 0)
+	MARTTA_PROPER(TopLevel)
+	MARTTA_ALSO_INHERITS(VariableNamer, 0)
 
 public:
 	Qualifiers							qualifiers() const { return m_qualifiers; }

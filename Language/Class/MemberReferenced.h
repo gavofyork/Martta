@@ -31,10 +31,10 @@ namespace Martta
 
 class M_API_Class MemberReferenced: public_super Referenced
 {
-	MARTTA_OBJECT(Referenced)
+	MARTTA_PROPER(Referenced)
 
 public:
-	MemberReferenced(ValueDefiner* _subject = 0): Referenced(_subject) {}
+	MemberReferenced(ValueDefiner* _subject = 0);
 
 	virtual List<ValueDefiner*>			possibilities() const { return possibilities(over(), true, true); }
 	static List<ValueDefiner*>			possibilities(Position const& _p, bool _methods = true, bool _nonMethods = true);
@@ -50,10 +50,10 @@ protected:
 
 class M_API_Class FloatingMemberReferenced: public_super MemberReferenced
 {
-	MARTTA_OBJECT(MemberReferenced)
+	MARTTA_PROPER(MemberReferenced)
 
 public:
-	FloatingMemberReferenced(ValueDefiner* _subject = 0): MemberReferenced(_subject) {}
+	FloatingMemberReferenced(ValueDefiner* _subject = 0): Referenced(_subject), MemberReferenced(_subject) {}
 
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 

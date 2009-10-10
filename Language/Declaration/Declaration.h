@@ -41,9 +41,9 @@ class ValueDefiner;
 class M_API_Declaration Declaration: public_super Concept, public_interface Identifiable, public_interface WebViewable, public_interface WebInformer
 {
 	MARTTA_PLACEHOLDER(Concept)
-	MARTTA_INHERITS(Identifiable, 0)
-	MARTTA_INHERITS(WebViewable, 1)
-	MARTTA_INHERITS(WebInformer, 2)
+	MARTTA_ALSO_INHERITS(Identifiable, 0)
+	MARTTA_ALSO_INHERITS(WebViewable, 1)
+	MARTTA_ALSO_INHERITS(WebInformer, 2)
 
 public:
 	virtual ~Declaration();

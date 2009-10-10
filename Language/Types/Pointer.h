@@ -31,7 +31,7 @@ namespace Martta
 
 class M_API_Types Pointer: public_super AddressType
 {
-	MARTTA_OBJECT(AddressType)
+	MARTTA_PROPER(AddressType)
 
 public:
 	static bool keyPressedOnPosition(Position const& _p, KeyEvent const* _e);

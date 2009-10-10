@@ -31,7 +31,7 @@ namespace Martta
 
 class M_API_Types MemberTemplateType: public_super TypeConcept
 {
-	MARTTA_OBJECT(TypeConcept)
+	MARTTA_PROPER(TypeConcept)
 
 public:
 	MemberTemplateType(int _index = 0): m_index(_index) {}

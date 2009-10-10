@@ -25,7 +25,7 @@
 namespace Martta
 {
 
-MARTTA_INTERFACE_CPP(TypedOwner);
+MARTTA_NOTION_CPP(TypedOwner);
 
 Types TypedOwner::allowedTypes(int) const
 {

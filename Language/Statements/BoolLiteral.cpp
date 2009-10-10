@@ -24,7 +24,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(BoolLiteral);
+MARTTA_PROPER_CPP(BoolLiteral);
 
 class BoolIdentifierSet: public IdentifierSet
 {

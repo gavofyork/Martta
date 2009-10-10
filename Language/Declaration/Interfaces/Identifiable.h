@@ -33,7 +33,7 @@ namespace Martta
 // Don't forget to use import/export functions!
 class M_API_Declaration Identifiable: public_super Concept, public Named
 {
-	MARTTA_INTERFACE
+	MARTTA_NOTION(Concept)
 
 public:
 	MARTTA_NAMED(Identity)

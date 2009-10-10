@@ -27,7 +27,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(ConversionOperator);
+MARTTA_PROPER_CPP(ConversionOperator);
 
 String ConversionOperator::basicCode(FunctionCodeScope _ref) const
 {

@@ -23,7 +23,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(FunctionType);
+MARTTA_PROPER_CPP(FunctionType);
 MARTTA_NAMED_CPP(FunctionType, Returned);
 
 bool FunctionType::defineSimilarityTo(TypeConcept const* _t, Castability _c) const

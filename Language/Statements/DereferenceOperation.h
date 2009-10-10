@@ -31,7 +31,7 @@ namespace Martta
 
 class M_API_Statements DereferenceOperation: public_super UnaryOperation
 {
-	MARTTA_OBJECT(UnaryOperation)
+	MARTTA_PROPER(UnaryOperation)
 
 public:
 	inline static bool					keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simpleKeyPressedOnPositionHandler<DereferenceOperation>(_p, _e, Operator::StarX); }

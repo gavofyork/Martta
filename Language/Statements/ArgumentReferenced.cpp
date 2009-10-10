@@ -26,7 +26,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(ArgumentReferenced);
+MARTTA_PROPER_CPP(ArgumentReferenced);
 
 static ReferencedValueSet<ArgumentReferenced> s_argumentReferencedRegistrand;
 
