@@ -22,7 +22,7 @@
 
 #include "Identifiable.h"
 #include "ModelPtrFace.h"
-#include "Entity.h"
+#include "Concept.h"
 
 #ifndef M_API_Declaration
 #define M_API_Declaration M_OUTAPI

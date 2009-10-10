@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-class M_API_Projects MainFunction: public Function
+class M_API_Projects MainFunction: public_super Function
 {
 	MARTTA_OBJECT(Function)
 

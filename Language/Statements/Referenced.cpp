@@ -49,9 +49,9 @@ String Referenced::code() const
 		return String::null;
 }
 
-void Referenced::onDependencySwitched(Entity* _t, Entity* _old)
+void Referenced::onDependencySwitched(Concept* _t, Concept* _old)
 {
-//	mDebug() << "Dependency switched" << _old << "->" << _t << " subject:" << (m_subject ? m_subject->self() : (Entity*)0);
+//	mDebug() << "Dependency switched" << _old << "->" << _t << " subject:" << (m_subject ? m_subject->self() : (Concept*)0);
 	if (m_subject == _old->tryKind<ValueDefiner>())
 	{
 //		mDebug() << "Subject switched to" << _t << "from" << _old;
@@ -59,7 +59,7 @@ void Referenced::onDependencySwitched(Entity* _t, Entity* _old)
 	}
 }
 
-void Referenced::onDependencyRemoved(Entity* _old, int)
+void Referenced::onDependencyRemoved(Concept* _old, int)
 {
 //	mDebug() << "Dependency removed" << _old << " subject:" << &*m_subject;
 	if (m_subject == _old->tryKind<ValueDefiner>())
@@ -98,7 +98,7 @@ EditDelegateFace* Referenced::newDelegate(CodeScene* _s)
 
 String Referenced::editHtmlHelper(ValueDefiner* _v, String const& _mid) const
 {
-	String ret = (_v ? &*_v->type() : TypeEntity::null)->typeHtml(_mid);
+	String ret = (_v ? &*_v->type() : TypeConcept::null)->typeHtml(_mid);
 	return tagOf(L"Referenced", _v->tryKind<Labelled>()->labelHtml(ret));
 }
 

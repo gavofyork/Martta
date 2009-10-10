@@ -31,7 +31,7 @@ namespace Martta
 
 class Class;
 
-class M_API_Members Destructor: public MemberLambda
+class M_API_Members Destructor: public_super MemberLambda
 {
 	MARTTA_OBJECT(MemberLambda)
 

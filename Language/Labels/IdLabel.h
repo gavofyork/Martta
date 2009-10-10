@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-class M_API_Labels IdLabel: public Label
+class M_API_Labels IdLabel: public_super Label
 {
 	MARTTA_PLACEHOLDER(Label)
 	

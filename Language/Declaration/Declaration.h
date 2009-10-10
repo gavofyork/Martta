@@ -23,7 +23,7 @@
 #include "Identifiable.h"
 #include "WebViewable.h"
 #include "WebInformer.h"
-#include "Entity.h"
+#include "Concept.h"
 
 #ifndef M_API_Declaration
 #define M_API_Declaration M_OUTAPI
@@ -38,9 +38,9 @@ class ValueDefiner;
  * Class for anything individually referencable in the language.
  * Currently this includes only functions, variables, types and enumeration values.
  */
-class M_API_Declaration Declaration: public Entity, public_interface Identifiable, public_interface WebViewable, public_interface WebInformer
+class M_API_Declaration Declaration: public_super Concept, public_interface Identifiable, public_interface WebViewable, public_interface WebInformer
 {
-	MARTTA_PLACEHOLDER(Entity)
+	MARTTA_PLACEHOLDER(Concept)
 	MARTTA_INHERITS(Identifiable, 0)
 	MARTTA_INHERITS(WebViewable, 1)
 	MARTTA_INHERITS(WebInformer, 2)
@@ -48,7 +48,7 @@ class M_API_Declaration Declaration: public Entity, public_interface Identifiabl
 public:
 	virtual ~Declaration();
 
-	virtual String						superChildInformationHtml(Entity const* _e) const;
+	virtual String						superChildInformationHtml(Concept const* _e) const;
 
 	/// From Identifiable (default implementations).
 	virtual String						key() const;

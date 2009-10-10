@@ -33,7 +33,7 @@ namespace Martta
 class BuiltinMethod;
 class BuiltinOperator;
 
-class M_API_Types HashType: public ModifyingType, public_interface Subscriptable
+class M_API_Types HashType: public_super ModifyingType, public_interface Subscriptable
 {
 	MARTTA_INITIALISED_OBJECT(ModifyingType)
 	MARTTA_INHERITS(Subscriptable, 0)
@@ -42,27 +42,27 @@ class M_API_Types HashType: public ModifyingType, public_interface Subscriptable
 	friend class BuiltinOperator;
 
 public:
-	enum { KeyType = FirstNamed, EndOfNamed };
-	enum { ValueType = Original };
+	MARTTA_NAMED(KeyType)
+	MARTTA_NAME_ALIAS(ValueType)
 
 	static void							initialiseClass();
 	static void							finaliseClass();
-	TypeEntity const*					key() const { return childIs<TypeEntity>(KeyType) ? childAs<TypeEntity>(KeyType) : TypeEntity::null; }
-	TypeEntity const*					value() const { return childIs<TypeEntity>(ValueType) ? childAs<TypeEntity>(ValueType) : TypeEntity::null; }
+	TypeConcept const*					key() const { return childIs<TypeConcept>(KeyType) ? childAs<TypeConcept>(KeyType) : TypeConcept::null; }
+	TypeConcept const*					value() const { return childIs<TypeConcept>(ValueType) ? childAs<TypeConcept>(ValueType) : TypeConcept::null; }
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 	virtual bool						isWellDefined() const { return key() && value() && key()->isWellDefined() && value()->isWellDefined(); }
 
 protected:
 	virtual bool						hasDefaultConstructor() const { return true; }
 	virtual Types						assignableTypes() const;
-	virtual List<ValueDefiner*>			applicableMembers(Entity const* _s = 0, bool _isConst = false) const;
+	virtual List<ValueDefiner*>			applicableMembers(Concept const* _s = 0, bool _isConst = false) const;
 
 	virtual int							minRequired(int _i) const { return _i == KeyType ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
-	virtual TypeEntity*					newClone() const { return new HashType; }
+	virtual TypeConcept*					newClone() const { return new HashType; }
 	virtual String						code(String const& _middle) const;
 	virtual String						defineHtml() const;
-	virtual bool						defineSimilarityTo(TypeEntity const* _t, Castability _c) const;
+	virtual bool						defineSimilarityTo(TypeConcept const* _t, Castability _c) const;
 	virtual Rgb							idColour() const { return 0xbbff77; }
 	virtual Types						subscriptTypes() const;
 	virtual Type						subscriptsTo(Type const&) const;

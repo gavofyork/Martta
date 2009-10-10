@@ -30,7 +30,7 @@ namespace Martta
 {
 
 // Only has ReturnType, ArgumentVariable...
-class M_API_Class VirtualPure: public VirtualMethod
+class M_API_Class VirtualPure: public_super VirtualMethod
 {
 	MARTTA_OBJECT(VirtualMethod)
 

@@ -23,7 +23,7 @@
 #include <msString.h>
 using namespace MarttaSupport;
 
-#include "Meta.h"
+#include "Concept.h"
 
 #ifndef M_API_WebView
 #define M_API_WebView M_OUTAPI
@@ -32,7 +32,7 @@ using namespace MarttaSupport;
 namespace Martta
 {
 
-class M_API_WebView WebInformer
+class M_API_WebView WebInformer: public_interface Concept
 {
 	MARTTA_INTERFACE
 
@@ -89,9 +89,9 @@ public:
 	static String					compileKinds(Kinds const& _ks);
 
 	static String					htmlFromTree(String const& _tree);
-	static String					basicInformationHtml(Entity const* _e);
+	static String					basicInformationHtml(Concept const* _e);
 	virtual String					informationHtml() const { return String::null; }
-	virtual String					superChildInformationHtml(Entity const*) const { return String::null; }
+	virtual String					superChildInformationHtml(Concept const*) const { return String::null; }
 };
 
 }

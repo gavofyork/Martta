@@ -30,7 +30,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(BuiltinDeclaration);
 
-void BuiltinDeclaration::construct(TypeEntity const* _scope, int _id, bool _isConst, Type const& _returns, Types const& _args, char const* _key)
+void BuiltinDeclaration::construct(TypeConcept const* _scope, int _id, bool _isConst, Type const& _returns, Types const& _args, char const* _key)
 {
 	m_key = _key;
 	m_myId = _id;
@@ -60,7 +60,7 @@ void BuiltinDeclaration::destruct()
 Kinds BuiltinDeclaration::allowedKinds(int _i) const
 {
 	if (_i >= 0)
-		return Kind::of<TypeEntity>();
+		return Kind::of<TypeConcept>();
 	return Super::allowedKinds(_i);
 }
 

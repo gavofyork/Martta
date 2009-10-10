@@ -30,7 +30,7 @@
 namespace Martta
 {
 
-class M_API_Statements BoolLiteral: public Literal
+class M_API_Statements BoolLiteral: public_super Literal
 {
 	MARTTA_OBJECT(Literal)
 

@@ -36,6 +36,8 @@ namespace Martta
 {
 
 MARTTA_OBJECT_CPP(HashType);
+MARTTA_NAMED_CPP(HashType, KeyType);
+MARTTA_NAME_ALIAS_CPP(HashType, ValueType, Original);
 
 List<BuiltinMethod*> HashType::s_members;
 List<BuiltinOperator*> HashType::s_nonMembers;
@@ -136,7 +138,7 @@ Types HashType::assignableTypes() const
 	return Type(*this);
 }
 
-List<ValueDefiner*> HashType::applicableMembers(Entity const*, bool _isConst) const
+List<ValueDefiner*> HashType::applicableMembers(Concept const*, bool _isConst) const
 {
 	List<ValueDefiner*> ret;
 	foreach (BuiltinMethod* i, s_members)
@@ -148,11 +150,11 @@ List<ValueDefiner*> HashType::applicableMembers(Entity const*, bool _isConst) co
 Kinds HashType::allowedKinds(int _i) const
 {
 	if (_i == KeyType)
-		return Kind::of<TypeEntity>();
+		return Kind::of<TypeConcept>();
 	return Super::allowedKinds(_i);
 }
 
-bool HashType::defineSimilarityTo(TypeEntity const* _t, Castability _c) const
+bool HashType::defineSimilarityTo(TypeConcept const* _t, Castability _c) const
 {
 	HashType const* t = _t->tryKind<HashType>();
 	return (t && (t->key()->isNull() || key()->isEquivalentTo(t->key())) && (t->value()->isNull() || key()->isEquivalentTo(t->value()))) ||
@@ -161,8 +163,8 @@ bool HashType::defineSimilarityTo(TypeEntity const* _t, Castability _c) const
 
 String HashType::code(String const& _middle) const
 {
-	if (childIs<TypeEntity>(ValueType) && childIs<TypeEntity>(KeyType))
-		return "::MarttaSupport::Hash< " + childAs<TypeEntity>(KeyType)->code() + ", " + childAs<TypeEntity>(ValueType)->code() + "> " + _middle;
+	if (childIs<TypeConcept>(ValueType) && childIs<TypeConcept>(KeyType))
+		return "::MarttaSupport::Hash< " + childAs<TypeConcept>(KeyType)->code() + ", " + childAs<TypeConcept>(ValueType)->code() + "> " + _middle;
 	else
 		return "::MarttaSupport::Hash< >" + _middle;
 }

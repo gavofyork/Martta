@@ -36,21 +36,22 @@ namespace Martta
 
 class CProject;
 
-class M_API_Projects CProjectDependency: public Entity
+class M_API_Projects CProjectDependency: public_super Concept
 {
-	MARTTA_OBJECT(Entity)
+	MARTTA_OBJECT(Concept)
 
 private:
 	ModelPtr<CProject> m_subject;
 };
 
-class M_API_Projects CProject: public Namespace, public_interface Project
+class M_API_Projects CProject: public_super Namespace, public_interface Project
 {
 	MARTTA_OBJECT(Namespace)
 	MARTTA_INHERITS(Project, 0)
 
 public:
-	enum { RequiredIncludes = FirstNamed, MainFunction, EndOfNamed };
+	MARTTA_NAMED(RequiredIncludes)
+	MARTTA_NAMED(MainFunction)
 
 	CProject();
 	virtual ~CProject();

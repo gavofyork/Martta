@@ -51,7 +51,7 @@ Type AddressType::subscriptsTo(Type const&) const
 		return Type(*original()).topWith(Reference());
 }
 
-bool AddressType::defineSimilarityTo(TypeEntity const* _t, Castability _c) const
+bool AddressType::defineSimilarityTo(TypeConcept const* _t, Castability _c) const
 {
 	return (_t->isKind<AddressType>() && original()->isSimilarTo(_t->asKind<AddressType>()->original(), Physical)) ||
 		Super::defineSimilarityTo(_t, _c);

@@ -26,7 +26,7 @@ namespace Martta
 
 MARTTA_PLACEHOLDER_CPP(Typed);
 
-void Typed::onDependencyChanged(int _a, Entity* _e)
+void Typed::onDependencyChanged(int _a, Concept* _e)
 {
 	if (_a & Logically && _e == parent())
 	{

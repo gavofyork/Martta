@@ -30,7 +30,7 @@ bool StringLiteral::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
 	if (_p.exists() && _p->isPlaceholder() && _e->text() == L"\"")
 	{
-		Entity* l = _p.place(new StringLiteral);
+		Concept* l = _p.place(new StringLiteral);
 		_e->codeScene()->setEditing(l);
 	}
 	else

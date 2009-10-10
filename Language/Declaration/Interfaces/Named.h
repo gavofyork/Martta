@@ -36,7 +36,7 @@ class M_API_Declaration Named
 {
 public:
 	virtual String								name() const { return String::null; }
-	virtual Entity const*						associate() const { return 0; }
+	virtual Concept const*						associate() const { return 0; }
 
 	virtual ~Named() {}
 };

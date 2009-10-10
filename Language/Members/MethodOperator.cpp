@@ -22,7 +22,7 @@
 #include "OperatorLabel.h"
 #include "ConstLabel.h"
 #include "Compound.h"
-#include "TypeEntity.h"
+#include "TypeConcept.h"
 #include "Argument.h"
 #include "MethodOperator.h"
 

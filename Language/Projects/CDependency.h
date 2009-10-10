@@ -24,7 +24,7 @@
 #include <msStringList.h>
 using namespace MarttaSupport;
 
-#include "Entity.h"
+#include "Concept.h"
 
 #ifndef M_API_Projects
 #define M_API_Projects M_OUTAPI
@@ -33,9 +33,9 @@ using namespace MarttaSupport;
 namespace Martta
 {
 
-class M_API_Projects CDependency: public Entity
+class M_API_Projects CDependency: public_super Concept
 {
-	MARTTA_OBJECT(Entity)
+	MARTTA_OBJECT(Concept)
 
 public:
 	String const&					name() const { return m_name; }

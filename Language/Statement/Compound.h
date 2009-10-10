@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-class M_API_Statement Compound: public Untyped
+class M_API_Statement Compound: public_super Untyped
 {
 	MARTTA_OBJECT(Untyped)
 
@@ -47,11 +47,11 @@ protected:
 	virtual bool						isChildInValidState(int _i) const { return Super::isChildInValidState(_i) || (cardinalChildCount() == 1 && _i == 0 && Statement::Super::isChildInValidState(_i)); }
 	virtual bool						requiresSemicolon() const { return false; }
 
-	static String						statementsToHtml(List<Entity*> const& _es);
+	static String						statementsToHtml(List<Concept*> const& _es);
 	static String						statementsToHtml(List<Statement*> const& _es);
 };
 
-class M_API_Statement HardCompound: public Compound
+class M_API_Statement HardCompound: public_super Compound
 {
 	MARTTA_OBJECT(Compound)
 

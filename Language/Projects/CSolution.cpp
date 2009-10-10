@@ -52,9 +52,9 @@ void CSolution::initialiseNew()
 {
 	clearEntities();
 #ifndef M_WIN 
-	back().place(Entity::evaluate(String("CProject{TextLabel[text=project]}{MainFunction{TextLabel[text=main]}{BuiltinType[id=%1]}{Argument{BuiltinType[id=%1]}{TextLabel[text=argc]}}{Argument{Pointer{Pointer{BuiltinType[id=%2]}}}{TextLabel[text=argv]}}{Compound{ReturnStatement{IntegerLiteral[value=0][signed=true]}}}}{CDependency[libs=][includes=/usr/include/stdlib.h*/usr/include/stdio.h][name=Standard C]}").arg(Int).arg(Char)));
+	back().place(Concept::evaluate(String("CProject{TextLabel[text=project]}{MainFunction{TextLabel[text=main]}{BuiltinType[id=%1]}{Argument{BuiltinType[id=%1]}{TextLabel[text=argc]}}{Argument{Pointer{Pointer{BuiltinType[id=%2]}}}{TextLabel[text=argv]}}{Compound{ReturnStatement{IntegerLiteral[value=0][signed=true]}}}}{CDependency[libs=][includes=/usr/include/stdlib.h*/usr/include/stdio.h][name=Standard C]}").arg(Int).arg(Char)));
 #else
-	back().place(Entity::evaluate(String("CProject{TextLabel[text=project]}{MainFunction{TextLabel[text=main]}{BuiltinType[id=%1]}{Argument{BuiltinType[id=%1]}{TextLabel[text=argc]}}{Argument{Pointer{Pointer{BuiltinType[id=%2]}}}{TextLabel[text=argv]}}{Compound{ReturnStatement{IntegerLiteral[value=0][signed=true]}}}}{CDependency[libs=][includes=stdlib.h*stdio.h][name=Standard C]}").arg(Int).arg(Char)));
+	back().place(Concept::evaluate(String("CProject{TextLabel[text=project]}{MainFunction{TextLabel[text=main]}{BuiltinType[id=%1]}{Argument{BuiltinType[id=%1]}{TextLabel[text=argc]}}{Argument{Pointer{Pointer{BuiltinType[id=%2]}}}{TextLabel[text=argv]}}{Compound{ReturnStatement{IntegerLiteral[value=0][signed=true]}}}}{CDependency[libs=][includes=stdlib.h*stdio.h][name=Standard C]}").arg(Int).arg(Char)));
 #endif
 
 	rejigIncludes();
@@ -102,7 +102,7 @@ void CSolution::removeProject(Project* _p)
 void CSolution::archiveModel()
 {
 	// Archive all model pointers
-	List<Entity*> es = cardinalChildren();
+	List<Concept*> es = cardinalChildren();
 	while (!es.isEmpty())
 	{
 		es.last()->archive();
@@ -114,22 +114,22 @@ void CSolution::killIncludeds()
 {
 	// Kill old declarations.
 	// May fsck up in here? (Had an alteringDepends flag protecting it originally.)
-	foreach (Entity* e, children(Included))
+	foreach (Concept* e, children(Included))
 		e->killAndDelete();
 }
 
 void CSolution::apresLoad(Project* _p)
 {
-	List<SafePointer<Entity> > uplist;
+	List<SafePointer<Concept> > uplist;
 	if (_p)
 		uplist << _p->self();
 	else
 		foreach (Project* p, cardinalChildrenAs<Project>())
 			uplist << p->self();
 	while (uplist.size())
-		if (Entity* e = uplist.takeLast())
+		if (Concept* e = uplist.takeLast())
 		{
-			foreach (Entity* i, e->children())
+			foreach (Concept* i, e->children())
 				uplist << i;
 			e->apresLoad();
 		}

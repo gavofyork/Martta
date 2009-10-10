@@ -18,7 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "Entity.h"
+#include "Concept.h"
 #include "Subscriptable.h"
 
 namespace Martta

@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-class M_API_CStuff Namespace: public TopLevel
+class M_API_CStuff Namespace: public_super TopLevel
 {
 	MARTTA_OBJECT(TopLevel)
 

@@ -30,7 +30,7 @@
 namespace Martta
 {
 
-class M_API_Projects CSolution: public Root, public_interface Solution
+class M_API_Projects CSolution: public_super Root, public_interface Solution
 {
 	MARTTA_OBJECT(Root)
 	MARTTA_INHERITS(Solution, 0)
@@ -44,7 +44,7 @@ public:
 protected:
 	virtual int							minRequired(int _i) const { return Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
-	virtual List<Entity*>				savedChildren() const { return cardinalChildren(); }
+	virtual List<Concept*>				savedChildren() const { return cardinalChildren(); }
 
 private:
 	void								apresLoad(Project* _p = 0);

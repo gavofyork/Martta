@@ -76,7 +76,7 @@ bool Statement::keyPressed(KeyEvent const* _e)
 String Statement::informationHtml() const
 {
 	String ret = TypedOwner::informationHtml();
-	MultiHash<String, Entity const*> vs;
+	MultiHash<String, Concept const*> vs;
 	foreach (Named* n, possibilities())
 		if (n->associate()->isKind<TypeNamer>() && n->associate()->isKind<Identifiable>())
 			vs.insert(ownerOf(n)->setId(), n->associate());
@@ -86,7 +86,7 @@ String Statement::informationHtml() const
 		foreach (String s, vs.uniqueKeys())
 		{
 			Pairs q(s);
-			foreach (Entity const* e, vs.values(s))
+			foreach (Concept const* e, vs.values(s))
 				q << e->asKind<Identifiable>()->name() << e->asKind<TypeNamer>()->type()->name();
 			p << q;
 		}

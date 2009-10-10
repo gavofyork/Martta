@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include "TypeEntity.h"
+#include "TypeConcept.h"
 
 #ifndef M_API_SimpleTypes
 #define M_API_SimpleTypes M_OUTAPI
@@ -29,12 +29,12 @@
 namespace Martta
 {
 
-class M_API_SimpleTypes PhysicalType: public TypeEntity
+class M_API_SimpleTypes PhysicalType: public_super TypeConcept
 {
-	MARTTA_PLACEHOLDER(TypeEntity)
+	MARTTA_PLACEHOLDER(TypeConcept)
 
 public:
-	virtual bool						isCastableTo(TypeEntity const*, bool) { return false; }
+	virtual bool						isCastableTo(TypeConcept const*, bool) { return false; }
 };
 
 }

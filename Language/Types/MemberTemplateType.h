@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include "TypeEntity.h"
+#include "TypeConcept.h"
 
 #ifndef M_API_Types
 #define M_API_Types M_OUTAPI
@@ -29,9 +29,9 @@
 namespace Martta
 {
 
-class M_API_Types MemberTemplateType: public TypeEntity
+class M_API_Types MemberTemplateType: public_super TypeConcept
 {
-	MARTTA_OBJECT(TypeEntity)
+	MARTTA_OBJECT(TypeConcept)
 
 public:
 	MemberTemplateType(int _index = 0): m_index(_index) {}
@@ -43,9 +43,9 @@ public:
 	virtual bool						isWellDefined() const { return true; }
 	
 protected:
-	virtual TypeEntity*					newClone() const { return new MemberTemplateType(m_index); }
-	virtual bool						defineSimilarityFrom(TypeEntity const* _f, Castability _c) const;
-	virtual bool						defineEquivalenceFrom(TypeEntity const* _f) const;
+	virtual TypeConcept*					newClone() const { return new MemberTemplateType(m_index); }
+	virtual bool						defineSimilarityFrom(TypeConcept const* _f, Castability _c) const;
+	virtual bool						defineEquivalenceFrom(TypeConcept const* _f) const;
 
 private:
 	int									m_index;

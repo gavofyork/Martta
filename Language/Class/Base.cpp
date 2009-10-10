@@ -27,6 +27,8 @@ namespace Martta
 {
 
 MARTTA_OBJECT_CPP(Base);
+MARTTA_NAMED_CPP(Base, Accessibility);
+MARTTA_NAMED_CPP(Base, Superclass);
 
 Class* Base::classType() const
 {
@@ -40,7 +42,7 @@ bool Base::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 	return simplePositionKeyPressHandler<Base>(_p, _e, "B");
 }
 
-void Base::onDependencyChanged(int, Entity*)
+void Base::onDependencyChanged(int, Concept*)
 {
 	changed(Logically);
 }
@@ -63,7 +65,7 @@ String Base::code() const
 {
 	if (!isComplete())
 		return String::null;
-	return childAs<Label>(Accessibility)->code() + " " + childAs<TypeEntity>(Superclass)->code();
+	return childAs<Label>(Accessibility)->code() + " " + childAs<TypeConcept>(Superclass)->code();
 }
 
 bool Base::keyPressed(KeyEvent const* _e)

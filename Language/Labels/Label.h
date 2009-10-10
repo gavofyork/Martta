@@ -21,7 +21,7 @@
 #pragma once
 
 #include "WebViewable.h"
-#include "Entity.h"
+#include "Concept.h"
 
 #ifndef M_API_Labels
 #define M_API_Labels M_OUTAPI
@@ -30,9 +30,9 @@
 namespace Martta
 {
 
-class M_API_Labels Label: public Entity, public_interface WebViewable
+class M_API_Labels Label: public_super Concept, public_interface WebViewable
 {
-	MARTTA_PLACEHOLDER(Entity)
+	MARTTA_PLACEHOLDER(Concept)
 	MARTTA_INHERITS(WebViewable, 0)
 
 public:

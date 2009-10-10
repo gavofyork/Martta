@@ -37,15 +37,15 @@ namespace Martta
  *
  * Aside from that it should also encompass all the implementation of the project in question.
  */
-class M_API_CStuff Root: public Declaration
+class M_API_CStuff Root: public_super Declaration
 {
 	MARTTA_OBJECT(Declaration)
 
 public:
-	enum { Included = FirstNamed, EndOfNamed };
+	MARTTA_NAMED(Included)
 
 	virtual String						name() const { return String::null; }
-	virtual Entity*						parent() const { return 0; }
+	virtual Concept*						parent() const { return 0; }
 	virtual String						reference() const { return ""; }
 	virtual String						key() const { return ""; }
 	virtual Kinds						allowedKinds(int) const;

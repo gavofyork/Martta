@@ -31,12 +31,12 @@
 namespace Martta
 {
 
-class M_API_Statements IfStatement: public Untyped, public_interface Corporal, public_interface Conditional
+class M_API_Statements IfStatement: public_super Untyped, public_interface Corporal, public_interface Conditional
 {
 	MARTTA_OBJECT(Untyped)
 
 public:
-	enum { AltBody = FirstNamed, EndOfNamed };
+	MARTTA_NAMED(AltBody)
 
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 
@@ -51,7 +51,7 @@ protected:
 	virtual bool						requiresSemicolon() const { return false; }
 };
 
-class M_API_Statements UnlessStatement: public IfStatement
+class M_API_Statements UnlessStatement: public_super IfStatement
 {
 	MARTTA_OBJECT(IfStatement)
 

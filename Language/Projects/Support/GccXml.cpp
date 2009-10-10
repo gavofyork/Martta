@@ -60,7 +60,7 @@ void GccXml::extractHeaders(QString const& _c, QXmlContentHandler* _h)
 	delete _h;
 }
 
-QXmlContentHandler* GccXml::declarationsHandler(Entity* _d)
+QXmlContentHandler* GccXml::declarationsHandler(Concept* _d)
 {
 	return new DeclarationsHandler(_d);
 }

@@ -166,7 +166,7 @@ Argument* LambdaNamer::argument(int _index) const
 
 Type LambdaNamer::returns() const
 {
-	if (TypeEntity* t = self()->tryChild<TypeEntity>(Returned))
+	if (TypeConcept* t = self()->tryChild<TypeConcept>(Returned))
 		return *t;
 	return Type();
 }

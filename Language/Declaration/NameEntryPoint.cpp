@@ -22,7 +22,7 @@
 #include "IdentifierSet.h"
 #include "CodeScene.h"
 #include "Named.h"
-#include "Entity.h"
+#include "Concept.h"
 #include "NameEntryPoint.h"
 
 namespace Martta

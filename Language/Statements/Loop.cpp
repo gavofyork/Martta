@@ -48,7 +48,7 @@ bool Loop::keyPressed(KeyEvent const* _e)
 	{}
 	else if (_e->text() == "B" && _e->focus()->isPlaceholder() && _e->focus()->over().allowedToBeKind<BreakStatement>())
 	{
-		Entity* e = new BreakStatement;
+		Concept* e = new BreakStatement;
 		_e->focus()->replace(e);
 		e->setCurrent();
 	}

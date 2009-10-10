@@ -20,7 +20,7 @@
 
 #include "ModelPtrRegistrar.h"
 #include "IdLabel.h"
-#include "Entity.h"
+#include "Concept.h"
 #include "Identifiable.h"
 
 namespace Martta

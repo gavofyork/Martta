@@ -25,7 +25,7 @@
 #include <msList.h>
 using namespace MarttaSupport;
 
-#include "Meta.h"
+#include "Concept.h"
 
 #ifndef M_API_WebView
 #define M_API_WebView M_OUTAPI
@@ -36,7 +36,7 @@ namespace Martta
 
 class CodeScene;
 
-class M_API_WebView WebViewable
+class M_API_WebView WebViewable: public_interface Concept
 {
 	MARTTA_INTERFACE
 
@@ -51,13 +51,13 @@ public:
 	static String							cssBorder(String const& _name, Rgb _col);
 
 protected:
-	static String							toHtml(Entity const* _e, String const& _tag = L"span");
-	static String							toHtml(List<Entity const*> const& _es, String const& _delimiter = L" ", String const& _tag = L"span");
-	inline static String					toHtml(List<Entity*> const& _es, String const& _delimiter = L" ", String const& _tag = L"span") { return toHtml(list_const_cast<Entity const*>(_es), _delimiter, _tag); }
+	static String							toHtml(Concept const* _e, String const& _tag = L"span");
+	static String							toHtml(List<Concept const*> const& _es, String const& _delimiter = L" ", String const& _tag = L"span");
+	inline static String					toHtml(List<Concept*> const& _es, String const& _delimiter = L" ", String const& _tag = L"span") { return toHtml(list_const_cast<Concept const*>(_es), _delimiter, _tag); }
 };
 
-#define MARTTA_REGISTER_CSS(EntityClass, CSS) \
-	static CssRegisterer s_css_ ## EntityClass ## __LINE__ (EntityClass::staticAuxilliary(), CSS)
+#define MARTTA_REGISTER_CSS(ConceptClass, CSS) \
+	static CssRegisterer s_css_ ## ConceptClass ## __LINE__ (ConceptClass::staticAuxilliary(), CSS)
 
 class M_API_WebView CssRegisterer
 {

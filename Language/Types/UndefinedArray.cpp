@@ -27,7 +27,7 @@ MARTTA_OBJECT_CPP(UndefinedArray);
 	
 String UndefinedArray::code(String const& _middle) const
 {
-	return childAs<TypeEntity>(Original)->code(_middle + "[]");
+	return childAs<TypeConcept>(Original)->code(_middle + "[]");
 }
 
 }

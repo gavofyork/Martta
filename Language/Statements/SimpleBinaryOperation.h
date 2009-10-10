@@ -33,7 +33,7 @@ namespace Martta
 
 class ValueDefiner;
 
-class M_API_Statements SimpleBinaryOperation: public BinaryOperation
+class M_API_Statements SimpleBinaryOperation: public_super BinaryOperation
 {
 	MARTTA_OBJECT(BinaryOperation)
 
@@ -50,7 +50,7 @@ protected:
 	virtual String						code() const;
 	virtual Precedence					precedence() const { return id().precedence(); }
 	virtual int							familyDependencies() const { return DependsOnChildren; }
-	virtual void						onDependencyChanged(int, Entity* _e);
+	virtual void						onDependencyChanged(int, Concept* _e);
 	virtual void						apresLoad() { refreshOperation(); }
 
 private:

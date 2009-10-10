@@ -18,7 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "Entity.h"
+#include "Concept.h"
 #include "Identifiable.h"
 #include "ModelPtrRegistrar.h"
 #include "ModelPtr.h"
@@ -74,7 +74,7 @@ void ModelPtrFace::set(String const& _k)
 		bool ok;
 		void* addr;
 		if (_k.startsWith("0x") && (addr = (void*)_k.mid(2).toUint(&ok, 16)) && ok)
-			m_cache = ((Entity*)addr)->asKind<Identifiable>();
+			m_cache = ((Concept*)addr)->asKind<Identifiable>();
 		else
 			ModelPtrRegistrar::get()->toBeRestored(this);
 	}

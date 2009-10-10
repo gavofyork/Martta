@@ -35,7 +35,7 @@ inline String stripId(String const& _html)
 	return String(_html).replace(L"id=", L"iXd=");
 }
 
-class M_API_Class VirtualOverride: public VirtualMethod
+class M_API_Class VirtualOverride: public_super VirtualMethod
 {
 	MARTTA_OBJECT(VirtualMethod)
 
@@ -70,7 +70,7 @@ protected:
 	virtual Type						returns() const;
 	virtual inline bool					isConst() const { return m_base.isUsable() ? m_base->isConst() : false; }
 
-	virtual void						onDependencyChanged(int _a, Entity* _e) { if (_e->tryKind<VirtualMethod>() == m_base) changed(); else return Super::onDependencyChanged(_a, _e); }
+	virtual void						onDependencyChanged(int _a, Concept* _e) { if (_e->tryKind<VirtualMethod>() == m_base) changed(); else return Super::onDependencyChanged(_a, _e); }
 
 	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p[L"base"] = m_base.key(); }
 	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_base.restoreFrom(_p[L"base"]); }

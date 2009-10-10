@@ -18,7 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "TypeEntity.h"
+#include "TypeConcept.h"
 #include "TextLabel.h"
 #include "Argument.h"
 
@@ -46,7 +46,7 @@ Kinds Argument::allowedKinds(int _i) const
 	if (_i == Identity)
 		return Kind::of<TextLabel>();
 	if (_i == OurType)
-		return Kind::of<TypeEntity>();
+		return Kind::of<TypeConcept>();
 	return Super::allowedKinds(_i);
 }
 

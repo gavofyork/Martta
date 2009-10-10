@@ -30,7 +30,7 @@
 namespace Martta
 {
 
-class M_API_Members MemberValue: public Member, public_interface ValueDefiner
+class M_API_Members MemberValue: public_super Member, public_interface ValueDefiner
 {
 	MARTTA_PLACEHOLDER(Member)
 	MARTTA_INHERITS(ValueDefiner, 0)

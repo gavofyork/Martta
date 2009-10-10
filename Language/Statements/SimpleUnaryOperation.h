@@ -31,7 +31,7 @@
 namespace Martta
 {
 
-class M_API_Statements SimpleUnaryOperation: public UnaryOperation
+class M_API_Statements SimpleUnaryOperation: public_super UnaryOperation
 {
 	MARTTA_OBJECT(UnaryOperation)
 
@@ -49,7 +49,7 @@ protected:
 	virtual bool						isPostfix() const { return id().isPostfix(); }
 	virtual Precedence					precedence() const { return id().precedence(); }
 	virtual int							familyDependencies() const { return DependsOnChildren; }
-	virtual void						onDependencyChanged(int, Entity*) { refreshOperation(); }
+	virtual void						onDependencyChanged(int, Concept*) { refreshOperation(); }
 	virtual void						apresLoad() { refreshOperation(); }
 
 private:

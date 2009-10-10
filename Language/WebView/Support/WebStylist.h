@@ -25,7 +25,7 @@
 #include <msString.h>
 using namespace MarttaSupport;
 
-#include "EntitySupport.h"
+#include "ConceptSupport.h"
 
 #ifndef M_API_WebView
 #define M_API_WebView M_OUTAPI
@@ -50,29 +50,29 @@ public:
 	/// The big function---get the HTML representation of an entity.
 	/// @returns the @b outer HTML to represent entity @a _e. @a _tag specifies the HTML for the
 	/// enclosing tag. Responsible for checking/using the cache.
-	String								toHtml(Entity const* _e, String const& _tag = L"span");
+	String								toHtml(Concept const* _e, String const& _tag = L"span");
 
 	/// @returns just the @b inner portion of the HTML for entity @a _e.
 	/// The HTML for that entity is recomputed and reflects any changes made in the object since
 	/// the last call of this method (if any). Children are, however, unaffected if they have had
 	/// their outer HTML added through addToHtmlCache().
-	String								rejiggedHtml(Entity const* _e);
+	String								rejiggedHtml(Concept const* _e);
 
 	/// Caches an element's outer HTML for later use in toHtml.
-	inline void							addToHtmlCache(Entity const* _e, String const& _outerHtml) { m_htmlCache.insert(_e, _outerHtml); }
+	inline void							addToHtmlCache(Concept const* _e, String const& _outerHtml) { m_htmlCache.insert(_e, _outerHtml); }
 
 	/// @returns the @b inner HTML to represent entity @a _e under the scene @a _cs.
-	String								editHtml(Entity const* _e, CodeScene* _cs);
+	String								editHtml(Concept const* _e, CodeScene* _cs);
 
 protected:
 	/// Overridable virtual for specifying novel style.
 	/// @returns the inner portion of HTML for entity @a _e .
-	virtual String						defineHtml(Entity const* _e);
+	virtual String						defineHtml(Concept const* _e);
 
 	/// Overridable virtual for specifying novel style.
 	/// @returns the inner portion of HTML for entity @a _e , when the edit delegate for this
 	/// entity is active in the scene @a _cs .
-	virtual String						defineEditHtml(Entity const* _e, CodeScene* _cs);
+	virtual String						defineEditHtml(Concept const* _e, CodeScene* _cs);
 
 private:
 	/// Refines an HTML string, conducting any special substitutions required.
@@ -82,7 +82,7 @@ private:
 	String								refineHtml(String const& _html, bool _allowThis = true, bool _forceThis = false, String const& _addClass = String::null);
 
 	int									m_stack;
-	Hash<Entity const*, String>			m_htmlCache;
+	Hash<Concept const*, String>			m_htmlCache;
 
 	static WebStylist*					s_current;
 };

@@ -30,7 +30,7 @@
 namespace Martta
 {
 
-class M_API_Namers Argument: public Declaration, public_interface VariableNamer
+class M_API_Namers Argument: public_super Declaration, public_interface VariableNamer
 {
 	MARTTA_OBJECT(Declaration)
 	MARTTA_INHERITS(VariableNamer, 0)
@@ -44,7 +44,7 @@ protected:
 	virtual int							minRequired(int _i) const { return _i == OurType || _i == Identity ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual int							familyDependencies() const { return DependsOnChildren; }
-	virtual void						onDependencyChanged(int _a, Entity* _e) { VariableNamer::onDependencyChanged(_a, _e); Super::onDependencyChanged(_a, _e); }
+	virtual void						onDependencyChanged(int _a, Concept* _e) { VariableNamer::onDependencyChanged(_a, _e); Super::onDependencyChanged(_a, _e); }
 	virtual String						interfaceCode() const { return VariableNamer::interfaceCode(); }
 	virtual String						implementationCode() const { return VariableNamer::implementationCode(); }
 	virtual bool						isSuperfluous() const;

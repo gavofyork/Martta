@@ -24,7 +24,7 @@
 #include <msRgb.h>
 using namespace MarttaSupport;
 
-#include "TypeEntity.h"
+#include "TypeConcept.h"
 #include "Labelled.h"
 #include "Identifiable.h"
 
@@ -47,9 +47,8 @@ typedef List<Type> Types;
  */
 class M_API_Types TypeDefinition: public_interface Identifiable, public_interface Labelled
 {
-	MARTTA_INTERFACE
-	MARTTA_INHERITS(Identifiable, 0)
-	MARTTA_INHERITS(Labelled, 1)
+	MARTTA_INTERFACE_INHERITS(Identifiable)
+	MARTTA_INHERITS(Labelled, 0)
 
 public:
 	virtual String						code() const = 0;
@@ -57,12 +56,12 @@ public:
 	virtual Types						assignableTypes() const = 0;
 	virtual List<Declaration*>			utilisedInUse() const = 0;
 	virtual bool						hasDefaultConstructor() const = 0;
-	virtual bool						hasSingleCastOperator(TypeEntity const* _t, bool _const) const;
-	virtual inline bool					hasSingleConversionConstructor(TypeEntity const*) const { return false; }
-	virtual bool						defineSimilarityTo(TypeEntity const* _t, TypeEntity::Castability _c) const;
-	virtual List<ValueDefiner*>			applicableMembers(Entity const* _s, bool _isConst) const;
+	virtual bool						hasSingleCastOperator(TypeConcept const* _t, bool _const) const;
+	virtual inline bool					hasSingleConversionConstructor(TypeConcept const*) const { return false; }
+	virtual bool						defineSimilarityTo(TypeConcept const* _t, TypeConcept::Castability _c) const;
+	virtual List<ValueDefiner*>			applicableMembers(Concept const* _s, bool _isConst) const;
 	virtual inline bool					canStandAlone() const { return true; }
-	virtual inline String				defineLabelHtml(String const& _html) const { return String(L"<span class=\"TypeEntity\" style=\"text-shadow: -1px -1px 1px %1\">").arg(idColour().name()) + _html + L"</span>"; }
+	virtual inline String				defineLabelHtml(String const& _html) const { return String(L"<span class=\"TypeConcept\" style=\"text-shadow: -1px -1px 1px %1\">").arg(idColour().name()) + _html + L"</span>"; }
 
 	virtual ~TypeDefinition() {}
 };

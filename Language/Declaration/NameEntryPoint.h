@@ -23,7 +23,6 @@
 #include "CompletionDelegate.h"
 #include "WebViewable.h"
 #include "Named.h"
-#include "Meta.h"
 
 #ifndef M_API_Declaration
 #define M_API_Declaration M_OUTAPI
@@ -34,10 +33,9 @@ namespace Martta
 
 class IdentifierSet;
 
-class M_API_Declaration NameEntryPoint: public_interface WebViewable
+class M_API_Declaration NameEntryPoint: public_super_interface WebViewable
 {
-	MARTTA_INTERFACE
-	MARTTA_INHERITS(WebViewable, 0)
+	MARTTA_INTERFACE_INHERITS(WebViewable)
 
 public:
 	Named*								get() const { return 0; }

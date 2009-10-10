@@ -20,7 +20,7 @@
 
 #include "WebStylistRegistrar.h"
 #include "TextLabel.h"
-#include "TypeEntity.h"
+#include "TypeConcept.h"
 #include "Reference.h"
 #include "MemberVariable.h"
 
@@ -41,7 +41,7 @@ String MemberVariable::defineLabelHtml(String const& _text) const
 Kinds MemberVariable::allowedKinds(int _i) const
 {
 	if (_i == OurType)
-		return Kind::of<TypeEntity>();
+		return Kind::of<TypeConcept>();
 	return Super::allowedKinds(_i);
 }
 

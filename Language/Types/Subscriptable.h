@@ -21,7 +21,7 @@
 #pragma once
 
 #include "Type.h"
-#include "Meta.h"
+#include "Concept.h"
 
 #ifndef M_API_Types
 #define M_API_Types M_OUTAPI
@@ -30,7 +30,7 @@
 namespace Martta
 {
 
-class M_API_Types Subscriptable
+class M_API_Types Subscriptable: public_interface Concept
 {
 	MARTTA_INTERFACE
 

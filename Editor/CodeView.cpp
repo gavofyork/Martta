@@ -46,7 +46,8 @@ CodeView::CodeView(QWidget* _parent):
 	connect(this, SIGNAL(selectionChanged()), SLOT(onSelectionChanged()));
 	setAttribute(Qt::WA_OpaquePaintEvent, false);
 #ifndef Q_WS_WIN
-	setRenderHints(QPainter::TextAntialiasing | QPainter::Antialiasing);
+//	setRenderHint(QPainter::TextAntialiasing, true);
+//	setRenderHint(QPainter::Antialiasing, true);
 #endif
 }
 
@@ -55,7 +56,7 @@ CodeView::~CodeView()
 	delete m_stylist;
 }
 
-void CodeView::setSubject(Entity* _s)
+void CodeView::setSubject(Concept* _s)
 {
 	m_subject = _s;
 	init();
@@ -68,14 +69,14 @@ void CodeView::setStylist(WebStylist* _s)
 	init();
 }
 
-Entity* CodeView::current() const
+Concept* CodeView::current() const
 {
-	Entity* r = (Entity*)(page()->mainFrame()->evaluateJavaScript("document.getElementById(g_currentIterator.referenceNode.parentNode.id).id").toInt());
+	Concept* r = (Concept*)(page()->mainFrame()->evaluateJavaScript("document.getElementById(g_currentIterator.referenceNode.parentNode.id).id").toInt());
 	qDebug() << "current:" << r;
 	if (r)
 		return r;
 	const_cast<CodeView*>(this)->restoreCurrent();
-	return (Entity*)(page()->mainFrame()->evaluateJavaScript("document.getElementById(g_currentIterator.referenceNode.parentNode.id).id").toInt());
+	return (Concept*)(page()->mainFrame()->evaluateJavaScript("document.getElementById(g_currentIterator.referenceNode.parentNode.id).id").toInt());
 }
 
 void CodeView::rememberCurrent()
@@ -93,7 +94,7 @@ void CodeView::restoreCurrent()
 	m_silent = s;
 }
 
-void CodeView::setCurrent(Entity const* _s)
+void CodeView::setCurrent(Concept const* _s)
 {
 	if (!m_silent)
 		refresh();
@@ -110,7 +111,7 @@ void CodeView::onCurrentChanged()
 {
 	if (!m_silent)
 	{
-		Entity* e = current();
+		Concept* e = current();
 		qDebug() << "onCurrentChanged:"<<e;
 		CodeScene::currentChanged(e, m_oldCurrent);
 		m_oldCurrent = e;
@@ -120,28 +121,28 @@ void CodeView::onCurrentChanged()
 	}
 }
 
-void CodeView::navigateInto(Entity* _centre)
+void CodeView::navigateInto(Concept* _centre)
 {
 	/// Selects _centre's leftmost, innermost focusable child. e.g. X on ()s: (++X + 4)
 	refresh();
 	page()->mainFrame()->evaluateJavaScript(QString("navigateInto('%1');").arg((int)_centre));
 }
 
-void CodeView::navigateOnto(Entity* _shell)
+void CodeView::navigateOnto(Concept* _shell)
 {
 	/// Selects _shell's leftmost focusable child. e.g. ++X on ()s: (++X + 4)
 	refresh();
 	page()->mainFrame()->evaluateJavaScript(QString("navigateOnto('%1');").arg((int)_shell));
 }
 
-void CodeView::navigateToNew(Entity* _from)
+void CodeView::navigateToNew(Concept* _from)
 {
 	/// Selects closest focusable sibling-owned entity visually forwards from _from, or parent if none.
 	refresh();
 	page()->mainFrame()->evaluateJavaScript(QString("navigateToNew('%1');").arg((int)_from));
 }
 
-void CodeView::navigateAway(Entity* _from, NavigationDirection _d)
+void CodeView::navigateAway(Concept* _from, NavigationDirection _d)
 {
 	refresh();
 	page()->mainFrame()->evaluateJavaScript(QString("setCurrentById('%1'); go%2()").arg((int)_from).arg(_d == Forwards ? "Next" : "Previous"));
@@ -149,20 +150,20 @@ void CodeView::navigateAway(Entity* _from, NavigationDirection _d)
 
 bool CodeView::attemptEdit(int _e)
 {
-	Entity* e = (Entity*)_e;
+	Concept* e = (Concept*)_e;
 	if (isFocusable(e))
 		setEditing(e);
 	return isEditing(e);
 }
 
-bool CodeView::isFocusable(Entity const* _e) const
+bool CodeView::isFocusable(Concept const* _e) const
 {
 	if (!isInScene(_e))
 		return false;
 	return page()->mainFrame()->evaluateJavaScript(QString("thisNode(document.getElementById('%1')) != null").arg((int)_e)).toBool();
 }
 
-bool CodeView::isInScene(Entity const* _e) const
+bool CodeView::isInScene(Concept const* _e) const
 {
 	if (page()->mainFrame()->evaluateJavaScript(QString("document.getElementById('%1') != null").arg((int)_e)).toBool())
 		return true;
@@ -170,14 +171,14 @@ bool CodeView::isInScene(Entity const* _e) const
 	return page()->mainFrame()->evaluateJavaScript(QString("document.getElementById('%1') != null").arg((int)_e)).toBool();
 }
 
-bool CodeView::manageKeyPress(KeyEvent const& _e, Entity const* _fe)
+bool CodeView::manageKeyPress(KeyEvent const& _e, Concept const* _fe)
 {
 	return page()->mainFrame()->evaluateJavaScript(QString("routeKeyPress(document.getElementById('%1'), '%2')").arg((int)_fe).arg(qs(_e.text()).replace('\'', "\\'"))).toBool();
 }
 
 void CodeView::refresh()
 {
-	Entity* e;
+	Concept* e;
 	if (WebStylistRegistrar::get()->hasChanged())
 		init();
 	else if (!m_dirty.isEmpty())
@@ -187,9 +188,9 @@ void CodeView::refresh()
 		{
 			if ((e = m_dirty.takeLast()))
 			{
-				Entity* cur = current();
+				Concept* cur = current();
 				QString s;
-				foreach (Entity* i, e->children())
+				foreach (Concept* i, e->children())
 					if ((s = page()->mainFrame()->evaluateJavaScript(QString("document.getElementById('%1').outerHTML").arg((int)i)).toString().replace('\\', "&#92;")) != QString::null)
 						m_stylist->addToHtmlCache(i, qs(s));
 				page()->mainFrame()->evaluateJavaScript(QString("changeContent('%1', '%2')").arg((int)e).arg(qs(m_stylist->rejiggedHtml(e)).replace('\'', "\\'")));
@@ -214,7 +215,7 @@ void CodeView::checkInvalids()
 {
 	m_invalids.removeAll(0);
 	while (m_invalidsToCheck.count())
-		if (Entity* e = m_invalidsToCheck.takeLast())
+		if (Concept* e = m_invalidsToCheck.takeLast())
 		{
 			bool validity = e->isValid();
 			if (validity && m_invalids.contains(e))
@@ -229,7 +230,8 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 	TIME_FUNCTION;
 	refresh();
 	checkInvalids();
-	Entity* c = current();
+	Concept* c = current();
+	mInfo() << c;
 
 	foreach (Position i, m_bracketed)
 		if (!i.exists() || (i.entity() != c && !c->hasAncestor(i.entity())))
@@ -310,9 +312,9 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 			}
 			p.setPen(QColor(255, 0, 0, 128));
 			foreach (Depender* i, ChangeMan::get()->dependersOf(c))
-				if (isInScene(i->self()))
+				if (isInScene(static_cast<Concept*>(i)))
 				{
-					QRect br = bounds(i->self());
+					QRect br = bounds(static_cast<Concept*>(i));
 					if (_ev->region().contains(br))
 						p.drawRect(br);
 				}
@@ -323,7 +325,7 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 		QPainter p(this);
 		p.setPen(QPen(QColor(255, 0, 0, 128), 1.5f, Qt::DotLine));
 		p.setBrush(QBrush(QColor(0, 0, 0, 64), Qt::BDiagPattern));
-		foreach (Entity* e, m_invalids)
+		foreach (Concept* e, m_invalids)
 			if (e != c || !editDelegate())
 			{
 				QRect b = bounds(e);
@@ -344,7 +346,7 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 					case ChangeMan::DependencyChanged: c = QColor(0, 0, 255); break;
 					case ChangeMan::DependencySwitched: c = QColor(0, 127, 255); break;
 					case ChangeMan::DependencyAdded: c = QColor(0, 127, 0); break;
-					case ChangeMan::EntityChildrenInitialised: c = QColor(0, 255, 0); break;
+					case ChangeMan::ConceptChildrenInitialised: c = QColor(0, 255, 0); break;
 					case ChangeMan::DependencyRemoved: c = QColor(255, 0, 0); break;
 					case ChangeMan::ChildMoved: c = QColor(0, 255, 255); break;
 					case ChangeMan::IndexChanged: c = QColor(255, 0, 255); break;
@@ -367,7 +369,7 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 	}
 }
 
-QRect CodeView::bounds(Entity const* _e) const
+QRect CodeView::bounds(Concept const* _e) const
 {
 	QStringList l = page()->mainFrame()->evaluateJavaScript(QString("bounds('%1')").arg((int)_e)).toString().split(" ");
 	if (l.size() == 4)
@@ -389,20 +391,20 @@ void CodeView::init()
 	page()->setPalette(pal);
 	m_dirty.clear();
 	m_invalidsToCheck.clear();
-	List<Entity*> q;
+	List<Concept*> q;
 	q.append(m_subject);
 	while (q.size())
-		if (Entity* e = q.takeLast())
+		if (Concept* e = q.takeLast())
 		{
 			m_invalidsToCheck.append(e);
-			foreach (Entity* i, e->children())
+			foreach (Concept* i, e->children())
 				q.append(i);
 		}
 }
 
-void CodeView::relayout(Entity* _e)
+void CodeView::relayout(Concept* _e)
 {
-	if (_e && _e == editEntity())
+	if (_e && _e == editConcept())
 	{
 		// Must handle the edit entity (if there is one) separately since refinedHtml (also using from toHtml) doesn't understand
 		// that defineHtml should be redirected to the editDelegate if there is one (and couldn't since it doesn't know which is

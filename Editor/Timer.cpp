@@ -20,7 +20,7 @@
 
 #include <QKeyEvent>
 
-#include <Entity.h>
+#include <Concept.h>
 #include <SpecialKeys.h>
 #include <KeyEvent.h>
 

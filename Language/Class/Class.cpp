@@ -48,6 +48,7 @@ namespace Martta
 
 MARTTA_OBJECT_CPP(Class);
 MARTTA_REGISTER_CSS(Class, ".Class-label { color: #000; font-weight: bold; text-shadow: -1px -1px 0px #f77; }");
+MARTTA_NAMED_CPP(Class, Artificials);
 
 Access Class::baseAccess(Class* _c) const
 {
@@ -74,7 +75,7 @@ bool Class::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 void Class::rejigDeps()
 {
 	removeAllDependencies();
-	foreach (Entity* i, members())
+	foreach (Concept* i, members())
 		if (i->child(Member::Accessibility))
 			addDependency(i->child(Member::Accessibility));
 }
@@ -154,7 +155,7 @@ void Class::onChildrenInitialised()
 		changed(Logically);
 }
 
-void Class::onDependencyAdded(Entity* _e)
+void Class::onDependencyAdded(Concept* _e)
 {
 	if (((_e->index() >= 0 && (_e->isKind<MethodOperator>() || _e->isKind<ConversionOperator>() || _e->isKind<Constructor>())) && checkImplicitConstructors())
 		|| updateWhacked())
@@ -163,7 +164,7 @@ void Class::onDependencyAdded(Entity* _e)
 		rejigDeps();
 }
 
-void Class::onDependencyRemoved(Entity* _e, int _oi)
+void Class::onDependencyRemoved(Concept* _e, int _oi)
 {
 	// TODO: Will it remove the Access label dep? Even if the member is only moved to another class?
 	if (((_oi >= 0 && (_e->isKind<MethodOperator>() || _e->isKind<ConversionOperator>() || _e->isKind<Constructor>())) && checkImplicitConstructors())
@@ -173,7 +174,7 @@ void Class::onDependencyRemoved(Entity* _e, int _oi)
 		rejigDeps();
 }
 
-void Class::onDependencyChanged(int, Entity* _e)
+void Class::onDependencyChanged(int, Concept* _e)
 {
 	if (((_e->isKind<Base>() || (_e->index() >= 0 && (_e->isKind<MethodOperator>() || _e->isKind<ConversionOperator>() || _e->isKind<Constructor>()))) && checkImplicitConstructors())
 		|| updateWhacked())
@@ -290,14 +291,14 @@ bool Class::hasDefaultConstructor() const
 	return count == 1;
 }
 
-bool Class::hasSingleCastOperator(TypeEntity const* _t, bool _const) const
+bool Class::hasSingleCastOperator(TypeConcept const* _t, bool _const) const
 {
 	bool gotOne = false;
 	bool dupe = false;
 	bool whackedConstForBest = false;
 	foreach (MemberLambda* i, membersOf<ConversionOperator>(_const, Public))
 	{
-		bool b = i->returns()->isSimilarTo(_t, TypeEntity::FairlyConvertible);
+		bool b = i->returns()->isSimilarTo(_t, TypeConcept::FairlyConvertible);
 		if (b && (!gotOne || (gotOne && i->isConst() == _const && whackedConstForBest)))
 			gotOne = true, dupe = false, whackedConstForBest = (i->isConst() != _const);
 		else if (b && gotOne)
@@ -309,12 +310,12 @@ bool Class::hasSingleCastOperator(TypeEntity const* _t, bool _const) const
 }
 
 
-bool Class::hasSingleConversionConstructor(TypeEntity const* _f) const
+bool Class::hasSingleConversionConstructor(TypeConcept const* _f) const
 {
 	bool gotOne = false;
 	foreach (MemberLambda* i, membersOf<Constructor>(false, Public))
 		if (i->argumentCount() == 1 && i->isValid())
-			if (_f->isSimilarTo(&*i->argumentType(0), TypeEntity::FairlyConvertible))
+			if (_f->isSimilarTo(&*i->argumentType(0), TypeConcept::FairlyConvertible))
 			{
 				if (!gotOne)
 					gotOne = true;
@@ -324,9 +325,9 @@ bool Class::hasSingleConversionConstructor(TypeEntity const* _f) const
 	return gotOne;
 }
 
-bool Class::defineSimilarityTo(TypeEntity const* _t, TypeEntity::Castability _c) const
+bool Class::defineSimilarityTo(TypeConcept const* _t, TypeConcept::Castability _c) const
 {
-	if (_c == TypeEntity::Physical && _t->isKind<ExplicitType>())
+	if (_c == TypeConcept::Physical && _t->isKind<ExplicitType>())
 	{
 		TypeDefinition* ts = _t->asKind<ExplicitType>()->subject();
 		// Note Physical attribute should be tested last.
@@ -352,7 +353,7 @@ Types Class::assignableTypes() const
 	return ret;
 }
 
-List<ValueDefiner*> Class::applicableMembers(Entity const* _s, bool _isConst) const
+List<ValueDefiner*> Class::applicableMembers(Concept const* _s, bool _isConst) const
 {
 	Access a = Public;
 	Class* classScope = _s->ancestor<Class>();
@@ -385,7 +386,7 @@ String Class::defineHtml() const
 {
 	String ret = L"<^><div><span class=\"keyword\">class</span> " + toHtml(child(Identity));
 	ret += L"<div class=\"block\">";
-	ret += toHtml(castEntities<Entity>(cardinalChildrenOf<Base>()), L"", L"div");
+	ret += toHtml(castEntities<Concept>(cardinalChildrenOf<Base>()), L"", L"div");
 	ret += L"<div class=\"deblock minor symbol\">{</div>";
 	for (int i = 0; i < AccessCount; i++)
 	{
@@ -404,7 +405,7 @@ String Class::defineHtml() const
 			if (f->access() == Access(i))
 				mem += toHtml(f, L"div");
 		foreach (MemberLambda* f, cardinalChildrenOf<MemberLambda>())
-			if (f->access() == Access(i) && !f->Entity::isKind(recognised))
+			if (f->access() == Access(i) && !f->Concept::isKind(recognised))
 				mem += toHtml(f, L"div");
 		foreach (MemberVariable* f, cardinalChildrenOf<MemberVariable>())
 			if (f->access() == Access(i))

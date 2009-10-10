@@ -59,7 +59,7 @@ bool ExplicitType::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 	if (_p.exists() && _p->isPlaceholder() && _e->text().length() == 1 && (_e->text()[0].isUpper() || _e->text()[0] == L':'))
 	{
 		// switch to Explicit Type.
-		Entity* e = _p.place(new ExplicitType);
+		Concept* e = _p.place(new ExplicitType);
 		_e->codeScene()->setEditing(e);
 		if (_e->codeScene()->isEditing(e))
 			_e->reinterpretLater();
@@ -91,7 +91,7 @@ void ExplicitType::apresLoad()
 
 String ExplicitType::defineHtml() const
 {
-	return L"<^>" + tagOf(L"TypeEntity", typeHtml(m_subject.isUsable() ? m_subject->name() : L"&empty;"));
+	return L"<^>" + tagOf(L"TypeConcept", typeHtml(m_subject.isUsable() ? m_subject->name() : L"&empty;"));
 }
 
 List<TypeDefinition*> ExplicitType::possibilities() const
@@ -111,7 +111,7 @@ List<TypeDefinition*> ExplicitType::possibilities() const
 String ExplicitType::defineEditHtml(CodeScene* _cs) const
 {
 	if (EditDelegateFace* d = _cs->editDelegate(this))
-		return tagOf(L"TypeEntity", typeHtml(d->real() + tagOf(L"unreal", d->unreal()))) + tagOf(L"minor", d->comment());
+		return tagOf(L"TypeConcept", typeHtml(d->real() + tagOf(L"unreal", d->unreal()))) + tagOf(L"minor", d->comment());
 	return String::null;
 }
 

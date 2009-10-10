@@ -22,7 +22,7 @@
 
 #include "AccessLabel.h"
 #include "WebViewable.h"
-#include "Entity.h"
+#include "Concept.h"
 
 #ifndef M_API_Class
 #define M_API_Class M_OUTAPI
@@ -33,13 +33,14 @@ namespace Martta
 
 class Class;
 
-class M_API_Class Base: public Entity, public_interface WebViewable
+class M_API_Class Base: public_super Concept, public_interface WebViewable
 {
-	MARTTA_OBJECT(Entity)
+	MARTTA_OBJECT(Concept)
 	MARTTA_INHERITS(WebViewable, 0)
 
 public:
-	enum { Accessibility = FirstNamed, Superclass, EndOfNamed };
+	MARTTA_NAMED(Accessibility)
+	MARTTA_NAMED(Superclass)
 
 	Access								access() const;
 	String								code() const;
@@ -50,7 +51,7 @@ public:
 protected:
 	virtual String						defineHtml() const;
 	virtual Kinds						allowedKinds(int _i) const;
-	virtual void						onDependencyChanged(int, Entity* _e);
+	virtual void						onDependencyChanged(int, Concept* _e);
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual int							minRequired(int _i) const { return _i == Accessibility || _i == Superclass ? 1 : Super::minRequired(_i); }
 	virtual bool						isChildInValidState(int _i) const;

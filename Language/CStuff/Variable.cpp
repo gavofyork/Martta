@@ -18,7 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "TypeEntity.h"
+#include "TypeConcept.h"
 #include "TextLabel.h"
 #include "Variable.h"
 
@@ -30,7 +30,7 @@ MARTTA_OBJECT_CPP(Variable);
 Kinds Variable::allowedKinds(int _i) const
 {
 	if (_i == OurType)
-		return Kind::of<TypeEntity>();
+		return Kind::of<TypeConcept>();
 	return Super::allowedKinds(_i);
 }
 

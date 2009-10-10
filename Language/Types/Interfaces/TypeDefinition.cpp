@@ -27,20 +27,20 @@ namespace Martta
 
 MARTTA_INTERFACE_CPP(TypeDefinition);
 
-bool TypeDefinition::hasSingleCastOperator(TypeEntity const* _t, bool) const
+bool TypeDefinition::hasSingleCastOperator(TypeConcept const* _t, bool) const
 {
 	return Type(*_t) == Type(const_cast<TypeDefinition*>(this));
 }
 
-bool TypeDefinition::defineSimilarityTo(TypeEntity const* _t, TypeEntity::Castability _c) const
+bool TypeDefinition::defineSimilarityTo(TypeConcept const* _t, TypeConcept::Castability _c) const
 {
 	if (ExplicitType const* e = _t->tryKind<ExplicitType>())
 		if (e->subject() == this)
 			return true;
-	return _c == TypeEntity::Convertible && hasSingleCastOperator(_t, false);
+	return _c == TypeConcept::Convertible && hasSingleCastOperator(_t, false);
 }
 
-List<ValueDefiner*> TypeDefinition::applicableMembers(Entity const*, bool) const
+List<ValueDefiner*> TypeDefinition::applicableMembers(Concept const*, bool) const
 {
 	return List<ValueDefiner*>();
 }

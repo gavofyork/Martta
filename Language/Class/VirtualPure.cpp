@@ -19,7 +19,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "TextLabel.h"
-#include "TypeEntity.h"
+#include "TypeConcept.h"
 #include "ConstLabel.h"
 #include "Argument.h"
 #include "VirtualPure.h"

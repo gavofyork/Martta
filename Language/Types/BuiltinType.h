@@ -39,7 +39,7 @@ class BuiltinTypeSet;
 
 template<class T> class NameTrait;
 
-class M_API_Types BuiltinType: public PhysicalType
+class M_API_Types BuiltinType: public_super PhysicalType
 {
 	MARTTA_INITIALISED_OBJECT(PhysicalType)
 
@@ -87,16 +87,16 @@ public:
 protected:
 	virtual bool						hasDefaultConstructor() const { return true; }
 	virtual Types						assignableTypes() const;
-	virtual bool						contentsEquivalentTo(TypeEntity const* _t) const { return _t->asKind<BuiltinType>()->m_id == m_id; }
+	virtual bool						contentsEquivalentTo(TypeConcept const* _t) const { return _t->asKind<BuiltinType>()->m_id == m_id; }
 	virtual Rgb							idColour() const { return 0xffbb77; }
-	virtual TypeEntity*					newClone() const { return new BuiltinType(m_id); }
+	virtual TypeConcept*					newClone() const { return new BuiltinType(m_id); }
 	virtual String						defineHtml() const;
 	virtual String						defineEditHtml(CodeScene* _cs) const;
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 	virtual bool						isSuperfluous() const { return Super::isSuperfluous() && m_id == (uint)-1; }
 	virtual bool						keyPressed(KeyEvent const* _e);
-	virtual bool						defineSimilarityFrom(TypeEntity const* _f, Castability _c) const;
-	virtual bool						defineSimilarityTo(TypeEntity const* _t, Castability _c) const;
+	virtual bool						defineSimilarityFrom(TypeConcept const* _f, Castability _c) const;
+	virtual bool						defineSimilarityTo(TypeConcept const* _t, Castability _c) const;
 	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p[L"id"] = String::number(m_id); }
 	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_id = _p[L"id"].toInt(); }
 

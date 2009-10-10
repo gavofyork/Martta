@@ -2,14 +2,14 @@
  * Version: Martta License version 1.0
  *
  * The contents of this file are subject to the Martta License version 1.0
- * (the "License"); you may not use this file except in compliance with the 
- * License. You should have received a copy of the Martta License 
+ * (the "License"); you may not use this file except in compliance with the
+ * License. You should have received a copy of the Martta License
  * "COPYING.Martta" along with Martta; if not you may obtain a copy of the
  * License at http://quidprocode.co.uk/Martta/
  *
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations under 
+ * License for the specific language governing rights and limitations under
  * the License.
  *
  * The Initial Developer of the code in this file is Gavin Wood.
@@ -24,8 +24,9 @@ namespace Martta
 {
 
 MARTTA_OBJECT_CPP(FunctionType);
+MARTTA_NAMED_CPP(FunctionType, Returned);
 
-bool FunctionType::defineSimilarityTo(TypeEntity const* _t, Castability _c) const
+bool FunctionType::defineSimilarityTo(TypeConcept const* _t, Castability _c) const
 {
 	if (_t->isKind<FunctionType>())
 	{
@@ -46,7 +47,7 @@ bool FunctionType::defineSimilarityTo(TypeEntity const* _t, Castability _c) cons
 List<Declaration*> FunctionType::utilisedX() const
 {
 	List<Declaration*> ret;
-	foreach (TypeEntity* i, childrenOf<TypeEntity>())
+	foreach (TypeConcept* i, childrenOf<TypeConcept>())
 		ret << i->utilised();
 	return ret;
 }
@@ -60,13 +61,13 @@ String FunctionType::code(String const& _middle) const
 {
 	if (m_wild)
 		return "#unknown-type#(" + _middle + ")(...)";
-	
+
 	String ret = returnType()->code() + "(" + _middle + ")(";
-	foreach (Entity* e, cardinalChildren())
+	foreach (Concept* e, cardinalChildren())
 	{
 		if (ret.right(1) != "(")
 			ret += ", ";
-		ret += e->asKind<TypeEntity>()->code();
+		ret += e->asKind<TypeConcept>()->code();
 	}
 	if (m_ellipsis)
 		ret += (cardinalChildCount()) ? ", ..." : "...";

@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "Concept.h"
 #include "Named.h"
 
 #ifndef M_API_Declaration
@@ -30,7 +31,7 @@ namespace Martta
 {
 
 // Don't forget to use import/export functions!
-class M_API_Declaration Identifiable: public Named
+class M_API_Declaration Identifiable: public_super Concept, public Named
 {
 	MARTTA_INTERFACE
 
@@ -55,7 +56,7 @@ public:
 	/// (e.g. ";;MyClass;;m_foo", ";;MyClass;;void bar(int)", ";;MyClass")
 	virtual String						key() const;
 
-	virtual Entity const*				associate() const { return self(); }
+	virtual Concept const*				associate() const { return self(); }
 
 	/// @returns the entity from which this may be addressed. Typically it is the parent, though some entities
 	/// (e.g. EnumValue) skip this immediate parent and use their parent's addressableContext.

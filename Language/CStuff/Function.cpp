@@ -32,7 +32,7 @@ Kinds Function::allowedKinds(int _i) const
 	if (_i == Body)
 		return Kind::of<HardCompound>();
 	if (_i == Returned)
-		return Kind::of<TypeEntity>();
+		return Kind::of<TypeConcept>();
 	if (_i >= 0)
 		return Kind::of<Argument>();
 	return Super::allowedKinds(_i);

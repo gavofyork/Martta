@@ -30,7 +30,7 @@
 namespace Martta
 {
 
-class M_API_Labels TextLabel: public IdLabel, public_interface WebViewable
+class M_API_Labels TextLabel: public_super IdLabel, public_interface WebViewable
 {
 	MARTTA_OBJECT(IdLabel)
 	MARTTA_INHERITS(WebViewable, 0)
@@ -51,7 +51,7 @@ public:
 protected:
 	virtual void						apresLoad();
 	virtual int							familyDependencies() const;
-	virtual void						onDependencyChanged(int _a, Entity* _e) { if (_a == Logically) changed(Visually); Super::onDependencyChanged(_a, _e); }
+	virtual void						onDependencyChanged(int _a, Concept* _e) { if (_a == Logically) changed(Visually); Super::onDependencyChanged(_a, _e); }
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 	virtual String						defineHtml() const;
 	virtual String						defineEditHtml(CodeScene* _cs) const;

@@ -24,7 +24,7 @@
 #include <msList.h>
 using namespace MarttaSupport;
 
-#include "Meta.h"
+#include "Concept.h"
 
 #ifndef M_API_Project
 #define M_API_Project M_OUTAPI
@@ -35,7 +35,7 @@ namespace Martta
 
 class Project;
 
-class M_API_Project Solution
+class M_API_Project Solution: public_interface Concept
 {
 	MARTTA_INTERFACE
 

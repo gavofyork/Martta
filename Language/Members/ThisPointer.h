@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-class M_API_Members ThisPointer: public Typed
+class M_API_Members ThisPointer: public_super Typed
 {
 	MARTTA_OBJECT(Typed)
 

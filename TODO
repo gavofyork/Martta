@@ -1,3 +1,8 @@
+RENAME ExplicitType to ReferencedType.
+RENAME Referenced to ReferencedValue.
+RENAME MemberVariable to Field.
+RENAME Project to Component
+RENAME Solution to Project
 
 --------------------------------------------------------------------------------
 
@@ -19,20 +24,16 @@ OPTIMISE Moving is crazily slow over statements.
 OPTIMISE onDependencyChanged gets index w/ special indices for parent, ancestral & freeforms.
 OPTIMISE delete type of field still slow.
 QUICK EnumNamer/Class expansion.
-RENAME Entity to Concept.
-RENAME ExplicitType to ReferencedType.
-RENAME Referenced to ReferencedValue.
-RENAME MemberVariable to Field.
-RENAME Project to Component
-RENAME Solution to Project
-QUICK [a-z] on TypeEntity should work for Explicits too
-- make TypeEntity a NameEntryPoint?
-QUICK TypeEntity shouldn't inherit from TypedOwner - Just MemberTempateType and ArrayType.
+QUICK [a-z] on TypeConcept should work for Explicits too
+- make TypeConcept a NameEntryPoint?
+QUICK TypeConcept shouldn't inherit from TypedOwner - Just MemberTempateType and ArrayType.
 
 Get rid of interfaces
-- Make all Entity-derivations virtual pure.
-- Make Entity itself uninstantiatable; relieved with a MARTTA_INTERFACE or MARTTA_PROPER
+- Make all Concept-derivations virtual pure.
+- Make Concept itself uninstantiatable; relieved with a MARTTA_INTERFACE or MARTTA_PROPER
 - Switch all interfaces into entities.
+- Kill virtualEndOfNamed.
+New Component of .h/.cpp
 Concept component types.
 - Self-hosting.
 
@@ -103,7 +104,7 @@ RELEASE M4 (TBD)
 ================================================================================
 
 Templates
-- Need to pass a template types hash through to the TypeEntity's isSimilarTo/isEquivalentTo.
+- Need to pass a template types hash through to the TypeConcept's isSimilarTo/isEquivalentTo.
   - Initialised by Type's isSimilarTo.
   - Initialised with all the "Template" entities's types.
   - Template entities come before the Class/Callable and act similarly to a scope with Typedefs.
@@ -116,7 +117,7 @@ Templates
   - The TemplatedTypes will reference a TemplateTypeDefinition entity.
 	- When copying the TemplatedType entity, they will automatically find the equivalent ancestor in the new type and thereby find the equivalent TemplateTypeDefinition.
 	- When copying a Template entity, it must copy the TemplatedTypes first (to allow the latter point).
-  - The TemplateTypeDefinition entity contains a TextLabel and a TypeEntity (the default).
+  - The TemplateTypeDefinition entity contains a TextLabel and a TypeConcept (the default).
 - Also need ExplicitTemplate,
 - Works similarly for TemplateValueDefinition.
 - Unit tests for template types.
@@ -152,7 +153,7 @@ RELEASE M6 (TBD)
 ================================================================================
 
 Problems infrastructure
-- No more bools returned for isValidEntityState; instead a List<Problem>.
+- No more bools returned for isValidConceptState; instead a List<Problem>.
   - Problem should just include text initially.
   - Expanded to include possible solutions later.
 - Mouse over to detail what's wrong.
@@ -180,7 +181,7 @@ Recursive search for utilised.
 
 Split CodeScene from CodeView via. mixins?.
 
-Virtual base for Entity.
+Virtual base for Concept.
 - Allow Members to inherit principally from "Member", but also from Callable/Variable.
 
 updateAncestralDependencies(); only gets called when context changes.
@@ -210,8 +211,8 @@ Currently MemberOperations' leftType needs only to be of type  "Class", rather t
 Allow code for "implicit" casting.
 - If string is used in a char const* position, it should use its toCString().
 
-Decent editors for Literal and TypeEntity-deriveds.
-- TypeEntity-deriveds should search based on name fragment and show a list of possibles.
+Decent editors for Literal and TypeConcept-deriveds.
+- TypeConcept-deriveds should search based on name fragment and show a list of possibles.
 
 Rewrite and simplify code generation process in Callables.
 Remove ProgramModel.
@@ -236,7 +237,7 @@ Inheritance
 - Make sure multiple overloads aren't in the list (only virtual bases)
 
 Operators/Operations
-- Handle comma operator (will need a new Entity).
+- Handle comma operator (will need a new Concept).
 
 Remove (or make useful) m_location?
 

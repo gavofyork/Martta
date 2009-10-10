@@ -30,7 +30,7 @@
 namespace Martta
 {
 
-class M_API_Class ArtificialAssignmentOperator: public MethodOperator, public_interface Artificial
+class M_API_Class ArtificialAssignmentOperator: public_super MethodOperator, public_interface Artificial
 {
 	MARTTA_OBJECT(MethodOperator)
 	MARTTA_INHERITS(Artificial, 0)

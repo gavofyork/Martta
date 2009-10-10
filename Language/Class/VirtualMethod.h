@@ -30,7 +30,7 @@
 namespace Martta
 {
 
-class M_API_Class VirtualMethod: public Method, public_interface Virtual
+class M_API_Class VirtualMethod: public_super Method, public_interface Virtual
 {
 	MARTTA_OBJECT(Method)
 	MARTTA_INHERITS(Virtual, 0)

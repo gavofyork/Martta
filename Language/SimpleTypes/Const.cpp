@@ -34,14 +34,14 @@ MARTTA_REGISTER_CSS(Const,
 	L".ConstLabel-nonconstblock { }"
 );
 
-bool Const::defineSimilarityFrom(TypeEntity const* _f, Castability _c) const
+bool Const::defineSimilarityFrom(TypeConcept const* _f, Castability _c) const
 {
 	return (_f->isKind<Const>() && _f->asKind<Const>()->original()->isSimilarTo(original(), _c))
 		|| _f->isSimilarTo(original(), _c)
 		|| Super::defineSimilarityFrom(_f, _c);
 }
 
-bool Const::defineSimilarityTo(TypeEntity const* _t, Castability _c) const
+bool Const::defineSimilarityTo(TypeConcept const* _t, Castability _c) const
 {
 	// Convertible means that a Reference to it will render it Unrelated.
 	return (isAnyConvertible(_c) && _c != ConstPerfectConvertible && original()->isSimilarTo(_t, _c)) ||
@@ -51,8 +51,8 @@ bool Const::defineSimilarityTo(TypeEntity const* _t, Castability _c) const
 
 String Const::code(String const& _middle) const
 {
-	if (childIs<TypeEntity>(Original))
-		return childAs<TypeEntity>(Original)->code(" const" + _middle);
+	if (childIs<TypeConcept>(Original))
+		return childAs<TypeConcept>(Original)->code(" const" + _middle);
 	return String::null;
 }
 

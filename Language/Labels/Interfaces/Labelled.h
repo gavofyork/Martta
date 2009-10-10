@@ -20,8 +20,7 @@
 
 #pragma once
 
-#include "EntitySupport.h"
-#include "Meta.h"
+#include "Concept.h"
 
 #ifndef M_API_Labels
 #define M_API_Labels M_OUTAPI
@@ -30,7 +29,7 @@
 namespace Martta
 {
 
-class M_API_Labels Labelled
+class M_API_Labels Labelled: public_interface Concept
 {
 	MARTTA_INTERFACE
 

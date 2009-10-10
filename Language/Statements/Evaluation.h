@@ -29,12 +29,12 @@
 namespace Martta
 {
 
-class M_API_Statements Evaluation: public Typed
+class M_API_Statements Evaluation: public_super Typed
 {
 	MARTTA_PLACEHOLDER(Typed)
 
 public:
-	virtual bool						doINeedParenthesising(Entity const*) const { return true; }
+	virtual bool						doINeedParenthesising(Concept const*) const { return true; }
 	String								parenthesise(String const& _code) const { return parent()->doINeedParenthesising(this) ? "(" + _code + ")" : _code; }
 };
 

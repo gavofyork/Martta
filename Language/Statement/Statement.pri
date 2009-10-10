@@ -1,4 +1,4 @@
-DEPS += TypeEntity Declaration
+DEPS += TypeConcept Declaration
 OURDIRS = . Interfaces
 TWD = $$PWD
 

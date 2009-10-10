@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-class M_API_SimpleTypes Const: public ModifyingType
+class M_API_SimpleTypes Const: public_super ModifyingType
 {
 	MARTTA_OBJECT(ModifyingType)
 
@@ -40,17 +40,17 @@ public:
 
 protected:
 	virtual bool						hasDefaultConstructor() const { return original() && original()->hasDefaultConstructor(); }
-	virtual List<ValueDefiner*>			applicableMembers(Entity const* _s = 0, bool = false) const { return original() ? original()->applicableMembers(_s, true) : Super::applicableMembers(_s); }
-	virtual bool						isType(Kind _typeKind) { return Entity::isKind(_typeKind) || original()->isType(_typeKind); }
-	virtual TypeEntity*					asType(Kind _typeKind) { if (Entity::isKind(_typeKind)) return this; AssertNR(original()->isType(_typeKind)); return original()->asType(_typeKind); }
+	virtual List<ValueDefiner*>			applicableMembers(Concept const* _s = 0, bool = false) const { return original() ? original()->applicableMembers(_s, true) : Super::applicableMembers(_s); }
+	virtual bool						isType(Kind _typeKind) { return Concept::isKind(_typeKind) || original()->isType(_typeKind); }
+	virtual TypeConcept*					asType(Kind _typeKind) { if (Concept::isKind(_typeKind)) return this; AssertNR(original()->isType(_typeKind)); return original()->asType(_typeKind); }
 	virtual String						code(String const& _middle) const;
 	virtual String						defineHtml() const;
-	virtual TypeEntity*					newClone() const { return new Const; }
+	virtual TypeConcept*					newClone() const { return new Const; }
 	virtual Kinds						deniedKinds(int _i) const;
 //	virtual bool						canStandAlone() const { return false; }
 	virtual bool						canStandAlone() const { return original() ? original()->canStandAlone() : false; }
-	virtual bool						defineSimilarityFrom(TypeEntity const* _f, Castability _c) const;
-	virtual bool						defineSimilarityTo(TypeEntity const* _t, Castability _c) const;
+	virtual bool						defineSimilarityFrom(TypeConcept const* _f, Castability _c) const;
+	virtual bool						defineSimilarityTo(TypeConcept const* _t, Castability _c) const;
 	virtual bool						keyPressed(KeyEvent const* _e);
 };
 

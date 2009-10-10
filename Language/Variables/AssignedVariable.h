@@ -30,25 +30,25 @@
 namespace Martta
 {
 
-class M_API_Variables AssignedVariable: public BareTyped, public_interface VariableNamer
+class M_API_Variables AssignedVariable: public_super BareTyped, public_interface VariableNamer
 {
 	MARTTA_OBJECT(BareTyped)
 	MARTTA_INHERITS(VariableNamer, 0)
 
 public:
-	enum { AssignedValue = FirstNamed, EndOfNamed };
+	MARTTA_NAMED(AssignedValue)
 
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 
 protected:
-	// From Entity via BareTyped
+	// From Concept via BareTyped
 	virtual int							minRequired(int _i) const { return _i == OurType || _i == AssignedValue || _i == Identity ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _index) const;
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual String						defineHtml() const { return defineVariableHtml() + L"<^><span class=\"symbol\"> := </span>" + toHtml(child(AssignedValue)); }
 	virtual bool						keyPressed(KeyEvent const* _e);
-	virtual void						onDependencyChanged(int _a, Entity* _e) { VariableNamer::onDependencyChanged(_a, _e); Super::onDependencyChanged(_a, _e); }
-	virtual void						onDependencySwitched(Entity*, Entity*);
+	virtual void						onDependencyChanged(int _a, Concept* _e) { VariableNamer::onDependencyChanged(_a, _e); Super::onDependencyChanged(_a, _e); }
+	virtual void						onDependencySwitched(Concept*, Concept*);
 	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); Identifiable::properties(_p); }
 	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); Identifiable::setProperties(_p); }
 	virtual bool						isInValidState() const { return Super::isInValidState() && VariableNamer::isInValidState(); }

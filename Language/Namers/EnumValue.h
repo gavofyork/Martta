@@ -31,17 +31,17 @@
 namespace Martta
 {
 
-class M_API_Namers EnumValue: public Declaration, public_interface ValueDefiner, public_interface WebViewable
+class M_API_Namers EnumValue: public_super Declaration, public_interface ValueDefiner, public_interface WebViewable
 {
 	MARTTA_OBJECT(Declaration)
 	MARTTA_INHERITS(ValueDefiner, 0)
 	MARTTA_INHERITS(WebViewable, 1)
 
-	friend class Entity;
+	friend class Concept;
 	friend class EnumValueResolver;
 
 public:
-	enum { Definition = FirstNamed, EndOfNamed };
+	MARTTA_NAMED(Definition)
 
 	// Accessor methods.
 	// From ValueDefiner from TypeNamer.
@@ -56,10 +56,10 @@ protected:
 	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual bool						isChildInValidState(int _i) const;
 	virtual bool						isSuperfluous() const;
-//	virtual bool						usurpsChild(Entity const* _e) const { return _e == child(Identity); }
+//	virtual bool						usurpsChild(Concept const* _e) const { return _e == child(Identity); }
 
 	virtual int							familyDependencies() const { return DependsOnChildren; }
-	virtual void						onDependencyChanged(int, Entity* _e) { if (_e == child(Identity)) { /*checkForCullingLater(); */changed(Logically); } }
+	virtual void						onDependencyChanged(int, Concept* _e) { if (_e == child(Identity)) { /*checkForCullingLater(); */changed(Logically); } }
 };
 
 }

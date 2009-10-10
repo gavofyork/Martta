@@ -61,6 +61,8 @@ namespace Martta
 {
 
 MARTTA_OBJECT_CPP(CProject);
+MARTTA_NAMED_CPP(CProject, RequiredIncludes);
+MARTTA_NAMED_CPP(CProject, MainFunction);
 MARTTA_OBJECT_CPP(CProjectDependency);
 
 CProject::CProject():

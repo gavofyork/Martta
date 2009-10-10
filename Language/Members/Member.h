@@ -35,12 +35,12 @@ class TypeDefintion;
 /**
  * Class for any entity that can be found inside a class (i.e. with an access attribute).
  */
-class M_API_Members Member: public Declaration
+class M_API_Members Member: public_super Declaration
 {
 	MARTTA_PLACEHOLDER(Declaration)
 
 public:
-	enum { Accessibility = FirstNamed, EndOfNamed };
+	MARTTA_NAMED(Accessibility)
 
 	virtual Access						access() const;
 	/// @returns the type definition (e.g. Class object) of which this is a member.
@@ -62,7 +62,7 @@ protected:
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual int							familyDependencies() const { return DependsOnChildren; }
-	virtual void						onDependencyChanged(int, Entity*) { changed(Logically); }
+	virtual void						onDependencyChanged(int, Concept*) { changed(Logically); }
 	virtual String						defineHtml() const;
 };
 

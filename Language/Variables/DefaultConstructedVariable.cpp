@@ -19,7 +19,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "TextLabel.h"
-#include "TypeEntity.h"
+#include "TypeConcept.h"
 #include "AssignedVariable.h"
 #include "DefaultConstructedVariable.h"
 
@@ -36,7 +36,7 @@ bool DefaultConstructedVariable::keyPressedOnPosition(Position const& _p, KeyEve
 Kinds DefaultConstructedVariable::allowedKinds(int _index) const
 {
 	if (_index == OurType)
-		return Kind::of<TypeEntity>();
+		return Kind::of<TypeConcept>();
 	else if (_index == Identity)
 		return Kind::of<TextLabel>();
 	return Super::allowedKinds(_index);
@@ -48,7 +48,7 @@ bool DefaultConstructedVariable::keyPressed(KeyEvent const* _e)
 		return true;
 	else if (_e->text() == "=")
 	{
-		Entity* o = usurp(new AssignedVariable);
+		Concept* o = usurp(new AssignedVariable);
 		o->prepareChildren();
 		_e->codeScene()->navigateOnto(o->child(AssignedVariable::AssignedValue));
 	}

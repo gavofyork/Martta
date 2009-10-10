@@ -21,7 +21,7 @@
 #include "WebStylist.h"
 #include "WebStylistRegistrar.h"
 #include "EditDelegate.h"
-#include "Entity.h"
+#include "Concept.h"
 #include "WebViewable.h"
 
 namespace Martta
@@ -76,16 +76,16 @@ String WebViewable::htmlEscape(String const& _s)
 		.replace(L"\"", L"&quot;");
 }
 
-String WebViewable::toHtml(Entity const* _e, String const& _tag)
+String WebViewable::toHtml(Concept const* _e, String const& _tag)
 {
 	return WebStylist::current()->toHtml(_e, _tag);
 }
 
-String WebViewable::toHtml(List<Entity const*> const& _es, String const& _delimiter, String const& _tag)
+String WebViewable::toHtml(List<Concept const*> const& _es, String const& _delimiter, String const& _tag)
 {
 	String ret;
 	bool first = true;
-	foreach (Entity const* e, _es)
+	foreach (Concept const* e, _es)
 	{
 		if (first)
 			first = false;

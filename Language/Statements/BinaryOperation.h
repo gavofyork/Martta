@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-class M_API_Statements BinaryOperation: public Operation
+class M_API_Statements BinaryOperation: public_super Operation
 {
 	MARTTA_PLACEHOLDER(Operation)
 
@@ -55,7 +55,7 @@ protected:
 		if (isTemporary(p.entity()) || !p->isKind<Typed>())
 			return false;
 
-		Entity* n = new T;
+		Concept* n = new T;
 		_e->noteStrobeCreation(n, &*p);
 		p->insert(n, FirstOperand);
 		n->validifyChildren();
@@ -72,7 +72,7 @@ protected:
 	virtual String						defineHtml() const;
 
 	virtual int							familyDependencies() const { return DependsOnBoth; }
-//	virtual void						onDependencySwitched(Entity* _e, Entity* _o) { if (_e == parent()) markDirty(); else Super::onDependencySwitched(_e, _o); }
+//	virtual void						onDependencySwitched(Concept* _e, Concept* _o) { if (_e == parent()) markDirty(); else Super::onDependencySwitched(_e, _o); }
 };
 
 }

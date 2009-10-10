@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include "Meta.h"
+#include "Concept.h"
 
 #ifndef M_API_Statement
 #define M_API_Statement M_OUTAPI
@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-class M_API_Statement Conditional
+class M_API_Statement Conditional: public_interface Concept
 {
 	MARTTA_INTERFACE
 

@@ -34,9 +34,9 @@ class BuiltinMethod;
 class BuiltinDeclaration;
 class BuiltinOperator;
 
-class M_API_Types StringType: public TypeEntity, public_interface Subscriptable
+class M_API_Types StringType: public_super TypeConcept, public_interface Subscriptable
 {
-	MARTTA_INITIALISED_OBJECT(TypeEntity)
+	MARTTA_INITIALISED_OBJECT(TypeConcept)
 	MARTTA_INHERITS(Subscriptable, 0)
 
 	friend class BuiltinMethod;
@@ -51,17 +51,17 @@ public:
 protected:
 	virtual bool						hasDefaultConstructor() const { return true; }
 	virtual Types						assignableTypes() const;
-	virtual List<ValueDefiner*>			applicableMembers(Entity const* _s = 0, bool _isConst = false) const;
+	virtual List<ValueDefiner*>			applicableMembers(Concept const* _s = 0, bool _isConst = false) const;
 
 	virtual String						code(String const& _middle) const;
 	virtual String						defineHtml() const;
-	virtual bool						defineSimilarityFrom(TypeEntity const* _f, Castability _c) const;
-	virtual bool						defineSimilarityTo(TypeEntity const* _t, Castability _c) const;
+	virtual bool						defineSimilarityFrom(TypeConcept const* _f, Castability _c) const;
+	virtual bool						defineSimilarityTo(TypeConcept const* _t, Castability _c) const;
 	virtual Rgb							idColour() const { return 0xffbb77; }
 	virtual Types						subscriptTypes() const;
 	virtual Type						subscriptsTo(Type const&) const;
 
-	virtual TypeEntity*					newClone() const { return new StringType; }
+	virtual TypeConcept*					newClone() const { return new StringType; }
 
 	static List<BuiltinMethod*>			s_members;
 	static List<BuiltinOperator*>		s_nonMembers;

@@ -31,6 +31,7 @@ namespace Martta
 {
 
 MARTTA_PLACEHOLDER_CPP(MemberLambda);
+MARTTA_NAMED_CPP(MemberLambda, Constness);
 MARTTA_REGISTER_CSS(MemberLambda,
 	WebViewable::cssBorder(L".MemberLambda-public-", AccessLabel::idColour(Public).interpolated(70, Rgb(0xffffff))) +
 	WebViewable::cssBorder(L".MemberLambda-protected-", AccessLabel::idColour(Protected).interpolated(70, Rgb(0xffffff))) +
@@ -43,7 +44,7 @@ Kinds MemberLambda::allowedKinds(int _i) const
 	if (_i == Body)
 		return Kind::of<HardCompound>();
 	if (_i == Returned)
-		return Kind::of<TypeEntity>();
+		return Kind::of<TypeConcept>();
 	if (_i >= 0)
 		return Kind::of<Argument>();
 	return Super::allowedKinds(_i);

@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-class M_API_Statement Untyped: public Statement
+class M_API_Statement Untyped: public_super Statement
 {
 	MARTTA_PLACEHOLDER(Statement)
 

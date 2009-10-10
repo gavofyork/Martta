@@ -30,7 +30,7 @@
 namespace Martta
 {
 
-class M_API_Members MemberVariable: public MemberValue, public_interface VariableNamer
+class M_API_Members MemberVariable: public_super MemberValue, public_interface VariableNamer
 {
 	MARTTA_OBJECT(MemberValue)
 	MARTTA_INHERITS(VariableNamer, 0)
@@ -41,7 +41,7 @@ public:
 protected:
 	virtual bool						keyPressed(KeyEvent const* _e) { return VariableNamer::keyPressed(_e) ? true : Super::keyPressed(_e); }
 	virtual int							familyDependencies() const { return DependsOnChildren; }
-	virtual void						onDependencyChanged(int _a, Entity* _e) { VariableNamer::onDependencyChanged(_a, _e); Super::onDependencyChanged(_a, _e); }
+	virtual void						onDependencyChanged(int _a, Concept* _e) { VariableNamer::onDependencyChanged(_a, _e); Super::onDependencyChanged(_a, _e); }
 	virtual List<Declaration*>			utilised() const { return actualType()->utilised(); }
 	virtual String						memberInterfaceCode() const { return VariableNamer::interfaceCode(); }
 	virtual String						memberImplementationCode() const { return VariableNamer::implementationCode(); }

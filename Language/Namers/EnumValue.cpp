@@ -31,6 +31,7 @@ namespace Martta
 {
 
 MARTTA_OBJECT_CPP(EnumValue);
+MARTTA_NAMED_CPP(EnumValue, Definition);
 
 Kinds EnumValue::allowedKinds(int _i) const
 {
@@ -61,7 +62,7 @@ bool EnumValue::isChildInValidState(int _i) const
 	if (childIs<Typed>(_i))
 	{
 		foreach (Type i, Types() << Type(Int))
-			if (childAs<Typed>(_i)->apparentType().isSimilarTo(i, TypeEntity::BasicallyConvertible))
+			if (childAs<Typed>(_i)->apparentType().isSimilarTo(i, TypeConcept::BasicallyConvertible))
 				return true;
 		return false;
 	}

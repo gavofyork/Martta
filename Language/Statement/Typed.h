@@ -29,13 +29,13 @@
 namespace Martta
 {
 
-class M_API_Statement Typed: public BareTyped
+class M_API_Statement Typed: public_super BareTyped
 {
 	MARTTA_PLACEHOLDER(BareTyped)
 
 public:
 	virtual int							familyDependencies() const { return DependsOnParent | DependsOnIndex; }
-	virtual void						onDependencyChanged(int _a, Entity* _e);
+	virtual void						onDependencyChanged(int _a, Concept* _e);
 	virtual void						onIndexChanged(int _oldIndex);
 };
 

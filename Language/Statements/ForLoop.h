@@ -30,13 +30,14 @@
 namespace Martta
 {
 
-class M_API_Statements ForLoop: public Loop, public_interface Conditional
+class M_API_Statements ForLoop: public_super Loop, public_interface Conditional
 {
 	MARTTA_OBJECT(Loop)
 	MARTTA_INHERITS(Conditional, 0)
 
 public:
-	enum { Initialiser = FirstNamed, Ticker, EndOfNamed };
+	MARTTA_NAMED(Initialiser)
+	MARTTA_NAMED(Ticker)
 
 	virtual int							minRequired(int _i) const { return _i == Initialiser || _i == Condition || _i == Ticker ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _index) const;

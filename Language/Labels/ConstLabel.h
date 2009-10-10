@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-class M_API_Labels ConstLabel: public Label
+class M_API_Labels ConstLabel: public_super Label
 {
 	MARTTA_OBJECT(Label)
 

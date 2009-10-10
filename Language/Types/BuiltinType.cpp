@@ -128,7 +128,7 @@ Types BuiltinType::assignableTypes() const
 	return Type(*this);
 }
 
-bool BuiltinType::defineSimilarityTo(TypeEntity const* _t, Castability _c) const
+bool BuiltinType::defineSimilarityTo(TypeConcept const* _t, Castability _c) const
 {
 	if (_t->isKind<BuiltinType>())
 	{
@@ -154,7 +154,7 @@ bool BuiltinType::defineSimilarityTo(TypeEntity const* _t, Castability _c) const
 	return Super::defineSimilarityTo(_t, _c);
 }
 
-bool BuiltinType::defineSimilarityFrom(TypeEntity const* _f, Castability _c) const
+bool BuiltinType::defineSimilarityFrom(TypeConcept const* _f, Castability _c) const
 {
 	return	(m_id == Void && !_f->isKind<ModifyingType>()) ||
 			(isAnyConvertible(_c) && m_id == Bool && _f->isKind<AddressType>()) ||
@@ -163,7 +163,7 @@ bool BuiltinType::defineSimilarityFrom(TypeEntity const* _f, Castability _c) con
 
 String BuiltinType::defineHtml() const
 {
-	return L"<^><span class=\"TypeEntity\">" + typeHtml((id() == (uint)-1) ? L"&empty;" : name(id())) + L"</span>";
+	return L"<^><span class=\"TypeConcept\">" + typeHtml((id() == (uint)-1) ? L"&empty;" : name(id())) + L"</span>";
 }
 
 template<>

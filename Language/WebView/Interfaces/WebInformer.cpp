@@ -18,7 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "Entity.h"
+#include "Concept.h"
 #include "WebInformer.h"
 
 namespace Martta
@@ -36,7 +36,7 @@ String WebInformer::compileKinds(Kinds const& _t)
 	return ret;
 }
 
-String WebInformer::basicInformationHtml(Entity const* _e)
+String WebInformer::basicInformationHtml(Concept const* _e)
 {
 	String ret = L"<h1>" + _e->kind().name() + L"</h1>";
 	{

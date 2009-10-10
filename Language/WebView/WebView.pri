@@ -1,4 +1,4 @@
-DEPS += Entity
+DEPS += Concept
 OURDIRS = Interfaces Support
 TWD = $$PWD
 

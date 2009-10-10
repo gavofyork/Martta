@@ -34,7 +34,7 @@ namespace Martta
 class EnumValue;
 class EnumerationResolver;
 
-class M_API_CStuff Enumeration: public TopLevelType, public_interface EnumerationNamer
+class M_API_CStuff Enumeration: public_super TopLevelType, public_interface EnumerationNamer
 {
 	MARTTA_OBJECT(TopLevelType)
 	MARTTA_INHERITS(EnumerationNamer, 0)
@@ -56,9 +56,9 @@ protected:
 	virtual bool						keyPressed(KeyEvent const* _e) { AssertNR(isComplete()); return EnumerationNamer::keyPressed(_e) ? true : Super::keyPressed(_e); }
 
 	virtual int							familyDependencies() { return DependsOnChildren; }
-	virtual void						onDependencyAdded(Entity* _e) { EnumerationNamer::onDependencyAdded(_e); }
-	virtual void						onDependencyChanged(int _a, Entity* _e) { EnumerationNamer::onDependencyChanged(_a, _e); }
-	virtual void						onDependencyRemoved(Entity* _e, int) { EnumerationNamer::onDependencyRemoved(_e); }
+	virtual void						onDependencyAdded(Concept* _e) { EnumerationNamer::onDependencyAdded(_e); }
+	virtual void						onDependencyChanged(int _a, Concept* _e) { EnumerationNamer::onDependencyChanged(_a, _e); }
+	virtual void						onDependencyRemoved(Concept* _e, int) { EnumerationNamer::onDependencyRemoved(_e); }
 };
 
 }

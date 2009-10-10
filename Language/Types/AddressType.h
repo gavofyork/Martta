@@ -30,7 +30,7 @@
 namespace Martta
 {
 
-class M_API_Types AddressType: public ModifyingType, public_interface Subscriptable
+class M_API_Types AddressType: public_super ModifyingType, public_interface Subscriptable
 {
 	MARTTA_INITIALISED_PLACEHOLDER(ModifyingType)
 	MARTTA_INHERITS(Subscriptable, 0)
@@ -40,8 +40,8 @@ public:
 	static void							finaliseClass();
 
 private:
-	virtual TypeEntity*					newClone() const { return new AddressType; }
-	virtual bool						defineSimilarityTo(TypeEntity const* _t, Castability _c) const;
+	virtual TypeConcept*					newClone() const { return new AddressType; }
+	virtual bool						defineSimilarityTo(TypeConcept const* _t, Castability _c) const;
 	virtual String						modifierHtml() const { return L"<span class=\"symbol\">@</span>"; }
 	virtual String						code(String const& _middle) const { return original()->code("@" + _middle); }
 	virtual Types						subscriptTypes() const;

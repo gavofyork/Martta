@@ -47,7 +47,7 @@ win32:DLLs.commands = @echo Copying libraries...\
 	&& copy ..\\support\\support.dll $$DESTDIR \
 	&& copy ..\\plugins\\Project.dll $$DESTDIR \
 	&& copy ..\\plugins\\WebView.dll $$DESTDIR \
-	&& copy ..\\plugins\\Entity.dll $$DESTDIR
+	&& copy ..\\plugins\\Concept.dll $$DESTDIR
 QMAKE_EXTRA_TARGETS += DLLs
 PRE_TARGETDEPS += DLLs
 

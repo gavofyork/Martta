@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-class M_API_Class MemberReferenced: public Referenced
+class M_API_Class MemberReferenced: public_super Referenced
 {
 	MARTTA_OBJECT(Referenced)
 
@@ -45,10 +45,10 @@ protected:
 	virtual String						defineEditHtml(CodeScene* _cs) const;
 
 	virtual Kinds						ancestralDependencies() const;
-	virtual void						onDependencyChanged(int _a, Entity* _d) { if (_d->isKind<MemberLambda>() || _d->isKind<Class>()) changed(Logically); Super::onDependencyChanged(_a, _d); }
+	virtual void						onDependencyChanged(int _a, Concept* _d) { if (_d->isKind<MemberLambda>() || _d->isKind<Class>()) changed(Logically); Super::onDependencyChanged(_a, _d); }
 };
 
-class M_API_Class FloatingMemberReferenced: public MemberReferenced
+class M_API_Class FloatingMemberReferenced: public_super MemberReferenced
 {
 	MARTTA_OBJECT(MemberReferenced)
 

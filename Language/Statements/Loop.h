@@ -30,7 +30,7 @@
 namespace Martta
 {
 
-class M_API_Statements Loop: public Untyped, public_interface Corporal
+class M_API_Statements Loop: public_super Untyped, public_interface Corporal
 {
 	MARTTA_OBJECT(Untyped)
 	MARTTA_INHERITS(Corporal, 0)

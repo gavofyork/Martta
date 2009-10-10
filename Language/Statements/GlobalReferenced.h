@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-class M_API_Statements GlobalReferenced: public Referenced
+class M_API_Statements GlobalReferenced: public_super Referenced
 {
 	MARTTA_OBJECT(Referenced)
 

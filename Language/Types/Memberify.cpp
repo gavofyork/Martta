@@ -25,6 +25,7 @@ namespace Martta
 {
 
 MARTTA_OBJECT_CPP(Memberify);
+MARTTA_NAMED_CPP(Memberify, Scope);
 
 Memberify::Memberify(TypeDefinition* _scope, bool _isConst)
 {
@@ -51,7 +52,7 @@ Types Memberify::assignableTypes() const
 
 bool Memberify::isConst() const
 {
-	TypeEntity* te = scope();
+	TypeConcept* te = scope();
 	if (te && te->isType<Const>())
 		return true;
 	return false;
@@ -60,7 +61,7 @@ bool Memberify::isConst() const
 void Memberify::setConst(bool _c)
 {
 	// !!!UNTESTED!!!
-	TypeEntity* te = scope();
+	TypeConcept* te = scope();
 	if (!te)
 		return;
 	if (!_c && te->isType<Const>())
@@ -72,13 +73,13 @@ void Memberify::setConst(bool _c)
 void Memberify::setScope(Type const& _newScope)
 {
 	AssertNR(scope());
-	scope()->replace(TypeEntity::cloneOf(&*_newScope, owner()));
-	List<TypeEntity*> l;
-	l << childrenOf<TypeEntity>();
+	scope()->replace(TypeConcept::cloneOf(&*_newScope, owner()));
+	List<TypeConcept*> l;
+	l << childrenOf<TypeConcept>();
 	while (!l.isEmpty())
 	{
-		TypeEntity* t = l.takeLast();
-		l << t->childrenOf<TypeEntity>();
+		TypeConcept* t = l.takeLast();
+		l << t->childrenOf<TypeConcept>();
 		t->rejig();	// Should really be done through Class since it knows about MemberTmplType and Memberify
 	}
 }
@@ -86,11 +87,11 @@ void Memberify::setScope(Type const& _newScope)
 Kinds Memberify::allowedKinds(int _i) const
 {
 	if (_i == Scope)
-		return Kind::of<TypeEntity>();
+		return Kind::of<TypeConcept>();
 	return Super::allowedKinds(_i);
 }
 
-TypeEntity* Memberify::scopeType() const
+TypeConcept* Memberify::scopeType() const
 {
 	if (scope())
 		if (scope()->isType<Const>())
@@ -98,7 +99,7 @@ TypeEntity* Memberify::scopeType() const
 		else
 			return scope();
 	else
-		return TypeEntity::null;
+		return TypeConcept::null;
 }
 
 String Memberify::code(String const& _middle) const
@@ -108,7 +109,7 @@ String Memberify::code(String const& _middle) const
 	return String::null;
 }
 
-bool Memberify::defineSimilarityFrom(TypeEntity const* _f, Castability _c) const
+bool Memberify::defineSimilarityFrom(TypeConcept const* _f, Castability _c) const
 {
 	// const and mutable member methods fit in mutable-shaped holes.
 	// only const member methods fit in const-shaped holes.

@@ -18,7 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "Entity.h"
+#include "Concept.h"
 #include "CodeScene.h"
 #include "WebStylistRegistrar.h"
 #include "WebViewable.h"
@@ -39,7 +39,7 @@ private:
 	WebStylist* m_s;
 };
 
-String WebStylist::toHtml(Entity const* _e, String const& _tag)
+String WebStylist::toHtml(Concept const* _e, String const& _tag)
 {
 	KeepCurrent k(this);
 	if (!_e)
@@ -49,7 +49,7 @@ String WebStylist::toHtml(Entity const* _e, String const& _tag)
 	return String("<%1 entity=\"true\" ondblclick=\"if (CodeView.attemptEdit(%2)) event.stopPropagation();\" id=\"%2\">%3</%4>").arg(_tag).arg((int)_e).arg(refineHtml(defineHtml(_e), !_e->isUsurped())).arg(_tag.section(L' ', 0, 0));
 }
 
-String WebStylist::rejiggedHtml(Entity const* _e)
+String WebStylist::rejiggedHtml(Concept const* _e)
 {
 	KeepCurrent k(this);
 	String ret = refineHtml(defineHtml(_e), !_e->isUsurped());
@@ -57,7 +57,7 @@ String WebStylist::rejiggedHtml(Entity const* _e)
 	return ret;
 }
 
-String WebStylist::editHtml(Entity const* _e, CodeScene* _cs)
+String WebStylist::editHtml(Concept const* _e, CodeScene* _cs)
 {
 	KeepCurrent k(this);
 	return refineHtml(defineEditHtml(_e, _cs), true, true, L"editing");
@@ -86,7 +86,7 @@ String WebStylist::refineHtml(String const& _html, bool _allowThis, bool _forceT
 	return ret;
 }
 
-String WebStylist::defineHtml(Entity const* _e)
+String WebStylist::defineHtml(Concept const* _e)
 {
 	if (WebViewable const* v = _e->tryKind<WebViewable>())
 		return v->defineHtml();
@@ -97,14 +97,14 @@ String WebStylist::defineHtml(Entity const* _e)
 	foreach (String s, p.keys())
 		ret += L"[" + s + L"=" + p[s] + L"]";
 	ret += L"</span><span>{";
-	foreach (Entity* e, _e->children())
+	foreach (Concept* e, _e->children())
 		 ret += L" " + toHtml(e) + L"@" + e->indexName();
 	ret += L" }</span>";
 
 	return ret;
 }
 
-String WebStylist::defineEditHtml(Entity const* _e, CodeScene* _cs)
+String WebStylist::defineEditHtml(Concept const* _e, CodeScene* _cs)
 {
 	if (WebViewable const* v = _e->tryKind<WebViewable>())
 		return v->defineEditHtml(_cs);

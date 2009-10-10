@@ -29,13 +29,13 @@
 namespace Martta
 {
 
-class M_API_Types UndefinedArray: public AddressType
+class M_API_Types UndefinedArray: public_super AddressType
 {
 	MARTTA_OBJECT(AddressType)
 
 protected:
 	virtual String						code(String const& _middle) const;
-	virtual TypeEntity*					newClone() const { return new UndefinedArray; }
+	virtual TypeConcept*					newClone() const { return new UndefinedArray; }
 	virtual String						defineHtml() const { return toHtml(child(Original)) + L"<^><span class=\"symbol\">[]</span>"; }
 };
 

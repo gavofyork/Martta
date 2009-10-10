@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-class M_API_Types Pointer: public AddressType
+class M_API_Types Pointer: public_super AddressType
 {
 	MARTTA_OBJECT(AddressType)
 
@@ -41,8 +41,8 @@ protected:
 	virtual bool						hasDefaultConstructor() const { return true; }
 	virtual String						code(String const& _middle) const { return original()->code("*" + _middle); }
 	virtual String						modifierHtml() const { return L"<span class=\"symbol\">*</span>"; }
-	virtual Rgb							idColour() const { return (original() ? original()->idColour() : TypeEntity::null->idColour()).interpolated(20); }
-	virtual TypeEntity*					newClone() const { return new Pointer; }
+	virtual Rgb							idColour() const { return (original() ? original()->idColour() : TypeConcept::null->idColour()).interpolated(20); }
+	virtual TypeConcept*					newClone() const { return new Pointer; }
 	virtual List<Declaration*>			utilised() const { return List<Declaration*>(); }
 };
 

@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-class M_API_Statements ReferenceOperation: public UnaryOperation
+class M_API_Statements ReferenceOperation: public_super UnaryOperation
 {
 	MARTTA_OBJECT(UnaryOperation)
 

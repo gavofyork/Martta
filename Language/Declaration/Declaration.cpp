@@ -30,7 +30,7 @@ Declaration::~Declaration()
 {
 }
 
-String Declaration::superChildInformationHtml(Entity const* _e) const
+String Declaration::superChildInformationHtml(Concept const* _e) const
 {
 	if (_e->ancestor<Declaration>() != this)
 		return String::null;

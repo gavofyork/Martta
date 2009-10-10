@@ -64,7 +64,7 @@ function entityParent(_e)
 		p = p.parentNode;
 	return p;
 }
-function focusableEntityParent(_e)
+function focusableConceptParent(_e)
 {
 	var p = _e.parentNode;
 	for (; p != null; p = p.parentNode)
@@ -88,7 +88,7 @@ function goIn()
 		return;
 	var e = g_currentIterator.referenceNode.parentNode;
 	var c;
-	if (g_inOutCache[e.id] && document.getElementById(g_inOutCache[e.id]) && focusableEntityParent(document.getElementById(g_inOutCache[e.id])) == e)
+	if (g_inOutCache[e.id] && document.getElementById(g_inOutCache[e.id]) && focusableConceptParent(document.getElementById(g_inOutCache[e.id])) == e)
 	{
 		c = document.getElementById(g_inOutCache[e.id]);
 	}
@@ -107,7 +107,7 @@ function goOut()
 	if (!g_currentIterator.referenceNode || !g_currentIterator.referenceNode.parentNode)
 		return;
 	var e = g_currentIterator.referenceNode.parentNode;
-	var p = focusableEntityParent(g_currentIterator.referenceNode.parentNode);
+	var p = focusableConceptParent(g_currentIterator.referenceNode.parentNode);
 	if (p && setReferenceNode(p))
 	{
 		g_inOutCache[p.id] = e.id;

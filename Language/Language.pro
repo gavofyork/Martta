@@ -3,10 +3,10 @@ SUBDIRS = \
  Operator \
  CQualifiers \
  CTypes \
- Entity \
+ Concept \
  WebView \
  Project \
- TypeEntity \
+ TypeConcept \
  Labels \
  Declaration \
  Statement \

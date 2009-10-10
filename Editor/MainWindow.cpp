@@ -95,7 +95,7 @@ MainWindow::MainWindow(QWidget* _p, Qt::WindowFlags _f):
 	setCorner(Qt::BottomRightCorner, Qt::RightDockWidgetArea);
 
 	CullManager::get()->setDelayedActor(new CullActor(this));
-	connect(codeView, SIGNAL(currentChanged(Entity*)), SLOT(entityFocused(Entity*)));
+	connect(codeView, SIGNAL(currentChanged(Concept*)), SLOT(entityFocused(Concept*)));
 
 	loadPlugins();
 	if (QFile::exists(s.value("mainwindow/lastproject").toString()))
@@ -130,7 +130,7 @@ MainWindow::~MainWindow()
 	m_updateTimer = 0;
 
 #if defined(DEBUG)
-//	mInfo() << "Type count:" << TypeEntity::s_typeCount;
+//	mInfo() << "Type count:" << TypeConcept::s_typeCount;
 #endif
 }
 
@@ -466,7 +466,7 @@ bool MainWindow::load(String const& _filename)
 
 	QStringList projectFiles;
 	QList<Project*> projects;
-	Entity* e = importDom(doc.documentElement(), 0, &projectFiles, &projects);	// Expects to be able to write into projects.
+	Concept* e = importDom(doc.documentElement(), 0, &projectFiles, &projects);	// Expects to be able to write into projects.
 	if (!e->isKind<Solution>())
 	{
 		QMessageBox::critical(0, tr("Load Solution"), tr("Invalid file contents (unknown Solution entity %1---missing a plugin?)").arg(qs(e->kind().name())));
@@ -580,7 +580,7 @@ bool MainWindow::deserialise(QString const& _s)
 
 	QStringList projectFiles;
 	QList<Project*> projects;
-	Entity* e = importDom(doc.documentElement(), 0, &projectFiles, &projects);	// Expects to be able to write into m_projects.
+	Concept* e = importDom(doc.documentElement(), 0, &projectFiles, &projects);	// Expects to be able to write into m_projects.
 	AssertNR(projectFiles.isEmpty());
 	if (!e->isKind<Solution>())
 	{
@@ -623,7 +623,7 @@ void MainWindow::updateSolutionSupportPath()
 #endif
 }
 
-QDomElement MainWindow::exportDom(QDomDocument& _doc, Entity const* _e, bool _dump) const
+QDomElement MainWindow::exportDom(QDomDocument& _doc, Concept const* _e, bool _dump) const
 {
 	QDomElement n = _doc.createElement(qs(_e->kind().name()).replace("::", ":"));
 	Hash<String, String> h;
@@ -633,7 +633,7 @@ QDomElement MainWindow::exportDom(QDomDocument& _doc, Entity const* _e, bool _du
 	String iId = _e->namedIndexId();
 	if (!iId.isEmpty())
 		n.setAttribute("index", qs(iId));
-	foreach (Entity* e, _e->savedChildren())
+	foreach (Concept* e, _e->savedChildren())
 		if (e->isKind<Project>() && !m_projects.value(e->asKind<Project>()).isEmpty() && !_dump)
 		{
 			QDomElement pe = _doc.createElement("project");
@@ -647,9 +647,9 @@ QDomElement MainWindow::exportDom(QDomDocument& _doc, Entity const* _e, bool _du
 	return n;
 }
 
-Entity* MainWindow::importDom(QDomElement const& _el, Entity* _p, QStringList* _unloadedProjects, QList<Project*>* _projects)
+Concept* MainWindow::importDom(QDomElement const& _el, Concept* _p, QStringList* _unloadedProjects, QList<Project*>* _projects)
 {
-	Entity* e = Entity::spawn(qs(_el.nodeName().replace(":", "::")));
+	Concept* e = Concept::spawn(qs(_el.nodeName().replace(":", "::")));
 	Assert(e, "Spawn doesn't know anything about this kind, yet it did when exported.");
 
 	if (e->isKind<Project>() && _projects)
@@ -697,7 +697,7 @@ void MainWindow::on_actShowDeps_triggered()
 void MainWindow::on_actCastability_triggered()
 {
 #if defined(DEBUG)
-//	TypeEntity::s_debugCastability = actCastability->isChecked();
+//	TypeConcept::s_debugCastability = actCastability->isChecked();
 #endif
 }
 
@@ -759,18 +759,18 @@ template<class T> void addToLanguage(Kind const& _k, T* _p)
 void MainWindow::updateLanguage()
 {
 	language->clear();
-	addToLanguage(Kind::of<Entity>(), language);
+	addToLanguage(Kind::of<Concept>(), language);
 	language->expandAll();
 }
 
-static void addChild(QTreeWidgetItem* _p, Entity const* _c)
+static void addChild(QTreeWidgetItem* _p, Concept const* _c)
 {
 	QTreeWidgetItem* t = new QTreeWidgetItem(_p, QStringList() << _c->indexName().toCString() << _c->kind().name().toCString());
-	foreach (Entity* e, _c->children())
+	foreach (Concept* e, _c->children())
 		addChild(t, e);
 }
 
-void MainWindow::entityFocused(Entity* _e)
+void MainWindow::entityFocused(Concept* _e)
 {
 	if (codeView->current() != _e)
 		codeView->setCurrent(_e);
@@ -790,17 +790,17 @@ void MainWindow::updateProgramCode()
 		programCode->setPlainText(qs(p->finalCode()));
 }
 
-bool hasSuperChild(Entity* _p, Entity* _e)
+bool hasSuperChild(Concept* _p, Concept* _e)
 {
 	if (_p == _e)
 		return true;
-	foreach (Entity* i, _p->children())
+	foreach (Concept* i, _p->children())
 		if (hasSuperChild(i, _e))
 			return true;
 	return false;
 }
 
-QString MainWindow::summary(Entity* _e)
+QString MainWindow::summary(Concept* _e)
 {
 	if (_e && hasSuperChild(m_solution->self(), _e))
 		return qs(_e->summary());
@@ -811,7 +811,7 @@ void MainWindow::delayedUpdate()
 {
 	m_updateTimer->deleteLater();
 	m_updateTimer = 0;
-	Entity* e = codeView->current();
+	Concept* e = codeView->current();
 	QString t;
 	if (e && e->parent())
 		TIME_STATEMENT("update")
@@ -821,7 +821,7 @@ void MainWindow::delayedUpdate()
 			t += qs(WebInformer::basicInformationHtml(e));
 			if (WebInformer* we = e->tryKind<WebInformer>())
 				t += qs(we->informationHtml());
-			for (Entity* p = e->parent(); p; p = p->parent())
+			for (Concept* p = e->parent(); p; p = p->parent())
 				if (WebInformer* we = p->tryKind<WebInformer>())
 					t += qs(we->superChildInformationHtml(e));
 		}
@@ -850,7 +850,7 @@ void MainWindow::delayedUpdate()
 			case ChangeMan::DependencyAdded:
 				new QTreeWidgetItem(changes, QStringList() << summary(i.m_depender) + ": DepAdded" << "Coming: " + summary(i.m_object1));
 			break;
-			case ChangeMan::EntityChildrenInitialised:
+			case ChangeMan::ConceptChildrenInitialised:
 				new QTreeWidgetItem(changes, QStringList() << summary(i.m_depender) + ": ChildrenInit'd");
 			break;
 			case ChangeMan::DependencyRemoved:

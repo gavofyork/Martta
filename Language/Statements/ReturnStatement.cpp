@@ -31,6 +31,7 @@ namespace Martta
 {
 
 MARTTA_OBJECT_CPP(ReturnStatement);
+MARTTA_NAMED_CPP(ReturnStatement, Returned);
 
 static SimpleIdentifierSet<ReturnStatement> s_returnStatementSet(L"return");
 
@@ -51,7 +52,7 @@ int ReturnStatement::minRequired(int _i) const
 		return Super::minRequired(_i);
 }
 
-void ReturnStatement::onDependencyChanged(int, Entity*)
+void ReturnStatement::onDependencyChanged(int, Concept*)
 {
 	validifyChildren();
 	changed(Logically);

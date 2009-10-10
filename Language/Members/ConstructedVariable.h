@@ -31,19 +31,19 @@ namespace Martta
 {
 
 /// Has two children; one of type Variable, and a second of Construction.
-class M_API_Members ConstructedVariable: public Primary, public_interface VariableNamer
+class M_API_Members ConstructedVariable: public_super Primary, public_interface VariableNamer
 {
 	MARTTA_OBJECT(Primary)
 	MARTTA_INHERITS(VariableNamer, 0)
 
 private:
-	enum { OurConstruction = FirstNamed, EndOfNamed };
+	MARTTA_NAMED(OurConstruction)
 
-	// From Entity via BareTyped
+	// From Concept via BareTyped
 	virtual int							minRequired(int _i) const { return _i == OurType || _i == OurConstruction || _i == Identity ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _index) const;
 	virtual int							familyDependencies() const { return DependsOnChildren; }
-	virtual void						onDependencyChanged(int, Entity*) { changed(Logically); }
+	virtual void						onDependencyChanged(int, Concept*) { changed(Logically); }
 	virtual String						defineHtml() const { return defineVariableHtml() + L" <^><span class=\"symbol\">(</span>" + toHtml(child(OurConstruction)) + L"<span class=\"symbol\">)</span>"; }
 	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); Identifiable::properties(_p); }

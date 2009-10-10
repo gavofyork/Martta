@@ -29,12 +29,12 @@
 namespace Martta
 {
 
-class M_API_Types Array: public AddressType
+class M_API_Types Array: public_super AddressType
 {
 	MARTTA_OBJECT(AddressType)
 
 public:
-	enum { Length = FirstNamed, EndOfNamed };
+	MARTTA_NAMED(Length)
 
 	inline static bool					keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePositionKeyPressHandler<Array>(_p, _e, "["); }
 
@@ -44,7 +44,7 @@ protected:
 	virtual int							minRequired(int _i) const { return _i == Length ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual Types						allowedTypes(int _i) const;
-	virtual TypeEntity*					newClone() const;
+	virtual TypeConcept*					newClone() const;
 	virtual String						defineHtml() const { return toHtml(child(Original)) + L"<^><span class=\"symbol\">[</span>" + toHtml(child(Length)) + L"<span class=\"symbol\">]</span>"; }
 	virtual List<Declaration*>			utilised() const;
 };

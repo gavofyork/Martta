@@ -212,25 +212,25 @@ prepare Operator "Operator Support/OperatorRegistrar"
 prepare CQualifiers CQualifiers ""
 prepare CTypes CTypes ""
 
-prepare Entity "Support/Auxilliary Support/AuxilliaryFace Support/AuxilliaryRegistrar Support/ChangeMan Support/CodeScene Support/CompletionDelegate Support/CullManager Support/Dier Support/EditDelegate Support/EntitySupport Support/KeyEvent Support/Kind Support/Meta Support/Position Support/SafePointer Interfaces/ChildValidifier Interfaces/Dependee Interfaces/Depender Interfaces/Familial Entity Support/SpecialKeys" 
+prepare Concept "Support/Auxilliary Support/AuxilliaryFace Support/AuxilliaryRegistrar Support/ChangeMan Support/CodeScene Support/CompletionDelegate Support/CullManager Support/Dier Support/EditDelegateFace Support/EditDelegate Support/ConceptSupport Support/KeyEvent Support/Kind Support/Meta Support/Position Support/SafePointer Interfaces/ChildValidifier Interfaces/Dependee Interfaces/Depender Interfaces/Familial Concept Support/SpecialKeys" 
 
-prepare WebView "Interfaces/WebViewable Interfaces/WebInformer Support/WebStylist Support/WebStylistRegistrar" "Entity"
+prepare WebView "Interfaces/WebViewable Interfaces/WebInformer Support/WebStylist Support/WebStylistRegistrar" "Concept"
 
-prepare Project "Project Solution" "Entity"
+prepare Project "Project Solution" "Concept"
 
-prepare TypeEntity "TypeEntity ModifyingType Interfaces/TypedOwner Interfaces/TypeNamer Support/Type" "Entity WebView"
+prepare TypeConcept "TypeConcept ModifyingType Interfaces/TypedOwner Interfaces/TypeNamer Support/Type" "Concept WebView"
 
-prepare Labels "Interfaces/Labelled ConstLabel AccessLabel Label MiscLabels IdLabel TextLabel OperatorLabel" "Entity Operator WebView"
+prepare Labels "Interfaces/Labelled ConstLabel AccessLabel Label MiscLabels IdLabel TextLabel OperatorLabel" "Concept Operator WebView"
 
 prepare Declaration "Support/IdentifierSet Support/IdentifierSetRegistrar Interfaces/Identifiable Support/ModelPtr Support/ModelPtrFace Support/ModelPtrRegistrar Interfaces/Named NameEntryPoint Declaration" "Labels"
 
-prepare Statement "ValueDefiner Interfaces/Corporal Interfaces/Conditional Statement Primary BareTyped Typed Untyped Compound" "TypeEntity Declaration"
+prepare Statement "ValueDefiner Interfaces/Corporal Interfaces/Conditional Statement Primary BareTyped Typed Untyped Compound" "TypeConcept Declaration"
 
-prepare SimpleTypes "Const Reference PhysicalType" "TypeEntity"
+prepare SimpleTypes "Const Reference PhysicalType" "TypeConcept"
 
 prepare Variables "Interfaces/VariableNamer Support/VariablePlacer AssignedVariable DefaultConstructedVariable" "Labels Statement SimpleTypes"
 
-prepare Types "Interfaces/TypeDefinition HashType ListType StringType ExplicitType Array BuiltinType BuiltinDeclaration BuiltinMethod BuiltinOperator MemberTemplateType Memberify AddressType Pointer UndefinedArray FunctionType Subscriptable Support/SubscriptableRegistrar" "TypeEntity Statement CTypes Operator Declaration Variables"
+prepare Types "Interfaces/TypeDefinition HashType ListType StringType ExplicitType Array BuiltinType BuiltinDeclaration BuiltinMethod BuiltinOperator MemberTemplateType Memberify AddressType Pointer UndefinedArray FunctionType Subscriptable Support/SubscriptableRegistrar" "TypeConcept Statement CTypes Operator Declaration Variables"
 
 prepare Namers "EnumerationNamer EnumValue Argument LambdaNamer" "Labels Declaration Types Statement CQualifiers"
 
@@ -247,13 +247,13 @@ prepare Class "Class Interfaces/Artificial ArtificialAssignmentOperator Artifici
 
 exit
 
-prepare Named Named Entity
-prepare Corporal Corporal Entity
-prepare Conditional Conditional Entity
+prepare Named Named Concept
+prepare Corporal Corporal Concept
+prepare Conditional Conditional Concept
 
-prepare NameEntryPoint NameEntryPoint "Entity Named IdentifierSet"
+prepare NameEntryPoint NameEntryPoint "Concept Named IdentifierSet"
 
-prepare Label Label Entity
+prepare Label Label Concept
 prepare MiscLabels "ConstLabel AccessLabel" Label
 prepare IdLabel IdLabel Label
 prepare TextLabel "TextLabel Interfaces/Labelled" IdLabel
@@ -262,11 +262,11 @@ prepare Labels "" "TextLabel MiscLabels OperatorLabel"
 
 prepare Identifiable "Identifiable Support/ModelPtr Support/ModelPtrFace Support/ModelPtrRegistrar" "Named IdLabel"
 
-prepare TypeEntity "TypeEntity ModifyingType Interfaces/TypedOwner Interfaces/TypeNamer Support/Type" Entity
+prepare TypeConcept "TypeConcept ModifyingType Interfaces/TypedOwner Interfaces/TypeNamer Support/Type" Concept
 
-prepare Subscriptable "Subscriptable Support/SubscriptableRegistrar" TypeEntity
+prepare Subscriptable "Subscriptable Support/SubscriptableRegistrar" TypeConcept
 
-prepare PhysicalType PhysicalType TypeEntity 
+prepare PhysicalType PhysicalType TypeConcept 
 prepare FunctionType FunctionType PhysicalType
 
 prepare ExplicitType "ExplicitType Interfaces/TypeDefinition" "PhysicalType Identifiable"
@@ -275,8 +275,8 @@ prepare AddressType "AddressType Pointer UndefinedArray" "QualifierTypes Subscri
 prepare Memberify Memberify "FunctionType AddressType"
 prepare MemberTemplateType MemberTemplateType Memberify
 
-prepare ValueDefiner "ValueDefiner" "TypeEntity Identifiable"
-prepare Statement "Statement Primary BareTyped Typed Untyped" "NameEntryPoint TypeEntity ValueDefiner"
+prepare ValueDefiner "ValueDefiner" "TypeConcept Identifiable"
+prepare Statement "Statement Primary BareTyped Typed Untyped" "NameEntryPoint TypeConcept ValueDefiner"
 prepare Compound Compound Statement
 prepare Declaration "Declaration" "Identifiable"
 
@@ -309,13 +309,13 @@ prepare InScopeReferenced InScopeReferenced "Referenced Declaration"
 
 prepare TopLevel TopLevel "Declaration TextLabel"
 prepare Root Root "TopLevel Declaration"
-prepare TopLevelType TopLevelType "TypeEntity ExplicitType TopLevel"
+prepare TopLevelType TopLevelType "TypeConcept ExplicitType TopLevel"
 
 prepare VariableNamer VariableNamer "QualifierTypes IdLabel TextLabel ValueDefiner"
-prepare Argument Argument "VariableNamer TypeEntity TextLabel Declaration"
+prepare Argument Argument "VariableNamer TypeConcept TextLabel Declaration"
 prepare LambdaNamer LambdaNamer "Argument Compound Statement FunctionType QualifierTypes IdLabel CQualifiers"
 prepare ReturnStatement ReturnStatement "LambdaNamer Statement BuiltinType"
-prepare StatementVariables "AssignedVariable DefaultConstructedVariable" "VariableNamer Statement TypeEntity"
+prepare StatementVariables "AssignedVariable DefaultConstructedVariable" "VariableNamer Statement TypeConcept"
 
 prepare ArgumentReferenced ArgumentReferenced "Referenced LambdaNamer Declaration"
 
@@ -344,7 +344,7 @@ prepare MethodOperator MethodOperator "MemberLambda Operator Labels BuiltinType"
 prepare ConversionOperator ConversionOperator "MemberLambda Labels"
 prepare Constructor Constructor "MemberLambda ExplicitType Labels QualifierTypes"
 prepare Construction Construction "Invocation Constructor ExplicitType QualifierTypes"
-prepare ConstructedVariable ConstructedVariable "VariableNamer Statement TypeEntity Construction"
+prepare ConstructedVariable ConstructedVariable "VariableNamer Statement TypeConcept Construction"
 
 prepare Destructor Destructor MemberLambda
 

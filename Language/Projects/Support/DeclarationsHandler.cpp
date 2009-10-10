@@ -20,7 +20,7 @@
 
 #include <CQualifiers.h>
 #include <CTypes.h>
-#include <Entity.h>
+#include <Concept.h>
 
 #include "DeclarationsHandler.h"
 
@@ -125,27 +125,27 @@ private:
 class Resolver
 {
 public:
-	Resolver(Entity* _s, QXmlAttributes const& _a, bool _isNamed = true): m_subject(_s)
+	Resolver(Concept* _s, QXmlAttributes const& _a, bool _isNamed = true): m_subject(_s)
 	{
 		if (_isNamed)
-			m_subject->adoptWithShove(Entity::evaluate(String(L"TextLabel[text=%1]").arg(qs(properName(_a)))));
+			m_subject->adoptWithShove(Concept::evaluate(String(L"TextLabel[text=%1]").arg(qs(properName(_a)))));
 	}
 	virtual ~Resolver() {}
 
-	Entity*					subject() const { return m_subject; }
+	Concept*					subject() const { return m_subject; }
 
 	virtual void			resolve(DeclarationsHandler*) {}
 	virtual bool			isType() const { return false; }
 
 protected:
-	Entity*					m_subject;
+	Concept*					m_subject;
 };
 
 class FunctionResolver: public Resolver
 {
 public:
-	FunctionResolver(Entity** _s, QXmlAttributes const& _a):
-		Resolver	(*_s = Entity::evaluate(String(L"Function")), _a),
+	FunctionResolver(Concept** _s, QXmlAttributes const& _a):
+		Resolver	(*_s = Concept::evaluate(String(L"Function")), _a),
 		m_returnsId	(_a.value("returns")),
 		m_contextId (_a.value("context")),
 		m_fileId	(_a.value("file"))
@@ -155,7 +155,7 @@ public:
 	{
 		// TODO: Will have to handle defaults for C++ stuff (i.e. know if it has a default).
 		m_argIds << _a.value("type");
-		m_subject->adopt(Entity::evaluate(String(L"Argument{TextLabel[name=%1]}").arg(qs(_a.value("name")))));
+		m_subject->adopt(Concept::evaluate(String(L"Argument{TextLabel[name=%1]}").arg(qs(_a.value("name")))));
 	}
 
 	void addEllipsis() { Hash<String, String> p; p[L"ellipsis"] = L"true"; m_subject->setProperties(p); }
@@ -177,8 +177,8 @@ private:
 class VariableResolver: public Resolver
 {
 public:
-	VariableResolver(Entity** _s, QXmlAttributes const& _a):
-		Resolver	(*_s = Entity::evaluate(String(L"Variable[extern=%1]").arg(_a.value("extern") == "1")), _a),
+	VariableResolver(Concept** _s, QXmlAttributes const& _a):
+		Resolver	(*_s = Concept::evaluate(String(L"Variable[extern=%1]").arg(_a.value("extern") == "1")), _a),
 		m_typeId	(_a.value("type")),
 		m_contextId (_a.value("context")),
 		m_fileId	(_a.value("file"))
@@ -198,15 +198,15 @@ protected:
 class EnumValueResolver: public Resolver
 {
 public:
-	EnumValueResolver(Entity** _s, QXmlAttributes const& _a):
-		Resolver(*_s = Entity::evaluate(String(L"EnumValue")), _a)
+	EnumValueResolver(Concept** _s, QXmlAttributes const& _a):
+		Resolver(*_s = Concept::evaluate(String(L"EnumValue")), _a)
 	{}
 };
 
 class TypeResolver: public Resolver
 {
 public:
-	TypeResolver(Entity* _s, QXmlAttributes const& _a, bool _isNamed = true):
+	TypeResolver(Concept* _s, QXmlAttributes const& _a, bool _isNamed = true):
 		Resolver	(_s, _a, _isNamed),
 		m_id		(_a.value("id")),
 		m_contextId	(_a.value("context")),
@@ -229,16 +229,16 @@ protected:
 class EnumerationResolver: public TypeResolver
 {
 public:
-	EnumerationResolver(Entity** _s, QXmlAttributes const& _a):
-		TypeResolver(*_s = Entity::evaluate("Enumeration"), _a, !properName(_a).startsWith("."))
+	EnumerationResolver(Concept** _s, QXmlAttributes const& _a):
+		TypeResolver(*_s = Concept::evaluate("Enumeration"), _a, !properName(_a).startsWith("."))
 	{}
 };
 
 class TypedefResolver: public TypeResolver
 {
 public:
-	TypedefResolver(Entity** _s, QXmlAttributes const& _a):
-		TypeResolver(*_s = Entity::evaluate("Typedef"), _a), m_typeId(_a.value("type"))
+	TypedefResolver(Concept** _s, QXmlAttributes const& _a):
+		TypeResolver(*_s = Concept::evaluate("Typedef"), _a), m_typeId(_a.value("type"))
 	{
 		m_name = properName(_a);
 	}
@@ -246,7 +246,7 @@ public:
 	virtual void resolve(DeclarationsHandler* _h)
 	{
 		TypeResolver::resolve(_h);
-		Entity* td;
+		Concept* td;
 		m_subject->adopt(_h->resolveType(m_typeId, &td));
 
 		if (_h->nameOfType(td) == m_name)
@@ -264,7 +264,7 @@ private:
 class WithFieldsResolver: public TypeResolver
 {
 public:
-	WithFieldsResolver(Entity* _s, QXmlAttributes const& _a): TypeResolver(_s, _a) {}
+	WithFieldsResolver(Concept* _s, QXmlAttributes const& _a): TypeResolver(_s, _a) {}
 
 	virtual bool isWithFields() const { return true; }
 };
@@ -272,33 +272,33 @@ public:
 class UnionResolver: public WithFieldsResolver
 {
 public:
-	UnionResolver(Entity** _s, QXmlAttributes const& _a): WithFieldsResolver(*_s = Entity::evaluate("Union"), _a) {}
+	UnionResolver(Concept** _s, QXmlAttributes const& _a): WithFieldsResolver(*_s = Concept::evaluate("Union"), _a) {}
 };
 
 class StructResolver: public WithFieldsResolver
 {
 public:
-	StructResolver(Entity** _s, QXmlAttributes const& _a): WithFieldsResolver(*_s = Entity::evaluate("Struct"), _a) {}
+	StructResolver(Concept** _s, QXmlAttributes const& _a): WithFieldsResolver(*_s = Concept::evaluate("Struct"), _a) {}
 };
 
 //////////////////////
 // DeclarationsHandler
 
-Entity* DeclarationsHandler::resolveType(QString const& _typeId, Entity** _td)
+Concept* DeclarationsHandler::resolveType(QString const& _typeId, Concept** _td)
 {
 	if (m_types.contains(_typeId))
 	{
 		if (_td)
 			*_td = m_types[_typeId];
-		return Entity::evaluate(String("ExplicitType[key=0x%1]").arg((void*)m_types[_typeId]));
+		return Concept::evaluate(String("ExplicitType[key=0x%1]").arg((void*)m_types[_typeId]));
 	}
 	else if (m_simples.contains(_typeId))
-		return Entity::evaluate(String(L"BuiltinType[id=%1]").arg(m_simples[_typeId]));
+		return Concept::evaluate(String(L"BuiltinType[id=%1]").arg(m_simples[_typeId]));
 	else if (m_functionTypes.contains(_typeId))
 	{
 		bool ellipsis = !m_functionTypes[_typeId]->m_argIds.isEmpty() && m_functionTypes[_typeId]->m_argIds.last().isEmpty();
-		Entity* r = resolveType(m_functionTypes[_typeId]->m_returnsId);
-		r = r->insert(Entity::evaluate(String(L"FunctionType[ellipsis=%1][wild=false]").arg(ellipsis)));
+		Concept* r = resolveType(m_functionTypes[_typeId]->m_returnsId);
+		r = r->insert(Concept::evaluate(String(L"FunctionType[ellipsis=%1][wild=false]").arg(ellipsis)));
 		foreach(QString i, m_functionTypes[_typeId]->m_argIds)
 			if (!i.isEmpty())
 				r->back().place(resolveType(i));
@@ -309,21 +309,21 @@ Entity* DeclarationsHandler::resolveType(QString const& _typeId, Entity** _td)
 		return r;
 	}
 	else if (m_pointers.contains(_typeId))
-		return resolveType(m_pointers[_typeId]->m_type)->insert(Entity::evaluate(L"Pointer"));
+		return resolveType(m_pointers[_typeId]->m_type)->insert(Concept::evaluate(L"Pointer"));
 	else if (m_cvQualifieds.contains(_typeId))
 	{
-		Entity* r = resolveType(m_cvQualifieds[_typeId]->m_type);
+		Concept* r = resolveType(m_cvQualifieds[_typeId]->m_type);
 		if (m_cvQualifieds[_typeId]->m_const)
-			r = r->insert(Entity::evaluate(L"Const"));
+			r = r->insert(Concept::evaluate(L"Const"));
 		return r;
 	}
 	else if (m_arrays.contains(_typeId))
 	{
-		Entity* r = resolveType(m_arrays[_typeId]->m_type);
+		Concept* r = resolveType(m_arrays[_typeId]->m_type);
 		if (m_arrays[_typeId]->m_length)
-			r = r->insert(Entity::evaluate(String(L"Array{IntegerLiteral[value=%1]}").arg(m_arrays[_typeId]->m_length)));
+			r = r->insert(Concept::evaluate(String(L"Array{IntegerLiteral[value=%1]}").arg(m_arrays[_typeId]->m_length)));
 		else
-			r = r->insert(Entity::evaluate(L"Array"));
+			r = r->insert(Concept::evaluate(L"Array"));
 		return r;
 	}
 	qCritical("Couldn't resolve type (%s)!", _typeId.toLatin1().data());
@@ -342,7 +342,7 @@ bool DeclarationsHandler::startElement(QString const&, QString const& _n, QStrin
 {
 	QString conId = _a.value("context");
 	AssertNR(conId.isEmpty() || m_contexts.contains(conId));
-	Entity* parent = m_contexts[conId];
+	Concept* parent = m_contexts[conId];
 	AssertNR(conId.isEmpty() || parent);
 
 	if (false) {}
@@ -395,7 +395,7 @@ bool DeclarationsHandler::startElement(QString const&, QString const& _n, QStrin
 					bool iwf = tr->isWithFields();
 					(void)(iwf);
 					AssertNR(iwf);
-					Entity* m;
+					Concept* m;
 					m_resolvers << new VariableResolver(&m, _a);
 					parent->adopt(m);
 					goto OK;
@@ -408,7 +408,7 @@ bool DeclarationsHandler::startElement(QString const&, QString const& _n, QStrin
 	else if (_n == "EnumValue")
 	{
 		AssertNR(m_lastEnum);
-		Entity* v;
+		Concept* v;
 		m_resolvers << new EnumValueResolver(&v, _a);
 		m_lastEnum->back().place(v);
 	}

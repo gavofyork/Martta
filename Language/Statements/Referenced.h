@@ -32,7 +32,7 @@
 namespace Martta
 {
 
-class M_API_Statements Referenced: public Typed
+class M_API_Statements Referenced: public_super Typed
 {
 	MARTTA_PLACEHOLDER(Typed)
 
@@ -54,9 +54,9 @@ protected:
 	virtual String						defineEditHtml(CodeScene* _cs) const;
 	virtual bool						isSuperfluous() const;
 	virtual void						apresLoad() { if (m_subject) addDependency(m_subject->self()); Super::apresLoad(); }
-	virtual void						onDependencyChanged(int _a, Entity* _d) { if (_d->tryKind<ValueDefiner>() == m_subject) changed(_a); Super::onDependencyChanged(_a, _d); }
-	virtual void						onDependencySwitched(Entity* _t, Entity* _old);
-	virtual void						onDependencyRemoved(Entity* _old, int);
+	virtual void						onDependencyChanged(int _a, Concept* _d) { if (_d->tryKind<ValueDefiner>() == m_subject) changed(_a); Super::onDependencyChanged(_a, _d); }
+	virtual void						onDependencySwitched(Concept* _t, Concept* _old);
+	virtual void						onDependencyRemoved(Concept* _old, int);
 	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p[L"subject"] = m_subject.key(); _p[L"hopeful"] = m_hopeful; }
 	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_subject.restoreFrom(_p[L"subject"]); m_hopeful = _p[L"hopeful"]; }
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
@@ -66,7 +66,7 @@ protected:
 };
 
 template<class T>
-class ReferencedValueSet: public IdentifierSet
+class ReferencedValueSet: public_super IdentifierSet
 {
 public:
 	virtual String						setId() const { return Kind::of<T>().name(); }

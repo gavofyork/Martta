@@ -30,6 +30,7 @@ namespace Martta
 {
 
 MARTTA_OBJECT_CPP(Invocation);
+MARTTA_NAMED_CPP(Invocation, Callee);
 
 Type Invocation::type() const
 {
@@ -97,7 +98,7 @@ String Invocation::defineHtml() const
 	return toHtml(child(Callee)) + L"<^><span class=\"symbol\">(</span>" + toHtml(cardinalChildren(), L", ") + L"<span class=\"symbol\">)</span>";
 }
 
-void Invocation::onDependencyChanged(int _a, Entity* _e)
+void Invocation::onDependencyChanged(int _a, Concept* _e)
 {
 	if (_e == child(Callee) && !child(Callee)->isPlaceholder() && child(Callee)->isInValidState())
 	{
@@ -136,7 +137,7 @@ bool Invocation::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 	if (_p.exists() && !_p->isPlaceholder() && _p->isKind<Typed>() && _e->text() == "(" &&
 		_p->asKind<Typed>()->apparentType()->isType<FunctionType>() && !(_p->parentIs<Invocation>() && _p->index() == Callee) && !isTemporary(_p.entity()))
 	{
-		Entity* n = new Invocation;
+		Concept* n = new Invocation;
 		_p->insert(n, Callee);
 		n->prepareChildren();
 		if (n->cardinalChildCount())

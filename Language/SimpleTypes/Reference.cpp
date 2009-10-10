@@ -32,7 +32,7 @@ MARTTA_REGISTER_CSS(Reference,
 	L".Reference { text-shadow: 1px 1px 1px #fff; color:#a50; font-size: 70%; font-weight: bold; }"
 );
 
-bool Reference::defineSimilarityTo(TypeEntity const* _t, Castability _c) const
+bool Reference::defineSimilarityTo(TypeConcept const* _t, Castability _c) const
 {
 			// X -*> Y => X& -=> Y&
 	return (_t->isKind<Reference>() && original()->isSimilarTo(_t->asKind<Reference>()->original(), Physical)) ||
@@ -45,7 +45,7 @@ bool Reference::defineSimilarityTo(TypeEntity const* _t, Castability _c) const
 		Super::defineSimilarityTo(_t, _c);
 }
 
-bool Reference::defineSimilarityFrom(TypeEntity const* _f, Castability _c) const
+bool Reference::defineSimilarityFrom(TypeConcept const* _f, Castability _c) const
 {
 	return (isAnyConvertible(_c) && original()->isKind<Const>() &&
 			// X -O2> X const&

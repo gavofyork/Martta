@@ -80,11 +80,11 @@ bool Compound::keyPressed(KeyEvent const* _e)
 	return true;
 }
 
-String Compound::statementsToHtml(List<Entity*> const& _es)
+String Compound::statementsToHtml(List<Concept*> const& _es)
 {
 	String ret;
 	bool first = true;
-	foreach (Entity const* e, _es)
+	foreach (Concept const* e, _es)
 	{
 		if (first || e->isKind<Compound>())
 			first = false;

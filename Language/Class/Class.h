@@ -30,12 +30,12 @@
 namespace Martta
 {
 
-class M_API_Class Class: public TopLevelType
+class M_API_Class Class: public_super TopLevelType
 {
 	MARTTA_OBJECT(TopLevelType)
 
 public:
-	enum { Artificials = FirstNamed, EndOfNamed };
+	MARTTA_NAMED(Artificials)
 
 	Class(): m_whackerCount(0) {}
 
@@ -54,19 +54,19 @@ protected:
 	virtual String						defineHtml() const;
 	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual List<Declaration*>			utilised() const;
-	virtual void						onDependencyChanged(int, Entity* _e);
+	virtual void						onDependencyChanged(int, Concept* _e);
 	virtual void						apresLoad() { rejigDeps(); checkImplicitConstructors(); updateWhacked(); }
-	virtual void						onDependencyAdded(Entity* _e);
-	virtual void						onDependencyRemoved(Entity* _e, int);
+	virtual void						onDependencyAdded(Concept* _e);
+	virtual void						onDependencyRemoved(Concept* _e, int);
 	// A child has been added to the class somewhere in the middle, probably. Either way we need to rejig deps to get the new access label tracked.
-	virtual void						onDependencySwitched(Entity* _e, Entity*) { onDependencyAdded(_e); }
+	virtual void						onDependencySwitched(Concept* _e, Concept*) { onDependencyAdded(_e); }
 	virtual void						onChildrenInitialised();
 	virtual bool						hasDefaultConstructor() const;
-	virtual bool						hasSingleCastOperator(TypeEntity const* _t, bool _const) const;
-	virtual bool						hasSingleConversionConstructor(TypeEntity const* _f) const;
-	virtual bool						defineSimilarityTo(TypeEntity const* _t, TypeEntity::Castability _c) const;
+	virtual bool						hasSingleCastOperator(TypeConcept const* _t, bool _const) const;
+	virtual bool						hasSingleConversionConstructor(TypeConcept const* _f) const;
+	virtual bool						defineSimilarityTo(TypeConcept const* _t, TypeConcept::Castability _c) const;
 	virtual Types						assignableTypes() const;
-	virtual List<ValueDefiner*>			applicableMembers(Entity const* _s, bool _isConst) const;
+	virtual List<ValueDefiner*>			applicableMembers(Concept const* _s, bool _isConst) const;
 	virtual bool						canStandAlone() const;
 	virtual String						informationHtml() const;
 

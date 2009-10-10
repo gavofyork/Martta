@@ -27,6 +27,7 @@ namespace Martta
 {
 
 MARTTA_PLACEHOLDER_CPP(Member);
+MARTTA_NAMED_CPP(Member, Accessibility);
 
 Access Member::access() const
 {

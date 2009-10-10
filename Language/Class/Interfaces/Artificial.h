@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include "Meta.h"
+#include "Concept.h"
 
 #ifndef M_API_Class
 #define M_API_Class M_OUTAPI
@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-class M_API_Class Artificial
+class M_API_Class Artificial: public_interface Concept
 {
 	MARTTA_INTERFACE
 

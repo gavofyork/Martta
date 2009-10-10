@@ -31,12 +31,12 @@
 namespace Martta
 {
 
-class M_API_Types Memberify: public ModifyingType
+class M_API_Types Memberify: public_super ModifyingType
 {
 	MARTTA_OBJECT(ModifyingType)
 
 public:
-	enum { Scope = FirstNamed, EndOfNamed };
+	MARTTA_NAMED(Scope)
 
 	inline Memberify() {}
 	Memberify(TypeDefinition* _scope, bool _isConst = true);
@@ -44,8 +44,8 @@ public:
 
 	bool								isConst() const;
 	void								setConst(bool _c);
-	TypeEntity*							scope() const { return tryChild<TypeEntity>(Scope); }
-	TypeEntity*							scopeType() const;
+	TypeConcept*							scope() const { return tryChild<TypeConcept>(Scope); }
+	TypeConcept*							scopeType() const;
 	template<class T> T*				scope(bool* _isConst = 0) const;
 	void								setScope(Type const& _newScope);
 	void								setScopeClass(TypeDefinition* _scope, bool _isConst = false);
@@ -54,11 +54,11 @@ public:
 
 protected:
 	virtual Types						assignableTypes() const;
-	virtual inline TypeEntity*			newClone() const { return new Memberify; }
+	virtual inline TypeConcept*			newClone() const { return new Memberify; }
 	virtual String						modifierHtml() const;
-	virtual bool						isSuperfluous() const { return !childIs<TypeEntity>(Scope) || Super::isSuperfluous(); }
+	virtual bool						isSuperfluous() const { return !childIs<TypeConcept>(Scope) || Super::isSuperfluous(); }
 	virtual bool						canStandAlone() const { return false; }
-	virtual bool						defineSimilarityFrom(TypeEntity const* _f, Castability _c) const;
+	virtual bool						defineSimilarityFrom(TypeConcept const* _f, Castability _c) const;
 	virtual Kinds						allowedKinds(int _i) const;
 };
 
@@ -67,7 +67,7 @@ protected:
 template<class T>
 T* Martta::Memberify::scope(bool* _isConst) const
 {
-	TypeEntity* te = scope();
+	TypeConcept* te = scope();
 	if (!te)
 		return 0;
 	if (ExplicitType* et = te->ignore<Const>()->tryType<ExplicitType>())

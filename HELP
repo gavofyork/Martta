@@ -14,7 +14,7 @@ Run the Martta executable. Select File->New Solution.
 
 In the main window you'll see a number of D'n'D-enabled information panes together with the document. Though this document appears similar to a textual C++ program it is not; rather it is a C++-like rendering of a Martta program. It cannot be navigated character-by-character like a text document and you will see no vertical line for the cursor. The view is made up of several program components (or "entities"), hierarchical in structure, similar to a C++ parse tree. Entities may be normal C++ concepts such as variables, types, classes and statements, but may also be slightly stranger concepts such as text labels, .
 
-Clicking on an entity will select it, giving it a blue box and the line it is on a blue background. Martta always tries to have an entity selected. You can see information pertaining to the selected entity in the "Entity Information" pane.
+Clicking on an entity will select it, giving it a blue box and the line it is on a blue background. Martta always tries to have an entity selected. You can see information pertaining to the selected entity in the "Concept Information" pane.
 
 The cursor keys may be use to move the selected entity. Page up/down function as hierarchy traversal tools, with page up selecting the "parent" of the selection and down selecting a "child". Functions are expandable - to expand a function either double-click on it or select it and press the '{' key. To close it you may double-click it or press the '}' key on it.
 

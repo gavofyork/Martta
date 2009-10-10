@@ -30,12 +30,12 @@
 namespace Martta
 {
 
-class M_API_Statements ReturnStatement: public Untyped
+class M_API_Statements ReturnStatement: public_super Untyped
 {
 	MARTTA_OBJECT(Untyped)
 
 public:
-	enum { Returned = FirstNamed, EndOfNamed };
+	MARTTA_NAMED(Returned)
 
 	virtual int							minRequired(int _i) const;
 	virtual Kinds						allowedKinds(int _i) const;
@@ -44,7 +44,7 @@ public:
 	inline static bool					keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePlaceholderKeyPressHandler<ReturnStatement>(_p, _e, "R"); }
 
 	virtual Kinds						ancestralDependencies() const { return Kind::of<LambdaNamer>(); }
-	virtual void						onDependencyChanged(int, Entity* _e);
+	virtual void						onDependencyChanged(int, Concept* _e);
 	virtual String						defineHtml() const { return L"<^><span class=\"keyword\">return</span> " + toHtml(child(Returned)); }
 };
 

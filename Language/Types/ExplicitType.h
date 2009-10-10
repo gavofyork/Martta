@@ -34,7 +34,7 @@ namespace Martta
 
 class ExplicitTypeSet;
 
-class M_API_Types ExplicitType: public PhysicalType
+class M_API_Types ExplicitType: public_super PhysicalType
 {
 	MARTTA_OBJECT(PhysicalType)
 
@@ -55,14 +55,14 @@ public:
 protected:
 	virtual inline bool					hasDefaultConstructor() const { return m_subject ? m_subject->hasDefaultConstructor() : false; }
 	virtual inline Types				assignableTypes() const { return m_subject ? m_subject->assignableTypes() : Types(); }
-	virtual inline List<ValueDefiner*>	applicableMembers(Entity const* _s = 0, bool _isConst = false) const { return m_subject ? m_subject->applicableMembers(_s, _isConst) : List<ValueDefiner*>(); }
+	virtual inline List<ValueDefiner*>	applicableMembers(Concept const* _s = 0, bool _isConst = false) const { return m_subject ? m_subject->applicableMembers(_s, _isConst) : List<ValueDefiner*>(); }
 	virtual inline bool					canStandAlone() const { return m_subject && m_subject->canStandAlone(); }
-	virtual inline bool					isCastableTo(TypeEntity const* _t, bool _const) { return m_subject && m_subject->hasSingleCastOperator(_t, _const); }
-	virtual inline TypeEntity*			newClone() const { return new ExplicitType(m_subject); }
+	virtual inline bool					isCastableTo(TypeConcept const* _t, bool _const) { return m_subject && m_subject->hasSingleCastOperator(_t, _const); }
+	virtual inline TypeConcept*			newClone() const { return new ExplicitType(m_subject); }
 
-	virtual inline bool					contentsEquivalentTo(TypeEntity const* _t) const { if (ExplicitType const* e = _t->tryKind<ExplicitType>()) return e->m_subject == m_subject; return false; }
-	virtual inline bool					defineSimilarityTo(TypeEntity const* _t, Castability _c) const { return (m_subject && m_subject->defineSimilarityTo(_t, _c)) || Super::defineSimilarityTo(_t, _c); }
-	virtual inline bool					defineSimilarityFrom(TypeEntity const* _f, Castability _c) const { return (m_subject && _c == Convertible && m_subject->hasSingleConversionConstructor(_f)) || Super::defineSimilarityFrom(_f, _c); }
+	virtual inline bool					contentsEquivalentTo(TypeConcept const* _t) const { if (ExplicitType const* e = _t->tryKind<ExplicitType>()) return e->m_subject == m_subject; return false; }
+	virtual inline bool					defineSimilarityTo(TypeConcept const* _t, Castability _c) const { return (m_subject && m_subject->defineSimilarityTo(_t, _c)) || Super::defineSimilarityTo(_t, _c); }
+	virtual inline bool					defineSimilarityFrom(TypeConcept const* _f, Castability _c) const { return (m_subject && _c == Convertible && m_subject->hasSingleConversionConstructor(_f)) || Super::defineSimilarityFrom(_f, _c); }
 
 	virtual inline bool					isNull() const { return !m_subject.isUsable(); }
 
@@ -80,9 +80,9 @@ protected:
 	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p[L"subject"] = m_subject.key(); }
 	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_subject.restoreFrom(_p[L"subject"]); }
 
-	virtual void						onDependencyRemoved(Entity* _s, int) { if (_s->tryKind<TypeDefinition>() == m_subject) set(0); }
-	virtual void						onDependencySwitched(Entity* _s, Entity* _o) { if (_o->tryKind<TypeDefinition>() == m_subject) set(_s->tryKind<TypeDefinition>()); }
-	virtual void						onDependencyChanged(int, Entity* _s) { if (_s->tryKind<TypeDefinition>() == m_subject) changed(); }
+	virtual void						onDependencyRemoved(Concept* _s, int) { if (_s->tryKind<TypeDefinition>() == m_subject) set(0); }
+	virtual void						onDependencySwitched(Concept* _s, Concept* _o) { if (_o->tryKind<TypeDefinition>() == m_subject) set(_s->tryKind<TypeDefinition>()); }
+	virtual void						onDependencyChanged(int, Concept* _s) { if (_s->tryKind<TypeDefinition>() == m_subject) changed(); }
 
 	ModelPtr<TypeDefinition>			m_subject;
 };

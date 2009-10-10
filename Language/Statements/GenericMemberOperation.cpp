@@ -72,7 +72,7 @@ Type GenericMemberOperation::type() const
 	if (!rt->isType<Memberify>())
 		return Type();
 	Memberify* m = rt->asType<Memberify>();
-	if (!m->scope() || !st->isSimilarTo(m->scope(), TypeEntity::Physical))
+	if (!m->scope() || !st->isSimilarTo(m->scope(), TypeConcept::Physical))
 	{
 		return Type();
 	}

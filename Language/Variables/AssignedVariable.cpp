@@ -19,7 +19,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "TextLabel.h"
-#include "TypeEntity.h"
+#include "TypeConcept.h"
 #include "Typed.h"
 #include "DefaultConstructedVariable.h"
 #include "AssignedVariable.h"
@@ -28,11 +28,12 @@ namespace Martta
 {
 
 MARTTA_OBJECT_CPP(AssignedVariable);
+MARTTA_NAMED_CPP(AssignedVariable, AssignedValue);
 
 Kinds AssignedVariable::allowedKinds(int _index) const
 {
 	if (_index == OurType)
-		return Kind::of<TypeEntity>();
+		return Kind::of<TypeConcept>();
 	else if (_index == AssignedValue)
 		return Kind::of<Typed>();
 	else if (_index == Identity)
@@ -60,13 +61,13 @@ bool AssignedVariable::keyPressedOnPosition(Position const& _p, KeyEvent const* 
 		return false;
 }
 
-void AssignedVariable::onDependencySwitched(Entity* _e, Entity*)
+void AssignedVariable::onDependencySwitched(Concept* _e, Concept*)
 {
 //	mDebug() << this << ": Dependency Switched: " << _e;
 //	debugTree();
 	if (_e == child(AssignedValue) && _e->kind() == Kind::of<Typed>())
 	{
-		Entity* o = usurp(new DefaultConstructedVariable);
+		Concept* o = usurp(new DefaultConstructedVariable);
 		_e->killAndDelete();
 		o->setCurrent();
 	}

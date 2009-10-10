@@ -30,6 +30,8 @@ namespace Martta
 {
 
 MARTTA_OBJECT_CPP(ForLoop);
+MARTTA_NAMED_CPP(ForLoop, Initialiser);
+MARTTA_NAMED_CPP(ForLoop, Ticker);
 
 static SimpleIdentifierSet<ForLoop> s_forLoopSet(L"for");
 

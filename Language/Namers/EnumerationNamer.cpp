@@ -99,7 +99,7 @@ String EnumerationNamer::defineEnumerationHtml() const
 	String ret;
 	String name;
 	if (isNamed())
-		name = Type(const_cast<TypeDefinition*>(asKind<TypeDefinition>()))->typeHtml(toHtml(self()->child(Identity), "span class=\"TypeEntity\""));
+		name = Type(const_cast<TypeDefinition*>(asKind<TypeDefinition>()))->typeHtml(toHtml(self()->child(Identity), "span class=\"TypeConcept\""));
 	else if (!m_stem.isEmpty())
 		name = L"<span class=\"unreal\">[" + m_stem + L"...]</span>";
 	return L"<span class=\"keyword\">enum</span> " + name + L"<div class=\"minor symbol\">{</div><div class=\"block\">" + toHtml(self()->cardinalChildren(), L"", L"div") + L"</div><div class=\"minor symbol\">}</div>";
@@ -117,13 +117,13 @@ String EnumerationNamer::defineEnumerationHtml() const
 */
 }
 
-void EnumerationNamer::onDependencyRemoved(Entity* _e)
+void EnumerationNamer::onDependencyRemoved(Concept* _e)
 {
 	if (_e->isKind<EnumValue>())
 		updateStem();
 }
 
-void EnumerationNamer::onDependencyAdded(Entity* _e)
+void EnumerationNamer::onDependencyAdded(Concept* _e)
 {
 	if (_e->isKind<EnumValue>())
 		updateStem();
@@ -131,7 +131,7 @@ void EnumerationNamer::onDependencyAdded(Entity* _e)
 		self()->changed(Dependee::Logically);
 }
 
-void EnumerationNamer::onDependencyChanged(int, Entity* _e)
+void EnumerationNamer::onDependencyChanged(int, Concept* _e)
 {
 	if (_e->isKind<TextLabel>())
 	{

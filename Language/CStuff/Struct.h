@@ -31,11 +31,11 @@ namespace Martta
 
 class StructResolver;
 
-class M_API_CStuff Struct: public TopLevelType
+class M_API_CStuff Struct: public_super TopLevelType
 {
 	MARTTA_OBJECT(TopLevelType)
 
-	friend class Entity;
+	friend class Concept;
 	friend class StructResolver;
 	template<class T> friend class WithFieldsSimpleResolver;
 

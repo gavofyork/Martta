@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-class M_API_Statements GenericMemberOperation: public BinaryOperation
+class M_API_Statements GenericMemberOperation: public_super BinaryOperation
 {
 	MARTTA_PLACEHOLDER(BinaryOperation)
 
@@ -41,7 +41,7 @@ protected:
 	virtual Types						deniedTypes(int _index) const;
 	virtual Type						type() const;
 	virtual int							familyDependencies() const { return DependsOnChildren; }
-	virtual void						onDependencyChanged(int, Entity*) { changed(Logically); }
+	virtual void						onDependencyChanged(int, Concept*) { changed(Logically); }
 	Type								memberified(Type _t, Type const& _scope) const;
 };
 

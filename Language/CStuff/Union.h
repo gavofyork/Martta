@@ -31,11 +31,11 @@ namespace Martta
 
 class UnionResolver;
 
-class M_API_CStuff Union: public TopLevelType
+class M_API_CStuff Union: public_super TopLevelType
 {
 	MARTTA_OBJECT(TopLevelType)
 
-	friend class Entity;
+	friend class Concept;
 	friend class UnionResolver;
 	template<class T> friend class WithFieldsSimpleResolver;
 

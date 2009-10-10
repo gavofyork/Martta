@@ -31,7 +31,7 @@
 namespace Martta
 {
 
-class M_API_CStuff Function: public TopLevel, public_interface LambdaNamer
+class M_API_CStuff Function: public_super TopLevel, public_interface LambdaNamer
 {
 	MARTTA_OBJECT(TopLevel)
 	MARTTA_INHERITS(LambdaNamer, 0)
@@ -47,8 +47,8 @@ protected:
 	virtual Kinds						allowedKinds(int _i) const;
 
 	virtual int							familyDependencies() const { return DependsOnChildren; }
-	virtual void						onDependencyChanged(int, Entity*) { changed(Logically); }
-	virtual void						onDependencyRemoved(Entity*, int) { changed(Logically); }
+	virtual void						onDependencyChanged(int, Concept*) { changed(Logically); }
+	virtual void						onDependencyRemoved(Concept*, int) { changed(Logically); }
 
 	virtual String						defineHtml() const;
 	virtual String						interfaceCode() const { return LambdaNamer::interfaceCode(); }

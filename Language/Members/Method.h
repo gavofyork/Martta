@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-class M_API_Members Method: public MemberLambda
+class M_API_Members Method: public_super MemberLambda
 {
 	MARTTA_OBJECT(MemberLambda)
 

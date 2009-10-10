@@ -33,7 +33,7 @@ namespace Martta
 class BuiltinOperator;
 class BuiltinMethod;
 
-class M_API_Types ListType: public ModifyingType, public_interface Subscriptable
+class M_API_Types ListType: public_super ModifyingType, public_interface Subscriptable
 {
 	MARTTA_INITIALISED_OBJECT(ModifyingType)
 	MARTTA_INHERITS(Subscriptable, 0)
@@ -42,7 +42,7 @@ class M_API_Types ListType: public ModifyingType, public_interface Subscriptable
 	friend class BuiltinOperator;
 
 public:
-	enum { Length = FirstNamed, EndOfNamed };
+	MARTTA_NAMED(Length)
 
 	static void							initialiseClass();
 	static void							finaliseClass();
@@ -52,15 +52,15 @@ protected:
 	// Assumes we are (eventually) a non-const ref.
 	virtual Types						assignableTypes() const;
 	virtual bool						hasDefaultConstructor() const { return true; }
-	virtual List<ValueDefiner*>			applicableMembers(Entity const* _s = 0, bool _isConst = false) const;
+	virtual List<ValueDefiner*>			applicableMembers(Concept const* _s = 0, bool _isConst = false) const;
 
 	virtual String						code(String const& _middle) const;
 	virtual int							minRequired(int _i) const { return _i == Original ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual Types						allowedTypes(int _i) const;
-	virtual TypeEntity*					newClone() const { return new ListType; }
+	virtual TypeConcept*					newClone() const { return new ListType; }
 	virtual String						defineHtml() const;
-	virtual bool						defineSimilarityFrom(TypeEntity const* _f, Castability _c) const;
+	virtual bool						defineSimilarityFrom(TypeConcept const* _f, Castability _c) const;
 	virtual Rgb							idColour() const { return 0x77ffbb; }
 	virtual Types						subscriptTypes() const;
 	virtual Type						subscriptsTo(Type const&) const;

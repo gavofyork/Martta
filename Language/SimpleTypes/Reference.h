@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-class M_API_SimpleTypes Reference: public ModifyingType
+class M_API_SimpleTypes Reference: public_super ModifyingType
 {
 	MARTTA_OBJECT(ModifyingType)
 
@@ -37,14 +37,14 @@ public:
 	inline static bool					keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePositionKeyPressHandler<Reference>(_p, _e, "&", false); }
 
 private:
-	virtual List<ValueDefiner*>			applicableMembers(Entity const* _s = 0, bool _isConst = false) const { return original() ? original()->applicableMembers(_s, _isConst) : Super::applicableMembers(_s); }
+	virtual List<ValueDefiner*>			applicableMembers(Concept const* _s = 0, bool _isConst = false) const { return original() ? original()->applicableMembers(_s, _isConst) : Super::applicableMembers(_s); }
 	virtual String						code(String const& _middle) const { return original()->code("&" + _middle); }
-	virtual bool						isType(Kind _typeKind) { return Entity::isKind(_typeKind) || original()->isType(_typeKind); }
-	virtual TypeEntity*					asType(Kind _typeKind) { if (Entity::isKind(_typeKind)) return this; AssertNR(original()->isType(_typeKind)); return original()->asType(_typeKind); }
-	virtual Rgb							idColour() const { return original() ? original()->idColour() : TypeEntity::null->idColour(); }
-	virtual TypeEntity* 				newClone() const { return new Reference; }
-	virtual bool						defineSimilarityFrom(TypeEntity const* _f, Castability _c) const;
-	virtual bool						defineSimilarityTo(TypeEntity const* _t, Castability _c) const;
+	virtual bool						isType(Kind _typeKind) { return Concept::isKind(_typeKind) || original()->isType(_typeKind); }
+	virtual TypeConcept*					asType(Kind _typeKind) { if (Concept::isKind(_typeKind)) return this; AssertNR(original()->isType(_typeKind)); return original()->asType(_typeKind); }
+	virtual Rgb							idColour() const { return original() ? original()->idColour() : TypeConcept::null->idColour(); }
+	virtual TypeConcept* 				newClone() const { return new Reference; }
+	virtual bool						defineSimilarityFrom(TypeConcept const* _f, Castability _c) const;
+	virtual bool						defineSimilarityTo(TypeConcept const* _t, Castability _c) const;
 	virtual String						defineHtml() const;
 	virtual List<Declaration*>			utilised() const { return List<Declaration*>(); }
 };

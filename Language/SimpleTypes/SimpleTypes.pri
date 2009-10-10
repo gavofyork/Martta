@@ -1,4 +1,4 @@
-DEPS += TypeEntity
+DEPS += TypeConcept
 OURDIRS = .
 TWD = $$PWD
 

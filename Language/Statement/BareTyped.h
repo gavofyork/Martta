@@ -31,7 +31,7 @@
 namespace Martta
 {
 
-class M_API_Statement BareTyped: public Primary, public_interface TypeNamer, public_interface WebInformer
+class M_API_Statement BareTyped: public_super Primary, public_interface TypeNamer, public_interface WebInformer
 {
 	MARTTA_PLACEHOLDER(Primary)
 	MARTTA_INHERITS(TypeNamer, 0)

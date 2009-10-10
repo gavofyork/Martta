@@ -29,12 +29,12 @@
 namespace Martta
 {
 
-class M_API_Statements Invocation: public Evaluation
+class M_API_Statements Invocation: public_super Evaluation
 {
 	MARTTA_OBJECT(Evaluation)
 
 public:
-	enum { Callee = FirstNamed, EndOfNamed };
+	MARTTA_NAMED(Callee)
 
 	String								callList() const { return callList(castEntities<Typed>(cardinalChildren())); }
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
@@ -49,7 +49,7 @@ protected:
 	virtual String						defineHtml() const;
 	String								callList(List<Typed*> _parameters) const;
 	virtual int							familyDependencies() const { return Super::familyDependencies() | DependsOnChildren; }
-	virtual void						onDependencyChanged(int, Entity* _e);
+	virtual void						onDependencyChanged(int, Concept* _e);
 };
 
 }

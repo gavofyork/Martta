@@ -58,7 +58,7 @@ public:
 	}
 	virtual String						defineEditHtml(Named*, String const& _mid)
 	{
-		return L"<^><span class=\"TypeEntity\">" + StringType().typeHtml(_mid) + L"</span>";
+		return L"<^><span class=\"TypeConcept\">" + StringType().typeHtml(_mid) + L"</span>";
 	}
 	SimpleNamed m_ourNamed;
 };
@@ -239,7 +239,7 @@ Types StringType::assignableTypes() const
 	return Type(*this).topWith(Const()).topWith(Reference()), Type(Char).topWith(Const()).topWith(Pointer()), Type(Char), Type(Wchar);
 }
 
-List<ValueDefiner*> StringType::applicableMembers(Entity const*, bool _isConst) const
+List<ValueDefiner*> StringType::applicableMembers(Concept const*, bool _isConst) const
 {
 	List<ValueDefiner*> ret;
 	foreach (BuiltinMethod* i, s_members)
@@ -248,7 +248,7 @@ List<ValueDefiner*> StringType::applicableMembers(Entity const*, bool _isConst) 
 	return ret;
 }
 
-bool StringType::defineSimilarityTo(TypeEntity const* _t, Castability _c) const
+bool StringType::defineSimilarityTo(TypeConcept const* _t, Castability _c) const
 {
 	return _t->isKind<StringType>() ||
 		(isAnyConvertible(_c) && _t->isKind<Pointer>() &&
@@ -258,7 +258,7 @@ bool StringType::defineSimilarityTo(TypeEntity const* _t, Castability _c) const
 		Super::defineSimilarityTo(_t, _c);
 }
 
-bool StringType::defineSimilarityFrom(TypeEntity const* _f, Castability _c) const
+bool StringType::defineSimilarityFrom(TypeConcept const* _f, Castability _c) const
 {
 	return (isAnyConvertible(_c) && _f->isKind<Pointer>() &&
 		_f->asKind<Pointer>()->original()->isType<BuiltinType>() &&
@@ -274,7 +274,7 @@ String StringType::code(String const& _middle) const
 
 String StringType::defineHtml() const
 {
-	return L"<^><span class=\"TypeEntity\">" + typeHtml(L"string") + L"</span>";
+	return L"<^><span class=\"TypeConcept\">" + typeHtml(L"string") + L"</span>";
 }
 
 }

@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-class M_API_Statements UnaryOperation: public Operation
+class M_API_Statements UnaryOperation: public_super Operation
 {
 	MARTTA_PLACEHOLDER(Operation)
 
@@ -49,7 +49,7 @@ protected:
 	virtual String						defineHtml() const;
 
 	virtual int							familyDependencies() const { return DependsOnBoth; }
-//	virtual void						onDependencySwitched(Entity* _e, Entity* _o) { if (_e == parent()) markDirty(); else Super::onDependencySwitched(_e, _o); }
+//	virtual void						onDependencySwitched(Concept* _e, Concept* _o) { if (_e == parent()) markDirty(); else Super::onDependencySwitched(_e, _o); }
 
 	template<class T> static bool		simpleKeyPressedOnPositionHandler(Position const& _p, KeyEvent const* _e, String const& _t, Precedence _d, Associativity _a, bool _pre = true, bool _confusable = false)
 	{
@@ -69,7 +69,7 @@ protected:
 		if (isTemporary(p.entity()))
 			return false;
 
-		Entity* n = new T;
+		Concept* n = new T;
 		_e->noteStrobeCreation(n, &*p);
 		p->insert(n, TheOperand);
 		n->validifyChildren();

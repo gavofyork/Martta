@@ -31,7 +31,7 @@
 namespace Martta
 {
 
-class Entity;
+class Concept;
 class FunctionResolver;
 class IncomingFunctionType;
 class ArrayType;
@@ -47,11 +47,11 @@ inline QString qs(String const& _s)
 class M_API_Projects DeclarationsHandler: public QXmlContentHandler
 {
 public:
-	DeclarationsHandler(Entity* _d): m_d(_d) {}
+	DeclarationsHandler(Concept* _d): m_d(_d) {}
 	~DeclarationsHandler() { }
 
-	Entity* resolveType(QString const& _typeId, Entity** _td = 0);
-	QString nameOfType(Entity* _td) const { return m_typeNames.value(_td); }
+	Concept* resolveType(QString const& _typeId, Concept** _td = 0);
+	QString nameOfType(Concept* _td) const { return m_typeNames.value(_td); }
 
 private:
 	virtual bool startDocument();
@@ -68,17 +68,17 @@ private:
 	virtual bool skippedEntity(QString const&) { return true; }
 	virtual bool startPrefixMapping(QString const&, QString const&) { return true; }
 
-	Entity*									m_d;
+	Concept*									m_d;
 
-	Entity*									m_lastEnum;
+	Concept*									m_lastEnum;
 	FunctionResolver*						m_lastFunction;
 	IncomingFunctionType*					m_lastIncomingFunctionType;
 
-	QHash<QString, Entity*>					m_contexts;
-	QHash<QString, Entity*>					m_functions;
-	QHash<QString, Entity*>					m_variables;
-	QHash<QString, Entity*>					m_types;
-	QHash<Entity*, QString>					m_typeNames;
+	QHash<QString, Concept*>					m_contexts;
+	QHash<QString, Concept*>					m_functions;
+	QHash<QString, Concept*>					m_variables;
+	QHash<QString, Concept*>					m_types;
+	QHash<Concept*, QString>					m_typeNames;
 
 	QHash<QString, int>						m_simples;
 	QHash<QString, ArrayType*>				m_arrays;

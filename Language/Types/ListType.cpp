@@ -35,6 +35,7 @@ namespace Martta
 {
 
 MARTTA_OBJECT_CPP(ListType);
+MARTTA_NAMED_CPP(ListType, Length);
 
 List<BuiltinMethod*> ListType::s_members;
 List<BuiltinOperator*> ListType::s_nonMembers;
@@ -124,7 +125,7 @@ Types ListType::assignableTypes() const
 	return Type(*this);
 }
 
-List<ValueDefiner*> ListType::applicableMembers(Entity const*, bool _isConst) const
+List<ValueDefiner*> ListType::applicableMembers(Concept const*, bool _isConst) const
 {
 	List<ValueDefiner*> ret;
 	foreach (BuiltinMethod* i, s_members)
@@ -133,7 +134,7 @@ List<ValueDefiner*> ListType::applicableMembers(Entity const*, bool _isConst) co
 	return ret;
 }
 
-bool ListType::defineSimilarityFrom(TypeEntity const* _f, Castability _c) const
+bool ListType::defineSimilarityFrom(TypeConcept const* _f, Castability _c) const
 {
 	return (_f->isKind<ListType>() && (Type(*original()).isNull() || _f->asKind<ListType>()->original()->isEquivalentTo(original()))) ||
 		Super::defineSimilarityFrom(_f, _c);
@@ -155,8 +156,8 @@ Types ListType::allowedTypes(int _i) const
 
 String ListType::code(String const& _middle) const
 {
-	if (childIs<TypeEntity>(Original))
-		return "::MarttaSupport::List< " + childAs<TypeEntity>(Original)->code() + " >" + _middle;
+	if (childIs<TypeConcept>(Original))
+		return "::MarttaSupport::List< " + childAs<TypeConcept>(Original)->code() + " >" + _middle;
 	else
 		return "::MarttaSupport::List<>" + _middle;
 }

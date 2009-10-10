@@ -32,14 +32,14 @@ class QXmlContentHandler;
 namespace Martta
 {
 
-class Entity;
+class Concept;
 
 class GccXml
 {
 public:
 	static void extractHeaders(QString const& _c, QXmlContentHandler* _h);
 
-	static QXmlContentHandler* declarationsHandler(Entity* _d);
+	static QXmlContentHandler* declarationsHandler(Concept* _d);
 };
 
 }

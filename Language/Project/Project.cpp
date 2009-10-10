@@ -18,7 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "Entity.h"
+#include "Concept.h"
 #include "Solution.h"
 #include "Project.h"
 
@@ -29,7 +29,7 @@ MARTTA_INTERFACE_CPP(Project);
 
 String const& Project::supportPath() const
 {
-	if (Solution* s = self()->tryParent<Solution>())
+	if (Solution* s = tryParent<Solution>())
 		return s->supportPath();
 	return String::null;
 }

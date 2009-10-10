@@ -31,11 +31,10 @@
 namespace Martta
 {
 
-class M_API_Namers EnumerationNamer: public_interface TypeDefinition, public_interface WebViewable
+class M_API_Namers EnumerationNamer: public_super_interface TypeDefinition, public_interface WebViewable
 {
-	MARTTA_INTERFACE
-	MARTTA_INHERITS(TypeDefinition, 0)
-	MARTTA_INHERITS(WebViewable, 1)
+	MARTTA_INTERFACE_INHERITS(TypeDefinition)
+	MARTTA_INHERITS(WebViewable, 0)
 
 public:
 	void								updateStem();
@@ -51,9 +50,9 @@ protected:
 	bool								keyPressed(KeyEvent const* _e);
 	List<ValueDefiner*>					valuesAdded() const { return self()->cardinalChildrenOf<ValueDefiner>(); }
 
-	void								onDependencyAdded(Entity* _e);
-	void								onDependencyChanged(int, Entity* _e);
-	void								onDependencyRemoved(Entity* _e);
+	void								onDependencyAdded(Concept* _e);
+	void								onDependencyChanged(int, Concept* _e);
+	void								onDependencyRemoved(Concept* _e);
 
 	virtual Rgb							idColour() const { return Rgb(0x4477aa); }
 

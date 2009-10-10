@@ -31,9 +31,9 @@ namespace Martta
 {
 
 class Position;
-class TypeEntity;
+class TypeConcept;
 
 M_API_Variables bool canPlaceVariable(Position const& _p);
-M_API_Variables void placeVariable(Position const& _p, TypeEntity* _t);
+M_API_Variables void placeVariable(Position const& _p, TypeConcept* _t);
 
 }

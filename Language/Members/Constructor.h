@@ -31,7 +31,7 @@ namespace Martta
 
 class Class;
 
-class M_API_Members Constructor: public MemberLambda
+class M_API_Members Constructor: public_super MemberLambda
 {
 	MARTTA_OBJECT(MemberLambda)
 

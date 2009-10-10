@@ -30,7 +30,7 @@
 namespace Martta
 {
 
-class M_API_Types BuiltinOperator: public BuiltinDeclaration
+class M_API_Types BuiltinOperator: public_super BuiltinDeclaration
 {
 	MARTTA_OBJECT(BuiltinDeclaration)
 	

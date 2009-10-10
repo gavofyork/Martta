@@ -1,4 +1,4 @@
-DEPS += Entity
+DEPS += Concept
 OURDIRS = .
 TWD = $$PWD
 

@@ -32,13 +32,13 @@ namespace Martta
 
 // Just for non-static callables
 
-class M_API_Members MemberLambda: public MemberValue, public_interface LambdaNamer
+class M_API_Members MemberLambda: public_super MemberValue, public_interface LambdaNamer
 {
 	MARTTA_PLACEHOLDER(MemberValue)
 	MARTTA_INHERITS(LambdaNamer, 0)
 
 public:
-	enum { Constness = FirstNamed, EndOfNamed };
+	MARTTA_NAMED(Constness)
 
 	virtual bool						isConst() const;
 	Type								thisType() const;
@@ -52,8 +52,8 @@ protected:
 	virtual String						memberInterfaceCode() const { return LambdaNamer::interfaceCode(); }
 
 	virtual int							familyDependencies() const { return DependsOnChildren; }
-	virtual void						onDependencyChanged(int, Entity* _e) { changed((_e == child(Constness) || _e == child(Accessibility)) ? AllAspects : Logically); }
-	virtual void						onDependencyRemoved(Entity*, int) { changed(Logically); }
+	virtual void						onDependencyChanged(int, Concept* _e) { changed((_e == child(Constness) || _e == child(Accessibility)) ? AllAspects : Logically); }
+	virtual void						onDependencyRemoved(Concept*, int) { changed(Logically); }
 	virtual List<Declaration*>			utilised() const;
 	virtual int							minRequired(int _i) const { return _i == Constness || _i == Body || _i == Returned ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;

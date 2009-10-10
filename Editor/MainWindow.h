@@ -54,7 +54,7 @@ private:
 
 class CodeScene;
 class Function;
-class Entity;
+class Concept;
 
 class MainWindow: public QMainWindow, public Ui::MainWindow
 {
@@ -89,7 +89,7 @@ private slots:
 
 	void on_programIn_returnPressed();
 
-	void entityFocused(Entity* _e);
+	void entityFocused(Concept* _e);
 	void delayedUpdate();
 
 	void resetSubject();
@@ -132,8 +132,8 @@ private:
 	// Maintains correctness of m_projects, m_filename and m_solution accordingly.
 	bool					save();
 
-	Entity*					importDom(QDomElement const& _el, Entity* _p, QStringList* _projectstoLoad = 0, QList<Project*>* _projects = 0);
-	QDomElement				exportDom(QDomDocument& _doc, Entity const* _e, bool _dump = false) const;
+	Concept*					importDom(QDomElement const& _el, Concept* _p, QStringList* _projectstoLoad = 0, QList<Project*>* _projects = 0);
+	QDomElement				exportDom(QDomDocument& _doc, Concept const* _e, bool _dump = false) const;
 
 	// Serialises/deserialises the lot.
 	QString					serialise() const;
@@ -142,7 +142,7 @@ private:
 	inline QList<Project*>	projects() const { return m_projects.keys(); }
 	inline Project*			project() const { return codeView->subject()->tryKind<Project>(); }
 
-	QString					summary(Entity* _e);
+	QString					summary(Concept* _e);
 
 	String					m_pluginsPath;
 

@@ -20,7 +20,7 @@
 
 #include "AssignedVariable.h"
 #include "DefaultConstructedVariable.h"
-#include "TypeEntity.h"
+#include "TypeConcept.h"
 #include "VariablePlacer.h"
 
 namespace Martta
@@ -31,9 +31,9 @@ bool canPlaceVariable(Position const& _p)
 	return _p.allowedToBeKind<AssignedVariable>();
 }
 
-void placeVariable(Position const& _p, TypeEntity* _t)
+void placeVariable(Position const& _p, TypeConcept* _t)
 {
-	Entity* e = 0;
+	Concept* e = 0;
 	if (_p.allowedToBeKind<DefaultConstructedVariable>())
 		e = new DefaultConstructedVariable;
 	else if (_p.allowedToBeKind<AssignedVariable>())

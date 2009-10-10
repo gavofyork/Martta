@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-class M_API_Statements AssignmentOperation: public BinaryOperation
+class M_API_Statements AssignmentOperation: public_super BinaryOperation
 {
 	MARTTA_OBJECT(BinaryOperation)
 
@@ -43,7 +43,7 @@ private:
 	virtual String						operatorHtml() const { return "<span class=\"symbol\">:=</span>"; }
 	virtual Operator					id() const { return Operator::Equals; }
 	virtual int							familyDependencies() const { return Super::familyDependencies() | DependsOnChildren; }
-	virtual void						onDependencyChanged(int _a, Entity* _e) { if (_e->parent() == this) changed(Logically); Super::onDependencyChanged(_a, _e); }
+	virtual void						onDependencyChanged(int _a, Concept* _e) { if (_e->parent() == this) changed(Logically); Super::onDependencyChanged(_a, _e); }
 };
 
 }
