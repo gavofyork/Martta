@@ -51,7 +51,7 @@ bool GlobalReferenced::keyPressed(KeyEvent const* _e)
 
 String GlobalReferenced::defineHtml() const
 {
-	return L"<^><span class=\"GlobalReferenced-Fader\"><span class=\"GlobalReferenced\">::</span></span>" + Super::defineHtml();
+	return L"<span class=\"GlobalReferenced-Fader\"><span class=\"GlobalReferenced\">::</span></span>" + Super::defineHtml();
 }
 
 String GlobalReferenced::defineEditHtml(CodeScene* _cs) const

@@ -1,6 +1,7 @@
 function bounds(_id)
 {
-	var bb = document.getElementById(_id).getBoundingClientRect();
+	var e = document.getElementById(_id);
+	var bb = e.getBoundingClientRect();
 	return bb.left + ' ' + bb.top + ' ' + bb.width + ' ' + bb.height;
 }
 function currentChanged()
