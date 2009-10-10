@@ -78,6 +78,7 @@ private slots:
 
 	void on_actShowDeps_triggered();
 	void on_actShowChanges_triggered();
+	void on_actListChanges_triggered();
 	void on_actClearChanges_triggered();
 	void on_actShowFirstChange_triggered();
 	void on_actRemoveFirstChange_triggered();

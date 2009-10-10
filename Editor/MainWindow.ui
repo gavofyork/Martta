@@ -155,10 +155,30 @@
     </property>
     <addaction name="actReloadPlugins"/>
    </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>&amp;View</string>
+    </property>
+    <addaction name="actListChanges"/>
+    <addaction name="actShowChanges"/>
+    <addaction name="actShowFirstChange"/>
+    <addaction name="actRemoveFirstChange"/>
+    <addaction name="separator"/>
+    <addaction name="actClearChanges"/>
+    <addaction name="actShowDeps"/>
+   </widget>
+   <widget class="QMenu" name="menu_Debug">
+    <property name="title">
+     <string>&amp;Debug</string>
+    </property>
+    <addaction name="actCastability"/>
+   </widget>
    <addaction name="menu_Project"/>
+   <addaction name="menuView"/>
    <addaction name="menu_Project_2"/>
    <addaction name="menuPlugins"/>
    <addaction name="menu_About"/>
+   <addaction name="menu_Debug"/>
   </widget>
   <widget class="QStatusBar" name="statusbar">
    <property name="autoFillBackground">
@@ -835,35 +855,6 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QToolBar" name="toolBar">
-   <property name="font">
-    <font>
-     <family>Verdana</family>
-     <pointsize>8</pointsize>
-     <weight>50</weight>
-     <italic>false</italic>
-     <bold>false</bold>
-    </font>
-   </property>
-   <property name="windowTitle">
-    <string>toolBar</string>
-   </property>
-   <property name="autoFillBackground">
-    <bool>true</bool>
-   </property>
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
-   <addaction name="actCastability"/>
-   <addaction name="actShowDeps"/>
-   <addaction name="actShowFirstChange"/>
-   <addaction name="actRemoveFirstChange"/>
-   <addaction name="actShowChanges"/>
-   <addaction name="actClearChanges"/>
-  </widget>
   <action name="actNewCProject">
    <property name="text">
     <string>&amp;Add C Dependency</string>
@@ -938,7 +929,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;Show Changes</string>
+    <string>&amp;Draw Changes</string>
    </property>
   </action>
   <action name="actShowFirstChange">
@@ -948,8 +939,11 @@
    <property name="checked">
     <bool>false</bool>
    </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
-    <string>Show &amp;First Change</string>
+    <string>Draw &amp;First Change Only</string>
    </property>
   </action>
   <action name="actNew">
@@ -1020,6 +1014,17 @@
     <string>Close Solution</string>
    </property>
   </action>
+  <action name="actListChanges">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>List Changes</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="0" margin="0"/>
  <customwidgets>
@@ -1035,5 +1040,22 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>actShowChanges</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>actShowFirstChange</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

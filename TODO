@@ -1,3 +1,14 @@
+
+--------------------------------------------------------------------------------
+
+RELEASE M1 (ASAP)
+
+- WebKit.
+- Plugins.
+- Binary builds/installers.
+
+================================================================================
+
 OPTIMISE New project far too slow.
 OPTIMISE StringLiteral editing - commit takes too long.
 OPTIMISE Moving is crazily slow over statements.
@@ -8,19 +19,26 @@ OPTIMISE Moving is crazily slow over statements.
 OPTIMISE onDependencyChanged gets index w/ special indices for parent, ancestral & freeforms.
 OPTIMISE delete type of field still slow.
 QUICK EnumNamer/Class expansion.
+RENAME Entity to Concept.
 RENAME ExplicitType to ReferencedType.
 RENAME Referenced to ReferencedValue.
-RENAME MemberVariable Field.
+RENAME MemberVariable to Field.
+RENAME Project to Component
+RENAME Solution to Project
 QUICK [a-z] on TypeEntity should work for Explicits too
 - make TypeEntity a NameEntryPoint?
+QUICK TypeEntity shouldn't inherit from TypedOwner - Just MemberTempateType and ArrayType.
+
+Get rid of interfaces
+- Make all Entity-derivations virtual pure.
+- Make Entity itself uninstantiatable; relieved with a MARTTA_INTERFACE or MARTTA_PROPER
+- Switch all interfaces into entities.
+Concept component types.
+- Self-hosting.
 
 --------------------------------------------------------------------------------
 
-RELEASE M1 (TBD)
-
-- WebKit.
-- Plugins.
-- Binary builds/installers.
+RELEASE M2 (TBD)
 
 ================================================================================
 
@@ -36,8 +54,11 @@ TODO Cache includes, so don't take so long to load.
 TODO SearchReferenced (\)
 - All possible (including scoped exterals).
 - Should provide list for browsing/selection.
-TODO WKTextStylist uses text file, defaulting to WebKitHtml::webKitHtml. 
+TODO WKTextStylist uses text file, defaulting to WebKitHtml::webKitHtml.
 OPTIMISE String (and List/Hash/Type perhaps) with copy on write.
+IDEA Current task in a line edit at top. Auto git commits.
+- Ctrl-S to commit.
+- 3 second delay to save to allow you to change line edit.
 
 Utilised
 - utilised/utilisable interface.
@@ -58,7 +79,7 @@ Multiple projects in a solution
 
 --------------------------------------------------------------------------------
 
-RELEASE M2 (TBD)
+RELEASE M3 (TBD)
 
 ================================================================================
 
@@ -71,13 +92,13 @@ Actionify everything.
 - Nice visualisation as a line with arrows between the action of each keypress.
   - Goes along the top.
   - e.g. "Create IntegeralLiteral 6" -> "Create SimpleBinaryOperation *" -> "Create Referenced (int i)"
-  - That way backspace deletes these things. 
+  - That way backspace deletes these things.
 - Pluginable actions
 - Use deniedKinds when determining legitimacy of keyPress. Will need passing down with dispatchKeyPress.
 
 --------------------------------------------------------------------------------
 
-RELEASE M3 (TBD)
+RELEASE M4 (TBD)
 
 ================================================================================
 
@@ -86,17 +107,17 @@ Templates
   - Initialised by Type's isSimilarTo.
   - Initialised with all the "Template" entities's types.
   - Template entities come before the Class/Callable and act similarly to a scope with Typedefs.
-    - All template type arguments must be given sensible defaults (used for checking against the implementations).
+	- All template type arguments must be given sensible defaults (used for checking against the implementations).
   - The hash gets filled in through the similarity check.
-    - Template should provide an "isAllowed" for determining if the requested type is allowed in the wanted position according to this instantiation.
-    - Won't work 100% since it will "jump to conclusions"; this can be worked around initially through providing the template parameter explicitly.
+	- Template should provide an "isAllowed" for determining if the requested type is allowed in the wanted position according to this instantiation.
+	- Won't work 100% since it will "jump to conclusions"; this can be worked around initially through providing the template parameter explicitly.
   - If the similarity check succeeds, the type remains unchanged (unlike currently), but the hash specifies the template types required.
   - A Template will contain the entity it refers to, along with several TemplateTypeDefinitions.
   - The TemplatedTypes will reference a TemplateTypeDefinition entity.
-    - When copying the TemplatedType entity, they will automatically find the equivalent ancestor in the new type and thereby find the equivalent TemplateTypeDefinition.
-    - When copying a Template entity, it must copy the TemplatedTypes first (to allow the latter point).
+	- When copying the TemplatedType entity, they will automatically find the equivalent ancestor in the new type and thereby find the equivalent TemplateTypeDefinition.
+	- When copying a Template entity, it must copy the TemplatedTypes first (to allow the latter point).
   - The TemplateTypeDefinition entity contains a TextLabel and a TypeEntity (the default).
-- Also need ExplicitTemplate, 
+- Also need ExplicitTemplate,
 - Works similarly for TemplateValueDefinition.
 - Unit tests for template types.
 
@@ -107,11 +128,11 @@ Default argument values.
 - Introducing operator overloads into classes.
 - Allow for method overloads.
   - Make a "best fitting arg list" function.
-    - This should take over from what's in Binary/Unary Operation, since that's flawed.
+	- This should take over from what's in Binary/Unary Operation, since that's flawed.
 
 --------------------------------------------------------------------------------
 
-RELEASE M4 (TBD)
+RELEASE M5 (TBD)
 
 ================================================================================
 
@@ -126,7 +147,7 @@ Allow for entity insertion & appending.
 
 --------------------------------------------------------------------------------
 
-RELEASE M5 (TBD)
+RELEASE M6 (TBD)
 
 ================================================================================
 
@@ -139,7 +160,7 @@ Problems infrastructure
 
 --------------------------------------------------------------------------------
 
-RELEASE M6 (TBD)
+RELEASE M7 (TBD)
 
 ================================================================================
 
@@ -149,7 +170,7 @@ Better code() handling.
 
 --------------------------------------------------------------------------------
 
-RELEASE M7 (TBD)
+RELEASE M8 (TBD)
 
 ================================================================================
 
@@ -275,7 +296,7 @@ BUG string s = "Boo"; printf("%s\n", s);
   - Fix: New type (Basic).
   - Basic is able to cast from any simple type and from a pointer.
   - String must be able to cast to a Basic by calling the toCString() method.
-    - Will need infrastructure to make this happen.
+	- Will need infrastructure to make this happen.
 
 Unit test embedding in class/methods.
 

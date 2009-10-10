@@ -335,7 +335,7 @@ void MainWindow::stepFinished()
 	{
 		String error = m_buildAndRun->readAllStandardError().data();
 		if(error.isEmpty()) error = m_buildAndRun->readAllStandardOutput().data();
-		
+
 		QMessageBox::critical(this, "Build failed", tr("Could not build executable. Build step '%1' returned with: '%2'").arg(qs(step.join(L' '))).arg(qs(error)));
 		m_buildAndRun->deleteLater();
 		m_buildAndRun = 0;
@@ -701,6 +701,11 @@ void MainWindow::on_actCastability_triggered()
 #endif
 }
 
+void MainWindow::on_actListChanges_triggered()
+{
+	delayedUpdate();
+}
+
 void MainWindow::on_actShowChanges_triggered()
 {
 	codeView->setShowChanges(actShowChanges->isChecked());
@@ -831,33 +836,34 @@ void MainWindow::delayedUpdate()
 	}
 
 	changes->clear();
-	foreach (ChangeMan::Entry i, ChangeMan::get()->changesDone())
-	{
-		switch (i.m_op)
+	if (actListChanges->isChecked())
+		foreach (ChangeMan::Entry i, ChangeMan::get()->changesDone())
 		{
-		case ChangeMan::DependencyChanged:
-			new QTreeWidgetItem(changes, QStringList() << summary(i.m_depender) + ": DepChanged" << summary(i.m_object1) + QString(", Aspect: %1").arg(i.m_aspect));
-		break;
-		case ChangeMan::DependencySwitched:
-			new QTreeWidgetItem(changes, QStringList() << summary(i.m_depender) + ": DepSwitched" << "Coming: " + summary(i.m_object1) + ", Going: " + summary(i.m_object2));
-		break;
-		case ChangeMan::DependencyAdded:
-			new QTreeWidgetItem(changes, QStringList() << summary(i.m_depender) + ": DepAdded" << "Coming: " + summary(i.m_object1));
-		break;
-		case ChangeMan::EntityChildrenInitialised:
-			new QTreeWidgetItem(changes, QStringList() << summary(i.m_depender) + ": ChildrenInit'd");
-		break;
-		case ChangeMan::DependencyRemoved:
-			new QTreeWidgetItem(changes, QStringList() << summary(i.m_depender) + ": DepRemoved" << "Going: " + summary(i.m_object1));
-		break;
-		case ChangeMan::ChildMoved:
-			new QTreeWidgetItem(changes, QStringList() << summary(i.m_depender) + ": ChildMoved" << summary(i.m_object1) + QString(", From: #%1").arg(i.m_index));
-		break;
-		case ChangeMan::IndexChanged:
-			new QTreeWidgetItem(changes, QStringList() << summary(i.m_depender) + ": IndexChanged" << QString("#%1").arg(i.m_index));
-		break;
+			switch (i.m_op)
+			{
+			case ChangeMan::DependencyChanged:
+				new QTreeWidgetItem(changes, QStringList() << summary(i.m_depender) + ": DepChanged" << summary(i.m_object1) + QString(", Aspect: %1").arg(i.m_aspect));
+			break;
+			case ChangeMan::DependencySwitched:
+				new QTreeWidgetItem(changes, QStringList() << summary(i.m_depender) + ": DepSwitched" << "Coming: " + summary(i.m_object1) + ", Going: " + summary(i.m_object2));
+			break;
+			case ChangeMan::DependencyAdded:
+				new QTreeWidgetItem(changes, QStringList() << summary(i.m_depender) + ": DepAdded" << "Coming: " + summary(i.m_object1));
+			break;
+			case ChangeMan::EntityChildrenInitialised:
+				new QTreeWidgetItem(changes, QStringList() << summary(i.m_depender) + ": ChildrenInit'd");
+			break;
+			case ChangeMan::DependencyRemoved:
+				new QTreeWidgetItem(changes, QStringList() << summary(i.m_depender) + ": DepRemoved" << "Going: " + summary(i.m_object1));
+			break;
+			case ChangeMan::ChildMoved:
+				new QTreeWidgetItem(changes, QStringList() << summary(i.m_depender) + ": ChildMoved" << summary(i.m_object1) + QString(", From: #%1").arg(i.m_index));
+			break;
+			case ChangeMan::IndexChanged:
+				new QTreeWidgetItem(changes, QStringList() << summary(i.m_depender) + ": IndexChanged" << QString("#%1").arg(i.m_index));
+			break;
+			}
 		}
-	}
 }
 
 }
