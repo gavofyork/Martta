@@ -41,7 +41,7 @@ template<class T> class NameTrait;
 
 class M_API_Types BuiltinType: public_super PhysicalType
 {
-	MARTTA_INITIALISED_OBJECT(PhysicalType)
+	MARTTA_INITIALISED_PROPER(PhysicalType)
 
 	friend class BuiltinOperator;	// For use of s_nonMembers. QUICK Should probably use an interface for this.
 	friend class NameTrait<int>;

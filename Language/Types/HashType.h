@@ -35,7 +35,7 @@ class BuiltinOperator;
 
 class M_API_Types HashType: public_super ModifyingType, public_interface Subscriptable
 {
-	MARTTA_INITIALISED_OBJECT(ModifyingType)
+	MARTTA_INITIALISED_PROPER(ModifyingType)
 	MARTTA_ALSO_INHERITS(Subscriptable, 0)
 
 	friend class BuiltinMethod;

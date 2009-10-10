@@ -38,10 +38,10 @@ template<class T> struct GetCount
 };
 
 template<class T>
-class InterfaceAuxilliary: public AuxilliaryFace
+class NotionAuxilliary: public AuxilliaryFace
 {
 public:
-	inline InterfaceAuxilliary(char const* _name): m_name(_name) { AuxilliaryRegistrar::get()->registerAuxilliary(this); }
+	inline NotionAuxilliary(char const* _name): m_name(_name) { AuxilliaryRegistrar::get()->registerAuxilliary(this); }
 	virtual inline bool						isInterface() const { return true; }
 	virtual inline bool						isPlaceholder() const { return false; }	// Undefined.
 	virtual inline char const*				name() const { return m_name; }
@@ -52,30 +52,25 @@ public:
 	virtual inline AuxilliaryFace const*	interfaceAuxilliary(int _i) const { return T::template ASHelper<GetCount<T>::Value>::altSupers()[_i]; }
 	virtual inline int						interfaceAuxilliaryCount() const { return GetCount<T>::Value; }
 	virtual inline Concept*					create() const { return 0; }
-//	virtual inline void const*				offset(Concept const*) const { return 0; }
+
 private:
 	char const*								m_name;
 };
 
 template<class T>
-class Auxilliary: public AuxilliaryFace
+class Auxilliary: public NotionAuxilliary<T>
 {
 public:
-	inline Auxilliary(char const* _name, bool _isPlaceholder): m_name(_name), m_isPlaceholder(_isPlaceholder) { AuxilliaryRegistrar::get()->registerAuxilliary(this); }
+	inline Auxilliary(char const* _name, bool _isPlaceholder): NotionAuxilliary<T>(_name), m_isPlaceholder(_isPlaceholder) {}
 	virtual inline bool						isInterface() const { return false; }
 	virtual inline bool						isPlaceholder() const { return m_isPlaceholder; }
-	virtual inline char const*				name() const { return m_name; }
 	virtual inline bool						dispatchKeyPress(Position const& _p, KeyEvent const* _e) const;
 	virtual inline void						initialise() const { T::initialiseClass(); }
 	virtual inline void						finalise() const { T::finaliseClass(); }
 	virtual inline AuxilliaryFace const*	superAuxilliary() const { return T::Super::staticAuxilliary(); }
-	virtual inline AuxilliaryFace const*	interfaceAuxilliary(int _i) const { return T::template ASHelper<GetCount<T>::Value>::altSupers()[_i]; }
-	virtual inline int						interfaceAuxilliaryCount() const { return GetCount<T>::Value; }
 	virtual inline Concept*					create() const { return new T; }
-//	virtual inline void const*				offset(Concept const* _e) const { return reinterpret_cast<void const*>(static_cast<T const*>(_e)); }
 
 private:
-	char const*								m_name;
 	bool									m_isPlaceholder;
 };
 

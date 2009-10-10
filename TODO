@@ -41,6 +41,7 @@ RELEASE M2 (TBD)
 
 BUG? current() bad in onCurrentAboutToChange.
 BUG Add method, make return type good, still appears bad. Making name good/bad doesn't change anything.
+BUG Guarantee tree structurally correct on load.
 EMAIL Kill selections.
 BRINGBACK All tests incl. Ser/Deser.
 TODO Unary operation should apply to climb Statement tree until it finds something.

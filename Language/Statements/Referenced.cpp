@@ -33,6 +33,7 @@ MARTTA_REGISTER_CSS(Referenced, ".Referenced { font-weight: normal; color: #000;
 Referenced::Referenced(ValueDefiner* _v):
 	m_subject	(0)
 {
+	mInfo() << ((Concept*)0)->tryKind<Concept>();
 	set(_v);
 }
 

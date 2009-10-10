@@ -48,7 +48,7 @@ void Concept::operator delete(void* p)
 	free(p);
 }
 
-MARTTA_PLACEHOLDER_CPP(Concept);
+MARTTA_NOTION_CPP(Concept);
 
 String Concept::indexName(int _i) const
 {

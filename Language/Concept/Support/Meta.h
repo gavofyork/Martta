@@ -45,11 +45,15 @@ template<class T, class F> T tryCast(F _f) { return tryCastPrivate::XL<T, F, try
 
 }
 
-#define MARTTA_BASIC \
+#define MARTTA_ALSO_INHERITS(S, i) \
+private: \
+	template<int d>						struct AltSuper<i + 1, d> { typedef S TheType; };
+
+#define MARTTA_COMMON(S) \
 public: \
 	template<class T> friend struct Martta::GetCount; \
 	template<class T> friend class Martta::Auxilliary; \
-	template<class T> friend class Martta::InterfaceAuxilliary; \
+	template<class T> friend class Martta::NotionAuxilliary; \
 	inline virtual Kind					kind() const { return this ? staticKind : Kind(Nothing::staticAuxilliary()); } \
 	static Kind							staticKind; \
 	static AuxilliaryFace const*		staticAuxilliary(); \
@@ -62,50 +66,38 @@ private: \
 	template<int d>						struct ASHelper<0, d> { static AuxilliaryFace const** altSupers() { static AuxilliaryFace const* r[1]; return r; } }; \
 	template<int m, typename T>			struct ASTHelper { typedef typename AltSuper<m - 1>::TheType H; static void const* altSupers(T const* _this, Kind _k) { /*mDebug() << "[" << T::staticKind.name() << "] Searching on " << m << "-1th entry: " << H::staticKind.name() << " for " << _k.name();*/ return H::staticKind.isKind(_k) ? tryCast<H const*>(_this)->tryInterface(_k) : ASTHelper<m - 1, T>::altSupers(_this, _k); } }; \
 	template<typename T>				struct ASTHelper<0, T> { static void const* altSupers(T const*, Kind) { /*mDebug() << "[" << T::staticKind.name() << "] Unable to find."; */return 0; } }; \
-	virtual void const*					toInterface(Kind _k) const { return tryInterface(_k); }
+	virtual void const*					toInterface(Kind _k) const { return tryInterface(_k); } \
+	MARTTA_ALSO_INHERITS(S, -1)
 
-#define MARTTA_ALSO_INHERITS(S, i) \
-private: \
-	template<int d>						struct AltSuper<i + 1, d> { typedef S TheType; };
+#define MARTTA_CONCEPT(S) \
+public: \
+	template<class T> inline T*			asKind() { if (!this) return 0; return Concept::asKind<T>(); } \
+	template<class T> inline T const*	asKind() const { if (!this) return 0; return Concept::asKind<T>(); } \
+	template<class T> inline T*			tryKind() { if (!this) return 0; return Concept::tryKind<T>(); } \
+	template<class T> inline T const*	tryKind() const { if (!this) return 0; return Concept::tryKind<T>(); } \
+	template<class T> inline bool		isKind() const { if (!this) return 0; return Concept::isKind<T>(); } \
+	MARTTA_COMMON(S)
 
 #define MARTTA_NOTION(S) \
-public: \
-	virtual void const*					tryKindBlind(Kind _k) const = 0; \
-	template<class T> inline T*			asKind() { if (!this) return 0; T* ret = const_cast<T*>(reinterpret_cast<T const*>(tryKindBlind(Kind::of<T>()))); AssertNR(ret); return ret; } \
-	template<class T> inline T const*	asKind() const { if (!this) return 0; T const* ret = reinterpret_cast<T const*>(tryKindBlind(Kind::of<T>())); AssertNR(ret); return ret; } \
-	template<class T> inline T*			tryKind() { if (!this) return 0; return const_cast<T*>(reinterpret_cast<T const*>(tryKindBlind(Kind::of<T>()))); } \
-	template<class T> inline T const*	tryKind() const { if (!this) return 0; return reinterpret_cast<T const*>(tryKindBlind(Kind::of<T>())); } \
-	template<class T> inline bool		isKind() const { if (!this) return false; return tryKindBlind(Kind::of<T>()); } \
-	MARTTA_BASIC \
-	MARTTA_ALSO_INHERITS(S, -1)
+	MARTTA_CONCEPT(S) \
+protected: \
+	virtual void const*					tryKindBlind(Kind _k) const { if (_k == staticKind) return reinterpret_cast<void const*>(this); return 0; }
 
-#define MARTTA_COMMON(S) \
+#define MARTTA_INITIALISED(S) \
 public: \
 	typedef S Super; \
-	MARTTA_BASIC \
-	MARTTA_ALSO_INHERITS(S, -1)
-
-#define MARTTA_INITIALISED_OBJECT(S) \
-public: \
-	Concept::asKind; \
-	Concept::tryKind; \
-	Concept::isKind; \
+	MARTTA_CONCEPT(S) \
+protected: \
 	virtual void const*					tryKindBlind(Kind _k) const { if (_k == staticKind) return reinterpret_cast<void const*>(this); return Super::tryKindBlind(_k); } \
-	MARTTA_COMMON(S)
 
-#define MARTTA_INITIALISED_PLACEHOLDER(S) \
-public: \
-	Concept::asKind; \
-	Concept::tryKind; \
-	Concept::isKind; \
-	virtual void const*					tryKindBlind(Kind _k) const { if (_k == staticKind) return reinterpret_cast<void const*>(this); return Super::tryKindBlind(_k); } \
-	MARTTA_COMMON(S)
+#define MARTTA_INITIALISED_PROPER(S) MARTTA_INITIALISED(S)
+#define MARTTA_INITIALISED_PLACEHOLDER(S) MARTTA_INITIALISED(S)
 
 #define MARTTA_PROPER(S) \
 public: \
 	static inline void					initialiseClass() {} \
 	static inline void					finaliseClass() {} \
-	MARTTA_INITIALISED_OBJECT(S)
+	MARTTA_INITIALISED_PROPER(S)
 
 #define MARTTA_PLACEHOLDER(S) \
 public: \
@@ -118,26 +110,15 @@ public: \
 #define MARTTA_NAME_ALIAS(X) static const int& X;
 #define MARTTA_NAME_ALIAS_CPP(E, X, Y) const int& E::X = E::Y
 
-#define MARTTA_CPP_BASIC(E) \
-	static AuxilliaryFace const* s_auxilliary_##E = 0;
-#define MARTTA_CPP_BASIC_END(E) \
+#define MARTTA_OBJECT_CPP(E, AUX) \
+	static AuxilliaryFace const* s_auxilliary_##E = 0; \
+	AuxilliaryFace const* E::staticAuxilliary() { if (!s_auxilliary_##E) s_auxilliary_##E = new AUX; return s_auxilliary_##E; } \
+	void const* E::tryInterface(Kind _k) const { AssertNR(this); if (_k == staticKind) { return (void const*)this; } if (void const* r = ASTHelper<GetCount<E>::Value, E>::altSupers(this, _k)) return r; return 0; } \
 	Kind E::staticKind = Kind(E::staticAuxilliary());
 
-#define MARTTA_OB_OR_PH_CPP(E, PH) \
-	MARTTA_CPP_BASIC(E) \
-	AuxilliaryFace const* E::staticAuxilliary() { if (!s_auxilliary_##E) s_auxilliary_##E = new Auxilliary<E>("Martta::" #E, PH); return s_auxilliary_##E; } \
-	void const* E::tryInterface(Kind _k) const { AssertNR(this); if (_k == staticKind) { return (void const*)this; } if (void const* r = ASTHelper<GetCount<E>::Value, E>::altSupers(this, _k)) return r; return 0; } \
-	MARTTA_CPP_BASIC_END(E)
-//	void const* E::tryInterface(Kind _k) const { AssertNR(this); if (_k == staticKind) { return (void const*)this; } if (void const* r = ASTHelper<GetCount<E>::Value, E>::altSupers(this, _k)) return r; return Super::tryInterface(_k); }
-
-#define MARTTA_PLACEHOLDER_CPP(E) MARTTA_OB_OR_PH_CPP(E, true)
-#define MARTTA_PROPER_CPP(E) MARTTA_OB_OR_PH_CPP(E, false)
-
-#define MARTTA_NOTION_CPP(E) \
-	MARTTA_CPP_BASIC(E) \
-	AuxilliaryFace const* E::staticAuxilliary() { if (!s_auxilliary_##E) s_auxilliary_##E = new InterfaceAuxilliary<E>("Martta::" #E); return s_auxilliary_##E; } \
-	void const* E::tryInterface(Kind _k) const { /*mDebug() << "tryInterface: " << E::staticKind.name() << ", searching " << _k.name();*/ AssertNR(this); if (_k == staticKind) { /*mDebug() << "Matched: Want " << _k.name() << ", got " << E::staticKind.name() << "!"; */return (void const*)this; } /*mDebug() << "Trying ASTHelper " << GetCount<E>::Value << " interfaces";*/ if (void const* r = ASTHelper<GetCount<E>::Value, E>::altSupers(this, _k)) return r; /*mDebug() << "Failed";*/ return 0; } \
-	MARTTA_CPP_BASIC_END(E)
+#define MARTTA_NOTION_CPP(E) MARTTA_OBJECT_CPP(E, NotionAuxilliary<E>("Martta::" #E))
+#define MARTTA_PLACEHOLDER_CPP(E) MARTTA_OBJECT_CPP(E, Auxilliary<E>("Martta::" #E, true))
+#define MARTTA_PROPER_CPP(E) MARTTA_OBJECT_CPP(E, Auxilliary<E>("Martta::" #E, false))
 
 #define public_interface virtual public
 #define public_super virtual public
