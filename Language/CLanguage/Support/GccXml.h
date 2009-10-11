@@ -20,26 +20,26 @@
 
 #pragma once
 
-#include "Function.h"
+#include <QString>
+#include <QStringList>
 
-#ifndef M_API_Projects
-#define M_API_Projects M_OUTAPI
+class QXmlContentHandler;
+
+#ifndef M_API_CLanguage
+#define M_API_CLanguage M_OUTAPI
 #endif
 
 namespace Martta
 {
 
-class M_API_Projects MainFunction: public_super Function
-{
-	MARTTA_PROPER(Function)
+class Concept;
 
-protected:
-	virtual int							minRequired(int _i) const { return Super::minRequired(_i); }
-	virtual Kinds						allowedKinds(int _i) const;
-	virtual String						defineBorderClass() const { return L"MainFunction"; }
-	virtual bool						defineChildFixed(int _i) const { return _i == Returned || _i >= 0; }
-//	virtual String						definePreHtml() const;
-	virtual bool						keyPressed(KeyEvent const* _e);
+class GccXml
+{
+public:
+	static void extractHeaders(QString const& _c, QXmlContentHandler* _h);
+
+	static QXmlContentHandler* declarationsHandler(Concept* _d);
 };
 
 }

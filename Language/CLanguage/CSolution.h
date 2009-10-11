@@ -20,26 +20,39 @@
 
 #pragma once
 
-#include <QString>
-#include <QStringList>
+#include "Solution.h"
+#include "Root.h"
 
-class QXmlContentHandler;
-
-#ifndef M_API_Projects
-#define M_API_Projects M_OUTAPI
+#ifndef M_API_CLanguage
+#define M_API_CLanguage M_OUTAPI
 #endif
 
 namespace Martta
 {
 
-class Concept;
-
-class GccXml
+class M_API_CLanguage CSolution: public_super Root, public_interface Solution
 {
-public:
-	static void extractHeaders(QString const& _c, QXmlContentHandler* _h);
+	MARTTA_PROPER(Root)
+	MARTTA_ALSO_INHERITS(Solution, 0)
 
-	static QXmlContentHandler* declarationsHandler(Concept* _d);
+public:
+	virtual void						initialiseNew();
+	virtual void						addProject(Project* _p);
+	virtual void						initWithProjects(List<Project*> const& _ps = List<Project*>());
+	virtual void						removeProject(Project* _p);
+
+protected:
+	virtual int							minRequired(int _i) const { return Super::minRequired(_i); }
+	virtual Kinds						allowedKinds(int _i) const;
+	virtual List<Concept*>				savedChildren() const { return cardinalChildren(); }
+
+private:
+	void								apresLoad(Project* _p = 0);
+	void								archiveModel();
+	void								killIncludeds();
+	void								rejigIncludes();
+
+	String								includeCode() const;
 };
 
 }

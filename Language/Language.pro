@@ -16,6 +16,6 @@ SUBDIRS = \
  Namers \
  Statements \
  CStuff \
- Projects \
+ CLanguage \
  Members \
  Class \

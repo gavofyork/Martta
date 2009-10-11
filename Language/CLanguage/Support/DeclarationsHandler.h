@@ -24,8 +24,8 @@
 #include <QtCore>
 #include <QtXml>
 
-#ifndef M_API_Projects
-#define M_API_Projects M_OUTAPI
+#ifndef M_API_CLanguage
+#define M_API_CLanguage M_OUTAPI
 #endif
 
 namespace Martta
@@ -44,7 +44,7 @@ inline QString qs(String const& _s)
 	return QString::fromWCharArray(_s.data(), _s.length());
 }
 
-class M_API_Projects DeclarationsHandler: public QXmlContentHandler
+class M_API_CLanguage DeclarationsHandler: public QXmlContentHandler
 {
 public:
 	DeclarationsHandler(Concept* _d): m_d(_d) {}

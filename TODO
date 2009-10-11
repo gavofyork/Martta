@@ -1,5 +1,4 @@
-RENAME MemberVariable to Field.
-RENAME Project to Component
+RENAME Project to Module
 RENAME Solution to Project
 
 --------------------------------------------------------------------------------

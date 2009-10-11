@@ -238,7 +238,7 @@ prepare Statements "ReturnStatement ReferencedValue InScopeReferencedValue Globa
 
 prepare CStuff "TopLevel Root TopLevelType Function Variable Struct Union Typedef Enumeration Namespace" "Namers"
 
-prepare Projects "CProject CSolution CDependency MainFunction Support/DeclarationsHandler Support/GccXml" "CStuff Project" "CONFIG += qt" "QT = core xml"
+prepare CLanguage "CProject CSolution CDependency MainFunction Support/DeclarationsHandler Support/GccXml" "CStuff Project" "CONFIG += qt" "QT = core xml"
 
 prepare Members "Construction Destructor ConstructedVariable Constructor ConversionOperator MethodOperator Method Member MemberLambda Field MemberValue MemberEnumeration ThisPointer" "Labels Declaration Types Namers Statements Operator Labels"
 

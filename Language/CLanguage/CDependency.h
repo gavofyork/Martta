@@ -26,14 +26,14 @@ using namespace MarttaSupport;
 
 #include "Concept.h"
 
-#ifndef M_API_Projects
-#define M_API_Projects M_OUTAPI
+#ifndef M_API_CLanguage
+#define M_API_CLanguage M_OUTAPI
 #endif
 
 namespace Martta
 {
 
-class M_API_Projects CDependency: public_super Concept
+class M_API_CLanguage CDependency: public_super Concept
 {
 	MARTTA_PROPER(Concept)
 

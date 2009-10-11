@@ -27,8 +27,8 @@ using namespace MarttaSupport;
 #include "Project.h"
 #include "Namespace.h"
 
-#ifndef M_API_Projects
-#define M_API_Projects M_OUTAPI
+#ifndef M_API_CLanguage
+#define M_API_CLanguage M_OUTAPI
 #endif
 
 namespace Martta
@@ -36,7 +36,7 @@ namespace Martta
 
 class CProject;
 
-class M_API_Projects CProjectDependency: public_super Concept
+class M_API_CLanguage CProjectDependency: public_super Concept
 {
 	MARTTA_PROPER(Concept)
 
@@ -44,7 +44,7 @@ private:
 	ModelPtr<CProject> m_subject;
 };
 
-class M_API_Projects CProject: public_super Namespace, public_interface Project
+class M_API_CLanguage CProject: public_super Namespace, public_interface Project
 {
 	MARTTA_PROPER(Namespace)
 	MARTTA_ALSO_INHERITS(Project, 0)
