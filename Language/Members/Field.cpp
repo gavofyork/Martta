@@ -22,32 +22,32 @@
 #include "TextLabel.h"
 #include "TypeConcept.h"
 #include "Reference.h"
-#include "MemberVariable.h"
+#include "Field.h"
 
 namespace Martta
 {
 
-MARTTA_PROPER_CPP(MemberVariable);
-MARTTA_REGISTER_CSS(MemberVariable,
-	L".MemberVariable-Fader { margin-right: -15px; padding-right: 15px; padding-left: 4px; -webkit-border-top-left-radius: 7px; -webkit-border-bottom-left-radius: 7px; background-image: -webkit-gradient(linear, left top, right top, from(#ccc), to(rgba(0, 0, 0, 0))); }"
-	L".MemberVariable { text-shadow: 1px 1px 1px #fff; color: #888; font-size: 70%; font-weight: bold; }"
+MARTTA_PROPER_CPP(Field);
+MARTTA_REGISTER_CSS(Field,
+	L".Field-Fader { margin-right: -15px; padding-right: 15px; padding-left: 4px; -webkit-border-top-left-radius: 7px; -webkit-border-bottom-left-radius: 7px; background-image: -webkit-gradient(linear, left top, right top, from(#ccc), to(rgba(0, 0, 0, 0))); }"
+	L".Field { text-shadow: 1px 1px 1px #fff; color: #888; font-size: 70%; font-weight: bold; }"
 );
 
-String MemberVariable::defineLabelHtml(String const& _text) const
+String Field::defineLabelHtml(String const& _text) const
 {
-	return L"<span class=\"MemberVariable-Fader\"><span class=\"MemberVariable\">M</span></span>" + _text;
+	return L"<span class=\"Field-Fader\"><span class=\"Field\">M</span></span>" + _text;
 }
 
-Kinds MemberVariable::allowedKinds(int _i) const
+Kinds Field::allowedKinds(int _i) const
 {
 	if (_i == OurType)
 		return Kind::of<TypeConcept>();
 	return Super::allowedKinds(_i);
 }
 
-bool MemberVariable::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
+bool Field::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
-	return simplePositionKeyPressHandler<MemberVariable>(_p, _e, L"F");
+	return simplePositionKeyPressHandler<Field>(_p, _e, L"F");
 }
 
 }

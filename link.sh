@@ -230,7 +230,7 @@ prepare SimpleTypes "Const Reference PhysicalType" "TypeConcept"
 
 prepare Variables "Interfaces/VariableNamer Support/VariablePlacer AssignedVariable DefaultConstructedVariable" "Labels Statement SimpleTypes"
 
-prepare Types "Interfaces/TypeDefinition HashType ListType StringType ExplicitType Array BuiltinType BuiltinDeclaration BuiltinMethod BuiltinOperator MemberTemplateType Memberify AddressType Pointer UndefinedArray FunctionType Subscriptable Support/SubscriptableRegistrar" "TypeConcept Statement CTypes Operator Declaration Variables"
+prepare Types "Interfaces/TypeDefinition HashType ListType StringType ReferencedType Array BuiltinType BuiltinDeclaration BuiltinMethod BuiltinOperator MemberTemplateType Memberify AddressType Pointer UndefinedArray FunctionType Subscriptable Support/SubscriptableRegistrar" "TypeConcept Statement CTypes Operator Declaration Variables"
 
 prepare Namers "EnumerationNamer EnumValue Argument LambdaNamer" "Labels Declaration Types Statement CQualifiers"
 
@@ -240,7 +240,7 @@ prepare CStuff "TopLevel Root TopLevelType Function Variable Struct Union Typede
 
 prepare Projects "CProject CSolution CDependency MainFunction Support/DeclarationsHandler Support/GccXml" "CStuff Project" "CONFIG += qt" "QT = core xml"
 
-prepare Members "Construction Destructor ConstructedVariable Constructor ConversionOperator MethodOperator Method Member MemberLambda MemberVariable MemberValue MemberEnumeration ThisPointer" "Labels Declaration Types Namers Statements Operator Labels"
+prepare Members "Construction Destructor ConstructedVariable Constructor ConversionOperator MethodOperator Method Member MemberLambda Field MemberValue MemberEnumeration ThisPointer" "Labels Declaration Types Namers Statements Operator Labels"
 
 prepare Class "Class Interfaces/Artificial ArtificialAssignmentOperator ArtificialCopyConstructor ArtificialDefaultConstructor Base VirtualBase Virtual VirtualMethod VirtualOverload VirtualPure MemberReferencedValue" "CStuff Types Members Statements"
 
@@ -269,8 +269,8 @@ prepare Subscriptable "Subscriptable Support/SubscriptableRegistrar" TypeConcept
 prepare PhysicalType PhysicalType TypeConcept 
 prepare FunctionType FunctionType PhysicalType
 
-prepare ExplicitType "ExplicitType Interfaces/TypeDefinition" "PhysicalType Identifiable"
-prepare QualifierTypes "Const Reference" ExplicitType
+prepare ReferencedType "ReferencedType Interfaces/TypeDefinition" "PhysicalType Identifiable"
+prepare QualifierTypes "Const Reference" ReferencedType
 prepare AddressType "AddressType Pointer UndefinedArray" "QualifierTypes Subscriptable"
 prepare Memberify Memberify "FunctionType AddressType"
 prepare MemberTemplateType MemberTemplateType Memberify
@@ -284,7 +284,7 @@ prepare BuiltinDeclarations "BuiltinDeclaration BuiltinMethod BuiltinOperator" "
 prepare BuiltinType "BuiltinType" "PhysicalType AddressType BuiltinDeclarations CTypes"
 prepare Array Array "AddressType Statement BuiltinType"
 prepare ExtendedTypes "HashType ListType StringType" "MemberTemplateType BuiltinType Statement Subscriptable"
-prepare Types "" "AddressType QualifierTypes ExplicitType FunctionType Memberify MemberTemplateType Array BuiltinType ExtendedTypes"
+prepare Types "" "AddressType QualifierTypes ReferencedType FunctionType Memberify MemberTemplateType Array BuiltinType ExtendedTypes"
 
 prepare ProgramFlow "IfStatement Loop ForLoop WhileLoop BreakStatement" "Compound BuiltinType Corporal Conditional"
 prepare Literals "Literal BoolLiteral StringLiteral IntegerLiteral FloatLiteral" "Statement BuiltinType"
@@ -300,7 +300,7 @@ prepare SimpleBinaryOperation SimpleBinaryOperation "BinaryOperation BuiltinType
 prepare SubscriptOperation SubscriptOperation "BinaryOperation BuiltinType Subscriptable"
 prepare LifeOperations "NewOperation DeleteOperation" "UnaryOperation PhysicalType AddressType Array"
 
-prepare MemberOperations "GenericMemberOperation MemberOperation LongMemberOperation" "BinaryOperation QualifierTypes ExplicitType FunctionType AddressType Memberify"
+prepare MemberOperations "GenericMemberOperation MemberOperation LongMemberOperation" "BinaryOperation QualifierTypes ReferencedType FunctionType AddressType Memberify"
 
 prepare Referenced Referenced "Statement TextLabel IdentifierSet"
 prepare LocalReferenced LocalReferenced Referenced
@@ -309,7 +309,7 @@ prepare InScopeReferenced InScopeReferenced "Referenced Declaration"
 
 prepare TopLevel TopLevel "Declaration TextLabel"
 prepare Root Root "TopLevel Declaration"
-prepare TopLevelType TopLevelType "TypeConcept ExplicitType TopLevel"
+prepare TopLevelType TopLevelType "TypeConcept ReferencedType TopLevel"
 
 prepare VariableNamer VariableNamer "QualifierTypes IdLabel TextLabel ValueDefiner"
 prepare Argument Argument "VariableNamer TypeConcept TextLabel Declaration"
@@ -319,7 +319,7 @@ prepare StatementVariables "AssignedVariable DefaultConstructedVariable" "Variab
 
 prepare ArgumentReferenced ArgumentReferenced "Referenced LambdaNamer Declaration"
 
-prepare EnumerationNamer "EnumerationNamer EnumValue" "TextLabel ValueDefiner ExplicitType Declaration BuiltinType Statement"
+prepare EnumerationNamer "EnumerationNamer EnumValue" "TextLabel ValueDefiner ReferencedType Declaration BuiltinType Statement"
 
 prepare Variable Variable "CQualifiers VariableNamer TopLevel"
 prepare Function Function "CQualifiers LambdaNamer TopLevel"
@@ -331,25 +331,25 @@ prepare Typedef Typedef "TopLevelType Struct"
 prepare Union Union TopLevelType
 prepare Enumeration Enumeration "EnumerationNamer TopLevelType"
 
-prepare Member Member "Labels ExplicitType Declaration"
+prepare Member Member "Labels ReferencedType Declaration"
 prepare MemberEnumeration MemberEnumeration "Member EnumerationNamer"
 prepare MemberValue MemberValue "Member ValueDefiner QualifierTypes Memberify"
-prepare MemberVariable MemberVariable "MemberValue VariableNamer"
-prepare MemberLambda MemberLambda "ExplicitType AddressType QualifierTypes Compound Argument MemberValue LambdaNamer"
+prepare Field Field "MemberValue VariableNamer"
+prepare MemberLambda MemberLambda "ReferencedType AddressType QualifierTypes Compound Argument MemberValue LambdaNamer"
 
 prepare ThisPointer ThisPointer "Statement MemberLambda"
 
 prepare Method Method MemberLambda
 prepare MethodOperator MethodOperator "MemberLambda Operator Labels BuiltinType"
 prepare ConversionOperator ConversionOperator "MemberLambda Labels"
-prepare Constructor Constructor "MemberLambda ExplicitType Labels QualifierTypes"
-prepare Construction Construction "Invocation Constructor ExplicitType QualifierTypes"
+prepare Constructor Constructor "MemberLambda ReferencedType Labels QualifierTypes"
+prepare Construction Construction "Invocation Constructor ReferencedType QualifierTypes"
 prepare ConstructedVariable ConstructedVariable "VariableNamer Statement TypeConcept Construction"
 
 prepare Destructor Destructor MemberLambda
 
-prepare Artificials "Interfaces/Artificial ArtificialAssignmentOperator ArtificialCopyConstructor ArtificialDefaultConstructor" "Constructor MethodOperator QualifierTypes ExplicitType"
+prepare Artificials "Interfaces/Artificial ArtificialAssignmentOperator ArtificialCopyConstructor ArtificialDefaultConstructor" "Constructor MethodOperator QualifierTypes ReferencedType"
 
-prepare Class "Class Base VirtualBase Virtual VirtualMethod VirtualOverload VirtualPure" "TopLevelType Memberify Destructor Method MethodOperator ConversionOperator Constructor Destructor MemberEnumeration MemberVariable Artificials"
+prepare Class "Class Base VirtualBase Virtual VirtualMethod VirtualOverload VirtualPure" "TopLevelType Memberify Destructor Method MethodOperator ConversionOperator Constructor Destructor MemberEnumeration Field Artificials"
 
 prepare MemberReferenced MemberReferenced "Class Referenced MemberOperations"

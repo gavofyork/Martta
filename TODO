@@ -1,5 +1,3 @@
-RENAME ExplicitType to ReferencedType.
-RENAME Referenced to ReferencedValue.
 RENAME MemberVariable to Field.
 RENAME Project to Component
 RENAME Solution to Project

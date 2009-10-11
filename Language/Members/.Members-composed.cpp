@@ -8,7 +8,7 @@
 #include "./Method.cpp"
 #include "./Member.cpp"
 #include "./MemberLambda.cpp"
-#include "./MemberVariable.cpp"
+#include "./Field.cpp"
 #include "./MemberValue.cpp"
 #include "./MemberEnumeration.cpp"
 #include "./ThisPointer.cpp"

@@ -23,7 +23,7 @@ using namespace MarttaSupport;
 
 #include "VirtualPure.h"	// < interface away to VirtualPure::whacksParent() const { return true; } from Member::whacksParent() const { return false; }?
 
-#include "MemberVariable.h"
+#include "Field.h"
 #include "MemberEnumeration.h"
 #include "Method.h"
 #include "Base.h"
@@ -407,7 +407,7 @@ String Class::defineHtml() const
 		foreach (MemberLambda* f, cardinalChildrenOf<MemberLambda>())
 			if (f->access() == Access(i) && !f->Concept::isKind(recognised))
 				mem += toHtml(f, L"div");
-		foreach (MemberVariable* f, cardinalChildrenOf<MemberVariable>())
+		foreach (Field* f, cardinalChildrenOf<Field>())
 			if (f->access() == Access(i))
 				mem += toHtml(f, L"div");
 		foreach (MemberEnumeration* f, cardinalChildrenOf<MemberEnumeration>())
@@ -429,7 +429,7 @@ String Class::defineHtml() const
 	ret += ";yminor;' (";
 	if (int n = cardinalChildCountOf<Method>())
 		ret += String::number(n) + " method" + (n > 1 ? "s, " : ", ");
-	if (int n = cardinalChildCountOf<MemberVariable>())
+	if (int n = cardinalChildCountOf<Field>())
 		ret += String::number(n) + " variable" + (n > 1 ? "s, " : ", ");
 	if (int n = cardinalChildCountOf<Constructor>())
 		ret += String::number(n) + " constructor" + (n > 1 ? "s, " : ", ");

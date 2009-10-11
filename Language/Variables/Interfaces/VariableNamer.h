@@ -46,7 +46,7 @@ public:
 
 protected:
 	virtual Type						type() const;
-	virtual inline String				defineLabelCode(String const& _text) const { return L"l_" + camelCase(_text); }	// Overridden in MemberVariable & Argument
+	virtual inline String				defineLabelCode(String const& _text) const { return L"l_" + camelCase(_text); }	// Overridden in Field & Argument
 
 	inline String						interfaceCode() const { return basicCode() + ";\n"; }
 	inline String						implementationCode() const { return String::null; }

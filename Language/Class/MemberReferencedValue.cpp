@@ -21,7 +21,7 @@
 #include "Artificial.h"
 #include "Class.h"
 #include "GenericMemberOperation.h"
-#include "MemberVariable.h"
+#include "Field.h"
 #include "MemberLambda.h"
 
 #include "Memberify.h"
@@ -125,7 +125,7 @@ String MemberReferencedValue::defineEditHtml(CodeScene* _cs) const
 		ValueDefiner* s = static_cast<CompletionDelegate<ReferencedValue, ValueDefiner*>*>(d)->selection();
 		String ret = d->real() + L"<span class=\"unreal\">" + d->unreal() + L"</span>";
 		if (!s)
-			ret = MemberVariable().labelHtml(ret);
+			ret = Field().labelHtml(ret);
 		return editHtmlHelper(s, ret) + tagOf(L"minor", d->comment());
 	}
 	return String::null;
