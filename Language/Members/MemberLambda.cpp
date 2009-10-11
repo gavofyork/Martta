@@ -19,7 +19,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "TypeDefinition.h"
-#include "ExplicitType.h"
+#include "ReferencedType.h"
 #include "Const.h"
 #include "Pointer.h"
 #include "ConstLabel.h"

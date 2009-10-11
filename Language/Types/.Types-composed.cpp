@@ -3,7 +3,7 @@
 #include "./HashType.cpp"
 #include "./ListType.cpp"
 #include "./StringType.cpp"
-#include "./ExplicitType.cpp"
+#include "./ReferencedType.cpp"
 #include "./Array.cpp"
 #include "./BuiltinType.cpp"
 #include "./BuiltinDeclaration.cpp"

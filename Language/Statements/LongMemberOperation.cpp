@@ -22,7 +22,7 @@
 #include "Reference.h"
 #include "Const.h"
 #include "Pointer.h"
-#include "ExplicitType.h"
+#include "ReferencedType.h"
 #include "FunctionType.h"
 #include "Memberify.h"
 #include "LongMemberOperation.h"
@@ -67,12 +67,12 @@ bool LongMemberOperation::keyPressedOnPosition(Position const& _p, KeyEvent cons
 			_p->debugTree();
 			mDebug() << _p->asKind<Typed>()->type()->isType<AddressType>();
 			if (_p->asKind<Typed>()->type()->isType<AddressType>())
-				mDebug() << _p->asKind<Typed>()->type()->asType<AddressType>()->original()->isType<ExplicitType>();
+				mDebug() << _p->asKind<Typed>()->type()->asType<AddressType>()->original()->isType<ReferencedType>();
 		}
 	}*/
 	if (_p.exists() && !_p->isPlaceholder() && _p->isKind<Typed>() &&
 		_p->asKind<Typed>()->apparentType()->isType<AddressType>() &&
-		_p->asKind<Typed>()->apparentType()->asType<AddressType>()->original()->isType<ExplicitType>())
+		_p->asKind<Typed>()->apparentType()->asType<AddressType>()->original()->isType<ReferencedType>())
 		return simpleKeyPressedOnPositionHandler<LongMemberOperation>(_p, _e, Operator::XArrow);
 	else
 		return false;

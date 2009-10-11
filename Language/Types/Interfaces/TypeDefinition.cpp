@@ -19,7 +19,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "Type.h"
-#include "ExplicitType.h"
+#include "ReferencedType.h"
 #include "TypeDefinition.h"
 
 namespace Martta
@@ -34,7 +34,7 @@ bool TypeDefinition::hasSingleCastOperator(TypeConcept const* _t, bool) const
 
 bool TypeDefinition::defineSimilarityTo(TypeConcept const* _t, TypeConcept::Castability _c) const
 {
-	if (ExplicitType const* e = _t->tryKind<ExplicitType>())
+	if (ReferencedType const* e = _t->tryKind<ReferencedType>())
 		if (e->subject() == this)
 			return true;
 	return _c == TypeConcept::Convertible && hasSingleCastOperator(_t, false);

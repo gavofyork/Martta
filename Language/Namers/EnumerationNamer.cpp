@@ -19,7 +19,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "EnumValue.h"
-#include "ExplicitType.h"
+#include "ReferencedType.h"
 #include "TextLabel.h"
 #include "CodeScene.h"
 #include "SpecialKeys.h"

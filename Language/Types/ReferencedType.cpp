@@ -22,19 +22,19 @@
 
 #include "IdentifierSet.h"
 #include "TypeDefinition.h"
-#include "ExplicitType.h"
+#include "ReferencedType.h"
 #include "CodeScene.h"
 #include "CompletionDelegate.h"
 
 namespace Martta
 {
 
-MARTTA_PROPER_CPP(ExplicitType);
+MARTTA_PROPER_CPP(ReferencedType);
 
-class ExplicitTypeSet: public IdentifierSet
+class ReferencedTypeSet: public IdentifierSet
 {
 public:
-	virtual String						setId() const { return L"Martta::ExplicitType"; }
+	virtual String						setId() const { return L"Martta::ReferencedType"; }
 	virtual List<Named*>				identifiableAt(Position const& _p)
 	{
 		if (canPlaceVariable(_p))
@@ -43,23 +43,23 @@ public:
 	}
 	virtual void						acceptAt(Position const& _pos, Named* _i)
 	{
-		placeVariable(_pos, new ExplicitType(static_cast<Identifiable*>(_i)->asKind<TypeDefinition>()));
+		placeVariable(_pos, new ReferencedType(static_cast<Identifiable*>(_i)->asKind<TypeDefinition>()));
 	}
 	virtual String						defineEditHtml(Named* _i, String const& _mid)
 	{
-		return ExplicitType(static_cast<Identifiable*>(_i)->asKind<TypeDefinition>()).fullHtml(_mid);
+		return ReferencedType(static_cast<Identifiable*>(_i)->asKind<TypeDefinition>()).fullHtml(_mid);
 	}
 	List<Named*> m_nameds;
 };
 
-static ExplicitTypeSet s_explicitTypeSet;
+static ReferencedTypeSet s_explicitTypeSet;
 
-bool ExplicitType::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
+bool ReferencedType::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
 	if (_p.exists() && _p->isPlaceholder() && _e->text().length() == 1 && (_e->text()[0].isUpper() || _e->text()[0] == L':'))
 	{
 		// switch to Explicit Type.
-		Concept* e = _p.place(new ExplicitType);
+		Concept* e = _p.place(new ReferencedType);
 		_e->codeScene()->setEditing(e);
 		if (_e->codeScene()->isEditing(e))
 			_e->reinterpretLater();
@@ -69,7 +69,7 @@ bool ExplicitType::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 	return true;
 }
 
-bool ExplicitType::keyPressed(KeyEvent const* _e)
+bool ReferencedType::keyPressed(KeyEvent const* _e)
 {
 	if (_e->text().length() == 1 && (_e->text()[0].isLetter() || _e->text()[0] == L':'))
 	{
@@ -82,42 +82,42 @@ bool ExplicitType::keyPressed(KeyEvent const* _e)
 	return true;
 }
 
-void ExplicitType::apresLoad()
+void ReferencedType::apresLoad()
 {
 	if (m_subject)
 		set(m_subject);
 	Super::apresLoad();
 }
 
-String ExplicitType::defineHtml() const
+String ReferencedType::defineHtml() const
 {
 	return L"<^>" + tagOf(L"TypeConcept", typeHtml(m_subject.isUsable() ? m_subject->name() : L"&empty;"));
 }
 
-List<TypeDefinition*> ExplicitType::possibilities() const
+List<TypeDefinition*> ReferencedType::possibilities() const
 {
 	List<TypeDefinition*> ret;
 	TypeDefinition* old = m_subject;
 	foreach (TypeDefinition* i, parent()->selfAndAncestorsChildrenOf<TypeDefinition>())
 	{
-		const_cast<ExplicitType*>(this)->m_subject = i;
+		const_cast<ReferencedType*>(this)->m_subject = i;
 		if (parent()->isChildInValidState(index()))
 			ret << i;
 	}
-	const_cast<ExplicitType*>(this)->m_subject = old;
+	const_cast<ReferencedType*>(this)->m_subject = old;
 	return ret;
 }
 
-String ExplicitType::defineEditHtml(CodeScene* _cs) const
+String ReferencedType::defineEditHtml(CodeScene* _cs) const
 {
 	if (EditDelegateFace* d = _cs->editDelegate(this))
 		return tagOf(L"TypeConcept", typeHtml(d->real() + tagOf(L"unreal", d->unreal()))) + tagOf(L"minor", d->comment());
 	return String::null;
 }
 
-EditDelegateFace* ExplicitType::newDelegate(CodeScene* _s)
+EditDelegateFace* ReferencedType::newDelegate(CodeScene* _s)
 {
-	return new CompletionDelegate<ExplicitType, TypeDefinition*>(this, _s);
+	return new CompletionDelegate<ReferencedType, TypeDefinition*>(this, _s);
 }
 
 }

@@ -20,7 +20,7 @@
 
 #include "Type.h"
 #include "BuiltinType.h"
-#include "ExplicitType.h"
+#include "ReferencedType.h"
 #include "Typed.h"
 #include "TextLabel.h"
 

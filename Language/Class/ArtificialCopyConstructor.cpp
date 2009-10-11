@@ -20,7 +20,7 @@
 
 #include "Const.h"
 #include "Reference.h"
-#include "ExplicitType.h"
+#include "ReferencedType.h"
 #include "ArtificialCopyConstructor.h"
 
 namespace Martta

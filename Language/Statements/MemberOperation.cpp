@@ -20,7 +20,7 @@
 
 #include "LongMemberOperation.h"
 #include "Reference.h"
-#include "ExplicitType.h"
+#include "ReferencedType.h"
 #include "Const.h"
 #include "FunctionType.h"
 #include "AddressType.h"

@@ -20,7 +20,7 @@
 
 #include "Class.h"
 #include "AccessLabel.h"
-#include "ExplicitType.h"
+#include "ReferencedType.h"
 #include "Base.h"
 
 namespace Martta
@@ -32,9 +32,9 @@ MARTTA_NAMED_CPP(Base, Superclass);
 
 Class* Base::classType() const
 {
-	if (!isComplete() || !childAs<ExplicitType>(Superclass)->subject()->isKind<Class>())
+	if (!isComplete() || !childAs<ReferencedType>(Superclass)->subject()->isKind<Class>())
 		return 0;
-	return childAs<ExplicitType>(Superclass)->subject()->asKind<Class>();
+	return childAs<ReferencedType>(Superclass)->subject()->asKind<Class>();
 }
 
 bool Base::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
@@ -49,8 +49,8 @@ void Base::onDependencyChanged(int, Concept*)
 
 bool Base::isChildInValidState(int _i) const
 {
-	if (childIs<ExplicitType>(_i))
-		return Super::isChildInValidState(_i) && childAs<ExplicitType>(_i)->subject()->isKind<Class>() && childAs<ExplicitType>(_i)->subject()->self() != parent();
+	if (childIs<ReferencedType>(_i))
+		return Super::isChildInValidState(_i) && childAs<ReferencedType>(_i)->subject()->isKind<Class>() && childAs<ReferencedType>(_i)->subject()->self() != parent();
 	return Super::isChildInValidState(_i);
 }
 
@@ -80,7 +80,7 @@ Kinds Base::allowedKinds(int _i) const
 	if (_i == Accessibility)
 		return Kind::of<AccessLabel>();
 	if (_i == Superclass)
-		return Kind::of<ExplicitType>();
+		return Kind::of<ReferencedType>();
 	return Super::allowedKinds(_i);
 }
 

@@ -290,7 +290,7 @@ Concept* DeclarationsHandler::resolveType(QString const& _typeId, Concept** _td)
 	{
 		if (_td)
 			*_td = m_types[_typeId];
-		return Concept::evaluate(String("ExplicitType[key=0x%1]").arg((void*)m_types[_typeId]));
+		return Concept::evaluate(String("ReferencedType[key=0x%1]").arg((void*)m_types[_typeId]));
 	}
 	else if (m_simples.contains(_typeId))
 		return Concept::evaluate(String(L"BuiltinType[id=%1]").arg(m_simples[_typeId]));

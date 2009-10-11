@@ -18,7 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "ExplicitType.h"
+#include "ReferencedType.h"
 #include "Reference.h"
 #include "Construction.h"
 

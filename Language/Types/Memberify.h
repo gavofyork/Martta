@@ -21,7 +21,7 @@
 #pragma once
 
 #include "Const.h"
-#include "ExplicitType.h"
+#include "ReferencedType.h"
 #include "ModifyingType.h"
 
 #ifndef M_API_Types
@@ -70,7 +70,7 @@ T* Martta::Memberify::scope(bool* _isConst) const
 	TypeConcept* te = scope();
 	if (!te)
 		return 0;
-	if (ExplicitType* et = te->ignore<Const>()->tryType<ExplicitType>())
+	if (ReferencedType* et = te->ignore<Const>()->tryType<ReferencedType>())
 	{
 		if (_isConst)
 			*_isConst = te->isType<Const>();

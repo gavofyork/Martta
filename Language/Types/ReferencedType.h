@@ -32,17 +32,17 @@
 namespace Martta
 {
 
-class ExplicitTypeSet;
+class ReferencedTypeSet;
 
-class M_API_Types ExplicitType: public_super PhysicalType
+class M_API_Types ReferencedType: public_super PhysicalType
 {
 	MARTTA_PROPER(PhysicalType)
 
 	friend class TypeDefinition;
-	friend class ExplicitTypeSet;
+	friend class ReferencedTypeSet;
 
 public:
-	ExplicitType(TypeDefinition* _subject = 0): m_subject(0) { set(_subject); }
+	ReferencedType(TypeDefinition* _subject = 0): m_subject(0) { set(_subject); }
 
 	TypeDefinition*						subject() const { return m_subject; }
 	TypeDefinition*						get() const { return m_subject; }
@@ -58,9 +58,9 @@ protected:
 	virtual inline List<ValueDefiner*>	applicableMembers(Concept const* _s = 0, bool _isConst = false) const { return m_subject ? m_subject->applicableMembers(_s, _isConst) : List<ValueDefiner*>(); }
 	virtual inline bool					canStandAlone() const { return m_subject && m_subject->canStandAlone(); }
 	virtual inline bool					isCastableTo(TypeConcept const* _t, bool _const) { return m_subject && m_subject->hasSingleCastOperator(_t, _const); }
-	virtual inline TypeConcept*			newClone() const { return new ExplicitType(m_subject); }
+	virtual inline TypeConcept*			newClone() const { return new ReferencedType(m_subject); }
 
-	virtual inline bool					contentsEquivalentTo(TypeConcept const* _t) const { if (ExplicitType const* e = _t->tryKind<ExplicitType>()) return e->m_subject == m_subject; return false; }
+	virtual inline bool					contentsEquivalentTo(TypeConcept const* _t) const { if (ReferencedType const* e = _t->tryKind<ReferencedType>()) return e->m_subject == m_subject; return false; }
 	virtual inline bool					defineSimilarityTo(TypeConcept const* _t, Castability _c) const { return (m_subject && m_subject->defineSimilarityTo(_t, _c)) || Super::defineSimilarityTo(_t, _c); }
 	virtual inline bool					defineSimilarityFrom(TypeConcept const* _f, Castability _c) const { return (m_subject && _c == Convertible && m_subject->hasSingleConversionConstructor(_f)) || Super::defineSimilarityFrom(_f, _c); }
 
@@ -95,7 +95,7 @@ template<class S>
 struct TypeConstructor<S*>
 {
 	static inline TypeDefinition* typeComb(S* _x) { return _x; }
-	static inline void construct(Type* _this, S* _subject) { _this->m_top = new ExplicitType(_subject); _this->m_top->setOwner(_this); }
+	static inline void construct(Type* _this, S* _subject) { _this->m_top = new ReferencedType(_subject); _this->m_top->setOwner(_this); }
 };
 
 }

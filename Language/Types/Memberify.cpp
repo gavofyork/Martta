@@ -32,7 +32,7 @@ Memberify::Memberify(TypeDefinition* _scope, bool _isConst)
 	prepareChildren();
 	if (child(Scope))
 		child(Scope)->killAndDelete();
-	middle(Scope).place(new ExplicitType(_scope));
+	middle(Scope).place(new ReferencedType(_scope));
 	if (_isConst)
 		child(Scope)->insert(new Const);
 }

@@ -40,7 +40,7 @@ using namespace MarttaSupport;
 #include "AccessLabel.h"
 #include "Const.h"
 #include "Reference.h"
-#include "ExplicitType.h"
+#include "ReferencedType.h"
 #include "Class.h"
 
 namespace Martta
@@ -327,9 +327,9 @@ bool Class::hasSingleConversionConstructor(TypeConcept const* _f) const
 
 bool Class::defineSimilarityTo(TypeConcept const* _t, TypeConcept::Castability _c) const
 {
-	if (_c == TypeConcept::Physical && _t->isKind<ExplicitType>())
+	if (_c == TypeConcept::Physical && _t->isKind<ReferencedType>())
 	{
-		TypeDefinition* ts = _t->asKind<ExplicitType>()->subject();
+		TypeDefinition* ts = _t->asKind<ReferencedType>()->subject();
 		// Note Physical attribute should be tested last.
 		List<Base*> bases = cardinalChildrenOf<Base>();
 		while (bases.size())

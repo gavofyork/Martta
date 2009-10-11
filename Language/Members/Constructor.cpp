@@ -19,7 +19,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "AccessLabel.h"
-#include "ExplicitType.h"
+#include "ReferencedType.h"
 #include "Compound.h"
 #include "Argument.h"
 #include "Reference.h"
