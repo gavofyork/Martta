@@ -23,7 +23,7 @@ macx:DEFINES += M_MAC
 win32:DEFINES += M_WIN
 !macx:unix: CONFIG += linux
 linux:DEFINES += M_LINUX
-DEPS = Project WebView
+DEPS = Language WebView
 QT += svg \
 	webkit \
 	xml
@@ -45,7 +45,7 @@ win32:DESTDIR = .\.
 
 win32:DLLs.commands = @echo Copying libraries...\
 	&& copy ..\\support\\support.dll $$DESTDIR \
-	&& copy ..\\plugins\\Project.dll $$DESTDIR \
+	&& copy ..\\plugins\\Language.dll $$DESTDIR \
 	&& copy ..\\plugins\\WebView.dll $$DESTDIR \
 	&& copy ..\\plugins\\Concept.dll $$DESTDIR
 QMAKE_EXTRA_TARGETS += DLLs

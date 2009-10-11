@@ -5,7 +5,7 @@ SUBDIRS = \
  CTypes \
  Concept \
  WebView \
- Project \
+ Language \
  TypeConcept \
  Labels \
  Declaration \

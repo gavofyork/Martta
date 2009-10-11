@@ -216,7 +216,7 @@ prepare Concept "Support/Auxilliary Support/AuxilliaryFace Support/AuxilliaryReg
 
 prepare WebView "Interfaces/WebViewable Interfaces/WebInformer Support/WebStylist Support/WebStylistRegistrar" "Concept"
 
-prepare Project "Project Solution" "Concept"
+prepare Language "Project Solution" "Concept"
 
 prepare TypeConcept "TypeConcept ModifyingType Interfaces/TypedOwner Interfaces/TypeNamer Support/Type" "Concept WebView"
 
@@ -238,7 +238,7 @@ prepare Statements "ReturnStatement ReferencedValue InScopeReferencedValue Globa
 
 prepare CStuff "TopLevel Root TopLevelType Function Variable Struct Union Typedef Enumeration Namespace" "Namers"
 
-prepare CLanguage "CProject CSolution CDependency MainFunction Support/DeclarationsHandler Support/GccXml" "CStuff Project" "CONFIG += qt" "QT = core xml"
+prepare CLanguage "CProject CSolution CDependency MainFunction Support/DeclarationsHandler Support/GccXml" "CStuff Language" "CONFIG += qt" "QT = core xml"
 
 prepare Members "Construction Destructor ConstructedVariable Constructor ConversionOperator MethodOperator Method Member MemberLambda Field MemberValue MemberEnumeration ThisPointer" "Labels Declaration Types Namers Statements Operator Labels"
 

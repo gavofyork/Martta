@@ -1,4 +1,4 @@
-DEPS += CStuff Project
+DEPS += CStuff Language
 OURDIRS = . Support
 TWD = $$PWD
 
