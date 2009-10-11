@@ -18,38 +18,32 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "LambdaNamer.h"
-#include "Argument.h"
-#include "CompletionDelegate.h"
-#include "ArgumentReferenced.h"
+#include "Declaration.h"
+#include "InScopeReferencedValue.h"
 
 namespace Martta
 {
 
-MARTTA_PROPER_CPP(ArgumentReferenced);
+MARTTA_PROPER_CPP(InScopeReferencedValue);
 
-static ReferencedValueSet<ArgumentReferenced> s_argumentReferencedRegistrand;
+static ReferencedValueSet<InScopeReferencedValue> s_inScopeReferencedValueRegistrand;
 
-bool ArgumentReferenced::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
+List<ValueDefiner*> InScopeReferencedValue::possibilities(Position const& _p)
 {
-	if (_p.exists() && _p->isPlaceholder() && _e->text() == L"_")
+	return _p->ancestor<Declaration>()->valuesKnown();
+}
+
+bool InScopeReferencedValue::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
+{
+	if (_p.exists() && _p->isPlaceholder() && _e->text() == L"$")
 	{
-		ArgumentReferenced* r = new ArgumentReferenced;
+		InScopeReferencedValue* r = new InScopeReferencedValue;
 		_p.place(r);
 		_e->codeScene()->setEditing(r);
 	}
 	else
 		return false;
 	return true;
-}
-
-List<ValueDefiner*> ArgumentReferenced::possibilities(Position const& _p)
-{
-	List<ValueDefiner*> ret;
-	if (LambdaNamer* ln = _p->ancestor<LambdaNamer>())
-		for (int i = 0; i < ln->argumentCount(); i++)
-			ret << ln->argument(i);
-	return ret;
 }
 
 }

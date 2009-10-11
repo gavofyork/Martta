@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include "Referenced.h"
+#include "ReferencedValue.h"
 
 #ifndef M_API_Class
 #define M_API_Class M_OUTAPI
@@ -29,12 +29,12 @@
 namespace Martta
 {
 
-class M_API_Class MemberReferenced: public_super Referenced
+class M_API_Class MemberReferencedValue: public_super ReferencedValue
 {
-	MARTTA_PROPER(Referenced)
+	MARTTA_PROPER(ReferencedValue)
 
 public:
-	MemberReferenced(ValueDefiner* _subject = 0);
+	MemberReferencedValue(ValueDefiner* _subject = 0);
 
 	virtual List<ValueDefiner*>			possibilities() const { return possibilities(over(), true, true); }
 	static List<ValueDefiner*>			possibilities(Position const& _p, bool _methods = true, bool _nonMethods = true);
@@ -48,12 +48,12 @@ protected:
 	virtual void						onDependencyChanged(int _a, Concept* _d) { if (_d->isKind<MemberLambda>() || _d->isKind<Class>()) changed(Logically); Super::onDependencyChanged(_a, _d); }
 };
 
-class M_API_Class FloatingMemberReferenced: public_super MemberReferenced
+class M_API_Class FloatingMemberReferencedValue: public_super MemberReferencedValue
 {
-	MARTTA_PROPER(MemberReferenced)
+	MARTTA_PROPER(MemberReferencedValue)
 
 public:
-	FloatingMemberReferenced(ValueDefiner* _subject = 0): Referenced(_subject), MemberReferenced(_subject) {}
+	FloatingMemberReferencedValue(ValueDefiner* _subject = 0): ReferencedValue(_subject), MemberReferencedValue(_subject) {}
 
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 

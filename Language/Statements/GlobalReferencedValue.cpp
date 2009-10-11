@@ -20,23 +20,23 @@
 
 #include "Position.h"
 #include "CompletionDelegate.h"
-#include "GlobalReferenced.h"
+#include "GlobalReferencedValue.h"
 
 namespace Martta
 {
 
-MARTTA_PROPER_CPP(GlobalReferenced);
-MARTTA_REGISTER_CSS(GlobalReferenced,
-	L".GlobalReferenced-Fader { margin-right: -15px; padding-right: 15px; padding-left: 4px; -webkit-border-top-left-radius: 7px; -webkit-border-bottom-left-radius: 7px; background-image: -webkit-gradient(linear, left top, right top, from(#ccc), to(rgba(0, 0, 0, 0))); }"
-	L".GlobalReferenced { text-shadow: 1px 1px 1px #fff; color: #888; font-size: 70%; font-weight: bold; }"
+MARTTA_PROPER_CPP(GlobalReferencedValue);
+MARTTA_REGISTER_CSS(GlobalReferencedValue,
+	L".GlobalReferencedValue-Fader { margin-right: -15px; padding-right: 15px; padding-left: 4px; -webkit-border-top-left-radius: 7px; -webkit-border-bottom-left-radius: 7px; background-image: -webkit-gradient(linear, left top, right top, from(#ccc), to(rgba(0, 0, 0, 0))); }"
+	L".GlobalReferencedValue { text-shadow: 1px 1px 1px #fff; color: #888; font-size: 70%; font-weight: bold; }"
 );
 
-bool GlobalReferenced::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
+bool GlobalReferencedValue::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
-	return simplePositionKeyPressHandler<GlobalReferenced>(_p, _e, L":");
+	return simplePositionKeyPressHandler<GlobalReferencedValue>(_p, _e, L":");
 }
 
-bool GlobalReferenced::keyPressed(KeyEvent const* _e)
+bool GlobalReferencedValue::keyPressed(KeyEvent const* _e)
 {
 	if (_e->text().length() == 1 && _e->text()[0].isLetter())
 	{
@@ -49,17 +49,17 @@ bool GlobalReferenced::keyPressed(KeyEvent const* _e)
 	return true;
 }
 
-String GlobalReferenced::defineHtml() const
+String GlobalReferencedValue::defineHtml() const
 {
-	return L"<span class=\"GlobalReferenced-Fader\"><span class=\"GlobalReferenced\">::</span></span>" + Super::defineHtml();
+	return L"<span class=\"GlobalReferencedValue-Fader\"><span class=\"GlobalReferencedValue\">::</span></span>" + Super::defineHtml();
 }
 
-String GlobalReferenced::defineEditHtml(CodeScene* _cs) const
+String GlobalReferencedValue::defineEditHtml(CodeScene* _cs) const
 {
-	return L"<span class=\"GlobalReferenced-Fader\"><span class=\"GlobalReferenced\">::</span></span>" + Super::defineEditHtml(_cs);
+	return L"<span class=\"GlobalReferencedValue-Fader\"><span class=\"GlobalReferencedValue\">::</span></span>" + Super::defineEditHtml(_cs);
 }
 
-List<ValueDefiner*> GlobalReferenced::possibilities(Position const& _p)
+List<ValueDefiner*> GlobalReferencedValue::possibilities(Position const& _p)
 {
 	return _p->root()->childrenOf<ValueDefiner>();
 }

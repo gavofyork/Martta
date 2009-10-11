@@ -10,5 +10,5 @@
 #include "./VirtualMethod.cpp"
 #include "./VirtualOverload.cpp"
 #include "./VirtualPure.cpp"
-#include "./MemberReferenced.cpp"
+#include "./MemberReferencedValue.cpp"
 

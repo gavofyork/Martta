@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include "Referenced.h"
+#include "ReferencedValue.h"
 
 #ifndef M_API_Statements
 #define M_API_Statements M_OUTAPI
@@ -29,12 +29,12 @@
 namespace Martta
 {
 
-class M_API_Statements LocalReferenced: public_super Referenced
+class M_API_Statements LocalReferencedValue: public_super ReferencedValue
 {
-	MARTTA_PROPER(Referenced)
+	MARTTA_PROPER(ReferencedValue)
 	
 public:
-	LocalReferenced(ValueDefiner* _subject = 0): Referenced(_subject) {}
+	LocalReferencedValue(ValueDefiner* _subject = 0): ReferencedValue(_subject) {}
 
 	static List<ValueDefiner*>			possibilities(Position const& _p);
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);

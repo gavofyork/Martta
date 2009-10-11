@@ -18,32 +18,35 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "Declaration.h"
-#include "InScopeReferenced.h"
+#include "Position.h"
+#include "CompletionDelegate.h"
+#include "LocalReferencedValue.h"
 
 namespace Martta
 {
 
-MARTTA_PROPER_CPP(InScopeReferenced);
+MARTTA_PROPER_CPP(LocalReferencedValue);
 
-static ReferencedValueSet<InScopeReferenced> s_inScopeReferencedRegistrand;
+static ReferencedValueSet<LocalReferencedValue> s_localReferencedValueRegistrand;
 
-List<ValueDefiner*> InScopeReferenced::possibilities(Position const& _p)
+bool LocalReferencedValue::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
-	return _p->ancestor<Declaration>()->valuesKnown();
-}
-
-bool InScopeReferenced::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
-{
-	if (_p.exists() && _p->isPlaceholder() && _e->text() == L"$")
+	if (_p.exists() && _p->isPlaceholder() && _e->text() == L"L")
 	{
-		InScopeReferenced* r = new InScopeReferenced;
+		LocalReferencedValue* r = new LocalReferencedValue;
 		_p.place(r);
 		_e->codeScene()->setEditing(r);
 	}
 	else
 		return false;
 	return true;
+}
+
+List<ValueDefiner*> LocalReferencedValue::possibilities(Position const& _p)
+{
+	if (Statement* s = _p->tryKind<Statement>())
+		return castEntities<ValueDefiner>(s->valuesInLocalScope());
+	return List<ValueDefiner*>();
 }
 
 }

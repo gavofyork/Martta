@@ -18,22 +18,23 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include "Position.h"
+#include "LambdaNamer.h"
+#include "Argument.h"
 #include "CompletionDelegate.h"
-#include "LocalReferenced.h"
+#include "ArgumentReferencedValue.h"
 
 namespace Martta
 {
 
-MARTTA_PROPER_CPP(LocalReferenced);
+MARTTA_PROPER_CPP(ArgumentReferencedValue);
 
-static ReferencedValueSet<LocalReferenced> s_localReferencedRegistrand;
+static ReferencedValueSet<ArgumentReferencedValue> s_argumentReferencedValueRegistrand;
 
-bool LocalReferenced::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
+bool ArgumentReferencedValue::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
-	if (_p.exists() && _p->isPlaceholder() && _e->text() == L"L")
+	if (_p.exists() && _p->isPlaceholder() && _e->text() == L"_")
 	{
-		LocalReferenced* r = new LocalReferenced;
+		ArgumentReferencedValue* r = new ArgumentReferencedValue;
 		_p.place(r);
 		_e->codeScene()->setEditing(r);
 	}
@@ -42,11 +43,13 @@ bool LocalReferenced::keyPressedOnPosition(Position const& _p, KeyEvent const* _
 	return true;
 }
 
-List<ValueDefiner*> LocalReferenced::possibilities(Position const& _p)
+List<ValueDefiner*> ArgumentReferencedValue::possibilities(Position const& _p)
 {
-	if (Statement* s = _p->tryKind<Statement>())
-		return castEntities<ValueDefiner>(s->valuesInLocalScope());
-	return List<ValueDefiner*>();
+	List<ValueDefiner*> ret;
+	if (LambdaNamer* ln = _p->ancestor<LambdaNamer>())
+		for (int i = 0; i < ln->argumentCount(); i++)
+			ret << ln->argument(i);
+	return ret;
 }
 
 }

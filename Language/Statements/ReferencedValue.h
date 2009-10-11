@@ -32,12 +32,12 @@
 namespace Martta
 {
 
-class M_API_Statements Referenced: public_super Typed
+class M_API_Statements ReferencedValue: public_super Typed
 {
 	MARTTA_PLACEHOLDER(Typed)
 
 public:
-	Referenced(ValueDefiner* _v = 0);
+	ReferencedValue(ValueDefiner* _v = 0);
 
 	ModelPtr<ValueDefiner>				subject() const { return m_subject; }
 	ModelPtr<ValueDefiner>				get() const { return m_subject; }
@@ -72,7 +72,7 @@ public:
 	virtual String						setId() const { return Kind::of<T>().name(); }
 	virtual List<Named*>				identifiableAt(Position const& _p) { return list_cast<Named*>(castEntities<Identifiable>(T::possibilities(_p))); }
 	virtual void						acceptAt(Position const& _p, Named* _i) { ValueDefiner* v = static_cast<Identifiable*>(_i)->asKind<ValueDefiner>(); _p.place(new T(v))->setCurrent(); }
-	virtual String						defineEditHtml(Named* _i, String const& _mid) { ValueDefiner* v = static_cast<Identifiable*>(_i)->asKind<ValueDefiner>(); return Referenced().editHtmlHelper(v, _mid); }
+	virtual String						defineEditHtml(Named* _i, String const& _mid) { ValueDefiner* v = static_cast<Identifiable*>(_i)->asKind<ValueDefiner>(); return ReferencedValue().editHtmlHelper(v, _mid); }
 };
 
 }

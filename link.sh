@@ -234,7 +234,7 @@ prepare Types "Interfaces/TypeDefinition HashType ListType StringType ExplicitTy
 
 prepare Namers "EnumerationNamer EnumValue Argument LambdaNamer" "Labels Declaration Types Statement CQualifiers"
 
-prepare Statements "ReturnStatement Referenced InScopeReferenced GlobalReferenced ArgumentReferenced LocalReferenced BinaryOperation AssignmentOperation SimpleBinaryOperation SubscriptOperation NewOperation DeleteOperation GenericMemberOperation MemberOperation LongMemberOperation SimpleUnaryOperation ReferenceOperation DereferenceOperation UnaryOperation Operation Invocation Evaluation Literal BoolLiteral StringLiteral IntegerLiteral FloatLiteral IfStatement Loop ForLoop WhileLoop BreakStatement Support/in.svg Support/out.svg Support/GlobalReferenced.svg" "Statement Types Labels Declaration Namers"
+prepare Statements "ReturnStatement ReferencedValue InScopeReferencedValue GlobalReferencedValue ArgumentReferencedValue LocalReferencedValue BinaryOperation AssignmentOperation SimpleBinaryOperation SubscriptOperation NewOperation DeleteOperation GenericMemberOperation MemberOperation LongMemberOperation SimpleUnaryOperation ReferenceOperation DereferenceOperation UnaryOperation Operation Invocation Evaluation Literal BoolLiteral StringLiteral IntegerLiteral FloatLiteral IfStatement Loop ForLoop WhileLoop BreakStatement Support/in.svg Support/out.svg Support/GlobalReferenced.svg" "Statement Types Labels Declaration Namers"
 
 prepare CStuff "TopLevel Root TopLevelType Function Variable Struct Union Typedef Enumeration Namespace" "Namers"
 
@@ -242,7 +242,7 @@ prepare Projects "CProject CSolution CDependency MainFunction Support/Declaratio
 
 prepare Members "Construction Destructor ConstructedVariable Constructor ConversionOperator MethodOperator Method Member MemberLambda MemberVariable MemberValue MemberEnumeration ThisPointer" "Labels Declaration Types Namers Statements Operator Labels"
 
-prepare Class "Class Interfaces/Artificial ArtificialAssignmentOperator ArtificialCopyConstructor ArtificialDefaultConstructor Base VirtualBase Virtual VirtualMethod VirtualOverload VirtualPure MemberReferenced" "CStuff Types Members Statements"
+prepare Class "Class Interfaces/Artificial ArtificialAssignmentOperator ArtificialCopyConstructor ArtificialDefaultConstructor Base VirtualBase Virtual VirtualMethod VirtualOverload VirtualPure MemberReferencedValue" "CStuff Types Members Statements"
 
 
 exit

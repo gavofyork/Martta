@@ -31,31 +31,31 @@
 #include "CodeScene.h"
 
 #include "CompletionDelegate.h"
-#include "MemberReferenced.h"
+#include "MemberReferencedValue.h"
 
 namespace Martta
 {
 
-MARTTA_PROPER_CPP(MemberReferenced);
+MARTTA_PROPER_CPP(MemberReferencedValue);
 
-static ReferencedValueSet<FloatingMemberReferenced> s_memberReferencedRegistrand;
+static ReferencedValueSet<FloatingMemberReferencedValue> s_memberReferencedValueRegistrand;
 
-MemberReferenced::MemberReferenced(ValueDefiner* _subject):
-	Referenced(_subject)
+MemberReferencedValue::MemberReferencedValue(ValueDefiner* _subject):
+	ReferencedValue(_subject)
 {
 }
 
-bool MemberReferenced::keyPressed(KeyEvent const* _e)
+bool MemberReferencedValue::keyPressed(KeyEvent const* _e)
 {
 	if (_e->text() == L"`")
 	{
-		replace(new FloatingMemberReferenced(m_subject))->setCurrent();
+		replace(new FloatingMemberReferencedValue(m_subject))->setCurrent();
 		return true;
 	}
 	return Super::keyPressed(_e);
 }
 
-Kinds MemberReferenced::ancestralDependencies() const
+Kinds MemberReferencedValue::ancestralDependencies() const
 {
 	Kinds ret = Kind::of<MemberLambda>();
 	if (!m_subject.isNull() && !parentIs<GenericMemberOperation>() && m_subject->isKind<MemberValue>() && hasAncestor<MemberLambda>() && ancestor<TypeDefinition>() != m_subject->asKind<MemberValue>()->typeDefinition())
@@ -63,7 +63,7 @@ Kinds MemberReferenced::ancestralDependencies() const
 	return ret;
 }
 
-List<ValueDefiner*> MemberReferenced::possibilities(Position const& _p, bool _methods, bool _nonMethods)
+List<ValueDefiner*> MemberReferencedValue::possibilities(Position const& _p, bool _methods, bool _nonMethods)
 {
 	List<ValueDefiner*> ret;
 	Type method = Type(FunctionType(false, true)).topWith(Memberify()).topWith(Reference());
@@ -85,7 +85,7 @@ List<ValueDefiner*> MemberReferenced::possibilities(Position const& _p, bool _me
 	return ret;
 }
 
-Type MemberReferenced::apparentType() const
+Type MemberReferencedValue::apparentType() const
 {
 	Type ret = type();
 	// If we're not in a member operation, check if there's some memberification that we can silently discard;
@@ -118,11 +118,11 @@ Type MemberReferenced::apparentType() const
 	return ret;
 }
 
-String MemberReferenced::defineEditHtml(CodeScene* _cs) const
+String MemberReferencedValue::defineEditHtml(CodeScene* _cs) const
 {
 	if (EditDelegateFace* d = _cs->editDelegate(this))
 	{
-		ValueDefiner* s = static_cast<CompletionDelegate<Referenced, ValueDefiner*>*>(d)->selection();
+		ValueDefiner* s = static_cast<CompletionDelegate<ReferencedValue, ValueDefiner*>*>(d)->selection();
 		String ret = d->real() + L"<span class=\"unreal\">" + d->unreal() + L"</span>";
 		if (!s)
 			ret = MemberVariable().labelHtml(ret);
@@ -138,19 +138,19 @@ String MemberReferenced::defineEditHtml(CodeScene* _cs) const
 		return true;
 	}*/
 
-MARTTA_PROPER_CPP(FloatingMemberReferenced);
+MARTTA_PROPER_CPP(FloatingMemberReferencedValue);
 
-bool FloatingMemberReferenced::keyPressed(KeyEvent const* _e)
+bool FloatingMemberReferencedValue::keyPressed(KeyEvent const* _e)
 {
 	if (_e->text() == L"`")
 	{
-		replace(new MemberReferenced(m_subject))->setCurrent();
+		replace(new MemberReferencedValue(m_subject))->setCurrent();
 		return true;
 	}
 	return Super::keyPressed(_e);
 }
 
-String FloatingMemberReferenced::code() const
+String FloatingMemberReferencedValue::code() const
 {
 	if (!m_subject.isNull())
 		return m_subject->nonSpecificReference();
@@ -158,12 +158,12 @@ String FloatingMemberReferenced::code() const
 		return String::null;
 }
 
-bool FloatingMemberReferenced::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
+bool FloatingMemberReferencedValue::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
 	if (_p.exists() && _p->isPlaceholder() && _e->text().length() == 1 && _e->text()[0].isLower() &&
 		_p->isKind<Typed>() && _p->asKind<Typed>()->ourAllowedTypes().size() && _p->asKind<Typed>()->ourAllowedTypes()[0]->isType<Memberify>())
 	{
-		FloatingMemberReferenced* r = new FloatingMemberReferenced;
+		FloatingMemberReferencedValue* r = new FloatingMemberReferencedValue;
 		_p.place(r);
 		_e->codeScene()->setEditing(r);
 		if (_e->codeScene()->isEditing(r))
@@ -171,7 +171,7 @@ bool FloatingMemberReferenced::keyPressedOnPosition(Position const& _p, KeyEvent
 	}
 	else if (_p.exists() && _p->isPlaceholder() && _e->text() == L"M")
 	{
-		FloatingMemberReferenced* r = new FloatingMemberReferenced;
+		FloatingMemberReferencedValue* r = new FloatingMemberReferencedValue;
 		_p.place(r);
 		_e->codeScene()->setEditing(r);
 	}

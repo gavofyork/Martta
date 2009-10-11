@@ -22,27 +22,27 @@
 #include "CodeScene.h"
 #include "EditDelegate.h"
 #include "CompletionDelegate.h"
-#include "Referenced.h"
+#include "ReferencedValue.h"
 
 namespace Martta
 {
 
-MARTTA_PLACEHOLDER_CPP(Referenced);
-MARTTA_REGISTER_CSS(Referenced, ".Referenced { font-weight: normal; color: #000; }");
+MARTTA_PLACEHOLDER_CPP(ReferencedValue);
+MARTTA_REGISTER_CSS(ReferencedValue, ".ReferencedValue { font-weight: normal; color: #000; }");
 
-Referenced::Referenced(ValueDefiner* _v):
+ReferencedValue::ReferencedValue(ValueDefiner* _v):
 	m_subject	(0)
 {
 	mInfo() << ((Concept*)0)->tryKind<Concept>();
 	set(_v);
 }
 
-bool Referenced::isSuperfluous() const
+bool ReferencedValue::isSuperfluous() const
 {
 	return (!m_subject.isUsable() && m_hopeful.isEmpty()) || Super::isSuperfluous();
 }
 
-String Referenced::code() const
+String ReferencedValue::code() const
 {
 	if (m_subject.isUsable())
 		return m_subject->reference();
@@ -50,7 +50,7 @@ String Referenced::code() const
 		return String::null;
 }
 
-void Referenced::onDependencySwitched(Concept* _t, Concept* _old)
+void ReferencedValue::onDependencySwitched(Concept* _t, Concept* _old)
 {
 //	mDebug() << "Dependency switched" << _old << "->" << _t << " subject:" << (m_subject ? m_subject->self() : (Concept*)0);
 	if (m_subject == _old->tryKind<ValueDefiner>())
@@ -60,7 +60,7 @@ void Referenced::onDependencySwitched(Concept* _t, Concept* _old)
 	}
 }
 
-void Referenced::onDependencyRemoved(Concept* _old, int)
+void ReferencedValue::onDependencyRemoved(Concept* _old, int)
 {
 //	mDebug() << "Dependency removed" << _old << " subject:" << &*m_subject;
 	if (m_subject == _old->tryKind<ValueDefiner>())
@@ -72,12 +72,12 @@ void Referenced::onDependencyRemoved(Concept* _old, int)
 	}
 }
 
-bool Referenced::isInValidState() const
+bool ReferencedValue::isInValidState() const
 {
 	return m_subject && m_subject->isAccessibleAt(over()) && Super::isInValidState();
 }
 
-Type Referenced::type() const
+Type ReferencedValue::type() const
 {
 	// If we're not referencing anything yet, return null.
 	if (!m_subject.isUsable())
@@ -85,28 +85,28 @@ Type Referenced::type() const
 	return m_subject->type();
 }
 
-String Referenced::defineHtml() const
+String ReferencedValue::defineHtml() const
 {
 	if (!m_subject)
 		return L"<^><span class=\"unreal\">[" + m_hopeful + L"?]</span>";
-	return L"<^><span class=\"Referenced\">" + m_subject->tryKind<Labelled>()->labelHtml(m_subject->type()->typeHtml(m_subject->name())) + L"</span>";
+	return L"<^><span class=\"ReferencedValue\">" + m_subject->tryKind<Labelled>()->labelHtml(m_subject->type()->typeHtml(m_subject->name())) + L"</span>";
 }
 
-EditDelegateFace* Referenced::newDelegate(CodeScene* _s)
+EditDelegateFace* ReferencedValue::newDelegate(CodeScene* _s)
 {
-	return new CompletionDelegate<Referenced, ValueDefiner*>(this, _s);
+	return new CompletionDelegate<ReferencedValue, ValueDefiner*>(this, _s);
 }
 
-String Referenced::editHtmlHelper(ValueDefiner* _v, String const& _mid) const
+String ReferencedValue::editHtmlHelper(ValueDefiner* _v, String const& _mid) const
 {
 	String ret = (_v ? &*_v->type() : TypeConcept::null)->typeHtml(_mid);
-	return tagOf(L"Referenced", _v->tryKind<Labelled>()->labelHtml(ret));
+	return tagOf(L"ReferencedValue", _v->tryKind<Labelled>()->labelHtml(ret));
 }
 
-String Referenced::defineEditHtml(CodeScene* _cs) const
+String ReferencedValue::defineEditHtml(CodeScene* _cs) const
 {
 	if (EditDelegateFace* d = _cs->editDelegate(this))
-		return editHtmlHelper(static_cast<CompletionDelegate<Referenced, ValueDefiner*>*>(d)->selection(), d->real() + tagOf(L"unreal", d->unreal())) + tagOf(L"minor", d->comment());
+		return editHtmlHelper(static_cast<CompletionDelegate<ReferencedValue, ValueDefiner*>*>(d)->selection(), d->real() + tagOf(L"unreal", d->unreal())) + tagOf(L"minor", d->comment());
 	return String::null;
 }
 
