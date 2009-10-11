@@ -10,7 +10,7 @@
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
  * License for the specific language governing rights and limitations under
- * the License.
+ * the License.Projec
  *
  * The Initial Developer of the code in this file is Gavin Wood.
  * Portions created by the Initial Developer are Copyright (C) 2008
@@ -22,8 +22,8 @@
 
 #include <QMainWindow>
 
-#include <Project.h>
-#include <Solution.h>
+#include <Module.h>
+#include <Program.h>
 #include <CullManager.h>
 
 #include "ui_MainWindow.h"
@@ -72,7 +72,7 @@ private slots:
 	void on_actQuit_triggered();
 
 	void on_actExecute_triggered();
-	void on_actNewCProject_triggered();
+	void on_actNewCModule_triggered();
 
 	void on_actReloadPlugins_triggered();
 
@@ -103,7 +103,7 @@ private slots:
 private:
 	virtual void paintEvent(QPaintEvent* _p);
 
-	void updateSolutionSupportPath();
+	void updateProgramSupportPath();
 
 	void setFilename(QString const& _fn);
 
@@ -113,14 +113,14 @@ private:
 	bool confirmLose();
 
 	// Simple load/save functions; doesn't record the filename.
-	Project*				loadProject(String const& _filename);
-	bool					saveProject(String const& _filename, Project* _p) const;
+	Module*				loadModule(String const& _filename);
+	bool					saveModule(String const& _filename, Module* _p) const;
 
 	// Will save the solution, but not the projects---do that manually.
 	// Acts according to m_filename and m_solution.
 	// Does nothing is m_filename/m_solution is null.
 	// @returns true iff everything went ok.
-	bool					saveSolution() const;
+	bool					saveProgram() const;
 
 	// Loads the solution file @a _filename and any projects that it requires.
 	// Maintains correctness of m_projects, m_filename and m_solution accordingly.
@@ -132,15 +132,15 @@ private:
 	// Maintains correctness of m_projects, m_filename and m_solution accordingly.
 	bool					save();
 
-	Concept*					importDom(QDomElement const& _el, Concept* _p, QStringList* _projectstoLoad = 0, QList<Project*>* _projects = 0);
+	Concept*					importDom(QDomElement const& _el, Concept* _p, QStringList* _projectstoLoad = 0, QList<Module*>* _projects = 0);
 	QDomElement				exportDom(QDomDocument& _doc, Concept const* _e, bool _dump = false) const;
 
 	// Serialises/deserialises the lot.
 	QString					serialise() const;
 	bool					deserialise(QString const& _s);
 
-	inline QList<Project*>	projects() const { return m_projects.keys(); }
-	inline Project*			project() const { return codeView->subject()->tryKind<Project>(); }
+	inline QList<Module*>	projects() const { return m_projects.keys(); }
+	inline Module*			project() const { return codeView->subject()->tryKind<Module>(); }
 
 	QString					summary(Concept* _e);
 
@@ -148,9 +148,9 @@ private:
 
 	QList<QLibrary*>		m_libraries;
 
-	QHash<Project*, QString>m_projects;
+	QHash<Module*, QString>m_projects;
 	QString					m_filename;
-	Solution*				m_solution;
+	Program*				m_solution;
 
 	QTimer*					m_updateTimer;
 

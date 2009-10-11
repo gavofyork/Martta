@@ -25,44 +25,44 @@
 #include "DeclarationsHandler.h"
 #include "CTypes.h"
 #include "CDependency.h"
-#include "CProject.h"
-#include "CSolution.h"
+#include "CModule.h"
+#include "CProgram.h"
 
 namespace Martta
 {
 
-MARTTA_PROPER_CPP(CSolution);
+MARTTA_PROPER_CPP(CProgram);
 
-Kinds CSolution::allowedKinds(int _i) const
+Kinds CProgram::allowedKinds(int _i) const
 {
 	if (_i >= 0)
-		return Kind::of<CProject>();
+		return Kind::of<CModule>();
 	return Super::allowedKinds(_i);
 }
 
-String CSolution::includeCode() const
+String CProgram::includeCode() const
 {
 	String ret;
-	foreach (CProject* p, cardinalChildrenAs<CProject>())
+	foreach (CModule* p, cardinalChildrenAs<CModule>())
 		ret += p->includeCode();
 	return ret;
 }
 
-void CSolution::initialiseNew()
+void CProgram::initialiseNew()
 {
 	clearEntities();
 #ifndef M_WIN
-	back().place(Concept::evaluate(String("CProject{TextLabel[text=project]}{MainFunction{TextLabel[text=main]}{BuiltinType[id=%1]}{Argument{BuiltinType[id=%1]}{TextLabel[text=argc]}}{Argument{Pointer{Pointer{BuiltinType[id=%2]}}}{TextLabel[text=argv]}}{Compound{ReturnStatement{IntegerLiteral[value=0][signed=true]}}}}{CDependency[libs=][includes=/usr/include/stdlib.h*/usr/include/stdio.h][name=Standard C]}").arg(Int).arg(Char)));
+	back().place(Concept::evaluate(String("CModule{TextLabel[text=project]}{MainFunction{TextLabel[text=main]}{BuiltinType[id=%1]}{Argument{BuiltinType[id=%1]}{TextLabel[text=argc]}}{Argument{Pointer{Pointer{BuiltinType[id=%2]}}}{TextLabel[text=argv]}}{Compound{ReturnStatement{IntegerLiteral[value=0][signed=true]}}}}{CDependency[libs=][includes=/usr/include/stdlib.h*/usr/include/stdio.h][name=Standard C]}").arg(Int).arg(Char)));
 #else
-	back().place(Concept::evaluate(String("CProject{TextLabel[text=project]}{MainFunction{TextLabel[text=main]}{BuiltinType[id=%1]}{Argument{BuiltinType[id=%1]}{TextLabel[text=argc]}}{Argument{Pointer{Pointer{BuiltinType[id=%2]}}}{TextLabel[text=argv]}}{Compound{ReturnStatement{IntegerLiteral[value=0][signed=true]}}}}{CDependency[libs=][includes=stdlib.h*stdio.h][name=Standard C]}").arg(Int).arg(Char)));
+	back().place(Concept::evaluate(String("CModule{TextLabel[text=project]}{MainFunction{TextLabel[text=main]}{BuiltinType[id=%1]}{Argument{BuiltinType[id=%1]}{TextLabel[text=argc]}}{Argument{Pointer{Pointer{BuiltinType[id=%2]}}}{TextLabel[text=argv]}}{Compound{ReturnStatement{IntegerLiteral[value=0][signed=true]}}}}{CDependency[libs=][includes=stdlib.h*stdio.h][name=Standard C]}").arg(Int).arg(Char)));
 #endif
 
 	rejigIncludes();
 }
 
-void CSolution::initWithProjects(List<Project*> const& _ps)
+void CProgram::initWithModules(List<Module*> const& _ps)
 {
-	foreach (Project* p, _ps)
+	foreach (Module* p, _ps)
 		p->self()->move(back());
 
 	ChangeMan::get()->sleep();
@@ -72,7 +72,7 @@ void CSolution::initWithProjects(List<Project*> const& _ps)
 	apresLoad();
 }
 
-void CSolution::addProject(Project* _p)
+void CProgram::addModule(Module* _p)
 {
 	ChangeMan::get()->sleep();
 	archiveModel();
@@ -86,7 +86,7 @@ void CSolution::addProject(Project* _p)
 	apresLoad(_p);
 }
 
-void CSolution::removeProject(Project* _p)
+void CProgram::removeModule(Module* _p)
 {
 	ChangeMan::get()->sleep();
 	archiveModel();
@@ -99,7 +99,7 @@ void CSolution::removeProject(Project* _p)
 	ChangeMan::get()->wake();
 }
 
-void CSolution::archiveModel()
+void CProgram::archiveModel()
 {
 	// Archive all model pointers
 	List<Concept*> es = cardinalChildren();
@@ -110,7 +110,7 @@ void CSolution::archiveModel()
 	}
 }
 
-void CSolution::killIncludeds()
+void CProgram::killIncludeds()
 {
 	// Kill old declarations.
 	// May fsck up in here? (Had an alteringDepends flag protecting it originally.)
@@ -118,13 +118,13 @@ void CSolution::killIncludeds()
 		e->killAndDelete();
 }
 
-void CSolution::apresLoad(Project* _p)
+void CProgram::apresLoad(Module* _p)
 {
 	List<SafePointer<Concept> > uplist;
 	if (_p)
 		uplist << _p->self();
 	else
-		foreach (Project* p, cardinalChildrenAs<Project>())
+		foreach (Module* p, cardinalChildrenAs<Module>())
 			uplist << p->self();
 	while (uplist.size())
 		if (Concept* e = uplist.takeLast())
@@ -135,7 +135,7 @@ void CSolution::apresLoad(Project* _p)
 		}
 }
 
-void CSolution::rejigIncludes()
+void CProgram::rejigIncludes()
 {
 	archiveModel();
 	killIncludeds();

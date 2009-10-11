@@ -1,6 +1,6 @@
 // Auto-generated composed file
-#include "./CProject.cpp"
-#include "./CSolution.cpp"
+#include "./CModule.cpp"
+#include "./CProgram.cpp"
 #include "./CDependency.cpp"
 #include "./MainFunction.cpp"
 #include "Support/DeclarationsHandler.cpp"

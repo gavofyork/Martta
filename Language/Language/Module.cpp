@@ -18,41 +18,25 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#pragma once
-
-#include "Solution.h"
-#include "Root.h"
-
-#ifndef M_API_CLanguage
-#define M_API_CLanguage M_OUTAPI
-#endif
+#include "Concept.h"
+#include "Program.h"
+#include "Module.h"
 
 namespace Martta
 {
 
-class M_API_CLanguage CSolution: public_super Root, public_interface Solution
+MARTTA_NOTION_CPP(Module);
+
+String const& Module::supportPath() const
 {
-	MARTTA_PROPER(Root)
-	MARTTA_ALSO_INHERITS(Solution, 0)
+	if (Program* s = tryParent<Program>())
+		return s->supportPath();
+	return String::null;
+}
 
-public:
-	virtual void						initialiseNew();
-	virtual void						addProject(Project* _p);
-	virtual void						initWithProjects(List<Project*> const& _ps = List<Project*>());
-	virtual void						removeProject(Project* _p);
-
-protected:
-	virtual int							minRequired(int _i) const { return Super::minRequired(_i); }
-	virtual Kinds						allowedKinds(int _i) const;
-	virtual List<Concept*>				savedChildren() const { return cardinalChildren(); }
-
-private:
-	void								apresLoad(Project* _p = 0);
-	void								archiveModel();
-	void								killIncludeds();
-	void								rejigIncludes();
-
-	String								includeCode() const;
-};
+List<StringList> Module::steps() const
+{
+	return List<StringList>();
+}
 
 }

@@ -1,4 +1,4 @@
 // Auto-generated composed file
-#include "./Project.cpp"
-#include "./Solution.cpp"
+#include "./Module.cpp"
+#include "./Program.cpp"
 

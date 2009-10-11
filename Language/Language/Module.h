@@ -18,12 +18,40 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#pragma once
+
+#include <msString.h>
+#include <msStringList.h>
+using namespace MarttaSupport;
+
 #include "Concept.h"
-#include "Solution.h"
+
+#ifndef M_API_Module
+#define M_API_Module M_OUTAPI
+#endif
 
 namespace Martta
 {
 
-MARTTA_NOTION_CPP(Solution);
+class M_API_Module Module: public_interface Concept
+{
+	MARTTA_NOTION(Concept)
+
+public:
+	virtual ~Module() {}
+
+	String const&						filename() const { return m_filename; }
+	void								setFilename(String const& _fn) { m_filename = _fn; }
+
+	virtual void						save() const {}
+	virtual List<StringList>			steps() const;
+	virtual String						finalCode() const { return String::null; }
+
+protected:
+	String const&						supportPath() const;
+
+private:
+	String								m_filename;
+};
 
 }

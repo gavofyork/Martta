@@ -21,37 +21,59 @@
 #pragma once
 
 #include <msString.h>
-#include <msList.h>
 using namespace MarttaSupport;
 
-#include "Concept.h"
+#include "ModelPtr.h"
+#include "Module.h"
+#include "Namespace.h"
 
-#ifndef M_API_Project
-#define M_API_Project M_OUTAPI
+#ifndef M_API_CLanguage
+#define M_API_CLanguage M_OUTAPI
 #endif
 
 namespace Martta
 {
 
-class Project;
+class CModule;
 
-class M_API_Project Solution: public_interface Concept
+class M_API_CLanguage CModuleDependency: public_super Concept
 {
-	MARTTA_NOTION(Concept)
+	MARTTA_PROPER(Concept)
+
+private:
+	ModelPtr<CModule> m_subject;
+};
+
+class M_API_CLanguage CModule: public_super Namespace, public_interface Module
+{
+	MARTTA_PROPER(Namespace)
+	MARTTA_ALSO_INHERITS(Module, 0)
 
 public:
-	virtual ~Solution() {}
+	MARTTA_NAMED(RequiredIncludes)
+	MARTTA_NAMED(MainFunction)
 
-	String const&						supportPath() const { return m_supportPath; }
-	void								setSupportPath(String const& _p) { m_supportPath = _p; }
+	CModule();
+	virtual ~CModule();
 
-	virtual void						initialiseNew() {}
-	virtual void						addProject(Project*) {}
-	virtual void						initWithProjects(List<Project*> const& = List<Project*>()) {}
-	virtual void						removeProject(Project*) {}
+	virtual String						finalCode() const;
+
+	virtual String						target() const { return m_tempPath + "/" + targetName(); }
+	virtual String						targetName() const;
+
+	virtual String						includeCode() const;
+	virtual StringList					libs() const;
+
+	virtual List<StringList>			steps() const;
 
 protected:
+	virtual int							minRequired(int _i) const { return _i == 0 ? 1 : Super::minRequired(_i); }
+	virtual Kinds						allowedKinds(int _i) const;
+
+private:
+	mutable String						m_tempPath;
 	String								m_supportPath;
+	mutable String						m_tempBatName;
 };
 
 }

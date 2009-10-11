@@ -20,12 +20,8 @@
 
 #pragma once
 
-#include <msString.h>
-using namespace MarttaSupport;
-
-#include "ModelPtr.h"
-#include "Project.h"
-#include "Namespace.h"
+#include "Program.h"
+#include "Root.h"
 
 #ifndef M_API_CLanguage
 #define M_API_CLanguage M_OUTAPI
@@ -34,46 +30,29 @@ using namespace MarttaSupport;
 namespace Martta
 {
 
-class CProject;
-
-class M_API_CLanguage CProjectDependency: public_super Concept
+class M_API_CLanguage CProgram: public_super Root, public_interface Program
 {
-	MARTTA_PROPER(Concept)
-
-private:
-	ModelPtr<CProject> m_subject;
-};
-
-class M_API_CLanguage CProject: public_super Namespace, public_interface Project
-{
-	MARTTA_PROPER(Namespace)
-	MARTTA_ALSO_INHERITS(Project, 0)
+	MARTTA_PROPER(Root)
+	MARTTA_ALSO_INHERITS(Program, 0)
 
 public:
-	MARTTA_NAMED(RequiredIncludes)
-	MARTTA_NAMED(MainFunction)
-
-	CProject();
-	virtual ~CProject();
-
-	virtual String						finalCode() const;
-
-	virtual String						target() const { return m_tempPath + "/" + targetName(); }
-	virtual String						targetName() const;
-
-	virtual String						includeCode() const;
-	virtual StringList					libs() const;
-
-	virtual List<StringList>			steps() const;
+	virtual void						initialiseNew();
+	virtual void						addModule(Module* _p);
+	virtual void						initWithModules(List<Module*> const& _ps = List<Module*>());
+	virtual void						removeModule(Module* _p);
 
 protected:
-	virtual int							minRequired(int _i) const { return _i == 0 ? 1 : Super::minRequired(_i); }
+	virtual int							minRequired(int _i) const { return Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
+	virtual List<Concept*>				savedChildren() const { return cardinalChildren(); }
 
 private:
-	mutable String						m_tempPath;
-	String								m_supportPath;
-	mutable String						m_tempBatName;
+	void								apresLoad(Module* _p = 0);
+	void								archiveModel();
+	void								killIncludeds();
+	void								rejigIncludes();
+
+	String								includeCode() const;
 };
 
 }

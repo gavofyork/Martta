@@ -21,37 +21,37 @@
 #pragma once
 
 #include <msString.h>
-#include <msStringList.h>
+#include <msList.h>
 using namespace MarttaSupport;
 
 #include "Concept.h"
 
-#ifndef M_API_Project
-#define M_API_Project M_OUTAPI
+#ifndef M_API_Module
+#define M_API_Module M_OUTAPI
 #endif
 
 namespace Martta
 {
 
-class M_API_Project Project: public_interface Concept
+class Module;
+
+class M_API_Module Program: public_interface Concept
 {
 	MARTTA_NOTION(Concept)
 
 public:
-	virtual ~Project() {}
+	virtual ~Program() {}
 
-	String const&						filename() const { return m_filename; }
-	void								setFilename(String const& _fn) { m_filename = _fn; }
+	String const&						supportPath() const { return m_supportPath; }
+	void								setSupportPath(String const& _p) { m_supportPath = _p; }
 
-	virtual void						save() const {}
-	virtual List<StringList>			steps() const;
-	virtual String						finalCode() const { return String::null; }
+	virtual void						initialiseNew() {}
+	virtual void						addModule(Module*) {}
+	virtual void						initWithModules(List<Module*> const& = List<Module*>()) {}
+	virtual void						removeModule(Module*) {}
 
 protected:
-	String const&						supportPath() const;
-
-private:
-	String								m_filename;
+	String								m_supportPath;
 };
 
 }

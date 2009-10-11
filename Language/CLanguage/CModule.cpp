@@ -55,17 +55,17 @@ inline QString xqs(String const& _s)
 
 #include "Function.h"
 #include "CDependency.h"
-#include "CProject.h"
+#include "CModule.h"
 
 namespace Martta
 {
 
-MARTTA_PROPER_CPP(CProject);
-MARTTA_NAMED_CPP(CProject, RequiredIncludes);
-MARTTA_NAMED_CPP(CProject, MainFunction);
-MARTTA_PROPER_CPP(CProjectDependency);
+MARTTA_PROPER_CPP(CModule);
+MARTTA_NAMED_CPP(CModule, RequiredIncludes);
+MARTTA_NAMED_CPP(CModule, MainFunction);
+MARTTA_PROPER_CPP(CModuleDependency);
 
-CProject::CProject():
+CModule::CModule():
 
 #ifdef M_WIN
 	//Inadeqate. Need to get this working properly quickly.
@@ -86,7 +86,7 @@ CProject::CProject():
 	*/
 }
 
-CProject::~CProject()
+CModule::~CModule()
 {
 	/*
 	// TODO: clean up temp path
@@ -100,7 +100,7 @@ CProject::~CProject()
 		remove(m_tempBatName.toCString());
 }
 
-Kinds CProject::allowedKinds(int _i) const
+Kinds CModule::allowedKinds(int _i) const
 {
 	if (_i == RequiredIncludes)
 		return Kind::of<CDependency>();
@@ -109,7 +109,7 @@ Kinds CProject::allowedKinds(int _i) const
 	return Super::allowedKinds(_i);
 }
 
-String CProject::includeCode() const
+String CModule::includeCode() const
 {
 	String ret;
 	foreach (CDependency* i, childrenAs<CDependency>(RequiredIncludes))
@@ -117,7 +117,7 @@ String CProject::includeCode() const
 	return ret;
 }
 
-StringList CProject::libs() const
+StringList CModule::libs() const
 {
 	StringList ret;
 	foreach (CDependency* i, childrenAs<CDependency>(RequiredIncludes))
@@ -125,7 +125,7 @@ StringList CProject::libs() const
 	return ret;
 }
 
-String CProject::finalCode() const
+String CModule::finalCode() const
 {
 	String ret;
 	ret += "#include \"" + supportPath() + "msList.h\"\n";
@@ -139,7 +139,7 @@ String CProject::finalCode() const
 	return ret;
 }
 
-List<StringList> CProject::steps() const
+List<StringList> CModule::steps() const
 {
 	String src = m_tempPath + "/" + name() + ".cpp";
 	String bin = m_tempPath + "/" + targetName();
@@ -208,7 +208,7 @@ List<StringList> CProject::steps() const
 	return ret;
 }
 
-String CProject::targetName() const
+String CModule::targetName() const
 {
 #ifdef M_WIN
 	return name() + ".exe";

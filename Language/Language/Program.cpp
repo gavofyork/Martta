@@ -19,24 +19,11 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "Concept.h"
-#include "Solution.h"
-#include "Project.h"
+#include "Program.h"
 
 namespace Martta
 {
 
-MARTTA_NOTION_CPP(Project);
-
-String const& Project::supportPath() const
-{
-	if (Solution* s = tryParent<Solution>())
-		return s->supportPath();
-	return String::null;
-}
-
-List<StringList> Project::steps() const
-{
-	return List<StringList>();
-}
+MARTTA_NOTION_CPP(Program);
 
 }

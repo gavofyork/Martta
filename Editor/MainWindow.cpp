@@ -280,15 +280,15 @@ void MainWindow::on_actNew_triggered()
 	m_solution = 0;
 
 	// For now just assume the default:
-	Kinds solutions = Kind::of<Solution>().deriveds();
+	Kinds solutions = Kind::of<Program>().deriveds();
 	solutions = solutions.onlyObjects();
 	if (solutions.size())
 	{
-		m_solution = solutions[0].spawnPrepared()->asKind<Solution>();
+		m_solution = solutions[0].spawnPrepared()->asKind<Program>();
 		m_solution->initialiseNew();
-		foreach (Project* p, m_solution->self()->superChildrenOf<Project>())
+		foreach (Module* p, m_solution->self()->superChildrenOf<Module>())
 			m_projects.insert(p, QString::null);
-		updateSolutionSupportPath();
+		updateProgramSupportPath();
 	}
 
 	setFilename(QString::null);
@@ -394,7 +394,7 @@ void MainWindow::on_actOpen_triggered()
 	if (!confirmLose())
 		return;
 
-	QString f = QFileDialog::getOpenFileName(this, "Open Solution", QDir::homePath(), "*.xml");
+	QString f = QFileDialog::getOpenFileName(this, "Open Program", QDir::homePath(), "*.xml");
 	if (f.isEmpty())
 		return;
 
@@ -413,7 +413,7 @@ void MainWindow::setFilename(QString const& _fn)
 	m_filename = _fn;
 	if (m_solution)
 		if (m_filename.isEmpty())
-			setWindowTitle(tr("Martta - <New Solution>"));
+			setWindowTitle(tr("Martta - <New Program>"));
 		else
 			setWindowTitle(tr("Martta - %1").arg(m_filename));
 	else
@@ -424,7 +424,7 @@ bool MainWindow::save()
 {
 	if (m_filename.isEmpty())
 	{
-		QString fn = QFileDialog::getSaveFileName(this, "Save Solution", QDir::homePath(), "*.xml");
+		QString fn = QFileDialog::getSaveFileName(this, "Save Program", QDir::homePath(), "*.xml");
 		if (fn.isEmpty())
 			return false;
 		if (!fn.endsWith(".xml"))
@@ -432,11 +432,11 @@ bool MainWindow::save()
 		setFilename(fn);
 	}
 
-	foreach (Project* p, projects())
+	foreach (Module* p, projects())
 		if (!m_projects[p].isEmpty())
-			if (!saveProject(qs(m_projects[p]), p))
+			if (!saveModule(qs(m_projects[p]), p))
 				return false;
-	return saveSolution();
+	return saveProgram();
 }
 
 bool MainWindow::load(String const& _filename)
@@ -444,7 +444,7 @@ bool MainWindow::load(String const& _filename)
 	QFile f(qs(_filename));
 	if (!f.open(QFile::ReadOnly | QFile::Text))
 	{
-		QMessageBox::critical(0, tr("Load Solution"), tr("File does not exist! (name is %1)").arg(f.fileName()));
+		QMessageBox::critical(0, tr("Load Program"), tr("File does not exist! (name is %1)").arg(f.fileName()));
 		return 0;
 	}
 
@@ -455,58 +455,58 @@ bool MainWindow::load(String const& _filename)
 	QDomDocument doc;
 	if (!doc.setContent(&f, true, &errorStr, &errorLine, &errorColumn))
 	{
-		QMessageBox::critical(0, tr("Load Solution"), tr("Parse error at line %1, column %2:\n%3").arg(errorLine).arg(errorColumn).arg(errorStr));
+		QMessageBox::critical(0, tr("Load Program"), tr("Parse error at line %1, column %2:\n%3").arg(errorLine).arg(errorColumn).arg(errorStr));
 		return false;
 	}
-	if (doc.doctype().name() != "MarttaSolution")
+	if (doc.doctype().name() != "MarttaProgram")
 	{
-		QMessageBox::critical(0, tr("Load Solution"), tr("Invalid solution file format (%1)").arg(doc.doctype().name()));
+		QMessageBox::critical(0, tr("Load Program"), tr("Invalid solution file format (%1)").arg(doc.doctype().name()));
 		return false;
 	}
 
 	QStringList projectFiles;
-	QList<Project*> projects;
+	QList<Module*> projects;
 	Concept* e = importDom(doc.documentElement(), 0, &projectFiles, &projects);	// Expects to be able to write into projects.
-	if (!e->isKind<Solution>())
+	if (!e->isKind<Program>())
 	{
-		QMessageBox::critical(0, tr("Load Solution"), tr("Invalid file contents (unknown Solution entity %1---missing a plugin?)").arg(qs(e->kind().name())));
+		QMessageBox::critical(0, tr("Load Program"), tr("Invalid file contents (unknown Program entity %1---missing a plugin?)").arg(qs(e->kind().name())));
 		e->killAndDelete();
 		return false;
 	}
 
 	m_projects.clear();
-	foreach (Project* p, projects)
+	foreach (Module* p, projects)
 		m_projects.insert(p, QString::null);
 	delete m_solution;
-	m_solution = e->asKind<Solution>();
+	m_solution = e->asKind<Program>();
 	setFilename(qs(_filename));
 
-	List<Project*> loadedProjects;
+	List<Module*> loadedModules;
 	foreach (QString f, projectFiles)
 	{
-		Project* p = loadProject(qs(f));
+		Module* p = loadModule(qs(f));
 		if (p)
 		{
 			m_projects[p] = f;
-			loadedProjects << p;
+			loadedModules << p;
 		}
 		else
-			QMessageBox::warning(0, tr("Load Solution"), tr("Project file not found (%1)").arg(f));
+			QMessageBox::warning(0, tr("Load Program"), tr("Module file not found (%1)").arg(f));
 	}
 
 
-	m_solution->initWithProjects(loadedProjects);
-	updateSolutionSupportPath();
+	m_solution->initWithModules(loadedModules);
+	updateProgramSupportPath();
 
 	return true;
 }
 
-bool MainWindow::saveSolution() const
+bool MainWindow::saveProgram() const
 {
 	if (!m_solution || m_filename.isEmpty())
 		return false;
 
-	QDomDocument doc("MarttaSolution");
+	QDomDocument doc("MarttaProgram");
 	doc.appendChild(exportDom(doc, m_solution->self()));
 	QFile f(m_filename);
 	if (!f.open(QFile::WriteOnly))
@@ -516,9 +516,9 @@ bool MainWindow::saveSolution() const
 	return true;
 }
 
-bool MainWindow::saveProject(String const& _file, Project* _p) const
+bool MainWindow::saveModule(String const& _file, Module* _p) const
 {
-	QDomDocument doc("MarttaProject");
+	QDomDocument doc("MarttaModule");
 	doc.appendChild(exportDom(doc, _p->self()));
 	QFile f(qs(_file));
 	if (!f.open(QFile::WriteOnly))
@@ -528,12 +528,12 @@ bool MainWindow::saveProject(String const& _file, Project* _p) const
 	return true;
 }
 
-Project* MainWindow::loadProject(String const& _filename)
+Module* MainWindow::loadModule(String const& _filename)
 {
 	QFile f(qs(_filename));
 	if (!f.open(QFile::ReadOnly | QFile::Text))
 	{
-		QMessageBox::critical(0, tr("Load Project"), tr("File does not exist! (name is %1)").arg(f.fileName()));
+		QMessageBox::critical(0, tr("Load Module"), tr("File does not exist! (name is %1)").arg(f.fileName()));
 		return 0;
 	}
 
@@ -544,15 +544,15 @@ Project* MainWindow::loadProject(String const& _filename)
 	QDomDocument doc;
 	if (!doc.setContent(&f, true, &errorStr, &errorLine, &errorColumn))
 	{
-		QMessageBox::critical(0, tr("Load Project"), tr("Parse error at line %1, column %2:\n%3").arg(errorLine).arg(errorColumn).arg(errorStr));
+		QMessageBox::critical(0, tr("Load Module"), tr("Parse error at line %1, column %2:\n%3").arg(errorLine).arg(errorColumn).arg(errorStr));
 		return 0;
 	}
-	if (doc.doctype().name() != "MarttaProject")
+	if (doc.doctype().name() != "MarttaModule")
 	{
-		QMessageBox::critical(0, tr("Load Project"), tr("Invalid file format (%1)").arg(doc.doctype().name()));
+		QMessageBox::critical(0, tr("Load Module"), tr("Invalid file format (%1)").arg(doc.doctype().name()));
 		return 0;
 	}
-	return importDom(doc.documentElement(), 0)->asKind<Project>();
+	return importDom(doc.documentElement(), 0)->asKind<Module>();
 }
 
 bool MainWindow::confirmLose()
@@ -564,7 +564,7 @@ bool MainWindow::confirmLose()
 
 QString MainWindow::serialise() const
 {
-	QDomDocument doc("MarttaSolution");
+	QDomDocument doc("MarttaProgram");
 	doc.appendChild(exportDom(doc, m_solution->self(), true));
 	QString ret;
 	QTextStream fs(&ret);
@@ -576,37 +576,37 @@ bool MainWindow::deserialise(QString const& _s)
 {
 	QDomDocument doc;
 	AssertNR(doc.setContent(_s, true, 0, 0, 0));
-	AssertNR(doc.doctype().name() == "MarttaSolution");
+	AssertNR(doc.doctype().name() == "MarttaProgram");
 
 	QStringList projectFiles;
-	QList<Project*> projects;
+	QList<Module*> projects;
 	Concept* e = importDom(doc.documentElement(), 0, &projectFiles, &projects);	// Expects to be able to write into m_projects.
 	AssertNR(projectFiles.isEmpty());
-	if (!e->isKind<Solution>())
+	if (!e->isKind<Program>())
 	{
 		QTemporaryFile f;
 		f.setAutoRemove(false);
 		f.open();
 		f.write(_s.toUtf8());
 		f.close();
-		QMessageBox::critical(0, tr("Load Solution"), tr("Document now invalid (unknown Solution entity %1---missing a plugin?). Solution contents dumped to %2.").arg(qs(e->kind().name())).arg(f.fileName()));
+		QMessageBox::critical(0, tr("Load Program"), tr("Document now invalid (unknown Program entity %1---missing a plugin?). Program contents dumped to %2.").arg(qs(e->kind().name())).arg(f.fileName()));
 		e->killAndDelete();
 		return false;
 	}
 
 	m_projects.clear();
-	foreach (Project* p, projects)
+	foreach (Module* p, projects)
 		m_projects.insert(p, QString::null);
 	delete m_solution;
-	m_solution = e->asKind<Solution>();
+	m_solution = e->asKind<Program>();
 
-	m_solution->initWithProjects();
-	updateSolutionSupportPath();
+	m_solution->initWithModules();
+	updateProgramSupportPath();
 
 	return true;
 }
 
-void MainWindow::updateSolutionSupportPath()
+void MainWindow::updateProgramSupportPath()
 {
 #ifdef Q_WS_MAC
 	CFURLRef appUrlRef = CFBundleCopyBundleURL(CFBundleGetMainBundle());
@@ -634,10 +634,10 @@ QDomElement MainWindow::exportDom(QDomDocument& _doc, Concept const* _e, bool _d
 	if (!iId.isEmpty())
 		n.setAttribute("index", qs(iId));
 	foreach (Concept* e, _e->savedChildren())
-		if (e->isKind<Project>() && !m_projects.value(e->asKind<Project>()).isEmpty() && !_dump)
+		if (e->isKind<Module>() && !m_projects.value(e->asKind<Module>()).isEmpty() && !_dump)
 		{
 			QDomElement pe = _doc.createElement("project");
-			pe.setAttribute("filename", m_projects.value(e->asKind<Project>()));
+			pe.setAttribute("filename", m_projects.value(e->asKind<Module>()));
 			n.appendChild(pe);
 		}
 		else
@@ -647,13 +647,13 @@ QDomElement MainWindow::exportDom(QDomDocument& _doc, Concept const* _e, bool _d
 	return n;
 }
 
-Concept* MainWindow::importDom(QDomElement const& _el, Concept* _p, QStringList* _unloadedProjects, QList<Project*>* _projects)
+Concept* MainWindow::importDom(QDomElement const& _el, Concept* _p, QStringList* _unloadedModules, QList<Module*>* _projects)
 {
 	Concept* e = Concept::spawn(qs(_el.nodeName().replace(":", "::")));
 	Assert(e, "Spawn doesn't know anything about this kind, yet it did when exported.");
 
-	if (e->isKind<Project>() && _projects)
-		*_projects << e->asKind<Project>();
+	if (e->isKind<Module>() && _projects)
+		*_projects << e->asKind<Module>();
 
 	Hash<String, String> h;
 	String index;
@@ -668,14 +668,14 @@ Concept* MainWindow::importDom(QDomElement const& _el, Concept* _p, QStringList*
 
 	e->setProperties(h);
 	for (QDomNode i = _el.firstChild(); !i.isNull(); i = i.nextSibling())
-		if(i.isElement() && i.toElement().tagName() == "project" && _unloadedProjects)
-			*_unloadedProjects << i.namedItem("filename").nodeValue();
+		if(i.isElement() && i.toElement().tagName() == "project" && _unloadedModules)
+			*_unloadedModules << i.namedItem("filename").nodeValue();
 		else if (i.isElement())
-			importDom(i.toElement(), e, _unloadedProjects, _projects);
+			importDom(i.toElement(), e, _unloadedModules, _projects);
 	return e;
 }
 
-void MainWindow::on_actNewCProject_triggered()
+void MainWindow::on_actNewCModule_triggered()
 {
 }
 
@@ -786,7 +786,7 @@ void MainWindow::entityFocused(Concept* _e)
 
 void MainWindow::updateProgramCode()
 {
-	if (Project* p = codeView->subject()->tryKind<Project>())
+	if (Module* p = codeView->subject()->tryKind<Module>())
 		programCode->setPlainText(qs(p->finalCode()));
 }
 
