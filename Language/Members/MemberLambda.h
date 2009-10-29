@@ -52,7 +52,7 @@ protected:
 	virtual String						memberInterfaceCode() const { return LambdaNamer::interfaceCode(); }
 
 	virtual int							familyDependencies() const { return DependsOnChildren; }
-	virtual void						onDependencyChanged(int, Concept* _e) { changed((_e == child(Constness) || _e == child(Accessibility)) ? AllAspects : Logically); }
+	virtual void						onDependencyChanged(int, Concept* _e) { changed((_e == child(Constness) || _e == child(Accessibility)) ? AllAspects : _e == child(Identity) ? Visually : Logically); }
 	virtual void						onDependencyRemoved(Concept*, int) { changed(Logically); }
 	virtual List<Declaration*>			utilised() const;
 	virtual int							minRequired(int _i) const { return _i == Constness || _i == Body || _i == Returned ? 1 : Super::minRequired(_i); }

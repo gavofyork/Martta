@@ -40,7 +40,13 @@ namespace Martta
 
 class EditDelegateFace;
 
-class M_API_Concept Concept: public_super Nothing, public SafePointerTarget, virtual public Dier, public ChildValidifier, public Depender, public Dependee
+class M_API_Concept Concept:
+	public_super	Nothing,
+	public			SafePointerTarget,
+	virtual public	Dier,
+	public			ChildValidifier,
+	public			Depender,
+	public			Dependee
 {
 	MARTTA_COMMON(Nothing)
 
@@ -95,7 +101,7 @@ public:
 	template<class T> inline T*			childAs(int _i) const { Concept* e = child(_i); AssertNR(e); return e->asKind<T>(); }
 	template<class T> inline T*			tryChild(int _i) const { if (Concept* e = child(_i)) return e->tryKind<T>(); return 0; }
 
-	inline List<Concept*> const&			cardinalChildren() const { return m_cardinalChildren; }
+	inline List<Concept*> const&		cardinalChildren() const { return m_cardinalChildren; }
 	inline int							cardinalChildCount() const { return m_cardinalChildren.size(); }
 	template<class T> inline List<T*>	cardinalChildrenOf() const { return filterEntities<T>(m_cardinalChildren); }
 	template<class T> inline List<T*>	cardinalChildrenAs() const { return castEntities<T>(m_cardinalChildren); }
@@ -124,7 +130,7 @@ public:
 	bool								hasAncestor(Kind _k) const;
 	bool								hasAncestor(Concept const* _a) const { return ancestorIndex(_a) != UndefinedIndex; }
 	template<class T> T*				ancestor() const { Concept* r = ancestor(T::staticKind); return r ? r->asKind<T>() : 0; }
-	Concept*								ancestor(Kind _k) const;
+	Concept*							ancestor(Kind _k) const;
 	template<class T> int				ancestorIndex() const { return ancestorIndex(T::staticKind); }
 	int									ancestorIndex(Kind _k) const;
 	int									ancestorIndex(Concept const* _a) const;
@@ -136,7 +142,7 @@ public:
 	bool								hasSelfAncestor(Kind _k) const;
 	bool								hasSelfAncestor(Concept const* _a) const;
 	template<class T> T*				selfAncestor() const { Concept* r = selfAncestor(T::staticKind); return r ? r->asKind<T>() : 0; }
-	Concept*								selfAncestor(Kind _k) const;
+	Concept*							selfAncestor(Kind _k) const;
 	inline Concept*						root() const { Concept* e; for (e = const_cast<Concept*>(this); e->m_parent; e = e->m_parent) {} return e; }
 	template<class T> T*				rootOf() const { T* r = tryKind<T>(); for (Concept* e = const_cast<Concept*>(this); e; e = e->m_parent) if (T* t = e->tryKind<T>()) r = t; return r; }
 
@@ -163,7 +169,7 @@ public:
 	bool								removeInvalidChildren();
 	/// Appends any children if they are necessary. They themselves will be in a valid state.
 	/// @note changed() called as appropriate.
-	Concept*								prepareChildren();
+	Concept*							prepareChildren();
 
 	virtual String						finalCode() const { return String::null; }
 	virtual String						summary() const { return kind().name(); }
@@ -223,14 +229,14 @@ public:
 	 * All of the children are transplanted to _u.
 	 * _u's allowedKinds/deniedKinds must agree with the current litter.
 	 */
-	Concept*								usurp(Concept* _u);
+	Concept*							usurp(Concept* _u);
 	template<class T> inline T*			usurp() { T* r = new T; usurp(r); return r; }
 
 	/**
 	 * Kills this object and replaces it with _r.
 	 * All children are killed.
 	 */
-	Concept*								replace(Concept* _r);
+	Concept*							replace(Concept* _r);
 	template<class T> inline T*			replace() { T* r = new T; replace(r); return r; }
 
 	enum { NonePrefered = INT_MAX - 1 };
@@ -244,7 +250,7 @@ public:
 	 * will be replaced (silently) by us. To be safe, guarantee that there is nothing in the destination
 	 * index prior to this operation.
 	 */
-	Concept*								insert(Concept* _e, int _preferedIndex = NonePrefered);
+	Concept*							insert(Concept* _e, int _preferedIndex = NonePrefered);
 	template<class T> inline T*			insert(int _preferedIndex = NonePrefered) { T* r = new T; insert(r, _preferedIndex); return r; }
 
 	/**
@@ -371,6 +377,7 @@ public:
 	virtual void						properties(Hash<String, String>&) const {}
 	virtual void						setProperties(Hash<String, String> const&) {}
 	virtual void						apresLoad() {}	// Called following a load after the model has been loaded.
+	virtual void						loadFinished();
 	virtual void						archive() { Hash<String, String> h; properties(h); setProperties(h); }	// Should (at least) force all ModelPtrs to revert to textual form.
 
 	// We've been double-clicked.

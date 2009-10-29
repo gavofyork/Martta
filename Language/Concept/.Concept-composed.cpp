@@ -15,6 +15,7 @@
 #include "Interfaces/Dependee.cpp"
 #include "Interfaces/Depender.cpp"
 #include "Interfaces/Familial.cpp"
+#include "Interfaces/Composite.cpp"
 #include "./Concept.cpp"
 #include "Support/SpecialKeys.cpp"
 

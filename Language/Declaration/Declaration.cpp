@@ -53,8 +53,21 @@ String Declaration::superChildInformationHtml(Concept const* _e) const
 	return p;
 }
 
-void Declaration::archivePtrs(bool) const
+int Declaration::registerAnonymous(Identifiable const* _e, Identifiable const** _registrar) const
 {
+	if (_registrar)
+		*_registrar = this;
+	if (m_anonyma.contains(_e))
+		return m_anonyma.indexOf(_e);
+	m_anonyma << _e;
+	return m_anonyma.size() - 1;
+}
+
+void Declaration::registerAnonymous(Identifiable const* _e, int _k)
+{
+	while (m_anonyma.size() <= _k)
+		m_anonyma << 0;
+	m_anonyma[_k] = _e;
 }
 
 void Declaration::restorePtrs() const

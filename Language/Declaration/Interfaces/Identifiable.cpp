@@ -113,4 +113,9 @@ void Identifiable::setProperties(Hash<String, String> const& _p)
 	ModelPtrRegistrar::get()->registerTemp(this, _p[L"generalkey"]);
 }
 
+void Identifiable::apresLoad()
+{
+	ModelPtrRegistrar::get()->restorePtrsOf(this);
+}
+
 }

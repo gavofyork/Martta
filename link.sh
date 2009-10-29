@@ -212,7 +212,7 @@ prepare Operator "Operator Support/OperatorRegistrar"
 prepare CQualifiers CQualifiers ""
 prepare CTypes CTypes ""
 
-prepare Concept "Support/Auxilliary Support/AuxilliaryFace Support/AuxilliaryRegistrar Support/ChangeMan Support/CodeScene Support/CompletionDelegate Support/CullManager Support/Dier Support/EditDelegateFace Support/EditDelegate Support/ConceptSupport Support/KeyEvent Support/Kind Support/Meta Support/Position Support/SafePointer Interfaces/ChildValidifier Interfaces/Dependee Interfaces/Depender Interfaces/Familial Concept Support/SpecialKeys" 
+prepare Concept "Support/Auxilliary Support/AuxilliaryFace Support/AuxilliaryRegistrar Support/ChangeMan Support/CodeScene Support/CompletionDelegate Support/CullManager Support/Dier Support/EditDelegateFace Support/EditDelegate Support/ConceptSupport Support/KeyEvent Support/Kind Support/Meta Support/Position Support/SafePointer Interfaces/ChildValidifier Interfaces/Dependee Interfaces/Depender Interfaces/Familial Interfaces/Composite Concept Support/SpecialKeys" 
 
 prepare WebView "Interfaces/WebViewable Interfaces/WebInformer Support/WebStylist Support/WebStylistRegistrar" "Concept"
 

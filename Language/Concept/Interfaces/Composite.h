@@ -20,25 +20,24 @@
 
 #pragma once
 
-#include "TypeNamer.h"
-#include "Identifiable.h"
+#include "Concept.h"
 
-#ifndef M_API_Statement
-#define M_API_Statement M_OUTAPI
+#ifndef M_API_Concept
+#define M_API_Concept M_OUTAPI
 #endif
 
 namespace Martta
 {
 
-class M_API_Statement ValueDefiner: public_interface Identifiable, public_interface TypeNamer
+class M_API_Concept Composite: public_interface Concept
 {
-	MARTTA_NOTION(Identifiable)
-	MARTTA_ALSO_INHERITS(TypeNamer, 0)
+	MARTTA_NOTION(Concept)
 
 public:
-	virtual String						identity() const { return type()->code(name()).replace(" ", "").replace("::", ";;"); }
-	virtual bool						isAccessibleAt(Position const&) const { return true; }
-	virtual void						apresLoad() { Identifiable::apresLoad(); TypeNamer::apresLoad(); }
+	virtual void compose();
+	static Concept* composeTree(Concept* _original);
+
+	virtual ~Composite() {}
 };
 
 }

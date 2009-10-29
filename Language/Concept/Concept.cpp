@@ -50,6 +50,13 @@ void Concept::operator delete(void* p)
 
 MARTTA_NOTION_CPP(Concept);
 
+void Concept::loadFinished()
+{
+	apresLoad();
+	foreach (Concept* i, children())
+		i->loadFinished();
+}
+
 String Concept::indexName(int _i) const
 {
 	if (_i == UndefinedIndex)

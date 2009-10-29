@@ -42,6 +42,7 @@ protected:
 	virtual String						nonSpecificReference() const { return codeName(); }
 	virtual	bool						isAccessibleAt(Position const& _p) const;
 	Type								memberifiedType(Type const& _t) const;
+	virtual void						apresLoad() { Member::apresLoad(); ValueDefiner::apresLoad(); }
 };
 
 }

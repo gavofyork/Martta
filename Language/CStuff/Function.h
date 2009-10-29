@@ -57,6 +57,7 @@ protected:
 
 	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p[L"ellipsis"] = String::number(m_ellipsis); }
 	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_ellipsis = _p[L"ellipsis"].toBool(); }
+	inline virtual void					apresLoad() { TopLevel::apresLoad(); LambdaNamer::apresLoad(); }
 private:
 	Qualifiers							m_qualifiers;
 	bool								m_ellipsis;

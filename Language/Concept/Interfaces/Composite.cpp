@@ -18,27 +18,52 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#pragma once
-
-#include "TypeNamer.h"
-#include "Identifiable.h"
-
-#ifndef M_API_Statement
-#define M_API_Statement M_OUTAPI
-#endif
+#include "Composite.h"
 
 namespace Martta
 {
 
-class M_API_Statement ValueDefiner: public_interface Identifiable, public_interface TypeNamer
-{
-	MARTTA_NOTION(Identifiable)
-	MARTTA_ALSO_INHERITS(TypeNamer, 0)
+MARTTA_NOTION_CPP(Composite);
 
-public:
-	virtual String						identity() const { return type()->code(name()).replace(" ", "").replace("::", ";;"); }
-	virtual bool						isAccessibleAt(Position const&) const { return true; }
-	virtual void						apresLoad() { Identifiable::apresLoad(); TypeNamer::apresLoad(); }
-};
+void Composite::compose()
+{
+	killAndDelete();
+}
+
+Concept* copyTree(Concept* _original, int _rec)
+{
+	Concept* ret = _original->kind().spawn();
+	Hash<String, String> h;
+	_original->properties(h);
+	ret->setProperties(h);
+	foreach (Concept* c, _original->children())
+		copyTree(c, _rec + 1)->silentMove(ret->middle(c->index()));
+	if (!_rec)
+		ret->loadFinished();
+	return ret;
+}
+
+Concept* Composite::composeTree(Concept* _original)
+{
+	Concept* ret = copyTree(_original, 0);
+
+	for (int composed = 1; composed;)
+	{
+		composed = 0;
+		List<Concept*> cs = ret->children();
+		while (cs.size())
+		{
+			Concept* c = cs.takeLast();
+			if (Composite* m = c->tryKind<Composite>())
+			{
+				composed++;
+				m->compose();
+			}
+			else
+				cs << c->children();
+		}
+	}
+	return ret;
+}
 
 }

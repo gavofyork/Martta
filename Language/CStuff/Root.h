@@ -45,11 +45,11 @@ public:
 	MARTTA_NAMED(Included)
 
 	virtual String						name() const { return String::null; }
-	virtual Concept*						parent() const { return 0; }
+	virtual Concept*					parent() const { return 0; }
 	virtual String						reference() const { return ""; }
 	virtual String						key() const { return ""; }
 	virtual Kinds						allowedKinds(int) const;
-	virtual void						apresLoad() { restorePtrs(); }
+	virtual void						apresLoad() { restorePtrs(); }		// XXX: I don't think this is needed...
 	virtual void						properties(Hash<String, String>& _p) const { Declaration::Super::properties(_p); }
 	virtual void						setProperties(Hash<String, String> const& _p) { Declaration::Super::setProperties(_p); }
 };

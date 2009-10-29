@@ -156,7 +156,7 @@ List<StringList> CModule::steps() const
 	ccArgs << L"-o" << bin;
 	ccArgs << L"-lsupport";
 	ccArgs << L"-L" + supportPath();
-	// TODO: Need to set supportPath to by LD_LIBRTARY_PAYTH.
+	ccArgs << L"-Wl,-R" + supportPath();
 #endif
 
 	foreach (String i, libs())

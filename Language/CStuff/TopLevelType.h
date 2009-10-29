@@ -48,6 +48,7 @@ protected:
 	virtual Types						assignableTypes() const;
 	virtual List<Declaration*>			utilisedInUse() const { return List<Declaration*>() << const_cast<TopLevelType*>(this); }
 	virtual inline String				defineLabelName(String const& _text) const { return camelCase(_text, true); }
+	virtual inline void					apresLoad() { TopLevel::apresLoad(); TypeDefinition::apresLoad(); }
 };
 
 }

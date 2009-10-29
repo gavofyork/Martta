@@ -25,6 +25,11 @@
 namespace Martta
 {
 
+Concept* Kind::spawn() const
+{
+	return Concept::spawn(name());
+}
+
 Concept* Kind::spawnPrepared() const
 {
 	return Concept::spawn(name())->prepareChildren();

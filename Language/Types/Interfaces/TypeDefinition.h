@@ -62,6 +62,7 @@ public:
 	virtual List<ValueDefiner*>			applicableMembers(Concept const* _s, bool _isConst) const;
 	virtual inline bool					canStandAlone() const { return true; }
 	virtual inline String				defineLabelHtml(String const& _html) const { return String(L"<span class=\"TypeConcept\" style=\"text-shadow: -1px -1px 1px %1\">").arg(idColour().name()) + _html + L"</span>"; }
+	virtual void						apresLoad() { Identifiable::apresLoad(); Labelled::apresLoad(); }
 
 	virtual ~TypeDefinition() {}
 };

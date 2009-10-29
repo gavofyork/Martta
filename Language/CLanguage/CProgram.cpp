@@ -67,9 +67,9 @@ void CProgram::initWithModules(List<Module*> const& _ps)
 
 	ChangeMan::get()->sleep();
 	GccXml::extractHeaders(qs(includeCode()), GccXml::declarationsHandler(this));
-	ModelPtrRegistrar::get()->restorePtrs(this);
+//	ModelPtrRegistrar::get()->restorePtrs(this);
 	ChangeMan::get()->wake();
-	apresLoad();
+	loadFinished();
 }
 
 void CProgram::addModule(Module* _p)
@@ -81,9 +81,10 @@ void CProgram::addModule(Module* _p)
 	_p->self()->move(back());
 
 	GccXml::extractHeaders(qs(includeCode()), GccXml::declarationsHandler(this));
-	ModelPtrRegistrar::get()->restorePtrs(this);
+//	ModelPtrRegistrar::get()->restorePtrs(this);
 	ChangeMan::get()->wake();
-	apresLoad(_p);
+//	apresLoad(_p);
+	loadFinished();
 }
 
 void CProgram::removeModule(Module* _p)
@@ -95,8 +96,9 @@ void CProgram::removeModule(Module* _p)
 	_p->self()->killAndDeleteWithNotification();
 
 	GccXml::extractHeaders(qs(includeCode()), GccXml::declarationsHandler(this));
-	ModelPtrRegistrar::get()->restorePtrs(this);
+//	ModelPtrRegistrar::get()->restorePtrs(this);
 	ChangeMan::get()->wake();
+	loadFinished();
 }
 
 void CProgram::archiveModel()
@@ -142,7 +144,8 @@ void CProgram::rejigIncludes()
 	// Import declarations.
 	GccXml::extractHeaders(qs(includeCode()), GccXml::declarationsHandler(this));
 	// De-archive pointers;
-	ModelPtrRegistrar::get()->restorePtrs(this);
+//	ModelPtrRegistrar::get()->restorePtrs(this);
+	loadFinished();
 }
 
 }

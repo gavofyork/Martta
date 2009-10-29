@@ -94,7 +94,7 @@ bool ChangeMan::changed(Dependee* _changer, int _aspect)
 	foreach (Depender* d, e->children())
 		if (d->shouldBeNotified() && d->familyDependencies() & Depender::DependsOnParent)
 			m_changeQueue << Entry(d, _aspect, e);
-	if (Depender* d = e)
+	if (Depender* d = e->parent())
 		if (d->shouldBeNotified() && d->familyDependencies() & Depender::DependsOnChildren)
 			m_changeQueue << Entry(d, _aspect, e);
 	List<Concept*> es;

@@ -50,7 +50,7 @@ protected:
 
 	inline String						interfaceCode() const { return basicCode() + ";\n"; }
 	inline String						implementationCode() const { return String::null; }
-	inline void							onDependencyChanged(int, Concept* _e) { if (_e == self()->child(OurType)) self()->changed(Dependee::Logically | Dependee::Visually); if (_e == self()->child(Identity)) self()->changed(Dependee::Visually); }
+	inline void							onDependencyChanged(int, Concept* _e) { if (_e == child(OurType)) changed(Dependee::Logically | Dependee::Visually); if (_e == child(Identity)) changed(Dependee::Visually); }
 	virtual inline String				defineLabelHtml(String const& _middle) const { return L"<span class=\"VariableNamer-definition\">" + type()->typeHtml(_middle) + L"</span>"; }
 	bool								keyPressed(KeyEvent const* _e);
 	String								defineVariableHtml() const;

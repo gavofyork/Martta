@@ -77,6 +77,7 @@ public:
 	inline Kinds supers() const { return m_mo ? AuxilliaryRegistrar::get()->supers(m_mo) : Kinds(); }
 	inline String name() const { return m_mo ? m_mo->name() : 0; }
 	inline AuxilliaryFace const* auxilliary() const { return m_mo; }
+	Concept* spawn() const;
 	Concept* spawnPrepared() const;
 
 	inline bool isInterface() const { return m_mo->isInterface(); }

@@ -66,6 +66,8 @@ public:
 	virtual int							registerAnonymous(Identifiable const* _e, Identifiable const** _registrar = 0) const;
 	virtual void						registerAnonymous(Identifiable const* _e, int _k);
 
+	virtual void						apresLoad();
+
 	/// @returns true if the entity cannot be explicitly referenced in the CPP code. This is the case in code
 	/// like class {} x; or typedef struct {} y; or enum { z };
 	virtual bool						isHidden() const { return codeName().startsWith(".") || name().isEmpty(); }				///< true for anonymous enums.

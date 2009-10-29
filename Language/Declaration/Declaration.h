@@ -53,11 +53,10 @@ public:
 	/// From Identifiable (default implementations).
 	virtual String						key() const;
 	virtual Identifiable*				lookupChild(String const& _key) const;
-	void								archivePtrs(bool _clear = false) const;
 	void								restorePtrs() const;
 
-	virtual int							registerAnonymous(Identifiable const* _e, Identifiable const** _registrar) const { if (_registrar) *_registrar = this; if (m_anonyma.contains(_e)) return m_anonyma.indexOf(_e); m_anonyma << _e; return m_anonyma.size() - 1; }
-	virtual void						registerAnonymous(Identifiable const* _e, int _k) { while (m_anonyma.size() <= _k) m_anonyma << 0; m_anonyma[_k] = _e; }
+	virtual int							registerAnonymous(Identifiable const* _e, Identifiable const** _registrar) const;
+	virtual void						registerAnonymous(Identifiable const* _e, int _k);
 
 	List<Declaration*>					utilisedSiblings() const;
 	virtual List<Declaration*>			utilised() const;
@@ -67,6 +66,8 @@ public:
 
 	virtual String						interfaceCode() const { return String::null; }
 	virtual String						implementationCode() const { return String::null; }
+
+	virtual void						apresLoad() { Concept::apresLoad(); Identifiable::apresLoad(); }
 
 	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); Identifiable::properties(_p); }
 	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); Identifiable::setProperties(_p); }

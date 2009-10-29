@@ -64,7 +64,7 @@ protected:
 	virtual void						onDependencyRemoved(Concept* _e, int) { EnumerationNamer::onDependencyRemoved(_e); }
 	virtual bool						keyPressed(KeyEvent const* _e) { AssertNR(isComplete()); return EnumerationNamer::keyPressed(_e) ? true : Super::keyPressed(_e); }
 	virtual inline String				defineLabelName(String const& _text) const { return camelCase(_text, true); }
-
+	virtual void						apresLoad() { Member::apresLoad(); EnumerationNamer::apresLoad(); Labelled::apresLoad(); }
 };
 
 }
