@@ -35,7 +35,7 @@ class M_API_Concept Composite: public_interface Concept
 
 public:
 	virtual void compose();
-	static Concept* composeTree(Concept* _original);
+	static Concept* composeTree(Concept const* _original);
 
 	virtual ~Composite() {}
 };

@@ -376,6 +376,7 @@ public:
 	virtual List<Concept*>				savedChildren() const;
 	virtual void						properties(Hash<String, String>&) const {}
 	virtual void						setProperties(Hash<String, String> const&) {}
+	virtual void						copyProperties(Concept const* _src) { Hash<String, String> h; _src->properties(h); setProperties(h); }
 	virtual void						apresLoad() {}	// Called following a load after the model has been loaded.
 	virtual void						loadFinished();
 	virtual void						archive() { Hash<String, String> h; properties(h); setProperties(h); }	// Should (at least) force all ModelPtrs to revert to textual form.

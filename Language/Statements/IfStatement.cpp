@@ -44,7 +44,7 @@ String IfStatement::code() const
 {
 	String ret;
 	ret += "if (" + (isStatement(Condition) ? asStatement(Condition)->code() : "");
-	ret += ")\n" + (isStatement(Body) ? asStatement(Body)->codeAsStatement() : "");
+	ret += ")\n" + (isStatement(Body) ? asStatement(Body)->codeAsStatement() : "{}");
 	ret += "else\n" + (isStatement(AltBody) ? asStatement(AltBody)->codeAsStatement() : "{}");
 	return ret;
 }
@@ -91,13 +91,28 @@ bool UnlessStatement::keyPressedOnPosition(Position const& _p, KeyEvent const* _
 	return simplePlaceholderKeyPressHandler<UnlessStatement>(_p, _e, "!?");
 }
 
-String UnlessStatement::code() const
+/*String UnlessStatement::code() const
 {
 	String ret;
 	ret += "if (" + (isStatement(Condition) ? asStatement(Condition)->code() : "");
 	ret += ")\n" + (isStatement(AltBody) ? asStatement(AltBody)->codeAsStatement() : "{}");
 	ret += "else\n" + (isStatement(Body) ? asStatement(Body)->codeAsStatement() : "");
 	return ret;
+}*/
+
+void UnlessStatement::compose()
+{
+	IfStatement* t = new IfStatement;
+	child(Condition)->silentMove(t->middle(Condition));
+	if (child(Body))
+		child(Body)->silentMove(t->middle(AltBody));
+	else
+		(new Compound)->silentMove(t->middle(AltBody));
+	if (child(AltBody))
+		child(AltBody)->silentMove(t->middle(Body));
+	else
+		(new Compound)->silentMove(t->middle(Body));
+	replace(t);
 }
 
 String UnlessStatement::defineHtml() const

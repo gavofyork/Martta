@@ -36,17 +36,25 @@ void ModelPtrFace::tryRestore(Identifiable const* _root)
 	if (isArchived())
 	{
 		if (Identifiable* i = ModelPtrRegistrar::get()->find(m_key))
+		{
 			m_cache = i;
+//			mInfo() << "MPR found " << m_key << m_cache->name();
+		}
 		if (!m_cache)
 		{
 			if (Identifiable* i = _root->find(m_key))
+			{
 				m_cache = i;
+//				mInfo() << "Root found " << m_key << m_cache->name() << _root;
+			}
 		}
 		// Note; m_cache is allowed to be zero, since it just means that the entity we're
 		// pointing at was deleted while we were archived. What we get back is naturally a
 		// null pointer.
 		if (m_cache)
+		{
 			m_key = String::null;
+		}
 	}
 }
 

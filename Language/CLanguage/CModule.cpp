@@ -54,6 +54,7 @@ inline QString xqs(String const& _s)
 #endif
 
 #include "Function.h"
+#include "Composite.h"
 #include "CDependency.h"
 #include "CModule.h"
 
@@ -133,7 +134,12 @@ String CModule::finalCode() const
 	ret += "#include \"" + supportPath() + "msHash.h\"\n";
 	ret += "#include \"" + supportPath() + "msSupport.h\"\n";
 	ret += includeCode();
-	ret += Super::finalCode();
+	{
+		CModule* composed = Composite::composeTree(this)->asKind<CModule>();
+		ret += composed->Super::finalCode();
+		delete composed;
+	}
+//	ret += Super::finalCode();
 	if (childIs<Function>(0))
 		ret += "int main(int argc, char** argv)\n{\n\treturn " + childAs<Function>(0)->reference() + "(argc, argv);\n}\n";
 	return ret;

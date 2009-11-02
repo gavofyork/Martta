@@ -22,6 +22,7 @@
 
 #include "Corporal.h"
 #include "Conditional.h"
+#include "Composite.h"
 #include "Untyped.h"
 
 #ifndef M_API_Statements
@@ -51,15 +52,17 @@ protected:
 	virtual bool						requiresSemicolon() const { return false; }
 };
 
-class M_API_Statements UnlessStatement: public_super IfStatement
+class M_API_Statements UnlessStatement: public_super IfStatement, public_interface Composite
 {
 	MARTTA_PROPER(IfStatement)
+	MARTTA_ALSO_INHERITS(Composite, 0)
 
 public:
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 
 protected:
-	virtual String						code() const;
+	virtual void						compose();
+//	virtual String						code() const;
 	virtual String						defineHtml() const;
 };
 

@@ -30,22 +30,31 @@ void Composite::compose()
 	killAndDelete();
 }
 
-Concept* copyTree(Concept* _original, int _rec)
+Concept* copyTree(Concept const* _original, Position const& _position = Nowhere)
 {
+	// Hidden in this file because it won't work generally - if the _original has a ModelPtr in one of its
+	// nodes but doesn't have the accompanying Identifiable it won't know to tell the Identifiable to apresLoad()
+	// itself (i.e. call loadFinished()) after copying.
+	// XXX: This should fsck up now with a program involving printf.
+	// FIX: Call copyTree for the entire Program, not per-module and have a specialised copyTree() for in-model copying.
+
 	Concept* ret = _original->kind().spawn();
-	Hash<String, String> h;
-	_original->properties(h);
-	ret->setProperties(h);
+	if (_position != Nowhere)
+		ret->silentMove(_position);
+	ret->copyProperties(_original);
 	foreach (Concept* c, _original->children())
-		copyTree(c, _rec + 1)->silentMove(ret->middle(c->index()));
-	if (!_rec)
+		copyTree(c, ret->middle(c->index()));
+	if (_position == Nowhere)
+	{
 		ret->loadFinished();
+		_original->root()->apresLoad();	// TODO: replace a postCopy() const method that calls restorePtrs
+	}
 	return ret;
 }
 
-Concept* Composite::composeTree(Concept* _original)
+Concept* Composite::composeTree(Concept const* _original)
 {
-	Concept* ret = copyTree(_original, 0);
+	Concept* ret = copyTree(_original);
 
 	for (int composed = 1; composed;)
 	{

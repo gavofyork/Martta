@@ -181,7 +181,7 @@ int String::toInt(bool* _ok, int _base) const
 	errno = 0;
 	int ret = m_data ? wcstol(m_data, 0, _base) : 0;
 	if (_ok)
-		*_ok = !errno && m_data;
+		*_ok = !errno && m_data && (ret || simplified() == L"0");
 	return ret;
 }
 
@@ -190,7 +190,7 @@ uint String::toUint(bool* _ok, int _base) const
 	errno = 0;
 	uint ret = m_data ? wcstoul(m_data, 0, _base) : 0u;
 	if (_ok)
-		*_ok = !errno && m_data;
+		*_ok = !errno && m_data && (ret || simplified() == L"0");
 	return ret;
 }
 
@@ -199,7 +199,7 @@ double String::toDouble(bool* _ok) const
 	errno = 0;
 	double ret = m_data ? wcstod(m_data, 0) : 0.;
 	if (_ok)
-		*_ok = !errno && m_data;
+		*_ok = !errno && m_data && (ret || simplified() == L"0");
 	return ret;
 }
 
