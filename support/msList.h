@@ -232,6 +232,14 @@ private:
 	int m_reserved;
 };
 
+template<class T> m_inline uint hashOf(List<T> const& _s)
+{
+	uint ret = 5381;
+	foreach (T i, _s)
+		ret = ((ret << 5) + ret) ^ hashOf(i);
+	return ret;
+}
+
 template<class T, class F> m_inline List<T> list_cast(List<F> _f)
 {
 	List<T> ret;

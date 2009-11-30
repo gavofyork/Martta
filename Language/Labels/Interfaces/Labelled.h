@@ -52,18 +52,9 @@ public:
 			return defineLabelCode(_text);
 	}
 
-	inline String labelName(String const& _text) const
-	{
-		if (!this)
-			return Labelled::defineLabelName(_text);
-		else
-			return defineLabelName(_text);
-	}
-
 protected:
 	virtual inline String defineLabelHtml(String const& _middle) const { return _middle; }
-	virtual inline String defineLabelCode(String const& _text) const { return labelName(_text); }
-	virtual inline String defineLabelName(String const& _text) const { return camelCase(_text); }
+	virtual inline String defineLabelCode(String const& _text) const { return camelCase(_text); }
 };
 
 }

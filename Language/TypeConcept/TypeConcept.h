@@ -72,7 +72,7 @@ public:
 #endif
 	}
 
-	virtual String						name() const { return code(); }
+	virtual String						typeName() const { return code(); }
 	virtual String						code(String const& _middle = "") const { return L"???" + _middle; }
 	virtual TypeConcept*					bottom() { return this; }
 	virtual Rgb							idColour() const { return 0x777777; }

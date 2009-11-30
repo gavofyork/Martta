@@ -129,7 +129,7 @@ inline String compileTypes(Types const& _t)
 {
 	String ret;
 	foreach (Type t, _t)
-		ret += t->name() + L", ";
+		ret += t->typeName() + L", ";
 	if (ret.endsWith(L", "))
 		ret.chop(2);
 	return ret;

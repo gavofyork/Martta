@@ -24,6 +24,7 @@
 #include <msList.h>
 using namespace MarttaSupport;
 
+#include "CodeScene.h"
 #include "Named.h"
 
 #ifndef M_API_Declaration
@@ -44,7 +45,7 @@ public:
 
 	virtual String						setId() const { return String::null; }
 	virtual List<Named*>				identifiableAt(Position const&) { return List<Named*>(); }
-	virtual void						acceptAt(Position const&, Named*) {}
+	virtual void						acceptAt(Position const&, Named*, CodeScene*) {}
 	virtual String						defineEditHtml(Named*, String const& _mid) { return _mid; }
 };
 
@@ -64,9 +65,9 @@ public:
 			return List<Named*>() << &m_ourNamed;
 		return List<Named*>();
 	}
-	virtual void						acceptAt(Position const& _pos, Named*)
+	virtual void						acceptAt(Position const& _pos, Named*, CodeScene* _cs)
 	{
-		_pos.place((new T)->prepareChildren())->dropCursor();
+		_cs->navigateInto(_pos.place((new T)->prepareChildren()));
 	}
 	virtual String						defineEditHtml(Named*, String const& _mid)
 	{

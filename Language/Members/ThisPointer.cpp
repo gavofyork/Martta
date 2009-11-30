@@ -42,7 +42,7 @@ public:
 		}
 		return List<Named*>();
 	}
-	virtual void						acceptAt(Position const& _pos, Named*)
+	virtual void						acceptAt(Position const& _pos, Named*, CodeScene*)
 	{
 		_pos.place(new ThisPointer)->setCurrent();
 	}

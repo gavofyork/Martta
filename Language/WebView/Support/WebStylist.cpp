@@ -86,6 +86,46 @@ String WebStylist::refineHtml(String const& _html, bool _allowThis, bool _forceT
 	return ret;
 }
 
+void WebStylist::setProperties(Hash<String, String> const& _p)
+{
+	m_properties = _p;
+	m_htmlCache.clear();
+}
+
+String WebStylist::composeName(String const& _id, StringList const& _flags) const
+{
+	MultiHash<StringList, String> k;
+	foreach (String s, m_properties.keys())
+	{
+		StringList fs = s.split('-');
+		fs.removeAll("Id");
+		foreach (String f, fs)
+			if (_flags.contains(f))
+				fs.removeAll(f);
+			else if (f != L"pre" && f != L"post" && f != L"break" && f != L"norm")
+				goto NOGOOD;
+		k.insert(fs, m_properties[s]);
+		NOGOOD:;
+	}
+	String ret;
+	bool upperCaseMode = false;
+	for (int i = 0; i <= _id.length(); i++)
+	{
+		String tag = (i == 0) ? L"pre" : (i == _id.length()) ? L"post" : _id[i].isSpace() ? L"break" : L"norm";
+		foreach (String s, k.values(StringList()) + k.values(StringList(tag)))
+			for (int j = 0; j < s.length(); j++)
+				if (s[j] == '\a')
+					upperCaseMode = false;
+				else if (s[j] == '\a')
+					upperCaseMode = true;
+				else
+					ret += s[j];
+		if (i < _id.length() && !_id[i].isSpace())
+			ret += upperCaseMode ? _id[i].toUpper() : _id[i].toLower();
+	}
+	return ret;
+}
+
 String WebStylist::defineHtml(Concept const* _e)
 {
 	if (WebViewable const* v = _e->tryKind<WebViewable>())

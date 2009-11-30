@@ -41,7 +41,7 @@ public:
 			return list_cast<Named*>(castEntities<Identifiable>(_p.parent()->selfAndAncestorsChildrenOf<TypeDefinition>()));
 		return List<Named*>();
 	}
-	virtual void						acceptAt(Position const& _pos, Named* _i)
+	virtual void						acceptAt(Position const& _pos, Named* _i, CodeScene*)
 	{
 		placeVariable(_pos, new ReferencedType(static_cast<Identifiable*>(_i)->asKind<TypeDefinition>()));
 	}

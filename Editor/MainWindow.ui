@@ -45,7 +45,7 @@
         <active>
          <colorrole role="Base">
           <brush brushstyle="SolidPattern">
-           <color alpha="0">
+           <color alpha="255">
             <red>255</red>
             <green>255</green>
             <blue>255</blue>
@@ -54,7 +54,7 @@
          </colorrole>
          <colorrole role="Window">
           <brush brushstyle="SolidPattern">
-           <color alpha="0">
+           <color alpha="255">
             <red>255</red>
             <green>255</green>
             <blue>255</blue>
@@ -65,7 +65,7 @@
         <inactive>
          <colorrole role="Base">
           <brush brushstyle="SolidPattern">
-           <color alpha="0">
+           <color alpha="255">
             <red>255</red>
             <green>255</green>
             <blue>255</blue>
@@ -74,7 +74,7 @@
          </colorrole>
          <colorrole role="Window">
           <brush brushstyle="SolidPattern">
-           <color alpha="0">
+           <color alpha="255">
             <red>255</red>
             <green>255</green>
             <blue>255</blue>
@@ -85,7 +85,7 @@
         <disabled>
          <colorrole role="Base">
           <brush brushstyle="SolidPattern">
-           <color alpha="0">
+           <color alpha="255">
             <red>255</red>
             <green>255</green>
             <blue>255</blue>
@@ -94,7 +94,7 @@
          </colorrole>
          <colorrole role="Window">
           <brush brushstyle="SolidPattern">
-           <color alpha="0">
+           <color alpha="255">
             <red>255</red>
             <green>255</green>
             <blue>255</blue>
@@ -117,7 +117,7 @@
      <x>0</x>
      <y>0</y>
      <width>579</width>
-     <height>23</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_Module">
@@ -166,6 +166,8 @@
     <addaction name="separator"/>
     <addaction name="actClearChanges"/>
     <addaction name="actShowDeps"/>
+    <addaction name="separator"/>
+    <addaction name="actNewCodeView"/>
    </widget>
    <widget class="QMenu" name="menu_Debug">
     <property name="title">
@@ -965,7 +967,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Show Depends</string>
+    <string>&amp;Show Depends</string>
    </property>
   </action>
   <action name="actRemoveCDependency">
@@ -1022,7 +1024,12 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>List Changes</string>
+    <string>&amp;List Changes</string>
+   </property>
+  </action>
+  <action name="actNewCodeView">
+   <property name="text">
+    <string>&amp;New Code View</string>
    </property>
   </action>
  </widget>

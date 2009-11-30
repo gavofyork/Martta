@@ -58,7 +58,7 @@ public:
 
 	uint id() const { return m_id; }
 	void setId(uint _d) { m_id = _d; changed(); }
-	void committed(int);
+	void committed(int, CodeScene*);
 
 	virtual String code(String const& _middle) const;
 

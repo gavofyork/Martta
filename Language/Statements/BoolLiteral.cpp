@@ -40,7 +40,7 @@ public:
 			return List<Named*>() << &m_true << &m_false;
 		return List<Named*>();
 	}
-	virtual void						acceptAt(Position const& _pos, Named* _n)
+	virtual void						acceptAt(Position const& _pos, Named* _n, CodeScene*)
 	{
 		_pos.place((new BoolLiteral(_n == &m_true))->prepareChildren())->dropCursor();
 	}

@@ -29,6 +29,7 @@
 #include <WebInformer.h>
 
 #include "Timer.h"
+#include "CodeView.h"
 #include "MainWindow.h"
 
 namespace Martta
@@ -80,10 +81,10 @@ MainWindow::MainWindow(QWidget* _p, Qt::WindowFlags _f):
 #ifdef Q_WS_MAC
 	setUnifiedTitleAndToolBarOnMac(true);
 #endif
-#ifndef Q_WS_WIN
-	setAttribute(Qt::WA_TranslucentBackground, true);
-#endif
-	centralWidget()->setAttribute(Qt::WA_OpaquePaintEvent, false);
+//#ifndef Q_WS_WIN
+//	setAttribute(Qt::WA_TranslucentBackground, true);
+//#endif
+//	centralWidget()->setAttribute(Qt::WA_OpaquePaintEvent, false);
 
 	QSettings s;
 	restoreState(s.value("mainwindow/state").toByteArray());
@@ -117,13 +118,12 @@ MainWindow::~MainWindow()
 {
 	CullManager::get()->setDelayedActor(0);
 
-	confirmLose();
 	QSettings s;
 	s.setValue("mainwindow/state", saveState());
 	s.setValue("mainwindow/geometry", saveGeometry());
 	s.setValue("mainwindow/lastproject", m_filename);
 
-	codeView->setSubject(0);
+	desetSubject();
 	delete m_solution;
 	m_solution = 0;
 	delete m_updateTimer;
@@ -132,6 +132,11 @@ MainWindow::~MainWindow()
 #if defined(DEBUG)
 //	mInfo() << "Type count:" << TypeConcept::s_typeCount;
 #endif
+}
+
+void MainWindow::closeEvent(QCloseEvent*)
+{
+	confirmLose();
 }
 
 void MainWindow::paintEvent(QPaintEvent* _ev)
@@ -232,11 +237,26 @@ void MainWindow::loadPlugins()
 	setEnabled(true);
 }
 
+void MainWindow::on_actNewCodeView_triggered()
+{
+	QDockWidget* dw = new QDockWidget("Code View", this);
+	CodeView* cv = new CodeView(dw);
+	dw->setWidget(cv);
+	cv->setSubject(codeView->subject());
+	addDockWidget(Qt::RightDockWidgetArea, dw);
+}
+
+void MainWindow::desetSubject()
+{
+	foreach (CodeView* cv, findChildren<CodeView*>())
+		cv->setSubject(0);
+}
+
 void MainWindow::on_actReloadPlugins_triggered()
 {
 	QString s = serialise();
 
-	codeView->setSubject(0);
+	desetSubject();
 	delete m_solution;
 	m_solution = 0;
 	m_projects.clear();
@@ -258,7 +278,7 @@ void MainWindow::on_actClose_triggered()
 	if (!confirmLose())
 		return;
 
-	codeView->setSubject(0);
+	desetSubject();
 
 	delete m_solution;
 	m_solution = 0;
@@ -273,7 +293,7 @@ void MainWindow::on_actNew_triggered()
 	if (!confirmLose())
 		return;
 
-	codeView->setSubject(0);
+	desetSubject();
 
 	m_projects.clear();
 	delete m_solution;
@@ -398,7 +418,7 @@ void MainWindow::on_actOpen_triggered()
 	if (f.isEmpty())
 		return;
 
-	codeView->setSubject(0);
+	desetSubject();
 	load(qs(f));
 	resetSubject();
 }
@@ -732,11 +752,11 @@ void MainWindow::on_actClearChanges_triggered()
 
 void MainWindow::resetSubject()
 {
-	if (projects().size())
-		codeView->setSubject(projects()[0]->self());
-	else
-		codeView->setSubject(0);
-
+	foreach (CodeView* cv, findChildren<CodeView*>())
+		if (projects().size())
+			cv->setSubject(projects()[0]->self());
+		else
+			cv->setSubject(0);
 	AssertNR(!codeView->current() || codeView->current()->root() == m_solution->self());
 	entityFocused(codeView->current());
 }

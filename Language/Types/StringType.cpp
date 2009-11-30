@@ -52,7 +52,7 @@ public:
 			return List<Named*>() << &m_ourNamed;
 		return List<Named*>();
 	}
-	virtual void						acceptAt(Position const& _pos, Named*)
+	virtual void						acceptAt(Position const& _pos, Named*, CodeScene*)
 	{
 		placeVariable(_pos, new StringType);
 	}

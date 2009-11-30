@@ -58,7 +58,7 @@ public:
 	Typed*								asTyped(int _i) const;
 	Type								typeOf(int _i) const;
 
-	void								committed(Named* _n) { NameEntryPoint::committed(_n); }
+	void								committed(Named* _n, CodeScene* _cs) { NameEntryPoint::committed(_n, _cs); }
 
 protected:
 	virtual List<int> const&			defineDeclarationOrder() const { static const List<int> r; return r; }

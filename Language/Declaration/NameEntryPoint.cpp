@@ -61,14 +61,14 @@ String NameEntryPoint::defineEditHtml(CodeScene* _cs) const
 	return defineHtml();
 }
 
-void NameEntryPoint::committed(Named* _i)
+void NameEntryPoint::committed(Named* _i, CodeScene* _cs)
 {
 	if (_i)
 		foreach (IdentifierSet* i, IdentifierSetRegistrar::get()->allSets())
 			if (i->identifiableAt(self()->over()).contains(_i))
 			{
 				Position p = self()->over();
-				i->acceptAt(self()->over(), _i);
+				i->acceptAt(self()->over(), _i, _cs);	// TODO!!! Actually use...
 				// NOTE: We may not exist at this point!
 				return;
 			}

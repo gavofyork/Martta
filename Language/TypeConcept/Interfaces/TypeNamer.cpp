@@ -43,9 +43,9 @@ Types TypeNamer::ourDeniedTypes() const
 String TypeNamer::informationHtml() const
 {
 	Pairs p("Concept Type", true);
-	p << L"Canonical type" << type()->name();
+	p << L"Canonical type" << type()->typeName();
 	if (apparentType() != type())
-		p << L"Apparent type" << apparentType()->name();
+		p << L"Apparent type" << apparentType()->typeName();
 	if (ourAllowedTypes().count())
 		p << L"Allowed types" << compileTypes(ourAllowedTypes());
 	if (ourDeniedTypes().count())

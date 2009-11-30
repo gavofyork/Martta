@@ -73,7 +73,7 @@ public:
 			return m_nameds;
 		return List<Named*>();
 	}
-	virtual void						acceptAt(Position const& _pos, Named* _i)
+	virtual void						acceptAt(Position const& _pos, Named* _i, CodeScene*)
 	{
 		placeVariable(_pos, new BuiltinType(static_cast<BuiltinNamed*>(_i)->m_id));
 	}
@@ -207,7 +207,7 @@ EditDelegateFace* BuiltinType::newDelegate(CodeScene* _s)
 	return new CompletionDelegate<BuiltinType, int>(this, _s);
 }
 
-void BuiltinType::committed(int)
+void BuiltinType::committed(int, CodeScene*)
 {
 	// Switch if necessary...
 	if (m_id >= NameTrait<int>::ExtraIds)

@@ -76,6 +76,12 @@ String WebViewable::htmlEscape(String const& _s)
 		.replace(L"\"", L"&quot;");
 }
 
+String WebViewable::composeName(String const& _id, StringList const& _flags)
+{
+	AssertNR(WebStylist::current());
+	return WebStylist::current()->composeName(_id, _flags);
+}
+
 String WebViewable::toHtml(Concept const* _e, String const& _tag)
 {
 	return WebStylist::current()->toHtml(_e, _tag);

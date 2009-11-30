@@ -64,6 +64,9 @@ public:
 	/// @returns the @b inner HTML to represent entity @a _e under the scene @a _cs.
 	String								editHtml(Concept const* _e, CodeScene* _cs);
 
+	void								setProperties(Hash<String, String> const& _p);
+	String								composeName(String const& _id, StringList const& _flags) const;
+
 protected:
 	/// Overridable virtual for specifying novel style.
 	/// @returns the inner portion of HTML for entity @a _e .
@@ -82,7 +85,9 @@ private:
 	String								refineHtml(String const& _html, bool _allowThis = true, bool _forceThis = false, String const& _addClass = String::null);
 
 	int									m_stack;
-	Hash<Concept const*, String>			m_htmlCache;
+	Hash<Concept const*, String>		m_htmlCache;
+
+	Hash<String, String>				m_properties;
 
 	static WebStylist*					s_current;
 };

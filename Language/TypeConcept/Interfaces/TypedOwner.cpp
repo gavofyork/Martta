@@ -99,9 +99,9 @@ String TypedOwner::informationHtml() const
 		Pairs p(L"Typed Children");
 		foreach (int i, ai)
 		{
-			Pairs q(self()->indexName(i) + L": " + escape(effectiveType(i)->name()));
+			Pairs q(self()->indexName(i) + L": " + escape(effectiveType(i)->typeName()));
 			if (canonicalType(i) != effectiveType(i))
-				q << "Canonical type" << escape(canonicalType(i)->name());
+				q << "Canonical type" << escape(canonicalType(i)->typeName());
 			q << "Allowed types" << escape(compileTypes(allowedTypes(i)));
 			if (deniedTypes(i).count())
 				q << "Denied types" << escape(compileTypes(deniedTypes(i)));

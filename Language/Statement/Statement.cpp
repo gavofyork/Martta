@@ -87,7 +87,7 @@ String Statement::informationHtml() const
 		{
 			Pairs q(s);
 			foreach (Concept const* e, vs.values(s))
-				q << e->asKind<Identifiable>()->name() << e->asKind<TypeNamer>()->type()->name();
+				q << e->asKind<Identifiable>()->name() << e->asKind<TypeNamer>()->type()->typeName();
 			p << q;
 		}
 		ret += p;

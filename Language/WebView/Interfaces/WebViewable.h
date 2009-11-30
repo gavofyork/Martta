@@ -22,6 +22,7 @@
 
 #include <msRgb.h>
 #include <msString.h>
+#include <msStringList.h>
 #include <msList.h>
 using namespace MarttaSupport;
 
@@ -51,6 +52,7 @@ public:
 	static String							cssBorder(String const& _name, Rgb _col);
 
 protected:
+	static String							composeName(String const& _id, StringList const& _flags);
 	static String							toHtml(Concept const* _e, String const& _tag = L"span");
 	static String							toHtml(List<Concept const*> const& _es, String const& _delimiter = L" ", String const& _tag = L"span");
 	inline static String					toHtml(List<Concept*> const& _es, String const& _delimiter = L" ", String const& _tag = L"span") { return toHtml(list_const_cast<Concept const*>(_es), _delimiter, _tag); }

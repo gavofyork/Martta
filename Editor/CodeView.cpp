@@ -43,8 +43,9 @@ CodeView::CodeView(QWidget* _parent):
 	m_showInvalids				(true)
 {
 	init();
+
 	connect(this, SIGNAL(selectionChanged()), SLOT(onSelectionChanged()));
-	setAttribute(Qt::WA_OpaquePaintEvent, false);
+//	setAttribute(Qt::WA_OpaquePaintEvent, false);
 #ifndef Q_WS_WIN
 //	setRenderHint(QPainter::TextAntialiasing, true);
 //	setRenderHint(QPainter::Antialiasing, true);
@@ -54,6 +55,22 @@ CodeView::CodeView(QWidget* _parent):
 CodeView::~CodeView()
 {
 	delete m_stylist;
+}
+
+Hash<String, String> CodeView::defaultProperties() const
+{
+	Hash<String, String> ret;// \a (lower), \b (upper), anything else is quoted.
+	ret["Id"] = "\a";
+	ret["Id-pre"] = "\a";
+	ret["Id-break"] = "\b";
+	ret["Id-post"] = "";
+	ret["Id-type-pre"] = "\b";
+	return ret;
+}
+
+void CodeView::onPropertyChanged(String const& _name, String const& _value, String const& _old) const
+{
+	m_stylist->setProperties(properties());
 }
 
 void CodeView::setSubject(Concept* _s)

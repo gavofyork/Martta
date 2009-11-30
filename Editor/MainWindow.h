@@ -75,6 +75,7 @@ private slots:
 	void on_actNewCModule_triggered();
 
 	void on_actReloadPlugins_triggered();
+	void on_actNewCodeView_triggered();
 
 	void on_actShowDeps_triggered();
 	void on_actShowChanges_triggered();
@@ -92,6 +93,7 @@ private slots:
 	void entityFocused(Concept* _e);
 	void delayedUpdate();
 
+	void desetSubject();
 	void resetSubject();
 
 	void stepFinished();
@@ -102,6 +104,7 @@ private slots:
 
 private:
 	virtual void paintEvent(QPaintEvent* _p);
+	virtual void closeEvent(QCloseEvent* _e);
 
 	void updateProgramSupportPath();
 

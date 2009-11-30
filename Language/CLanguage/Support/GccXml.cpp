@@ -33,9 +33,9 @@ void GccXml::extractHeaders(QString const& _c, QXmlContentHandler* _h)
 
 	QString xmlfn;
 	{
-		QTemporaryFile xml;
+                QTemporaryFile xml("XXXXXX.c"); // Would be .cpp except we can only handle reading in C files at the moment.
 		xml.open();
-		xmlfn = xml.fileName();
+                xmlfn = xml.fileName();
 	}
 
 	QStringList searchPaths;
@@ -46,7 +46,7 @@ void GccXml::extractHeaders(QString const& _c, QXmlContentHandler* _h)
 #endif
 	foreach (QString s, searchPaths)
 		if (QFile::exists(s))
-			QProcess::execute(s, QStringList() << f.fileName() << "--gccxml-cxxflags" << "-xc" << ("-fxml=" + xmlfn));
+                        QProcess::execute(s, QStringList() << f.fileName() << ("-fxml=" + xmlfn));
 	f.close();
 
 	QXmlSimpleReader xmlReader;

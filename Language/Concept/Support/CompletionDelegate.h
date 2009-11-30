@@ -30,7 +30,7 @@ using namespace MarttaSupport;
 #include "SpecialKeys.h"
 #include "EditDelegate.h"
 
-M_TEST_METHOD_EXISTANCE_1(committed)
+M_TEST_METHOD_EXISTANCE_2(committed)
 
 #ifndef M_API_Concept
 #define M_API_Concept M_OUTAPI
@@ -79,7 +79,7 @@ public:
 	virtual void leavingEditIntact()
 	{
 		mDebug() << "leaving edit intact with " << m_selection;
-		committed<T, R>(*EditDelegate<T>::subject(), m_selection);
+		committed<T, R, CodeScene*>(*EditDelegate<T>::subject(), m_selection, EditDelegate<T>::codeScene());
 	}
 	virtual void commit()
 	{

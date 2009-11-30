@@ -197,6 +197,16 @@ template<class T, class A> m_inline void __TEST_1##bar(T& _a, A _arg, bar##Metho
 template<class T, class A> m_inline void __TEST_1##bar(T&, A, bar##MethodExistsFalse1&){}\
 template<class T, class A> m_inline void bar(T& _a, A _arg) { __TEST_1##bar(_a, _arg, bar##IfMethodExists1<T, A>(0)); }
 
+#define M_TEST_METHOD_EXISTANCE_2(bar)\
+enum bar##MethodExistsTrue2 {};\
+enum bar##MethodExistsFalse2 {};\
+template<class T, class A, class B, void (T::*)(A, B)> struct bar##MethodExistsStruct2 {};\
+template<class T, class A, class B> bar##MethodExistsFalse2& bar##IfMethodExists2(...) { return *(bar##MethodExistsFalse2*)0; }\
+template<class T, class A, class B> bar##MethodExistsTrue2& bar##IfMethodExists2(bar##MethodExistsStruct2<T, A, B, &T::bar>*) { return *(bar##MethodExistsTrue2*)0; }\
+template<class T, class A, class B> m_inline void __TEST_2##bar(T& _a, A _argA, B _argB, bar##MethodExistsTrue2&) { _a.bar(_argA, _argB); }\
+template<class T, class A, class B> m_inline void __TEST_2##bar(T&, A, B, bar##MethodExistsFalse2&){}\
+template<class T, class A, class B> m_inline void bar(T& _a, A _argA, B _argB) { __TEST_2##bar(_a, _argA, _argB, bar##IfMethodExists2<T, A, B>(0)); }
+
 // Taken from Qt 4.4, Copyright Nokia. Used under licence (GPL).
 #if defined(__GNUC__) && !defined(__INTEL_COMPILER)
 /* make use of typeof-extension */

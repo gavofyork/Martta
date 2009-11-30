@@ -39,15 +39,18 @@ public:
 	~CodeView();
 
 	// Set the current attributes.
-	virtual Concept*						subject() const { return &*m_subject; }
+	virtual Concept*					subject() const { return &*m_subject; }
 	virtual void						setSubject(Concept* _subject);
+
+	Hash<String, String>				properties() const { return m_properties; }
+	void								setProperty(String const& _name, String const& _value) { String old = m_properties[_name]; m_properties[_name] = _value; onPropertyChanged(_name, _value, old); }
 
 	// Stylist
 	virtual WebStylist*					stylist() const { return m_stylist; };
 	virtual void						setStylist(WebStylist* _s);
 
 	// What's happening?
-	virtual Concept*						current() const;
+	virtual Concept*					current() const;
 	virtual bool						isCurrent(Concept const* _e) const { return _e == current(); }
 	virtual bool						isFocusable(Concept const* _e) const;
 	virtual bool						isInScene(Concept const* _e) const;
@@ -96,6 +99,11 @@ private:
 	virtual void						onAncestorSwitched(Concept* _e, Concept* _ancestor, Concept* _old) { checkInvalid(_e); (void)(_ancestor); (void)(_old); }
 	virtual void						onAncestorRemoved(Concept* _e, Concept* _old) { checkInvalid(_e); (void)(_old); }
 
+//	virtual	Hash<String, String>		defaultProperties() const { return Hash<String, String>(); }
+//	virtual void						onPropertyChanged(String const& _name, String const& _value) const { }
+	virtual	Hash<String, String>		defaultProperties() const;
+	virtual void						onPropertyChanged(String const& _name, String const& _value, String const& _old) const;
+
 	void								init();
 	void								refresh();
 	void								checkInvalids();
@@ -111,13 +119,14 @@ private:
 	virtual void						relayout(Concept* _e);
 
 	List<SafePointer<Concept> >			m_dirty;
+	Hash<String, String>				m_properties;
 
-	SafePointer<Concept>					m_subject;
+	SafePointer<Concept>				m_subject;
 	WebStylist*							m_stylist;
 	bool								m_silent;
 	SafePointer<Concept, true>			m_oldCurrent;
 	QPoint								m_remembered;
-	SafePointer<Concept>					m_rememberedParent;
+	SafePointer<Concept>				m_rememberedParent;
 
 	bool								m_showDependencyInfo;
 	bool								m_showChanges;

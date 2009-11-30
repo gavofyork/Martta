@@ -40,7 +40,7 @@ class M_API_Declaration NameEntryPoint: public_super_interface WebViewable
 public:
 	Named*								get() const { return 0; }
 	void								set(Named*) const {}
-	void								committed(Named*);
+	void								committed(Named*, CodeScene* _cs);	// TODO!!! actually use (passing _cs)
 	List<Named*>						possibilities() const;
 	IdentifierSet*						ownerOf(Named* _n) const;
 
