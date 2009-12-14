@@ -56,7 +56,7 @@ int TextLabel::familyDependencies() const
 	return parentIs<Labelled>() ? DependsOnParent : DependsOnNothing;
 }
 
-String TextLabel::name() const
+String TextLabel::namey() const
 {
 	if (m_text.isEmpty() && isValid())
 		return String("ANON%1").arg((int)this);//return "foo";	// TODO: make it proper.
@@ -66,11 +66,22 @@ String TextLabel::name() const
 		return m_text;
 }
 
+void TextLabel::onDependencyChanged(int _a, Concept* _e)
+{
+	SafePointer<Concept> sp = this;
+	if (_a == Logically)
+		changed(Visually);
+	if (!sp)
+		Assert(false, "TextLabel has been deleted on a notification of its change.");
+	else
+		Super::onDependencyChanged(_a, _e);
+}
+
 String TextLabel::defineHtml() const
 {
-	if (name().isEmpty())
+	if (namey().isEmpty())
 		return L"<^><span class=\"minor\">[ANONYMOUS]</span>";
-	return L"<^>" + tryParent<Labelled>()->labelHtml(String(L"<span class=\"TextLabel-%1\">").arg(isNamed() ? L"named" : L"unnamed") + name() + L"</span>");
+	return L"<^>" + String(L"<span class=\"TextLabel-%1\">").arg(isNamed() ? L"named" : L"unnamed") + tryParent<Labelled>()->labelHtml(namey()) + L"</span>";
 }
 
 String TextLabel::defineEditHtml(CodeScene* _cs) const

@@ -32,7 +32,7 @@ String BareTyped::informationHtml() const
 	{
 		Pairs p("Members", true);
 		foreach (ValueDefiner* v, type()->applicableMembers())
-			p << v->name() << v->type()->code();
+			p << v->nick() << v->type()->code();
 		ret += p;
 	}
 	return ret;

@@ -18,6 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "WebStylist.h"
 #include "BinaryOperation.h"
 
 namespace Martta
@@ -27,7 +28,11 @@ MARTTA_PLACEHOLDER_CPP(BinaryOperation);
 
 String BinaryOperation::defineHtml() const
 {
-	return toHtml(child(FirstOperand), childIs<Operation>(FirstOperand) ? L"span class=\"Operation\"" : L"span") + L" <^>" + operatorHtml() + L" " + toHtml(child(SecondOperand), childIs<Operation>(SecondOperand) ? L"span class=\"Operation\"" : L"span");
+	String ret = L"%1 <^>" + operatorHtml() + L" %2";
+	if (doINeedParenthesising(this) && WebStylist::current()->property(L"Operation", L"Parenthesise").toBool())
+		ret = L"(" + ret + L")";
+	return ret	.arg(toHtml(child(FirstOperand), childIs<Operation>(FirstOperand) ? L"span class=\"Operation\"" : L"span"))
+				.arg(toHtml(child(SecondOperand), childIs<Operation>(SecondOperand) ? L"span class=\"Operation\"" : L"span"));
 }
 
 }

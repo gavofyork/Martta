@@ -50,7 +50,7 @@ public:
 	/// The big function---get the HTML representation of an entity.
 	/// @returns the @b outer HTML to represent entity @a _e. @a _tag specifies the HTML for the
 	/// enclosing tag. Responsible for checking/using the cache.
-	String								toHtml(Concept const* _e, String const& _tag = L"span");
+	String								toHtml(Concept const* _e, String const& _tag = L"");
 
 	/// @returns just the @b inner portion of the HTML for entity @a _e.
 	/// The HTML for that entity is recomputed and reflects any changes made in the object since
@@ -66,6 +66,7 @@ public:
 
 	void								setProperties(Hash<String, String> const& _p);
 	String								composeName(String const& _id, StringList const& _flags) const;
+	String								property(String const& _concept, String const& _id) const { return m_properties[_concept + L"-" + _id]; }
 
 protected:
 	/// Overridable virtual for specifying novel style.

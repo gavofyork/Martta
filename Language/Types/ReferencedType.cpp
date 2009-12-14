@@ -91,7 +91,8 @@ void ReferencedType::apresLoad()
 
 String ReferencedType::defineHtml() const
 {
-	return L"<^>" + tagOf(L"TypeConcept", typeHtml(m_subject.isUsable() ? m_subject->name() : L"&empty;"));
+	//return L"<^>" + tagOf(L"TypeConcept", typeHtml(m_subject.isUsable() ? m_subject->tryKind<Labelled>()->labelHtml(m_subject->nick()) : L"&empty;"));
+	return L"<^>" + tagOf(L"TypeConcept", m_subject.isUsable() ? m_subject->tryKind<Labelled>()->labelHtml(m_subject->nick()) : typeHtml(L"&empty;"));
 }
 
 List<TypeDefinition*> ReferencedType::possibilities() const

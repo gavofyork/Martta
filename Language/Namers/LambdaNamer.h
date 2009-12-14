@@ -23,6 +23,7 @@
 #include "CQualifiers.h"
 #include "WebViewable.h"
 #include "Type.h"
+#include "Labelled.h"
 #include "ValueDefiner.h"
 
 #ifndef M_API_Namers
@@ -35,10 +36,11 @@ namespace Martta
 class Argument;
 class Compound;
 
-class M_API_Namers LambdaNamer: public_super_interface ValueDefiner, public_interface WebViewable
+class M_API_Namers LambdaNamer: public_super_interface ValueDefiner, public_interface WebViewable, public_interface Labelled
 {
 	MARTTA_NOTION(ValueDefiner)
 	MARTTA_ALSO_INHERITS(WebViewable, 0)
+	MARTTA_ALSO_INHERITS(Labelled, 1)
 
 public:
 	MARTTA_NAMED(Body)
@@ -55,6 +57,7 @@ public:
 	bool								keyPressed(KeyEvent const* _e);
 	/// Gives a parameter list of the call. This depends on argumentType/CodeName, ellipsis, reference and codeName.
 	String								callingCode(FunctionCodeScope _ref) const;
+	virtual inline String				defineLabelHtml(String const& _text) const { return composeName(_text, StringList("Lambda")); }
 
 	// From ValueDefiner. Do be careful though - if you've got a mixin situation where one side is pure virtual
 	// still, explicitly scope this side on the call or you'll crash.
@@ -93,7 +96,6 @@ public:
 	virtual Argument*					argument(int _index) const;
 	virtual Type						returns() const;
 	virtual Type						argumentType(int _index) const;
-	virtual String						argumentName(int _index) const;
 	virtual String						argumentCodeName(int _index) const;
 
 protected:

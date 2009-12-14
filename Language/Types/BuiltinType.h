@@ -28,6 +28,11 @@
 #define M_API_Types M_OUTAPI
 #endif
 
+namespace MarttaSupport
+{
+template<class T> class NameTrait;
+}
+
 namespace Martta
 {
 
@@ -37,14 +42,12 @@ extern const int s_simpleIdsCount;
 class BuiltinOperator;
 class BuiltinTypeSet;
 
-template<class T> class NameTrait;
-
 class M_API_Types BuiltinType: public_super PhysicalType
 {
 	MARTTA_INITIALISED_PROPER(PhysicalType)
 
 	friend class BuiltinOperator;	// For use of s_nonMembers. QUICK Should probably use an interface for this.
-	friend class NameTrait<int>;
+	friend class MarttaSupport::NameTrait<int>;
 	friend class BuiltinTypeSet;
 
 public:
@@ -62,7 +65,7 @@ public:
 
 	virtual String code(String const& _middle) const;
 
-	static inline String name(uint _d)
+	static inline String nickFor(uint _d)
 	{
 		return (_d == (uint)-1) ? String::null : (_d == Wchar) ? String("wchar_t") : (String((_d & Unsigned) ? (_d & Float || _d & Double) ? "c" : "u" : "") +
 				(((_d & Longlong) == Longlong) ? "ll" : (_d & Short) ? "s" : (_d & Long) ? "l" : "") +
@@ -72,7 +75,7 @@ public:
 	static int id(String const& _n)
 	{
 		for (int i = 0; i < s_simpleIdsCount; i++)
-			if (name(s_simpleIds[i]) == _n)
+			if (nickFor(s_simpleIds[i]) == _n)
 				return s_simpleIds[i];
 		return (uint)-1;
 	}

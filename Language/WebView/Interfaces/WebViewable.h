@@ -51,11 +51,12 @@ public:
 	inline static String					tagOf(String const& _classes, String const& _mid, String const& _tag = L"span") { return L"<" + _tag + " class=\"" + _classes + "\">" + _mid + L"</" + _tag + L">"; }
 	static String							cssBorder(String const& _name, Rgb _col);
 
-protected:
 	static String							composeName(String const& _id, StringList const& _flags);
-	static String							toHtml(Concept const* _e, String const& _tag = L"span");
-	static String							toHtml(List<Concept const*> const& _es, String const& _delimiter = L" ", String const& _tag = L"span");
-	inline static String					toHtml(List<Concept*> const& _es, String const& _delimiter = L" ", String const& _tag = L"span") { return toHtml(list_const_cast<Concept const*>(_es), _delimiter, _tag); }
+
+protected:
+	static String							toHtml(Concept const* _e, String const& _tag = L"");
+	static String							toHtml(List<Concept const*> const& _es, String const& _delimiter = L" ", String const& _tag = L"");
+	inline static String					toHtml(List<Concept*> const& _es, String const& _delimiter = L" ", String const& _tag = L"") { return toHtml(list_const_cast<Concept const*>(_es), _delimiter, _tag); }
 };
 
 #define MARTTA_REGISTER_CSS(ConceptClass, CSS) \

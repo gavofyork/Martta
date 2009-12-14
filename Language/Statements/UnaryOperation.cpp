@@ -18,6 +18,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "WebStylist.h"
 #include "UnaryOperation.h"
 
 namespace Martta
@@ -28,6 +29,8 @@ MARTTA_PLACEHOLDER_CPP(UnaryOperation);
 String UnaryOperation::defineHtml() const
 {
 	String ret = isPostfix() ? "%2<^>%1" : "<^>%1%2";
+	if (doINeedParenthesising(this) && WebStylist::current()->property(L"Operation", L"Parenthesise").toBool())
+		ret = L"(" + ret + L")";
 	return ret.arg(operatorHtml()).arg(toHtml(child(TheOperand)));
 }
 

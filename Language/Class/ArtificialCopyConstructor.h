@@ -48,7 +48,6 @@ protected:
 	virtual int							argumentCount() const { return 1; }
 	virtual Type						argumentType(int) const;
 	virtual String						argumentCodeName(int) const { return "source"; }
-	virtual String						argumentName(int) const { return "source"; }
 };
 
 }

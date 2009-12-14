@@ -76,6 +76,7 @@ void AuxilliaryRegistrar::jigCache()
 			m_derivedsMap.insert(j, i);
 		}
 	}
+
 //	recurseAux(m_immediateDerivedsMap.values(0)[0], "");
 }
 

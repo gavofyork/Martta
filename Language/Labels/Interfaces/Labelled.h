@@ -36,12 +36,12 @@ class M_API_Labels Labelled: public_interface Concept
 public:
 	virtual ~Labelled() {}
 
-	inline String labelHtml(String const& _middle) const
+	inline String labelHtml(String const& _text) const
 	{
 		if (!this)
-			return Labelled::defineLabelHtml(_middle);
+			return Labelled::defineLabelHtml(_text);
 		else
-			return defineLabelHtml(_middle);
+			return defineLabelHtml(_text);
 	}
 
 	inline String labelCode(String const& _text) const
@@ -53,7 +53,7 @@ public:
 	}
 
 protected:
-	virtual inline String defineLabelHtml(String const& _middle) const { return _middle; }
+	virtual inline String defineLabelHtml(String const& _text) const { return _text; }
 	virtual inline String defineLabelCode(String const& _text) const { return camelCase(_text); }
 };
 

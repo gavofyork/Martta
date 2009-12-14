@@ -258,7 +258,7 @@ List<Member*> Class::members(bool _isConst, Access _access) const
 			ret += i;
 	StringList names;
 	foreach (Member* d, ret)
-		names << d->name();
+		names << d->nick();
 
 	List<Member*> buf;
 	foreach (Base* i, cardinalChildrenOf<Base>())
@@ -273,8 +273,8 @@ List<Member*> Class::members(bool _isConst, Access _access) const
 			buf = i->classType()->members(_isConst, Public);
 		StringList tba;
 		foreach (Member* d, filterEntitiesInv<Constructor>(buf))
-			if (!names.contains(d->name()))	// only for equivalent params?
-			{	tba << d->name();
+			if (!names.contains(d->nick()))	// only for equivalent params?
+			{	tba << d->nick();
 				ret << d;
 			}
 		names += tba;

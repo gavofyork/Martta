@@ -22,6 +22,7 @@
 #include "Const.h"
 #include "Reference.h"
 #include "FunctionType.h"
+#include "WebStylist.h"
 #include "ValueDefiner.h"
 #include "SimpleBinaryOperation.h"
 
@@ -98,6 +99,21 @@ String SimpleBinaryOperation::operatorHtml() const
 	else
 		return String(L"<span class=\"symbol\">%1</span>").arg(id().code());
 }
+
+String SimpleBinaryOperation::defineHtml() const
+{
+	if (id().symbol() == Operator::Slash && WebStylist::current()->property("SimpleBinaryOperation", "ProperMaths").toBool())
+	{
+		String ret = L"<^><div style=\"display: inline-block; vertical-align: middle; text-align:center\">%1<hr style=\"margin:0; margin-top:1px; padding:0; border:0; border-bottom: 2px solid #666;\"/>%2</div>";
+		if (doINeedParenthesising(this) && WebStylist::current()->property(L"Operation", L"Parenthesise").toBool())
+			ret = L"(" + ret + L")";
+		return ret	.arg(toHtml(child(FirstOperand), childIs<Operation>(FirstOperand) ? L"class=\"Operation\"" : L""))
+					.arg(toHtml(child(SecondOperand), childIs<Operation>(SecondOperand) ? L"class=\"Operation\"" : L""));
+	}
+	else
+		return Super::defineHtml();
+}
+
 
 void SimpleBinaryOperation::setOperation(Operator _o, Type const& _left, Type const& _right)
 {

@@ -46,7 +46,7 @@ String LambdaNamer::defineNameHtml() const
 	if (self()->child(Identity))
 		return FunctionType().typeHtml(toHtml(self()->child(Identity)));
 	else
-		return name();
+		return L"NO_IDENTITY";
 }
 
 String LambdaNamer::defineArgListHtml() const
@@ -176,13 +176,6 @@ Type LambdaNamer::argumentType(int _index) const
 	if (Argument* v = argument(_index))
 		return *v->actualType();
 	return Type();
-}
-
-String LambdaNamer::argumentName(int _index) const
-{
-	if (Argument* v = argument(_index))
-		return v->name();
-	return String::null;
 }
 
 String LambdaNamer::argumentCodeName(int _index) const

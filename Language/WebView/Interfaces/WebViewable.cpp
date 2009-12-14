@@ -30,12 +30,13 @@ namespace Martta
 MARTTA_NOTION_CPP(WebViewable);
 MARTTA_REGISTER_CSS(WebViewable,
 	"body { color: #666; font-size: 12px; font-family: Lucida Grande; background-color: transparent; }"
+	".layout { display: inline-block; }"
 	".keyword { font-weight: bold; }"
 	".unreal { color: #888; }"
 	".minor { color: #888; font-size: 8px; }"
 	".symbol { font-weight: bold; }"
-	".block { position: relative; margin-left: 20px; }"
-	".deblock { position: relative; margin-left: -20px; }"
+	".block { display: block; position: relative; margin-left: 20px; }"
+	".deblock { display: block; position: relative; margin-left: -20px; }"
 //	".editing { background-color: rgba(255, 0, 0, 0.25); }"
 	".badge { margin: 0px 0px; padding: 0px 0.3em; border-top: 1px solid rgba(0,0,0,0.4); border-left: 1px solid rgba(0,0,0,0.2); border-bottom: 1px solid rgba(255,255,255,0.4); border-right: 1px solid rgba(255,255,255,0.2); background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,0.2)), to(rgba(255,255,255,0.2))); font-weight: 900; color: rgba(255,255,255,0.85); text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }"
 );

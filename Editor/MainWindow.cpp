@@ -87,6 +87,8 @@ MainWindow::MainWindow(QWidget* _p, Qt::WindowFlags _f):
 //	centralWidget()->setAttribute(Qt::WA_OpaquePaintEvent, false);
 
 	QSettings s;
+	for (int i = 0; i < s.value("mainwindow/codeviews").toInt(); i++)
+		(i ? makeCodeView(s.value(QString("mainwindow/codeview%1/title").arg(i)).toString()) : codeView)->setProperties(qhv(s.value(QString("mainwindow/codeview%1/properties").arg(i)).toHash()));
 	restoreState(s.value("mainwindow/state").toByteArray());
 	restoreGeometry(s.value("mainwindow/geometry").toByteArray());
 
@@ -119,6 +121,14 @@ MainWindow::~MainWindow()
 	CullManager::get()->setDelayedActor(0);
 
 	QSettings s;
+	s.setValue("mainwindow/codeviews", findChildren<CodeView*>().count());
+	int i = 1;
+	foreach (CodeView* cv, findChildren<CodeView*>())
+	{
+		if (cv != codeView)
+			s.setValue(QString("mainwindow/codeview%1/title").arg(i), static_cast<QDockWidget*>(cv->parent())->windowTitle());
+		s.setValue(QString("mainwindow/codeview%1/properties").arg(cv == codeView ? 0 : i++), qhv(cv->properties()));
+	}
 	s.setValue("mainwindow/state", saveState());
 	s.setValue("mainwindow/geometry", saveGeometry());
 	s.setValue("mainwindow/lastproject", m_filename);
@@ -237,13 +247,36 @@ void MainWindow::loadPlugins()
 	setEnabled(true);
 }
 
-void MainWindow::on_actNewCodeView_triggered()
+void MainWindow::on_actConfigureCodeView_triggered()
 {
-	QDockWidget* dw = new QDockWidget("Code View", this);
+	foreach (CodeView* cv, findChildren<CodeView*>())
+		if (cv->hasFocus())
+			cv->onConfigure();
+}
+
+void MainWindow::on_actRemoveCodeView_triggered()
+{
+	foreach (CodeView* cv, findChildren<CodeView*>())
+		if (cv->hasFocus() && cv != codeView)
+			delete cv->parentWidget();
+}
+
+CodeView* MainWindow::makeCodeView(QString const& _name)
+{
+	QDockWidget* dw = new QDockWidget(_name, this);
 	CodeView* cv = new CodeView(dw);
 	dw->setWidget(cv);
 	cv->setSubject(codeView->subject());
 	addDockWidget(Qt::RightDockWidgetArea, dw);
+	return cv;
+}
+
+void MainWindow::on_actNewCodeView_triggered()
+{
+	bool ok = false;
+	QString name = QInputDialog::getText(this, "Create New Code View", "Please enter name for new code view", QLineEdit::Normal, "New Code View", &ok);
+	if (ok)
+		makeCodeView(name);
 }
 
 void MainWindow::desetSubject()
@@ -781,6 +814,24 @@ void MainWindow::updateLanguage()
 	language->clear();
 	addToLanguage(Kind::of<Concept>(), language);
 	language->expandAll();
+
+	QFile f("/home/gav/language.dot");
+	f.open(QIODevice::WriteOnly);
+	QTextStream fout(&f);
+	fout << "digraph G\n{\nbgcolor=\"transparent\";\nedge [fontname=\"FreeSans\",fontsize=\"2\",labelfontname=\"FreeSans\",labelfontsize=\"2\"];\nnode [fontname=\"FreeSans\",fontsize=\"20\",shape=record];\nrankdir=LR;" << endl;
+	Kinds all = AuxilliaryRegistrar::get()->auxilliaries();
+	foreach (Kind k, all)
+	{
+		fout	<< qs(k.name()).replace("Martta::", "") << " [label=\"" << qs(k.name().replace("Martta::", "")) << "\",height=0,width=0,color=\""
+				<< (k.isInterface() ? "red" : k.isPlaceholder() ? "blue" : "black") << "\"];" << endl;
+		foreach (Kind b, k.immediateInterfaces())
+		{
+			QString colour = b.isInterface() ? "red" : "black";
+			QString style = b == k.super() ? "solid" : "dotted";
+			fout << qs(b.name().replace("Martta::", "")) << " -> " << qs(k.name().replace("Martta::", "")) + " [dir=back,color=\"" << colour << "\",style=\"" << style << "\"];" << endl;
+		}
+	}
+	fout << "}";
 }
 
 static void addChild(QTreeWidgetItem* _p, Concept const* _c)

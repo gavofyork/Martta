@@ -45,11 +45,14 @@ CodeView::CodeView(QWidget* _parent):
 	init();
 
 	connect(this, SIGNAL(selectionChanged()), SLOT(onSelectionChanged()));
+	setAutoFillBackground(true);
 //	setAttribute(Qt::WA_OpaquePaintEvent, false);
 #ifndef Q_WS_WIN
 //	setRenderHint(QPainter::TextAntialiasing, true);
 //	setRenderHint(QPainter::Antialiasing, true);
 #endif
+
+	m_properties = defaultProperties();
 }
 
 CodeView::~CodeView()
@@ -57,18 +60,47 @@ CodeView::~CodeView()
 	delete m_stylist;
 }
 
+void CodeView::onConfigure()
+{
+	QDialog d(this);
+	d.setLayout(new QVBoxLayout);
+	Hash<String, String> p = properties();
+	QTableWidget* t = new QTableWidget(p.size(), 1, &d);
+	t->setVerticalHeaderLabels(qs(p.keys()));
+	int i = 0;
+	foreach (String s, p.values())
+		t->setItem(i++, 0, new QTableWidgetItem(qs(s)));
+
+	d.layout()->addWidget(t);
+	d.setModal(true);
+	d.exec();
+
+	i = 0;
+	foreach (String s, p.keys())
+	{
+		if (qs(p[s]) != t->item(i, 0)->text())
+			setProperty(s, qs(t->item(i, 0)->text()));
+		i++;
+	}
+	delete t;
+	
+	init();
+}
+
 Hash<String, String> CodeView::defaultProperties() const
 {
-	Hash<String, String> ret;// \a (lower), \b (upper), anything else is quoted.
-	ret["Id"] = "\a";
-	ret["Id-pre"] = "\a";
-	ret["Id-break"] = "\b";
-	ret["Id-post"] = "";
-	ret["Id-type-pre"] = "\b";
+	Hash<String, String> ret;
+	ret[L"Id-Namespace"] = L"FooBar";
+	ret[L"Id-Variable"] = L"fooBar";
+	ret[L"Id-Lambda"] = L"fooBar";
+	ret[L"Id-Enumeration"] = L"FooBar";
+	ret[L"Id-TypeDefinition"] = L"FooBar";
+	ret[L"Operation-Parenthesise"] = L"0";
+	ret["SimpleBinaryOperation-ProperMaths"] = L"0";
 	return ret;
 }
 
-void CodeView::onPropertyChanged(String const& _name, String const& _value, String const& _old) const
+void CodeView::onPropertiesChanged()
 {
 	m_stylist->setProperties(properties());
 }
@@ -89,7 +121,6 @@ void CodeView::setStylist(WebStylist* _s)
 Concept* CodeView::current() const
 {
 	Concept* r = (Concept*)(page()->mainFrame()->evaluateJavaScript("document.getElementById(g_currentIterator.referenceNode.parentNode.id).id").toInt());
-	qDebug() << "current:" << r;
 	if (r)
 		return r;
 	const_cast<CodeView*>(this)->restoreCurrent();
@@ -397,6 +428,7 @@ QRect CodeView::bounds(Concept const* _e) const
 
 void CodeView::init()
 {
+	m_stylist->setProperties(properties());
 	QString css = qs(WebStylistRegistrar::get()->css());
 	setHtml(QString("<!DOCTYPE HTML><html><head><style type=\"text/css\">%1</style></head><body onmousedown=\"procMouseDown(event)\">%2</body></html>").arg(css).arg(qs(m_stylist->toHtml(m_subject))));
 	page()->mainFrame()->addToJavaScriptWindowObject("CodeView", this);

@@ -31,11 +31,10 @@
 namespace Martta
 {
 
-class M_API_Statement BareTyped: public_super Primary, public_interface TypeNamer, public_interface WebInformer
+class M_API_Statement BareTyped: public_super Primary, public_interface TypeNamer
 {
 	MARTTA_PLACEHOLDER(Primary)
 	MARTTA_ALSO_INHERITS(TypeNamer, 0)
-	MARTTA_ALSO_INHERITS(WebInformer, 1)
 
 public:
 	virtual String		informationHtml() const;

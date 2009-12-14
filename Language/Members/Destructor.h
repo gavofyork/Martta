@@ -45,7 +45,7 @@ protected:
 	virtual bool						isConst() const { return false; }
 	virtual bool						isInValidState() const { return Super::Super::isInValidState(); }
 
-	virtual String						name() const;
+	virtual String						nick() const;
 	virtual String						codeName() const;
 
 	virtual Type						returns() const { return Type(); }

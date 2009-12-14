@@ -44,6 +44,7 @@ public:
 
 protected:
 	virtual Operator					id() const { return m_operator; }
+	virtual String						defineHtml() const;
 	virtual String						operatorHtml() const;
 	virtual Types						allowedTypes(int _index) const;
 	virtual Type						type() const;

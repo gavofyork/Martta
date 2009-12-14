@@ -34,9 +34,7 @@ class M_API_Labels IdLabel: public_super Label
 	MARTTA_PLACEHOLDER(Label)
 	
 public:
-	// Potentially queries the parent's isChildInValidState() to check if we're valid.
-	// @note NEVER call them from the parent's isChildInValidState() function.
-	virtual String						name() const { return String::null; }
+	virtual String						text() const { return String::null; }
 };
 
 }

@@ -30,28 +30,27 @@
 namespace Martta
 {
 
-class M_API_Labels TextLabel: public_super IdLabel, public_interface WebViewable
+class M_API_Labels TextLabel: public_super IdLabel
 {
 	MARTTA_PROPER(IdLabel)
-	MARTTA_ALSO_INHERITS(WebViewable, 0)
 
 public:
 	TextLabel(String const& _t = String::null): m_text(_t) {}
 
 	// Queries the parent's isChildInValidState() to check if we're valid - if so and we're null it makes up a name. If not it just returns "".
 	// @note NEVER call them from the parent's isChildInValidState() function.
-	virtual String						name() const;
+	String								namey() const;
 	virtual String						code() const;
+	virtual String						text() const { return m_text; }
 
 	// These tell the truth (i.e. independent of what parent thinks).
 	bool								isNamed() const { return !m_text.isEmpty(); }
-	String								text() const { return m_text; }
 	void								setText(String const& _t) { m_text = _t; changed(); }
 
 protected:
 	virtual void						apresLoad();
 	virtual int							familyDependencies() const;
-	virtual void						onDependencyChanged(int _a, Concept* _e) { if (_a == Logically) changed(Visually); Super::onDependencyChanged(_a, _e); }
+	virtual void						onDependencyChanged(int _a, Concept* _e);
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
 	virtual String						defineHtml() const;
 	virtual String						defineEditHtml(CodeScene* _cs) const;

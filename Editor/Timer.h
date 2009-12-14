@@ -71,6 +71,22 @@ inline QStringList qs(List<String> const& _f)
 	return ret;
 }
 
+inline QHash<QString, QVariant> qhv(Hash<String, String> const& _f)
+{
+	QHash<QString, QVariant> ret;
+	foreach (String s, _f.keys())
+		ret[qs(s)] = qs(_f[s]);
+	return ret;
+}
+
+inline Hash<String, String> qhv(QHash<QString, QVariant> const& _f)
+{
+	Hash<String, String> ret;
+	foreach (QString s, _f.keys())
+		ret[qs(s)] = qs(_f[s].toString());
+	return ret;
+}
+
 int translateMods(int _e);
 wchar_t const* translateKey(int _e);
 

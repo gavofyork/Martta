@@ -128,7 +128,7 @@ void EnumerationNamer::onDependencyAdded(Concept* _e)
 	if (_e->isKind<EnumValue>())
 		updateStem();
 	else
-		self()->changed(Dependee::Logically);
+		changed(Dependee::Logically);
 }
 
 void EnumerationNamer::onDependencyChanged(int, Concept* _e)

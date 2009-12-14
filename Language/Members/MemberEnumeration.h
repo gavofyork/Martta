@@ -31,11 +31,10 @@
 namespace Martta
 {
 
-class M_API_Members MemberEnumeration: public_super Member, public_interface EnumerationNamer, public_interface Labelled
+class M_API_Members MemberEnumeration: public_super Member, public_interface EnumerationNamer
 {
 	MARTTA_PROPER(Member)
 	MARTTA_ALSO_INHERITS(EnumerationNamer, 0)
-	MARTTA_ALSO_INHERITS(Labelled, 1)
 
 public:
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);

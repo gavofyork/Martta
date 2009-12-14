@@ -41,9 +41,9 @@ bool Constructor::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 	return simplePositionKeyPressHandler<Constructor>(_p, _e, "C");
 }
 
-String Constructor::name() const
+String Constructor::nick() const
 {
-	return typeDefinition()->name();
+	return typeDefinition()->nick();
 }
 
 String Constructor::codeName() const

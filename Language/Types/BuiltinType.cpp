@@ -49,7 +49,7 @@ class BuiltinNamed: public Named
 {
 public:
 	BuiltinNamed(int _id): m_id(_id) {}
-	virtual String name() const { return BuiltinType::name(m_id); }
+	virtual String nickFor() const { return BuiltinType::nickFor(m_id); }
 	uint m_id;
 };
 
@@ -163,9 +163,13 @@ bool BuiltinType::defineSimilarityFrom(TypeConcept const* _f, Castability _c) co
 
 String BuiltinType::defineHtml() const
 {
-	return L"<^><span class=\"TypeConcept\">" + typeHtml((id() == (uint)-1) ? L"&empty;" : name(id())) + L"</span>";
+	return L"<^><span class=\"TypeConcept\">" + typeHtml((id() == (uint)-1) ? L"&empty;" : nickFor(id())) + L"</span>";
 }
 
+}
+
+namespace MarttaSupport
+{
 template<>
 class NameTrait<int>
 {
@@ -174,16 +178,20 @@ public:
 	static String name(int _val)
 	{
 		if (_val < ExtraIds)
-			return BuiltinType::name(_val);
+			return ::Martta::BuiltinType::nickFor(_val);
 
 		int i = ExtraIds;
-		foreach (String s, BuiltinType::s_recognisedExtras.keys())
+		foreach (String s, ::Martta::BuiltinType::s_recognisedExtras.keys())
 			if (_val == i++)
 				return s;
 
 		return String::null;
 	}
 };
+}
+
+namespace Martta
+{
 
 List<int> BuiltinType::possibilities() const
 {

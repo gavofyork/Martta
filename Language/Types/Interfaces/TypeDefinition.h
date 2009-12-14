@@ -27,6 +27,7 @@ using namespace MarttaSupport;
 #include "TypeConcept.h"
 #include "Labelled.h"
 #include "Identifiable.h"
+#include "WebViewable.h"
 
 #ifndef M_API_Types
 #define M_API_Types M_OUTAPI
@@ -61,10 +62,22 @@ public:
 	virtual bool						defineSimilarityTo(TypeConcept const* _t, TypeConcept::Castability _c) const;
 	virtual List<ValueDefiner*>			applicableMembers(Concept const* _s, bool _isConst) const;
 	virtual inline bool					canStandAlone() const { return true; }
-	virtual inline String				defineLabelHtml(String const& _html) const { return String(L"<span class=\"TypeConcept\" style=\"text-shadow: -1px -1px 1px %1\">").arg(idColour().name()) + _html + L"</span>"; }
+	virtual inline String				defineLabelHtml(String const& _text) const { return String(L"<span class=\"TypeConcept\" style=\"text-shadow: -1px -1px 1px %1\">").arg(idColour().name()) + WebViewable::composeName(_text, StringList("TypeDefinition")) + L"</span>"; }
 	virtual void						apresLoad() { Identifiable::apresLoad(); Labelled::apresLoad(); }
 
 	virtual ~TypeDefinition() {}
+};
+
+}
+
+namespace MarttaSupport
+{
+
+template<>
+class NameTrait< ::Martta::TypeDefinition*>
+{
+public:
+	static String name(::Martta::TypeDefinition* _val) { return _val ? _val->nick() : String::null; }
 };
 
 }

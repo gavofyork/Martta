@@ -43,7 +43,8 @@ public:
 	virtual void						setSubject(Concept* _subject);
 
 	Hash<String, String>				properties() const { return m_properties; }
-	void								setProperty(String const& _name, String const& _value) { String old = m_properties[_name]; m_properties[_name] = _value; onPropertyChanged(_name, _value, old); }
+	void								setProperty(String const& _name, String const& _value) { m_properties[_name] = _value; onPropertiesChanged(); }
+	void								setProperties(Hash<String, String> const& _p) { foreach (String s, _p.keys()) m_properties[s] = _p[s]; onPropertiesChanged(); }
 
 	// Stylist
 	virtual WebStylist*					stylist() const { return m_stylist; };
@@ -73,6 +74,8 @@ public slots:
 	bool								attemptEdit(int _e);
 	void								markDirty(int _e) { relayout((Concept*)_e); }
 
+	void								onConfigure();
+
 	void								setShowDependencyInfo(bool _v) { m_showDependencyInfo = _v; update(); }
 	void								setShowChanges(bool _v) { m_showChanges = _v; update(); }
 	void								setShowOneChange(bool _v) { m_showOneChange = _v; update(); }
@@ -100,9 +103,9 @@ private:
 	virtual void						onAncestorRemoved(Concept* _e, Concept* _old) { checkInvalid(_e); (void)(_old); }
 
 //	virtual	Hash<String, String>		defaultProperties() const { return Hash<String, String>(); }
-//	virtual void						onPropertyChanged(String const& _name, String const& _value) const { }
+//	virtual void						onPropertiesChanged() {}
 	virtual	Hash<String, String>		defaultProperties() const;
-	virtual void						onPropertyChanged(String const& _name, String const& _value, String const& _old) const;
+	virtual void						onPropertiesChanged();
 
 	void								init();
 	void								refresh();

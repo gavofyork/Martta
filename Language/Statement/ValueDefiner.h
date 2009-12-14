@@ -36,9 +36,21 @@ class M_API_Statement ValueDefiner: public_interface Identifiable, public_interf
 	MARTTA_ALSO_INHERITS(TypeNamer, 0)
 
 public:
-	virtual String						identity() const { return type()->code(name()).replace(" ", "").replace("::", ";;"); }
+	virtual String						identity() const { return type()->code(nick()).replace(" ", "").replace("::", ";;"); }
 	virtual bool						isAccessibleAt(Position const&) const { return true; }
 	virtual void						apresLoad() { Identifiable::apresLoad(); TypeNamer::apresLoad(); }
+};
+
+}
+
+namespace MarttaSupport
+{
+
+template<>
+class NameTrait< ::Martta::ValueDefiner*>
+{
+public:
+	static String name(::Martta::ValueDefiner* _val) { return _val ? _val->nick() : String::null; }
 };
 
 }

@@ -46,7 +46,7 @@ public:
 
 protected:
 	virtual inline String				defineLabelCode(String const& _text) const { return _text[0].isNumber() ? L"_" + camelCase(_text, true) : camelCase(_text, true); }
-	virtual inline String				defineLabelName(String const& _text) const { return camelCase(_text, true); }
+	virtual inline String				defineLabelHtml(String const& _text) const { return composeName(_text, StringList("Namespace")); }
 };
 
 }

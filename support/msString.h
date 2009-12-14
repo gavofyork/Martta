@@ -375,6 +375,22 @@ m_inline const String operator+(wchar_t _ch, String const& _s) { return String(_
 M_API_support String times(int _s, int _omte, String const& _btwn);
 M_API_support String camelCase(String const& _t, bool _upperFirst = false);
 
+template<class T>
+class NameTrait
+{
+public:
+	static String name(T _val) { return _val ? _val->name() : String::null; }
+};
+
+template<class S> inline List<S> nameStarts(List<S> const& _l, String const& _s)
+{
+	List<S> ret;
+	foreach (S i, _l)
+		if (NameTrait<S>::name(i).toLower().startsWith(_s.toLower()))
+			ret << i;
+	return ret;
+}
+
 }
 
 #if defined(QT_DEBUG) || defined(QT_NO_DEBUG)

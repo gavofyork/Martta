@@ -1,5 +1,7 @@
+BUG Try to name an enum.
 BUG '{' on char.
 BUG? current() bad in onCurrentAboutToChange.
+BUG Delete identifier - turns to anon nut no update to references.
 BUG Add method, make return type good, still appears bad.
 - Making name good/bad doesn't change anything.
 - Name change doesn't carry into owner.
@@ -27,6 +29,22 @@ QUICK EnumNamer/Class expansion.
 QUICK [a-z] on TypeConcept should work for Explicits too
 - make TypeConcept a NameEntryPoint?
 QUICK TypeConcept shouldn't inherit from TypedOwner - Just MemberTempateType and ArrayType.
+QUICK Don't require <^> to be at root level of defineHtml.
+
+- Redirection: Required for conditional compilation & placeholders
+  - Introduce virtual int redirect() const { return Undefined; }
+  - All family methods should change to reflect this:
+    - child() to Concept* child(int _id) const { int r = rawChild(_id)->redirect(); return r != Undefined ? rawChild(_id)->child(r) : this; }
+    - index() to int index() const { return rawParent()->redirect() == rawIndex() ? rawParent()->parent() : rawParent(); }
+    - parent() to Concept* parent() const { return rawParent()->redirect() == rawIndex() ? rawParent()->index() : rawIndex(); }
+  - Provide raw family methods to avoid redirection.
+  - Clean up use of child() vs. rawChild(), parent() vs. rawParent() and Position in general.
+- For conditional compilation will probably want to introduce "StatementSet".
+
+- Use UUIDs for identifiers rather than dicking around with C++-like scoped keys.
+  - When an identifier is deleted, keep the UUID, kind and name around in a portion of the module "Orphaned identifiers".
+    - These are (not usually) deleted properly, but remembered in case of a later (existing) reference.
+    - They can be manually or automatically (similar kind/name) rerouted to another identifier.
 
 - Make Concept itself uninstantiatable; relieved with a MARTTA_PLACEHOLDER or MARTTA_PROPER
 New Component of .h/.cpp
@@ -177,9 +195,6 @@ Recursive search for utilised.
 
 Split CodeScene from CodeView via. mixins?.
 
-Virtual base for Concept.
-- Allow Members to inherit principally from "Member", but also from Callable/Variable.
-
 updateAncestralDependencies(); only gets called when context changes.
 - Should get called when there's any possibility that the ancestor could be different.
 - When anything is added/removed/switched, check all ancestors to see if the have any (preferably ancestral; maybe keep a count or multiple lists?) dependents. If so, update all those children.
@@ -194,7 +209,7 @@ Move the commitContextChange stuff from CodeScene's key event handler into the E
 === MINOR TASKS ===
 
 BUG Inherited methods don't work.
-WISH References leave hopeful names behind when invalid.
+DONE? References leave hopeful names behind when invalid.
 WISH Same with invocations when function arg is deleted, return when return type is removed.
 
 MINOR double - int gets -(int, int) not -(double, double)

@@ -67,7 +67,7 @@ void ReferencedValue::onDependencyRemoved(Concept* _old, int)
 	{
 //		mDebug() << "Subject removed (was" << _old << ")";
 		if (Identifiable* i = _old->tryKind<Identifiable>())
-			m_hopeful = i->name();
+			m_hopeful = i->nick();
 		set(0);
 	}
 }
@@ -89,7 +89,9 @@ String ReferencedValue::defineHtml() const
 {
 	if (!m_subject)
 		return L"<^><span class=\"unreal\">[" + m_hopeful + L"?]</span>";
-	return L"<^><span class=\"ReferencedValue\">" + m_subject->tryKind<Labelled>()->labelHtml(m_subject->type()->typeHtml(m_subject->name())) + L"</span>";
+	return L"<^><span class=\"ReferencedValue\">" +
+		m_subject->type()->typeHtml(m_subject->tryKind<Labelled>()->labelHtml(m_subject->nick())) +
+		L"</span>";
 }
 
 EditDelegateFace* ReferencedValue::newDelegate(CodeScene* _s)

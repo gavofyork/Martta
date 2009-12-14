@@ -40,18 +40,18 @@ class M_API_Variables VariableNamer: public_interface ValueDefiner, public_inter
 public:
 	MARTTA_NAMED(OurType)
 
-	TypeConcept*							actualType() const;
+	TypeConcept*						actualType() const;
 	virtual String						summary() const { return basicCode(); }
 	String								basicCode() const;
 
 protected:
 	virtual Type						type() const;
-	virtual inline String				defineLabelCode(String const& _text) const { return L"l_" + composeName(_text, StringList("Variable")); }	// Overridden in Field & Argument
+	virtual inline String				defineLabelCode(String const& _text) const { return L"l_" + camelCase(_text); }	// Overridden in Field & Argument
 
 	inline String						interfaceCode() const { return basicCode() + ";\n"; }
 	inline String						implementationCode() const { return String::null; }
 	inline void							onDependencyChanged(int, Concept* _e) { if (_e == child(OurType)) changed(Dependee::Logically | Dependee::Visually); if (_e == child(Identity)) changed(Dependee::Visually); }
-	virtual inline String				defineLabelHtml(String const& _middle) const { return L"<span class=\"VariableNamer-definition\">" + type()->typeHtml(_middle) + L"</span>"; }
+	virtual inline String				defineLabelHtml(String const& _text) const { return L"<span class=\"VariableNamer-definition\">" + type()->typeHtml(composeName(_text, StringList("Variable"))) + L"</span>"; }
 	bool								keyPressed(KeyEvent const* _e);
 	String								defineVariableHtml() const;
 	bool								isInValidState() const { return actualType()->canStandAlone(); }

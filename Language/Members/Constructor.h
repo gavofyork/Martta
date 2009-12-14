@@ -45,7 +45,7 @@ protected:
 	virtual String						defineReturnHtml() const { return String::null; }
 	virtual bool						isConst() const { return false; }
 
-	virtual String						name() const;
+	virtual String						nick() const;
 	virtual String						codeName() const;
 
 	virtual bool						isInValidState() const;

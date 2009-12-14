@@ -45,6 +45,8 @@ public:
 protected:
 	virtual bool						hasDefaultConstructor() const { return true; }
 
+	virtual inline String				defineLabelHtml(String const& _text) const { return composeName(_text, StringList("Enumeration")); }
+
 	String								defineEnumerationHtml() const;
 	String								interfaceCode() const;
 	bool								keyPressed(KeyEvent const* _e);

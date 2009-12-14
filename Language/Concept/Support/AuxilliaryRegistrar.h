@@ -43,13 +43,14 @@ public:
 
 	inline static AuxilliaryRegistrar*	get() { if (!s_this) s_this = new AuxilliaryRegistrar; return s_this; }
 	void								registerName(int _n, char const* _name);
-	inline List<int> const&			names() const { return m_names; }
-	MarttaSupport::String const&						nameOfArbitrary(int _n) const;
+	inline List<int> const&				names() const { return m_names; }
+	MarttaSupport::String const&		nameOfArbitrary(int _n) const;
 	int									arbitraryOfName(String const& _name) const;
 
 	inline AuxilliaryFace const*		auxilliary(String const& _kindName) { return m_auxilliaries.value(_kindName); }
 	void								registerAuxilliary(AuxilliaryFace const* _a);
 	inline List<AuxilliaryFace const*> const&	allInterfaces() const { return m_allInterfaces; }
+	inline List<AuxilliaryFace const*>	auxilliaries() const { return m_auxilliaries.values(); }
 
 	template<class T>
 	inline List<AuxilliaryFace const*> immediateInterfaces() const { return immediateInterfaces(T::staticAuxilliary()); }

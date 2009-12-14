@@ -49,7 +49,7 @@ String Namespace::finalCode() const
 
 String Namespace::defineHtml() const
 {
-	return L"<span class=\"keyword\">namespace</span> " + toHtml(child(Identity)) + toHtml(cardinalChildren(), L"", L"div class=\"block\"");
+	return L"<span class=\"keyword\">namespace</span> " + toHtml(child(Identity)) + toHtml(cardinalChildren(), "", "div class=\"block\"");
 }
 
 Kinds Namespace::allowedKinds(int _i) const

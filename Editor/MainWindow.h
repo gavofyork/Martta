@@ -76,6 +76,8 @@ private slots:
 
 	void on_actReloadPlugins_triggered();
 	void on_actNewCodeView_triggered();
+	void on_actRemoveCodeView_triggered();
+	void on_actConfigureCodeView_triggered();
 
 	void on_actShowDeps_triggered();
 	void on_actShowChanges_triggered();
@@ -134,6 +136,8 @@ private:
 	// Proper save function---saves everything, prompting for filename if necessary.
 	// Maintains correctness of m_projects, m_filename and m_solution accordingly.
 	bool					save();
+
+	CodeView*				makeCodeView(QString const& _name = "Code View");
 
 	Concept*					importDom(QDomElement const& _el, Concept* _p, QStringList* _projectstoLoad = 0, QList<Module*>* _projects = 0);
 	QDomElement				exportDom(QDomDocument& _doc, Concept const* _e, bool _dump = false) const;

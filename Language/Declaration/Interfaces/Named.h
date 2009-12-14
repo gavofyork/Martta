@@ -35,21 +35,36 @@ namespace Martta
 class M_API_Declaration Named
 {
 public:
-	virtual String								name() const { return String::null; }
+	virtual String								nick() const { return String::null; }
 	virtual Concept const*						associate() const { return 0; }
 
 	virtual ~Named() {}
 };
 
+}
+
+namespace MarttaSupport
+{
+template<>
+class NameTrait< ::Martta::Named*>
+{
+public:
+	static String name(::Martta::Named* _val) { return _val ? _val->nick() : String::null; }
+};
+}
+
+namespace Martta
+{
+
 class M_API_Declaration SimpleNamed: public Named
 {
 public:
-	SimpleNamed(String const& _name): m_name(_name) {}
+	SimpleNamed(String const& _nick): m_nick(_nick) {}
 
-	virtual String								name() const { return m_name; }
+	virtual String								nick() const { return m_nick; }
 
 private:
-	String										m_name;
+	String										m_nick;
 };
 
 }

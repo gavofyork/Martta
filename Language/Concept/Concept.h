@@ -150,7 +150,7 @@ public:
 	template<class T> List<T*>			superChildrenOf() const { List<T*> ret; ret << childrenOf<T>(); foreach (Concept* e, children()) ret << e->superChildrenOf<T>(); return ret; }
 
 	inline int							properCount() const { int ret = 0; foreach (Concept* i, m_cardinalChildren) if (!i->isPlaceholder()) ret++; return ret; }
-	inline List<Concept*>				properts() const { List<Concept*> ret; foreach (Concept* i, m_cardinalChildren) if (!i->isPlaceholder()) ret += i; return ret; }
+	inline List<Concept*>				propers() const { List<Concept*> ret; foreach (Concept* i, m_cardinalChildren) if (!i->isPlaceholder()) ret += i; return ret; }
 	inline Concept*						proper(int _i) const { int c = 0; foreach (Concept* i, m_cardinalChildren) if (c++ == _i) return i; AssertNR(false); return 0; }
 
 	virtual bool						usurpsChild(Concept const*) const { return false; }
@@ -476,7 +476,7 @@ private:
 
 	void								inLimbo(Dependee* _replacement = 0);
 
-	Concept*								m_parent;
+	Concept*							m_parent;
 	int									m_index;
 	List<Concept*>						m_cardinalChildren;
 	Hash<int, Concept*>					m_namedChildren;

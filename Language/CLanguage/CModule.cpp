@@ -147,7 +147,7 @@ String CModule::finalCode() const
 
 List<StringList> CModule::steps() const
 {
-	String src = m_tempPath + "/" + name() + ".cpp";
+	String src = m_tempPath + "/" + nick() + ".cpp";
 	String bin = m_tempPath + "/" + targetName();
 
 	StringList ccArgs;
@@ -217,9 +217,9 @@ List<StringList> CModule::steps() const
 String CModule::targetName() const
 {
 #ifdef M_WIN
-	return name() + ".exe";
+	return nick() + ".exe";
 #else
-	return name();
+	return nick();
 #endif
 }
 

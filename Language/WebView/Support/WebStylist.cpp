@@ -42,11 +42,25 @@ private:
 String WebStylist::toHtml(Concept const* _e, String const& _tag)
 {
 	KeepCurrent k(this);
+	String t = _tag;
+	if (t.section(L' ', 0, 0) == L"div")
+		t = t.section(L' ', 1);
+	else
+	{
+		if (t.section(L' ', 0, 0) == L"span")
+			t = t.section(L' ', 1);
+		int i = t.indexOf("class=\"");
+		if (i != -1)
+			t.insert(i + 7, L"layout ");
+		else
+			t += " class=\"layout\"";
+	}
+
 	if (!_e)
 		return String::null;
 	if (m_htmlCache.contains(_e))
 		return m_htmlCache[_e];
-	return String("<%1 entity=\"true\" ondblclick=\"if (CodeView.attemptEdit(%2)) event.stopPropagation();\" id=\"%2\">%3</%4>").arg(_tag).arg((int)_e).arg(refineHtml(defineHtml(_e), !_e->isUsurped())).arg(_tag.section(L' ', 0, 0));
+	return String("<div %1 entity=\"true\" ondblclick=\"if (CodeView.attemptEdit(%2)) event.stopPropagation();\" id=\"%2\">%3</div>").arg(t).arg((int)_e).arg(refineHtml(defineHtml(_e), !_e->isUsurped()))/*.arg(_tag.section(L' ', 0, 0))*/;
 }
 
 String WebStylist::rejiggedHtml(Concept const* _e)
@@ -86,9 +100,35 @@ String WebStylist::refineHtml(String const& _html, bool _allowThis, bool _forceT
 	return ret;
 }
 
+StringList analyse(String const& _fb)
+{
+	String lfb = _fb.toLower();
+	int fi = lfb.indexOf(L"foo");
+	int bi = lfb.indexOf(L"bar");
+	if (fi < 0 || bi < fi + 3)
+		return StringList(L"", L"", L"", L"");
+	bool fIsLow = _fb[fi].isLower();
+	bool oIsLow = _fb[fi + 1].isLower();
+	bool bIsLow = _fb[bi].isLower();
+	String pre = _fb.left(fi);
+	String mid = _fb.mid(fi + 3, bi - (fi + 3));
+	String post = _fb.mid(bi + 3);
+	return StringList(pre + (fIsLow ? L"\a" : L"\b"), oIsLow ? L"\a" : L"\b", mid + (bIsLow ? L"\a" : L"\b"), post);
+}
+
 void WebStylist::setProperties(Hash<String, String> const& _p)
 {
-	m_properties = _p;
+	foreach (String s, _p.keys())
+		if (s.startsWith(L"Id-") || s == L"Id")
+		{
+			StringList a = analyse(_p[s]);
+			m_properties[s + "-pre"] = a[0];
+			m_properties[s + "-norm"] = a[1];
+			m_properties[s + "-break"] = a[2];
+			m_properties[s + "-post"] = a[3];
+		}
+		else
+			m_properties[s] = _p[s];
 	m_htmlCache.clear();
 }
 
@@ -107,20 +147,28 @@ String WebStylist::composeName(String const& _id, StringList const& _flags) cons
 		k.insert(fs, m_properties[s]);
 		NOGOOD:;
 	}
+	mInfo() << k << _id;
 	String ret;
 	bool upperCaseMode = false;
+	bool onBreak = false;
 	for (int i = 0; i <= _id.length(); i++)
 	{
-		String tag = (i == 0) ? L"pre" : (i == _id.length()) ? L"post" : _id[i].isSpace() ? L"break" : L"norm";
+		if (_id[i].isSpace())
+		{
+			onBreak = true;
+			continue;
+		}
+		String tag = (i == 0) ? L"pre" : (i == _id.length()) ? L"post" : onBreak ? L"break" : L"norm";
+		onBreak = false;
 		foreach (String s, k.values(StringList()) + k.values(StringList(tag)))
 			for (int j = 0; j < s.length(); j++)
 				if (s[j] == '\a')
 					upperCaseMode = false;
-				else if (s[j] == '\a')
+				else if (s[j] == '\b')
 					upperCaseMode = true;
 				else
 					ret += s[j];
-		if (i < _id.length() && !_id[i].isSpace())
+		if (i < _id.length())
 			ret += upperCaseMode ? _id[i].toUpper() : _id[i].toLower();
 	}
 	return ret;
@@ -152,3 +200,12 @@ String WebStylist::defineEditHtml(Concept const* _e, CodeScene* _cs)
 }
 
 }
+
+/*
+  <StringLiteral>
+  <here/><span class="symbol">&ldquo;</span><span class="StringLiteral Literal"><deref attrib="value"/></span><span class="symbol">&rdquo;</span>;
+  </StringLiteral>
+  <ReferencedType>
+  <here/><redirect attrib="subject" repot="TypeConcept"><typed>&empty;</typed></reuse>;
+  </ReferencedType>
+*/

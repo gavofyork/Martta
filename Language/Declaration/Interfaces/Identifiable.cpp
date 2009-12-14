@@ -33,10 +33,10 @@ Identifiable::~Identifiable()
 {
 }
 
-String Identifiable::name() const
+String Identifiable::nick() const
 {
 	if (IdLabel* l = self()->tryChild<IdLabel>(Identity))
-		return l->name();
+		return l->text();
 	return String::null;
 }
 

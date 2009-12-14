@@ -39,22 +39,6 @@ M_TEST_METHOD_EXISTANCE_2(committed)
 namespace Martta
 {
 
-template<class T>
-class NameTrait
-{
-public:
-	static String name(T _val) { return _val ? _val->name() : String::null; }
-};
-
-template<class S> inline List<S> nameStarts(List<S> const& _l, String const& _s)
-{
-	List<S> ret;
-	foreach (S i, _l)
-		if (NameTrait<S>::name(i).toLower().startsWith(_s.toLower()))
-			ret << i;
-	return ret;
-}
-
 // Exists: List<R> T::possibilities()
 // Exists: void T::set(R)
 // Exists: R T::get()

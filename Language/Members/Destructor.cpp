@@ -39,9 +39,9 @@ Kinds Destructor::allowedKinds(int _i) const
 	return Super::allowedKinds(_i);
 }
 
-String Destructor::name() const
+String Destructor::nick() const
 {
-	return "~" + typeDefinition()->name();
+	return "~" + typeDefinition()->nick();
 }
 
 String Destructor::codeName() const

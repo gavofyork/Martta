@@ -36,12 +36,11 @@ namespace Martta
 class ValueDefiner;
 class Typed;
 
-class M_API_Statement Statement: public_super Concept, public_interface TypedOwner, public_interface NameEntryPoint, public_interface WebViewable, public_interface WebInformer
+class M_API_Statement Statement: public_super Concept, public_interface TypedOwner, public_interface NameEntryPoint
 {
 	MARTTA_PLACEHOLDER(Concept)
 	MARTTA_ALSO_INHERITS(TypedOwner, 0)
 	MARTTA_ALSO_INHERITS(NameEntryPoint, 1)
-	MARTTA_ALSO_INHERITS(WebViewable, 2)
 
 public:
 	virtual String						code() const { return "(void)0;"; }

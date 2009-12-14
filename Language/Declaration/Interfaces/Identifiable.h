@@ -39,7 +39,8 @@ public:
 	MARTTA_NAMED(Identity)
 
 	/// @returns the user-visible name used for this entity. (e.g. "foo", "bar", "my class")
-	virtual String						name() const;
+	/// This is usually a loop-back to the text of the label.
+	virtual String						nick() const;
 	/// @returns the name used for this declaration in the CPP code. (e.g. "foo", "m_bar", "MyClass")
 	virtual String						codeName() const;
 	/// @returns the program-wide reference used for this declaration in the CPP code (calls codeName()).
@@ -70,7 +71,7 @@ public:
 
 	/// @returns true if the entity cannot be explicitly referenced in the CPP code. This is the case in code
 	/// like class {} x; or typedef struct {} y; or enum { z };
-	virtual bool						isHidden() const { return codeName().startsWith(".") || name().isEmpty(); }				///< true for anonymous enums.
+	virtual bool						isHidden() const { return codeName().startsWith(".") || nick().isEmpty(); }				///< true for anonymous enums.
 
 	virtual Identifiable*				lookupChild(String const& _subkey) const;
 	Identifiable*						find(String const& _key) const;	// Treats this entity as root scope and looks for (scoped) _key in it.

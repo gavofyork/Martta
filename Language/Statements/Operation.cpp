@@ -36,7 +36,7 @@ MARTTA_PLACEHOLDER_CPP(Operation);
 MARTTA_NAMED_CPP(Operation, FirstOperand);
 MARTTA_NAME_ALIAS_CPP(Operation, TheOperand, FirstOperand);
 MARTTA_NAMED_CPP(Operation, SecondOperand);
-MARTTA_REGISTER_CSS(Operation, ".Operation { background-color: rgba(0, 0, 0, 0.03); padding: 0 2px 0 2px; }");
+MARTTA_REGISTER_CSS(Operation, ".Operation { background-color: rgba(0, 0, 0, 0.05); padding: 0 2px 0 2px; }");
 
 Type Operation::prototypeOf(Type const& _t, int _index)
 {

@@ -44,3 +44,13 @@ protected:
 };
 
 }
+
+namespace MarttaSupport
+{
+template<>
+class NameTrait< ::Martta::VirtualMethod*>
+{
+public:
+	static String name(::Martta::VirtualMethod* _val) { return _val ? _val->nick() : String::null; }
+};
+}

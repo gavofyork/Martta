@@ -47,7 +47,7 @@ Type EnumValue::type() const
 {
 	if (parentIs<EnumerationNamer>())
 	{
-		if (parentAs<EnumerationNamer>()->isHidden() || parentAs<EnumerationNamer>()->name().isEmpty())
+		if (parentAs<EnumerationNamer>()->isHidden() || parentAs<EnumerationNamer>()->nick().isEmpty())
 			return Type(Int);
 		else
 			return Type(parentAs<EnumerationNamer>());
