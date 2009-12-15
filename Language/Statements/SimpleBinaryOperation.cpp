@@ -49,7 +49,7 @@ bool SimpleBinaryOperation::keyPressedOnPosition(Position const& _p, KeyEvent co
 	_e->noteStrobeCreation(n, &*p);
 	p->insert(n, FirstOperand);
 	n->validifyChildren();
-	n->dropCursor();
+	_e->codeScene()->dropCursor(n);
 	return true;
 }
 
@@ -60,41 +60,54 @@ List<ValueDefiner*> SimpleBinaryOperation::findOperators(Operator _o, Type const
 
 String SimpleBinaryOperation::operatorHtml() const
 {
-	if (id().symbol() == Operator::BangEquals)
+	bool s = !WebStylist::current()->property("CSS", "Simple").toBool();
+	if (s && id().symbol() == Operator::BangEquals)
 		return L"<span class=\"symbol\">=<span style=\"margin-left:-0.4em\">/</span><span style=\"margin-left:-0.4em\">=</span></span>";
-	else if (id().symbol() == Operator::EqualsEquals)
+	else if (s && id().symbol() == Operator::EqualsEquals)
 		return L"<span class=\"symbol\">=<span style=\"margin-left:-0.27em\">=</span></span>";
-	else if (id().symbol() == Operator::LessThanEquals)
+	else if (s && id().symbol() == Operator::LessThanEquals)
 		return L"<span class=\"symbol\">&le;</span>";
-	else if (id().symbol() == Operator::GreaterThanEquals)
+	else if (s && id().symbol() == Operator::GreaterThanEquals)
 		return L"<span class=\"symbol\">&ge;</span>";
+	else if (id().symbol() == Operator::LessThanEquals)
+		return L"<span class=\"symbol\">&lt;=</span>";
+	else if (id().symbol() == Operator::GreaterThanEquals)
+		return L"<span class=\"symbol\">&gt;=</span>";
 	else if (id().symbol() == Operator::LessThan)
 		return L"<span class=\"symbol\">&lt;</span>";
 	else if (id().symbol() == Operator::GreaterThan)
 		return L"<span class=\"symbol\">&gt;</span>";
+	else if (s && id().symbol() == Operator::LeftShift)
+		return L"<span class=\"symbol\">&lt;&lt;</span>";
 	else if (id().symbol() == Operator::LeftShift)
 		return L"<span class=\"symbol\">&laquo;</span>";
-	else if (id().symbol() == Operator::RightShift)
+	else if (s && id().symbol() == Operator::RightShift)
 		return L"<span class=\"symbol\">&raquo;</span>";
-	else if (id().symbol() == Operator::LeftShiftEquals)
+	else if (id().symbol() == Operator::RightShift)
+		return L"<span class=\"symbol\">&gt;&gt;</span>";
+	else if (s && id().symbol() == Operator::LeftShiftEquals)
 		return L"<span class=\"symbol\">&laquo;=</span>";
-	else if (id().symbol() == Operator::RightShiftEquals)
+	else if (s && id().symbol() == Operator::RightShiftEquals)
 		return L"<span class=\"symbol\">&raquo;=</span>";
-	else if (id().symbol() == Operator::Star)
+	else if (id().symbol() == Operator::LeftShiftEquals)
+		return L"<span class=\"symbol\">&lt;&lt;=</span>";
+	else if (id().symbol() == Operator::RightShiftEquals)
+		return L"<span class=\"symbol\">&gt;&gt;=</span>";
+	else if (s && id().symbol() == Operator::Star)
 		return L"<span class=\"symbol\">&times;</span>";
-	else if (id().symbol() == Operator::Slash)
+	else if (s && id().symbol() == Operator::Slash)
 		return L"<span class=\"symbol\">&divide;</span>";
-	else if (id().symbol() == Operator::BarBar)
+	else if (s && id().symbol() == Operator::BarBar)
 		return L"<span class=\"symbol\">&or;</span>";
-	else if (id().symbol() == Operator::AmpersAmpers)
+	else if (s && id().symbol() == Operator::AmpersAmpers)
 		return L"<span class=\"symbol\">&and;</span>";
-	else if (id().symbol() == Operator::PlusEquals)
+	else if (s && id().symbol() == Operator::PlusEquals)
 		return L"<span class=\"symbol\">+=</span>";
-	else if (id().symbol() == Operator::MinusEquals)
+	else if (s && id().symbol() == Operator::MinusEquals)
 		return L"<span class=\"symbol\">-=</span>";
-	else if (id().symbol() == Operator::StarEquals)
+	else if (s && id().symbol() == Operator::StarEquals)
 		return L"<span class=\"symbol\">&times;=</span>";
-	else if (id().symbol() == Operator::SlashEquals)
+	else if (s && id().symbol() == Operator::SlashEquals)
 		return L"<span class=\"symbol\">&divide;=</span>";
 	else
 		return String(L"<span class=\"symbol\">%1</span>").arg(id().code());

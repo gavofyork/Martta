@@ -49,7 +49,7 @@ bool MemberReferencedValue::keyPressed(KeyEvent const* _e)
 {
 	if (_e->text() == L"`")
 	{
-		replace(new FloatingMemberReferencedValue(m_subject))->setCurrent();
+		_e->codeScene()->setCurrent(replace(new FloatingMemberReferencedValue(m_subject)));
 		return true;
 	}
 	return Super::keyPressed(_e);
@@ -144,7 +144,7 @@ bool FloatingMemberReferencedValue::keyPressed(KeyEvent const* _e)
 {
 	if (_e->text() == L"`")
 	{
-		replace(new MemberReferencedValue(m_subject))->setCurrent();
+		_e->codeScene()->setCurrent(replace(new MemberReferencedValue(m_subject)));
 		return true;
 	}
 	return Super::keyPressed(_e);

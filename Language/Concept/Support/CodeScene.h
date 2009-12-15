@@ -81,6 +81,7 @@ public:
 	enum NavigationDirection { Forwards, Backwards };
 	virtual void				navigateAway(Concept* _from, NavigationDirection _d = Forwards) = 0;	/// Selects closest focusable entity visually _d from _from. e.g. 4 on ()s: (++X + 4)
 	virtual void				navigateToNew(Concept* _from) = 0;									/// Selects closest focusable sibling-owned entity visually forwards from _from, or parent if none.
+	void						dropCursor(Concept* _shell);
 
 	// NONVIRTUAL Bracketing code.
 	void						setBracketed(Position const& _p) { m_bracketed.append(_p); }

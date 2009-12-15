@@ -20,12 +20,20 @@
 
 #include "Type.h"
 #include "ReferencedType.h"
+#include "WebStylist.h"
 #include "TypeDefinition.h"
 
 namespace Martta
 {
 
 MARTTA_NOTION_CPP(TypeDefinition);
+
+String TypeDefinition::defineLabelHtml(String const& _text) const
+{
+	if (WebStylist::current()->property("CSS", "Simple").toBool())
+		return String(L"<span class=\"TypeConcept\">") + WebViewable::composeName(_text, StringList("TypeDefinition")) + L"</span>";
+	return String(L"<span class=\"TypeConcept\" style=\"text-shadow: -1px -1px 1px %1\">").arg(idColour().name()) + WebViewable::composeName(_text, StringList("TypeDefinition")) + L"</span>";
+}
 
 bool TypeDefinition::hasSingleCastOperator(TypeConcept const* _t, bool) const
 {

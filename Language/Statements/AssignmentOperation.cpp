@@ -20,13 +20,21 @@
 
 #include "Const.h"
 #include "Reference.h"
+#include "WebStylist.h"
 #include "AssignmentOperation.h"
 
 namespace Martta
 {
 
 MARTTA_PROPER_CPP(AssignmentOperation);	
-	
+
+String AssignmentOperation::operatorHtml() const
+{
+	if (WebStylist::current()->property("CSS", "Simple").toBool())
+		return L"<span class=\"symbol\">=</span>";
+	return L"<span class=\"symbol\">:=</span>";
+}
+
 String AssignmentOperation::code() const
 {
 	Typed* e = asTyped(FirstOperand);

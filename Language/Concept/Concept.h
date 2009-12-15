@@ -276,7 +276,7 @@ public:
 	/**
 	 * Safe, model-aware deletion operation. It keeps everything in order according to allowedKinds().
 	 */
-	void								deleteAndRefill(Concept* _e = 0, bool _moveToGrave = false);
+	void								deleteAndRefill(Concept* _e = 0);
 
 	virtual void const*					tryKindBlind(Kind _k) const { return _k == staticKind ? reinterpret_cast<void const*>(this) : toInterface(_k); }
 
@@ -391,8 +391,6 @@ public:
 	List<int>							knownNames() const;
 
 	/// These apply to all CodeScenes in operation.
-	void								setCurrent();
-	void								dropCursor();
 	bool								isCurrent() const;
 	bool								isCurrentOrAncestor() const;
 	bool								isEditing() const;
@@ -571,7 +569,7 @@ bool Martta::Concept::simplePositionKeyPressHandler(Position const& _p, KeyEvent
 			if (_ontoNew)
 				_e->codeScene()->navigateToNew(n);
 			else
-				n->setCurrent();
+				_e->codeScene()->setCurrent(n);
 		}
 		else if (!_p.exists() || _p->isPlaceholder() || _p.index() >= 0)	// if it's not cardinal we'll end up pushing the new thing behind the current.
 		{

@@ -319,27 +319,6 @@ bool Concept::isCurrentOrAncestor() const
 			return true;
 	return false;
 }
-void Concept::setCurrent()
-{
-	foreach (CodeScene* i, CodeScene::all())
-		i->setCurrent(this);
-}
-void Concept::dropCursor()
-{
-	List<Concept*> s = children();
-	while (s.size())
-	{
-		Concept* e = s.takeFirst();
-		if (e->isPlaceholder())
-		{
-			e->setCurrent();
-			return;
-		}
-		else
-			s = e->children() + s;
-	}
-	setCurrent();
-}
 
 // Editting in CodeScene(s)
 bool Concept::isEditing() const
@@ -425,16 +404,16 @@ bool Concept::keyPressed(KeyEvent const* _e)
 	if (_e->codeScene()->isCurrent(this) && (_e->text() == DeleteKey && _e->modifiers() == ShiftModifier) && !isFixed())
 	{
 		_e->codeScene()->rememberCurrent();
-		deleteAndRefill(0, false);	// NOTE: Was true; changed to false to avoid erroneous currents being set. May need a rethink.
+		deleteAndRefill(0);	// NOTE: Was true; changed to false to avoid erroneous currents being set. May need a rethink.
 		_e->codeScene()->restoreCurrent();
 	}
 	else if (_e->codeScene()->isCurrent(this) && _e->text() == DeleteKey && !isFixed())
 	{
 		_e->codeScene()->rememberCurrent();
 		if (properCount() == 1 && over().allowedToBeKind(proper(0)->kind()))
-			deleteAndRefill(proper(0), false);	// SEE ABOVE.
+			deleteAndRefill(proper(0));	// SEE ABOVE.
 		else
-			deleteAndRefill(0, false);	// SEE ABOVE.
+			deleteAndRefill(0);	// SEE ABOVE.
 		_e->codeScene()->restoreCurrent();
 	}
 	else if (_e->codeScene()->isCurrent(this) && _e->text() == TabKey && !_e->codeScene()->isEditing(this) && !isFixed())
@@ -927,7 +906,7 @@ void Concept::inLimbo(Dependee* _replacement)
 	oneFootInTheGrave(_replacement);
 }
 
-void Concept::deleteAndRefill(Concept* _e, bool _moveToGrave)
+void Concept::deleteAndRefill(Concept* _e)
 {
 	SafePointer<Concept> c = parent();
 	Position p = over();
@@ -953,8 +932,6 @@ void Concept::deleteAndRefill(Concept* _e, bool _moveToGrave)
 		c->childRemoved(this, ci);
 		delete this;
 	}
-	if (_moveToGrave)
-		p.nearestConcept()->setCurrent();
 }
 
 void Concept::notifyOfStrobe(Concept* _strobeCreation)

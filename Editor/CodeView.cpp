@@ -95,8 +95,9 @@ Hash<String, String> CodeView::defaultProperties() const
 	ret[L"Id-Lambda"] = L"fooBar";
 	ret[L"Id-Enumeration"] = L"FooBar";
 	ret[L"Id-TypeDefinition"] = L"FooBar";
-	ret[L"Operation-Parenthesise"] = L"0";
-	ret["SimpleBinaryOperation-ProperMaths"] = L"0";
+	ret[L"Operation-Parenthesise"] = L"false";
+	ret[L"SimpleBinaryOperation-ProperMaths"] = L"false";
+	ret[L"CSS-Simple"] = L"false";
 	return ret;
 }
 
@@ -429,7 +430,7 @@ QRect CodeView::bounds(Concept const* _e) const
 void CodeView::init()
 {
 	m_stylist->setProperties(properties());
-	QString css = qs(WebStylistRegistrar::get()->css());
+	QString css = qs(m_stylist->css());
 	setHtml(QString("<!DOCTYPE HTML><html><head><style type=\"text/css\">%1</style></head><body onmousedown=\"procMouseDown(event)\">%2</body></html>").arg(css).arg(qs(m_stylist->toHtml(m_subject))));
 	page()->mainFrame()->addToJavaScriptWindowObject("CodeView", this);
 	QFile support(":/CodeView/Support.js");

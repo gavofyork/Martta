@@ -49,6 +49,7 @@ public:
 
 	bool								hasChanged() const { return m_changed; }
 	String								css() const { m_changed = false; return StringList(m_css.values()).join(L' '); }
+	String								css(AuxilliaryFace const* _af) const { return m_css.value(_af); }
 	Hash<AuxilliaryFace const*, String> const& registered() const { return m_css; }
 
 private:

@@ -34,6 +34,6 @@ class Position;
 class TypeConcept;
 
 M_API_Variables bool canPlaceVariable(Position const& _p);
-M_API_Variables void placeVariable(Position const& _p, TypeConcept* _t);
+M_API_Variables void placeVariable(Position const& _p, TypeConcept* _t, CodeScene* _cs);
 
 }

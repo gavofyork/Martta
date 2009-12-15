@@ -22,6 +22,7 @@
 #include "TypeConcept.h"
 #include "Typed.h"
 #include "DefaultConstructedVariable.h"
+#include "WebStylist.h"
 #include "AssignedVariable.h"
 
 namespace Martta
@@ -67,10 +68,15 @@ void AssignedVariable::onDependencySwitched(Concept* _e, Concept*)
 //	debugTree();
 	if (_e == child(AssignedValue) && _e->kind() == Kind::of<Typed>())
 	{
-		Concept* o = usurp(new DefaultConstructedVariable);
+		usurp(new DefaultConstructedVariable);
 		_e->killAndDelete();
-		o->setCurrent();
 	}
+}
+
+String AssignedVariable::defineHtml() const
+{
+	String m = WebStylist::current()->property("CSS", "Simple").toBool() ? L"=" : L":=";
+	return defineVariableHtml() + L"<^><span class=\"symbol\"> " + m + L" </span>" + toHtml(child(AssignedValue));
 }
 
 bool AssignedVariable::keyPressed(KeyEvent const* _e)
@@ -78,7 +84,7 @@ bool AssignedVariable::keyPressed(KeyEvent const* _e)
 	if (VariableNamer::keyPressed(_e))
 		return true;
 	else if (_e->text() == "=")
-		child(AssignedValue)->setCurrent();
+		_e->codeScene()->setCurrent(child(AssignedValue));
 	else
 		return Super::keyPressed(_e);
 	return true;

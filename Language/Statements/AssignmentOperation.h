@@ -40,7 +40,7 @@ private:
 	virtual Types						allowedTypes(int _index) const;
 	virtual Type						type() const;
 	virtual String						code() const;
-	virtual String						operatorHtml() const { return "<span class=\"symbol\">:=</span>"; }
+	virtual String						operatorHtml() const;
 	virtual Operator					id() const { return Operator::Equals; }
 	virtual int							familyDependencies() const { return Super::familyDependencies() | DependsOnChildren; }
 	virtual void						onDependencyChanged(int _a, Concept* _e) { if (_e->parent() == this) changed(Logically); Super::onDependencyChanged(_a, _e); }

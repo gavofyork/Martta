@@ -54,13 +54,11 @@ bool Compound::keyPressed(KeyEvent const* _e)
 		front() :
 		back() :
 		middle(_e->focalIndex() + ((_e->isInserting() || _e->modifiers() & ShiftModifier) ? 0 : 1));
-		Statement* s = new Statement;
-		p.place(s);
-		s->setCurrent();
+		_e->codeScene()->setCurrent(p.place(new Statement));
 	}
 	else if (_e->text() == L"¬" && _e->focalIndex() != UndefinedIndex)
 	{
-		child(_e->focalIndex())->setCurrent();
+		_e->codeScene()->setCurrent(child(_e->focalIndex()));
 	}
 	else if (_e->text() == L"J" && _e->focalIndex() != UndefinedIndex && _e->focalIndex() >= 0 && _e->focusIsPlaceholder()
 		&& child(_e->focalIndex() + 1) && _e->focus()->over().allowedToBeKind(child(_e->focalIndex() + 1)->kind()))
@@ -69,11 +67,11 @@ bool Compound::keyPressed(KeyEvent const* _e)
 	}
 	else if (_e->text() == L";" && _e->focalIndex() != UndefinedIndex)
 	{
-		child(_e->focalIndex())->setCurrent();
+		_e->codeScene()->setCurrent(child(_e->focalIndex()));
 	}
 	else if (_e->text() == "{")
 	{
-		child(0)->setCurrent();
+		_e->codeScene()->setCurrent(child(0));
 	}
 	else
 		return Super::keyPressed(_e);

@@ -45,7 +45,7 @@ protected:
 	virtual int							minRequired(int _i) const { return _i == OurType || _i == AssignedValue || _i == Identity ? 1 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _index) const;
 	virtual int							familyDependencies() const { return DependsOnChildren; }
-	virtual String						defineHtml() const { return defineVariableHtml() + L"<^><span class=\"symbol\"> := </span>" + toHtml(child(AssignedValue)); }
+	virtual String						defineHtml() const;
 	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual void						onDependencyChanged(int _a, Concept* _e) { VariableNamer::onDependencyChanged(_a, _e); Super::onDependencyChanged(_a, _e); }
 	virtual void						onDependencySwitched(Concept*, Concept*);

@@ -22,6 +22,7 @@
 #include "BuiltinType.h"
 #include "ReferencedType.h"
 #include "Typed.h"
+#include "WebStylist.h"
 #include "TextLabel.h"
 
 #include "EnumerationNamer.h"
@@ -77,7 +78,9 @@ String EnumValue::defineHtml() const
 {
 	String r = toHtml(child(Identity));
 	if (child(Definition))
-		r += " <span class=\"symbol\">:=</span> " + toHtml(child(Definition));
+	{
+		r += L" <span class=\"symbol\">" + String(WebStylist::current()->property("CSS", "Simple").toBool() ? L"=" : L":=") + L"</span> " + toHtml(child(Definition));
+	}
 	return r;
 }
 
@@ -100,7 +103,7 @@ bool EnumValue::keyPressed(KeyEvent const* _e)
 	{
 		if (!child(Definition))
 			middle(Definition).spawnPrepared();
-		child(Definition)->setCurrent();
+		_e->codeScene()->setCurrent(child(Definition));
 	}
 	else
 		return Super::keyPressed(_e);

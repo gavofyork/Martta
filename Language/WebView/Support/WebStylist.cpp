@@ -128,8 +128,44 @@ void WebStylist::setProperties(Hash<String, String> const& _p)
 			m_properties[s + "-post"] = a[3];
 		}
 		else
+		{
+			if (s == L"CSS-Simple")
+			{
+				m_css = _p[s].toBool() ?
+					"body { color: black; font-size: 12px; font-family: Mono; background-color: white; }"
+					".layout { display: inline-block; }"
+					".keyword { font-weight: bold; }"
+					".unreal { color: #888; }"
+					".symbol { font-weight: bold; }"
+					".block { display: block; position: relative; margin-left: 20px; }"
+					".deblock { display: block; position: relative; margin-left: -20px; }"
+				//	".editing { background-color: rgba(255, 0, 0, 0.25); }"
+					".badge { margin: 0px 0px; padding: 0px 0.3em; border-top: 1px solid rgba(0,0,0,0.4); border-left: 1px solid rgba(0,0,0,0.2); border-bottom: 1px solid rgba(255,255,255,0.4); border-right: 1px solid rgba(255,255,255,0.2); background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,0.2)), to(rgba(255,255,255,0.2))); font-weight: 900; color: rgba(255,255,255,0.85); text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }"
+				:
+					"body { color: #666; font-size: 12px; font-family: Lucida Grande; background-color: white; }"
+					".layout { display: inline-block; }"
+					".keyword { font-weight: bold; }"
+					".unreal { color: #888; }"
+					".minor { color: #888; font-size: 8px; }"
+					".symbol { font-weight: bold; }"
+					".block { display: block; position: relative; margin-left: 20px; }"
+					".deblock { display: block; position: relative; margin-left: -20px; }"
+				//	".editing { background-color: rgba(255, 0, 0, 0.25); }"
+					".badge { margin: 0px 0px; padding: 0px 0.3em; border-top: 1px solid rgba(0,0,0,0.4); border-left: 1px solid rgba(0,0,0,0.2); border-bottom: 1px solid rgba(255,255,255,0.4); border-right: 1px solid rgba(255,255,255,0.2); background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,0.2)), to(rgba(255,255,255,0.2))); font-weight: 900; color: rgba(255,255,255,0.85); text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }";
+			}
 			m_properties[s] = _p[s];
+		}
+
 	m_htmlCache.clear();
+}
+
+
+String WebStylist::defineCss() const
+{
+	if (m_properties[L"CSS-Simple"].toBool())
+		return m_css;
+	else
+		return m_css + WebStylistRegistrar::get()->css();
 }
 
 String WebStylist::composeName(String const& _id, StringList const& _flags) const

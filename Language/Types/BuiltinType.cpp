@@ -49,7 +49,7 @@ class BuiltinNamed: public Named
 {
 public:
 	BuiltinNamed(int _id): m_id(_id) {}
-	virtual String nickFor() const { return BuiltinType::nickFor(m_id); }
+	virtual String nick() const { return BuiltinType::nickFor(m_id); }
 	uint m_id;
 };
 
@@ -73,9 +73,9 @@ public:
 			return m_nameds;
 		return List<Named*>();
 	}
-	virtual void						acceptAt(Position const& _pos, Named* _i, CodeScene*)
+	virtual void						acceptAt(Position const& _pos, Named* _i, CodeScene* _cs)
 	{
-		placeVariable(_pos, new BuiltinType(static_cast<BuiltinNamed*>(_i)->m_id));
+		placeVariable(_pos, new BuiltinType(static_cast<BuiltinNamed*>(_i)->m_id), _cs);
 	}
 	virtual String						defineEditHtml(Named*, String const& _mid)
 	{

@@ -42,9 +42,9 @@ public:
 		}
 		return List<Named*>();
 	}
-	virtual void						acceptAt(Position const& _pos, Named*, CodeScene*)
+	virtual void						acceptAt(Position const& _pos, Named*, CodeScene* _cs)
 	{
-		_pos.place(new ThisPointer)->setCurrent();
+		_cs->setCurrent(_pos.place(new ThisPointer));
 	}
 	virtual String						defineEditHtml(Named*, String const& _mid)
 	{

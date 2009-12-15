@@ -114,19 +114,19 @@ bool Invocation::keyPressed(KeyEvent const* _e)
 	if (_e->text() == "(" && _e->focalIndex() == Callee && child(0))
 		_e->codeScene()->navigateOnto(child(0));
 	else if (_e->text() == "(" && _e->focalIndex() == Callee)
-		setCurrent();
+		_e->codeScene()->setCurrent(this);
 	else if (_e->text() == ")" && !_e->isFocused())
-		setCurrent();
+		_e->codeScene()->setCurrent(this);
 	else if (_e->text() == "," && (_e->focalIndex() >= 0 || _e->focalIndex() == UndefinedIndex) && back().allowedKinds().size())
 	{
 		// Jump to next if we press a comma in the parameter list, before the last item.
 		Typed* t = new Typed;
 		(_e->focalIndex() == UndefinedIndex ? self()->back() : self()->middle(_e->focalIndex() + (_e->isInserting() ? 0 : 1))).place(t);
-		t->setCurrent();
+		_e->codeScene()->setCurrent(t);
 	}
 	else if (_e->text() == "," && back().allowedKinds().size())
 		// Insert a new item if we press a comma anywhere else, if we're allowed to.
-		back().spawnPrepared()->setCurrent();
+		_e->codeScene()->setCurrent(back().spawnPrepared());
 	else
 		return Super::keyPressed(_e);
 	return true;
@@ -140,10 +140,7 @@ bool Invocation::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 		Concept* n = new Invocation;
 		_p->insert(n, Callee);
 		n->prepareChildren();
-		if (n->cardinalChildCount())
-			n->dropCursor();
-		else
-			n->setCurrent();
+		_e->codeScene()->setCurrent(n->cardinalChildCount() ? n->child(0) : n);
 		return true;
 	}
 	return false;

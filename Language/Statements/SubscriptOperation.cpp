@@ -73,7 +73,7 @@ Type SubscriptOperation::type() const
 bool SubscriptOperation::keyPressed(KeyEvent const* _e)
 {
 	if (_e->text() == "]")
-		setCurrent();
+		_e->codeScene()->setCurrent(this);
 	else
 		return Super::keyPressed(_e);
 	return true;

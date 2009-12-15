@@ -239,7 +239,7 @@ Misc
 Make edited names safe
 - Proper scope checking
 
-Deletion of Variable/Function should replace all Referenced objects with placeholder objects.
+DONE? Deletion of Variable/Function should replace all Referenced objects with placeholder objects.
 - Could do with a "remove" as well as a "replace".
 
 Inheritance
@@ -249,8 +249,6 @@ Inheritance
 
 Operators/Operations
 - Handle comma operator (will need a new Concept).
-
-Remove (or make useful) m_location?
 
 ================================================================================
 

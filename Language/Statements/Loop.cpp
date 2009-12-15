@@ -50,7 +50,7 @@ bool Loop::keyPressed(KeyEvent const* _e)
 	{
 		Concept* e = new BreakStatement;
 		_e->focus()->replace(e);
-		e->setCurrent();
+		_e->codeScene()->setCurrent(e);
 	}
 	else
 		return Super::keyPressed(_e);

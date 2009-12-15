@@ -55,6 +55,20 @@ void CodeScene::killStrobe()
 	m_strobeText = String::null;
 }
 
+void CodeScene::dropCursor(Concept* _shell)
+{
+	navigateOnto(_shell);
+	while (!current()->isPlaceholder())
+	{
+		navigateAway(current());
+		if (!current()->hasSelfAncestor(_shell))
+		{
+			setCurrent(_shell);
+			return;
+		}
+	}
+}
+
 Concept* CodeScene::editConcept() const
 {
 	return editDelegate() ? m_editDelegate->entity() : 0;

@@ -70,6 +70,8 @@ String LambdaNamer::defineMidHtml(String const& _middle) const
 			info = L" (" + String::number(n) + L" statement" + (n > 1 ? L"s" : L"") + L")";
 		else
 			info = " (empty)";
+		if (WebStylist::current()->property("CSS", "Simple").toBool())
+			info = L" //" + info;
 	}
 	return String(_middle + L"<span id=\"%1-info\" class=\"minor\">" + info + L"</span>").arg((int)self());
 }

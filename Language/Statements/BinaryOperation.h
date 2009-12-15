@@ -59,8 +59,7 @@ protected:
 		_e->noteStrobeCreation(n, &*p);
 		p->insert(n, FirstOperand);
 		n->validifyChildren();
-		//_e->codeScene()->navigateOnto(n->child(SecondOperand));
-		n->dropCursor();
+		_e->codeScene()->dropCursor(n);
 		return true;
 	}
 	template<class T> static bool		simpleKeyPressedOnPositionHandler(Position const& _p, KeyEvent const* _e, Operator _o)

@@ -65,9 +65,9 @@ bool ForLoop::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 bool ForLoop::keyPressed(KeyEvent const* _e)
 {
 	if (_e->text() == ";" && _e->focalIndex() == Initialiser)
-		child(Condition)->setCurrent();
+		_e->codeScene()->setCurrent(child(Condition));
 	else if (_e->text() == ";" && _e->focalIndex() == Condition)
-		child(Ticker)->setCurrent();
+		_e->codeScene()->setCurrent(child(Ticker));
 	else
 		return Super::keyPressed(_e);
 	return true;

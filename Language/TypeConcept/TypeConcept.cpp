@@ -19,6 +19,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "Type.h"
+#include "WebStylist.h"
 #include "TypeConcept.h"
 
 namespace Martta
@@ -74,6 +75,8 @@ void TypeConcept::parentSwitched(Concept* _exParent)
 
 String TypeConcept::typeHtml(String const& _middle) const
 {
+	if (WebStylist::current()->property(L"CSS", L"Simple").toBool())
+		return _middle;
 	return String(L"<span style=\"text-shadow: -1px -1px 0 %1\">").arg(idColour().name(255)) + _middle + L"</span>";
 }
 

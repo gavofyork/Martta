@@ -50,7 +50,7 @@ bool ConstructedVariable::keyPressed(KeyEvent const* _e)
 	if (VariableNamer::keyPressed(_e))
 		return true;
 	else if (_e->text() == "(")
-		child(OurConstruction)->setCurrent();
+		_e->codeScene()->setCurrent(child(OurConstruction));
 	else
 		return Super::keyPressed(_e);
 	return true;

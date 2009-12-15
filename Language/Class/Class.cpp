@@ -373,7 +373,7 @@ bool Class::keyPressed(KeyEvent const* _e)
 {
 	if (_e->text() == "H")
 	{
-		setCurrent();
+		_e->codeScene()->setCurrent(this);
 	}
 	else if (attemptAppend(_e))
 	{}

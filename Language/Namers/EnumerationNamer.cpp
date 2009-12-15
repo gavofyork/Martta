@@ -73,7 +73,7 @@ bool EnumerationNamer::keyPressed(KeyEvent const* _e)
 		EnumValue* s = new EnumValue;
 		s->prepareChildren();
 		p.place(s);
-		s->child(Identity)->setCurrent();
+		_e->codeScene()->setCurrent(s->child(Identity));
 	}
 	else if (_e->text() == L"¬" && _e->focalIndex() != UndefinedIndex)
 	{
@@ -81,7 +81,7 @@ bool EnumerationNamer::keyPressed(KeyEvent const* _e)
 	}
 	else if (_e->text() == "H")
 	{
-		self()->setCurrent();
+		_e->codeScene()->setCurrent(self());
 	}
 	else if (_e->text().length() == 1 && _e->text()[0].isLower() && !isNamed())
 	{

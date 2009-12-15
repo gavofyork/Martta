@@ -51,7 +51,7 @@ bool SimpleUnaryOperation::keyPressedOnPosition(Position const& _p, KeyEvent con
 		_e->noteStrobeCreation(n, &*p);
 		p->insert(n, TheOperand);
 		n->validifyChildren();
-		n->dropCursor();
+		_e->codeScene()->dropCursor(n);
 		return true;
 	}
 	return false;
@@ -108,7 +108,8 @@ Types SimpleUnaryOperation::allowedTypes(int _index) const
 
 String SimpleUnaryOperation::operatorHtml() const
 {
-	if (id().symbol() == Operator::PlusPlusX || id().symbol() == Operator::XPlusPlus)
+	bool s = !WebStylist::current()->property("CSS", "Simple").toBool();
+	if (s && (id().symbol() == Operator::PlusPlusX || id().symbol() == Operator::XPlusPlus))
 		return L"<span class=\"symbol\">+<span style=\"margin-left: -0.4em;\">+</span></span>";
 	else
 		return String("<span class=\"symbol\">%1</span>").arg(id().code());

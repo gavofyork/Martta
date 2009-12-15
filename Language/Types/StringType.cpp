@@ -52,9 +52,9 @@ public:
 			return List<Named*>() << &m_ourNamed;
 		return List<Named*>();
 	}
-	virtual void						acceptAt(Position const& _pos, Named*, CodeScene*)
+	virtual void						acceptAt(Position const& _pos, Named*, CodeScene* _cs)
 	{
-		placeVariable(_pos, new StringType);
+		placeVariable(_pos, new StringType, _cs);
 	}
 	virtual String						defineEditHtml(Named*, String const& _mid)
 	{

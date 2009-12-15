@@ -76,7 +76,7 @@ protected:
 		if (pre)
 			_e->codeScene()->navigateInto(n);
 		else
-			n->setCurrent();
+			_e->codeScene()->setCurrent(n);
 		return true;
 	}
 	template<class T> static bool		simpleKeyPressedOnPositionHandler(Position const& _p, KeyEvent const* _e, Operator _o)

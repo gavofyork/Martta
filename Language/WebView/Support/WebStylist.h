@@ -68,7 +68,11 @@ public:
 	String								composeName(String const& _id, StringList const& _flags) const;
 	String								property(String const& _concept, String const& _id) const { return m_properties[_concept + L"-" + _id]; }
 
+	String								css() const { return defineCss(); }
+
 protected:
+	virtual String						defineCss() const;
+
 	/// Overridable virtual for specifying novel style.
 	/// @returns the inner portion of HTML for entity @a _e .
 	virtual String						defineHtml(Concept const* _e);
@@ -87,6 +91,7 @@ private:
 
 	int									m_stack;
 	Hash<Concept const*, String>		m_htmlCache;
+	String								m_css;
 
 	Hash<String, String>				m_properties;
 

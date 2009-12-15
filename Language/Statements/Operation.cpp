@@ -142,13 +142,13 @@ bool Operation::keyPressed(KeyEvent const* _e)
 	if (_e->text() == ")" && _e->codeScene()->isBracketed(over()))
 	{
 		_e->codeScene()->removeBracket(over());
-		over()->setCurrent();
+		_e->codeScene()->setCurrent(this);
 		return true;
 	}
 	else if(_e->text() == ")")
 	{
 		_e->codeScene()->setBracketed(over());
-		over()->setCurrent();
+		_e->codeScene()->setCurrent(this);
 		return true;
 	}
 

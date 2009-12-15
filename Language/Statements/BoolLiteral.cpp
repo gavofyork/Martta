@@ -40,9 +40,9 @@ public:
 			return List<Named*>() << &m_true << &m_false;
 		return List<Named*>();
 	}
-	virtual void						acceptAt(Position const& _pos, Named* _n, CodeScene*)
+	virtual void						acceptAt(Position const& _pos, Named* _n, CodeScene* _cs)
 	{
-		_pos.place((new BoolLiteral(_n == &m_true))->prepareChildren())->dropCursor();
+		_cs->setCurrent(_pos.place((new BoolLiteral(_n == &m_true))->prepareChildren()));
 	}
 	virtual String						defineEditHtml(Named*, String const& _mid)
 	{

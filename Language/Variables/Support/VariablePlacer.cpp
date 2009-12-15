@@ -31,7 +31,7 @@ bool canPlaceVariable(Position const& _p)
 	return _p.allowedToBeKind<AssignedVariable>();
 }
 
-void placeVariable(Position const& _p, TypeConcept* _t)
+void placeVariable(Position const& _p, TypeConcept* _t, CodeScene* _cs)
 {
 	Concept* e = 0;
 	if (_p.allowedToBeKind<DefaultConstructedVariable>())
@@ -43,7 +43,7 @@ void placeVariable(Position const& _p, TypeConcept* _t)
 		e->adopt(_t);
 		e->prepareChildren();
 		_p.place(e);
-		e->child(VariableNamer::OurType)->setCurrent();
+		_cs->setCurrent(e->child(VariableNamer::OurType));
 	}
 	else
 		delete _t;
