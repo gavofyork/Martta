@@ -26,8 +26,8 @@ using namespace MarttaSupport;
 
 #include "Concept.h"
 
-#ifndef M_API_Module
-#define M_API_Module M_OUTAPI
+#ifndef M_API_Language
+#define M_API_Language M_OUTAPI
 #endif
 
 namespace Martta
@@ -35,7 +35,7 @@ namespace Martta
 
 class Module;
 
-class M_API_Module Program: public_interface Concept
+class M_API_Language Program: public_interface Concept
 {
 	MARTTA_NOTION(Concept)
 
