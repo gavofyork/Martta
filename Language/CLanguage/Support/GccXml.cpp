@@ -40,7 +40,7 @@ void GccXml::extractHeaders(QString const& _c, QXmlContentHandler* _h)
 
 	QStringList searchPaths;
 #ifdef Q_WS_WIN
-	searchPaths << (QCoreApplication::applicationDirPath() + "/gccxml/bin/gccxml.exe") << "C:\\Program Files\\gccxml\\bin\\gccxml.exe";
+	searchPaths << (QCoreApplication::applicationDirPath() + "/../gccxml/bin/gccxml.exe") << "C:\\Program Files\\gccxml\\bin\\gccxml.exe";
 #else
 	searchPaths << "/usr/local/bin/gccxml" << "/usr/bin/gccxml";
 #endif
