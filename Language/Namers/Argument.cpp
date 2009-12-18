@@ -31,11 +31,6 @@ MARTTA_REGISTER_CSS(Argument,
 	L".Argument { text-shadow: 1px 1px 1px #fff; color: #888; font-size: 70%; font-weight: bold; }"
 );
 
-String Argument::defineLabelHtml(String const& _text) const
-{
-	return L"<span class=\"Argument-Fader\"><span class=\"Argument\">_</span></span>" + _text;
-}
-
 bool Argument::isSuperfluous() const
 {
 	return actualType()->isNull();

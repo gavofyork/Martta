@@ -58,6 +58,7 @@ protected:
 	virtual bool						isSuperfluous() const;
 //	virtual bool						usurpsChild(Concept const* _e) const { return _e == child(Identity); }
 	virtual void						apresLoad() { Declaration::apresLoad(); ValueDefiner::apresLoad(); WebViewable::apresLoad(); }
+	virtual inline String				defineLabelHtml(String const& _text) const { return type()->typeHtml(composedName(_text)); }
 
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual void						onDependencyChanged(int, Concept* _e) { if (_e == child(Identity)) { /*checkForCullingLater(); */changed(Logically); } }

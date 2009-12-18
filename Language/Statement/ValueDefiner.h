@@ -21,6 +21,7 @@
 #pragma once
 
 #include "TypeNamer.h"
+#include "WebViewable.h"
 #include "Identifiable.h"
 
 #ifndef M_API_Statement
@@ -30,10 +31,11 @@
 namespace Martta
 {
 
-class M_API_Statement ValueDefiner: public_interface Identifiable, public_interface TypeNamer
+class M_API_Statement ValueDefiner: public_super_interface Identifiable, public_interface WebViewable, public_interface TypeNamer
 {
 	MARTTA_NOTION(Identifiable)
-	MARTTA_ALSO_INHERITS(TypeNamer, 0)
+	MARTTA_ALSO_INHERITS(WebViewable, 0)
+	MARTTA_ALSO_INHERITS(TypeNamer, 1)
 
 public:
 	virtual String						identity() const { return type()->code(nick()).replace(" ", "").replace("::", ";;"); }

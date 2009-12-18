@@ -33,11 +33,6 @@ MARTTA_REGISTER_CSS(Field,
 	L".Field { text-shadow: 1px 1px 1px #fff; color: #888; font-size: 70%; font-weight: bold; }"
 );
 
-String Field::defineLabelHtml(String const& _text) const
-{
-	return L"<span class=\"Field-Fader\"><span class=\"Field\">M</span></span>" + _text;
-}
-
 Kinds Field::allowedKinds(int _i) const
 {
 	if (_i == OurType)

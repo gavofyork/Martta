@@ -45,7 +45,7 @@ public:
 protected:
 	virtual bool						hasDefaultConstructor() const { return true; }
 
-	virtual inline String				defineLabelHtml(String const& _text) const { return composeName(_text, StringList("Enumeration")); }
+	virtual inline String				defineLabelHtml(String const& _text) const { return composedName(_text); }
 
 	String								defineEnumerationHtml() const;
 	String								interfaceCode() const;

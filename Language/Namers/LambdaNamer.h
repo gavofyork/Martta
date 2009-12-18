@@ -47,6 +47,8 @@ public:
 	MARTTA_NAMED(Name)
 	MARTTA_NAMED(Returned)
 
+	virtual inline String				defineLabelHtml(String const& _text) const { return type()->typeHtml(composedName(_text)); }
+
 	// WHAT YOU GET:
 
 	enum FunctionCodeScope { InsideScope = 0, OutsideScope = 1 };
@@ -57,7 +59,6 @@ public:
 	bool								keyPressed(KeyEvent const* _e);
 	/// Gives a parameter list of the call. This depends on argumentType/CodeName, ellipsis, reference and codeName.
 	String								callingCode(FunctionCodeScope _ref) const;
-	virtual inline String				defineLabelHtml(String const& _text) const { return composeName(_text, StringList("Lambda")); }
 
 	// From ValueDefiner. Do be careful though - if you've got a mixin situation where one side is pure virtual
 	// still, explicitly scope this side on the call or you'll crash.

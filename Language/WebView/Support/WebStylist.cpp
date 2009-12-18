@@ -170,19 +170,11 @@ String WebStylist::defineCss() const
 
 String WebStylist::composeName(String const& _id, StringList const& _flags) const
 {
-	MultiHash<StringList, String> k;
-	foreach (String s, m_properties.keys())
-	{
-		StringList fs = s.split('-');
-		fs.removeAll("Id");
-		foreach (String f, fs)
-			if (_flags.contains(f))
-				fs.removeAll(f);
-			else if (f != L"pre" && f != L"post" && f != L"break" && f != L"norm")
-				goto NOGOOD;
-		k.insert(fs, m_properties[s]);
-		NOGOOD:;
-	}
+	String flag;
+	foreach (flag, _flags)
+		if (m_properties.contains("Id-" + flag + "-norm"))
+			break;
+
 	String ret;
 	bool upperCaseMode = false;
 	bool onBreak = false;
@@ -195,17 +187,18 @@ String WebStylist::composeName(String const& _id, StringList const& _flags) cons
 		}
 		String tag = (i == 0) ? L"pre" : (i == _id.length()) ? L"post" : onBreak ? L"break" : L"norm";
 		onBreak = false;
-		foreach (String s, k.values(StringList()) + k.values(StringList(tag)))
-			for (int j = 0; j < s.length(); j++)
-				if (s[j] == '\a')
-					upperCaseMode = false;
-				else if (s[j] == '\b')
-					upperCaseMode = true;
-				else
-					ret += s[j];
+		String s = m_properties.value("Id-" + flag + "-" + tag);
+		for (int j = 0; j < s.length(); j++)
+			if (s[j] == '\a')
+				upperCaseMode = false;
+			else if (s[j] == '\b')
+				upperCaseMode = true;
+			else
+				ret += s[j];
 		if (i < _id.length())
 			ret += upperCaseMode ? _id[i].toUpper() : _id[i].toLower();
 	}
+	mInfo() << _flags << ":" << flag << _id << ret;
 	return ret;
 }
 

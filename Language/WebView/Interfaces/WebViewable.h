@@ -52,6 +52,7 @@ public:
 	static String							cssBorder(String const& _name, Rgb _col);
 
 	static String							composeName(String const& _id, StringList const& _flags);
+	String									composedName(String const& _id) const { return composeName(_id, kind().realSupers().names().reversed()); }
 
 protected:
 	static String							toHtml(Concept const* _e, String const& _tag = L"");

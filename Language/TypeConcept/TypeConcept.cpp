@@ -48,7 +48,8 @@ bool TypeConcept::keyPressed(KeyEvent const* _e)
 {
 	if (attemptInsert(_e))
 	{}
-	else if (_e->isFocused() && !isPlaceholder() && _e->text().length() == 1 && _e->text()[0].isGraph())
+	// WTF \/  ?
+	else if (_e->isFocused() && !isPlaceholder() && _e->text().length() == 1 && _e->text()[0].isGraph() && _e->text() != "{")
 	{
 		_e->codeScene()->navigateAway(this, CodeScene::Forwards);
 		if (_e->codeScene()->current() != this)

@@ -22,6 +22,7 @@
 
 #include <msSupport.h>
 #include <msList.h>
+#include <msStringList.h>
 using namespace MarttaSupport;
 
 #include "AuxilliaryRegistrar.h"
@@ -44,6 +45,8 @@ public:
 	Kinds(Kind const& _k) { append(_k); }
 	Kinds(List<Kind> const& _k): List<Kind>(_k) {}
 	inline Kinds(List<AuxilliaryFace const*> const& _k);
+
+	inline StringList names() const;
 
 	inline Kinds operator,(Kind const& _c) const { return Kinds(*this) << _c; }
 
@@ -70,6 +73,7 @@ public:
 	template<class T> inline static Kind of() { return Kind(T::staticAuxilliary()); }
 
 	inline Kind super() const { return m_mo ? Kind(m_mo->superAuxilliary()) : Kind(); }
+	inline Kinds realSupers() const { return m_mo ? AuxilliaryRegistrar::get()->realSupers(m_mo) << m_mo : Kinds(); }
 	inline Kinds deriveds() const { return m_mo ? AuxilliaryRegistrar::get()->deriveds(m_mo) : Kinds(); }
 	inline Kinds immediateDeriveds() const { return m_mo ? AuxilliaryRegistrar::get()->immediateDeriveds(m_mo) : Kinds(); }
 	inline Kinds interfaces() const { return m_mo ? AuxilliaryRegistrar::get()->interfaces(m_mo) : Kinds(); }
@@ -137,6 +141,14 @@ inline bool Martta::Kinds::containsKindOf(Kind const& _base) const
 		if (k.isKind(_base))
 			return true;
 	return false;
+}
+
+inline StringList Martta::Kinds::names() const
+{
+	StringList ret;
+	foreach (Kind k, *this)
+		ret << k.name();
+	return ret;
 }
 
 inline Martta::Kind Martta::Kinds::commonBase() const
