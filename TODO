@@ -1,12 +1,13 @@
+BUG Delete identifier - turns to anon nut no update to references.
+BUG Dodgy layout
+BUG Editing ReferencedType uses spacey name.
+BUG MemberVariable always uses dodgy name.
 BUG Try to name an enum.
 BUG '{' on char.
 BUG? current() bad in onCurrentAboutToChange.
-BUG Delete identifier - turns to anon nut no update to references.
 BUG Add method, make return type good, still appears bad.
 - Making name good/bad doesn't change anything.
 - Name change doesn't carry into owner.
-BUG Dodgy layout
-BUG Editing referenceds uses spacey name.
 --------------------------------------------------------------------------------
 
 RELEASE M1 (ASAP)
