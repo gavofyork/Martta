@@ -183,7 +183,6 @@ String WebStylist::composeName(String const& _id, StringList const& _flags) cons
 		k.insert(fs, m_properties[s]);
 		NOGOOD:;
 	}
-	mInfo() << k << _id;
 	String ret;
 	bool upperCaseMode = false;
 	bool onBreak = false;

@@ -6,7 +6,7 @@ BUG Add method, make return type good, still appears bad.
 - Making name good/bad doesn't change anything.
 - Name change doesn't carry into owner.
 BUG Dodgy layout
-
+BUG Editing referenceds uses spacey name.
 --------------------------------------------------------------------------------
 
 RELEASE M1 (ASAP)

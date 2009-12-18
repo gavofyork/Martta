@@ -206,18 +206,18 @@ bool Concept::isValid() const
 
 	if (!isAllowed())
 	{
-		mInfo() << this << "invalid because it's not allowed here by parent." << parent();
+//		mInfo() << this << "invalid because it's not allowed here by parent." << parent();
 		return false;
 	}
 	if (!isInValidState())
 	{
-		mInfo() << this << "invalid because it's in an invalid entity state.";
+//		mInfo() << this << "invalid because it's in an invalid entity state.";
 		return false;
 	}
 	if (parent())
 		if (!parent()->isChildInValidState(index()))
 		{
-			mInfo() << this << "invalid because its context considers it in an invalid state.";
+//			mInfo() << this << "invalid because its context considers it in an invalid state.";
 			return false;
 		}
 	return true;

@@ -161,7 +161,7 @@ void CodeView::onCurrentChanged()
 	if (!m_silent)
 	{
 		Concept* e = current();
-		qDebug() << "onCurrentChanged:"<<e;
+//		qDebug() << "onCurrentChanged:"<<e;
 		CodeScene::currentChanged(e, m_oldCurrent);
 		m_oldCurrent = e;
 		rememberCurrent();
@@ -307,7 +307,7 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 			p.drawRect(br);
 		}
 	}
-	TIME_STATEMENT("WVpaintEvent")
+//	TIME_STATEMENT("WVpaintEvent")
 		QWebView::paintEvent(_ev);
 
 	if (c)

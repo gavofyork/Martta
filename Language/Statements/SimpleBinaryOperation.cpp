@@ -156,7 +156,7 @@ Types SimpleBinaryOperation::allowedTypes(int _index) const
 	{
 		if (!m_symbolCache)
 			return Types();
-		mDebug() << prototypeOf(FirstOperand)->code() << prototypeOf(SecondOperand)->code() << " " << _index << " " << typeOf(FirstOperand)->code();
+//		mDebug() << prototypeOf(FirstOperand)->code() << prototypeOf(SecondOperand)->code() << " " << _index << " " << typeOf(FirstOperand)->code();
 		if (_index == SecondOperand && prototypeOf(SecondOperand).isUltimatelyNull() && !typeOf(FirstOperand).isNull())
 			return typeOf(FirstOperand).strippedTo(prototypeOf(SecondOperand));
 		if (_index == SecondOperand && prototypeOf(SecondOperand).isUltimatelyNull())
