@@ -5,6 +5,7 @@ BUG Delete identifier - turns to anon nut no update to references.
 BUG Add method, make return type good, still appears bad.
 - Making name good/bad doesn't change anything.
 - Name change doesn't carry into owner.
+BUG Dodgy layout
 
 --------------------------------------------------------------------------------
 

@@ -113,6 +113,14 @@ public:
 	}
 	virtual void commit()
 	{
+		subject()->setText(real().simplified().trimmed());
+	}
+	virtual bool isValid() const
+	{
+		return true;//!m_text.isEmpty();
+	}
+	virtual String real() const
+	{
 		// translate to all-lower, space separated.
 		String actual = "";
 		bool wordBreak = true;
@@ -141,15 +149,7 @@ public:
 				wordBreak = true;
 			}
 		}
-		subject()->setText(actual.simplified().trimmed());
-	}
-	virtual bool isValid() const
-	{
-		return true;//!m_text.isEmpty();
-	}
-	virtual String real() const
-	{
-		return m_text;
+		return actual;
 	}
 
 private:
