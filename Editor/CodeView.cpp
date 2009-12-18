@@ -276,22 +276,24 @@ void CodeView::checkInvalids()
 
 void CodeView::paintEvent(QPaintEvent* _ev)
 {
-	TIME_FUNCTION;
+//	TIME_FUNCTION;
 	refresh();
 	checkInvalids();
 	Concept* c = current();
-	mInfo() << c;
+//	mInfo() << c;
 
 	foreach (Position i, m_bracketed)
 		if (!i.exists() || (i.entity() != c && !c->hasAncestor(i.entity())))
 			m_bracketed.removeAll(i);
 
+	{
+		QPainter p(this);
+		p.fillRect(rect(), Qt::white);
+	}
+
 	if (c)
 	{
 		QPainter p(this);
-
-		p.fillRect(rect(), QColor(255, 255, 255, 235));
-
 //		p.setRenderHint(QPainter::Antialiasing, true);
 		QRect br = bounds(c);
 		br = QRect(0, br.y(), width(), br.height());

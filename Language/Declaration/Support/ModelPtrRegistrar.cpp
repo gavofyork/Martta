@@ -76,7 +76,7 @@ void ModelPtrRegistrar::restorePtrs(Identifiable const* _root)
 
 void ModelPtrRegistrar::restorePtrsOf(Identifiable const* _id)
 {
-	mInfo() << "Restoring up to" << m_modelPtrs.size() << "pointers";
+//	mInfo() << "Restoring up to" << m_modelPtrs.size() << "pointers";
 
 //	foreach (Identifiable* d, _id->childrenOf<Identifiable>())
 //		regDecs(d);
@@ -101,7 +101,7 @@ void ModelPtrRegistrar::restorePtrsOf(Identifiable const* _id)
 		}
 	}
 
-	mInfo() << "Restored " << restored << "pointers";
+//	mInfo() << "Restored " << restored << "pointers";
 
 //	m_tempRegistered.clear();
 

@@ -84,7 +84,7 @@ MainWindow::MainWindow(QWidget* _p, Qt::WindowFlags _f):
 //#ifndef Q_WS_WIN
 //	setAttribute(Qt::WA_TranslucentBackground, true);
 //#endif
-//	centralWidget()->setAttribute(Qt::WA_OpaquePaintEvent, false);
+	centralWidget()->setAttribute(Qt::WA_OpaquePaintEvent, true);
 
 	QSettings s;
 	for (int i = 0; i < s.value("mainwindow/codeviews").toInt(); i++)
@@ -151,8 +151,7 @@ void MainWindow::closeEvent(QCloseEvent*)
 
 void MainWindow::paintEvent(QPaintEvent* _ev)
 {
-	QPainter p(this);
-	p.fillRect(_ev->rect(), Qt::transparent);
+	QMainWindow::paintEvent(_ev);
 }
 
 struct UpdateProgress
