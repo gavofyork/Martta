@@ -51,7 +51,7 @@ protected:
 	inline String						interfaceCode() const { return basicCode() + ";\n"; }
 	inline String						implementationCode() const { return String::null; }
 	inline void							onDependencyChanged(int, Concept* _e) { if (_e == child(OurType)) changed(Dependee::Logically | Dependee::Visually); if (_e == child(Identity)) changed(Dependee::Visually); }
-	virtual inline String				defineLabelHtml(String const& _text) const { return L"<span class=\"VariableNamer-definition\">" + type()->typeHtml(composeName(_text, StringList("Variable"))) + L"</span>"; }
+	virtual inline String				defineLabelHtml(String const& _text) const { return tagOf(L"VariableNamer-definition", type()->typeHtml(composedName(_text))); }
 	bool								keyPressed(KeyEvent const* _e);
 	String								defineVariableHtml() const;
 	bool								isInValidState() const { return actualType()->canStandAlone(); }

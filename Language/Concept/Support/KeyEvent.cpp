@@ -65,7 +65,7 @@ void KeyEvent::noteStrobeCreation(Concept* _creation, Concept* _old) const
 {
 	// Quick exit if we're not in the strobe phase of the key press handler.
 	// If we don't exit, we'll end up moving/killing any active strobe's creation before the strobe has been cancelled.
-	if (m_text.length() < 2)
+	if (m_text.length() < 2 && m_codeScene->strobeChild())
 		return;
 
 	AssertNR(!m_strobed);

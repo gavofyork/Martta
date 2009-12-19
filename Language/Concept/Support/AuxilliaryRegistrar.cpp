@@ -55,6 +55,7 @@ void AuxilliaryRegistrar::jigCache()
 	m_allInterfaces.clear();
 	m_interfacesMap.clear();
 	m_supersMap.clear();
+	m_realSupersMap.clear();
 	m_immediateDerivedsMap.clear();
 	m_derivedsMap.clear();
 
@@ -73,6 +74,7 @@ void AuxilliaryRegistrar::jigCache()
 		for (AuxilliaryFace const* j = i->superAuxilliary(); j; j = j->superAuxilliary())
 		{
 			m_supersMap.insert(i, j);
+			m_realSupersMap.insert(i, j);
 			m_derivedsMap.insert(j, i);
 		}
 	}

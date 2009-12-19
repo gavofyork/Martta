@@ -84,7 +84,7 @@ MainWindow::MainWindow(QWidget* _p, Qt::WindowFlags _f):
 //#ifndef Q_WS_WIN
 //	setAttribute(Qt::WA_TranslucentBackground, true);
 //#endif
-//	centralWidget()->setAttribute(Qt::WA_OpaquePaintEvent, false);
+	centralWidget()->setAttribute(Qt::WA_OpaquePaintEvent, true);
 
 	QSettings s;
 	for (int i = 0; i < s.value("mainwindow/codeviews").toInt(); i++)
@@ -151,8 +151,7 @@ void MainWindow::closeEvent(QCloseEvent*)
 
 void MainWindow::paintEvent(QPaintEvent* _ev)
 {
-	QPainter p(this);
-	p.fillRect(_ev->rect(), Qt::transparent);
+	QMainWindow::paintEvent(_ev);
 }
 
 struct UpdateProgress
@@ -885,7 +884,7 @@ void MainWindow::delayedUpdate()
 	Concept* e = codeView->current();
 	QString t;
 	if (e && e->parent())
-		TIME_STATEMENT("update")
+//		TIME_STATEMENT("update")
 		{
 			t = "<script language=\"javascript\">function toggle(_id, _t){var a = document.getElementById(_id); var hid = a.style.display == 'none'; _t.innerHTML = hid ? _id : (_id + '...'); a.style.display = hid ? null : 'none';}</script>"
 				"<style type=\"text/css\">body{margin:2px;padding:0;font-size:12px;}h1{text-shadow:-1px -1px 2px #aaa;font-size:110%;text-align:left;padding:0 0 0 0.5em;margin:0;border-bottom:1px #888 solid;font-weight:bold;color:black;}.sh{color:black;font-weight:bold}h2{margin:0.5em 0 0.1em 0;cursor:pointer;text-decoration:underline;font-size:100%;color:black;font-weight:bold;} table{font-size:100%;padding:0;margin:0;border-spacing:0}th{font-size:100%;font-weight:normal;color:black;text-align:left;padding:0 1em 0 0;margin:0 0;white-space:nowrap} td{font-size:100%;color:#666;padding:0;margin:0;spacing:0;white-space:nowrap} tr{margin:0;padding:0}</style>";

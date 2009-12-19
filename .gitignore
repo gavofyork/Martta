@@ -1,4 +1,6 @@
-.DS_Store
+Martta.tag
+doc/
+DS_Store
 Makefile
 bin/
 Editor/build/
@@ -185,4 +187,4 @@ support/support.xcodeproj/
 /Language/WebView/Makefile.Debug
 /Language/WebView/Makefile.Release
 /support/Makefile.Debug
-/support/Makefile.Release
+/support/Makefile.ReleaseMartta.tag

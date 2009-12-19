@@ -120,15 +120,10 @@ Type MemberReferencedValue::apparentType() const
 
 String MemberReferencedValue::defineEditHtml(CodeScene* _cs) const
 {
-	if (EditDelegateFace* d = _cs->editDelegate(this))
-	{
-		ValueDefiner* s = static_cast<CompletionDelegate<ReferencedValue, ValueDefiner*>*>(d)->selection();
-		String ret = d->real() + L"<span class=\"unreal\">" + d->unreal() + L"</span>";
-		if (!s)
-			ret = Field().labelHtml(ret);
-		return editHtmlHelper(s, ret) + tagOf(L"minor", d->comment());
-	}
-	return String::null;
+//	if (EditDelegateFace* d = _cs->editDelegate(this))
+//		if (!static_cast<CompletionDelegate<ReferencedValue, ValueDefiner*>*>(d)->selection())
+//			return Field().labelHtml(d->real() + tagOf(L"unreal", d->unreal()));
+	return Super::defineEditHtml(_cs);
 }
 
 /*	else if (_e->text() == " " || _e->text() == "[" || _e->text() == "#")

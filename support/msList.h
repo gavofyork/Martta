@@ -198,7 +198,7 @@ public:
 	m_inline void replace(int _i, T const& _value) { AssertNR(_i >= 0 && _i < m_count); star(m_data[_i]) = _value; }
 	m_inline void replace(T const& _from, T const& _to) { int i = indexOf(_from); if (i > -1) star(m_data[i]) = _to; }
 	m_inline void reserve(int _n);
-	m_inline List<T> reversed() const { return List<T>(*this); }
+	m_inline List<T> reversed() const { return List<T>(*this).reverse(); }
 	m_inline List<T>& reverse();
 	m_inline int size() const { return count(); }
 	m_inline void swap(int _i, int _j);

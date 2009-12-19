@@ -132,7 +132,7 @@ void WebStylist::setProperties(Hash<String, String> const& _p)
 			if (s == L"CSS-Simple")
 			{
 				m_css = _p[s].toBool() ?
-					"body { color: black; font-size: 12px; font-family: Mono; background-color: white; }"
+					"body { color: black; font-size: 12px; font-family: Mono; background-color: rgba(255, 255, 255, 0.1); }"
 					".layout { display: inline-block; }"
 					".keyword { font-weight: bold; }"
 					".unreal { color: #888; }"
@@ -142,7 +142,7 @@ void WebStylist::setProperties(Hash<String, String> const& _p)
 				//	".editing { background-color: rgba(255, 0, 0, 0.25); }"
 					".badge { margin: 0px 0px; padding: 0px 0.3em; border-top: 1px solid rgba(0,0,0,0.4); border-left: 1px solid rgba(0,0,0,0.2); border-bottom: 1px solid rgba(255,255,255,0.4); border-right: 1px solid rgba(255,255,255,0.2); background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,0.2)), to(rgba(255,255,255,0.2))); font-weight: 900; color: rgba(255,255,255,0.85); text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }"
 				:
-					"body { color: #666; font-size: 12px; font-family: Lucida Grande; background-color: white; }"
+					"body { color: #666; font-size: 12px; font-family: Lucida Grande; background-color: rgba(255, 255, 255, 0.1); }"
 					".layout { display: inline-block; }"
 					".keyword { font-weight: bold; }"
 					".unreal { color: #888; }"
@@ -170,20 +170,11 @@ String WebStylist::defineCss() const
 
 String WebStylist::composeName(String const& _id, StringList const& _flags) const
 {
-	MultiHash<StringList, String> k;
-	foreach (String s, m_properties.keys())
-	{
-		StringList fs = s.split('-');
-		fs.removeAll("Id");
-		foreach (String f, fs)
-			if (_flags.contains(f))
-				fs.removeAll(f);
-			else if (f != L"pre" && f != L"post" && f != L"break" && f != L"norm")
-				goto NOGOOD;
-		k.insert(fs, m_properties[s]);
-		NOGOOD:;
-	}
-	mInfo() << k << _id;
+	String flag;
+	foreach (flag, _flags)
+		if (m_properties.contains("Id-" + flag + "-norm"))
+			break;
+
 	String ret;
 	bool upperCaseMode = false;
 	bool onBreak = false;
@@ -196,17 +187,18 @@ String WebStylist::composeName(String const& _id, StringList const& _flags) cons
 		}
 		String tag = (i == 0) ? L"pre" : (i == _id.length()) ? L"post" : onBreak ? L"break" : L"norm";
 		onBreak = false;
-		foreach (String s, k.values(StringList()) + k.values(StringList(tag)))
-			for (int j = 0; j < s.length(); j++)
-				if (s[j] == '\a')
-					upperCaseMode = false;
-				else if (s[j] == '\b')
-					upperCaseMode = true;
-				else
-					ret += s[j];
+		String s = m_properties.value("Id-" + flag + "-" + tag);
+		for (int j = 0; j < s.length(); j++)
+			if (s[j] == '\a')
+				upperCaseMode = false;
+			else if (s[j] == '\b')
+				upperCaseMode = true;
+			else
+				ret += s[j];
 		if (i < _id.length())
 			ret += upperCaseMode ? _id[i].toUpper() : _id[i].toLower();
 	}
+	mInfo() << _flags << ":" << flag << _id << ret;
 	return ret;
 }
 

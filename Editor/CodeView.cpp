@@ -90,13 +90,20 @@ void CodeView::onConfigure()
 Hash<String, String> CodeView::defaultProperties() const
 {
 	Hash<String, String> ret;
-	ret[L"Id-Namespace"] = L"FooBar";
-	ret[L"Id-Variable"] = L"fooBar";
-	ret[L"Id-Lambda"] = L"fooBar";
-	ret[L"Id-Enumeration"] = L"FooBar";
-	ret[L"Id-TypeDefinition"] = L"FooBar";
+	ret[L"Id-Martta::Argument"] = L"<span class=\"Argument-Fader\"><span class=\"Argument\">_</span></span>fooBar";
+	ret[L"Id-Martta::Field"] = L"<span class=\"Argument-Fader\"><span class=\"Member\">M</span></span>fooBar";
+	ret[L"Id-Martta::TopLevelType"] = L"FooBar";
+	ret[L"Id-Martta::Namespace"] = L"FooBar";
+	ret[L"Id-Martta::Variable"] = L"fooBar";
+	ret[L"Id-Martta::Function"] = L"fooBar";
+
+	ret[L"Id-Martta::Primary"] = L"<span class=\"Argument-Fader\"><span class=\"Member\">L</span></span>fooBar";
+
+	ret[L"Id-Martta::MemberValue"] = L"fooBar";
+	ret[L"Id-Martta::MemberLambda"] = L"fooBar";
+	ret[L"Id-Martta::MemberEnumeration"] = L"FooBar";
 	ret[L"Operation-Parenthesise"] = L"false";
-	ret[L"SimpleBinaryOperation-ProperMaths"] = L"false";
+	ret[L"SimpleBinaryOperation-ProperMaths"] = L"true";
 	ret[L"CSS-Simple"] = L"false";
 	return ret;
 }
@@ -161,7 +168,7 @@ void CodeView::onCurrentChanged()
 	if (!m_silent)
 	{
 		Concept* e = current();
-		qDebug() << "onCurrentChanged:"<<e;
+//		qDebug() << "onCurrentChanged:"<<e;
 		CodeScene::currentChanged(e, m_oldCurrent);
 		m_oldCurrent = e;
 		rememberCurrent();
@@ -276,22 +283,24 @@ void CodeView::checkInvalids()
 
 void CodeView::paintEvent(QPaintEvent* _ev)
 {
-	TIME_FUNCTION;
+//	TIME_FUNCTION;
 	refresh();
 	checkInvalids();
 	Concept* c = current();
-	mInfo() << c;
+//	mInfo() << c;
 
 	foreach (Position i, m_bracketed)
 		if (!i.exists() || (i.entity() != c && !c->hasAncestor(i.entity())))
 			m_bracketed.removeAll(i);
 
+	{
+		QPainter p(this);
+		p.fillRect(rect(), Qt::white);
+	}
+
 	if (c)
 	{
 		QPainter p(this);
-
-		p.fillRect(rect(), QColor(255, 255, 255, 235));
-
 //		p.setRenderHint(QPainter::Antialiasing, true);
 		QRect br = bounds(c);
 		br = QRect(0, br.y(), width(), br.height());
@@ -305,7 +314,7 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 			p.drawRect(br);
 		}
 	}
-	TIME_STATEMENT("WVpaintEvent")
+//	TIME_STATEMENT("WVpaintEvent")
 		QWebView::paintEvent(_ev);
 
 	if (c)

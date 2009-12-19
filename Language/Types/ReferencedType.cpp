@@ -47,7 +47,7 @@ public:
 	}
 	virtual String						defineEditHtml(Named* _i, String const& _mid)
 	{
-		return ReferencedType(static_cast<Identifiable*>(_i)->asKind<TypeDefinition>()).fullHtml(_mid);
+		return ReferencedType(static_cast<Identifiable*>(_i)->asKind<TypeDefinition>()).fullHtml(WebViewable::composeName(_mid, static_cast<Identifiable*>(_i)->kind().realSupers().names().reversed()));
 	}
 	List<Named*> m_nameds;
 };

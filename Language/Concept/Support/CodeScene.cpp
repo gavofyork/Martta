@@ -89,7 +89,7 @@ void CodeScene::setEditing(Concept* _e)
 	if (_e == editConcept())
 		return;
 
-	mDebug() << "Changing editing...";
+//	mDebug() << "Changing editing...";
 
 	if (editDelegate())
 	{
@@ -97,12 +97,12 @@ void CodeScene::setEditing(Concept* _e)
 		SafePointer<Concept> cur = current();
 		// If the edit delegate is half-way to destruction, we can allow it to have a null subject.
 //		AssertNR(edited == cur || cur->usurpsChild(edited) || !edited);
-		mDebug() << "Leaving editing...";
+//		mDebug() << "Leaving editing...";
 		if (isInScene(edited))
 		{
 			if (editDelegate())
 				editDelegate()->tryCommit();
-			mDebug() << "Leaving editing intact...";
+//			mDebug() << "Leaving editing intact...";
 			if (editDelegate())
 				editDelegate()->leavingEditIntact();
 			// at this point, m_editDelegate and m_current may no longer be valid.
@@ -190,6 +190,9 @@ void CodeScene::keyPressHandler(KeyEvent& _e)
 		e.executeStrobe();
 		m_activeStrobe = Nowhere;
 	}
+//	else
+//		if (!_e.text().isEmpty() && _e.text() != L" ")
+//			mInfo() << "No strobe focus";
 
 	if (!e.isAccepted())
 	{
@@ -256,6 +259,11 @@ void CodeScene::keyPressHandler(KeyEvent& _e)
 			m_strobeFocus = n;
 			m_strobeCreation = 0;
 			m_strobeChild = 0;
+		}
+		else
+		{
+//			if (n) n->debugTree();
+//			mInfo() << "Not starting strobe" << n << (n ? n->parent() : &*n) << (currentPoint.exists() ? currentPoint.entity() : (Concept*)0) << e.strobeCreation();
 		}
 //		if (m_strobeCreation && m_strobeFocus)
 //			m_strobeChild = m_strobeCreation->child(m_strobeFocus->ancestorIndex(&*m_strobeCreation));

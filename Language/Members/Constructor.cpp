@@ -71,6 +71,11 @@ bool Constructor::isInValidState() const
 	return true;
 }
 
+String Constructor::defineNameHtml() const
+{
+	return typeDefinition()->labelHtml(typeDefinition()->nick());
+}
+
 Type Constructor::returns() const
 {
 	return Type(typeDefinition()).topWith(Reference());

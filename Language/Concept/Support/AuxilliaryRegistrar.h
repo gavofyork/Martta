@@ -51,6 +51,7 @@ public:
 	void								registerAuxilliary(AuxilliaryFace const* _a);
 	inline List<AuxilliaryFace const*> const&	allInterfaces() const { return m_allInterfaces; }
 	inline List<AuxilliaryFace const*>	auxilliaries() const { return m_auxilliaries.values(); }
+	inline List<AuxilliaryFace const*>	realSupers(AuxilliaryFace const* _a) const { return m_realSupersMap.values(_a); }
 
 	template<class T>
 	inline List<AuxilliaryFace const*> immediateInterfaces() const { return immediateInterfaces(T::staticAuxilliary()); }
@@ -102,6 +103,7 @@ private:
 	Hash<String, int>					m_invNameMap;
 	Hash<String, AuxilliaryFace const*> m_auxilliaries;								///< All our auxilliaries.
 	List<AuxilliaryFace const*>			m_allInterfaces;							///< All our interfaces.
+	MultiHash<AuxilliaryFace const*, AuxilliaryFace const*>	m_realSupersMap;		///< Just the actual superclasses (one per class).
 	MultiHash<AuxilliaryFace const*, AuxilliaryFace const*> m_immediateDerivedsMap;	///< Immediately derived classes (only Concept-derived classes here).
 	MultiHash<AuxilliaryFace const*, AuxilliaryFace const*> m_interfacesMap;		///< All interfaces fulfilled (no Concept-derived classes in the values here).
 	MultiHash<AuxilliaryFace const*, AuxilliaryFace const*> m_supersMap;			///< All supers (way back to Concept together with interfaces).
