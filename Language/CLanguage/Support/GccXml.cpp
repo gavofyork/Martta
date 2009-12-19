@@ -39,10 +39,13 @@ void GccXml::extractHeaders(QString const& _c, QXmlContentHandler* _h)
 	}
 
 	QStringList searchPaths;
+	QString executable;
 #ifdef Q_WS_WIN
-	searchPaths << (QCoreApplication::applicationDirPath() + "/../gccxml/bin/gccxml.exe") << "C:\\Program Files\\gccxml\\bin\\gccxml.exe";
+	searchPaths << (QCoreApplication::applicationDirPath() + "/../gccxml/bin/") << "C:\\Program Files\\gccxml\\bin\\";
+	executable = "gccxml.exe";
 #else
-	searchPaths << "/usr/local/bin/gccxml" << "/usr/bin/gccxml";
+	searchPaths << "/usr/local/bin/" << "/usr/bin/";
+	executable = "gccxml";
 #endif
 	foreach (QString s, searchPaths)
 		if (QFile::exists(s))
@@ -61,7 +64,7 @@ void GccXml::extractHeaders(QString const& _c, QXmlContentHandler* _h)
 				}
 			}				
 #endif
-            QProcess::execute(s, QStringList() << f.fileName() << ("-fxml=" + xmlfn));
+			QProcess::execute(s + executable, QStringList() << f.fileName() << /*"--gccxml-cxxflags" << "-xc" <<*/ ("-fxml=" + xmlfn));
 		}
 	f.close();
 
