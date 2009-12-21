@@ -42,7 +42,7 @@ public:
 private:
 	virtual TypeConcept*					newClone() const { return new AddressType; }
 	virtual bool						defineSimilarityTo(TypeConcept const* _t, Castability _c) const;
-	virtual String						modifierHtml() const { return L"<span class=\"symbol\">@</span>"; }
+	virtual String						modifierHtml() const { return tagOf(L"symbol", L"@"); }
 	virtual String						code(String const& _middle) const { return original()->code("@" + _middle); }
 	virtual Types						subscriptTypes() const;
 	virtual Type						subscriptsTo(Type const&) const;

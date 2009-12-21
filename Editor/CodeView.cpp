@@ -97,7 +97,7 @@ Hash<String, String> CodeView::defaultProperties() const
 	ret[L"Id-Martta::Variable"] = L"fooBar";
 	ret[L"Id-Martta::Function"] = L"fooBar";
 
-	ret[L"Id-Martta::Primary"] = L"<span class=\"Argument-Fader\"><span class=\"Member\">L</span></span>fooBar";
+	ret[L"Id-Martta::Primary"] = L"fooBar";
 
 	ret[L"Id-Martta::MemberValue"] = L"fooBar";
 	ret[L"Id-Martta::MemberLambda"] = L"fooBar";

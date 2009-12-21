@@ -133,7 +133,7 @@ public:
 	virtual void						rejig() const {}
 
 	String								typeHtml(String const& _middle) const;
-	virtual String						fullHtml(String const& _middle) const { return L"<span class=\"TypeConcept\">" + typeHtml(_middle) + L"</span>"; }
+	virtual String						fullHtml(String const& _middle) const { return tagOf(L"TypeConcept", typeHtml(_middle)); }
 
 protected:
 	/// This newClone is the simple one; it doesn't have to change the ownership or duplicate the children.

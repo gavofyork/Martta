@@ -12,3 +12,4 @@ for(a, DEPS): !contains(DONE, $${a}) {
 	NO_SOURCES = 0
 	include($${BASE}/$${a}/$${a}.pri)
 }
+win32:QMAKE_CXXFLAGS *= /wd4100 /wd4250 /wd4512 /wd4251 /wd4275 /wd4675 /wd4800 /wd4355 /wd4305

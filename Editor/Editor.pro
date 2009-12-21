@@ -51,7 +51,6 @@ win32:DLLs.commands = @echo Copying libraries...\
 QMAKE_EXTRA_TARGETS += DLLs
 PRE_TARGETDEPS += DLLs
 
-win32:QMAKE_CXXFLAGS += \wd4100 \wd4250
 linux:QMAKE_LFLAGS += -Wl,-rpath,../plugins -Wl,-rpath,../support
 macx:QMAKE_LFLAGS += -Wl,-macosx_version_min,10.5 -Wl,-rpath,$$PWD/../plugins -Wl,-rpath,$$PWD/../support
 DEFINES += MARTTA_PLUGINS_PATH=\\\"$$PWD/../plugins\\\"

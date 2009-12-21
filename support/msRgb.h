@@ -68,16 +68,16 @@ public:
 
 	m_inline Rgb interpolated(int _percent, Rgb _c = black) const
 	{
-		return fromRgb(	((int)r() * (100 - _percent) + (int)_c.r() * _percent) / 100,
-						((int)g() * (100 - _percent) + (int)_c.g() * _percent) / 100,
-						((int)b() * (100 - _percent) + (int)_c.b() * _percent) / 100,
-						((int)a() * (100 - _percent) + (int)_c.a() * _percent) / 100);
+		return fromRgb(	(uchar)(((int)r() * (100 - _percent) + (int)_c.r() * _percent) / 100),
+						(uchar)(((int)g() * (100 - _percent) + (int)_c.g() * _percent) / 100),
+						(uchar)(((int)b() * (100 - _percent) + (int)_c.b() * _percent) / 100),
+						(uchar)(((int)a() * (100 - _percent) + (int)_c.a() * _percent) / 100));
 	}
 	m_inline Rgb interpolated(int _percent, uchar _alpha, Rgb _c = black) const
 	{
-		return fromRgb(	((int)r() * (100 - _percent) + (int)_c.r() * _percent) / 100,
-						((int)g() * (100 - _percent) + (int)_c.g() * _percent) / 100,
-						((int)b() * (100 - _percent) + (int)_c.b() * _percent) / 100, _alpha);
+		return fromRgb(	(uchar)(((int)r() * (100 - _percent) + (int)_c.r() * _percent) / 100),
+						(uchar)(((int)g() * (100 - _percent) + (int)_c.g() * _percent) / 100),
+						(uchar)(((int)b() * (100 - _percent) + (int)_c.b() * _percent) / 100), _alpha);
 	}
 
 	static const Rgb black;
