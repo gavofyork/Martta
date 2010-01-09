@@ -4,6 +4,7 @@ BUG If half-way point is on a word break, it isn't capitalised.
 BUG If on word break, tab will tab in the space :-/
 BUG can't enter multi-word references in editor.
 BUG Dodgy layout
+BUG i=j)+=i gives i=(j+=i) but && works (& isn't realised for bools)
 
 BUG Delete identifier - turns to anon nut no update to references.
 BUG Try to name an enum.

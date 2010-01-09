@@ -53,6 +53,7 @@ void CodeScene::killStrobe()
 	m_strobeFocus = 0;
 	m_strobeCreation = 0;
 	m_strobeText = String::null;
+	m_strobeBracketed.clear();
 }
 
 void CodeScene::dropCursor(Concept* _shell)
@@ -184,11 +185,15 @@ void CodeScene::keyPressHandler(KeyEvent& _e)
 
 	if (m_strobeFocus && !_e.text().isEmpty() && _e.text() != L" ")
 	{
+		List<Position> ob = m_bracketed;
+		m_bracketed = m_strobeBracketed;
 		m_activeStrobe = m_strobeCreation ? m_strobeCreation->over() : m_strobeFocus->over();
 		e = KeyEvent(m_strobeText + _e.text(), _e.modifiers() , &*m_strobeFocus, true, m_strobeFocus->isPlaceholder(), UndefinedIndex, this);
 		Concept::keyPressEventStarter(&e);
 		e.executeStrobe();
 		m_activeStrobe = Nowhere;
+		if (!e.isAccepted())
+			m_bracketed = ob;
 	}
 //	else
 //		if (!_e.text().isEmpty() && _e.text() != L" ")
@@ -245,6 +250,7 @@ void CodeScene::keyPressHandler(KeyEvent& _e)
 			m_strobeFocus = n;
 			m_strobeChild = n;
 			m_strobeCreation = currentPoint.entity();
+			m_strobeBracketed = m_bracketed;
 		}
 		else if (!m_strobeFocus && n && e.strobeCreation() && e.strobeCreation() != n)
 		{
@@ -252,6 +258,7 @@ void CodeScene::keyPressHandler(KeyEvent& _e)
 			m_strobeFocus = n;
 			m_strobeCreation = e.strobeCreation();
 			m_strobeChild = e.strobeChild();
+			m_strobeBracketed = m_bracketed;
 		}
 		else if (!m_strobeFocus && n && !e.isAccepted())
 		{
@@ -259,6 +266,7 @@ void CodeScene::keyPressHandler(KeyEvent& _e)
 			m_strobeFocus = n;
 			m_strobeCreation = 0;
 			m_strobeChild = 0;
+			m_strobeBracketed = m_bracketed;
 		}
 		else
 		{
@@ -271,6 +279,7 @@ void CodeScene::keyPressHandler(KeyEvent& _e)
 //			m_strobeChild = 0;
 		if (m_strobeFocus)
 			m_strobeText += _e.text()[0];
+
 	}
 	if (e.isAccepted())
 		_e.accept();

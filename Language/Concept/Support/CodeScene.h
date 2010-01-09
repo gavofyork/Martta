@@ -134,9 +134,10 @@ protected:
 	// State
 	List<Position>				m_bracketed;
 
-	SafePointer<Concept>			m_strobeCreation;
-	SafePointer<Concept>			m_strobeChild;
-	SafePointer<Concept>			m_strobeFocus;
+	SafePointer<Concept>		m_strobeCreation;
+	SafePointer<Concept>		m_strobeChild;
+	SafePointer<Concept>		m_strobeFocus;
+	List<Position>				m_strobeBracketed;	///< What was bracketed prior to current strobe.
 	String						m_strobeText;
 	Position					m_activeStrobe;
 
