@@ -122,6 +122,12 @@ QString CodeView::toHtml() const
 	return QString("<!DOCTYPE HTML><html><head><script type=\"text/javascript\">%3</script><style type=\"text/css\">%1</style></head><body onmousedown=\"procMouseDown(event)\">%2</body></html>").arg(qs(m_stylist->css())).arg(qs(m_stylist->toHtml(m_subject))).arg(support.readAll().data());
 }
 
+void CodeView::renderTo(QPaintDevice* _dev)
+{
+	QPainter p(_dev);
+	page()->mainFrame()->render(&p);
+}
+
 void CodeView::setSubject(Concept* _s)
 {
 	m_subject = _s;
@@ -307,15 +313,14 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 		if (!i.exists() || (i.concept() != c && !c->hasAncestor(i.concept())))
 			removeBracket(i);
 
+	TIME_STATEMENT("refresh")
 	refresh();
+	TIME_STATEMENT("checkInvalids")
 	checkInvalids();
 	c = current();
 //	mInfo() << c;
 
-
-
-
-	{
+/*	{
 		QPainter p(this);
 		p.fillRect(rect(), Qt::white);
 	}
@@ -335,8 +340,8 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 			p.setBrush(g);
 			p.drawRect(br);
 		}
-	}
-//	TIME_STATEMENT("WVpaintEvent")
+	}*/
+	TIME_STATEMENT("WVpaintEvent")
 		QWebView::paintEvent(_ev);
 
 	if (c)
@@ -375,6 +380,17 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 			p.drawRect(br + 2.f);
 			p.setPen(editDelegate() ? QColor(255, 0, 0, 16) : QColor(0, 64, 128, 16));
 			p.drawRect(br + 3.f);
+			QRect marker;
+			for (int i = 0; i < 2; i++)
+				if (_ev->region().contains(marker = QRect(i ? width() - 8 - page()->mainFrame()->scrollBarGeometry(Qt::Vertical).width() : 0, br.y(), 8, br.height())))
+				{
+					QLinearGradient g(marker.topLeft(), marker.bottomLeft());
+					g.setColorAt(0.f, editDelegate() ? QColor(224, 0, 0, 255) : QColor(0, 128, 255, 64));
+					g.setColorAt(1.f, editDelegate() ? QColor(224, 0, 0, 64) : QColor(0, 128, 255, 192));
+					p.setPen(Qt::NoPen);
+					p.setBrush(g);
+					p.drawRect(marker);
+				}
 		}
 
 		if (m_showDependencyInfo)

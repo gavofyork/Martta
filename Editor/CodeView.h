@@ -43,6 +43,7 @@ public:
 	virtual void						setSubject(Concept* _subject);
 
 	QString								toHtml() const;
+	void								renderTo(QPaintDevice* _dev);
 
 	Hash<String, String>				properties() const { return m_properties; }
 	void								setProperty(String const& _name, String const& _value) { m_properties[_name] = _value; onPropertiesChanged(); }

@@ -79,6 +79,7 @@ private slots:
 	void on_actRemoveCodeView_triggered();
 	void on_actConfigureCodeView_triggered();
 	void on_actCopyCodeViewContents_triggered();
+	void on_actSaveCodeViewToSvg_triggered();
 
 	void on_actShowDeps_triggered();
 	void on_actShowChanges_triggered();
