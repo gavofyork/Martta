@@ -97,23 +97,23 @@ String Compound::statementsToHtml(List<Statement*> const& _es)
 {
 	String ret;
 	foreach (Statement const* e, _es)
-		ret += WebViewable::toHtml(e, e->requiresSemicolon() ? L"span" : L"div") + (e->requiresSemicolon() ? L"<br/>" : L"");
+		ret += WebViewable::toHtml(e, e->requiresSemicolon() ? L"span" : L"div") + (e->requiresSemicolon() ? tagOf(L"minor symbol", L";") + br() : L"");
 	return ret;
 }
 
 String Compound::defineHtml() const
 {
 	if (statements().size() > 1)
-		return L"<div class=\"minor symbol\">{</div><div class=\"block\">" + statementsToHtml(statements()) + L"</div><div class=\"minor symbol\">}</div>";
+		return tagOf(L"minor symbol", L"{", L"div") + tagOf(L"block", statementsToHtml(statements()), L"div") + tagOf(L"minor symbol", L"}", L"div");
 	else if (statements().size())
-		return L"<div class=\"block\">" + statementsToHtml(statements()) + L"</div>";
+		return tagOf(L"block", statementsToHtml(statements()), L"div");
 	else
-		return L" <span class=\"minor symbol\">{}</span>";
+		return L" " + tagOf(L"minor symbol", L"{}");
 }
 
 String HardCompound::defineHtml() const
 {
-	return L"<div class=\"minor symbol\">{</div><div class=\"block\">" + statementsToHtml(statements()) + L"</div><div class=\"minor symbol\">}</div>";
+	return tagOf(L"minor symbol", L"{", L"div") + tagOf(L"block", statementsToHtml(statements()), L"div") + tagOf(L"minor symbol", L"}", L"div");
 }
 
 }

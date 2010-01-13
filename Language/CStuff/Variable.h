@@ -40,7 +40,7 @@ public:
 	Qualifiers							qualifiers() const { return m_qualifiers; }
 
 protected:
-	virtual String						defineHtml() const { return L"<^>" + defineVariableHtml(); }
+	virtual String						defineHtml() const { return L"<^>" + defineVariableHtml() + tagOf(L"minor symbol", L";"); }
 	virtual List<Declaration*>			utilised() const { return actualType()->utilised(); }
 
 	virtual bool						keyPressed(KeyEvent const* _e) { return VariableNamer::keyPressed(_e) ? true : Super::keyPressed(_e); }

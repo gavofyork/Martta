@@ -66,7 +66,7 @@ protected:
 
 		Position p = pre ? _p : slideOnPrecedence(_p, _d, _a, _e->nearestBracket(_p));
 
-		if (isTemporary(p.entity()))
+		if (isTemporary(p.concept()))
 			return false;
 
 		Concept* n = new T;

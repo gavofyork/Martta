@@ -135,7 +135,8 @@ void WebStylist::setProperties(Hash<String, String> const& _p)
 					"body { color: black; font-size: 12px; font-family: Mono; background-color: rgba(255, 255, 255, 0.1); }"
 					".layout { display: inline-block; }"
 					".keyword { font-weight: bold; }"
-					".unreal { color: #888; }"
+					"._ms_unreal { color: #888; }"
+					"._ms_minor { color: #888; font-size: 10px; font-family: Sans; }"
 					".symbol { font-weight: bold; }"
 					".block { display: block; position: relative; margin-left: 20px; }"
 					".deblock { display: block; position: relative; margin-left: -20px; }"
@@ -145,6 +146,8 @@ void WebStylist::setProperties(Hash<String, String> const& _p)
 					"body { color: #666; font-size: 12px; font-family: Lucida Grande; background-color: rgba(255, 255, 255, 0.1); }"
 					".layout { display: inline-block; }"
 					".keyword { font-weight: bold; }"
+					"._ms_unreal { color: #888; }"
+					"._ms_minor { color: #888; font-size: 8px; }"
 					".unreal { color: #888; }"
 					".minor { color: #888; font-size: 8px; }"
 					".symbol { font-weight: bold; }"
@@ -204,18 +207,21 @@ String WebStylist::composeName(String const& _id, StringList const& _flags) cons
 
 String WebStylist::defineHtml(Concept const* _e)
 {
+	String ret;
 	if (WebViewable const* v = _e->tryKind<WebViewable>())
-		return v->defineHtml();
-
-	String ret = L"<span class=\"keyword\">" + _e->kind().name() + L"</span><span class=\"minor\">";
-	Hash<String, String> p;
-	_e->properties(p);
-	foreach (String s, p.keys())
-		ret += L"[" + s + L"=" + p[s] + L"]";
-	ret += L"</span><span>{";
-	foreach (Concept* e, _e->children())
-		 ret += L" " + toHtml(e) + L"@" + e->indexName();
-	ret += L" }</span>";
+		ret = v->defineHtml();
+	else
+	{
+		ret = L"<span class=\"keyword\">" + _e->kind().name() + L"</span><span class=\"minor\">";
+		Hash<String, String> p;
+		_e->properties(p);
+		foreach (String s, p.keys())
+			ret += L"[" + s + L"=" + p[s] + L"]";
+		ret += L"</span><span>{";
+		foreach (Concept* e, _e->children())
+			 ret += L" " + toHtml(e) + L"@" + e->indexName();
+		ret += L" }</span>";
+	}
 
 	return ret;
 }

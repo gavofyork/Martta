@@ -36,7 +36,7 @@ class EditDelegate: public EditDelegateFace
 public:
 	EditDelegate(T* _e, CodeScene* _s, bool _immediateCommits = false): EditDelegateFace(_e, _s, _immediateCommits) {}
 
-	T* subject() const { return entity() ? entity()->template asKind<T>() : 0; }
+	T* subject() const { return concept() ? concept()->template asKind<T>() : 0; }
 };
 
 }

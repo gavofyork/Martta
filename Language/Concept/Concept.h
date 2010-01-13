@@ -560,7 +560,7 @@ bool Martta::Concept::simplePositionKeyPressHandler(Position const& _p, KeyEvent
 		{
 			// insert
 			// when pressed on _p refers to a, changes from x->(a->(d, e), b, c) to x->(N->(a->(d, e)), b, c)
-			Concept* e = _p.entity();
+			Concept* e = _p.concept();
 			mDebug() << e;
 			mDebug() << n;
 			_e->noteStrobeCreation(e, n);

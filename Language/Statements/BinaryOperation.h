@@ -52,7 +52,7 @@ protected:
 			return false;
 		Position p = slideOnPrecedence(_p, _d, _a, _e->nearestBracket(_p));
 
-		if (isTemporary(p.entity()) || !p->isKind<Typed>())
+		if (isTemporary(p.concept()) || !p->isKind<Typed>())
 			return false;
 
 		Concept* n = new T;

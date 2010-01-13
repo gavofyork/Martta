@@ -519,7 +519,7 @@ String& String::replace(uint _position, uint _n, String const& _after)
 
 String& String::replace(uint _position, uint _n, Char _after)
 {
-	AssertNR(_position < m_length);
+	AssertNR(_position <= m_length);
 	AssertNR(_position + _n <= m_length);
 	if (_n == 1)
 		m_data[_position] = _after;

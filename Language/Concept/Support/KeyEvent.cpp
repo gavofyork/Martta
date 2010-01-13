@@ -103,11 +103,11 @@ void KeyEvent::executeStrobe()
 {
 	if (!m_strobed && m_text.length() > 1)
 	{
-		if (m_sCrPoint.exists() && m_sCrPoint.entity() != m_originalStrobeChild)
+		if (m_sCrPoint.exists() && m_sCrPoint.concept() != m_originalStrobeChild)
 		{
 			// We strobed without saying anything
 			mInfo() << "Strobe with no noteStrobeCreation";
-			noteStrobeCreation(m_sCrPoint.entity(), m_codeScene->strobeChild());
+			noteStrobeCreation(m_sCrPoint.concept(), m_codeScene->strobeChild());
 		}
 	}
 	if (m_text.length() > 1 && m_sCrPoint && m_sChPoint)

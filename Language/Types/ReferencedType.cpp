@@ -112,7 +112,7 @@ List<TypeDefinition*> ReferencedType::possibilities() const
 String ReferencedType::defineEditHtml(CodeScene* _cs) const
 {
 	if (EditDelegateFace* d = _cs->editDelegate(this))
-		return tagOf(L"TypeConcept", typeHtml(d->real() + tagOf(L"unreal", d->unreal()))) + tagOf(L"minor", d->comment());
+		return tagOf(L"TypeConcept", typeHtml(d->real() + tagOf(L"_ms_unreal", d->unreal()))) + tagOf(L"_ms_minor", d->comment());
 	return String::null;
 }
 

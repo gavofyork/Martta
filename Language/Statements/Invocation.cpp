@@ -95,7 +95,7 @@ Types Invocation::allowedTypes(int _index) const
 
 String Invocation::defineHtml() const
 {
-	return toHtml(child(Callee)) + L"<^><span class=\"symbol\">(</span>" + toHtml(cardinalChildren(), L", ") + L"<span class=\"symbol\">)</span>";
+	return toHtml(child(Callee)) + mark() + tagOf(L"minor symbol", L"(") + toHtml(cardinalChildren(), L", ") + tagOf(L"minor symbol", L")");
 }
 
 void Invocation::onDependencyChanged(int _a, Concept* _e)
@@ -135,7 +135,7 @@ bool Invocation::keyPressed(KeyEvent const* _e)
 bool Invocation::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
 	if (_p.exists() && !_p->isPlaceholder() && _p->isKind<Typed>() && _e->text() == "(" &&
-		_p->asKind<Typed>()->apparentType()->isType<FunctionType>() && !(_p->parentIs<Invocation>() && _p->index() == Callee) && !isTemporary(_p.entity()))
+		_p->asKind<Typed>()->apparentType()->isType<FunctionType>() && !(_p->parentIs<Invocation>() && _p->index() == Callee) && !isTemporary(_p.concept()))
 	{
 		Concept* n = new Invocation;
 		_p->insert(n, Callee);

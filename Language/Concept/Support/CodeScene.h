@@ -84,9 +84,9 @@ public:
 	void						dropCursor(Concept* _shell);
 
 	// NONVIRTUAL Bracketing code.
-	void						setBracketed(Position const& _p) { m_bracketed.append(_p); }
-	void						removeBracket(Position const& _p) { m_bracketed.removeAt(m_bracketed.lastIndexOf(_p)); }
-	bool						isBracketed(Position const& _p) const { return m_bracketed.contains(_p); }
+	void						setBracketed(Position const& _p) { m_bracketed.append(_p); relayout(_p.concept()); }
+	void						removeBracket(Position const& _p) { m_bracketed.removeAt(m_bracketed.lastIndexOf(_p)); relayout(_p.concept()); }
+	int						isBracketed(Position const& _p) const { return m_bracketed.count(_p); }
 	Position					nearestBracket(Position const& _p) const;
 
 	// NONVIRTUAL For EditDelegateFace.

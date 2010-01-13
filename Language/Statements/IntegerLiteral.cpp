@@ -33,7 +33,7 @@ bool IntegerLiteral::keyPressedOnPosition(Position const& _p, KeyEvent const* _e
 	if (_p.exists() && _e->text().length() == 2 && _e->text()[0] == L'-' && _e->text()[1].isNumber() && _p->isPlaceholder())
 	{
 		IntegerLiteral* l = new IntegerLiteral(_e->text().toInt());
-		_e->noteStrobeCreation(l, _p.entity());
+		_e->noteStrobeCreation(l, _p.concept());
 		_p.place(l);
 		_e->codeScene()->setEditing(l);
 	}
@@ -46,7 +46,7 @@ bool IntegerLiteral::keyPressedOnPosition(Position const& _p, KeyEvent const* _e
 	else if (_p.exists() && _p->isKind<IntegerLiteral>() && _e->text().length() == 1 && _e->text()[0].isNumber())
 	{
 		_p->asKind<IntegerLiteral>()->setValue(_e->text().toDouble());
-		_e->codeScene()->setEditing(_p.entity());
+		_e->codeScene()->setEditing(_p.concept());
 	}
 	else
 		return false;

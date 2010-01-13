@@ -45,7 +45,7 @@ public:
 	virtual String				unreal() const { return String::null; }
 	virtual String				comment() const { return String::null; }
 	virtual void*				current() const { return 0; }
-	Concept*						entity() const { return m_subject; }
+	Concept*						concept() const { return m_subject; }
 
 	void						initialised() { /*m_immediateCommits = !isValid();*/ }
 	void						lazyCommit() { if (m_immediateCommits) tryCommit(); }

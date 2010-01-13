@@ -60,10 +60,10 @@ public:
 	bool								isFixed() const;
 	Concept*								nearestConcept() const;
 
-	Concept&								operator*() const { return *entity(); }
-	Concept*								operator->() const { return entity(); }
+	Concept&								operator*() const { return *concept(); }
+	Concept*								operator->() const { return concept(); }
 	bool								exists() const;
-	Concept*								entity() const;
+	Concept*								concept() const;
 
 	inline bool							isNull() const { return !m_parent; }
 	inline bool							isValid() const { return m_parent; }

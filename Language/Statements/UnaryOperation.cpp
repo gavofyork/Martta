@@ -28,9 +28,7 @@ MARTTA_PLACEHOLDER_CPP(UnaryOperation);
 
 String UnaryOperation::defineHtml() const
 {
-	String ret = isPostfix() ? "%2<^>%1" : "<^>%1%2";
-	if (doINeedParenthesising(this) && WebStylist::current()->property(L"Operation", L"Parenthesise").toBool())
-		ret = L"(" + ret + L")";
+	String ret = displayParenthesise(isPostfix() ? L"%2<^>%1" : L"<^>%1%2");
 	return ret.arg(operatorHtml()).arg(toHtml(child(TheOperand)));
 }
 

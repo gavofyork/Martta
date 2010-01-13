@@ -36,7 +36,21 @@ MARTTA_PLACEHOLDER_CPP(Operation);
 MARTTA_NAMED_CPP(Operation, FirstOperand);
 MARTTA_NAME_ALIAS_CPP(Operation, TheOperand, FirstOperand);
 MARTTA_NAMED_CPP(Operation, SecondOperand);
-MARTTA_REGISTER_CSS(Operation, ".Operation { background-color: rgba(0, 0, 0, 0.05); padding: 0 2px 0 2px; }");
+MARTTA_REGISTER_CSS(Operation, ".Operation { background-color: rgba(0, 0, 0, 0.1); padding: 0 2px 0 2px; }");
+
+bool Operation::doesChildNeedParenthesising(int _ch) const
+{
+	if (Operation* ch = tryChild<Operation>(_ch))
+		return !(ch->precedence() < precedence() || (ch->precedence() == precedence() && associativity() == ((_ch == FirstOperand) ? LeftAssociativity : RightAssociativity)));
+	return Super::doesChildNeedParenthesising(_ch);
+}
+
+String Operation::displayParenthesise(String const& _html) const
+{
+	if (doINeedParenthesising(this) && !(WebStylist::current()->codeScene()->isBracketed(over()) && WebStylist::current()->property(L"CodeView", L"Preview Brackets").toBool()) && WebStylist::current()->property(L"Operation", L"Parenthesise").toBool())
+		return tagOf(L"symbol", L"(") + _html + tagOf(L"symbol", L")");
+	return _html;
+}
 
 Type Operation::prototypeOf(Type const& _t, int _index)
 {
@@ -145,12 +159,12 @@ bool Operation::keyPressed(KeyEvent const* _e)
 		_e->codeScene()->setCurrent(this);
 		return true;
 	}
-	else if(_e->text() == ")")
+/*	else if(_e->text() == ")")
 	{
 		_e->codeScene()->setBracketed(over());
 		_e->codeScene()->setCurrent(this);
 		return true;
-	}
+	}*/
 
 	return Super::keyPressed(_e);
 }
@@ -158,7 +172,7 @@ bool Operation::keyPressed(KeyEvent const* _e)
 Position Operation::slideOnPrecedence(Position _p, Precedence _d, Associativity _a, Position const& _block)
 {
 	Position p = _p;
-	while (_block != p && p->parentIs<Operation>() && p.entity() == p->parentAs<Operation>()->lastOperand() &&
+	while (_block != p && p->parentIs<Operation>() && p.concept() == p->parentAs<Operation>()->lastOperand() &&
 		   (_d > p->parentAs<Operation>()->precedence() || (_d == p->parentAs<Operation>()->precedence() && _a == LeftAssociativity)))
 		p = p.parent()->over();
 	while (_block != p && p->isKind<Operation>() && !p->asKind<Operation>()->lastOperand()->isPlaceholder() && p->asKind<Operation>()->precedence() == _d && _a == RightAssociativity)

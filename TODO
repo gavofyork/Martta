@@ -4,7 +4,6 @@ BUG If half-way point is on a word break, it isn't capitalised.
 BUG If on word break, tab will tab in the space :-/
 BUG can't enter multi-word references in editor.
 BUG Dodgy layout
-BUG i=j)+=i gives i=(j+=i) but && works (& isn't realised for bools)
 
 BUG Delete identifier - turns to anon nut no update to references.
 BUG Try to name an enum.
@@ -12,6 +11,7 @@ BUG? current() bad in onCurrentAboutToChange.
 BUG Add method, make return type good, still appears bad.
 - Making name good/bad doesn't change anything.
 - Name change doesn't carry into owner.
+- Same with constructor - assigned variable with type of no constructor error, add constructor no update.
 --------------------------------------------------------------------------------
 
 RELEASE M1 (ASAP)

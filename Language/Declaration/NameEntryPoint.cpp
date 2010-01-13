@@ -51,12 +51,12 @@ String NameEntryPoint::defineEditHtml(CodeScene* _cs) const
 	if (self()->isPlaceholder())
 		if (EditDelegateFace* d = _cs->editDelegate(self()))
 		{
-			String ret = d->real() + L"<span class=\"unreal\">" + d->unreal() + L"</span>";
+			String ret = d->real() + tagOf(L"_ms_unreal", d->unreal());
 			if (Named* n = reinterpret_cast<Named*>(d->current()))
 				foreach (IdentifierSet* i, IdentifierSetRegistrar::get()->allSets())
 					if (i->identifiableAt(self()->over()).contains(n))
-						return i->defineEditHtml(n, ret) + tagOf(L"minor", d->comment());
-			return ret + tagOf(L"minor", d->comment());
+						return i->defineEditHtml(n, ret) + tagOf(L"_ms_minor", d->comment());
+			return ret + tagOf(L"_ms_minor", d->comment());
 		}
 	return defineHtml();
 }
