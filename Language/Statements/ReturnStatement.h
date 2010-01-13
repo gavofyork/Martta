@@ -41,7 +41,7 @@ public:
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual Types						allowedTypes(int _index) const;
 	virtual String						code() const;
-	inline static bool					keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePlaceholderKeyPressHandler<ReturnStatement>(_p, _e, "R"); }
+	inline static bool					keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePositionKeyPressHandler<ReturnStatement>(_p, _e, "R"); }
 
 	virtual Kinds						ancestralDependencies() const { return Kind::of<LambdaNamer>(); }
 	virtual void						onDependencyChanged(int, Concept* _e);

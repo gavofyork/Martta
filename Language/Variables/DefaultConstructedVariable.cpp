@@ -30,7 +30,7 @@ MARTTA_PROPER_CPP(DefaultConstructedVariable);
 
 bool DefaultConstructedVariable::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
-	return simplePlaceholderKeyPressHandler<DefaultConstructedVariable>(_p, _e, "V");
+	return simplePositionKeyPressHandler<DefaultConstructedVariable>(_p, _e, "V");
 }
 
 Kinds DefaultConstructedVariable::allowedKinds(int _index) const

@@ -59,7 +59,7 @@ Types ForLoop::allowedTypes(int _index) const
 
 bool ForLoop::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
-	return simplePlaceholderKeyPressHandler<ForLoop>(_p, _e, "F");
+	return simplePositionKeyPressHandler<ForLoop>(_p, _e, "F");
 }
 
 bool ForLoop::keyPressed(KeyEvent const* _e)

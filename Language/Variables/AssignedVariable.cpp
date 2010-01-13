@@ -57,7 +57,7 @@ String AssignedVariable::code() const
 bool AssignedVariable::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
 	if (!_p.allowedToBeKind<DefaultConstructedVariable>())
-		return simplePlaceholderKeyPressHandler<AssignedVariable>(_p, _e, "V");
+		return simplePositionKeyPressHandler<AssignedVariable>(_p, _e, "V");
 	else
 		return false;
 }

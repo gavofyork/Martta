@@ -37,7 +37,7 @@ static SimpleIdentifierSet<UnlessStatement> s_unlessSet(L"unless");
 
 bool IfStatement::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
-	return simplePlaceholderKeyPressHandler<IfStatement>(_p, _e, "?");
+	return simplePositionKeyPressHandler<IfStatement>(_p, _e, "?");
 }
 
 String IfStatement::code() const
@@ -88,7 +88,7 @@ String IfStatement::defineHtml() const
 
 bool UnlessStatement::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
-	return simplePlaceholderKeyPressHandler<UnlessStatement>(_p, _e, "!?");
+	return simplePositionKeyPressHandler<UnlessStatement>(_p, _e, "!?");
 }
 
 /*String UnlessStatement::code() const

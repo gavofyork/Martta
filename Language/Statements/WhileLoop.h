@@ -36,7 +36,7 @@ class M_API_Statements WhileLoop: public_super Loop, public_interface Conditiona
 	MARTTA_ALSO_INHERITS(Conditional, 0)
 
 public:
-	inline static bool					keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePlaceholderKeyPressHandler<WhileLoop>(_p, _e, "W"); }
+	inline static bool					keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePositionKeyPressHandler<WhileLoop>(_p, _e, "W"); }
 
 protected:
 	virtual Kinds						allowedKinds(int _index) const;
@@ -54,7 +54,7 @@ class M_API_Statements UntilLoop: public_super WhileLoop
 	MARTTA_PROPER(WhileLoop)
 
 public:
-	inline static bool					keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePlaceholderKeyPressHandler<UntilLoop>(_p, _e, "U"); }
+	inline static bool					keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePositionKeyPressHandler<UntilLoop>(_p, _e, "U"); }
 
 private:
 	virtual String						code() const;
