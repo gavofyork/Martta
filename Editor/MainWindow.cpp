@@ -20,6 +20,7 @@
 
 #include <QtGui>
 #include <QtXml>
+#include <QWebFrame>
 
 #ifdef Q_WS_MAC
 #include <CoreFoundation/CoreFoundation.h>
@@ -244,6 +245,13 @@ void MainWindow::loadPlugins()
 
 	updateLanguage();
 	setEnabled(true);
+}
+
+void MainWindow::on_actCopyCodeViewContents_triggered()
+{
+	foreach (CodeView* cv, findChildren<CodeView*>())
+		if (cv->hasFocus())
+			QApplication::clipboard()->setText(cv->toHtml());
 }
 
 void MainWindow::on_actConfigureCodeView_triggered()

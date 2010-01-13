@@ -98,7 +98,7 @@ Hash<String, String> CodeView::defaultProperties() const
 	ret[L"Id-Martta::Variable"] = L"fooBar";
 	ret[L"Id-Martta::Function"] = L"fooBar";
 
-	ret[L"Id-Martta::Primary"] = L"<span class=\"Argument-Fader\"><span class=\"Member\">L</span></span>fooBar";
+	ret[L"Id-Martta::Primary"] = L"fooBar";
 
 	ret[L"Id-Martta::MemberValue"] = L"fooBar";
 	ret[L"Id-Martta::MemberLambda"] = L"fooBar";
@@ -113,6 +113,13 @@ Hash<String, String> CodeView::defaultProperties() const
 void CodeView::onPropertiesChanged()
 {
 	m_stylist->setProperties(properties());
+}
+
+QString CodeView::toHtml() const
+{
+	QFile support(":/CodeView/Support.js");
+	support.open(QFile::ReadOnly);
+	return QString("<!DOCTYPE HTML><html><head><script type=\"text/javascript\">%3</script><style type=\"text/css\">%1</style></head><body onmousedown=\"procMouseDown(event)\">%2</body></html>").arg(qs(m_stylist->css())).arg(qs(m_stylist->toHtml(m_subject))).arg(support.readAll().data());
 }
 
 void CodeView::setSubject(Concept* _s)

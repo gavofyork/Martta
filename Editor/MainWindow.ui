@@ -170,6 +170,7 @@
     <addaction name="actNewCodeView"/>
     <addaction name="actRemoveCodeView"/>
     <addaction name="actConfigureCodeView"/>
+    <addaction name="actCopyCodeViewContents"/>
    </widget>
    <widget class="QMenu" name="menu_Debug">
     <property name="title">
@@ -914,6 +915,14 @@
   <action name="actRemoveCodeView">
    <property name="text">
     <string>R&amp;emove Code View</string>
+   </property>
+  </action>
+  <action name="actCopyCodeViewContents">
+   <property name="text">
+    <string>Co&amp;py Code View Contents</string>
+   </property>
+   <property name="toolTip">
+    <string>Copy Code View Contents</string>
    </property>
   </action>
  </widget>
