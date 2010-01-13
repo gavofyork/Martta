@@ -1,0 +1,1452 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Product Id="{D9A0703A-1A99-4802-84B4-D29AB10233C6}" Language="1033" Manufacturer="Quid Pro Code" Name="Martta" UpgradeCode="{557AD33B-20F9-4821-B4FC-7670C53B513B}" Version="1.0.0.0">
+     <Package Compressed="yes" InstallerVersion="200" />
+      <WixVariable Id="WixUILicenseRtf" Value=".\License.rtf" />
+      <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
+      <UIRef Id="WixUI_InstallDir" />
+      <UIRef Id="WixUI_ErrorProgressText" />
+      <Directory Id='TARGETDIR' Name='SourceDir'>
+        <Directory Id="ProgramFilesFolder">
+          <Directory Id="INSTALLDIR" Name="Martta">
+            <Directory Id="Editor" Name="Editor">
+                    <Component Id="Concept.dll" Guid="{C9D54F36-1260-4005-895A-92D66EB1595E}">
+                        <File Id="Concept.dll" KeyPath="yes" Source="SourceDir\Editor\Concept.dll" />
+                    </Component>
+                    <Component Id="Language.dll" Guid="{C3CAB6B1-833C-47AF-AE27-A8397024313A}">
+                        <File Id="Language.dll" KeyPath="yes" Source="SourceDir\Editor\Language.dll" />
+                    </Component>
+                    <Component Id="Martta.exe" Guid="{2BE80B48-5A62-4AF2-98CE-112529AFCF56}">
+                        <File Id="Martta.exe" KeyPath="yes" Source="SourceDir\Editor\Martta.exe" />
+                    </Component>
+                    <Component Id="phonon4.dll" Guid="{4DEF3CB1-48E3-49CF-8764-3FB5F1D0E190}">
+                        <File Id="phonon4.dll" KeyPath="yes" Source="SourceDir\Editor\phonon4.dll" />
+                    </Component>
+                    <Component Id="QtCore4.dll" Guid="{D095E308-047F-4399-938B-567E96E0D4F4}">
+                        <File Id="QtCore4.dll" KeyPath="yes" Source="SourceDir\Editor\QtCore4.dll" />
+                    </Component>
+                    <Component Id="QtGui4.dll" Guid="{A289F7CB-0D58-48C6-BCD0-993B6BCEBB8F}">
+                        <File Id="QtGui4.dll" KeyPath="yes" Source="SourceDir\Editor\QtGui4.dll" />
+                    </Component>
+                    <Component Id="QtNetwork4.dll" Guid="{B6450D8E-689D-4B64-A96D-20BB2A034B90}">
+                        <File Id="QtNetwork4.dll" KeyPath="yes" Source="SourceDir\Editor\QtNetwork4.dll" />
+                    </Component>
+                    <Component Id="QtWebKit4.dll" Guid="{80085693-261A-4508-BF70-D2515987B678}">
+                        <File Id="QtWebKit4.dll" KeyPath="yes" Source="SourceDir\Editor\QtWebKit4.dll" />
+                    </Component>
+                    <Component Id="QtXml4.dll" Guid="{3C541561-306F-4563-B4F3-743CE086B8A7}">
+                        <File Id="QtXml4.dll" KeyPath="yes" Source="SourceDir\Editor\QtXml4.dll" />
+                    </Component>
+                    <Component Id="support.dll" Guid="{295A850C-B8ED-4589-99E6-5B61D680439A}">
+                        <File Id="support.dll" KeyPath="yes" Source="SourceDir\Editor\support.dll" />
+                    </Component>
+                    <Component Id="WebView.dll" Guid="{B31C124B-8EA1-4684-9920-7CA1D5233179}">
+                        <File Id="WebView.dll" KeyPath="yes" Source="SourceDir\Editor\WebView.dll" />
+                    </Component>
+                </Directory>
+                <Directory Id="gccxml" Name="gccxml">
+                    <Directory Id="bin" Name="bin">
+                        <Component Id="gccxml.exe" Guid="{35891AD2-0F0A-46E0-9618-C657A1181808}">
+                            <File Id="gccxml.exe" KeyPath="yes" Source="SourceDir\gccxml\bin\gccxml.exe" />
+                        </Component>
+                        <Component Id="gccxml_cc1plus.exe" Guid="{154E89AD-5C4E-4202-A279-9E8B064FBB61}">
+                            <File Id="gccxml_cc1plus.exe" KeyPath="yes" Source="SourceDir\gccxml\bin\gccxml_cc1plus.exe" />
+                        </Component>
+                        <Component Id="gccxml_vcconfig.bat" Guid="{6465B6CF-F0F6-4AE6-BA3E-5A16285FA05F}">
+                            <File Id="gccxml_vcconfig.bat" KeyPath="yes" Source="SourceDir\gccxml\bin\gccxml_vcconfig.bat" />
+                        </Component>
+                        <Component Id="gccxml_vcconfig.exe" Guid="{EEBFBA54-71BC-4415-B516-21DD553E51EA}">
+                            <File Id="gccxml_vcconfig.exe" KeyPath="yes" Source="SourceDir\gccxml\bin\gccxml_vcconfig.exe" />
+                        </Component>
+                    </Directory>
+                    <Directory Id="share" Name="share">
+                        <Directory Id="doc" Name="doc">
+                            <Directory Id="gccxml_0.9" Name="gccxml-0.9">
+                                <Component Id="Copyright.txt" Guid="{93F548CC-3E18-453C-9F9C-038E5DB83104}">
+                                    <File Id="Copyright.txt" KeyPath="yes" Source="SourceDir\gccxml\share\doc\gccxml-0.9\Copyright.txt" />
+                                </Component>
+                                <Component Id="gccxml.html" Guid="{09F576F6-A63A-44B4-A1CB-644F2F50E1F1}">
+                                    <File Id="gccxml.html" KeyPath="yes" Source="SourceDir\gccxml\share\doc\gccxml-0.9\gccxml.html" />
+                                </Component>
+                                <Component Id="gccxml.txt" Guid="{07398474-44B9-4240-A34B-7171166E4331}">
+                                    <File Id="gccxml.txt" KeyPath="yes" Source="SourceDir\gccxml\share\doc\gccxml-0.9\gccxml.txt" />
+                                </Component>
+                            </Directory>
+                        </Directory>
+                        <Directory Id="gccxml_0.9_1" Name="gccxml-0.9">
+                            <Component Id="gccxml_config" Guid="{2AE842FD-F385-4D97-98AF-1DF3E0658B07}">
+                                <File Id="gccxml_config" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\gccxml_config" />
+                            </Component>
+                            <Component Id="gccxml_identify_compiler.cc" Guid="{C8DC612E-2160-4A14-A81F-AE43C5440372}">
+                                <File Id="gccxml_identify_compiler.cc" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\gccxml_identify_compiler.cc" />
+                            </Component>
+                            <Directory Id="Borland" Name="Borland">
+                                <Directory Id="_5.5" Name="5.5">
+                                    <Component Id="except.h" Guid="{DB737EF0-62E6-413D-B18B-7000C4E66139}">
+                                        <File Id="except.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\except.h" />
+                                    </Component>
+                                    <Component Id="gccxml_fstream.h" Guid="{3F8F928F-220D-4FE5-99B4-2E426F8A7C34}">
+                                        <File Id="gccxml_fstream.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\gccxml_fstream.h" />
+                                    </Component>
+                                    <Component Id="gccxml_new.h" Guid="{AEEBFF1A-8838-4710-9790-AAD0039ABDA4}">
+                                        <File Id="gccxml_new.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\gccxml_new.h" />
+                                    </Component>
+                                    <Component Id="gccxml_valarray.h" Guid="{C126A674-C82A-40AF-9286-E67B4759FEC7}">
+                                        <File Id="gccxml_valarray.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\gccxml_valarray.h" />
+                                    </Component>
+                                    <Component Id="gccxml_vector.h" Guid="{A47E6F5A-FB16-41DE-B550-CFF7D5472D51}">
+                                        <File Id="gccxml_vector.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\gccxml_vector.h" />
+                                    </Component>
+                                    <Component Id="io.h" Guid="{17D378E6-DD8D-4630-B8A6-645EB45DBD66}">
+                                        <File Id="io.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\io.h" />
+                                    </Component>
+                                    <Component Id="oaidl.h" Guid="{74491C9C-DA52-4E16-94FD-04F9D73DB36D}">
+                                        <File Id="oaidl.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\oaidl.h" />
+                                    </Component>
+                                    <Component Id="propidl.h" Guid="{4AE47903-C222-4D85-A7D0-C4E81A732793}">
+                                        <File Id="propidl.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\propidl.h" />
+                                    </Component>
+                                    <Component Id="stdarg.h" Guid="{D81D8B4D-23B1-4918-80E9-D1006198F284}">
+                                        <File Id="stdarg.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\stdarg.h" />
+                                    </Component>
+                                    <Component Id="valarray.cc" Guid="{44B88A9A-1155-462B-8692-72E0D53B30E1}">
+                                        <File Id="valarray.cc" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\valarray.cc" />
+                                    </Component>
+                                    <Directory Id="rw" Name="rw">
+                                        <Component Id="locimpl.h" Guid="{D063A532-5CD7-4572-B1C1-BA71D1FCC130}">
+                                            <File Id="locimpl.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\rw\locimpl.h" />
+                                        </Component>
+                                        <Component Id="rwlocale.h" Guid="{F34CBDC0-3892-4C6E-8706-EB674E4F730A}">
+                                            <File Id="rwlocale.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\rw\rwlocale.h" />
+                                        </Component>
+                                    </Directory>
+                                    <Directory Id="Wrappers" Name="Wrappers">
+                                        <Component Id="algorithm" Guid="{B7AAB7CB-1F73-4393-9AA5-AF2D6450D9A8}">
+                                            <File Id="algorithm" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\algorithm" />
+                                        </Component>
+                                        <Component Id="algorithm.h" Guid="{549BDCCE-B8A4-4047-9358-72CE0999BA97}">
+                                            <File Id="algorithm.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\algorithm.h" />
+                                        </Component>
+                                        <Component Id="bitset" Guid="{9718C9F6-4130-41CC-93BD-3F92C95B8A4B}">
+                                            <File Id="bitset" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\bitset" />
+                                        </Component>
+                                        <Component Id="bitset.h" Guid="{95665F6F-6A55-4384-B701-EBFCE985C7CC}">
+                                            <File Id="bitset.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\bitset.h" />
+                                        </Component>
+                                        <Component Id="cctype" Guid="{EBD1A67E-8F34-4E66-86CB-FBEFBE26C057}">
+                                            <File Id="cctype" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\cctype" />
+                                        </Component>
+                                        <Component Id="cfloat" Guid="{38F2B552-6F9E-4C94-A981-2260B5FCEFC3}">
+                                            <File Id="cfloat" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\cfloat" />
+                                        </Component>
+                                        <Component Id="climits" Guid="{46861959-6400-4529-B297-9EF0ABAEEE5E}">
+                                            <File Id="climits" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\climits" />
+                                        </Component>
+                                        <Component Id="cmath" Guid="{616FD127-CA41-491F-8C48-F6656D09C842}">
+                                            <File Id="cmath" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\cmath" />
+                                        </Component>
+                                        <Component Id="complex" Guid="{B6CA0C4A-452E-425D-873D-2D06FD6D82DA}">
+                                            <File Id="complex" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\complex" />
+                                        </Component>
+                                        <Component Id="complex.h" Guid="{E3FABC61-7DD1-46E4-8B10-F0EA5DACAEAB}">
+                                            <File Id="complex.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\complex.h" />
+                                        </Component>
+                                        <Component Id="cstddef" Guid="{492AE917-DBE3-42B6-A5ED-BE0E569F27BF}">
+                                            <File Id="cstddef" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\cstddef" />
+                                        </Component>
+                                        <Component Id="cstdio" Guid="{7E937A23-09EB-4953-A989-762C847AC6F3}">
+                                            <File Id="cstdio" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\cstdio" />
+                                        </Component>
+                                        <Component Id="cstdlib" Guid="{347BD408-D65D-4257-B074-773453FEBCEC}">
+                                            <File Id="cstdlib" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\cstdlib" />
+                                        </Component>
+                                        <Component Id="cstring" Guid="{DEBDE4A3-F40B-4E0F-AB91-B2C94EE9B1E6}">
+                                            <File Id="cstring" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\cstring" />
+                                        </Component>
+                                        <Component Id="cstring.h" Guid="{A39D817C-860B-4386-B7FA-AAB28D8A97E5}">
+                                            <File Id="cstring.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\cstring.h" />
+                                        </Component>
+                                        <Component Id="ctime" Guid="{C626C8A4-7FA3-46E8-BFE3-6B518847D34A}">
+                                            <File Id="ctime" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\ctime" />
+                                        </Component>
+                                        <Component Id="cwchar" Guid="{6A5D3B68-469E-40BF-A9A7-B9481807A6B2}">
+                                            <File Id="cwchar" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\cwchar" />
+                                        </Component>
+                                        <Component Id="cwctype" Guid="{0879D86F-7005-4DBA-ACB4-FAC11E916E40}">
+                                            <File Id="cwctype" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\cwctype" />
+                                        </Component>
+                                        <Component Id="deque" Guid="{A63922DE-BC2A-4436-8417-4A0A527CBB73}">
+                                            <File Id="deque" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\deque" />
+                                        </Component>
+                                        <Component Id="deque.h" Guid="{F7E90B76-4E81-4E77-9E0D-720C9C512266}">
+                                            <File Id="deque.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\deque.h" />
+                                        </Component>
+                                        <Component Id="exception" Guid="{DFC1AC2C-4541-40E7-9CF0-D0383DB9EDA3}">
+                                            <File Id="exception" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\exception" />
+                                        </Component>
+                                        <Component Id="exception.h" Guid="{536D6F2E-6599-4D02-A099-2D3A41F9D440}">
+                                            <File Id="exception.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\exception.h" />
+                                        </Component>
+                                        <Component Id="fstream" Guid="{CF4F20C2-A955-4C86-91E1-0A8A873EDEDC}">
+                                            <File Id="fstream" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\fstream" />
+                                        </Component>
+                                        <Component Id="fstream.h" Guid="{EF6E5F4D-0345-49DE-AE98-3DC789D94C84}">
+                                            <File Id="fstream.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\fstream.h" />
+                                        </Component>
+                                        <Component Id="function" Guid="{A5E8FD27-5CF0-4356-ADC3-B04ACD73025D}">
+                                            <File Id="function" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\function" />
+                                        </Component>
+                                        <Component Id="function.h" Guid="{C39A0A8E-9B64-4EBE-B467-78D0E24DF7D0}">
+                                            <File Id="function.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\function.h" />
+                                        </Component>
+                                        <Component Id="functional" Guid="{71FDC60D-9DC2-49E0-BA53-EC8D32FE9BAD}">
+                                            <File Id="functional" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\functional" />
+                                        </Component>
+                                        <Component Id="gccxml_typeinfo.h" Guid="{4E7C3E82-2E1B-4732-9CFC-F62A8F6109DD}">
+                                            <File Id="gccxml_typeinfo.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\gccxml_typeinfo.h" />
+                                        </Component>
+                                        <Component Id="iomanip" Guid="{7F358D21-ACDF-4D64-B47B-1DEA1EEE9586}">
+                                            <File Id="iomanip" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\iomanip" />
+                                        </Component>
+                                        <Component Id="iomanip.h" Guid="{882C4D01-66D8-4BA8-B43F-9F78C86D9AA0}">
+                                            <File Id="iomanip.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\iomanip.h" />
+                                        </Component>
+                                        <Component Id="ios" Guid="{500D6CC1-3551-4AAA-A183-D137ADBD1097}">
+                                            <File Id="ios" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\ios" />
+                                        </Component>
+                                        <Component Id="ios.h" Guid="{0FAA8B02-159B-491E-9734-5B138B9502A3}">
+                                            <File Id="ios.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\ios.h" />
+                                        </Component>
+                                        <Component Id="iosfwd" Guid="{A3AD3AC4-1925-4BDF-8ADD-B033502C5B71}">
+                                            <File Id="iosfwd" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\iosfwd" />
+                                        </Component>
+                                        <Component Id="iosfwd.h" Guid="{D79C2778-4415-4D4C-854B-4081303725B9}">
+                                            <File Id="iosfwd.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\iosfwd.h" />
+                                        </Component>
+                                        <Component Id="iostream" Guid="{53B83E2B-0D45-47D0-8E94-96083E33C5D0}">
+                                            <File Id="iostream" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\iostream" />
+                                        </Component>
+                                        <Component Id="iostream.h" Guid="{A143598F-E45B-47AC-9A00-8A0F7AD60597}">
+                                            <File Id="iostream.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\iostream.h" />
+                                        </Component>
+                                        <Component Id="istream" Guid="{9B02F992-E937-4D6B-A675-B8B7819C0A6B}">
+                                            <File Id="istream" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\istream" />
+                                        </Component>
+                                        <Component Id="istream.h" Guid="{DF1AD4E0-68A8-4382-85C0-6FABFB3A1EE7}">
+                                            <File Id="istream.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\istream.h" />
+                                        </Component>
+                                        <Component Id="iterator" Guid="{DD9AB429-814E-43A3-8701-B89829BD04FE}">
+                                            <File Id="iterator" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\iterator" />
+                                        </Component>
+                                        <Component Id="iterator.h" Guid="{9FED17D6-72B8-4CF7-A72E-F13CBFADACFE}">
+                                            <File Id="iterator.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\iterator.h" />
+                                        </Component>
+                                        <Component Id="limits" Guid="{BF95016C-32A3-4B72-B084-4FE916C44DF8}">
+                                            <File Id="limits" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\limits" />
+                                        </Component>
+                                        <Component Id="limits.h" Guid="{CF9D408B-971A-422D-A571-CA90EAEB7570}">
+                                            <File Id="limits.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\limits.h" />
+                                        </Component>
+                                        <Component Id="list" Guid="{3C185F6D-E0A4-4757-8F63-950816C8B611}">
+                                            <File Id="list" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\list" />
+                                        </Component>
+                                        <Component Id="list.h" Guid="{3B81CE97-094E-4902-80BF-326805705B9E}">
+                                            <File Id="list.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\list.h" />
+                                        </Component>
+                                        <Component Id="locale" Guid="{CF7F333D-EA95-40E0-8125-B175DC88FA75}">
+                                            <File Id="locale" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\locale" />
+                                        </Component>
+                                        <Component Id="locale.h" Guid="{9FE9A2CC-1AAE-47EE-BA3A-73909F3446CC}">
+                                            <File Id="locale.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\locale.h" />
+                                        </Component>
+                                        <Component Id="map" Guid="{5EB9AFED-115A-4995-8B95-4F5A60D42D3B}">
+                                            <File Id="map" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\map" />
+                                        </Component>
+                                        <Component Id="map.h" Guid="{1395C0DA-661B-4D55-94CB-348B320B80EF}">
+                                            <File Id="map.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\map.h" />
+                                        </Component>
+                                        <Component Id="memory" Guid="{7FC48A1A-FEDE-44F8-BCA3-F25FCC6486CD}">
+                                            <File Id="memory" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\memory" />
+                                        </Component>
+                                        <Component Id="memory.h" Guid="{F06AF9A9-02A7-4B5C-89AB-3ABE159B3257}">
+                                            <File Id="memory.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\memory.h" />
+                                        </Component>
+                                        <Component Id="new" Guid="{6D45DF96-F441-4875-BC25-76D47CBB66A8}">
+                                            <File Id="new" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\new" />
+                                        </Component>
+                                        <Component Id="new.h" Guid="{BA6F9070-1366-4A21-BD72-7793EB14A16B}">
+                                            <File Id="new.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\new.h" />
+                                        </Component>
+                                        <Component Id="numeric" Guid="{243BA7D0-EACF-498A-A7E5-6E2821B72172}">
+                                            <File Id="numeric" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\numeric" />
+                                        </Component>
+                                        <Component Id="numeric.h" Guid="{25294F95-D45B-4D68-AB6E-DE332FF37028}">
+                                            <File Id="numeric.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\numeric.h" />
+                                        </Component>
+                                        <Component Id="ostream" Guid="{8130FE76-07BA-45AC-A50C-B755846EBC54}">
+                                            <File Id="ostream" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\ostream" />
+                                        </Component>
+                                        <Component Id="ostream.h" Guid="{B2B0E3D1-BFF3-4EFB-BB09-F87C4433176E}">
+                                            <File Id="ostream.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\ostream.h" />
+                                        </Component>
+                                        <Component Id="queue" Guid="{9825F8F3-D521-4F5D-AEAA-0705BE6D5FB1}">
+                                            <File Id="queue" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\queue" />
+                                        </Component>
+                                        <Component Id="queue.h" Guid="{53EF92FE-0611-4FBD-976A-FE93F28CAE6D}">
+                                            <File Id="queue.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\queue.h" />
+                                        </Component>
+                                        <Component Id="set" Guid="{4694A571-0E17-4110-91E6-5918445B9A7D}">
+                                            <File Id="set" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\set" />
+                                        </Component>
+                                        <Component Id="set.h" Guid="{BC588159-41AE-4E2E-9405-84E636301FBA}">
+                                            <File Id="set.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\set.h" />
+                                        </Component>
+                                        <Component Id="sstream" Guid="{757423AF-088E-468D-8E4D-4C9E04DF958F}">
+                                            <File Id="sstream" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\sstream" />
+                                        </Component>
+                                        <Component Id="sstream.h" Guid="{4B8CEDCC-D32F-4D9E-A096-352BE50DFEA3}">
+                                            <File Id="sstream.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\sstream.h" />
+                                        </Component>
+                                        <Component Id="stack" Guid="{8D32FF82-9509-496C-9552-1564BDAC3F19}">
+                                            <File Id="stack" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\stack" />
+                                        </Component>
+                                        <Component Id="stack.h" Guid="{6E1B191B-F8F5-4CF3-A259-F2B0AB93B976}">
+                                            <File Id="stack.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\stack.h" />
+                                        </Component>
+                                        <Component Id="stdexcept" Guid="{1FEB8FDC-1233-44E1-80FE-42B9E8E67011}">
+                                            <File Id="stdexcept" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\stdexcept" />
+                                        </Component>
+                                        <Component Id="stdexcept.h" Guid="{DBE08376-44AE-4D80-8D9C-97EB1AE3C662}">
+                                            <File Id="stdexcept.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\stdexcept.h" />
+                                        </Component>
+                                        <Component Id="streambuf" Guid="{DC2425F5-DAC4-4BA5-AC51-A4252BF568A6}">
+                                            <File Id="streambuf" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\streambuf" />
+                                        </Component>
+                                        <Component Id="streambuf.h" Guid="{7BE321EF-D41E-4EAA-89B4-40669C980297}">
+                                            <File Id="streambuf.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\streambuf.h" />
+                                        </Component>
+                                        <Component Id="string" Guid="{F0CF38CA-BC51-4C1E-BF4C-09D8B01F4924}">
+                                            <File Id="string" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\string" />
+                                        </Component>
+                                        <Component Id="string.h" Guid="{B44544F4-D816-40BD-9182-3E3D110F8572}">
+                                            <File Id="string.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\string.h" />
+                                        </Component>
+                                        <Component Id="strstream" Guid="{6F93F94A-3B29-4E4A-9951-F422F56B952C}">
+                                            <File Id="strstream" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\strstream" />
+                                        </Component>
+                                        <Component Id="strstream.h" Guid="{70896E31-0B18-40E7-AD7E-0F7FEDDD0D30}">
+                                            <File Id="strstream.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\strstream.h" />
+                                        </Component>
+                                        <Component Id="typeinfo" Guid="{430BABB2-8332-4426-B7F3-118D26A8ED28}">
+                                            <File Id="typeinfo" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\typeinfo" />
+                                        </Component>
+                                        <Component Id="typeinfo.h" Guid="{5C2BE151-80FD-4FD9-83BE-0F8C7F964545}">
+                                            <File Id="typeinfo.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\typeinfo.h" />
+                                        </Component>
+                                        <Component Id="utility" Guid="{C043A657-15A1-41B4-9903-A5A36E25AC97}">
+                                            <File Id="utility" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\utility" />
+                                        </Component>
+                                        <Component Id="utility.h" Guid="{5341DDC5-3C96-414F-AC6A-2FAE26024F1A}">
+                                            <File Id="utility.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\utility.h" />
+                                        </Component>
+                                        <Component Id="valarray" Guid="{5BDCED18-0FF2-4C22-920E-60BADC02C1B1}">
+                                            <File Id="valarray" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\valarray" />
+                                        </Component>
+                                        <Component Id="valarray.h" Guid="{76FE4045-BF0E-48B6-962A-C8D91404D7BB}">
+                                            <File Id="valarray.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\valarray.h" />
+                                        </Component>
+                                        <Component Id="vector" Guid="{6831832F-AACB-4D63-8109-8298DFAC7A8B}">
+                                            <File Id="vector" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\vector" />
+                                        </Component>
+                                        <Component Id="vector.h" Guid="{F3774133-5859-4F2C-AD9F-2B944A4A73F5}">
+                                            <File Id="vector.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\vector.h" />
+                                        </Component>
+                                        <Directory Id="rw_1" Name="rw">
+                                            <Component Id="codecvt" Guid="{438F8A7C-0D57-4859-BB59-11311E1579DF}">
+                                                <File Id="codecvt" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\rw\codecvt" />
+                                            </Component>
+                                            <Component Id="collate" Guid="{3CA70C02-3A50-419F-974B-2C0A007A41B0}">
+                                                <File Id="collate" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\rw\collate" />
+                                            </Component>
+                                            <Component Id="ctype" Guid="{9EC95B36-EA10-4446-A3CF-196EAFD59F0C}">
+                                                <File Id="ctype" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\rw\ctype" />
+                                            </Component>
+                                            <Component Id="iosbase" Guid="{00AF90F5-CA58-48CA-96B3-56C5A837CD2B}">
+                                                <File Id="iosbase" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\rw\iosbase" />
+                                            </Component>
+                                            <Component Id="iotraits" Guid="{C055E9F2-9938-4D49-AB02-CA25C1D2C7DF}">
+                                                <File Id="iotraits" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\rw\iotraits" />
+                                            </Component>
+                                            <Component Id="iterator_1" Guid="{395C31BD-7D8B-494F-BDC5-F0B5110B9D98}">
+                                                <File Id="iterator_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\rw\iterator" />
+                                            </Component>
+                                            <Component Id="lochelp" Guid="{E1A7339E-779C-47BA-BEF7-D3D982DB0429}">
+                                                <File Id="lochelp" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\rw\lochelp" />
+                                            </Component>
+                                            <Component Id="locimpl" Guid="{9D504EEB-2F18-44FD-928D-9F4CD814BD35}">
+                                                <File Id="locimpl" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\rw\locimpl" />
+                                            </Component>
+                                            <Component Id="locvector" Guid="{14800E9B-E78B-44D6-9F8D-D690686C44B3}">
+                                                <File Id="locvector" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\rw\locvector" />
+                                            </Component>
+                                            <Component Id="messages" Guid="{C862AA0A-63E7-477E-8541-4E4B8E8573C7}">
+                                                <File Id="messages" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\rw\messages" />
+                                            </Component>
+                                            <Component Id="money" Guid="{E8B34137-2AD5-43B2-8FE9-FC0961010433}">
+                                                <File Id="money" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\rw\money" />
+                                            </Component>
+                                            <Component Id="numbrw" Guid="{A2BD079C-7FED-4A5F-80F8-2D3FA32800B6}">
+                                                <File Id="numbrw" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\rw\numbrw" />
+                                            </Component>
+                                            <Component Id="numeral" Guid="{CEDCD795-1F27-4A1D-87FC-9D71CEFAF53B}">
+                                                <File Id="numeral" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\rw\numeral" />
+                                            </Component>
+                                            <Component Id="rwdispatch.h" Guid="{3D56556E-B52B-4A2F-8062-477B7455FCE0}">
+                                                <File Id="rwdispatch.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\rw\rwdispatch.h" />
+                                            </Component>
+                                            <Component Id="rwlocale" Guid="{E046230C-1F62-487C-B338-A84CB95DF776}">
+                                                <File Id="rwlocale" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\rw\rwlocale" />
+                                            </Component>
+                                            <Component Id="rwstderr_macros.h" Guid="{06CF6ADD-FBEC-4E24-8926-94B6FCADF207}">
+                                                <File Id="rwstderr_macros.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\rw\rwstderr_macros.h" />
+                                            </Component>
+                                            <Component Id="string_ref" Guid="{03ECCEFF-69C4-412E-A59D-722D1370486E}">
+                                                <File Id="string_ref" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\rw\string_ref" />
+                                            </Component>
+                                            <Component Id="time" Guid="{851C9CEF-DF82-4FB3-9EA9-4ED1CAC6E6B5}">
+                                                <File Id="time" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\rw\time" />
+                                            </Component>
+                                            <Component Id="traits" Guid="{9E51B647-A118-4873-B767-68C9C9801D20}">
+                                                <File Id="traits" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\rw\traits" />
+                                            </Component>
+                                            <Component Id="tree" Guid="{385035D3-7820-444F-AB62-57ED34A27EB6}">
+                                                <File Id="tree" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\rw\tree" />
+                                            </Component>
+                                            <Component Id="usefacet" Guid="{41ED8D25-33A5-457F-8985-6F46F9AF820B}">
+                                                <File Id="usefacet" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\rw\usefacet" />
+                                            </Component>
+                                            <Component Id="valimp" Guid="{2D6A16BD-DC0C-4DFA-8C35-5DBCD4AF52B2}">
+                                                <File Id="valimp" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\rw\valimp" />
+                                            </Component>
+                                            <Component Id="vendor" Guid="{9BEDBACD-69FE-4C36-B9BB-F25FEB8C617C}">
+                                                <File Id="vendor" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Borland\5.5\Wrappers\rw\vendor" />
+                                            </Component>
+                                        </Directory>
+                                    </Directory>
+                                </Directory>
+                            </Directory>
+                            <Directory Id="GCC" Name="GCC">
+                                <Directory Id="_2.95" Name="2.95">
+                                    <Component Id="algorithm_1" Guid="{19CD9E18-703C-4F97-8D6C-3337EC27CEF8}">
+                                        <File Id="algorithm_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\algorithm" />
+                                    </Component>
+                                    <Component Id="bitset_1" Guid="{6D4D7F6E-34AE-4B1E-8A19-76CE194FFB4D}">
+                                        <File Id="bitset_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\bitset" />
+                                    </Component>
+                                    <Component Id="cctype_1" Guid="{C9B41F1C-A033-4446-8263-04C32FD9840F}">
+                                        <File Id="cctype_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\cctype" />
+                                    </Component>
+                                    <Component Id="clocale" Guid="{894BAF48-E807-48B4-ABB6-90B1F0684741}">
+                                        <File Id="clocale" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\clocale" />
+                                    </Component>
+                                    <Component Id="cmath_1" Guid="{EBDC0644-C42B-409D-A563-F59DDAB44B56}">
+                                        <File Id="cmath_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\cmath" />
+                                    </Component>
+                                    <Component Id="complex_1" Guid="{5482F006-5C23-47BC-B365-A4E4C9B65D6B}">
+                                        <File Id="complex_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\complex" />
+                                    </Component>
+                                    <Component Id="csetjmp" Guid="{A28A82F3-8AD8-4516-9F3B-0ED5128162F2}">
+                                        <File Id="csetjmp" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\csetjmp" />
+                                    </Component>
+                                    <Component Id="csignal" Guid="{FF797418-AA4F-413A-9614-8A6025DBEC12}">
+                                        <File Id="csignal" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\csignal" />
+                                    </Component>
+                                    <Component Id="cstdarg" Guid="{04546ED5-C697-4EBF-A7B6-01AB9A2D0E32}">
+                                        <File Id="cstdarg" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\cstdarg" />
+                                    </Component>
+                                    <Component Id="cstddef_1" Guid="{4227C37C-F07A-420C-A39D-58014CF27181}">
+                                        <File Id="cstddef_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\cstddef" />
+                                    </Component>
+                                    <Component Id="cstdio_1" Guid="{C0C7F491-140A-45FC-BFD3-6630A1171367}">
+                                        <File Id="cstdio_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\cstdio" />
+                                    </Component>
+                                    <Component Id="cstdlib_1" Guid="{1F9BC0B4-5E5B-46C7-BEBB-D32F55B26954}">
+                                        <File Id="cstdlib_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\cstdlib" />
+                                    </Component>
+                                    <Component Id="cstring_1" Guid="{CCBC4449-47F7-4AB6-B859-864AFD3A2B02}">
+                                        <File Id="cstring_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\cstring" />
+                                    </Component>
+                                    <Component Id="ctime_1" Guid="{670F1CC0-8152-4CEF-B820-6D7C2E624ADC}">
+                                        <File Id="ctime_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\ctime" />
+                                    </Component>
+                                    <Component Id="cwchar_1" Guid="{02370E50-38E5-46BC-A153-2EA3064621F9}">
+                                        <File Id="cwchar_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\cwchar" />
+                                    </Component>
+                                    <Component Id="cwctype_1" Guid="{11A6642E-D286-4B71-BA1D-F9A2BBDC2157}">
+                                        <File Id="cwctype_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\cwctype" />
+                                    </Component>
+                                    <Component Id="deque_1" Guid="{9EF786A6-5002-46DB-8945-52BE33659203}">
+                                        <File Id="deque_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\deque" />
+                                    </Component>
+                                    <Component Id="exception_1" Guid="{403CD028-D321-4A44-B683-C3B133E3E916}">
+                                        <File Id="exception_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\exception" />
+                                    </Component>
+                                    <Component Id="fstream_1" Guid="{ACB5CBFD-F58C-495E-AEF8-BC3138021C1B}">
+                                        <File Id="fstream_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\fstream" />
+                                    </Component>
+                                    <Component Id="functional_1" Guid="{F11F170F-1A20-4B46-AE88-092CD698445F}">
+                                        <File Id="functional_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\functional" />
+                                    </Component>
+                                    <Component Id="gccxml_bitset" Guid="{4C93CF4D-8277-4840-A17E-1A3379FEB621}">
+                                        <File Id="gccxml_bitset" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\gccxml_bitset" />
+                                    </Component>
+                                    <Component Id="iomanip_1" Guid="{7633912E-FEDE-4E8F-97AB-151F0E3B1110}">
+                                        <File Id="iomanip_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\iomanip" />
+                                    </Component>
+                                    <Component Id="iosfwd_1" Guid="{8DA9AE60-4AA4-4FBE-9A69-F9FB5CFAE49B}">
+                                        <File Id="iosfwd_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\iosfwd" />
+                                    </Component>
+                                    <Component Id="iostream_1" Guid="{F99865E4-7E13-40C4-8F9A-62D97C041279}">
+                                        <File Id="iostream_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\iostream" />
+                                    </Component>
+                                    <Component Id="iterator_2" Guid="{78C735C6-2846-4A95-A18C-D428EFD5C07C}">
+                                        <File Id="iterator_2" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\iterator" />
+                                    </Component>
+                                    <Component Id="list_1" Guid="{23F567B6-8790-4F20-BAEE-4AD4931343E4}">
+                                        <File Id="list_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\list" />
+                                    </Component>
+                                    <Component Id="map_1" Guid="{9B555D64-14D3-46DE-BC7F-07C0ED6610CB}">
+                                        <File Id="map_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\map" />
+                                    </Component>
+                                    <Component Id="memory_1" Guid="{49E5746A-B8A6-48E5-A9C7-51D3B159633F}">
+                                        <File Id="memory_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\memory" />
+                                    </Component>
+                                    <Component Id="new_1" Guid="{CAA96F58-5101-41B3-AF34-1BC5E8FC715A}">
+                                        <File Id="new_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\new" />
+                                    </Component>
+                                    <Component Id="numeric_1" Guid="{69936A49-8246-494E-93E5-ECBC45F3F16E}">
+                                        <File Id="numeric_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\numeric" />
+                                    </Component>
+                                    <Component Id="pthread.h" Guid="{113B265E-CEB6-4857-8D58-5CDEB17DFA20}">
+                                        <File Id="pthread.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\pthread.h" />
+                                    </Component>
+                                    <Component Id="queue_1" Guid="{A2C083AD-B99C-4D01-8FF8-762F582DF290}">
+                                        <File Id="queue_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\queue" />
+                                    </Component>
+                                    <Component Id="set_1" Guid="{5393E8C0-2750-466B-B219-29898291614A}">
+                                        <File Id="set_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\set" />
+                                    </Component>
+                                    <Component Id="sstream_1" Guid="{316D37D0-5E17-4E86-9CD9-949C60B902D2}">
+                                        <File Id="sstream_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\sstream" />
+                                    </Component>
+                                    <Component Id="stack_1" Guid="{4DB39F98-8159-493F-8495-7BD1FA33C959}">
+                                        <File Id="stack_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\stack" />
+                                    </Component>
+                                    <Component Id="stdexcept_1" Guid="{BAD9AFC7-3836-4F5B-A10E-C0C8B21A6DA2}">
+                                        <File Id="stdexcept_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\stdexcept" />
+                                    </Component>
+                                    <Component Id="stl_alloc.h" Guid="{B20DB52B-6842-40DE-97A6-782EF3187927}">
+                                        <File Id="stl_alloc.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\stl_alloc.h" />
+                                    </Component>
+                                    <Component Id="stl_bvector.h" Guid="{D34865EE-91DD-4925-96E7-77D036CA8A1B}">
+                                        <File Id="stl_bvector.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\stl_bvector.h" />
+                                    </Component>
+                                    <Component Id="stl_deque.h" Guid="{1786B23E-104A-4581-966D-E35E919CB3F3}">
+                                        <File Id="stl_deque.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\stl_deque.h" />
+                                    </Component>
+                                    <Component Id="stl_list.h" Guid="{B8C3CD01-14C7-4B3F-AC78-0F47E17FDE74}">
+                                        <File Id="stl_list.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\stl_list.h" />
+                                    </Component>
+                                    <Component Id="stl_tree.h" Guid="{25A22930-E90A-41D3-A02B-B635ACB258AD}">
+                                        <File Id="stl_tree.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\stl_tree.h" />
+                                    </Component>
+                                    <Component Id="stl_vector.h" Guid="{25CA73E6-2E09-4BFD-A810-9C9251D75942}">
+                                        <File Id="stl_vector.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\stl_vector.h" />
+                                    </Component>
+                                    <Component Id="string_1" Guid="{D43E8F1C-334A-4BE5-8ECF-835B1549D3F2}">
+                                        <File Id="string_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\string" />
+                                    </Component>
+                                    <Component Id="strstream_1" Guid="{9456AD1A-1BCC-4D51-95F1-30650C1BA695}">
+                                        <File Id="strstream_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\strstream" />
+                                    </Component>
+                                    <Component Id="typeinfo_1" Guid="{63D5BCBB-0D29-411E-9265-7C33B2BC2E0C}">
+                                        <File Id="typeinfo_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\typeinfo" />
+                                    </Component>
+                                    <Component Id="utility_1" Guid="{E2DF5609-C0C4-421A-8B82-628E7BE32D73}">
+                                        <File Id="utility_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\utility" />
+                                    </Component>
+                                    <Component Id="valarray_1" Guid="{00FBFDD9-976D-42EB-986F-DC4271BBB02F}">
+                                        <File Id="valarray_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\valarray" />
+                                    </Component>
+                                    <Component Id="vector_1" Guid="{6C90E38E-F588-4209-843C-C1EBB2A5A241}">
+                                        <File Id="vector_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\vector" />
+                                    </Component>
+                                    <Directory Id="std" Name="std">
+                                        <Component Id="bastring.cc" Guid="{EE213A1D-DDDF-40CA-8273-A41EB04126EE}">
+                                            <File Id="bastring.cc" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\std\bastring.cc" />
+                                        </Component>
+                                        <Component Id="complext.h" Guid="{B94307E0-4386-432F-8CD2-B6050B793099}">
+                                            <File Id="complext.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\std\complext.h" />
+                                        </Component>
+                                        <Component Id="dcomplex.h" Guid="{3424652A-9B0B-49C2-AC14-B80DA342FA8E}">
+                                            <File Id="dcomplex.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\std\dcomplex.h" />
+                                        </Component>
+                                        <Component Id="fcomplex.h" Guid="{7B8880B1-7C2E-482C-9A60-2F97C8025610}">
+                                            <File Id="fcomplex.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\std\fcomplex.h" />
+                                        </Component>
+                                        <Component Id="gslice_array.h" Guid="{B07EF436-9D81-4FE5-8973-68B99798F0C2}">
+                                            <File Id="gslice_array.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\std\gslice_array.h" />
+                                        </Component>
+                                        <Component Id="indirect_array.h" Guid="{F7108881-BF8C-45E0-B876-E1F78BCA0199}">
+                                            <File Id="indirect_array.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\std\indirect_array.h" />
+                                        </Component>
+                                        <Component Id="ldcomplex.h" Guid="{35D3AA40-1B43-475F-B809-0EBDC6C36006}">
+                                            <File Id="ldcomplex.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\std\ldcomplex.h" />
+                                        </Component>
+                                        <Component Id="mask_array.h" Guid="{833864AA-C842-4BA6-8C23-B9F4D74234B1}">
+                                            <File Id="mask_array.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\std\mask_array.h" />
+                                        </Component>
+                                        <Component Id="slice_array.h" Guid="{33BE87D0-E9AD-4581-8356-992B1999215C}">
+                                            <File Id="slice_array.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\std\slice_array.h" />
+                                        </Component>
+                                        <Component Id="std_valarray.h" Guid="{07CD00F9-7962-43F9-9777-B87F90F36CB1}">
+                                            <File Id="std_valarray.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\std\std_valarray.h" />
+                                        </Component>
+                                        <Component Id="straits.h" Guid="{57B1A0C6-3B20-4DBC-9535-864165BB20DD}">
+                                            <File Id="straits.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\std\straits.h" />
+                                        </Component>
+                                        <Component Id="valarray_meta.h" Guid="{542B2EE6-27C1-47D1-B656-FA53443C43B6}">
+                                            <File Id="valarray_meta.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.95\std\valarray_meta.h" />
+                                        </Component>
+                                    </Directory>
+                                </Directory>
+                                <Directory Id="_2.96" Name="2.96">
+                                    <Component Id="sstream_2" Guid="{27EC69BB-2D2E-42F2-BD60-29F3859F6B14}">
+                                        <File Id="sstream_2" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\2.96\sstream" />
+                                    </Component>
+                                </Directory>
+                                <Directory Id="_3.0" Name="3.0">
+                                    <Component Id="pthread.h_1" Guid="{1E60D458-2276-4AA7-B2B9-09E1818F3838}">
+                                        <File Id="pthread.h_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\3.0\pthread.h" />
+                                    </Component>
+                                </Directory>
+                                <Directory Id="_3.1" Name="3.1">
+                                    <Component Id="pthread.h_2" Guid="{C0E0A942-4AEA-4A59-B3AC-E5B29464A26F}">
+                                        <File Id="pthread.h_2" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\3.1\pthread.h" />
+                                    </Component>
+                                </Directory>
+                                <Directory Id="_3.2" Name="3.2">
+                                    <Component Id="fstream_2" Guid="{BC8F180B-C2F3-4B65-A76C-7D402E17EF5F}">
+                                        <File Id="fstream_2" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\3.2\fstream" />
+                                    </Component>
+                                    <Component Id="pthread.h_3" Guid="{BC913062-76EC-469B-8514-EF8C748ADF16}">
+                                        <File Id="pthread.h_3" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\3.2\pthread.h" />
+                                    </Component>
+                                    <Component Id="sstream_3" Guid="{260BBDB0-FAAB-4C7B-869E-E42AD38DE7DA}">
+                                        <File Id="sstream_3" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\3.2\sstream" />
+                                    </Component>
+                                    <Directory Id="bits" Name="bits">
+                                        <Component Id="fstream.tcc" Guid="{45F9C395-4DF6-47B8-9282-D424D797E5B1}">
+                                            <File Id="fstream.tcc" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\3.2\bits\fstream.tcc" />
+                                        </Component>
+                                        <Component Id="istream.tcc" Guid="{521E2908-1C04-464C-A305-70D9DD524FC8}">
+                                            <File Id="istream.tcc" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\3.2\bits\istream.tcc" />
+                                        </Component>
+                                        <Component Id="locale_facets.h" Guid="{71972C2B-91BF-478F-B035-3462780EE6BA}">
+                                            <File Id="locale_facets.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\3.2\bits\locale_facets.h" />
+                                        </Component>
+                                        <Component Id="locale_facets.tcc" Guid="{3AD15532-71D9-47AD-81CB-1BD8E71E249D}">
+                                            <File Id="locale_facets.tcc" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\3.2\bits\locale_facets.tcc" />
+                                        </Component>
+                                        <Component Id="messages_members.h" Guid="{E74A4FB8-6C03-4461-9881-27423CA3CE19}">
+                                            <File Id="messages_members.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\3.2\bits\messages_members.h" />
+                                        </Component>
+                                        <Component Id="ostream.tcc" Guid="{C0FB25E4-7E69-49F7-8322-53DDE301927F}">
+                                            <File Id="ostream.tcc" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\3.2\bits\ostream.tcc" />
+                                        </Component>
+                                        <Component Id="sstream.tcc" Guid="{978ACCE1-3B82-40EC-A36D-8BDE44897010}">
+                                            <File Id="sstream.tcc" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\3.2\bits\sstream.tcc" />
+                                        </Component>
+                                        <Component Id="stl_deque.h_1" Guid="{5E953FC0-85AE-440B-9672-F113FEEA1585}">
+                                            <File Id="stl_deque.h_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\3.2\bits\stl_deque.h" />
+                                        </Component>
+                                        <Component Id="stl_list.h_1" Guid="{521C7FC8-C3B3-43E0-8636-1D73AF920B67}">
+                                            <File Id="stl_list.h_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\3.2\bits\stl_list.h" />
+                                        </Component>
+                                        <Component Id="stl_tree.h_1" Guid="{46CDDC18-7608-49F4-A882-D458D918EEAB}">
+                                            <File Id="stl_tree.h_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\3.2\bits\stl_tree.h" />
+                                        </Component>
+                                        <Component Id="stl_vector.h_1" Guid="{70623A42-7718-4B73-81FD-3A8E7779DDF0}">
+                                            <File Id="stl_vector.h_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\3.2\bits\stl_vector.h" />
+                                        </Component>
+                                        <Component Id="valarray_meta.h_1" Guid="{A2B2BE15-7F92-407F-B2F3-3EAAD4AD42F2}">
+                                            <File Id="valarray_meta.h_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\3.2\bits\valarray_meta.h" />
+                                        </Component>
+                                    </Directory>
+                                </Directory>
+                                <Directory Id="_3.3" Name="3.3">
+                                    <Component Id="fstream_3" Guid="{BA3C5B24-AF13-4901-8940-D9CE2CA27131}">
+                                        <File Id="fstream_3" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\3.3\fstream" />
+                                    </Component>
+                                    <Component Id="gccxml_builtins.h" Guid="{B796B475-622F-4018-8C03-D8F470BE0A0F}">
+                                        <File Id="gccxml_builtins.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\3.3\gccxml_builtins.h" />
+                                    </Component>
+                                    <Component Id="sstream_4" Guid="{D5BDC881-F002-450A-9A67-FF2652C51DCC}">
+                                        <File Id="sstream_4" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\3.3\sstream" />
+                                    </Component>
+                                    <Directory Id="bits_1" Name="bits">
+                                        <Component Id="fstream.tcc_1" Guid="{BD2FDBF3-422E-4434-9581-5D7BDAD4FED7}">
+                                            <File Id="fstream.tcc_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\3.3\bits\fstream.tcc" />
+                                        </Component>
+                                        <Component Id="list.tcc" Guid="{FF6D0AAC-3C91-4584-BD3A-E992DA3F1BA4}">
+                                            <File Id="list.tcc" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\3.3\bits\list.tcc" />
+                                        </Component>
+                                        <Component Id="locale_facets.h_1" Guid="{A795E45F-C906-4DA7-96EF-B4A5BC606AA0}">
+                                            <File Id="locale_facets.h_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\3.3\bits\locale_facets.h" />
+                                        </Component>
+                                        <Component Id="messages_members.h_1" Guid="{C3123D09-FE2E-41AD-911A-6A60B9FB5B02}">
+                                            <File Id="messages_members.h_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\3.3\bits\messages_members.h" />
+                                        </Component>
+                                        <Component Id="sstream.tcc_1" Guid="{53EE2FB6-0BFB-45B8-A07A-2F5E8CC4AA40}">
+                                            <File Id="sstream.tcc_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\3.3\bits\sstream.tcc" />
+                                        </Component>
+                                        <Component Id="stl_deque.h_2" Guid="{C6356AE5-89B5-459B-8CB6-7AFF451BFF38}">
+                                            <File Id="stl_deque.h_2" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\3.3\bits\stl_deque.h" />
+                                        </Component>
+                                        <Component Id="stl_list.h_2" Guid="{C777E2DC-2FDC-4B3E-A85F-48C60E0D0BD3}">
+                                            <File Id="stl_list.h_2" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\3.3\bits\stl_list.h" />
+                                        </Component>
+                                        <Component Id="stl_tree.h_2" Guid="{4412120D-A8C4-469F-A5BA-DDEEBDDAA7CA}">
+                                            <File Id="stl_tree.h_2" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\3.3\bits\stl_tree.h" />
+                                        </Component>
+                                        <Component Id="stl_vector.h_2" Guid="{071AECBD-782E-4037-8B4B-D2F925E0133F}">
+                                            <File Id="stl_vector.h_2" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\3.3\bits\stl_vector.h" />
+                                        </Component>
+                                        <Component Id="valarray_meta.h_2" Guid="{4B45FF32-7FB4-44AA-A9A6-4B095D6C28D5}">
+                                            <File Id="valarray_meta.h_2" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\3.3\bits\valarray_meta.h" />
+                                        </Component>
+                                    </Directory>
+                                </Directory>
+                                <Directory Id="_3.4" Name="3.4">
+                                    <Component Id="gccxml_builtins.h_1" Guid="{A426471E-6E9C-4DF1-86EB-7F51D6AF472C}">
+                                        <File Id="gccxml_builtins.h_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\3.4\gccxml_builtins.h" />
+                                    </Component>
+                                    <Directory Id="bits_2" Name="bits">
+                                        <Component Id="gthr_default.h" Guid="{BCCC1C21-3FA0-4362-88DC-45889ECC1155}">
+                                            <File Id="gthr_default.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\3.4\bits\gthr-default.h" />
+                                        </Component>
+                                    </Directory>
+                                </Directory>
+                                <Directory Id="_4.0" Name="4.0">
+                                    <Component Id="gccxml_builtins.h_2" Guid="{EC3775DD-9644-4009-86A0-FF3BCA7BF123}">
+                                        <File Id="gccxml_builtins.h_2" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\4.0\gccxml_builtins.h" />
+                                    </Component>
+                                </Directory>
+                                <Directory Id="_4.1" Name="4.1">
+                                    <Component Id="gccxml_builtins.h_3" Guid="{F1FC5073-EC81-457E-B7E5-ABFE2508DF39}">
+                                        <File Id="gccxml_builtins.h_3" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\4.1\gccxml_builtins.h" />
+                                    </Component>
+                                    <Directory Id="bits_3" Name="bits">
+                                        <Component Id="gthr_default.h_1" Guid="{2DD2923F-BCBB-47D6-ACF9-37E2F6DF7817}">
+                                            <File Id="gthr_default.h_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\4.1\bits\gthr-default.h" />
+                                        </Component>
+                                    </Directory>
+                                </Directory>
+                                <Directory Id="_4.2" Name="4.2">
+                                    <Component Id="gccxml_builtins.h_4" Guid="{5182881D-424A-42F2-A9C5-5BAEC9860DE1}">
+                                        <File Id="gccxml_builtins.h_4" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\4.2\gccxml_builtins.h" />
+                                    </Component>
+                                </Directory>
+                                <Directory Id="_4.3" Name="4.3">
+                                    <Component Id="gccxml_builtins.h_5" Guid="{EF98C4F4-14C4-4613-823B-F7DA91927A2A}">
+                                        <File Id="gccxml_builtins.h_5" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\GCC\4.3\gccxml_builtins.h" />
+                                    </Component>
+                                </Directory>
+                            </Directory>
+                            <Directory Id="IBM" Name="IBM">
+                                <Component Id="find_flags" Guid="{2CD39B22-B00F-43B3-AF42-F9422488D0D9}">
+                                    <File Id="find_flags" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\IBM\find_flags" />
+                                </Component>
+                                <Component Id="find_flags_common" Guid="{984F8612-12AA-45FD-8AC9-A2E1BECCBFD0}">
+                                    <File Id="find_flags_common" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\IBM\find_flags_common" />
+                                </Component>
+                                <Component Id="README" Guid="{A90DA847-30E5-4006-9FFC-30F89A3644FE}">
+                                    <File Id="README" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\IBM\README" />
+                                </Component>
+                                <Directory Id="_8.0" Name="8.0">
+                                    <Component Id="adapt_headers.sh" Guid="{F2C86D83-07E4-4D9E-9BE5-09A4D03CA0B8}">
+                                        <File Id="adapt_headers.sh" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\IBM\8.0\adapt_headers.sh" />
+                                    </Component>
+                                    <Component Id="stdlib.h.patch" Guid="{668D5D2B-0979-4C19-BC2C-C659D1C62BE8}">
+                                        <File Id="stdlib.h.patch" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\IBM\8.0\stdlib.h.patch" />
+                                    </Component>
+                                    <Component Id="xstring.patch" Guid="{3B7479D1-638C-4E28-922B-E119FAD6688F}">
+                                        <File Id="xstring.patch" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\IBM\8.0\xstring.patch" />
+                                    </Component>
+                                </Directory>
+                            </Directory>
+                            <Directory Id="Intelx" Name="Intel">
+                                <Component Id="find_flags_1" Guid="{037A486F-CABB-419D-A0A9-C0C57D0DD18B}">
+                                    <File Id="find_flags_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Intel\find_flags" />
+                                </Component>
+                                <Component Id="pthread.h_4" Guid="{96E72805-4172-469F-B844-6E3E9AFC84BE}">
+                                    <File Id="pthread.h_4" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Intel\pthread.h" />
+                                </Component>
+                            </Directory>
+                            <Directory Id="MIPSpro" Name="MIPSpro">
+                                <Component Id="find_flags_2" Guid="{81862CC9-3021-4D19-A4AB-CA3AEF82E95A}">
+                                    <File Id="find_flags_2" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\MIPSpro\find_flags" />
+                                </Component>
+                                <Directory Id="_7.3" Name="7.3">
+                                    <Component Id="exception_2" Guid="{F6668D07-AFF0-45A9-B366-2D1B4B973D20}">
+                                        <File Id="exception_2" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\MIPSpro\7.3\exception" />
+                                    </Component>
+                                    <Component Id="gccxml_mpro_internals.h" Guid="{2D24121A-C51A-416A-AEF4-65E0F2790048}">
+                                        <File Id="gccxml_mpro_internals.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\MIPSpro\7.3\gccxml_mpro_internals.h" />
+                                    </Component>
+                                    <Component Id="iomanip_2" Guid="{6187E63C-3CBA-4EC1-92E9-14E876AEDB5B}">
+                                        <File Id="iomanip_2" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\MIPSpro\7.3\iomanip" />
+                                    </Component>
+                                    <Component Id="ostream_1" Guid="{B38EA5BC-E7C1-4D41-B4FD-5FD8095F30FD}">
+                                        <File Id="ostream_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\MIPSpro\7.3\ostream" />
+                                    </Component>
+                                    <Component Id="stddef.h" Guid="{EC71D33A-704A-4A11-83BC-D328790BC191}">
+                                        <File Id="stddef.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\MIPSpro\7.3\stddef.h" />
+                                    </Component>
+                                    <Component Id="stl_config.h" Guid="{9132DEDC-265E-4820-8194-F561E1129447}">
+                                        <File Id="stl_config.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\MIPSpro\7.3\stl_config.h" />
+                                    </Component>
+                                    <Component Id="stl_locale.h" Guid="{CEB98335-63B5-45A8-A45E-BE1A7FCC2821}">
+                                        <File Id="stl_locale.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\MIPSpro\7.3\stl_locale.h" />
+                                    </Component>
+                                    <Component Id="stl_monetary.h" Guid="{7FFF261A-6BA1-4D38-B10A-CFB41E8F772A}">
+                                        <File Id="stl_monetary.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\MIPSpro\7.3\stl_monetary.h" />
+                                    </Component>
+                                    <Component Id="stl_numeric_facets.h" Guid="{1C0E0B93-05F5-4F4A-ACB7-BD0EE16B3A9F}">
+                                        <File Id="stl_numeric_facets.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\MIPSpro\7.3\stl_numeric_facets.h" />
+                                    </Component>
+                                    <Component Id="stl_threads.h" Guid="{DED2544E-5E29-4F47-A7F0-0630F27E1928}">
+                                        <File Id="stl_threads.h" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\MIPSpro\7.3\stl_threads.h" />
+                                    </Component>
+                                    <Component Id="string_2" Guid="{FBA3BC1B-FE38-46A9-9C5D-E7926F11D5A7}">
+                                        <File Id="string_2" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\MIPSpro\7.3\string" />
+                                    </Component>
+                                </Directory>
+                            </Directory>
+                            <Directory Id="Sun" Name="Sun">
+                                <Component Id="find_flags_3" Guid="{1F6FE14F-621A-41C3-B59E-AE7E887345C1}">
+                                    <File Id="find_flags_3" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Sun\find_flags" />
+                                </Component>
+                                <Component Id="find_flags_common_1" Guid="{CED183B3-991B-4B61-B83A-544C47FB969F}">
+                                    <File Id="find_flags_common_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Sun\find_flags_common" />
+                                </Component>
+                                <Component Id="README_1" Guid="{490DF79D-9D08-47F3-A020-5589D0663DD6}">
+                                    <File Id="README_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Sun\README" />
+                                </Component>
+                                <Directory Id="_5.8" Name="5.8">
+                                    <Component Id="adapt_headers.sh_1" Guid="{2C255E45-319C-46ED-A895-6A10DAA829C7}">
+                                        <File Id="adapt_headers.sh_1" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Sun\5.8\adapt_headers.sh" />
+                                    </Component>
+                                    <Component Id="Cstd.patch" Guid="{3E20819C-215D-4D2F-A929-2C3E35657840}">
+                                        <File Id="Cstd.patch" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Sun\5.8\Cstd.patch" />
+                                    </Component>
+                                    <Component Id="std_5.10.patch" Guid="{72E76DB7-D5B4-4528-9308-E2A31BAD338F}">
+                                        <File Id="std_5.10.patch" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\Sun\5.8\std-5.10.patch" />
+                                    </Component>
+                                </Directory>
+                            </Directory>
+                            <Directory Id="VcInstall" Name="VcInstall">
+                                <Component Id="vc6Include.patch" Guid="{02A307F8-3AB4-48BE-98B9-DC12C8BAE748}">
+                                    <File Id="vc6Include.patch" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\VcInstall\vc6Include.patch" />
+                                </Component>
+                                <Component Id="vc71Include.patch" Guid="{0C379341-9EF5-4238-B7C7-C7C114109B31}">
+                                    <File Id="vc71Include.patch" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\VcInstall\vc71Include.patch" />
+                                </Component>
+                                <Component Id="vc71PlatformSDK.patch" Guid="{09183EE5-AB58-4B2D-B9A6-E62026467649}">
+                                    <File Id="vc71PlatformSDK.patch" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\VcInstall\vc71PlatformSDK.patch" />
+                                </Component>
+                                <Component Id="vc7Include.patch" Guid="{774B5067-2492-4E67-97CA-1E08F48BEBA8}">
+                                    <File Id="vc7Include.patch" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\VcInstall\vc7Include.patch" />
+                                </Component>
+                                <Component Id="vc7PlatformSDK.patch" Guid="{815764F3-BE4D-42C4-8B41-557D0A138F1B}">
+                                    <File Id="vc7PlatformSDK.patch" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\VcInstall\vc7PlatformSDK.patch" />
+                                </Component>
+                                <Component Id="vc8ExpressInclude.patch" Guid="{69404A8D-9EFF-4A3A-879D-D15505B17926}">
+                                    <File Id="vc8ExpressInclude.patch" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\VcInstall\vc8ExpressInclude.patch" />
+                                </Component>
+                                <Component Id="vc8ExpressPlatformSDK.patch" Guid="{B175214F-85D2-4D1B-BBED-5D35F459E120}">
+                                    <File Id="vc8ExpressPlatformSDK.patch" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\VcInstall\vc8ExpressPlatformSDK.patch" />
+                                </Component>
+                                <Component Id="vc8Include.patch" Guid="{7492D2D4-793D-4294-BDD6-4F58D2831873}">
+                                    <File Id="vc8Include.patch" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\VcInstall\vc8Include.patch" />
+                                </Component>
+                                <Component Id="vc8PlatformSDK.patch" Guid="{207A45A7-95EB-4F3D-BD92-AEBD0CE5D2E7}">
+                                    <File Id="vc8PlatformSDK.patch" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\VcInstall\vc8PlatformSDK.patch" />
+                                </Component>
+                                <Component Id="vc8sp1ExpressInclude.patch" Guid="{BD073010-AF7B-4CC1-8ECF-F5FBD6CDF04A}">
+                                    <File Id="vc8sp1ExpressInclude.patch" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\VcInstall\vc8sp1ExpressInclude.patch" />
+                                </Component>
+                                <Component Id="vc8sp1Include.patch" Guid="{6B2B68C1-C2F8-4E1F-A817-561EB97A098B}">
+                                    <File Id="vc8sp1Include.patch" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\VcInstall\vc8sp1Include.patch" />
+                                </Component>
+                                <Component Id="vc8sp1PlatformSDK.patch" Guid="{809560A4-0EB4-4E3A-B2A1-F93368970BA3}">
+                                    <File Id="vc8sp1PlatformSDK.patch" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\VcInstall\vc8sp1PlatformSDK.patch" />
+                                </Component>
+                                <Component Id="vc9Include.patch" Guid="{27D2AECC-FC74-491D-8E3C-2EE3D5A00C11}">
+                                    <File Id="vc9Include.patch" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\VcInstall\vc9Include.patch" />
+                                </Component>
+                                <Component Id="vc9PlatformSDK.patch" Guid="{D482FF62-3559-4B68-A94B-039A3087DCA3}">
+                                    <File Id="vc9PlatformSDK.patch" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\VcInstall\vc9PlatformSDK.patch" />
+                                </Component>
+                                <Component Id="vc9sp1Include.patch" Guid="{4FFA7FB0-6A78-4F7F-81C8-09488A36503D}">
+                                    <File Id="vc9sp1Include.patch" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\VcInstall\vc9sp1Include.patch" />
+                                </Component>
+                                <Component Id="vcCat.exe" Guid="{1042966F-FB23-43BD-ADD7-76F0F3559C6A}">
+                                    <File Id="vcCat.exe" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\VcInstall\vcCat.exe" />
+                                </Component>
+                                <Component Id="vcCat.readme.txt" Guid="{1EC9A82F-DD4B-4934-AAC4-ACE5A6A1BDD2}">
+                                    <File Id="vcCat.readme.txt" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\VcInstall\vcCat.readme.txt" />
+                                </Component>
+                                <Component Id="vcPatch.exe" Guid="{299E0B4A-1694-445A-A877-D1B7713B3015}">
+                                    <File Id="vcPatch.exe" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\VcInstall\vcPatch.exe" />
+                                </Component>
+                                <Component Id="vcPatch.readme.txt" Guid="{9B3D1DBF-CAA2-49D5-A298-4791373766D8}">
+                                    <File Id="vcPatch.readme.txt" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\VcInstall\vcPatch.readme.txt" />
+                                </Component>
+                                <Component Id="vc_helper" Guid="{9E7FBF81-5BFC-45FC-82B1-C448D6621038}">
+                                    <File Id="vc_helper" KeyPath="yes" Source="SourceDir\gccxml\share\gccxml-0.9\VcInstall\vc_helper" />
+                                </Component>
+                            </Directory>
+                        </Directory>
+                        <Directory Id="man" Name="man">
+                            <Directory Id="man1" Name="man1">
+                                <Component Id="gccxml.1" Guid="{5CE935B6-6FC5-432C-B8BD-17802E794057}">
+                                    <File Id="gccxml.1" KeyPath="yes" Source="SourceDir\gccxml\share\man\man1\gccxml.1" />
+                                </Component>
+                            </Directory>
+                        </Directory>
+                    </Directory>
+                </Directory>
+                <Directory Id="plugins" Name="plugins">
+                    <Component Id="CLanguage.dll" Guid="{46C12722-00C4-4BC4-BF02-571E66719C7D}">
+                        <File Id="CLanguage.dll" KeyPath="yes" Source="SourceDir\plugins\CLanguage.dll" />
+                    </Component>
+                    <Component Id="CLanguage.dll.dep" Guid="{287DADE8-20D0-4E42-B1F4-A1D93A4AE65A}">
+                        <File Id="CLanguage.dll.dep" KeyPath="yes" Source="SourceDir\plugins\CLanguage.dll.dep" />
+                    </Component>
+                    <Component Id="Class.dll" Guid="{A579D6AB-AB4B-4398-A874-E8DD30624F6D}">
+                        <File Id="Class.dll" KeyPath="yes" Source="SourceDir\plugins\Class.dll" />
+                    </Component>
+                    <Component Id="Class.dll.dep" Guid="{9310B113-69D9-4AB9-8B4F-C30297B89D62}">
+                        <File Id="Class.dll.dep" KeyPath="yes" Source="SourceDir\plugins\Class.dll.dep" />
+                    </Component>
+                    <Component Id="Concept.dll_1" Guid="{C4118E3C-493F-4E3F-9654-29FF01233878}">
+                        <File Id="Concept.dll_1" KeyPath="yes" Source="SourceDir\plugins\Concept.dll" />
+                    </Component>
+                    <Component Id="Concept.dll.dep" Guid="{26A15A4C-F17C-40FC-913A-D32C6A9957C7}">
+                        <File Id="Concept.dll.dep" KeyPath="yes" Source="SourceDir\plugins\Concept.dll.dep" />
+                    </Component>
+                    <Component Id="CQualifiers.dll" Guid="{6A49066A-DCC5-4505-8D9C-E13B112CEF6E}">
+                        <File Id="CQualifiers.dll" KeyPath="yes" Source="SourceDir\plugins\CQualifiers.dll" />
+                    </Component>
+                    <Component Id="CQualifiers.dll.dep" Guid="{76DAD68B-1C34-41B0-A841-969AB1E7D7DD}">
+                        <File Id="CQualifiers.dll.dep" KeyPath="yes" Source="SourceDir\plugins\CQualifiers.dll.dep" />
+                    </Component>
+                    <Component Id="CStuff.dll" Guid="{0666C322-4148-49EE-9547-3405E8F2EE15}">
+                        <File Id="CStuff.dll" KeyPath="yes" Source="SourceDir\plugins\CStuff.dll" />
+                    </Component>
+                    <Component Id="CStuff.dll.dep" Guid="{C36B49CF-251B-43F3-B42A-8F26B460A310}">
+                        <File Id="CStuff.dll.dep" KeyPath="yes" Source="SourceDir\plugins\CStuff.dll.dep" />
+                    </Component>
+                    <Component Id="CTypes.dll" Guid="{52976FCA-1FF1-4DB4-A18E-03B0CED5E1FF}">
+                        <File Id="CTypes.dll" KeyPath="yes" Source="SourceDir\plugins\CTypes.dll" />
+                    </Component>
+                    <Component Id="CTypes.dll.dep" Guid="{1FCB874C-5E89-4E7E-B077-DB65B8D2BEF9}">
+                        <File Id="CTypes.dll.dep" KeyPath="yes" Source="SourceDir\plugins\CTypes.dll.dep" />
+                    </Component>
+                    <Component Id="Declaration.dll" Guid="{CC94EB3A-0FB8-4D42-B819-B2AF6E86992F}">
+                        <File Id="Declaration.dll" KeyPath="yes" Source="SourceDir\plugins\Declaration.dll" />
+                    </Component>
+                    <Component Id="Declaration.dll.dep" Guid="{FC95AD37-2039-46D5-B74C-F108E3796DCC}">
+                        <File Id="Declaration.dll.dep" KeyPath="yes" Source="SourceDir\plugins\Declaration.dll.dep" />
+                    </Component>
+                    <Component Id="Labels.dll" Guid="{56C458B6-118B-4610-A59A-ADD2CC38CB9F}">
+                        <File Id="Labels.dll" KeyPath="yes" Source="SourceDir\plugins\Labels.dll" />
+                    </Component>
+                    <Component Id="Labels.dll.dep" Guid="{F09E13ED-F745-45E0-9F1A-0C0CCF4563E9}">
+                        <File Id="Labels.dll.dep" KeyPath="yes" Source="SourceDir\plugins\Labels.dll.dep" />
+                    </Component>
+                    <Component Id="Language.dll_1" Guid="{080816A9-BCC6-4A26-95D0-F46C6D1A635B}">
+                        <File Id="Language.dll_1" KeyPath="yes" Source="SourceDir\plugins\Language.dll" />
+                    </Component>
+                    <Component Id="Language.dll.dep" Guid="{986028D3-3233-4FFD-9EE9-036FB78166AF}">
+                        <File Id="Language.dll.dep" KeyPath="yes" Source="SourceDir\plugins\Language.dll.dep" />
+                    </Component>
+                    <Component Id="Members.dll" Guid="{82E2FC8F-A0C6-4D17-A9FF-AC0B580908C6}">
+                        <File Id="Members.dll" KeyPath="yes" Source="SourceDir\plugins\Members.dll" />
+                    </Component>
+                    <Component Id="Members.dll.dep" Guid="{DB3F700F-4EB0-4963-A471-1EC8BAFC4EE4}">
+                        <File Id="Members.dll.dep" KeyPath="yes" Source="SourceDir\plugins\Members.dll.dep" />
+                    </Component>
+                    <Component Id="Namers.dll" Guid="{BB553A61-67F1-4174-B7AE-738E5F891B29}">
+                        <File Id="Namers.dll" KeyPath="yes" Source="SourceDir\plugins\Namers.dll" />
+                    </Component>
+                    <Component Id="Namers.dll.dep" Guid="{A09F1702-EA2A-46AF-A638-A618E14E8851}">
+                        <File Id="Namers.dll.dep" KeyPath="yes" Source="SourceDir\plugins\Namers.dll.dep" />
+                    </Component>
+                    <Component Id="Operator.dll" Guid="{D925CC42-6017-4AA3-B1BC-61626F80D77F}">
+                        <File Id="Operator.dll" KeyPath="yes" Source="SourceDir\plugins\Operator.dll" />
+                    </Component>
+                    <Component Id="Operator.dll.dep" Guid="{005356C3-CCC8-4BD1-A7C2-AEB0056AF2F3}">
+                        <File Id="Operator.dll.dep" KeyPath="yes" Source="SourceDir\plugins\Operator.dll.dep" />
+                    </Component>
+                    <Component Id="SimpleTypes.dll" Guid="{BCD6E383-2FC1-4722-8FBF-CA543854B458}">
+                        <File Id="SimpleTypes.dll" KeyPath="yes" Source="SourceDir\plugins\SimpleTypes.dll" />
+                    </Component>
+                    <Component Id="SimpleTypes.dll.dep" Guid="{3A8475DA-35A2-41FA-8FF7-6B37AA02AB6E}">
+                        <File Id="SimpleTypes.dll.dep" KeyPath="yes" Source="SourceDir\plugins\SimpleTypes.dll.dep" />
+                    </Component>
+                    <Component Id="Statement.dll" Guid="{50FB4E08-C021-45CE-81FA-38AFE5047261}">
+                        <File Id="Statement.dll" KeyPath="yes" Source="SourceDir\plugins\Statement.dll" />
+                    </Component>
+                    <Component Id="Statement.dll.dep" Guid="{C4E144E4-FC60-4F05-8ADF-3242995CEFF5}">
+                        <File Id="Statement.dll.dep" KeyPath="yes" Source="SourceDir\plugins\Statement.dll.dep" />
+                    </Component>
+                    <Component Id="Statements.dll" Guid="{B5F299B9-59E5-4CD7-86AA-5F301437D124}">
+                        <File Id="Statements.dll" KeyPath="yes" Source="SourceDir\plugins\Statements.dll" />
+                    </Component>
+                    <Component Id="Statements.dll.dep" Guid="{CDE6B2DA-EA65-4B71-AE00-DD849A9211C7}">
+                        <File Id="Statements.dll.dep" KeyPath="yes" Source="SourceDir\plugins\Statements.dll.dep" />
+                    </Component>
+                    <Component Id="TypeConcept.dll" Guid="{FCBFCBE4-B4B1-426A-BB87-0C87A3A0A61E}">
+                        <File Id="TypeConcept.dll" KeyPath="yes" Source="SourceDir\plugins\TypeConcept.dll" />
+                    </Component>
+                    <Component Id="TypeConcept.dll.dep" Guid="{39A86C38-3AEE-461E-B0CE-6A118B0881AB}">
+                        <File Id="TypeConcept.dll.dep" KeyPath="yes" Source="SourceDir\plugins\TypeConcept.dll.dep" />
+                    </Component>
+                    <Component Id="Types.dll" Guid="{0BC124B0-093B-436F-91DB-18149DA217BB}">
+                        <File Id="Types.dll" KeyPath="yes" Source="SourceDir\plugins\Types.dll" />
+                    </Component>
+                    <Component Id="Types.dll.dep" Guid="{5B1A8C23-1ED0-45EC-BC95-5BADE696AA5B}">
+                        <File Id="Types.dll.dep" KeyPath="yes" Source="SourceDir\plugins\Types.dll.dep" />
+                    </Component>
+                    <Component Id="Variables.dll" Guid="{65C9763B-DEF1-478F-BA32-0E76AA266E1F}">
+                        <File Id="Variables.dll" KeyPath="yes" Source="SourceDir\plugins\Variables.dll" />
+                    </Component>
+                    <Component Id="Variables.dll.dep" Guid="{032913A2-9273-4F47-9498-1415534E4F0B}">
+                        <File Id="Variables.dll.dep" KeyPath="yes" Source="SourceDir\plugins\Variables.dll.dep" />
+                    </Component>
+                    <Component Id="WebView.dll_1" Guid="{69EB4963-C7DF-4711-BD0E-A1314CA68716}">
+                        <File Id="WebView.dll_1" KeyPath="yes" Source="SourceDir\plugins\WebView.dll" />
+                    </Component>
+                    <Component Id="WebView.dll.dep" Guid="{0E50D483-AC87-428E-8DE6-A2B3FFE3AC97}">
+                        <File Id="WebView.dll.dep" KeyPath="yes" Source="SourceDir\plugins\WebView.dll.dep" />
+                    </Component>
+                    <Directory Id="Data" Name="Data">
+                        <Component Id="GlobalReferenced.svg" Guid="{04A29643-9224-425E-BABF-69E5CEB1CDBF}">
+                            <File Id="GlobalReferenced.svg" KeyPath="yes" Source="SourceDir\plugins\Data\GlobalReferenced.svg" />
+                        </Component>
+                        <Component Id="in.svg" Guid="{15A08001-7A47-4F71-B0CC-24776DBF9349}">
+                            <File Id="in.svg" KeyPath="yes" Source="SourceDir\plugins\Data\in.svg" />
+                        </Component>
+                        <Component Id="out.svg" Guid="{52132110-F735-4E66-8F3C-B7F041B431D2}">
+                            <File Id="out.svg" KeyPath="yes" Source="SourceDir\plugins\Data\out.svg" />
+                        </Component>
+                    </Directory>
+                </Directory>
+                <Directory Id="Support" Name="Support">
+                    <Component Id="COPYING.MarttaSupport" Guid="{E663801E-4DFC-4A3A-AB0D-DAF5D1525E1E}">
+                        <File Id="COPYING.MarttaSupport" KeyPath="yes" Source="SourceDir\Support\COPYING.MarttaSupport" />
+                    </Component>
+                    <Component Id="msDebug.h" Guid="{DF9F1DFD-2769-4362-A37D-D12C955838CC}">
+                        <File Id="msDebug.h" KeyPath="yes" Source="SourceDir\Support\msDebug.h" />
+                    </Component>
+                    <Component Id="msFlags.h" Guid="{B494333A-A00F-495C-80A2-90AC896DF432}">
+                        <File Id="msFlags.h" KeyPath="yes" Source="SourceDir\Support\msFlags.h" />
+                    </Component>
+                    <Component Id="msHash.h" Guid="{BE6FC2A4-4B3B-424F-BF2C-D729315CC9B9}">
+                        <File Id="msHash.h" KeyPath="yes" Source="SourceDir\Support\msHash.h" />
+                    </Component>
+                    <Component Id="msHash.inl" Guid="{7543CA82-193A-428F-88B4-3C6E4AD0A6F2}">
+                        <File Id="msHash.inl" KeyPath="yes" Source="SourceDir\Support\msHash.inl" />
+                    </Component>
+                    <Component Id="msList.h" Guid="{35CA5751-7CE3-4B01-A311-2D992AB9526A}">
+                        <File Id="msList.h" KeyPath="yes" Source="SourceDir\Support\msList.h" />
+                    </Component>
+                    <Component Id="msList.inl" Guid="{9A577A77-6C14-4CCB-B42E-C5E373148599}">
+                        <File Id="msList.inl" KeyPath="yes" Source="SourceDir\Support\msList.inl" />
+                    </Component>
+                    <Component Id="msRgb.cpp" Guid="{D17594C4-355D-478F-B0F5-4AF2F18731E6}">
+                        <File Id="msRgb.cpp" KeyPath="yes" Source="SourceDir\Support\msRgb.cpp" />
+                    </Component>
+                    <Component Id="msRgb.h" Guid="{5EAD9D8F-7F54-4D98-A6D6-67177D74F697}">
+                        <File Id="msRgb.h" KeyPath="yes" Source="SourceDir\Support\msRgb.h" />
+                    </Component>
+                    <Component Id="msString.cpp" Guid="{5434E3D6-4793-4D3E-814B-466E786652F6}">
+                        <File Id="msString.cpp" KeyPath="yes" Source="SourceDir\Support\msString.cpp" />
+                    </Component>
+                    <Component Id="msString.h" Guid="{4C112300-44E7-44EC-8AC5-AE225D768542}">
+                        <File Id="msString.h" KeyPath="yes" Source="SourceDir\Support\msString.h" />
+                    </Component>
+                    <Component Id="msStringList.h" Guid="{BB38BC91-7CF4-4B5B-8E6E-A9C142DEFFAE}">
+                        <File Id="msStringList.h" KeyPath="yes" Source="SourceDir\Support\msStringList.h" />
+                    </Component>
+                    <Component Id="msSupport.h" Guid="{D0CB6A5A-E3D3-4444-91B6-8F58206C5BDD}">
+                        <File Id="msSupport.h" KeyPath="yes" Source="SourceDir\Support\msSupport.h" />
+                    </Component>
+                    <Component Id="msTextStream.h" Guid="{6BA11D70-F3EA-44CD-A648-C20BB37E6714}">
+                        <File Id="msTextStream.h" KeyPath="yes" Source="SourceDir\Support\msTextStream.h" />
+                    </Component>
+                    <Component Id="support.dll_1" Guid="{6758B141-B3F9-43C5-9907-875B17A2F8B2}">
+                        <File Id="support.dll_1" KeyPath="yes" Source="SourceDir\Support\support.dll" />
+                    </Component>
+                    <Component Id="support.lib" Guid="{79D333E4-0D2D-41FF-952B-EC9429DA2172}">
+                        <File Id="support.lib" KeyPath="yes" Source="SourceDir\Support\support.lib" />
+                    </Component>
+				</Directory>
+          </Directory>
+      </Directory> 
+      </Directory>
+      <Feature Id='Complete' Level='1' Title='Martta' Description='Yes' ConfigurableDirectory='INSTALLDIR'>
+        <ComponentRef Id="Concept.dll" />
+            <ComponentRef Id="Language.dll" />
+            <ComponentRef Id="Martta.exe" />
+            <ComponentRef Id="phonon4.dll" />
+            <ComponentRef Id="QtCore4.dll" />
+            <ComponentRef Id="QtGui4.dll" />
+            <ComponentRef Id="QtNetwork4.dll" />
+            <ComponentRef Id="QtWebKit4.dll" />
+            <ComponentRef Id="QtXml4.dll" />
+            <ComponentRef Id="support.dll" />
+            <ComponentRef Id="WebView.dll" />
+            <ComponentRef Id="gccxml.exe" />
+            <ComponentRef Id="gccxml_cc1plus.exe" />
+            <ComponentRef Id="gccxml_vcconfig.bat" />
+            <ComponentRef Id="gccxml_vcconfig.exe" />
+            <ComponentRef Id="Copyright.txt" />
+            <ComponentRef Id="gccxml.html" />
+            <ComponentRef Id="gccxml.txt" />
+            <ComponentRef Id="gccxml_config" />
+            <ComponentRef Id="gccxml_identify_compiler.cc" />
+            <ComponentRef Id="except.h" />
+            <ComponentRef Id="gccxml_fstream.h" />
+            <ComponentRef Id="gccxml_new.h" />
+            <ComponentRef Id="gccxml_valarray.h" />
+            <ComponentRef Id="gccxml_vector.h" />
+            <ComponentRef Id="io.h" />
+            <ComponentRef Id="oaidl.h" />
+            <ComponentRef Id="propidl.h" />
+            <ComponentRef Id="stdarg.h" />
+            <ComponentRef Id="valarray.cc" />
+            <ComponentRef Id="locimpl.h" />
+            <ComponentRef Id="rwlocale.h" />
+            <ComponentRef Id="algorithm" />
+            <ComponentRef Id="algorithm.h" />
+            <ComponentRef Id="bitset" />
+            <ComponentRef Id="bitset.h" />
+            <ComponentRef Id="cctype" />
+            <ComponentRef Id="cfloat" />
+            <ComponentRef Id="climits" />
+            <ComponentRef Id="cmath" />
+            <ComponentRef Id="complex" />
+            <ComponentRef Id="complex.h" />
+            <ComponentRef Id="cstddef" />
+            <ComponentRef Id="cstdio" />
+            <ComponentRef Id="cstdlib" />
+            <ComponentRef Id="cstring" />
+            <ComponentRef Id="cstring.h" />
+            <ComponentRef Id="ctime" />
+            <ComponentRef Id="cwchar" />
+            <ComponentRef Id="cwctype" />
+            <ComponentRef Id="deque" />
+            <ComponentRef Id="deque.h" />
+            <ComponentRef Id="exception" />
+            <ComponentRef Id="exception.h" />
+            <ComponentRef Id="fstream" />
+            <ComponentRef Id="fstream.h" />
+            <ComponentRef Id="function" />
+            <ComponentRef Id="function.h" />
+            <ComponentRef Id="functional" />
+            <ComponentRef Id="gccxml_typeinfo.h" />
+            <ComponentRef Id="iomanip" />
+            <ComponentRef Id="iomanip.h" />
+            <ComponentRef Id="ios" />
+            <ComponentRef Id="ios.h" />
+            <ComponentRef Id="iosfwd" />
+            <ComponentRef Id="iosfwd.h" />
+            <ComponentRef Id="iostream" />
+            <ComponentRef Id="iostream.h" />
+            <ComponentRef Id="istream" />
+            <ComponentRef Id="istream.h" />
+            <ComponentRef Id="iterator" />
+            <ComponentRef Id="iterator.h" />
+            <ComponentRef Id="limits" />
+            <ComponentRef Id="limits.h" />
+            <ComponentRef Id="list" />
+            <ComponentRef Id="list.h" />
+            <ComponentRef Id="locale" />
+            <ComponentRef Id="locale.h" />
+            <ComponentRef Id="map" />
+            <ComponentRef Id="map.h" />
+            <ComponentRef Id="memory" />
+            <ComponentRef Id="memory.h" />
+            <ComponentRef Id="new" />
+            <ComponentRef Id="new.h" />
+            <ComponentRef Id="numeric" />
+            <ComponentRef Id="numeric.h" />
+            <ComponentRef Id="ostream" />
+            <ComponentRef Id="ostream.h" />
+            <ComponentRef Id="queue" />
+            <ComponentRef Id="queue.h" />
+            <ComponentRef Id="set" />
+            <ComponentRef Id="set.h" />
+            <ComponentRef Id="sstream" />
+            <ComponentRef Id="sstream.h" />
+            <ComponentRef Id="stack" />
+            <ComponentRef Id="stack.h" />
+            <ComponentRef Id="stdexcept" />
+            <ComponentRef Id="stdexcept.h" />
+            <ComponentRef Id="streambuf" />
+            <ComponentRef Id="streambuf.h" />
+            <ComponentRef Id="string" />
+            <ComponentRef Id="string.h" />
+            <ComponentRef Id="strstream" />
+            <ComponentRef Id="strstream.h" />
+            <ComponentRef Id="typeinfo" />
+            <ComponentRef Id="typeinfo.h" />
+            <ComponentRef Id="utility" />
+            <ComponentRef Id="utility.h" />
+            <ComponentRef Id="valarray" />
+            <ComponentRef Id="valarray.h" />
+            <ComponentRef Id="vector" />
+            <ComponentRef Id="vector.h" />
+            <ComponentRef Id="codecvt" />
+            <ComponentRef Id="collate" />
+            <ComponentRef Id="ctype" />
+            <ComponentRef Id="iosbase" />
+            <ComponentRef Id="iotraits" />
+            <ComponentRef Id="iterator_1" />
+            <ComponentRef Id="lochelp" />
+            <ComponentRef Id="locimpl" />
+            <ComponentRef Id="locvector" />
+            <ComponentRef Id="messages" />
+            <ComponentRef Id="money" />
+            <ComponentRef Id="numbrw" />
+            <ComponentRef Id="numeral" />
+            <ComponentRef Id="rwdispatch.h" />
+            <ComponentRef Id="rwlocale" />
+            <ComponentRef Id="rwstderr_macros.h" />
+            <ComponentRef Id="string_ref" />
+            <ComponentRef Id="time" />
+            <ComponentRef Id="traits" />
+            <ComponentRef Id="tree" />
+            <ComponentRef Id="usefacet" />
+            <ComponentRef Id="valimp" />
+            <ComponentRef Id="vendor" />
+            <ComponentRef Id="algorithm_1" />
+            <ComponentRef Id="bitset_1" />
+            <ComponentRef Id="cctype_1" />
+            <ComponentRef Id="clocale" />
+            <ComponentRef Id="cmath_1" />
+            <ComponentRef Id="complex_1" />
+            <ComponentRef Id="csetjmp" />
+            <ComponentRef Id="csignal" />
+            <ComponentRef Id="cstdarg" />
+            <ComponentRef Id="cstddef_1" />
+            <ComponentRef Id="cstdio_1" />
+            <ComponentRef Id="cstdlib_1" />
+            <ComponentRef Id="cstring_1" />
+            <ComponentRef Id="ctime_1" />
+            <ComponentRef Id="cwchar_1" />
+            <ComponentRef Id="cwctype_1" />
+            <ComponentRef Id="deque_1" />
+            <ComponentRef Id="exception_1" />
+            <ComponentRef Id="fstream_1" />
+            <ComponentRef Id="functional_1" />
+            <ComponentRef Id="gccxml_bitset" />
+            <ComponentRef Id="iomanip_1" />
+            <ComponentRef Id="iosfwd_1" />
+            <ComponentRef Id="iostream_1" />
+            <ComponentRef Id="iterator_2" />
+            <ComponentRef Id="list_1" />
+            <ComponentRef Id="map_1" />
+            <ComponentRef Id="memory_1" />
+            <ComponentRef Id="new_1" />
+            <ComponentRef Id="numeric_1" />
+            <ComponentRef Id="pthread.h" />
+            <ComponentRef Id="queue_1" />
+            <ComponentRef Id="set_1" />
+            <ComponentRef Id="sstream_1" />
+            <ComponentRef Id="stack_1" />
+            <ComponentRef Id="stdexcept_1" />
+            <ComponentRef Id="stl_alloc.h" />
+            <ComponentRef Id="stl_bvector.h" />
+            <ComponentRef Id="stl_deque.h" />
+            <ComponentRef Id="stl_list.h" />
+            <ComponentRef Id="stl_tree.h" />
+            <ComponentRef Id="stl_vector.h" />
+            <ComponentRef Id="string_1" />
+            <ComponentRef Id="strstream_1" />
+            <ComponentRef Id="typeinfo_1" />
+            <ComponentRef Id="utility_1" />
+            <ComponentRef Id="valarray_1" />
+            <ComponentRef Id="vector_1" />
+            <ComponentRef Id="bastring.cc" />
+            <ComponentRef Id="complext.h" />
+            <ComponentRef Id="dcomplex.h" />
+            <ComponentRef Id="fcomplex.h" />
+            <ComponentRef Id="gslice_array.h" />
+            <ComponentRef Id="indirect_array.h" />
+            <ComponentRef Id="ldcomplex.h" />
+            <ComponentRef Id="mask_array.h" />
+            <ComponentRef Id="slice_array.h" />
+            <ComponentRef Id="std_valarray.h" />
+            <ComponentRef Id="straits.h" />
+            <ComponentRef Id="valarray_meta.h" />
+            <ComponentRef Id="sstream_2" />
+            <ComponentRef Id="pthread.h_1" />
+            <ComponentRef Id="pthread.h_2" />
+            <ComponentRef Id="fstream_2" />
+            <ComponentRef Id="pthread.h_3" />
+            <ComponentRef Id="sstream_3" />
+            <ComponentRef Id="fstream.tcc" />
+            <ComponentRef Id="istream.tcc" />
+            <ComponentRef Id="locale_facets.h" />
+            <ComponentRef Id="locale_facets.tcc" />
+            <ComponentRef Id="messages_members.h" />
+            <ComponentRef Id="ostream.tcc" />
+            <ComponentRef Id="sstream.tcc" />
+            <ComponentRef Id="stl_deque.h_1" />
+            <ComponentRef Id="stl_list.h_1" />
+            <ComponentRef Id="stl_tree.h_1" />
+            <ComponentRef Id="stl_vector.h_1" />
+            <ComponentRef Id="valarray_meta.h_1" />
+            <ComponentRef Id="fstream_3" />
+            <ComponentRef Id="gccxml_builtins.h" />
+            <ComponentRef Id="sstream_4" />
+            <ComponentRef Id="fstream.tcc_1" />
+            <ComponentRef Id="list.tcc" />
+            <ComponentRef Id="locale_facets.h_1" />
+            <ComponentRef Id="messages_members.h_1" />
+            <ComponentRef Id="sstream.tcc_1" />
+            <ComponentRef Id="stl_deque.h_2" />
+            <ComponentRef Id="stl_list.h_2" />
+            <ComponentRef Id="stl_tree.h_2" />
+            <ComponentRef Id="stl_vector.h_2" />
+            <ComponentRef Id="valarray_meta.h_2" />
+            <ComponentRef Id="gccxml_builtins.h_1" />
+            <ComponentRef Id="gthr_default.h" />
+            <ComponentRef Id="gccxml_builtins.h_2" />
+            <ComponentRef Id="gccxml_builtins.h_3" />
+            <ComponentRef Id="gthr_default.h_1" />
+            <ComponentRef Id="gccxml_builtins.h_4" />
+            <ComponentRef Id="gccxml_builtins.h_5" />
+            <ComponentRef Id="find_flags" />
+            <ComponentRef Id="find_flags_common" />
+            <ComponentRef Id="README" />
+            <ComponentRef Id="adapt_headers.sh" />
+            <ComponentRef Id="stdlib.h.patch" />
+            <ComponentRef Id="xstring.patch" />
+            <ComponentRef Id="find_flags_1" />
+            <ComponentRef Id="pthread.h_4" />
+            <ComponentRef Id="find_flags_2" />
+            <ComponentRef Id="exception_2" />
+            <ComponentRef Id="gccxml_mpro_internals.h" />
+            <ComponentRef Id="iomanip_2" />
+            <ComponentRef Id="ostream_1" />
+            <ComponentRef Id="stddef.h" />
+            <ComponentRef Id="stl_config.h" />
+            <ComponentRef Id="stl_locale.h" />
+            <ComponentRef Id="stl_monetary.h" />
+            <ComponentRef Id="stl_numeric_facets.h" />
+            <ComponentRef Id="stl_threads.h" />
+            <ComponentRef Id="string_2" />
+            <ComponentRef Id="find_flags_3" />
+            <ComponentRef Id="find_flags_common_1" />
+            <ComponentRef Id="README_1" />
+            <ComponentRef Id="adapt_headers.sh_1" />
+            <ComponentRef Id="Cstd.patch" />
+            <ComponentRef Id="std_5.10.patch" />
+            <ComponentRef Id="vc6Include.patch" />
+            <ComponentRef Id="vc71Include.patch" />
+            <ComponentRef Id="vc71PlatformSDK.patch" />
+            <ComponentRef Id="vc7Include.patch" />
+            <ComponentRef Id="vc7PlatformSDK.patch" />
+            <ComponentRef Id="vc8ExpressInclude.patch" />
+            <ComponentRef Id="vc8ExpressPlatformSDK.patch" />
+            <ComponentRef Id="vc8Include.patch" />
+            <ComponentRef Id="vc8PlatformSDK.patch" />
+            <ComponentRef Id="vc8sp1ExpressInclude.patch" />
+            <ComponentRef Id="vc8sp1Include.patch" />
+            <ComponentRef Id="vc8sp1PlatformSDK.patch" />
+            <ComponentRef Id="vc9Include.patch" />
+            <ComponentRef Id="vc9PlatformSDK.patch" />
+            <ComponentRef Id="vc9sp1Include.patch" />
+            <ComponentRef Id="vcCat.exe" />
+            <ComponentRef Id="vcCat.readme.txt" />
+            <ComponentRef Id="vcPatch.exe" />
+            <ComponentRef Id="vcPatch.readme.txt" />
+            <ComponentRef Id="vc_helper" />
+            <ComponentRef Id="gccxml.1" />
+            <ComponentRef Id="CLanguage.dll" />
+            <ComponentRef Id="CLanguage.dll.dep" />
+            <ComponentRef Id="Class.dll" />
+            <ComponentRef Id="Class.dll.dep" />
+            <ComponentRef Id="Concept.dll_1" />
+            <ComponentRef Id="Concept.dll.dep" />
+            <ComponentRef Id="CQualifiers.dll" />
+            <ComponentRef Id="CQualifiers.dll.dep" />
+            <ComponentRef Id="CStuff.dll" />
+            <ComponentRef Id="CStuff.dll.dep" />
+            <ComponentRef Id="CTypes.dll" />
+            <ComponentRef Id="CTypes.dll.dep" />
+            <ComponentRef Id="Declaration.dll" />
+            <ComponentRef Id="Declaration.dll.dep" />
+            <ComponentRef Id="Labels.dll" />
+            <ComponentRef Id="Labels.dll.dep" />
+            <ComponentRef Id="Language.dll_1" />
+            <ComponentRef Id="Language.dll.dep" />
+            <ComponentRef Id="Members.dll" />
+            <ComponentRef Id="Members.dll.dep" />
+            <ComponentRef Id="Namers.dll" />
+            <ComponentRef Id="Namers.dll.dep" />
+            <ComponentRef Id="Operator.dll" />
+            <ComponentRef Id="Operator.dll.dep" />
+            <ComponentRef Id="SimpleTypes.dll" />
+            <ComponentRef Id="SimpleTypes.dll.dep" />
+            <ComponentRef Id="Statement.dll" />
+            <ComponentRef Id="Statement.dll.dep" />
+            <ComponentRef Id="Statements.dll" />
+            <ComponentRef Id="Statements.dll.dep" />
+            <ComponentRef Id="TypeConcept.dll" />
+            <ComponentRef Id="TypeConcept.dll.dep" />
+            <ComponentRef Id="Types.dll" />
+            <ComponentRef Id="Types.dll.dep" />
+            <ComponentRef Id="Variables.dll" />
+            <ComponentRef Id="Variables.dll.dep" />
+            <ComponentRef Id="WebView.dll_1" />
+            <ComponentRef Id="WebView.dll.dep" />
+            <ComponentRef Id="GlobalReferenced.svg" />
+            <ComponentRef Id="in.svg" />
+            <ComponentRef Id="out.svg" />
+            <ComponentRef Id="COPYING.MarttaSupport" />
+            <ComponentRef Id="msDebug.h" />
+            <ComponentRef Id="msFlags.h" />
+            <ComponentRef Id="msHash.h" />
+            <ComponentRef Id="msHash.inl" />
+            <ComponentRef Id="msList.h" />
+            <ComponentRef Id="msList.inl" />
+            <ComponentRef Id="msRgb.cpp" />
+            <ComponentRef Id="msRgb.h" />
+            <ComponentRef Id="msString.cpp" />
+            <ComponentRef Id="msString.h" />
+            <ComponentRef Id="msStringList.h" />
+            <ComponentRef Id="msSupport.h" />
+            <ComponentRef Id="msTextStream.h" />
+            <ComponentRef Id="support.dll_1" />
+            <ComponentRef Id="support.lib" />
+      </Feature>
+      <Media Id="1" Cabinet="product.cab" EmbedCab="yes" />
+		
+    </Product>
+</Wix>
