@@ -38,7 +38,7 @@ bool SimpleBinaryOperation::keyPressedOnPosition(Position const& _p, KeyEvent co
 		return false;
 
 	Position p = slideOnPrecedence(_p, o.precedence(), o.associativity(), _e->nearestBracket(_p));
-	AssertNR(!p.entity()->isEditing());
+	AssertNR(!p.concept()->isEditing());
 
 	// Try condition for p, then _p if p fails, then bail if _p fails. p is the one that succeeded first.
 	for (; !(p->isKind<Typed>() && findOperators(o, p->asKind<Typed>()->apparentType()).size()); p = _p)
@@ -117,9 +117,7 @@ String SimpleBinaryOperation::defineHtml() const
 {
 	if (id().symbol() == Operator::Slash && WebStylist::current()->property("SimpleBinaryOperation", "ProperMaths").toBool())
 	{
-		String ret = L"<^><div style=\"display: inline-block; vertical-align: middle; text-align:center\">%1<hr style=\"margin:0; margin-top:1px; padding:0; border:0; border-bottom: 2px solid #666;\"/>%2</div>";
-		if (doINeedParenthesising(this) && WebStylist::current()->property(L"Operation", L"Parenthesise").toBool())
-			ret = L"(" + ret + L")";
+		String ret = displayParenthesise(L"<^><div style=\"display: inline-block; vertical-align: middle; text-align:center\">%1<hr style=\"margin:0; margin-top:1px; padding:0; border:0; border-bottom: 2px solid #666;\"/>%2</div>");
 		return ret	.arg(toHtml(child(FirstOperand), childIs<Operation>(FirstOperand) ? L"class=\"Operation\"" : L""))
 					.arg(toHtml(child(SecondOperand), childIs<Operation>(SecondOperand) ? L"class=\"Operation\"" : L""));
 	}

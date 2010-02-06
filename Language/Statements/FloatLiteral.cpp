@@ -39,7 +39,7 @@ bool FloatLiteral::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 	else if (_p.exists() && _p->isKind<FloatLiteral>() && _e->text().length() == 1 && _e->text()[0].isNumber())
 	{
 		_p->asKind<FloatLiteral>()->setValue(_e->text().toInt());
-		_e->codeScene()->setEditing(_p.entity());
+		_e->codeScene()->setEditing(_p.concept());
 	}
 	else
 		return false;

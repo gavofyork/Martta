@@ -920,10 +920,10 @@ void Concept::deleteAndRefill(Concept* _e)
 	else if (isNecessary())
 	{
 		p.spawnPreparedSilent();
-		kill(p.entity());
-		inLimbo(p.entity());
+		kill(p.concept());
+		inLimbo(p.concept());
 		p->parentAdded();
-		c->childSwitched(p.entity(), this);
+		c->childSwitched(p.concept(), this);
 		delete this;
 	}
 	else

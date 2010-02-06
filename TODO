@@ -8,9 +8,11 @@ BUG Dodgy layout
 BUG Delete identifier - turns to anon nut no update to references.
 BUG Try to name an enum.
 BUG? current() bad in onCurrentAboutToChange.
+BUG (n statements) doesn't update in secondary view when changes in primary.
 BUG Add method, make return type good, still appears bad.
 - Making name good/bad doesn't change anything.
 - Name change doesn't carry into owner.
+- Same with constructor - assigned variable with type of no constructor error, add constructor no update.
 --------------------------------------------------------------------------------
 
 RELEASE M1 (ASAP)

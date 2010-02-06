@@ -226,6 +226,8 @@ prepare Declaration "Support/IdentifierSet Support/IdentifierSetRegistrar Interf
 
 prepare Statement "ValueDefiner Interfaces/Corporal Interfaces/Conditional Statement Primary BareTyped Typed Untyped Compound" "TypeConcept Declaration"
 
+prepare Comment "Comment" "Statement"
+
 prepare SimpleTypes "Const Reference PhysicalType" "TypeConcept"
 
 prepare Variables "Interfaces/VariableNamer Support/VariablePlacer AssignedVariable DefaultConstructedVariable" "Labels Statement SimpleTypes"

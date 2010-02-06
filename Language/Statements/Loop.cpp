@@ -32,7 +32,7 @@ static SimpleIdentifierSet<Loop> s_loopSet(L"forever");
 
 bool Loop::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
-	return simplePlaceholderKeyPressHandler<Loop>(_p, _e, "...");
+	return simplePositionKeyPressHandler<Loop>(_p, _e, "...");
 }
 
 Kinds Loop::allowedKinds(int _index) const

@@ -20,6 +20,8 @@
 
 #include <QtGui>
 #include <QtXml>
+#include <QWebFrame>
+#include <QSvgGenerator>
 
 #ifdef Q_WS_MAC
 #include <CoreFoundation/CoreFoundation.h>
@@ -244,6 +246,28 @@ void MainWindow::loadPlugins()
 
 	updateLanguage();
 	setEnabled(true);
+}
+
+void MainWindow::on_actCopyCodeViewContents_triggered()
+{
+	foreach (CodeView* cv, findChildren<CodeView*>())
+		if (cv->hasFocus())
+			QApplication::clipboard()->setText(cv->toHtml());
+}
+
+void MainWindow::on_actSaveCodeViewToSvg_triggered()
+{
+	foreach (CodeView* cv, findChildren<CodeView*>())
+		if (cv->hasFocus())
+		{
+			QString fn = QFileDialog::getSaveFileName(this, "Save Code View to SVG", QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation), "*.svg;SVG documents");
+			if (!fn.isEmpty())
+			{
+				QSvgGenerator g;
+				g.setFileName(fn);
+				cv->renderTo(&g);
+			}
+		}
 }
 
 void MainWindow::on_actConfigureCodeView_triggered()

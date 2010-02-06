@@ -28,9 +28,7 @@ MARTTA_PLACEHOLDER_CPP(BinaryOperation);
 
 String BinaryOperation::defineHtml() const
 {
-	String ret = L"%1 <^>" + operatorHtml() + L" %2";
-	if (doINeedParenthesising(this) && WebStylist::current()->property(L"Operation", L"Parenthesise").toBool())
-		ret = L"(" + ret + L")";
+	String ret = displayParenthesise(L"%1 <^>" + operatorHtml() + L" %2");
 	return ret	.arg(toHtml(child(FirstOperand), childIs<Operation>(FirstOperand) ? L"span class=\"Operation\"" : L"span"))
 				.arg(toHtml(child(SecondOperand), childIs<Operation>(SecondOperand) ? L"span class=\"Operation\"" : L"span"));
 }

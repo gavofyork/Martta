@@ -4,3 +4,4 @@ HEADERS +=  Support/Auxilliary.h Support/AuxilliaryFace.h Support/AuxilliaryRegi
 unix:HEADERS +=  Support/AuxilliaryRegistrar.cpp Support/ChangeMan.cpp Support/CodeScene.cpp Support/CompletionDelegate.cpp Support/CullManager.cpp Support/Dier.cpp Support/EditDelegateFace.cpp Support/EditDelegate.cpp Support/KeyEvent.cpp Support/Kind.cpp Support/Meta.cpp Support/Position.cpp Interfaces/ChildValidifier.cpp Interfaces/Dependee.cpp Interfaces/Depender.cpp Interfaces/Familial.cpp Interfaces/Composite.cpp ./Concept.cpp Support/SpecialKeys.cpp
 SOURCES += .Concept-composed.cpp
 DEFINES += M_API_Concept=M_INAPI
+

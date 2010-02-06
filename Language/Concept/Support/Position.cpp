@@ -34,7 +34,7 @@ bool Position::isFixed() const
 	return m_parent && (m_parent->isFixed() || m_parent->defineChildFixed(m_index == UndefinedIndex ? m_parent->cardinalChildCount() : m_index));
 }
 
-Concept* Position::entity() const
+Concept* Position::concept() const
 {
 	AssertNR(exists());
 	return m_parent->child(m_index);
@@ -110,7 +110,7 @@ TextStream& operator<<(TextStream& _out, Position const& _item)
 {
 	_out << _item.m_index << "@" << &*_item.m_parent;
 	if (_item.exists())
-		_out << "[" << _item.entity() << "]";
+		_out << "[" << _item.concept() << "]";
 	return _out;
 }
 

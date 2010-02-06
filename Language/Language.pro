@@ -10,6 +10,7 @@ SUBDIRS = \
  Labels \
  Declaration \
  Statement \
+ Comment \
  SimpleTypes \
  Variables \
  Types \

@@ -20,29 +20,39 @@
 
 #pragma once
 
-#include "Const.h"
-#include "Pointer.h"
-#include "UnaryOperation.h"
+#include <msString.h>
+using namespace MarttaSupport;
 
-#ifndef M_API_Statements
-#define M_API_Statements M_OUTAPI
+#include "Statement.h"
+
+#ifndef M_API_Comment
+#define M_API_Comment M_OUTAPI
 #endif
 
 namespace Martta
 {
 
-class M_API_Statements DeleteOperation: public_super UnaryOperation
+class M_API_Comment Comment: public_super Statement
 {
-	MARTTA_PROPER(UnaryOperation)
+	MARTTA_PROPER(Statement)
 
 public:
-	inline static bool					keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePositionKeyPressHandler<DeleteOperation>(_p, _e, "~"); }
+	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
+
+	String								value() const { return m_value; }
+	void								setValue(String const& _s) { m_value = _s; changed(); }
 
 protected:
-	virtual Types						allowedTypes(int) const { return Type().topWith(Const()).topWith(Pointer()); }
-	virtual Type						type() const { return Type(); }
-	virtual String						code() const { return "delete " + childAs<Statement>(TheOperand)->code(); }
-	virtual String						defineHtml() const { return L"<^><span class=\"keyword\">delete</span>" + toHtml(child(TheOperand)); }
+	virtual String						code() const { return String::null; }
+	virtual bool						requiresSemicolon() const { return false; }
+	virtual String						defineHtml() const;
+	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
+	virtual bool						keyPressed(KeyEvent const* _e);
+	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p[L"value"] = m_value; }
+	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_value = _p[L"value"]; }
+
+private:
+	String								m_value;
 };
 
 }

@@ -48,7 +48,11 @@ public:
 	virtual String							defineEditHtml(CodeScene* _cs) const;
 
 	static String							htmlEscape(String const& _s);
-	inline static String					tagOf(String const& _classes, String const& _mid, String const& _tag = L"span") { return L"<" + _tag + " class=\"" + _classes + "\">" + _mid + L"</" + _tag + L">"; }
+	inline static String					br() { return L"<br/>"; }
+	inline static String					mark() { return L"<^>"; }
+	template<String const& Tag>
+	inline static String					tagOf(String const& _classes, String const& _mid) { return L"<" + Tag + " class=\"" + _classes + "\">" + _mid + L"</" + Tag.section(L' ', 0, 0) + L">"; }
+	inline static String					tagOf(String const& _classes, String const& _mid, String const& _tag = L"span") { return L"<" + _tag + " class=\"" + _classes + "\">" + _mid + L"</" + _tag.section(L' ', 0, 0) + L">"; }
 	static String							cssBorder(String const& _name, Rgb _col);
 
 	static String							composeName(String const& _id, StringList const& _flags);

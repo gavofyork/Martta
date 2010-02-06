@@ -42,6 +42,7 @@ CodeView::CodeView(QWidget* _parent):
 	m_showOneChange				(false),
 	m_showInvalids				(true)
 {
+	m_stylist->setCodeScene(this);
 	init();
 
 	connect(this, SIGNAL(selectionChanged()), SLOT(onSelectionChanged()));
@@ -105,12 +106,26 @@ Hash<String, String> CodeView::defaultProperties() const
 	ret[L"Operation-Parenthesise"] = L"false";
 	ret[L"SimpleBinaryOperation-ProperMaths"] = L"true";
 	ret[L"CSS-Simple"] = L"false";
+	ret[L"CodeView-Preview Brackets"] = L"false";
 	return ret;
 }
 
 void CodeView::onPropertiesChanged()
 {
 	m_stylist->setProperties(properties());
+}
+
+QString CodeView::toHtml() const
+{
+	QFile support(":/CodeView/Support.js");
+	support.open(QFile::ReadOnly);
+	return QString("<!DOCTYPE HTML><html><head><script type=\"text/javascript\">%3</script><style type=\"text/css\">%1</style></head><body onmousedown=\"procMouseDown(event)\">%2</body></html>").arg(qs(m_stylist->css())).arg(qs(m_stylist->toHtml(m_subject))).arg(support.readAll().data());
+}
+
+void CodeView::renderTo(QPaintDevice* _dev)
+{
+	QPainter p(_dev);
+	page()->mainFrame()->render(&p);
 }
 
 void CodeView::setSubject(Concept* _s)
@@ -123,6 +138,7 @@ void CodeView::setStylist(WebStylist* _s)
 {
 	delete m_stylist;
 	m_stylist = _s;
+	_s->setCodeScene(this);
 	init();
 }
 
@@ -249,7 +265,15 @@ void CodeView::refresh()
 				foreach (Concept* i, e->children())
 					if ((s = page()->mainFrame()->evaluateJavaScript(QString("document.getElementById('%1').outerHTML").arg((int)i)).toString().replace('\\', "&#92;")) != QString::null)
 						m_stylist->addToHtmlCache(i, qs(s));
-				page()->mainFrame()->evaluateJavaScript(QString("changeContent('%1', '%2')").arg((int)e).arg(qs(m_stylist->rejiggedHtml(e)).replace('\'', "\\'")));
+				String h = m_stylist->rejiggedHtml(e);
+				if (m_stylist->property(L"CodeView", L"Preview Brackets").toBool())
+					for (int i = 0; i < isBracketed(e->over()); i++)
+						if (m_stylist->property(L"CSS", L"Simple").toBool())
+							h = L"(" + h + L")";
+						else
+							h = L"<span class=\"symbol\">(</span>" + h + L"<span class=\"symbol\">)</span>";
+
+				page()->mainFrame()->evaluateJavaScript(QString("changeContent('%1', '%2')").arg((int)e).arg(qs(h).replace('\'', "\\'")));
 				silentlySetCurrent(cur);
 			}
 		}
@@ -284,16 +308,19 @@ void CodeView::checkInvalids()
 void CodeView::paintEvent(QPaintEvent* _ev)
 {
 //	TIME_FUNCTION;
-	refresh();
-	checkInvalids();
 	Concept* c = current();
+	foreach (Position i, m_bracketed)
+		if (!i.exists() || (i.concept() != c && !c->hasAncestor(i.concept())))
+			removeBracket(i);
+
+	TIME_STATEMENT("refresh")
+	refresh();
+	TIME_STATEMENT("checkInvalids")
+	checkInvalids();
+	c = current();
 //	mInfo() << c;
 
-	foreach (Position i, m_bracketed)
-		if (!i.exists() || (i.entity() != c && !c->hasAncestor(i.entity())))
-			m_bracketed.removeAll(i);
-
-	{
+/*	{
 		QPainter p(this);
 		p.fillRect(rect(), Qt::white);
 	}
@@ -313,8 +340,8 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 			p.setBrush(g);
 			p.drawRect(br);
 		}
-	}
-//	TIME_STATEMENT("WVpaintEvent")
+	}*/
+	TIME_STATEMENT("WVpaintEvent")
 		QWebView::paintEvent(_ev);
 
 	if (c)
@@ -325,7 +352,7 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 		p.setPen(Qt::NoPen);
 		foreach (Position i, m_bracketed)
 		{
-			QRect br = bounds(i.entity());
+			QRect br = bounds(i.concept());
 			QRect obr = QRect(br.x() - 2.f, br.y(), br.width() + 4.f, br.height());
 			if (_ev->region().contains(obr))
 			{
@@ -353,6 +380,17 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 			p.drawRect(br + 2.f);
 			p.setPen(editDelegate() ? QColor(255, 0, 0, 16) : QColor(0, 64, 128, 16));
 			p.drawRect(br + 3.f);
+			QRect marker;
+			for (int i = 0; i < 2; i++)
+				if (_ev->region().contains(marker = QRect(i ? width() - 8 - page()->mainFrame()->scrollBarGeometry(Qt::Vertical).width() : 0, br.y(), 8, br.height())))
+				{
+					QLinearGradient g(marker.topLeft(), marker.bottomLeft());
+					g.setColorAt(0.f, editDelegate() ? QColor(224, 0, 0, 255) : QColor(0, 128, 255, 64));
+					g.setColorAt(1.f, editDelegate() ? QColor(224, 0, 0, 64) : QColor(0, 128, 255, 192));
+					p.setPen(Qt::NoPen);
+					p.setBrush(g);
+					p.drawRect(marker);
+				}
 		}
 
 		if (m_showDependencyInfo)
@@ -438,6 +476,7 @@ QRect CodeView::bounds(Concept const* _e) const
 
 void CodeView::init()
 {
+	m_bracketed.clear();
 	m_stylist->setProperties(properties());
 	QString css = qs(m_stylist->css());
 	setHtml(QString("<!DOCTYPE HTML><html><head><style type=\"text/css\">%1</style></head><body onmousedown=\"procMouseDown(event)\">%2</body></html>").arg(css).arg(qs(m_stylist->toHtml(m_subject))));
@@ -469,6 +508,12 @@ void CodeView::relayout(Concept* _e)
 		// that defineHtml should be redirected to the editDelegate if there is one (and couldn't since it doesn't know which is
 		// the active CodeScene).
 		QString html = qs(m_stylist->editHtml(_e, this));
+		if (m_stylist->property(L"CodeView", L"Preview Brackets").toBool())
+			for (int i = 0; i < isBracketed(_e->over()); i++)
+				if (m_stylist->property(L"CSS", L"Simple").toBool())
+					html = "(" + html + ")";
+				else
+					html = "<span class=\"symbol\">(</span>" + html + "<span class=\"symbol\">)</span>";
 		page()->mainFrame()->evaluateJavaScript(QString("changeEditContent(%1, '%2')").arg((int)_e).arg(html.replace('\'', "\\'")));
 		update();
 	}

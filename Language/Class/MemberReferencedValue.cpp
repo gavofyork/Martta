@@ -71,8 +71,8 @@ List<ValueDefiner*> MemberReferencedValue::possibilities(Position const& _p, boo
 		foreach (Type t, s->allowedTypes(_p.index()))
 		{
 			List<ValueDefiner*> appMems;
-			if (t->isType<Memberify>() && t->asType<Memberify>()->scope() && _p.entity())
-				appMems = t->asType<Memberify>()->scope()->applicableMembers(_p.entity(), t->asType<Memberify>()->isConst());
+			if (t->isType<Memberify>() && t->asType<Memberify>()->scope() && _p.concept())
+				appMems = t->asType<Memberify>()->scope()->applicableMembers(_p.concept(), t->asType<Memberify>()->isConst());
 			else if (Class* c = _p->ancestor<Class>())
 				appMems = castEntities<ValueDefiner>(c->membersOf<MemberValue>(_p->hasAncestor<MemberLambda>() ? _p->ancestor<MemberLambda>()->isConst() : false));
 			appMems = filterEntitiesInv<Artificial>(appMems);

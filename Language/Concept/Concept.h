@@ -404,8 +404,6 @@ public:
 	inline static bool					isTemporary(Concept* _e) { SafePointer<Concept> p(_e); p->clearEditing(); return !p; }
 	static bool							isValidName(String const& _n);
 	template<class T>
-	inline static bool					simplePlaceholderKeyPressHandler(Position const& _p, KeyEvent const* _e, String const& _t);
-	template<class T>
 	inline static bool					simplePositionKeyPressHandler(Position const& _p, KeyEvent const* _e, String const& _t, bool _ontoNew = true);
 
 	void								debugTree() const;
@@ -540,19 +538,6 @@ void Martta::Concept::setDependency(T& _dependencyVariable, U const& _dependency
 }
 
 template<class T>
-bool Martta::Concept::simplePlaceholderKeyPressHandler(Position const& _p, KeyEvent const* _e, String const& _t)
-{
-	if (_e->text() == _t && _p.allowedToBeKind<T>() && _p.exists() && _p->isPlaceholder())
-	{
-		Concept* e = Kind::of<T>().spawnPrepared();
-		_p.place(e);
-		_e->codeScene()->navigateInto(e);
-		return true;
-	}
-	return false;
-}
-
-template<class T>
 bool Martta::Concept::simplePositionKeyPressHandler(Position const& _p, KeyEvent const* _e, String const& _t, bool _ontoNew)
 {
 	if (_e->text() == _t && _p.allowedToBeKind<T>())
@@ -562,7 +547,7 @@ bool Martta::Concept::simplePositionKeyPressHandler(Position const& _p, KeyEvent
 		{
 			// insert
 			// when pressed on _p refers to a, changes from x->(a->(d, e), b, c) to x->(N->(a->(d, e)), b, c)
-			Concept* e = _p.entity();
+			Concept* e = _p.concept();
 			mDebug() << e;
 			mDebug() << n;
 			_e->noteStrobeCreation(e, n);

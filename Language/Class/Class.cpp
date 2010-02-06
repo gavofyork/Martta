@@ -384,10 +384,7 @@ bool Class::keyPressed(KeyEvent const* _e)
 
 String Class::defineHtml() const
 {
-	String ret = L"<^><div><span class=\"keyword\">class</span> " + toHtml(child(Identity));
-	ret += L"<div class=\"block\">";
-	ret += toHtml(castEntities<Concept>(cardinalChildrenOf<Base>()), L"", L"div");
-	ret += L"<div class=\"deblock minor symbol\">{</div>";
+	String mems;
 	for (int i = 0; i < AccessCount; i++)
 	{
 		String mem;
@@ -414,10 +411,20 @@ String Class::defineHtml() const
 			if (f->access() == Access(i))
 				mem += toHtml(f, L"div");
 		if (!mem.isEmpty())
-			ret += String(L"<div class=\"deblock AccessLabel-%1\">%1</div><div class=\"AccessLabel-%1block\">%2</div>").arg(Martta::code(Access(i))).arg(mem);
+		{
+			String ac = String(Martta::code(Access(i)));
+			mems += tagOf(L"deblock AccessLabel-" + ac, ac + tagOf(L"minor symbol", L":"), L"div") +
+					tagOf(L"AccessLabel-" + ac + L"block", mem, L"div");
+		}
 	}
-	ret += L"<div class=\"deblock minor symbol\">}</div>";
-	ret += L"</div></div>";
+	String ret = L"<^>" + tagOf(L"",
+								tagOf(L"keyword", L"class") + L" " + toHtml(child(Identity)) + tagOf(L"block",
+									toHtml(castEntities<Concept>(cardinalChildrenOf<Base>()), L"", L"div") +
+									tagOf(L"deblock minor symbol", L"{", L"div") +
+									mems +
+									tagOf(L"deblock minor symbol", L"};", L"div"),
+								L"div"),
+							L"div");
 
 /*	if (cardinalChildCountOf<Base>())
 	{

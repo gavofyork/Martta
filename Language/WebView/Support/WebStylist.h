@@ -41,8 +41,11 @@ class M_API_WebView WebStylist
 	friend class KeepCurrent;
 
 public:
-	WebStylist(): m_stack(0) {}
+	WebStylist(): m_stack(0), m_myCodeScene(0) {}
 	virtual ~WebStylist() {}
+
+	void								setCodeScene(CodeScene* _cs) { m_myCodeScene = _cs; }
+	CodeScene*							codeScene() { return m_myCodeScene; }
 
 	/// The stylist which is currently recalculating HTML.
 	static WebStylist*					current() { return s_current; }
@@ -95,6 +98,7 @@ private:
 
 	Hash<String, String>				m_properties;
 
+	CodeScene*							m_myCodeScene;
 	static WebStylist*					s_current;
 };
 

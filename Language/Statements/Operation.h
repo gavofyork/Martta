@@ -46,12 +46,15 @@ public:
 	bool								keyPressed(KeyEvent const*);
 
 	virtual Precedence					precedence() const { return id().precedence(); }
+	virtual Associativity				associativity() const { return id().associativity(); }
 	virtual Operator					id() const { return Operator(); }
 
 protected:
 	virtual bool						isSlidable(int) const { return false; }
 	virtual Concept*					lastOperand() const { return child(SecondOperand) ? child(SecondOperand) : child(FirstOperand); }	// QUICK optimise into overrides
+	virtual bool						doesChildNeedParenthesising(int _ch) const;
 	static Position						slideOnPrecedence(Position _p, Precedence _d, Associativity _a, Position const& _block);
+	String								displayParenthesise(String const& _html) const;
 
 	// Must return all entities that are LambdaNamer-derived and whose id() is operator _o.
 	static List<ValueDefiner*>			allOperators(Operator _o);
@@ -60,6 +63,7 @@ protected:
 	static Type							prototypeOf(Type const& _t, int _index = UndefinedIndex);
 	static bool							prototypeHasArgumentAt(Type const& _t, int _cardinal);
 	static List<ValueDefiner*>			findBestOverload(Types const& _actual, List<ValueDefiner*> const _candidates);
+
 };
 
 }

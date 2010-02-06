@@ -55,7 +55,7 @@ void ReferencedValue::onDependencySwitched(Concept* _t, Concept* _old)
 	if (m_subject == _old->tryKind<ValueDefiner>())
 	{
 //		mDebug() << "Subject switched to" << _t << "from" << _old;
-		set(_t->asKind<ValueDefiner>());
+		set(_t->tryKind<ValueDefiner>());
 	}
 }
 
@@ -107,7 +107,7 @@ String ReferencedValue::editHtmlHelper(ValueDefiner* _v, String const& _mid) con
 String ReferencedValue::defineEditHtml(CodeScene* _cs) const
 {
 	if (EditDelegateFace* d = _cs->editDelegate(this))
-		return editHtmlHelper(static_cast<CompletionDelegate<ReferencedValue, ValueDefiner*>*>(d)->selection(), d->real() + tagOf(L"unreal", d->unreal())) + tagOf(L"minor", d->comment());
+		return editHtmlHelper(static_cast<CompletionDelegate<ReferencedValue, ValueDefiner*>*>(d)->selection(), d->real() + tagOf(L"_ms_unreal", d->unreal())) + tagOf(L"_ms_minor", d->comment());
 	return String::null;
 }
 

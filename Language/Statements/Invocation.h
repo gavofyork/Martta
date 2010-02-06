@@ -50,6 +50,7 @@ protected:
 	String								callList(List<Typed*> _parameters) const;
 	virtual int							familyDependencies() const { return Super::familyDependencies() | DependsOnChildren; }
 	virtual void						onDependencyChanged(int, Concept* _e);
+	virtual bool						doesChildNeedParenthesising(int _ch) const { return _ch < 0; }
 };
 
 }

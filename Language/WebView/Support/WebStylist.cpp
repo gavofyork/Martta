@@ -132,19 +132,22 @@ void WebStylist::setProperties(Hash<String, String> const& _p)
 			if (s == L"CSS-Simple")
 			{
 				m_css = _p[s].toBool() ?
-					"body { color: black; font-size: 12px; font-family: Mono; background-color: rgba(255, 255, 255, 0.1); }"
+					"body { color: black; font-size: 12px; font-family: Mono; background-color: rgba(255, 255, 255, 1); }"
 					".layout { display: inline-block; }"
 					".keyword { font-weight: bold; }"
-					".unreal { color: #888; }"
+					"._ms_unreal { color: #888; }"
+					"._ms_minor { color: #888; font-size: 10px; font-family: Sans; }"
 					".symbol { font-weight: bold; }"
 					".block { display: block; position: relative; margin-left: 20px; }"
 					".deblock { display: block; position: relative; margin-left: -20px; }"
 				//	".editing { background-color: rgba(255, 0, 0, 0.25); }"
 					".badge { margin: 0px 0px; padding: 0px 0.3em; border-top: 1px solid rgba(0,0,0,0.4); border-left: 1px solid rgba(0,0,0,0.2); border-bottom: 1px solid rgba(255,255,255,0.4); border-right: 1px solid rgba(255,255,255,0.2); background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,0.2)), to(rgba(255,255,255,0.2))); font-weight: 900; color: rgba(255,255,255,0.85); text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }"
 				:
-					"body { color: #666; font-size: 12px; font-family: Lucida Grande; background-color: rgba(255, 255, 255, 0.1); }"
+					"body { color: #666; font-size: 12px; font-family: Sans; background-color: rgba(255, 255, 255, 1); }"
 					".layout { display: inline-block; }"
 					".keyword { font-weight: bold; }"
+					"._ms_unreal { color: #888; }"
+					"._ms_minor { color: #888; font-size: 8px; }"
 					".unreal { color: #888; }"
 					".minor { color: #888; font-size: 8px; }"
 					".symbol { font-weight: bold; }"
@@ -204,18 +207,21 @@ String WebStylist::composeName(String const& _id, StringList const& _flags) cons
 
 String WebStylist::defineHtml(Concept const* _e)
 {
+	String ret;
 	if (WebViewable const* v = _e->tryKind<WebViewable>())
-		return v->defineHtml();
-
-	String ret = L"<span class=\"keyword\">" + _e->kind().name() + L"</span><span class=\"minor\">";
-	Hash<String, String> p;
-	_e->properties(p);
-	foreach (String s, p.keys())
-		ret += L"[" + s + L"=" + p[s] + L"]";
-	ret += L"</span><span>{";
-	foreach (Concept* e, _e->children())
-		 ret += L" " + toHtml(e) + L"@" + e->indexName();
-	ret += L" }</span>";
+		ret = v->defineHtml();
+	else
+	{
+		ret = L"<span class=\"keyword\">" + _e->kind().name() + L"</span><span class=\"minor\">";
+		Hash<String, String> p;
+		_e->properties(p);
+		foreach (String s, p.keys())
+			ret += L"[" + s + L"=" + p[s] + L"]";
+		ret += L"</span><span>{";
+		foreach (Concept* e, _e->children())
+			 ret += L" " + toHtml(e) + L"@" + e->indexName();
+		ret += L" }</span>";
+	}
 
 	return ret;
 }

@@ -53,6 +53,7 @@ void CodeScene::killStrobe()
 	m_strobeFocus = 0;
 	m_strobeCreation = 0;
 	m_strobeText = String::null;
+	m_strobeBracketed.clear();
 }
 
 void CodeScene::dropCursor(Concept* _shell)
@@ -71,14 +72,14 @@ void CodeScene::dropCursor(Concept* _shell)
 
 Concept* CodeScene::editConcept() const
 {
-	return editDelegate() ? m_editDelegate->entity() : 0;
+	return editDelegate() ? m_editDelegate->concept() : 0;
 }
 
 EditDelegateFace* CodeScene::editDelegate() const
 {
 	if (!m_editDelegate)
 		return 0;
-	if (!m_editDelegate->entity())
+	if (!m_editDelegate->concept())
 		delete m_editDelegate;
 	// Note the destructor of the edit delegate tell us that it's dead so m_editDelegate is always correct.
 	return m_editDelegate;
@@ -93,7 +94,7 @@ void CodeScene::setEditing(Concept* _e)
 
 	if (editDelegate())
 	{
-		SafePointer<Concept> edited = m_editDelegate->entity();
+		SafePointer<Concept> edited = m_editDelegate->concept();
 		SafePointer<Concept> cur = current();
 		// If the edit delegate is half-way to destruction, we can allow it to have a null subject.
 //		AssertNR(edited == cur || cur->usurpsChild(edited) || !edited);
@@ -159,7 +160,7 @@ Position CodeScene::nearestBracket(Position const& _p) const
 			n = 0;
 			return i;
 		}
-		else if (int d = _p->hasAncestor(i.entity()))
+		else if (int d = _p->hasAncestor(i.concept()))
 		{
 			if (d < n)
 			{
@@ -184,11 +185,15 @@ void CodeScene::keyPressHandler(KeyEvent& _e)
 
 	if (m_strobeFocus && !_e.text().isEmpty() && _e.text() != L" ")
 	{
+		List<Position> ob = m_bracketed;
+		m_bracketed = m_strobeBracketed;
 		m_activeStrobe = m_strobeCreation ? m_strobeCreation->over() : m_strobeFocus->over();
 		e = KeyEvent(m_strobeText + _e.text(), _e.modifiers() , &*m_strobeFocus, true, m_strobeFocus->isPlaceholder(), UndefinedIndex, this);
 		Concept::keyPressEventStarter(&e);
 		e.executeStrobe();
 		m_activeStrobe = Nowhere;
+		if (!e.isAccepted())
+			m_bracketed = ob;
 	}
 //	else
 //		if (!_e.text().isEmpty() && _e.text() != L" ")
@@ -239,12 +244,13 @@ void CodeScene::keyPressHandler(KeyEvent& _e)
 	if (!_e.text().isEmpty() && (wchar_t)_e.text()[0] > L' ' && allowStrobeInit)
 	{
 		// Add to m_strobe.
-		if (!m_strobeFocus && currentPoint.exists() && n && n->parent() == currentPoint.entity())
+		if (!m_strobeFocus && currentPoint.exists() && n && n->parent() == currentPoint.concept())
 		{
 			// Kick off the strobe sequence.
 			m_strobeFocus = n;
 			m_strobeChild = n;
-			m_strobeCreation = currentPoint.entity();
+			m_strobeCreation = currentPoint.concept();
+			m_strobeBracketed = m_bracketed;
 		}
 		else if (!m_strobeFocus && n && e.strobeCreation() && e.strobeCreation() != n)
 		{
@@ -252,6 +258,7 @@ void CodeScene::keyPressHandler(KeyEvent& _e)
 			m_strobeFocus = n;
 			m_strobeCreation = e.strobeCreation();
 			m_strobeChild = e.strobeChild();
+			m_strobeBracketed = m_bracketed;
 		}
 		else if (!m_strobeFocus && n && !e.isAccepted())
 		{
@@ -259,11 +266,12 @@ void CodeScene::keyPressHandler(KeyEvent& _e)
 			m_strobeFocus = n;
 			m_strobeCreation = 0;
 			m_strobeChild = 0;
+			m_strobeBracketed = m_bracketed;
 		}
 		else
 		{
 //			if (n) n->debugTree();
-//			mInfo() << "Not starting strobe" << n << (n ? n->parent() : &*n) << (currentPoint.exists() ? currentPoint.entity() : (Concept*)0) << e.strobeCreation();
+//			mInfo() << "Not starting strobe" << n << (n ? n->parent() : &*n) << (currentPoint.exists() ? currentPoint.concept() : (Concept*)0) << e.strobeCreation();
 		}
 //		if (m_strobeCreation && m_strobeFocus)
 //			m_strobeChild = m_strobeCreation->child(m_strobeFocus->ancestorIndex(&*m_strobeCreation));
@@ -271,6 +279,7 @@ void CodeScene::keyPressHandler(KeyEvent& _e)
 //			m_strobeChild = 0;
 		if (m_strobeFocus)
 			m_strobeText += _e.text()[0];
+
 	}
 	if (e.isAccepted())
 		_e.accept();
