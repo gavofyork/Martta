@@ -480,8 +480,10 @@ private:
 	Hash<int, Concept*>					m_namedChildren;
 };
 
+#if defined(DEBUG)
 M_API_Concept extern int s_news;
 M_API_Concept extern int s_deletes;
+#endif
 
 inline MarttaSupport::TextStream& operator<<(MarttaSupport::TextStream& _out, const Kind& _item)
 {

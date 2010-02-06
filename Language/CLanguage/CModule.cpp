@@ -66,37 +66,33 @@ MARTTA_NAMED_CPP(CModule, RequiredIncludes);
 MARTTA_NAMED_CPP(CModule, MainFunction);
 MARTTA_PROPER_CPP(CModuleDependency);
 
-CModule::CModule():
-
-#ifdef M_WIN
-	//Inadeqate. Need to get this working properly quickly.
-	m_tempPath		(L"C:/temp")
-#else
-	m_tempPath		(L"/tmp")
+// TODO: need to get temppath from Qt-aware part of code.
+CModule::CModule()
+#ifndef M_WIN
+:	m_tempPath		(L"/tmp")
 #endif
 {
-	/*
-	// TODO: make a temp path
+#ifdef M_WIN
 	{
 	QTemporaryFile out;
 	out.open();
-	m_tempPath = out.fileName();
+	m_tempPath = qPrintable(out.fileName());
 	}
-	QFile::remove(m_tempPath);
-	QDir(m_tempPath).mkdir(m_tempPath);
-	*/
+	QFile::remove(m_tempPath.toCString());
+	QDir(m_tempPath.toCString()).mkdir(m_tempPath.toCString());
+#endif
 }
 
 CModule::~CModule()
 {
-	/*
+#ifdef M_WIN
 	// TODO: clean up temp path
-	QDir dir(m_tempPath);
+	QDir dir(m_tempPath.toCString());
 	dir.setFilter(QDir::Files | QDir::Hidden);
 	foreach (QFileInfo i, dir.entryInfoList())
 		QFile::remove(i.fileName());
-	QDir().rmdir(m_tempPath);
-	*/
+	QDir().rmdir(m_tempPath.toCString());
+#endif
 	if (!m_tempBatName.isEmpty())
 		remove(m_tempBatName.toCString());
 }

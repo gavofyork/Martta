@@ -488,7 +488,9 @@ bool DeclarationsHandler::endElement(QString const&, QString const& _n, QString 
 
 bool DeclarationsHandler::endDocument()
 {
+#if defined(DEBUG)
 	mInfo() << s_news << "total allocations" << s_deletes << "total deallocations.";
+#endif
 	// Resolve all types.
 	foreach(Resolver* f, m_resolvers)
 	{

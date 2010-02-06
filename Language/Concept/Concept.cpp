@@ -32,6 +32,7 @@ using namespace MarttaSupport;
 namespace Martta
 {
 
+#if defined(DEBUG)
 int s_news = 0;
 int s_deletes = 0;
 
@@ -47,6 +48,7 @@ void Concept::operator delete(void* p)
 	s_deletes++;
 	free(p);
 }
+#endif
 
 MARTTA_NOTION_CPP(Concept);
 

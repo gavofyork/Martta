@@ -200,9 +200,9 @@ class M_EXPORT GeneralHash
 	friend class ConstIterator;
 	template<typename Key2, typename T2, uint Min2, bool AlwaysMulti2, bool ImplicitKey2> friend class GeneralHash;
 
-#if defined(QT_DEBUG)
+/*#if defined(QT_DEBUG)
 //	friend m_inline QDebug operator<<(QDebug _stream, ::MarttaSupport::GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey> const& _me) { return _me.streamToDebug(_stream); }
-#endif
+#endif*/
 	friend m_inline TextStream& operator<<(TextStream& _stream, ::MarttaSupport::GeneralHash<Key, T, Min, AlwaysMulti, ImplicitKey> const& _me) { return _me.streamToDebug(_stream); }
 
 	typedef PNode<Key, T, ImplicitKey> Node;
@@ -420,9 +420,9 @@ private:
 	// Resizes the hash if necessary
 	m_inline void checkSize();
 
-#if defined(QT_DEBUG) || defined(QT_NO_DEBUG)
+/*#if defined(QT_DEBUG) || defined(QT_NO_DEBUG)
 	m_inline QDebug streamToDebug(QDebug _stream) const;
-#endif
+#endif*/
 	m_inline TextStream& streamToDebug(TextStream& _stream) const;
 
 	Node* m_nodes;
