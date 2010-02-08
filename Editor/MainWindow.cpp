@@ -838,7 +838,7 @@ void MainWindow::updateLanguage()
 	addToLanguage(Kind::of<Concept>(), language);
 	language->expandAll();
 
-	QFile f("/home/gav/language.dot");
+/*	QFile f("/home/gav/language.dot");
 	f.open(QIODevice::WriteOnly);
 	QTextStream fout(&f);
 	fout << "digraph G\n{\nbgcolor=\"transparent\";\nedge [fontname=\"FreeSans\",fontsize=\"2\",labelfontname=\"FreeSans\",labelfontsize=\"2\"];\nnode [fontname=\"FreeSans\",fontsize=\"20\",shape=record];\nrankdir=LR;" << endl;
@@ -854,7 +854,7 @@ void MainWindow::updateLanguage()
 			fout << qs(b.name().replace("Martta::", "")) << " -> " << qs(k.name().replace("Martta::", "")) + " [dir=back,color=\"" << colour << "\",style=\"" << style << "\"];" << endl;
 		}
 	}
-	fout << "}";
+	fout << "}";*/
 }
 
 static void addChild(QTreeWidgetItem* _p, Concept const* _c)
