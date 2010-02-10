@@ -35,7 +35,7 @@ class TypeDefintion;
 /**
  * Class for any entity that can be found inside a class (i.e. with an access attribute).
  */
-class M_API_Members Member: public_super Declaration
+class M_CLASS M_API_Members Member: public_super Declaration
 {
 	MARTTA_PLACEHOLDER(Declaration)
 

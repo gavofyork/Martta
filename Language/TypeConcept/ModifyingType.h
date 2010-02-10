@@ -34,7 +34,7 @@ namespace Martta
 // means that in derived classes which need other children (e.g. Array, Memberify) they have
 // to ensure that the 'child' is in place before any secondary entities are added.
 
-class M_API_TypeConcept ModifyingType: public_super TypeConcept
+class M_CLASS M_API_TypeConcept ModifyingType: public_super TypeConcept
 {
 	MARTTA_PLACEHOLDER(TypeConcept)
 

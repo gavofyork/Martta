@@ -35,7 +35,7 @@ namespace Martta
 
 class Module;
 
-class M_API_Language Program: public_interface Concept
+class M_CLASS M_API_Language Program: public_interface Concept
 {
 	MARTTA_NOTION(Concept)
 

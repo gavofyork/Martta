@@ -24,6 +24,8 @@
 #include <QtCore>
 #include <QtXml>
 
+#include "ConceptSupport.h"
+
 #ifndef M_API_CLanguage
 #define M_API_CLanguage M_OUTAPI
 #endif
@@ -31,7 +33,6 @@
 namespace Martta
 {
 
-class Concept;
 class FunctionResolver;
 class IncomingFunctionType;
 class ArrayType;
@@ -44,7 +45,7 @@ inline QString qs(String const& _s)
 	return QString::fromWCharArray(_s.data(), _s.length());
 }
 
-class M_API_CLanguage DeclarationsHandler: public QXmlContentHandler
+class M_CLASS M_API_CLanguage DeclarationsHandler: public QXmlContentHandler
 {
 public:
 	DeclarationsHandler(Concept* _d): m_d(_d) {}

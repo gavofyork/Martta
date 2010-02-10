@@ -32,7 +32,7 @@ using namespace MarttaSupport;
 namespace Martta
 {
 
-class M_API_Comment Comment: public_super Statement
+class M_CLASS M_API_Comment Comment: public_super Statement
 {
 	MARTTA_PROPER(Statement)
 

@@ -30,7 +30,7 @@
 namespace Martta
 {
 
-class M_API_CStuff TopLevel: public_super Declaration, public_interface Labelled
+class M_CLASS M_API_CStuff TopLevel: public_super Declaration, public_interface Labelled
 {
 	MARTTA_PLACEHOLDER(Declaration)
 	MARTTA_ALSO_INHERITS(Labelled, 0)

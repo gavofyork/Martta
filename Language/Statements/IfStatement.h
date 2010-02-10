@@ -32,7 +32,7 @@
 namespace Martta
 {
 
-class M_API_Statements IfStatement: public_super Untyped, public_interface Corporal, public_interface Conditional
+class M_CLASS M_API_Statements IfStatement: public_super Untyped, public_interface Corporal, public_interface Conditional
 {
 	MARTTA_PROPER(Untyped)
 
@@ -52,7 +52,7 @@ protected:
 	virtual bool						requiresSemicolon() const { return false; }
 };
 
-class M_API_Statements UnlessStatement: public_super IfStatement, public_interface Composite
+class M_CLASS M_API_Statements UnlessStatement: public_super IfStatement, public_interface Composite
 {
 	MARTTA_PROPER(IfStatement)
 	MARTTA_ALSO_INHERITS(Composite, 0)

@@ -31,7 +31,7 @@
 namespace Martta
 {
 
-class M_API_Members Construction: public_super Invocation
+class M_CLASS M_API_Members Construction: public_super Invocation
 {
 	MARTTA_PROPER(Invocation)
 

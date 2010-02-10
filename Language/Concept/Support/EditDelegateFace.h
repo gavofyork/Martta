@@ -31,7 +31,6 @@ namespace Martta
 
 class CodeScene;
 class KeyEvent;
-class Concept;
 
 class M_API_Concept EditDelegateFace
 {

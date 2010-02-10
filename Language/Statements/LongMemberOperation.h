@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-class M_API_Statements LongMemberOperation: public_super GenericMemberOperation
+class M_CLASS M_API_Statements LongMemberOperation: public_super GenericMemberOperation
 {
 	MARTTA_PROPER(GenericMemberOperation)
 

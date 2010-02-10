@@ -31,7 +31,7 @@
 namespace Martta
 {
 
-class M_API_CStuff Variable: public_super TopLevel, public_interface VariableNamer
+class M_CLASS M_API_CStuff Variable: public_super TopLevel, public_interface VariableNamer
 {
 	MARTTA_PROPER(TopLevel)
 	MARTTA_ALSO_INHERITS(VariableNamer, 0)

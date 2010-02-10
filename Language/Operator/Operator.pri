@@ -1,4 +1,4 @@
-DEPS += 
+DEPS += Concept
 OURDIRS = . Support
 TWD = $$PWD
 

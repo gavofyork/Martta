@@ -35,7 +35,7 @@ namespace Martta
 class Type;
 typedef List<Type> Types;
 
-class M_API_TypeConcept TypedOwner: public_interface WebInformer
+class M_CLASS M_API_TypeConcept TypedOwner: public_interface WebInformer
 {
 	MARTTA_NOTION(WebInformer)
 

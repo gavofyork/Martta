@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-class M_API_CLanguage MainFunction: public_super Function
+class M_CLASS M_API_CLanguage MainFunction: public_super Function
 {
 	MARTTA_PROPER(Function)
 

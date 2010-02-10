@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-class M_API_Statements SubscriptOperation: public_super BinaryOperation
+class M_CLASS M_API_Statements SubscriptOperation: public_super BinaryOperation
 {
 	MARTTA_PROPER(BinaryOperation)
 

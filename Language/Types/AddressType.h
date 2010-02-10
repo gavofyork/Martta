@@ -30,7 +30,7 @@
 namespace Martta
 {
 
-class M_API_Types AddressType: public_super ModifyingType, public_interface Subscriptable
+class M_CLASS M_API_Types AddressType: public_super ModifyingType, public_interface Subscriptable
 {
 	MARTTA_INITIALISED_PLACEHOLDER(ModifyingType)
 	MARTTA_ALSO_INHERITS(Subscriptable, 0)

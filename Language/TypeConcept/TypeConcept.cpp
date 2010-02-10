@@ -29,10 +29,15 @@ MARTTA_PLACEHOLDER_CPP(TypeConcept);
 MARTTA_NAMED_CPP(TypeConcept, Default);
 MARTTA_REGISTER_CSS(TypeConcept, ".TypeConcept { color: black; font-weight: bold; text-shadow: -1px -1px 0px #888; }");
 
-TypeConcept* TypeConcept::null = (new TypeConcept)->setOwned();
+TypeConcept* TypeConcept::null = new TypeConcept(TypeConcept::TheNullType);
 
 bool TypeConcept::s_debugCastability = false;
 int TypeConcept::s_typeCount = 0;
+
+TypeConcept::TypeConcept(TNT): m_owner(new Type(Type::TheNullTypeOwner))
+{
+	m_owner->m_top = this;
+}
 
 Types TypeConcept::assignableTypes() const
 {

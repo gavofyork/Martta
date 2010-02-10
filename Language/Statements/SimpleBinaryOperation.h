@@ -31,9 +31,9 @@
 namespace Martta
 {
 
-class ValueDefiner;
+class M_CLASS ValueDefiner;
 
-class M_API_Statements SimpleBinaryOperation: public_super BinaryOperation
+class M_CLASS M_API_Statements SimpleBinaryOperation: public_super BinaryOperation
 {
 	MARTTA_PROPER(BinaryOperation)
 

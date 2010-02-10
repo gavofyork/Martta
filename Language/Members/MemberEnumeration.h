@@ -31,7 +31,7 @@
 namespace Martta
 {
 
-class M_API_Members MemberEnumeration: public_super Member, public_interface EnumerationNamer
+class M_CLASS M_API_Members MemberEnumeration: public_super Member, public_interface EnumerationNamer
 {
 	MARTTA_PROPER(Member)
 	MARTTA_ALSO_INHERITS(EnumerationNamer, 0)

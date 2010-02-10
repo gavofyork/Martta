@@ -32,9 +32,8 @@ using namespace MarttaSupport;
 namespace Martta
 {
 
-class TypeDefinition;
-class ModifyingType;
-class TypeConcept;
+class M_CLASS TypeDefinition;
+class M_CLASS ModifyingType;
 
 // We, for the general case, assume T is a TypeConcept const&
 template<class T>
@@ -51,7 +50,9 @@ class M_API_TypeConcept Type
 
 public:
 	enum Aadl { AdoptAndDeleteLater };
+	enum Tnto { TheNullTypeOwner };
 
+	inline Type(Tnto) { m_top = 0; }
 	inline Type() { m_top = TypeConcept::null->clone(this); }
 	inline Type(Type const& _t): m_top(_t.m_top->clone(this)) {}
 	inline Type(TypeConcept* _te, Aadl): m_top(_te) { m_top->setOwner(this); }
@@ -148,7 +149,7 @@ inline TextStream& operator<<(TextStream& _out, Martta::Type const& _item)
 template<class T>
 inline void TypeConstructor<T>::construct(Type* _this, T _tree)
 {
-	_this->simpleConstruct(_tree);
+	_this->simpleConstruct(*_tree.template asKind<class TypeConcept>());
 }
 
 }

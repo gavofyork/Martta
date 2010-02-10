@@ -23,6 +23,7 @@
 #include <msHash.h>
 using namespace MarttaSupport;
 
+#include "ConceptSupport.h"
 #include "Operator.h"
 
 #ifndef M_API_Operator
@@ -32,7 +33,7 @@ using namespace MarttaSupport;
 namespace Martta
 {
 
-class ValueDefiner;
+class M_CLASS ValueDefiner;
 
 class M_API_Operator OperatorRegistrar
 {

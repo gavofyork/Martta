@@ -37,7 +37,7 @@ namespace Martta
 
 class CodeScene;
 
-class M_API_WebView WebViewable: public_interface Concept
+class M_CLASS M_API_WebView WebViewable: public_interface Concept
 {
 	MARTTA_NOTION(Concept)
 

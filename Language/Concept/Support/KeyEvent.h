@@ -22,6 +22,7 @@
 
 #include "SafePointer.h"
 #include "Position.h"
+#include "ConceptSupport.h"
 
 #ifndef M_API_Concept
 #define M_API_Concept M_OUTAPI
@@ -30,7 +31,6 @@
 namespace Martta
 {
 
-class Concept;
 class CodeScene;
 class Position;
 

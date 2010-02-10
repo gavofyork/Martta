@@ -33,7 +33,7 @@ namespace Martta
 class BuiltinOperator;
 class BuiltinMethod;
 
-class M_API_Types ListType: public_super ModifyingType, public_interface Subscriptable
+class M_CLASS M_API_Types ListType: public_super ModifyingType, public_interface Subscriptable
 {
 	MARTTA_INITIALISED_PROPER(ModifyingType)
 	MARTTA_ALSO_INHERITS(Subscriptable, 0)

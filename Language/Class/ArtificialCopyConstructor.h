@@ -30,7 +30,7 @@
 namespace Martta
 {
 
-class M_API_Class ArtificialCopyConstructor: public_super Constructor, public_interface Artificial
+class M_CLASS M_API_Class ArtificialCopyConstructor: public_super Constructor, public_interface Artificial
 {
 	MARTTA_PROPER(Constructor)
 	MARTTA_ALSO_INHERITS(Artificial, 0)

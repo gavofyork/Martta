@@ -31,9 +31,9 @@
 namespace Martta
 {
 
-class Class;
+class M_CLASS Class;
 
-class M_API_Class Base: public_super Concept, public_interface WebViewable
+class M_CLASS M_API_Class Base: public_super Concept, public_interface WebViewable
 {
 	MARTTA_PROPER(Concept)
 	MARTTA_ALSO_INHERITS(WebViewable, 0)

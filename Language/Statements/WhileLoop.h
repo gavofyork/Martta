@@ -30,7 +30,7 @@
 namespace Martta
 {
 
-class M_API_Statements WhileLoop: public_super Loop, public_interface Conditional
+class M_CLASS M_API_Statements WhileLoop: public_super Loop, public_interface Conditional
 {
 	MARTTA_PROPER(Loop)
 	MARTTA_ALSO_INHERITS(Conditional, 0)
@@ -49,7 +49,7 @@ private:
 	virtual List<int> const&			defineDeclarationOrder() const { static const List<int> r = List<int>() << Condition << Body; return r; }
 };
 
-class M_API_Statements UntilLoop: public_super WhileLoop
+class M_CLASS M_API_Statements UntilLoop: public_super WhileLoop
 {
 	MARTTA_PROPER(WhileLoop)
 

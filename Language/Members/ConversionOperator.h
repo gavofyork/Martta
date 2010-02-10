@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-class M_API_Members ConversionOperator: public_super MemberLambda
+class M_CLASS M_API_Members ConversionOperator: public_super MemberLambda
 {
 	MARTTA_PROPER(MemberLambda)
 

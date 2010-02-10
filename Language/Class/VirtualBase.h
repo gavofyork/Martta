@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-class M_API_Class VirtualBase: public_super Base
+class M_CLASS M_API_Class VirtualBase: public_super Base
 {
 	MARTTA_PROPER(Base)
 

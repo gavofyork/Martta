@@ -33,7 +33,7 @@ using namespace MarttaSupport;
 namespace Martta
 {
 
-class M_API_Language Module: public_interface Concept
+class M_CLASS M_API_Language Module: public_interface Concept
 {
 	MARTTA_NOTION(Concept)
 

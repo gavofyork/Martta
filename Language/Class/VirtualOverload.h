@@ -35,7 +35,7 @@ inline String stripId(String const& _html)
 	return String(_html).replace(L"id=", L"iXd=");
 }
 
-class M_API_Class VirtualOverride: public_super VirtualMethod
+class M_CLASS M_API_Class VirtualOverride: public_super VirtualMethod
 {
 	MARTTA_PROPER(VirtualMethod)
 

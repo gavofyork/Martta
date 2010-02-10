@@ -30,7 +30,7 @@
 namespace Martta
 {
 
-class M_API_CLanguage CProgram: public_super Root, public_interface Program
+class M_CLASS M_API_CLanguage CProgram: public_super Root, public_interface Program
 {
 	MARTTA_PROPER(Root)
 	MARTTA_ALSO_INHERITS(Program, 0)

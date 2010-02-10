@@ -31,7 +31,7 @@
 namespace Martta
 {
 
-class M_API_CStuff Function: public_super TopLevel, public_interface LambdaNamer
+class M_CLASS M_API_CStuff Function: public_super TopLevel, public_interface LambdaNamer
 {
 	MARTTA_PROPER(TopLevel)
 	MARTTA_ALSO_INHERITS(LambdaNamer, 0)

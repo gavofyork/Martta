@@ -25,6 +25,7 @@
 #include <msStringList.h>
 using namespace MarttaSupport;
 
+#include "ConceptSupport.h"
 #include "AuxilliaryRegistrar.h"
 #include "AuxilliaryFace.h"
 
@@ -35,7 +36,6 @@ using namespace MarttaSupport;
 namespace Martta
 {
 
-class Concept;
 class Kind;
 
 class M_API_Concept Kinds: public List<Kind>
@@ -111,7 +111,7 @@ private:
 
 inline uint hashOf(Kind const& _k)
 {
-	return MarttaSupport::hashOf((void const*)_k.auxilliary());
+	return MarttaSupport::hashOf(reinterpret_cast<void const*>(_k.auxilliary()));
 }
 
 }

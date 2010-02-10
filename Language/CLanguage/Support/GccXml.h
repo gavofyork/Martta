@@ -23,6 +23,8 @@
 #include <QString>
 #include <QStringList>
 
+#include "ConceptSupport.h"
+
 class QXmlContentHandler;
 
 #ifndef M_API_CLanguage
@@ -31,8 +33,6 @@ class QXmlContentHandler;
 
 namespace Martta
 {
-
-class Concept;
 
 class GccXml
 {

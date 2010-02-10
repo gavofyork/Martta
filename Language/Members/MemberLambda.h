@@ -32,7 +32,7 @@ namespace Martta
 
 // Just for non-static callables
 
-class M_API_Members MemberLambda: public_super MemberValue, public_interface LambdaNamer
+class M_CLASS M_API_Members MemberLambda: public_super MemberValue, public_interface LambdaNamer
 {
 	MARTTA_PLACEHOLDER(MemberValue)
 	MARTTA_ALSO_INHERITS(LambdaNamer, 0)

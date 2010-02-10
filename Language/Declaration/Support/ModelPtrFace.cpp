@@ -71,6 +71,7 @@ void ModelPtrFace::set(Identifiable* _e)
 {
 	m_cache = _e;
 	m_key = String::null;
+	ModelPtrRegistrar::get()->notToBeRestored(this);
 }
 
 void ModelPtrFace::set(String const& _k)

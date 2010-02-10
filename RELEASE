@@ -1,0 +1,6 @@
+a) update package version to <NEW VERSION>~rc<RELEASE ATTEMPT> (debian/changelog & system/exscalibar.h)
+b) git commit -a
+c) package.sh
+d) if build fixes required
+   1 increment RELEASE ATTEMPT
+   2 goto (a).

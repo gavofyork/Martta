@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "ConceptSupport.h"
 #include "Dier.h"
 #include "ChangeMan.h"
 
@@ -29,8 +30,6 @@
 
 namespace Martta
 {
-
-class Concept;
 
 class M_API_Concept Dependee: virtual public Dier
 {

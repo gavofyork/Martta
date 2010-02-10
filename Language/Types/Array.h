@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-class M_API_Types Array: public_super AddressType
+class M_CLASS M_API_Types Array: public_super AddressType
 {
 	MARTTA_PROPER(AddressType)
 

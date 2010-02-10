@@ -1,17 +1,5 @@
-CONFIG -= debug release qt stl exceptions rtti
-CONFIG *= debug shared plugin thread
-profile {
-DEFINES *= PROFILE
-CONFIG *= release
-}
-debug:DEFINES *= DEBUG
-release:DEFINES *= RELEASE
-unix:DEFINES += M_UNIX
-macx:DEFINES += M_MAC
-win32:DEFINES += M_WIN
-!macx:unix:DEFINES += M_LINUX
+include(../global.pri)
 TEMPLATE = lib
-!win32:VERSION = 0.1.0
 BASE = $$PWD
 OBJECTS_DIR = $$BASE/build
 DEPENDPATH += ../../support

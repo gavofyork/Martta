@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-class M_API_Statements Invocation: public_super Evaluation
+class M_CLASS M_API_Statements Invocation: public_super Evaluation
 {
 	MARTTA_PROPER(Evaluation)
 

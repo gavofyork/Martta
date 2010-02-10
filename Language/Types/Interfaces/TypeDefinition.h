@@ -36,8 +36,8 @@ using namespace MarttaSupport;
 namespace Martta
 {
 
-class ValueDefiner;
-class Declaration;
+class M_CLASS ValueDefiner;
+class M_CLASS Declaration;
 class Type;
 typedef List<Type> Types;
 
@@ -46,7 +46,7 @@ typedef List<Type> Types;
  * Types may be named or anonymous.
  * This includes typedefs, unions, structs and enums.
  */
-class M_API_Types TypeDefinition: public_interface Identifiable, public_interface Labelled
+class M_CLASS M_API_Types TypeDefinition: public_interface Identifiable, public_interface Labelled
 {
 	MARTTA_NOTION(Identifiable)
 	MARTTA_ALSO_INHERITS(Labelled, 0)

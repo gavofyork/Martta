@@ -33,7 +33,7 @@ using namespace MarttaSupport;
 namespace Martta
 {
 
-class M_API_CLanguage CDependency: public_super Concept
+class M_CLASS M_API_CLanguage CDependency: public_super Concept
 {
 	MARTTA_PROPER(Concept)
 

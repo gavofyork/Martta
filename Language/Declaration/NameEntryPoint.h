@@ -33,7 +33,7 @@ namespace Martta
 
 class IdentifierSet;
 
-class M_API_Declaration NameEntryPoint: public_super_interface WebViewable
+class M_CLASS M_API_Declaration NameEntryPoint: public_super_interface WebViewable
 {
 	MARTTA_NOTION(WebViewable)
 

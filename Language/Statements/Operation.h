@@ -33,7 +33,7 @@ using namespace MarttaSupport;
 namespace Martta
 {
 
-class M_API_Statements Operation: public_super Evaluation
+class M_CLASS M_API_Statements Operation: public_super Evaluation
 {
 	MARTTA_PLACEHOLDER(Evaluation)
 

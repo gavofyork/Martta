@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-class M_API_Types MemberTemplateType: public_super TypeConcept
+class M_CLASS M_API_Types MemberTemplateType: public_super TypeConcept
 {
 	MARTTA_PROPER(TypeConcept)
 

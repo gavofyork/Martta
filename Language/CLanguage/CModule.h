@@ -36,7 +36,7 @@ namespace Martta
 
 class CModule;
 
-class M_API_CLanguage CModuleDependency: public_super Concept
+class M_CLASS M_API_CLanguage CModuleDependency: public_super Concept
 {
 	MARTTA_PROPER(Concept)
 
@@ -44,7 +44,7 @@ private:
 	ModelPtr<CModule> m_subject;
 };
 
-class M_API_CLanguage CModule: public_super Namespace, public_interface Module
+class M_CLASS M_API_CLanguage CModule: public_super Namespace, public_interface Module
 {
 	MARTTA_PROPER(Namespace)
 	MARTTA_ALSO_INHERITS(Module, 0)

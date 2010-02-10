@@ -30,7 +30,7 @@
 namespace Martta
 {
 
-class M_API_Variables AssignedVariable: public_super BareTyped, public_interface VariableNamer
+class M_CLASS M_API_Variables AssignedVariable: public_super BareTyped, public_interface VariableNamer
 {
 	MARTTA_PROPER(BareTyped)
 	MARTTA_ALSO_INHERITS(VariableNamer, 0)

@@ -31,7 +31,7 @@
 namespace Martta
 {
 
-class M_API_Statements DeleteOperation: public_super UnaryOperation
+class M_CLASS M_API_Statements DeleteOperation: public_super UnaryOperation
 {
 	MARTTA_PROPER(UnaryOperation)
 

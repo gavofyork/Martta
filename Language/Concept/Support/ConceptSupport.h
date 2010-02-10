@@ -33,7 +33,10 @@ using namespace MarttaSupport;
 namespace Martta
 {
 
-class Concept;
+#define M_CLASS
+	//__attribute__((__may_alias__))
+class M_CLASS Concept;
+
 class EditDelegateFace;
 class CodeScene;
 class KeyEvent;

@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-class M_API_Statement Corporal: public_super_interface WebViewable
+class M_CLASS M_API_Statement Corporal: public_super_interface WebViewable
 {
 	MARTTA_NOTION(WebViewable)
 

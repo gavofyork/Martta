@@ -201,7 +201,7 @@ String WebStylist::composeName(String const& _id, StringList const& _flags) cons
 		if (i < _id.length())
 			ret += upperCaseMode ? _id[i].toUpper() : _id[i].toLower();
 	}
-	mInfo() << _flags << ":" << flag << _id << ret;
+//	mInfo() << _flags << ":" << flag << _id << ret;
 	return ret;
 }
 

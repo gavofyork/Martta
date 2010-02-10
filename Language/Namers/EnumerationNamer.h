@@ -31,7 +31,7 @@
 namespace Martta
 {
 
-class M_API_Namers EnumerationNamer: public_super_interface TypeDefinition, public_interface WebViewable
+class M_CLASS M_API_Namers EnumerationNamer: public_super_interface TypeDefinition, public_interface WebViewable
 {
 	MARTTA_NOTION(TypeDefinition)
 	MARTTA_ALSO_INHERITS(WebViewable, 0)

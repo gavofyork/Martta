@@ -30,7 +30,7 @@
 namespace Martta
 {
 
-class M_API_Types BuiltinDeclaration: public_super Declaration, public_interface ValueDefiner
+class M_CLASS M_API_Types BuiltinDeclaration: public_super Declaration, public_interface ValueDefiner
 {
 	MARTTA_PROPER(Declaration)
 	MARTTA_ALSO_INHERITS(ValueDefiner, 0)

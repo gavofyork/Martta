@@ -30,7 +30,7 @@
 namespace Martta
 {
 
-class M_API_Labels OperatorLabel: public_super IdLabel
+class M_CLASS M_API_Labels OperatorLabel: public_super IdLabel
 {
 	MARTTA_PROPER(IdLabel)
 

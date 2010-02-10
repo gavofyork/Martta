@@ -37,7 +37,7 @@ namespace Martta
  *
  * Aside from that it should also encompass all the implementation of the project in question.
  */
-class M_API_CStuff Root: public_super Declaration
+class M_CLASS M_API_CStuff Root: public_super Declaration
 {
 	MARTTA_PROPER(Declaration)
 

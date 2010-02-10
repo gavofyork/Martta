@@ -24,7 +24,6 @@
 #include "NameEntryPoint.h"
 #include "WebViewable.h"
 #include "TypedOwner.h"
-#include "Concept.h"
 
 #ifndef M_API_Statement
 #define M_API_Statement M_OUTAPI
@@ -33,10 +32,10 @@
 namespace Martta
 {
 
-class ValueDefiner;
-class Typed;
+class M_CLASS ValueDefiner;
+class M_CLASS Typed;
 
-class M_API_Statement Statement: public_super_interface TypedOwner, public_interface NameEntryPoint
+class M_CLASS M_API_Statement Statement: public_super_interface TypedOwner, public_interface NameEntryPoint
 {
 	MARTTA_PLACEHOLDER(TypedOwner)
 	MARTTA_ALSO_INHERITS(NameEntryPoint, 0)

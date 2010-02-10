@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "ConceptSupport.h"
 #include "TopLevelType.h"
 
 #ifndef M_API_CStuff
@@ -31,7 +32,7 @@ namespace Martta
 
 class StructResolver;
 
-class M_API_CStuff Struct: public_super TopLevelType
+class M_CLASS M_API_CStuff Struct: public_super TopLevelType
 {
 	MARTTA_PROPER(TopLevelType)
 

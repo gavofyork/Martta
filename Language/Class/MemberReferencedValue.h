@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-class M_API_Class MemberReferencedValue: public_super ReferencedValue
+class M_CLASS M_API_Class MemberReferencedValue: public_super ReferencedValue
 {
 	MARTTA_PROPER(ReferencedValue)
 
@@ -48,7 +48,7 @@ protected:
 	virtual void						onDependencyChanged(int _a, Concept* _d) { if (_d->isKind<MemberLambda>() || _d->isKind<Class>()) changed(Logically); Super::onDependencyChanged(_a, _d); }
 };
 
-class M_API_Class FloatingMemberReferencedValue: public_super MemberReferencedValue
+class M_CLASS M_API_Class FloatingMemberReferencedValue: public_super MemberReferencedValue
 {
 	MARTTA_PROPER(MemberReferencedValue)
 

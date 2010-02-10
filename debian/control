@@ -1,0 +1,13 @@
+Source: martta
+Section: devel
+Priority: optional
+Maintainer: Gav Wood <gavin@quidprocode.co.uk>
+Build-Depends: debhelper (>= 7), cdbs, libqt4-dev, libfftw3-dev, libsndfile1-dev, libmad0-dev, libasound2-dev, mawk, grep (>= 2.0.0), sed (>= 4.0.0), libnewmat10-dev
+Standards-Version: 3.8.3
+Homepage: http://martta.net/
+
+Package: martta
+Architecture: any
+Depends: g++, gccxml
+Description: Audio processing framework
+

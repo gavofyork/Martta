@@ -24,6 +24,7 @@
 #include <msTextStream.h>
 using namespace MarttaSupport;
 
+#include "ConceptSupport.h"
 #include "SafePointer.h"
 #include "Kind.h"
 
@@ -36,7 +37,7 @@ namespace Martta
 
 static const int UndefinedIndex = INT_MAX;
 
-class Concept;
+class M_CLASS Concept;
 
 class M_API_Concept Position
 {

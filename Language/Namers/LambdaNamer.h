@@ -36,7 +36,7 @@ namespace Martta
 class Argument;
 class Compound;
 
-class M_API_Namers LambdaNamer: public_super_interface ValueDefiner, public_interface WebViewable, public_interface Labelled
+class M_CLASS M_API_Namers LambdaNamer: public_super_interface ValueDefiner, public_interface WebViewable, public_interface Labelled
 {
 	MARTTA_NOTION(ValueDefiner)
 	MARTTA_ALSO_INHERITS(WebViewable, 0)

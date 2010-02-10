@@ -32,6 +32,11 @@ void ModelPtrRegistrar::toBeRestored(ModelPtrFace* _p)
 	m_modelPtrs << _p;
 }
 
+void ModelPtrRegistrar::notToBeRestored(ModelPtrFace* _p)
+{
+	m_modelPtrs.removeAll(_p);
+}
+
 void regDecs(Identifiable* _d)
 {
 	ModelPtrRegistrar::get()->registerTemp(_d, _d->key());
@@ -76,7 +81,7 @@ void ModelPtrRegistrar::restorePtrs(Identifiable const* _root)
 
 void ModelPtrRegistrar::restorePtrsOf(Identifiable const* _id)
 {
-//	mInfo() << "Restoring up to" << m_modelPtrs.size() << "pointers";
+	mInfo() << "Restoring up to" << m_modelPtrs.size() << "pointers";
 
 //	foreach (Identifiable* d, _id->childrenOf<Identifiable>())
 //		regDecs(d);
@@ -91,6 +96,7 @@ void ModelPtrRegistrar::restorePtrsOf(Identifiable const* _id)
 	int restored = 0;
 	for (List<ModelPtrFace*>::Iterator i = m_modelPtrs.begin(); i != m_modelPtrs.end();)
 	{
+//		mDebug() << (*i)->key();
 		(*i)->tryRestore(_id);
 		if ((*i)->isArchived())
 			++i;

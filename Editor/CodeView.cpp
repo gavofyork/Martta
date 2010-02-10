@@ -288,7 +288,7 @@ inline QRect operator+(QRect const& _a, int _x)
 
 void CodeView::onSelectionChanged()
 {
-	mInfo();
+	mInfo() << "";
 }
 
 void CodeView::checkInvalids()

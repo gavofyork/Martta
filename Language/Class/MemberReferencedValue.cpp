@@ -24,6 +24,8 @@
 #include "Field.h"
 #include "MemberLambda.h"
 
+#include "BuiltinType.h"
+
 #include "Memberify.h"
 #include "FunctionType.h"
 #include "Reference.h"

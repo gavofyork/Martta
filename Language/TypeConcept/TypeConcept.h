@@ -34,14 +34,14 @@ using namespace MarttaSupport;
 namespace Martta
 {
 
-class Declaration;
-class ModifyingType;
-class ValueDefiner;
+class M_CLASS Declaration;
+class M_CLASS ModifyingType;
+class M_CLASS ValueDefiner;
 class Type;
-class TypeConcept;
+class M_CLASS TypeConcept;
 template<class T> struct TypeConstructor;
 
-class M_API_TypeConcept TypeConcept: public_super Concept, public_interface TypedOwner, public_interface WebViewable
+class M_CLASS M_API_TypeConcept TypeConcept: public_super Concept, public_interface TypedOwner, public_interface WebViewable
 {
 	MARTTA_PLACEHOLDER(Concept)
 	MARTTA_ALSO_INHERITS(TypedOwner, 0)
@@ -57,6 +57,8 @@ public:
 
 	MARTTA_NAMED(Default)
 
+	enum TNT { TheNullType };
+
 	inline TypeConcept(): m_owner(0)
 	{
 #if defined(DEBUG)
@@ -65,6 +67,7 @@ public:
 		m_isUnchanging = true;
 		m_isAsleep = true;
 	}
+	TypeConcept(TNT);
 	inline ~TypeConcept()
 	{
 #if defined(DEBUG)
@@ -122,7 +125,6 @@ public:
 	/// _t goes in our place, and we are a child of _t
 	void								knitIn(TypeConcept* _t);
 
-	TypeConcept*							setOwned() { m_owner = (Type*)1; return this; }
 	static TypeConcept*					null;
 
 	/// Just a tunnel into other TypeConcept's newClone methods.

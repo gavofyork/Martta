@@ -31,7 +31,7 @@ namespace Martta
 
 class TypedefResolver;
 
-class M_API_CStuff Typedef: public_super TopLevelType
+class M_CLASS M_API_CStuff Typedef: public_super TopLevelType
 {
 	MARTTA_PROPER(TopLevelType)
 

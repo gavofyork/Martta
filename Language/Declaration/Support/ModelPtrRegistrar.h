@@ -45,6 +45,7 @@ public:
 	static ModelPtrRegistrar*			get() { return s_this ? s_this : new ModelPtrRegistrar; }
 
 	void								toBeRestored(ModelPtrFace* _p);
+	void								notToBeRestored(ModelPtrFace* _p);
 	void								restorePtrs(Identifiable const* _root);
 	void								restorePtrsOf(Identifiable const* _id);
 

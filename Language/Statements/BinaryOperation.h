@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-class M_API_Statements BinaryOperation: public_super Operation
+class M_CLASS M_API_Statements BinaryOperation: public_super Operation
 {
 	MARTTA_PLACEHOLDER(Operation)
 

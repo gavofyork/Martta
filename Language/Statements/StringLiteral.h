@@ -32,7 +32,7 @@
 namespace Martta
 {
 
-class M_API_Statements StringLiteral: public_super Literal
+class M_CLASS M_API_Statements StringLiteral: public_super Literal
 {
 	MARTTA_PROPER(Literal)
 

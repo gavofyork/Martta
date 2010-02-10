@@ -31,7 +31,7 @@
 namespace Martta
 {
 
-class M_API_Statement ValueDefiner: public_super_interface Identifiable, public_interface WebViewable, public_interface TypeNamer
+class M_CLASS M_API_Statement ValueDefiner: public_super_interface Identifiable, public_interface WebViewable, public_interface TypeNamer
 {
 	MARTTA_NOTION(Identifiable)
 	MARTTA_ALSO_INHERITS(WebViewable, 0)

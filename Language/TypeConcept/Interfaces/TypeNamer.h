@@ -30,7 +30,7 @@
 namespace Martta
 {
 
-class M_API_TypeConcept TypeNamer: public_super_interface WebInformer
+class M_CLASS M_API_TypeConcept TypeNamer: public_super_interface WebInformer
 {
 	MARTTA_NOTION(WebInformer)
 

@@ -52,7 +52,7 @@ inline char const* code(Access _i)
 	}
 }
 
-class M_API_Labels AccessLabel: public_super Label
+class M_CLASS M_API_Labels AccessLabel: public_super Label
 {
 	MARTTA_PROPER(Label)
 

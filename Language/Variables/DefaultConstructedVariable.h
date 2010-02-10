@@ -30,7 +30,7 @@
 namespace Martta
 {
 
-class M_API_Variables DefaultConstructedVariable: public_super Primary, public_interface VariableNamer
+class M_CLASS M_API_Variables DefaultConstructedVariable: public_super Primary, public_interface VariableNamer
 {
 	MARTTA_PROPER(Primary)
 	MARTTA_ALSO_INHERITS(VariableNamer, 0)

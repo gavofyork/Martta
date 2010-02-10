@@ -34,7 +34,7 @@ namespace Martta
 
 class ReferencedTypeSet;
 
-class M_API_Types ReferencedType: public_super PhysicalType
+class M_CLASS M_API_Types ReferencedType: public_super PhysicalType
 {
 	MARTTA_PROPER(PhysicalType)
 

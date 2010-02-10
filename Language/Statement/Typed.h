@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-class M_API_Statement Typed: public_super BareTyped
+class M_CLASS M_API_Statement Typed: public_super BareTyped
 {
 	MARTTA_PLACEHOLDER(BareTyped)
 

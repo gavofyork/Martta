@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-class M_API_Statement Compound: public_super Untyped
+class M_CLASS M_API_Statement Compound: public_super Untyped
 {
 	MARTTA_PROPER(Untyped)
 
@@ -51,7 +51,7 @@ protected:
 	static String						statementsToHtml(List<Statement*> const& _es);
 };
 
-class M_API_Statement HardCompound: public_super Compound
+class M_CLASS M_API_Statement HardCompound: public_super Compound
 {
 	MARTTA_PROPER(Compound)
 

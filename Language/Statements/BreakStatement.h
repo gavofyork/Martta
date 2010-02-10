@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-class M_API_Statements BreakStatement: public_super Untyped
+class M_CLASS M_API_Statements BreakStatement: public_super Untyped
 {
 	MARTTA_PROPER(Untyped)
 

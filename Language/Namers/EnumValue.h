@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "ConceptSupport.h"
 #include "ValueDefiner.h"
 #include "WebViewable.h"
 #include "Declaration.h"
@@ -31,7 +32,7 @@
 namespace Martta
 {
 
-class M_API_Namers EnumValue: public_super Declaration, public_interface ValueDefiner, public_interface WebViewable
+class M_CLASS M_API_Namers EnumValue: public_super Declaration, public_interface ValueDefiner, public_interface WebViewable
 {
 	MARTTA_PROPER(Declaration)
 	MARTTA_ALSO_INHERITS(ValueDefiner, 0)

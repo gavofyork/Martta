@@ -39,10 +39,10 @@ namespace Martta
 extern const int s_simpleIds[];
 extern const int s_simpleIdsCount;
 
-class BuiltinOperator;
+class M_CLASS BuiltinOperator;
 class BuiltinTypeSet;
 
-class M_API_Types BuiltinType: public_super PhysicalType
+class M_CLASS M_API_Types BuiltinType: public_super PhysicalType
 {
 	MARTTA_INITIALISED_PROPER(PhysicalType)
 
@@ -113,7 +113,11 @@ private:
 template<>
 struct TypeConstructor<uint const&>
 {
-	static inline void construct(Type* _this, uint const& _builtin) { _this->m_top = new BuiltinType(_builtin); _this->m_top->setOwner(_this); }
+	static inline void construct(Type* _this, uint const& _builtin)
+	{
+		_this->m_top = (new BuiltinType(_builtin))->asKind<TypeConcept>();
+		_this->m_top->setOwner(_this);
+	}
 };
 
 }

@@ -30,7 +30,7 @@
 namespace Martta
 {
 
-class M_API_Labels Label: public_super Concept, public_interface WebViewable
+class M_CLASS M_API_Labels Label: public_super Concept, public_interface WebViewable
 {
 	MARTTA_PLACEHOLDER(Concept)
 	MARTTA_ALSO_INHERITS(WebViewable, 0)

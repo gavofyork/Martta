@@ -30,7 +30,7 @@
 namespace Martta
 {
 
-class M_API_Namers Argument: public_super Declaration, public_interface VariableNamer
+class M_CLASS M_API_Namers Argument: public_super Declaration, public_interface VariableNamer
 {
 	MARTTA_PROPER(Declaration)
 	MARTTA_ALSO_INHERITS(VariableNamer, 0)

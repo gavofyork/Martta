@@ -29,7 +29,7 @@
 namespace Martta
 {
 
-class M_API_SimpleTypes PhysicalType: public_super TypeConcept
+class M_CLASS M_API_SimpleTypes PhysicalType: public_super TypeConcept
 {
 	MARTTA_PLACEHOLDER(TypeConcept)
 

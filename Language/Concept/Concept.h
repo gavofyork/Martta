@@ -40,7 +40,7 @@ namespace Martta
 
 class EditDelegateFace;
 
-class M_API_Concept Concept:
+class M_CLASS M_API_Concept Concept:
 	public_super	Nothing,
 	public			SafePointerTarget,
 	virtual public	Dier,
@@ -278,7 +278,7 @@ public:
 	 */
 	void								deleteAndRefill(Concept* _e = 0);
 
-	virtual void const*					tryKindBlind(Kind _k) const { return _k == staticKind ? reinterpret_cast<void const*>(this) : toInterface(_k); }
+	virtual RawConstMemory				tryKindBlind(Kind _k) const { return _k == staticKind ? reinterpret_cast<RawConstMemory>(this) : toInterface(_k); }
 
 	template<class T> inline bool		isKind() const { return this && kind().isKind(T::staticKind); }
 	inline bool							isKind(Kind _k) const { return this && kind().isKind(_k); }

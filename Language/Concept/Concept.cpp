@@ -40,6 +40,7 @@ void* Concept::operator new(size_t _size)
 {
 	s_news++;
 	void* ret = malloc(_size);
+	AssertNR(ret);
 	return ret;
 }
 

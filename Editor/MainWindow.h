@@ -54,7 +54,6 @@ private:
 
 class CodeScene;
 class Function;
-class Concept;
 
 class MainWindow: public QMainWindow, public Ui::MainWindow
 {

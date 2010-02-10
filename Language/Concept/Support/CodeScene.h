@@ -38,7 +38,6 @@ namespace Martta
 
 class EditDelegateFace;
 class Position;
-class Concept;
 
 class M_API_Concept DataFinder
 {

@@ -26,16 +26,16 @@ namespace Martta
 
 void GccXml::extractHeaders(QString const& _c, QXmlContentHandler* _h)
 {
-	QTemporaryFile f;
-	f.open();
-	f.write(_c.toAscii());
-	f.flush();
+	QTemporaryFile sourceCode("XXXXXX.c");
+	sourceCode.open();
+	sourceCode.write(_c.toAscii());
+	sourceCode.flush();
 
 	QString xmlfn;
 	{
-                QTemporaryFile xml("XXXXXX.c"); // Would be .cpp except we can only handle reading in C files at the moment.
+		QTemporaryFile xml("XXXXXX.xml"); // Would be .cpp except we can only handle reading in C files at the moment.
 		xml.open();
-                xmlfn = xml.fileName();
+		xmlfn = xml.fileName();
 	}
 
 	QStringList searchPaths;
@@ -49,26 +49,26 @@ void GccXml::extractHeaders(QString const& _c, QXmlContentHandler* _h)
 	executable = "gccxml";
 #endif
 	foreach (QString s, searchPaths)
-		if (QFile::exists(s))
+		if (QFile::exists(s + executable))
 		{
 #ifdef M_WIN
 			QStringList env = QProcess::systemEnvironment();
 			int numVSInstalled = (env.filter(QRegExp("VS..COMNTOOLS.*"))).size();
 			QDir g(s + "../share/gccxml-0.9");
-			if(g.exists())
+			if (g.exists())
 			{			
 				int numGxVcDirs = ((g.entryList(QDir::Dirs)).filter(QRegExp("Vc.*"))).size();
-				if(numVSInstalled >= numGxVcDirs)
+				if (numVSInstalled >= numGxVcDirs)
 				{
 					QDir::setCurrent(s);
 					QProcess::execute("cmd", QStringList() << "/C" << "gccxml_vcconfig.bat");
 				}
 			}				
 #endif
-			QProcess::execute(s + executable, QStringList() << f.fileName() << /*"--gccxml-cxxflags" << "-xc" <<*/ ("-fxml=" + xmlfn));
+			QProcess::execute(s + executable, QStringList() << sourceCode.fileName() << ("-fxml=" + xmlfn));
 			break;
 		}
-	f.close();
+	sourceCode.close();
 
 	QXmlSimpleReader xmlReader;
 	QFile xml(xmlfn);

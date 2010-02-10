@@ -34,7 +34,7 @@ namespace Martta
 class EnumValue;
 class EnumerationResolver;
 
-class M_API_CStuff Enumeration: public_super TopLevelType, public_interface EnumerationNamer
+class M_CLASS M_API_CStuff Enumeration: public_super TopLevelType, public_interface EnumerationNamer
 {
 	MARTTA_PROPER(TopLevelType)
 	MARTTA_ALSO_INHERITS(EnumerationNamer, 0)

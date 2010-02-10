@@ -23,6 +23,8 @@
 #include <msSupport.h>
 using namespace MarttaSupport;
 
+#include "ConceptSupport.h"
+
 #ifndef M_API_Concept
 #define M_API_Concept M_OUTAPI
 #endif
@@ -30,7 +32,6 @@ using namespace MarttaSupport;
 namespace Martta
 {
 
-class Concept;
 class KeyEvent;
 class Position;
 
@@ -44,7 +45,7 @@ public:
 	virtual bool						isInterface() const = 0;
 	virtual bool						isPlaceholder() const = 0;
 	virtual char const*					name() const = 0;
-//	virtual void const*					offset(Concept const*) const = 0;
+//	virtual RawConstMemory				offset(Concept const*) const = 0;
 
 	// They will return 0 is called on an Interface.
 	virtual Concept*						create() const = 0;
