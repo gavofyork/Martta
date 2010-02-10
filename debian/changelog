@@ -1,47 +1,5 @@
-exscalibar (1.1.2) jaunty; urgency=medium
-
-  * MultiProcessors.
-
- -- Gav Wood <gavofyork@gmail.com>  Tue, 19 Oct 2009 10:53:43 +0200
-
-exscalibar (1.1.1-release-next1) jaunty; urgency=medium
-
-  * First preparation for next release.
-
- -- Gav Wood <gavofyork@gmail.com>  Tue, 19 Oct 2009 10:53:43 +0200
-
-exscalibar (1.1.1) jaunty; urgency=medium
-
-  * Several minor fixes.
-
- -- Gav Wood <gavofyork@gmail.com>  Tue, 13 Oct 2009 12:37:43 +0200
-
-exscalibar (1.1.1pre4) jaunty; urgency=medium
-
-  * Another amd64 fix.
-
- -- Gav Wood <gavofyork@gmail.com>  Tue, 13 Oct 2009 12:29:43 +0200
-
-exscalibar (1.1.1pre3) jaunty; urgency=medium
-
-  * Another amd64 fix.
-
- -- Gav Wood <gavofyork@gmail.com>  Tue, 13 Oct 2009 12:15:43 +0200
-
-exscalibar (1.1.1pre2) jaunty; urgency=medium
-
-  * Minor amd64 fix.
-
- -- Gav Wood <gavofyork@gmail.com>  Tue, 13 Oct 2009 12:07:43 +0200
-
-exscalibar (1.1.1pre1) jaunty; urgency=medium
-
-  * Nothing.
-
- -- Gav Wood <gavofyork@gmail.com>  Tue, 13 Oct 2009 11:48:43 +0200
-
-exscalibar (1.1.0) jaunty; urgency=medium
+Martta (0.0.99) karmic; urgency=medium
 
   * Initial Release.
 
- -- Gav Wood <gavofyork@gmail.com>  Mon, 12 Oct 2009 19:23:43 +0200
+ -- Gav Wood <gavin@quidprocode.co.uk> Wed Feb 10 18:35:06 CET 2010

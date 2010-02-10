@@ -4,7 +4,7 @@ opwd=`pwd`
 cd /tmp
 
 echo Checking out...
-git clone $opwd .
+git clone $opwd
 cd Martta
 
 if [ "$1" = "" ]; then
@@ -18,7 +18,7 @@ echo Cleaning backup files...
 find . | grep \~ | xargs rm -f
 
 echo Cleaning others...
-rm makeRelease.sh link.sh
+rm release.sh link.sh
 
 echo Cleaning versioning...
 rm -rf .git .gitignore
