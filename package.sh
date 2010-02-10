@@ -1,8 +1,8 @@
 #!/bin/bash
 
 set -e
-rm -f ../Martta_*
+rm -f ../martta_*
 debuild -S -sa
 cd ..
-dput -f ppa:r-launchpad-gavofyork-fastmail-fm/martta Martta_*_source.changes
+dput -f ppa:r-launchpad-gavofyork-fastmail-fm/martta martta_*_source.changes
 

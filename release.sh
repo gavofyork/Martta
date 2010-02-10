@@ -8,9 +8,9 @@ git clone $opwd
 cd Martta
 
 if [ "$1" = "" ]; then
-	archdir="Martta-$(date +%Y%m%d)"
+	archdir="martta-$(date +%Y%m%d)"
 else
-	archdir="Martta-$1"
+	archdir="martta-$1"
 fi
 archfile="$archdir.tar.bz2"
 
@@ -35,7 +35,7 @@ cd "$archdir"
 ./package.sh
 
 echo Cleaning up...
-rm -rf $archdir
+rm -rf /tmp/$archdir
 mv /tmp/$archfile ~
 
 echo Done.
