@@ -10,4 +10,5 @@ Package: martta
 Architecture: any
 Depends: g++, gccxml, libqt4-dev
 Description: C++ Language Workbench
-
+Martta is a C++-based language workbench. It is implemented through a Webkit-based graphical program editor and a pure-plugin architecture for extensibly defining the grammar allowed in the programs.
+It is designed to bring a truely next-generation programming experience to C++ programmers.
