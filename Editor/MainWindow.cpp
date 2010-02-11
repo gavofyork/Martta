@@ -70,11 +70,12 @@ MainWindow::MainWindow(QWidget* _p, Qt::WindowFlags _f):
 	m_updateTimer		(0),
 	m_buildAndRun		(0)
 {
-//#if M_WIN
+#if M_LINUX
+	mInfo() << qs(qApp->applicationDirPath());
+	m_pluginsPath = qs(qApp->applicationDirPath() + "/../share/martta/plugins");
+#else
 	m_pluginsPath = qs(qApp->applicationDirPath() + "/../plugins");
-/*#else
-	m_pluginsPath = MARTTA_PLUGINS_PATH;
-#endif*/
+#endif
 	qApp->addLibraryPath(qs(m_pluginsPath));
 	DataFinder::set(new RealDataFinder(m_pluginsPath));
 

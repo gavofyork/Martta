@@ -6,7 +6,7 @@ SOURCES += .Statements-composed.cpp
 DEFINES += M_API_Statements=M_INAPI
 
 INSTALL_DATA.files =  Support/in.svg Support/out.svg Support/GlobalReferenced.svg
-INSTALL_DATA.path = Data
+INSTALL_DATA.path = $$PREFIX/share/martta/plugins/Data
 INSTALLS += INSTALL_DATA
 !win32:DATA.commands = @echo "Copying data..." && mkdir -p "$$DESTDIR/Data" && cp $$INSTALL_DATA.files "$$DESTDIR/Data"
 win32:DATA.commands = @echo Copying data.. && md $$replace(DESTDIR, "/", "\\")\\Data\\TBD &&  copy Support\\in.svg $$replace(DESTDIR, "/", "\\")\\Data && copy Support\\out.svg $$replace(DESTDIR, "/", "\\")\\Data && copy Support\\GlobalReferenced.svg $$replace(DESTDIR, "/", "\\")\\Data && rd $$replace(DESTDIR, "/", "\\")\\Data\\TBD

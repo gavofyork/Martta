@@ -164,18 +164,7 @@ EOF
 if [[ ! -e "$root/martta.prf" ]]; then
 echo "Features file..."
 cat > "$root/martta.prf" << EOF
-CONFIG -= debug release qt stl exceptions rtti
-CONFIG *= debug shared plugin thread
-profile {
-DEFINES *= PROFILE
-CONFIG *= release
-}
-debug:DEFINES *= DEBUG
-release:DEFINES *= RELEASE
-unix:DEFINES += M_UNIX
-macx:DEFINES += M_MAC
-win32:DEFINES += M_WIN
-!macx:unix:DEFINES += M_LINUX
+include(../global.pri)
 TEMPLATE = lib
 !win32:VERSION = 0.1.0
 BASE = \$\$PWD
@@ -199,7 +188,13 @@ contains(TARGET, \$\$basename(TWD)): contains(TEMPLATE, lib) {
 	QMAKE_POST_LINK += echo \$\${TARGET} \$\$DEPS > \$\${DESTDIR}/\$(TARGET).dep
 	macx: QMAKE_LFLAGS += -install_name @rpath/\$(TARGET)
 }
-!contains(TARGET, \$\$basename(TWD)): !contains(NO_SOURCES, 1): LIBS *= -l\$\$basename(TWD)
+!contains(TARGET, \$\$basename(TWD)): !contains(NO_SOURCES, 1) {
+	LIBS *= -l\$\$basename(TWD)
+	INSTALLS = target deps
+	target.path = \$\$PREFIX/share/martta/plugins
+	deps.path = \$\$PREFIX/share/martta/plugins
+	deps.files = \$\${DESTDIR}/\$(TARGET).dep
+}
 for(a, DEPS): !contains(DONE, \$\${a}) {
 	DONE += \$\${a}
 	NO_SOURCES = 0

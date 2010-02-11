@@ -16,7 +16,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>../Martta Logo-64.png</normaloff>../Martta Logo-64.png</iconset>
+    <normaloff>../extra/Martta Logo-64.png</normaloff>../extra/Martta Logo-64.png</iconset>
   </property>
   <property name="styleSheet">
    <string>font: 8pt &quot;Verdana&quot;;</string>

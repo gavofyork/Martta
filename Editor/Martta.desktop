@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Martta
+Name[xx]=Martta
+GenericName=C++ Program Editor
+Exec=Martta
+Icon=Martta
+Terminal=false
+Categories=Qt;Development;

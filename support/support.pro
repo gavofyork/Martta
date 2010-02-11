@@ -51,3 +51,12 @@ SOURCES += msSupport.cpp \
 	msDebug.cpp \
 	msStringList.cpp \
 	msFlags.cpp
+
+INSTALLS += target exheaders extarget
+target.path = $${PREFIX}/lib
+exheaders.files = $$HEADERS
+exheaders.path = $${PREFIX}/share/martta/support
+extarget.files = TARGET
+extarget.path = $${PREFIX}/share/martta/support
+
+
