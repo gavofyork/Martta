@@ -2,12 +2,12 @@ Source: martta
 Section: devel
 Priority: optional
 Maintainer: Gav Wood <gavin@quidprocode.co.uk>
-Build-Depends: debhelper (>= 7), mawk, grep (>= 2.0.0), sed (>= 4.0.0), libqt4-dev (>= 4.6.0), g++
+Build-Depends: debhelper (>= 7), mawk, grep (>= 2.0.0), sed (>= 4.0.0), qt4 (>= 4.6.0), g++
 Standards-Version: 3.8.3
 Homepage: http://martta.net/
 
 Package: martta
 Architecture: any
-Depends: g++, gccxml, libqt4-dev (>= 4.6.0)
+Depends: g++, gccxml, qt4 (>= 4.6.0)
 Description: C++ Language Workbench
 
