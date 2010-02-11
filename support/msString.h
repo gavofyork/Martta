@@ -286,7 +286,7 @@ public:
 	String					arg(String const& _a, int _fieldWidth = 0, Char _fillChar = L' ') const;
 	m_inline String			arg(wchar_t const* _a, int _fieldWidth = 0, Char _fillChar = L' ') const { return arg(String(_a), _fieldWidth, _fillChar); }
 	m_inline String			arg(char const* _a, int _fieldWidth = 0, Char _fillChar = L' ') const { return arg(String(_a), _fieldWidth, _fillChar); }
-	m_inline String			arg(void* _a) const { return arg(number((uint)_a, 16)); }
+	m_inline String			arg(void* _a) const { return arg(number((unsigned long)_a, 16)); }
 	m_inline String			arg(bool _a) const { return arg(number(_a)); }
 	m_inline String			arg(double _a, int _fieldWidth = 0, char _format = 'g', int _precision = -1, Char _fillChar = L' ') const { return arg(String::number(_a, _format, _precision), _fieldWidth, _fillChar); }
 	m_inline String			arg(long _a, int _fieldWidth = 0, wchar_t _fillChar = L' ') const { return arg(String::number(_a), _fieldWidth, Char(_fillChar)); }

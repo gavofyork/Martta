@@ -8,6 +8,6 @@ Homepage: http://martta.net/
 
 Package: martta
 Architecture: any
-Depends: g++, gccxml
-Description: Audio processing framework
+Depends: g++, gccxml, qt4 (>= 4.6.0)
+Description: C++ Language Workbench
 

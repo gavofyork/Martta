@@ -87,7 +87,7 @@ m_inline uint hashOf(char const* _key)
 		r = (((r << 16) ^ *i) + ((r >> 16) ^ *i));
 	return r;
 }
-template<typename T> m_inline uint hashOf(T const* _key) { return (uint)_key; }
+template<typename T> m_inline uint hashOf(T const* _key) { return (uint)((unsigned long)_key); }
 
 template<typename T, typename S>
 m_inline Pair<T, S> makePair(T const& _first, S const& _second)
