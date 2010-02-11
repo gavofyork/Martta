@@ -60,7 +60,7 @@ String WebStylist::toHtml(Concept const* _e, String const& _tag)
 		return String::null;
 	if (m_htmlCache.contains(_e))
 		return m_htmlCache[_e];
-	return String("<div %1 entity=\"true\" ondblclick=\"if (CodeView.attemptEdit(%2)) event.stopPropagation();\" id=\"%2\">%3</div>").arg(t).arg((int)_e).arg(refineHtml(defineHtml(_e), !_e->isUsurped()))/*.arg(_tag.section(L' ', 0, 0))*/;
+	return String("<div %1 entity=\"true\" ondblclick=\"if (CodeView.attemptEdit(%2)) event.stopPropagation();\" id=\"%2\">%3</div>").arg(t).arg((unsigned long)_e).arg(refineHtml(defineHtml(_e), !_e->isUsurped()))/*.arg(_tag.section(L' ', 0, 0))*/;
 }
 
 String WebStylist::rejiggedHtml(Concept const* _e)
