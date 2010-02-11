@@ -38,7 +38,7 @@ String TextLabel::code() const
 {
 	if (m_text.isEmpty())
 		if (isValid())
-			return String("_ANON%1").arg((int)this);
+			return String("_ANON%1").arg((long)this);
 		else
 			return String::null;
 	else
@@ -59,7 +59,7 @@ int TextLabel::familyDependencies() const
 String TextLabel::namey() const
 {
 	if (m_text.isEmpty() && isValid())
-		return String("ANON%1").arg((int)this);//return "foo";	// TODO: make it proper.
+		return String("ANON%1").arg((long)this);//return "foo";	// TODO: make it proper.
 	else if (m_text.isEmpty())
 		return String::null;
 	else

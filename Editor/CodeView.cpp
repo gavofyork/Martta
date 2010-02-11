@@ -162,7 +162,7 @@ void CodeView::restoreCurrent()
 	refresh();
 	bool s = m_silent;
 	m_silent = true;
-	page()->mainFrame()->evaluateJavaScript(QString("restoreCurrent(%1, %2, %3)").arg(m_remembered.x()).arg(m_remembered.y()).arg((int)&*m_rememberedParent));
+	page()->mainFrame()->evaluateJavaScript(QString("restoreCurrent(%1, %2, %3)").arg(m_remembered.x()).arg(m_remembered.y()).arg((long)&*m_rememberedParent));
 	m_silent = s;
 }
 
@@ -170,7 +170,7 @@ void CodeView::setCurrent(Concept const* _s)
 {
 	if (!m_silent)
 		refresh();
-	page()->mainFrame()->evaluateJavaScript(QString("setCurrentById('%1')").arg((int)_s));
+	page()->mainFrame()->evaluateJavaScript(QString("setCurrentById('%1')").arg((long)_s));
 }
 
 void CodeView::onCurrentAboutToChange()
@@ -197,27 +197,27 @@ void CodeView::navigateInto(Concept* _centre)
 {
 	/// Selects _centre's leftmost, innermost focusable child. e.g. X on ()s: (++X + 4)
 	refresh();
-	page()->mainFrame()->evaluateJavaScript(QString("navigateInto('%1');").arg((int)_centre));
+	page()->mainFrame()->evaluateJavaScript(QString("navigateInto('%1');").arg((long)_centre));
 }
 
 void CodeView::navigateOnto(Concept* _shell)
 {
 	/// Selects _shell's leftmost focusable child. e.g. ++X on ()s: (++X + 4)
 	refresh();
-	page()->mainFrame()->evaluateJavaScript(QString("navigateOnto('%1');").arg((int)_shell));
+	page()->mainFrame()->evaluateJavaScript(QString("navigateOnto('%1');").arg((long)_shell));
 }
 
 void CodeView::navigateToNew(Concept* _from)
 {
 	/// Selects closest focusable sibling-owned entity visually forwards from _from, or parent if none.
 	refresh();
-	page()->mainFrame()->evaluateJavaScript(QString("navigateToNew('%1');").arg((int)_from));
+	page()->mainFrame()->evaluateJavaScript(QString("navigateToNew('%1');").arg((long)_from));
 }
 
 void CodeView::navigateAway(Concept* _from, NavigationDirection _d)
 {
 	refresh();
-	page()->mainFrame()->evaluateJavaScript(QString("setCurrentById('%1'); go%2()").arg((int)_from).arg(_d == Forwards ? "Next" : "Previous"));
+	page()->mainFrame()->evaluateJavaScript(QString("setCurrentById('%1'); go%2()").arg((long)_from).arg(_d == Forwards ? "Next" : "Previous"));
 }
 
 bool CodeView::attemptEdit(int _e)
@@ -232,20 +232,20 @@ bool CodeView::isFocusable(Concept const* _e) const
 {
 	if (!isInScene(_e))
 		return false;
-	return page()->mainFrame()->evaluateJavaScript(QString("thisNode(document.getElementById('%1')) != null").arg((int)_e)).toBool();
+	return page()->mainFrame()->evaluateJavaScript(QString("thisNode(document.getElementById('%1')) != null").arg((long)_e)).toBool();
 }
 
 bool CodeView::isInScene(Concept const* _e) const
 {
-	if (page()->mainFrame()->evaluateJavaScript(QString("document.getElementById('%1') != null").arg((int)_e)).toBool())
+	if (page()->mainFrame()->evaluateJavaScript(QString("document.getElementById('%1') != null").arg((long)_e)).toBool())
 		return true;
 	const_cast<CodeView*>(this)->refresh();
-	return page()->mainFrame()->evaluateJavaScript(QString("document.getElementById('%1') != null").arg((int)_e)).toBool();
+	return page()->mainFrame()->evaluateJavaScript(QString("document.getElementById('%1') != null").arg((long)_e)).toBool();
 }
 
 bool CodeView::manageKeyPress(KeyEvent const& _e, Concept const* _fe)
 {
-	return page()->mainFrame()->evaluateJavaScript(QString("routeKeyPress(document.getElementById('%1'), '%2')").arg((int)_fe).arg(qs(_e.text()).replace('\'', "\\'"))).toBool();
+	return page()->mainFrame()->evaluateJavaScript(QString("routeKeyPress(document.getElementById('%1'), '%2')").arg((long)_fe).arg(qs(_e.text()).replace('\'', "\\'"))).toBool();
 }
 
 void CodeView::refresh()
@@ -263,7 +263,7 @@ void CodeView::refresh()
 				Concept* cur = current();
 				QString s;
 				foreach (Concept* i, e->children())
-					if ((s = page()->mainFrame()->evaluateJavaScript(QString("document.getElementById('%1').outerHTML").arg((int)i)).toString().replace('\\', "&#92;")) != QString::null)
+					if ((s = page()->mainFrame()->evaluateJavaScript(QString("document.getElementById('%1').outerHTML").arg((long)i)).toString().replace('\\', "&#92;")) != QString::null)
 						m_stylist->addToHtmlCache(i, qs(s));
 				String h = m_stylist->rejiggedHtml(e);
 				if (m_stylist->property(L"CodeView", L"Preview Brackets").toBool())
@@ -273,7 +273,7 @@ void CodeView::refresh()
 						else
 							h = L"<span class=\"symbol\">(</span>" + h + L"<span class=\"symbol\">)</span>";
 
-				page()->mainFrame()->evaluateJavaScript(QString("changeContent('%1', '%2')").arg((int)e).arg(qs(h).replace('\'', "\\'")));
+				page()->mainFrame()->evaluateJavaScript(QString("changeContent('%1', '%2')").arg((long)e).arg(qs(h).replace('\'', "\\'")));
 				silentlySetCurrent(cur);
 			}
 		}
@@ -467,7 +467,7 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 
 QRect CodeView::bounds(Concept const* _e) const
 {
-	QStringList l = page()->mainFrame()->evaluateJavaScript(QString("bounds('%1')").arg((int)_e)).toString().split(" ");
+	QStringList l = page()->mainFrame()->evaluateJavaScript(QString("bounds('%1')").arg((long)_e)).toString().split(" ");
 	if (l.size() == 4)
 		return QRect(l[0].toInt(), l[1].toInt(), l[2].toInt(), l[3].toInt());
 	else
@@ -514,7 +514,7 @@ void CodeView::relayout(Concept* _e)
 					html = "(" + html + ")";
 				else
 					html = "<span class=\"symbol\">(</span>" + html + "<span class=\"symbol\">)</span>";
-		page()->mainFrame()->evaluateJavaScript(QString("changeEditContent(%1, '%2')").arg((int)_e).arg(html.replace('\'', "\\'")));
+		page()->mainFrame()->evaluateJavaScript(QString("changeEditContent(%1, '%2')").arg((long)_e).arg(html.replace('\'', "\\'")));
 		update();
 	}
 	else if (isInScene(_e))

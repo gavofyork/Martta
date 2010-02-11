@@ -1,3 +1,9 @@
+martta (M1~rc11) karmic; urgency=low
+
+  * Initial release (x64 build fixes)
+
+ -- Gav Wood <gavin@quidprocode.co.uk>  Thu, 11 Feb 2010 15:09:03 +0100
+
 martta (M1~rc10) karmic; urgency=low
 
   * Initial release (x64 build fixes)
