@@ -2,6 +2,8 @@ CONFIG -= qt stl exceptions rtti
 CONFIG *= shared plugin thread warn_on
 DEFINES -= DEBUG RELEASE NODEBUG NORELEASE
 
+isEmpty(PREFIX): PREFIX = /usr
+
 ENV_BUILD_CONFIG = $$(BUILD_CONFIG)
 !isEmpty(ENV_BUILD_CONFIG) {
 	CONFIG -= release debug profile
