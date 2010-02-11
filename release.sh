@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [[ ! "$2" = "" ]]; then
+	debchange -v $1 "$2"
+	git commit -a -m "$2"
+fi
+
 opwd=`pwd`
 cd /tmp
 
