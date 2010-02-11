@@ -1,30 +1,12 @@
-Martta: The C++-based Extensible Quasi-Graphical Symbolic Meta-Language.
+Martta: The C++-based Language Workbench
 
-By Gavin Wood. Copyright (c) 2008, quid pro code, Ltd.  All rights reserved.
+By Gavin Wood. Copyright (c) 2008, 2009, 2010, quid pro code, Ltd.  All rights reserved.
 
-Milestone 0: Technology Preview.
+Milestone 1: Technology Preview.
 
-For the terms of distribution, please see src/COPYING.Martta for all files in the src/ heirarchy and support/COPYING.MarttaSupport for all files in the support/ heirarchy.
-
-INTRODUCTION
-
-INSTALLATION
-
-NOTE: Currently Martta is non-trivial to build. This will be improved in forthcoming releases.
-
-Martta has two dependencies; Qt version 4.4 or above and GccXML. Regarding the latter, I use
-the latest version from the CVS repository, but you might like to try earlier versions if they
-are most convenient to install for you.
-
-Qt may be downloaded from Trolltech's site, www.trolltech.com.
-
-GccXML may be downloaded from www.gccxml.org.
-
-Mac OS X
---------
-
-You will need Apple's developer toolset which includes GCC and make. Once installed and
-working you can use the qmake utility provided by Qt in this directory to build Martta. The
-final application is to be found in the bin/ path, and is called Martta.
-
+For the terms of distribution, see COPYING.Martta.
+For a building/installation guide, see INSTALLATION.
+For help with using Martta, see USAGE.
+For information on making a new release, see RELEASE.
+For a list of features yet to do, see TODO.
 

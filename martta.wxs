@@ -2,7 +2,7 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
     <Product Id="{D9A0703A-1A99-4802-84B4-D29AB10233C6}" Language="1033" Manufacturer="Quid Pro Code" Name="Martta" UpgradeCode="{557AD33B-20F9-4821-B4FC-7670C53B513B}" Version="1.0.0.0">
      <Package Compressed="yes" InstallerVersion="200" />
-      <WixVariable Id="WixUILicenseRtf" Value=".\License.rtf" />
+      <WixVariable Id="WixUILicenseRtf" Value=".\extra\License.rtf" />
       <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
       <UIRef Id="WixUI_InstallDir" />
       <UIRef Id="WixUI_ErrorProgressText" />

@@ -25,7 +25,7 @@ win32:DEFINES += M_WIN
 !macx:unix: CONFIG += linux
 linux:DEFINES += M_LINUX
 
-!win32:VERSION = 0.1.0
+!win32:VERSION = M1
 
 unix:QMAKE_CXXFLAGS += -fno-strict-aliasing
 
