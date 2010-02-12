@@ -3,10 +3,11 @@ QMAKE_LIBDIR *= $$DESTDIR
 DEPENDPATH *= $$join(OURDIRS, " $$TWD/", "$$TWD/")
 INCLUDEPATH *= $$join(OURDIRS, " $$TWD/", "$$TWD/")
 contains(TARGET, $$basename(TWD)): contains(TEMPLATE, lib) {
+	QMAKE_POST_LINK += echo $${TARGET} $$DEPS > $${OBJECTS_DIR}/$${TARGET}.dep
 	QMAKE_POST_LINK += echo $${TARGET} $$DEPS > $${DESTDIR}/$${TARGET}.dep
 	macx: QMAKE_LFLAGS += -install_name @rpath/$(TARGET)
 	INSTALLS += target dep
-	dep.files = $${DESTDIR}/$${TARGET}.dep
+	dep.files = $${OBJECTS_DIR}/$${TARGET}.dep
 	dep.path = $$PREFIX/share/martta/plugins
 	target.path = $$PREFIX/share/martta/plugins
 }
