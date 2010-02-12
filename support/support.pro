@@ -4,6 +4,7 @@
 include(../global.pri)
 
 TEMPLATE = lib
+XT = $$TARGET
 TARGET = support
 macx:QMAKE_LFLAGS += -Wl,-Sp -install_name @rpath/$(TARGET)
 macx:QMAKE_CXXFLAGS_DEBUG += -fasm-blocks
@@ -52,11 +53,8 @@ SOURCES += msSupport.cpp \
 	msStringList.cpp \
 	msFlags.cpp
 
-INSTALLS += target exheaders extarget
+INSTALLS += target exheaders
 target.path = $${PREFIX}/lib
-exheaders.files = $$HEADERS
+exheaders.files = $${HEADERS}
 exheaders.path = $${PREFIX}/share/martta/support
-extarget.files = TARGET
-extarget.path = $${PREFIX}/share/martta/support
-
 
