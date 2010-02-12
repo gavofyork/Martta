@@ -26,16 +26,19 @@ namespace Martta
 
 void GccXml::extractHeaders(QString const& _c, QXmlContentHandler* _h)
 {
-	QTemporaryFile sourceCode("XXXXXX.c");
-	sourceCode.open();
-	sourceCode.write(_c.toAscii());
-	sourceCode.flush();
-
 	QString xmlfn;
+	QString srcfn;
 	{
-		QTemporaryFile xml("XXXXXX.xml"); // Would be .cpp except we can only handle reading in C files at the moment.
-		xml.open();
-		xmlfn = xml.fileName();
+		QTemporaryFile tf;
+		tf.open();
+		xmlfn = tf.fileName() + ".xml";
+		srcfn = tf.fileName() + ".c";
+	}
+
+	{
+		QFile sourceCode(srcfn);
+		sourceCode.open(QIODevice::WriteOnly);
+		sourceCode.write(_c.toAscii());
 	}
 
 	QStringList searchPaths;
@@ -65,10 +68,9 @@ void GccXml::extractHeaders(QString const& _c, QXmlContentHandler* _h)
 				}
 			}				
 #endif
-			QProcess::execute(s + executable, QStringList() << sourceCode.fileName() << ("-fxml=" + xmlfn));
+			QProcess::execute(s + executable, QStringList() << srcfn << ("-fxml=" + xmlfn));
 			break;
 		}
-	sourceCode.close();
 
 	QXmlSimpleReader xmlReader;
 	QFile xml(xmlfn);
@@ -77,7 +79,10 @@ void GccXml::extractHeaders(QString const& _c, QXmlContentHandler* _h)
 	xmlReader.setContentHandler(_h);
 	xmlReader.parse(source);
 	delete source;
+	xml.close();
+
 	QFile::remove(xmlfn);
+	QFile::remove(srcfn);
 	delete _h;
 }
 
