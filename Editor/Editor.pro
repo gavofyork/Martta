@@ -52,6 +52,7 @@ macx: SUPPORT.files += ../support/libsupport.dylib
 INSTALLS = target dotdesktop icon
 target.path = $$PREFIX/bin
 
+system(mkdir -p $${OBJECTS_DIR})
 system(cat Martta.desktop > $${OBJECTS_DIR}/Martta.desktop)
 system(echo Exec=$${PREFIX}/bin/Martta >> $${OBJECTS_DIR}/Martta.desktop)
 system(echo Path=$${PREFIX}/bin >> $${OBJECTS_DIR}/Martta.desktop)
