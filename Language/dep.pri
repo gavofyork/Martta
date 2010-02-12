@@ -3,7 +3,7 @@ QMAKE_LIBDIR *= $$DESTDIR
 DEPENDPATH *= $$join(OURDIRS, " $$TWD/", "$$TWD/")
 INCLUDEPATH *= $$join(OURDIRS, " $$TWD/", "$$TWD/")
 contains(TARGET, $$basename(TWD)): contains(TEMPLATE, lib) {
-	system(echo $${TARGET} $$DEPS > $${OBJECTS_DIR}/$${TARGET}.dep)
+	system(mkdir -p "$${OBJECTS_DIR}" && echo $${TARGET} $$DEPS > "$${OBJECTS_DIR}/$${TARGET}.dep")
 	QMAKE_PRE_LINK += echo $${TARGET} $$DEPS > $${DESTDIR}/$${TARGET}.dep
 	macx: QMAKE_LFLAGS += -install_name @rpath/$(TARGET)
 	INSTALLS += target dep
