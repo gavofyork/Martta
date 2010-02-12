@@ -31,7 +31,7 @@ win32:DLLs.commands = @echo Copying libraries...\
 QMAKE_EXTRA_TARGETS += DLLs
 PRE_TARGETDEPS += DLLs
 
-linux:QMAKE_LFLAGS += -Wl,-rpath,../plugins -Wl,-rpath,../support -Wl,-rpath,../share/martta/plugins
+linux:QMAKE_LFLAGS += -Wl,-rpath,../plugins -Wl,-rpath,../support -Wl,-rpath,../share/martta/support -Wl,-rpath,../share/martta/plugins
 macx:QMAKE_LFLAGS += -Wl,-macosx_version_min,10.5 -Wl,-rpath,$$PWD/../plugins -Wl,-rpath,$$PWD/../support
 LIBS += -lsupport
 TARGET = Martta
@@ -49,14 +49,18 @@ win32: SUPPORT.files += ../support/support.dll ../support/support.lib
 linux: SUPPORT.files += ../support/libsupport.so
 macx: SUPPORT.files += ../support/libsupport.dylib
 
-INSTALLS = target dotdesktop icon base
+INSTALLS = target dotdesktop icon
 target.path = $$PREFIX/bin
-dotdesktop.files = Martta.desktop
+linux {
+	system(cat Martta.desktop > $${OBJECTS_DIR}/Martta.desktop)
+	system(echo Exec=$${PREFIX}/bin/Martta >> $${OBJECTS_DIR}/Martta.desktop)
+	system(echo Path=$${PREFIX}/bin >> $${OBJECTS_DIR}/Martta.desktop)
+}
+
+dotdesktop.files = $${OBJECTS_DIR}/Martta.desktop
 dotdesktop.path = $$PREFIX/share/applications
 icon.files = Martta.xpm Martta.png
 icon.path = $$PREFIX/share/pixmaps
-base.files = ../plugins/libLanguage.so ../plugins/libWebView.so ../plugins/libConcept.so
-base.path = $$PREFIX/lib
 
 # Input
 HEADERS += CodeView.h \

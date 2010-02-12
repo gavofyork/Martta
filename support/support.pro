@@ -54,7 +54,7 @@ SOURCES += msSupport.cpp \
 	msFlags.cpp
 
 INSTALLS += target exheaders
-target.path = $${PREFIX}/lib
+target.path = $${PREFIX}/share/martta/support
 exheaders.files = $${HEADERS}
 exheaders.path = $${PREFIX}/share/martta/support
 
