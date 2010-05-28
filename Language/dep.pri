@@ -1,8 +1,8 @@
 QMAKE_FEATURES *= $$PWD
 QMAKE_LIBDIR *= $$DESTDIR
-DEPENDPATH *= $$join(OURDIRS, " $$TWD/", "$$TWD/")
-INCLUDEPATH *= $$join(OURDIRS, " $$TWD/", "$$TWD/")
-contains(TARGET, $$basename(TWD)): contains(TEMPLATE, lib) {
+DEPENDPATH *= $$join(OURDIRS, " $$HWD/", "$$HWD/")
+INCLUDEPATH *= $$join(OURDIRS, " $$HWD/", "$$HWD/")
+contains(TARGET, $$basename(HWD)): contains(TEMPLATE, lib) {
 	system(mkdir -p "$${OBJECTS_DIR}" && echo $${TARGET} $$DEPS > "$${OBJECTS_DIR}/$${TARGET}.dep")
 	QMAKE_PRE_LINK += echo $${TARGET} $$DEPS > $${DESTDIR}/$${TARGET}.dep
 	macx: QMAKE_LFLAGS += -install_name @rpath/$(TARGET)
@@ -11,7 +11,8 @@ contains(TARGET, $$basename(TWD)): contains(TEMPLATE, lib) {
 	dep.path = $$PREFIX/share/martta/plugins
 	target.path = $$PREFIX/share/martta/plugins
 }
-!contains(TARGET, $$basename(TWD)): !contains(NO_SOURCES, 1): LIBS *= -l$$basename(TWD)
+!contains(TARGET, $$basename(HWD)): !contains(NO_SOURCES, 1): LIBS *= -l$$basename(HWD)
+LIBS -= -l
 for(a, DEPS): !contains(DONE, $${a}) {
 	DONE += $${a}
 	NO_SOURCES = 0

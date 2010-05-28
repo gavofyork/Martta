@@ -1,5 +1,6 @@
 DEPS += Labels Statement SimpleTypes
 OURDIRS = . Interfaces Support
-TWD = $$PWD
+HWD = $$PWD
+TWD = $$OUT_PWD
 
 include(../dep.pri)

@@ -30,7 +30,7 @@ unix {
 DEFINES += M_API_support=M_INAPI
 DEPENDPATH += .
 INCLUDEPATH += .
-OBJECTS_DIR = build
+OBJECTS_DIR = $$OUT_PWD/build
 win32:DESTDIR = ./.
 
 # Input

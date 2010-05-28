@@ -10,24 +10,29 @@ QT += svg \
 TEMPLATE = app
 BASE = ../Language
 TWD = $$PWD
+HWD = $$OLD_PWD
 TARGET = Editor
-include(../Language/dep.pri)
+message($$PWD/../Language/dep.pri)
+message($$DONE)
+include($$PWD/../Language/dep.pri)
+include($$PWD/$${BASE}/Concept/Concept.pri)
+message($$DONE $$LIBS)
 OBJECTS_DIR = build
 UI_DIR = build
 RCC_DIR = build
 MOC_DIR = build
 DEPENDS =
 QMAKE_LIBDIR += ../support \
-	../plugins
+	$$PWD/../plugins
 INCLUDEPATH *= ../support
 DEPENDPATH += .
 win32:DESTDIR = .\.
 
 win32:DLLs.commands = @echo Copying libraries...\
-	&& copy ..\\support\\support.dll $$DESTDIR \
-	&& copy ..\\plugins\\Language.dll $$DESTDIR \
-	&& copy ..\\plugins\\WebView.dll $$DESTDIR \
-	&& copy ..\\plugins\\Concept.dll $$DESTDIR
+	&& copy $$PWD\\..\\support\\support.dll $$DESTDIR \
+	&& copy $$PWD\\..\\plugins\\Language.dll $$DESTDIR \
+	&& copy $$PWD\\..\\plugins\\WebView.dll $$DESTDIR \
+	&& copy $$PWD\\..\\plugins\\Concept.dll $$DESTDIR
 QMAKE_EXTRA_TARGETS += DLLs
 PRE_TARGETDEPS += DLLs
 

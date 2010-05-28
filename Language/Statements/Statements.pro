@@ -5,7 +5,7 @@ unix:HEADERS +=  ./ReturnStatement.cpp ./ReferencedValue.cpp ./InScopeReferenced
 SOURCES += .Statements-composed.cpp
 DEFINES += M_API_Statements=M_INAPI
 
-INSTALL_DATA.files =  Support/in.svg Support/out.svg Support/GlobalReferenced.svg
+INSTALL_DATA.files =  $$PWD/Support/in.svg $$PWD/Support/out.svg $$PWD/Support/GlobalReferenced.svg
 INSTALL_DATA.path = $$PREFIX/share/martta/plugins/Data
 INSTALLS += INSTALL_DATA
 !win32:DATA.commands = @echo "Copying data..." && mkdir -p "$$DESTDIR/Data" && cp $$INSTALL_DATA.files "$$DESTDIR/Data"

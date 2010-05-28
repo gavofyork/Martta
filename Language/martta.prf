@@ -1,9 +1,10 @@
 include(../global.pri)
 TEMPLATE = lib
-BASE = $$PWD
+BASE = "$$PWD"
 OBJECTS_DIR = $$BASE/build
-DEPENDPATH += ../../support
-INCLUDEPATH += ../../support
-QMAKE_LIBDIR += ../../support $$BASE/../plugins
+DEPENDPATH += $$PWD/../support
+INCLUDEPATH += $$PWD/../support
+message("martta.prf" $$PWD $$BASE)
+QMAKE_LIBDIR += $$OUT_PWD/../../support $$OUT_PWD/../../plugins
 LIBS += -lsupport
-DESTDIR = $$BASE/../plugins
+DESTDIR = $$OUT_PWD/../../plugins

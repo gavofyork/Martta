@@ -1,5 +1,6 @@
 DEPS += Concept WebView
 OURDIRS = . Interfaces Support
-TWD = $$PWD
+HWD = $$PWD
+TWD = $$OUT_PWD
 
 include(../dep.pri)

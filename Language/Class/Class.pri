@@ -1,5 +1,6 @@
 DEPS += CStuff Types Members Statements
 OURDIRS = . Interfaces
-TWD = $$PWD
+HWD = $$PWD
+TWD = $$OUT_PWD
 
 include(../dep.pri)

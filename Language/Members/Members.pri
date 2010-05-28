@@ -1,5 +1,6 @@
 DEPS += Labels Declaration Types Namers Statements Operator Labels
 OURDIRS = .
-TWD = $$PWD
+HWD = $$PWD
+TWD = $$OUT_PWD
 
 include(../dep.pri)
