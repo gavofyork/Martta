@@ -1,3 +1,4 @@
+BUG Change class name and the constuctor stays the same.
 BUG Don't want constructor in list really (at least not in current state).
 BUG half-way through editing  can't see what's done and what's not.
 BUG If half-way point is on a word break, it isn't capitalised.

@@ -4,7 +4,6 @@ BASE = "$$PWD"
 OBJECTS_DIR = $$BASE/build
 DEPENDPATH += $$PWD/../support
 INCLUDEPATH += $$PWD/../support
-message("martta.prf" $$PWD $$BASE)
 QMAKE_LIBDIR += $$OUT_PWD/../../support $$OUT_PWD/../../plugins
 LIBS += -lsupport
 DESTDIR = $$OUT_PWD/../../plugins
