@@ -70,8 +70,8 @@ MainWindow::MainWindow(QWidget* _p, Qt::WindowFlags _f):
 	m_updateTimer		(0),
 	m_buildAndRun		(0)
 {
-#if M_LINUX
 	mInfo() << qs(qApp->applicationDirPath());
+#if M_LINUX
 	if (qApp->arguments().count() > 1)
 		m_pluginsPath = qs(qApp->applicationDirPath() + "/" + qApp->arguments()[1]);
 	else
@@ -79,6 +79,7 @@ MainWindow::MainWindow(QWidget* _p, Qt::WindowFlags _f):
 #else
 	m_pluginsPath = qs(qApp->applicationDirPath() + "/../plugins");
 #endif
+	qDebug() << qApp->applicationDirPath() << (M_LINUX) << qApp->arguments().count() << qs(m_pluginsPath);
 	qApp->addLibraryPath(qs(m_pluginsPath));
 	DataFinder::set(new RealDataFinder(m_pluginsPath));
 
@@ -699,7 +700,10 @@ void MainWindow::updateProgramSupportPath()
 	m_solution->setSupportPath(qs(QCoreApplication::applicationDirPath() + "/../Support/"));
 #endif
 #ifdef Q_WS_X11
-	m_solution->setSupportPath(qs(QCoreApplication::applicationDirPath() + "/../share/martta/support/"));
+	if (qApp->arguments().count() > 1)
+		m_solution->setSupportPath(qs(QCoreApplication::applicationDirPath() + "/../support/"));
+	else
+		m_solution->setSupportPath(qs(QCoreApplication::applicationDirPath() + "/../share/martta/support/"));
 #endif
 }
 

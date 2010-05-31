@@ -108,7 +108,7 @@ public: \
 	MARTTA_INITIALISED_PLACEHOLDER(S)
 
 #define MARTTA_NAMED(X) static const int X;
-#define MARTTA_NAMED_CPP(E, X) const int E::X = registerName(-((int)(((unsigned long)&X) / sizeof(X))), #E "::" #X)
+#define MARTTA_NAMED_CPP(E, X) const int E::X = registerName(-((int) ((((unsigned long)&X) / sizeof(int)) % ((1l << (sizeof(int) * 8 - 1)) - 1)) ), #E "::" #X)
 #define MARTTA_NAME_ALIAS(X) static const int& X;
 #define MARTTA_NAME_ALIAS_CPP(E, X, Y) const int& E::X = E::Y
 

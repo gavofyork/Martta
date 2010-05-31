@@ -10,13 +10,10 @@ QT += svg \
 TEMPLATE = app
 BASE = ../Language
 TWD = $$PWD
-HWD = $$OLD_PWD
+HWD = $$OUT_PWD
 TARGET = Editor
-message($$PWD/../Language/dep.pri)
-message($$DONE)
 include($$PWD/../Language/dep.pri)
 include($$PWD/$${BASE}/Concept/Concept.pri)
-message($$DONE $$LIBS)
 OBJECTS_DIR = build
 UI_DIR = build
 RCC_DIR = build
@@ -51,8 +48,13 @@ SUPPORT.files = $$SUPPORT_HEADERS \
 	$$SUPPORT_INLINES
 SUPPORT.path = Support
 win32: SUPPORT.files += ../support/support.dll ../support/support.lib
-linux: SUPPORT.files += ../support/libsupport.so
+#linux: SUPPORT.files += ../support/libsupport.so
+linux {
+	QMAKE_POST_LINK = true
+	for(a, SUPPORT.files):QMAKE_POST_LINK += && cp $$PWD/$${a} $$OUT_PWD/../support
+}
 macx: SUPPORT.files += ../support/libsupport.dylib
+
 
 INSTALLS = target dotdesktop icon
 target.path = $$PREFIX/bin
