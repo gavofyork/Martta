@@ -46,6 +46,8 @@ String TypeNamer::informationHtml() const
 	p << L"Canonical type" << type()->typeName();
 	if (apparentType() != type())
 		p << L"Apparent type" << apparentType()->typeName();
+	if (bareType() != type())
+		p << L"Bare type" << bareType()->typeName();
 	if (ourAllowedTypes().count())
 		p << L"Allowed types" << compileTypes(ourAllowedTypes());
 	if (ourDeniedTypes().count())

@@ -32,6 +32,13 @@ MARTTA_REGISTER_CSS(Reference,
 	L".Reference { text-shadow: 1px 1px 1px #fff; color:#a50; font-size: 70%; font-weight: bold; }"
 );
 
+Type Reference::ensure(Type const& _t)
+{
+	if (!_t->isType<Reference>())
+		return _t.toppedWith(Reference());
+	return _t;
+}
+
 bool Reference::defineSimilarityTo(TypeConcept const* _t, Castability _c) const
 {
 			// X -*> Y => X& -=> Y&

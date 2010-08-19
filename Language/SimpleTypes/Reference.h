@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "Type.h"
 #include "ModifyingType.h"
 
 #ifndef M_API_SimpleTypes
@@ -35,6 +36,7 @@ class M_CLASS M_API_SimpleTypes Reference: public_super ModifyingType
 
 public:
 	inline static bool					keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePositionKeyPressHandler<Reference>(_p, _e, "&", false); }
+	static Type							ensure(Type const& _t);
 
 private:
 	virtual List<ValueDefiner*>			applicableMembers(Concept const* _s = 0, bool _isConst = false) const { return original() ? original()->applicableMembers(_s, _isConst) : Super::applicableMembers(_s); }

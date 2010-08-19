@@ -20,6 +20,7 @@
 
 #include "WebStylistRegistrar.h"
 #include "PhysicalType.h"
+#include "Type.h"
 #include "Reference.h"
 #include "Const.h"
 
@@ -33,6 +34,13 @@ MARTTA_REGISTER_CSS(Const,
 	L".ConstLabel-constblock { -webkit-border-image: -webkit-gradient(linear, left top, right top, from(#fff), to(#bdf), color-stop(0.5, #bdf)) 100% 100% 100% 100% repeat repeat; border-width: 0 0 0 12px; padding-left: 8px; margin-left: -20px; }"
 	L".ConstLabel-nonconstblock { }"
 );
+
+Type Const::ensure(Type const& _t)
+{
+	if (!_t->isType<Const>())
+		return _t.toppedWith(Const());
+	return _t;
+}
 
 bool Const::defineSimilarityFrom(TypeConcept const* _f, Castability _c) const
 {

@@ -44,6 +44,9 @@ public:
 	/// The actual type it thinks it is. This is (typically) independent of the parent and
 	/// the type has not been implicitly casted according to the "hole" it is trying to fit.
 	virtual Type						type() const { return Type(); }
+	/// The absolute original type (e.g. before it is made into a reference type by virtue
+	/// of being a variable).
+	virtual Type						bareType() const { return type(); }
 
 	Types								ourAllowedTypes() const;
 	Types								ourDeniedTypes() const;

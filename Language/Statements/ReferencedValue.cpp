@@ -76,6 +76,14 @@ bool ReferencedValue::isInValidState() const
 	return m_subject && m_subject->isAccessibleAt(over()) && Super::isInValidState();
 }
 
+Type ReferencedValue::bareType() const
+{
+	// If we're not referencing anything yet, return null.
+	if (!m_subject.isUsable())
+		return Type();
+	return m_subject->bareType();
+}
+
 Type ReferencedValue::type() const
 {
 	// If we're not referencing anything yet, return null.

@@ -146,6 +146,7 @@ public:
 	inline Concept*						root() const { Concept* e; for (e = const_cast<Concept*>(this); e->m_parent; e = e->m_parent) {} return e; }
 	template<class T> T*				rootOf() const { T* r = tryKind<T>(); for (Concept* e = const_cast<Concept*>(this); e; e = e->m_parent) if (T* t = e->tryKind<T>()) r = t; return r; }
 
+	template<class T> List<T*>			ancestorsOf() const { List<T*> ret; for (T* e = this; e; e = e->parent()) if (e.isKind<T>()) ret += e; return ret; }
 	template<class T> List<T*>			selfAndAncestorsChildrenOf() const { List<T*> ret = childrenOf<T>(); return parent() ? ret + parent()->selfAndAncestorsChildrenOf<T>() : ret; }
 	template<class T> List<T*>			superChildrenOf() const { List<T*> ret; ret << childrenOf<T>(); foreach (Concept* e, children()) ret << e->superChildrenOf<T>(); return ret; }
 

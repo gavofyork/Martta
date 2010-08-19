@@ -42,10 +42,15 @@ protected:
 
 };
 
-// Note these two can morph into ClosureExplicit...
-class ClosureDefaultValue: public_super ClosureEntry
+class ClosureDefault: public_super ClosureEntry
 {
-	MARTTA_PROPER(ClosureEntry)
+	MARTTA_PLACEHOLDER(ClosureEntry)
+};
+
+// Note these two can morph into ClosureExplicit...
+class ClosureDefaultValue: public_super ClosureDefault
+{
+	MARTTA_PROPER(ClosureDefault)
 
 public:
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePositionKeyPressHandler<ClosureDefaultValue>(_p, _e, "="); }
@@ -54,9 +59,9 @@ protected:
 	virtual String						defineHtml() const { return mark() + tagOf("symbol", "="); }
 };
 
-class ClosureDefaultReference: public_super ClosureEntry
+class ClosureDefaultReference: public_super ClosureDefault
 {
-	MARTTA_PROPER(ClosureEntry)
+	MARTTA_PROPER(ClosureDefault)
 
 public:
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePositionKeyPressHandler<ClosureDefaultReference>(_p, _e, "&"); }

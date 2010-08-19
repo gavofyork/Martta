@@ -46,9 +46,11 @@ public:
 	String								editHtmlHelper(ValueDefiner* _v, String const& _mid) const;
 	virtual List<ValueDefiner*>			possibilities() const { return List<ValueDefiner*>(); }
 
+	virtual Type						type() const;
+	virtual Type						bareType() const;
+
 protected:
 	virtual String						code() const;
-	virtual Type						type() const;
 	virtual bool						isInValidState() const;
 	virtual String						defineHtml() const;
 	virtual String						defineEditHtml(CodeScene* _cs) const;

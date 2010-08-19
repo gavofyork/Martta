@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "Type.h"
 #include "ModifyingType.h"
 
 #ifndef M_API_SimpleTypes
@@ -34,9 +35,8 @@ class M_CLASS M_API_SimpleTypes Const: public_super ModifyingType
 	MARTTA_PROPER(ModifyingType)
 
 public:
-	Const() {}
-
 	inline static bool					keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePositionKeyPressHandler<Const>(_p, _e, "!", false); }
+	static Type							ensure(Type const& _t);
 
 protected:
 	virtual bool						hasDefaultConstructor() const { return original() && original()->hasDefaultConstructor(); }

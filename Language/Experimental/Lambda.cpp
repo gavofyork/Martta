@@ -30,13 +30,18 @@
 #include "Construction.h"
 #include "Field.h"
 #include "Position.h"
+#include "Reference.h"
+#include "Const.h"
 #include "ReferencedValue.h"
+#include "LocalReferencedValue.h"
+#include "ArgumentReferencedValue.h"
 #include "Lambda.h"
 
 namespace Martta
 {
 
 MARTTA_PLACEHOLDER_CPP(ClosureEntry);
+MARTTA_PLACEHOLDER_CPP(ClosureDefault);
 MARTTA_PROPER_CPP(ClosureDefaultValue);
 MARTTA_PROPER_CPP(ClosureDefaultReference);
 MARTTA_PROPER_CPP(Closure);
@@ -105,18 +110,6 @@ bool Lambda::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 
 void Lambda::compose()
 {
-	/*IfStatement* t = new IfStatement;
-	child(Condition)->silentMove(t->middle(Condition));
-	if (child(Body))
-		child(Body)->silentMove(t->middle(AltBody));
-	else
-		(new Compound)->silentMove(t->middle(AltBody));
-	if (child(AltBody))
-		child(AltBody)->silentMove(t->middle(Body));
-	else
-		(new Compound)->silentMove(t->middle(Body));
-	replace(t);*/
-
 	TopLevel* n = ancestor<Namespace>();
 	if (!n)
 		return Composite::compose();
@@ -136,10 +129,6 @@ void Lambda::compose()
 	foreach (Argument* a, cardinalChildrenAs<Argument>())
 		a->silentMove(mop->back());
 	mop->prepareChildren();
-	mop->body()->child(0)->killAndDelete();
-	foreach (Concept* i, child(Body)->cardinalChildren())
-		i->silentMove(mop->body()->back());
-
 	/*
 	foreach (Argument* a, cardinalChildrenAs<Argument>())
 	{
@@ -148,22 +137,61 @@ void Lambda::compose()
 		c->firstFor(f->kind()).insertSilent(f);
 		a->rewirePointer(f);
 	}*/
-	/*
-	List<ReferencedValue*> crv = child(Body)->superChildrenOf<ReferencedValue>();
-	foreach (Argument* a, cardinalChildrenAs<Argument>())
+
+	Construction* t = new Construction(ctor);
+
+	// only when we have the default...
+	bool haveDefault = false;
+	bool byValue = false;
+	List<ClosureDefault*> ccd = child(ClosureSet)->cardinalChildrenOf<ClosureDefault>();
+	if (ccd.size() == 1)
 	{
-		Field* f = new Field;
-		f->middle(Field::Accessibility).insertSilent(new AccessLabel(Private));
-		f->middle(Field::OurType).insertSilent(TypeConcept::cloneOf(a->actualType(), 0));
-		f->prepareChildren();
-		c->firstFor(f->kind()).insertSilent(f);
-		foreach (ReferencedValue* v, crv)
+		haveDefault = true;
+		byValue = ccd.first()->isKind<ClosureDefaultValue>();
+	}
+	List<ReferencedValue*> crv = child(Body)->superChildrenOf<ReferencedValue>();
+	while (crv.count())
+	{
+		ReferencedValue* v = crv.takeLast();
+		if (v->subject() && v->subject()->parent() != mop && v->subject()->parent() != c && (v->isKind<LocalReferencedValue>() || v->isKind<ArgumentReferencedValue>()))
+		{
+			if (haveDefault)
+			{
+				Argument* a = new Argument;
+				if (byValue)
+					Reference::ensure(Const::ensure(v->bareType())).insertSilentCopy(a->middle(Argument::OurType));
+				else
+					Reference::ensure(v->bareType()).insertSilentCopy(a->middle(Argument::OurType));
+				a->prepareChildren();
+				ctor->back().insertSilent(a);
+				t->back().insertSilent(new ReferencedValue(v->subject()));
+
+				Field* f = new Field;
+				f->middle(Field::Accessibility).insertSilent(new AccessLabel(Private));
+				if (byValue)
+					v->bareType().insertSilentCopy(f->middle(Field::OurType));
+				else
+					Reference::ensure(v->bareType()).insertSilentCopy(f->middle(Field::OurType));
+				f->prepareChildren();
+				c->back().insertSilent(f);
+				v->set(f);
+			}
+			else
+				v->set(0);
+		}
+	}
+
+	mop->body()->child(0)->killAndDelete();
+	foreach (Concept* i, child(Body)->cardinalChildren())
+		i->silentMove(mop->body()->back());
+
+/*	foreach (Argument* a, cardinalChildrenAs<Argument>())
+	{
 			if (v->subject() == a)
 				v->set(f);
 	}*/
 
 	n->middle(ni).insertSilent(c);
-	Construction* t = new Construction(ctor);
 	replace(t);
 	n->debugTree();
 }

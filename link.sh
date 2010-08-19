@@ -32,7 +32,7 @@ else
 fi
 
 if [[ "x$3" == "x" ]]; then
-	support="\$\$OUT_PWD/../../support"
+	support="\$\$PWD/../support"
 else
 	support="$3"
 fi
@@ -172,13 +172,13 @@ cat > "$root/martta.prf" << EOF
 include(../global.pri)
 TEMPLATE = lib
 !win32:VERSION = 0.1.0
-BASE = \$\$PWD
-OBJECTS_DIR = \$\$OUT_PWD/build
+BASE = "\$\$PWD"
+OBJECTS_DIR = "\$\$OUT_PWD/build"
 DEPENDPATH += $support
 INCLUDEPATH += $support
-QMAKE_LIBDIR += $support \$\$OUT_PWD/../../plugins
+QMAKE_LIBDIR += "\$\$OUT_PWD/../../support" "\$\$OUT_PWD/../../plugins"
 LIBS += -lsupport
-DESTDIR = \$\$OUT_PWD/../../plugins
+DESTDIR = "\$\$OUT_PWD/../../plugins"
 EOF
 fi
 

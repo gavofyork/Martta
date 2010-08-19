@@ -46,9 +46,12 @@ bool ArgumentReferencedValue::keyPressedOnPosition(Position const& _p, KeyEvent 
 List<ValueDefiner*> ArgumentReferencedValue::possibilities(Position const& _p)
 {
 	List<ValueDefiner*> ret;
-	if (LambdaNamer* ln = _p->ancestor<LambdaNamer>())
+	foreach (Argument* i, _p.parent()->selfAndAncestorsChildrenOf<Argument>())
+		ret << i;
+	/*
+	foreach (LambdaNamer* ln, _p->ancestor<LambdaNamer>())
 		for (int i = 0; i < ln->argumentCount(); i++)
-			ret << ln->argument(i);
+			ret << ln->argument(i);*/
 	return ret;
 }
 

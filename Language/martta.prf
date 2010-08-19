@@ -2,9 +2,9 @@ include(../global.pri)
 TEMPLATE = lib
 !win32:VERSION = 0.1.0
 BASE = "$$PWD"
-OBJECTS_DIR = $$OUT_PWD/build
-DEPENDPATH += $$OUT_PWD/../../support
-INCLUDEPATH += $$OUT_PWD/../../support
-QMAKE_LIBDIR += $$OUT_PWD/../../support $$OUT_PWD/../../plugins
+OBJECTS_DIR = "$$OUT_PWD/build"
+DEPENDPATH += $$PWD/../support
+INCLUDEPATH += $$PWD/../support
+QMAKE_LIBDIR += "$$OUT_PWD/../../support" "$$OUT_PWD/../../plugins"
 LIBS += -lsupport
-DESTDIR = $$OUT_PWD/../../plugins
+DESTDIR = "$$OUT_PWD/../../plugins"
