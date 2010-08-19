@@ -38,7 +38,7 @@ public:
 	virtual List<Named*>				identifiableAt(Position const& _p)
 	{
 		if (canPlaceVariable(_p))
-			return list_cast<Named*>(castEntities<Identifiable>(_p.parent()->selfAndAncestorsChildrenOf<TypeDefinition>()));
+			return list_cast<Named*>(concepts_cast<Identifiable>(_p.parent()->selfAndAncestorsChildrenOf<TypeDefinition>()));
 		return List<Named*>();
 	}
 	virtual void						acceptAt(Position const& _pos, Named* _i, CodeScene* _cs)

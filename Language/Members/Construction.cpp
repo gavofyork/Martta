@@ -66,7 +66,7 @@ String Construction::code() const
 {
 	if (!m_subject.isUsable())
 		return String::null;
-	return m_subject->parentAs<Identifiable>()->reference() + callList();	// parentAs<>() actually gives the class.
+	return L"(" + m_subject->parentAs<Identifiable>()->reference() + callList() + L")";	// parentAs<>() actually gives the class.
 }
 
 }

@@ -36,7 +36,7 @@ class M_CLASS M_API_Statements Invocation: public_super Evaluation
 public:
 	MARTTA_NAMED(Callee)
 
-	String								callList() const { return callList(castEntities<Typed>(cardinalChildren())); }
+	String								callList() const { return callList(concepts_cast<Typed>(cardinalChildren())); }
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 
 protected:

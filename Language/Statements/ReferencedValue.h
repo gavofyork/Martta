@@ -32,19 +32,25 @@
 namespace Martta
 {
 
-class M_CLASS M_API_Statements ReferencedValue: public_super Typed
+class M_CLASS M_API_Statements ReferencedValue: public_super Typed, public_interface NameEntryPoint
 {
 	MARTTA_PLACEHOLDER(Typed)
+	MARTTA_ALSO_INHERITS(NameEntryPoint, 0)
 
 public:
 	ReferencedValue(ValueDefiner* _v = 0);
 
 	ModelPtr<ValueDefiner>				subject() const { return m_subject; }
 	ModelPtr<ValueDefiner>				get() const { return m_subject; }
+	void								set(int) { setDependency(m_subject, (ValueDefiner*)0); }
 	void								set(ValueDefiner* _e) { setDependency(m_subject, _e); }
+	void								set(Named* _n) { set(static_cast<Identifiable*>(_n)->asKind<ValueDefiner>()); }
+	void								set(ModelPtr<ValueDefiner> const& _e) { set(&*_e); }
+
+//	virtual List<Named*>				possibilities() const { return list_cast<Named*>(possibilities(over(), true)); }
 
 	String								editHtmlHelper(ValueDefiner* _v, String const& _mid) const;
-	virtual List<ValueDefiner*>			possibilities() const { return List<ValueDefiner*>(); }
+	virtual List<ValueDefiner*>			refPossibilities(Position const&) const { return List<ValueDefiner*>(); }
 
 	virtual Type						type() const;
 	virtual Type						bareType() const;
@@ -61,7 +67,13 @@ protected:
 	virtual void						onDependencyRemoved(Concept* _old, int);
 	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); _p[L"subject"] = m_subject.key(); _p[L"hopeful"] = m_hopeful; }
 	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); m_subject.restoreFrom(_p[L"subject"]); m_hopeful = _p[L"hopeful"]; }
-	virtual EditDelegateFace*			newDelegate(CodeScene* _s);
+	virtual EditDelegateFace*			newDelegate(CodeScene* _s) { return NameEntryPoint::newDelegate<ReferencedValue>(_s); }
+	virtual bool						keyPressed(KeyEvent const* _e)
+	{
+		if (NameEntryPoint::keyPressed(_e))
+			return true;
+		return Super::keyPressed(_e);
+	}
 
 	String								m_hopeful;
 	ModelPtr<ValueDefiner>				m_subject;
@@ -72,9 +84,18 @@ class ReferencedValueSet: public_super IdentifierSet
 {
 public:
 	virtual String						setId() const { return Kind::of<T>().name(); }
-	virtual List<Named*>				identifiableAt(Position const& _p) { return list_cast<Named*>(castEntities<Identifiable>(T::possibilities(_p))); }
+	virtual List<Named*>				identifiableAt(Position const& _p) { if (_p.allowedToBeKind<T>()) return list_cast<Named*>(concepts_cast<Identifiable>(T::staticRefPossibilities(_p))); return List<Named*>(); }
 	virtual void						acceptAt(Position const& _p, Named* _i, CodeScene* _cs) { ValueDefiner* v = static_cast<Identifiable*>(_i)->asKind<ValueDefiner>(); _cs->setCurrent(_p.place(new T(v))); }
 	virtual String						defineEditHtml(Named* _i, String const& _mid) { ValueDefiner* v = static_cast<Identifiable*>(_i)->asKind<ValueDefiner>(); return ReferencedValue().editHtmlHelper(v, _mid); }
+};
+
+class M_CLASS M_API_Statements ScopedReferencedValue: public_super ReferencedValue
+{
+	MARTTA_PLACEHOLDER(ReferencedValue)
+
+public:
+	ScopedReferencedValue() {}
+	ScopedReferencedValue(ValueDefiner* _v) { set(_v); }
 };
 
 }

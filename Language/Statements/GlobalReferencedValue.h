@@ -36,11 +36,13 @@ class M_CLASS M_API_Statements GlobalReferencedValue: public_super ReferencedVal
 public:
 	GlobalReferencedValue(ValueDefiner* _subject = 0): ReferencedValue(_subject) {}
 
-	static List<ValueDefiner*>			possibilities(Position const& _p);
+	static List<ValueDefiner*>			staticRefPossibilities(Position const& _p);
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 
-	virtual List<ValueDefiner*>			possibilities() const { return possibilities(over()); }
+	virtual List<ValueDefiner*>			refPossibilities(Position const& _p) const { return staticRefPossibilities(_p); }
 	virtual String						defineEditHtml(CodeScene* _cs) const;
+	virtual List<ValueDefiner*>			possibilities() const { return refPossibilities(over()); }
+	virtual EditDelegateFace*			newDelegate(CodeScene* _s) { return new CompletionDelegate<GlobalReferencedValue, ValueDefiner*>(this, _s); }
 
 protected:
 	virtual String						defineHtml() const;

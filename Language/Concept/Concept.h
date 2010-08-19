@@ -89,9 +89,9 @@ public:
 	inline int							childCount(int _i) const { if (_i >= 0) return _i < m_cardinalChildren.size() ? 1 : 0; int r = 0; Hash<int, Concept*>::ConstIterator i = m_namedChildren.find(_i); while (i != m_namedChildren.end() && i.key() == _i) ++r, ++i; return r; }
 	inline List<Concept*>				children(int _i) const { if(_i < 0) return m_namedChildren.values(_i); if (_i < m_cardinalChildren.size()) return List<Concept*>() << child(_i); return List<Concept*>(); }
 	template<class T> inline List<T*>	childrenOf() const { return filterEntities<T>(children()); }
-	template<class T> inline List<T*>	childrenAs() const { return castEntities<T>(children()); }
+	template<class T> inline List<T*>	childrenAs() const { return concepts_cast<T>(children()); }
 	template<class T> inline List<T*>	childrenOf(int _i) const { return filterEntities<T>(children(_i)); }
-	template<class T> inline List<T*>	childrenAs(int _i) const { return castEntities<T>(children(_i)); }
+	template<class T> inline List<T*>	childrenAs(int _i) const { return concepts_cast<T>(children(_i)); }
 	template<class T> inline int		childIndexOf() const { foreach (Concept* e, children()) if (e->isKind<T>()) return e->m_index; return UndefinedIndex; }
 	template<class T> inline int		childCountOf() const { int r = 0; foreach (Concept* i, children()) if (i->isKind<T>()) r++; return r; }
 	template<class T> inline int		childCountOf(int _i) const { int r = 0; foreach (Concept* i, children(_i)) if (i->isKind<T>()) r++; return r; }
@@ -104,7 +104,7 @@ public:
 	inline List<Concept*> const&		cardinalChildren() const { return m_cardinalChildren; }
 	inline int							cardinalChildCount() const { return m_cardinalChildren.size(); }
 	template<class T> inline List<T*>	cardinalChildrenOf() const { return filterEntities<T>(m_cardinalChildren); }
-	template<class T> inline List<T*>	cardinalChildrenAs() const { return castEntities<T>(m_cardinalChildren); }
+	template<class T> inline List<T*>	cardinalChildrenAs() const { return concepts_cast<T>(m_cardinalChildren); }
 	template<class T> inline T*			cardinalChildOf() const { AssertNR(cardinalChildCountOf<T>()); return childAs<T>(cardinalChildIndexOf<T>()); }
 	template<class T> inline int		cardinalChildIndexOf() const { for (int r = 0; r < m_cardinalChildren.size(); ++r) if (childIs<T>(r)) return r; return UndefinedIndex; }
 	template<class T> inline int		cardinalChildCountOf() const { int r = 0; foreach (Concept* i, m_cardinalChildren) if (i->isKind<T>()) r++; return r; }

@@ -42,10 +42,10 @@ bool LocalReferencedValue::keyPressedOnPosition(Position const& _p, KeyEvent con
 	return true;
 }
 
-List<ValueDefiner*> LocalReferencedValue::possibilities(Position const& _p)
+List<ValueDefiner*> LocalReferencedValue::staticRefPossibilities(Position const& _p)
 {
-	if (Statement* s = _p->tryKind<Statement>())
-		return castEntities<ValueDefiner>(s->valuesInLocalScope());
+	if (Statement* s = _p->selfAncestor<Statement>())
+		return concepts_cast<ValueDefiner>(s->valuesInLocalScope());
 	return List<ValueDefiner*>();
 }
 

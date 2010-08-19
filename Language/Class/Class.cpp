@@ -27,6 +27,7 @@ using namespace MarttaSupport;
 #include "MemberEnumeration.h"
 #include "Method.h"
 #include "Base.h"
+#include "MemberReferencedValue.h"
 
 #include "Constructor.h"
 #include "Destructor.h"
@@ -47,6 +48,35 @@ using namespace MarttaSupport;
 
 namespace Martta
 {
+
+	MARTTA_PROPER_CPP(InitialiserItem);
+	MARTTA_NAMED_CPP(InitialiserItem, TheField);
+	MARTTA_NAMED_CPP(InitialiserItem, Value);
+
+	Kinds InitialiserItem::allowedKinds(int _i) const
+	{
+		return _i == TheField ? Kind::of<FloatingMemberReferencedValue>() : _i == Value ? Kind::of<Typed>() : Super::allowedKinds(_i);
+	}
+
+	String InitialiserItem::code() const
+	{
+		return childAs<Primary>(TheField)->code() + L"(" + childAs<Primary>(Value)->code() + L")";
+	}
+
+	MARTTA_PROPER_CPP(InitialiserList);
+
+	String InitialiserList::code() const
+	{
+		String ret = L":";
+		foreach (InitialiserItem* c, cardinalChildrenAs<InitialiserItem>())
+			ret += "\n\t" + c->code() + L",";
+		ret.chop(1);
+		return ret;
+	}
+
+
+
+
 
 MARTTA_PROPER_CPP(Class);
 MARTTA_REGISTER_CSS(Class, ".Class-label { color: #000; font-weight: bold; text-shadow: -1px -1px 0px #f77; }");
@@ -438,7 +468,7 @@ String Class::defineHtml() const
 	}
 	String ret = L"<^>" + tagOf(L"",
 								tagOf(L"keyword", L"class") + L" " + toHtml(child(Identity)) + tagOf(L"block",
-									toHtml(castEntities<Concept>(cardinalChildrenOf<Base>()), L"", L"div") +
+									toHtml(concepts_cast<Concept>(cardinalChildrenOf<Base>()), L"", L"div") +
 									tagOf(L"deblock minor symbol", L"{", L"div") +
 									mems +
 									tagOf(L"deblock minor symbol", L"};", L"div"),

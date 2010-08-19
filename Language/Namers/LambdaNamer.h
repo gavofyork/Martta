@@ -76,6 +76,9 @@ public:
 	/// Basic code for this function call. Is essentially the interfaceCode without the final ';'.
 	/// A default implementation exists.
 	virtual String						basicCode(FunctionCodeScope _ref) const;
+	/// Body code for this function call. It forms the implementation with the basicCode().
+	/// A default implementation exists.
+	virtual String						bodyCode() const;
 	virtual String						summary() const { return basicCode(InsideScope); }
 	virtual String						defineBorderClass() const { return L"LambdaNamer"; }
 	virtual String						definePreHtml() const { return String::null; }

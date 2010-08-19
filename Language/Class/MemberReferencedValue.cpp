@@ -65,7 +65,7 @@ Kinds MemberReferencedValue::ancestralDependencies() const
 	return ret;
 }
 
-List<ValueDefiner*> MemberReferencedValue::possibilities(Position const& _p, bool _methods, bool _nonMethods)
+List<ValueDefiner*> MemberReferencedValue::staticRefPossibilities(Position const& _p, bool _methods, bool _nonMethods)
 {
 	List<ValueDefiner*> ret;
 	Type method = Type(FunctionType(false, true)).topWith(Memberify()).topWith(Reference());
@@ -76,7 +76,7 @@ List<ValueDefiner*> MemberReferencedValue::possibilities(Position const& _p, boo
 			if (t->isType<Memberify>() && t->asType<Memberify>()->scope() && _p.concept())
 				appMems = t->asType<Memberify>()->scope()->applicableMembers(_p.concept(), t->asType<Memberify>()->isConst());
 			else if (Class* c = _p->ancestor<Class>())
-				appMems = castEntities<ValueDefiner>(c->membersOf<MemberValue>(_p->hasAncestor<MemberLambda>() ? _p->ancestor<MemberLambda>()->isConst() : false));
+				appMems = concepts_cast<ValueDefiner>(c->membersOf<MemberValue>(_p->hasAncestor<MemberLambda>() ? _p->ancestor<MemberLambda>()->isConst() : false));
 			appMems = filterEntitiesInv<Artificial>(appMems);
 			if (!_methods)
 				appMems = filterTypedsInv<ValueDefiner>(method, appMems);

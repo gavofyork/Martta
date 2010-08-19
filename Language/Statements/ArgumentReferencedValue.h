@@ -29,17 +29,19 @@
 namespace Martta
 {
 
-class M_CLASS M_API_Statements ArgumentReferencedValue: public_super ReferencedValue
+class M_CLASS M_API_Statements ArgumentReferencedValue: public_super ScopedReferencedValue
 {
-	MARTTA_PROPER(ReferencedValue)
+	MARTTA_PROPER(ScopedReferencedValue)
 	
 public:
-	ArgumentReferencedValue(ValueDefiner* _subject = 0): ReferencedValue(_subject) {}
+	ArgumentReferencedValue(ValueDefiner* _subject = 0): ScopedReferencedValue(_subject) {}
 
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 
-	virtual List<ValueDefiner*>			possibilities() const { return possibilities(over()); }
-	static List<ValueDefiner*>			possibilities(Position const& _p);
+	static List<ValueDefiner*>			staticRefPossibilities(Position const& _p);
+	virtual List<ValueDefiner*>			refPossibilities(Position const& _p) const { return staticRefPossibilities(_p); }
+	virtual List<ValueDefiner*>			possibilities() const { return refPossibilities(over()); }
+	virtual EditDelegateFace*			newDelegate(CodeScene* _s) { return new CompletionDelegate<ArgumentReferencedValue, ValueDefiner*>(this, _s); }
 };
 
 }

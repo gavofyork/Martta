@@ -59,7 +59,7 @@ String GlobalReferencedValue::defineEditHtml(CodeScene* _cs) const
 	return L"<span class=\"GlobalReferencedValue-Fader\"><span class=\"GlobalReferencedValue\">::</span></span>" + Super::defineEditHtml(_cs);
 }
 
-List<ValueDefiner*> GlobalReferencedValue::possibilities(Position const& _p)
+List<ValueDefiner*> GlobalReferencedValue::staticRefPossibilities(Position const& _p)
 {
 	return _p->root()->childrenOf<ValueDefiner>();
 }

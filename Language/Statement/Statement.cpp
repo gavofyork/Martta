@@ -26,6 +26,7 @@
 namespace Martta
 {
 
+MARTTA_NOTION_CPP(ScopePreserver);
 MARTTA_PLACEHOLDER_CPP(Statement);
 MARTTA_REGISTER_CSS(Statement, ".Statement { background-color: transparent; padding: 0; }");
 
@@ -55,12 +56,21 @@ void Statement::appendDefinedUptoHere(int _index, List<ValueDefiner*>* _list) co
 				*_list << v;
 }
 
-List<ValueDefiner*> Statement::valuesInLocalScope() const
+List<ValueDefiner*> ScopePreserver::valuesInLocalScope(int) const
 {
-	if (!parentIs<Statement>())
-		return List<ValueDefiner*>();
-	List<ValueDefiner*> ret = parentAs<Statement>()->valuesInLocalScope();
-	parentAs<Statement>()->appendDefinedUptoHere(index(), &ret);
+	List<ValueDefiner*> ret;
+	if (parentIs<ScopePreserver>())
+		ret = parentAs<ScopePreserver>()->valuesInLocalScope(index());
+	return ret;
+}
+
+List<ValueDefiner*> Statement::valuesInLocalScope(int _i) const
+{
+	List<ValueDefiner*> ret;
+	if (_i != UndefinedIndex && _i > 0)
+		appendDefinedUptoHere(_i, &ret);
+	if (parentIs<ScopePreserver>())
+		ret = parentAs<ScopePreserver>()->valuesInLocalScope(index());
 	return ret;
 }
 

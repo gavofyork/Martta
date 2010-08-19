@@ -30,6 +30,8 @@ namespace Martta
 MARTTA_PLACEHOLDER_CPP(ReferencedValue);
 MARTTA_REGISTER_CSS(ReferencedValue, ".ReferencedValue { font-weight: normal; color: #000; }");
 
+MARTTA_PLACEHOLDER_CPP(ScopedReferencedValue);
+
 ReferencedValue::ReferencedValue(ValueDefiner* _v):
 	m_subject	(0)
 {
@@ -100,12 +102,12 @@ String ReferencedValue::defineHtml() const
 		m_subject->type()->typeHtml(m_subject->tryKind<Labelled>()->labelHtml(m_subject->nick())) +
 		L"</span>";
 }
-
+/*
 EditDelegateFace* ReferencedValue::newDelegate(CodeScene* _s)
 {
 	return new CompletionDelegate<ReferencedValue, ValueDefiner*>(this, _s);
 }
-
+*/
 String ReferencedValue::editHtmlHelper(ValueDefiner* _v, String const& _mid) const
 {
 	String ret = (_v ? &*_v->type() : TypeConcept::null)->typeHtml(_mid);

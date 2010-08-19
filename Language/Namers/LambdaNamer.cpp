@@ -51,7 +51,7 @@ String LambdaNamer::defineNameHtml() const
 
 String LambdaNamer::defineArgListHtml() const
 {
-	return "<span class=\"symbol\">(</span>" + toHtml(self()->cardinalChildren(), L"<span class=\"symbol\">, </span>") + L"<span class=\"symbol\">)</span>";
+	return tagOf(L"minor symbol", L"(") + toHtml(self()->cardinalChildren(), tagOf(L"minor symbol", L", ")) + tagOf(L"minor symbol", L")");
 }
 
 String LambdaNamer::defineBodyHtml() const
@@ -125,7 +125,12 @@ Type LambdaNamer::type() const
 
 String LambdaNamer::implementationCode() const
 {
-	return basicCode(LambdaNamer::OutsideScope) + "\n" + (body() ? body()->code() : String::null);
+	return basicCode(LambdaNamer::OutsideScope) + bodyCode();
+}
+
+String LambdaNamer::bodyCode() const
+{
+	return "\n" + (body() ? body()->code() : String::null);
 }
 
 String LambdaNamer::callingCode(FunctionCodeScope _ref) const

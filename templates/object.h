@@ -22,10 +22,14 @@
 
 #include "_SUPER_.h"
 
+#ifndef M_API__MODULE_
+#define M_API__MODULE_ M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class _NAME_: public _SUPER_
+class M_CLASS M_API__MODULE_ _NAME_: public_super _SUPER_
 {
 	MARTTA_PROPER(_SUPER_)
 	

@@ -46,7 +46,7 @@ template<class T, bool F> class SafePointer;
 
 typedef Hash<String, String> ViewKeys;
 
-template<class T, class F> inline List<T*> castEntities(List<F*> _f)
+template<class T, class F> inline List<T*> concepts_cast(List<F*> _f)
 {
 	List<T*> ret;
 	foreach (F* i, _f)

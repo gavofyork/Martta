@@ -36,8 +36,10 @@ class M_CLASS M_API_Class MemberReferencedValue: public_super ReferencedValue
 public:
 	MemberReferencedValue(ValueDefiner* _subject = 0);
 
-	virtual List<ValueDefiner*>			possibilities() const { return possibilities(over(), true, true); }
-	static List<ValueDefiner*>			possibilities(Position const& _p, bool _methods = true, bool _nonMethods = true);
+	virtual List<ValueDefiner*>			refPossibilities(Position const& _p) const { return staticRefPossibilities(_p); }
+	static List<ValueDefiner*>			staticRefPossibilities(Position const& _p, bool _methods = true, bool _nonMethods = true);
+	virtual List<ValueDefiner*>			possibilities() const { return refPossibilities(over()); }
+	virtual EditDelegateFace*			newDelegate(CodeScene* _s) { return new CompletionDelegate<MemberReferencedValue, ValueDefiner*>(this, _s); }
 
 protected:
 	virtual Type						apparentType() const;

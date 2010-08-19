@@ -20,6 +20,7 @@
 
 #include "LambdaNamer.h"
 #include "Argument.h"
+#include "Compound.h"
 #include "CompletionDelegate.h"
 #include "ArgumentReferencedValue.h"
 
@@ -43,11 +44,12 @@ bool ArgumentReferencedValue::keyPressedOnPosition(Position const& _p, KeyEvent 
 	return true;
 }
 
-List<ValueDefiner*> ArgumentReferencedValue::possibilities(Position const& _p)
+List<ValueDefiner*> ArgumentReferencedValue::staticRefPossibilities(Position const& _p)
 {
 	List<ValueDefiner*> ret;
-	foreach (Argument* i, _p.parent()->selfAndAncestorsChildrenOf<Argument>())
-		ret << i;
+	if (Compound* c = _p->ancestor<Compound>())
+		foreach (Argument* i, c->parent()->selfAndAncestorsChildrenOf<Argument>())
+			ret << i;
 	/*
 	foreach (LambdaNamer* ln, _p->ancestor<LambdaNamer>())
 		for (int i = 0; i < ln->argumentCount(); i++)

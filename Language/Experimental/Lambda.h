@@ -24,72 +24,106 @@
 #include "LambdaNamer.h"
 #include "Typed.h"
 
+#ifndef M_API_Experimental
+#define M_API_Experimental M_OUTAPI
+#endif
+
 namespace Martta
 {
 
-class ClosureEntry: public_super Concept, public_interface NameEntryPoint
+class M_CLASS M_API_Experimental ClosureEntry: public_super Concept, public_interface NameEntryPoint, public_interface ScopePreserver
 {
 	MARTTA_PLACEHOLDER(Concept)
 	MARTTA_ALSO_INHERITS(NameEntryPoint, 0)
+	MARTTA_ALSO_INHERITS(ScopePreserver, 1)
+
+public:
+	void								committed(Named* _n, CodeScene* _cs) { NameEntryPoint::committed(_n, _cs); }
 
 protected:
+	virtual EditDelegateFace*			newDelegate(CodeScene* _s) { return NameEntryPoint::newDelegate<ClosureEntry>(_s); }
 	virtual bool						keyPressed(KeyEvent const* _e)
 	{
 		if (NameEntryPoint::keyPressed(_e))
 			return true;
 		return Super::keyPressed(_e);
 	}
-
 };
 
-class ClosureDefault: public_super ClosureEntry
+class M_CLASS M_API_Experimental ClosureDefault: public_super ClosureEntry
 {
 	MARTTA_PLACEHOLDER(ClosureEntry)
 };
 
-// Note these two can morph into ClosureExplicit...
-class ClosureDefaultValue: public_super ClosureDefault
+class M_CLASS M_API_Experimental ClosureDefaultValue: public_super ClosureDefault
 {
 	MARTTA_PROPER(ClosureDefault)
 
 public:
-	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePositionKeyPressHandler<ClosureDefaultValue>(_p, _e, "="); }
+	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePositionKeyPressHandler<ClosureDefaultValue>(_p, _e, "@="); }
 
 protected:
 	virtual String						defineHtml() const { return mark() + tagOf("symbol", "="); }
 };
 
-class ClosureDefaultReference: public_super ClosureDefault
+class M_CLASS M_API_Experimental ClosureDefaultReference: public_super ClosureDefault
 {
 	MARTTA_PROPER(ClosureDefault)
 
 public:
-	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePositionKeyPressHandler<ClosureDefaultReference>(_p, _e, "&"); }
+	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePositionKeyPressHandler<ClosureDefaultReference>(_p, _e, "@&"); }
 
 protected:
 	virtual String						defineHtml() const { return mark() + tagOf("symbol", "&"); }
 };
-#if 0
-// Refers to an existent variable.
-class ClosureExplicit: public_super ClosureEntry
+
+// Refers to an existant variable.
+class M_CLASS M_API_Experimental ClosureExplicit: public_super ClosureEntry
 {
-	MARTTA_PLACEHOLDER(ClosureEntry)
+	MARTTA_PROPER(ClosureEntry)
+
+public:
+	MARTTA_NAMED(Variable)
+
+	ClosureExplicit(ValueDefiner* _v = 0);
+
+protected:
+	virtual int							minRequired(int _i) const { return _i == Variable ? 1 : 0; }
+	virtual Kinds						allowedKinds(int _i) const;
+	virtual String						preHtml() const { return L""; }
+	virtual String						defineHtml() const { return preHtml() + toHtml(child(Variable)); }
+	virtual bool						isSuperfluous() const { return !childAs<ReferencedValue>(Variable)->subject(); }
 };
 
-class ClosureExplicitValue: public_super ClosureExplicit
+class M_CLASS M_API_Experimental ClosureExplicitValue: public_super ClosureExplicit
 {
 	MARTTA_PROPER(ClosureExplicit)
+
+public:
+	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePositionKeyPressHandler<ClosureExplicitValue>(_p, _e, "="); }
+
+protected:
+	virtual String						preHtml() const { return tagOf(L"symbol", L"="); }
+	virtual Concept*					onDecay() const { return new ClosureDefaultValue; }
 };
 
-class ClosureExplicitReference: public_super ClosureExplicit
+class M_CLASS M_API_Experimental ClosureExplicitReference: public_super ClosureExplicit
 {
 	MARTTA_PROPER(ClosureExplicit)
+
+public:
+	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePositionKeyPressHandler<ClosureExplicitReference>(_p, _e, "&"); }
+
+protected:
+	virtual String						preHtml() const { return tagOf(L"symbol", L"&"); }
+	virtual Concept*					onDecay() const { return new ClosureDefaultReference; }
 };
-#endif
-class Closure: public_super Concept, public_interface WebViewable
+
+class M_CLASS M_API_Experimental Closure: public_super Concept, public_interface WebViewable, public_interface ScopePreserver
 {
 	MARTTA_PROPER(Concept)
 	MARTTA_ALSO_INHERITS(WebViewable, 0)
+	MARTTA_ALSO_INHERITS(ScopePreserver, 1)
 
 public:
 	Concept*							firstChild()
@@ -104,7 +138,7 @@ public:
 	}
 
 protected:
-	virtual String						defineHtml() const { return mark() + tagOf("symbol", "[") + toHtml(self()->cardinalChildren(), L"<span class=\"symbol\">, </span>") + tagOf("symbol", "]"); }
+	virtual String						defineHtml() const { return mark() + tagOf("minor symbol", "[") + toHtml(self()->cardinalChildren(), tagOf(L"minor symbol", L", ")) + tagOf(L"minor symbol", L"]"); }
 	virtual int							minRequired(int) const { return 0; }
 	virtual Kinds						allowedKinds(int _i) const { return _i >= 0 ? Kind::of<ClosureEntry>() : Kinds(); }
 	virtual bool						keyPressed(KeyEvent const* _e)
@@ -122,7 +156,7 @@ protected:
 	}
 };
 
-class Lambda: public_super Typed, public_interface LambdaNamer, public_interface Composite
+class M_CLASS M_API_Experimental Lambda: public_super Typed, public_interface LambdaNamer, public_interface Composite
 {
 	MARTTA_PROPER(Typed)
 	MARTTA_ALSO_INHERITS(LambdaNamer, 0)

@@ -120,7 +120,7 @@ String HardCompound::defineHtml() const
 String SoftCompound::defineHtml() const
 {
 	if (statements().size() > 0)
-		return tagOf(L"minor symbol", L"{") + toHtml(cardinalChildren(), tagOf(L"minor symbol", "; ")) + tagOf(L"minor symbol", "}");
+		return tagOf(L"minor symbol", L"{") + toHtml(cardinalChildren(), tagOf(L"minor symbol", "; ")) + tagOf(L"minor symbol", ";}");
 	else
 		return L" " + tagOf(L"minor symbol", L"{}");
 }

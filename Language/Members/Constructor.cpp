@@ -20,6 +20,8 @@
 
 #include "AccessLabel.h"
 #include "ReferencedType.h"
+#include "Field.h"
+#include "ValueDefiner.h"
 #include "Compound.h"
 #include "Argument.h"
 #include "Reference.h"
@@ -29,11 +31,22 @@
 namespace Martta
 {
 
-MARTTA_PROPER_CPP(Constructor);	
+MARTTA_PLACEHOLDER_CPP(ConstructionHelper);
+
+MARTTA_PROPER_CPP(Constructor);
+MARTTA_NAMED_CPP(Constructor, Helper);
 
 String Constructor::basicCode(FunctionCodeScope _ref) const
 {
 	return Martta::code(qualifiers() & FunctionMask) + callingCode(_ref);
+}
+
+String Constructor::bodyCode() const
+{
+	String r;
+	foreach (ConstructionHelper* c, childrenOf<ConstructionHelper>(Helper))
+		r += c->code();
+	return r + Super::bodyCode();
 }
 
 bool Constructor::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
@@ -57,6 +70,8 @@ Kinds Constructor::allowedKinds(int _i) const
 		return Kinds();
 	else if (_i == Body)
 		return Kind::of<HardCompound>();
+	else if (_i == Helper)
+		return Kind::of<ConstructionHelper>();
 	else if (_i >= 0)
 		return Kind::of<Argument>();
 	return Super::allowedKinds(_i);

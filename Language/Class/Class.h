@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "Constructor.h"
 #include "AccessLabel.h"
 #include "TopLevelType.h"
 
@@ -31,6 +32,33 @@ namespace Martta
 {
 
 class Member;
+
+
+class M_CLASS M_API_Members InitialiserItem: public_super Concept
+{
+	MARTTA_PROPER(Concept)
+
+public:
+	MARTTA_NAMED(TheField)
+	MARTTA_NAMED(Value)
+
+	virtual String						code() const;
+
+protected:
+	virtual int							minRequired(int _i) const { return _i == TheField || _i == Value ? 1 : Super::minRequired(_i); }
+	virtual Kinds						allowedKinds(int _i) const;
+};
+
+class M_CLASS M_API_Members InitialiserList: public_super ConstructionHelper
+{
+	MARTTA_PROPER(ConstructionHelper)
+
+protected:
+	virtual int							minRequired(int) const { return 0; }
+	virtual Kinds						allowedKinds(int _i) const { return _i >= 0 ? Kind::of<InitialiserItem>() : Kinds(); }
+	virtual String						code() const;
+};
+
 
 class M_CLASS M_API_Class Class: public_super TopLevelType
 {
@@ -80,5 +108,6 @@ private:
 
 	mutable int							m_whackerCount;
 };
+
 
 }

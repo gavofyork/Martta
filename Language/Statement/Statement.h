@@ -35,18 +35,27 @@ namespace Martta
 class M_CLASS ValueDefiner;
 class M_CLASS Typed;
 
-class M_CLASS M_API_Statement Statement: public_super_interface Concept, public_interface TypedOwner, public_interface NameEntryPoint
+class M_CLASS M_API_Statement ScopePreserver: public_super_interface Concept
+{
+	MARTTA_NOTION(Concept)
+
+public:
+	virtual List<ValueDefiner*>			valuesInLocalScope(int _i = UndefinedIndex) const;
+};
+
+class M_CLASS M_API_Statement Statement: public_super_interface Concept, public_interface TypedOwner, public_interface NameEntryPoint, public_interface ScopePreserver
 {
 	MARTTA_PLACEHOLDER(Concept)
 	MARTTA_ALSO_INHERITS(TypedOwner, 0)
 	MARTTA_ALSO_INHERITS(NameEntryPoint, 1)
+	MARTTA_ALSO_INHERITS(ScopePreserver, 2)
 
 public:
 	virtual String						code() const { return "(void)0;"; }
 	virtual String						codeAsStatement() const { return code(); }
 	virtual bool						requiresSemicolon() const { return true; }
 
-	virtual List<ValueDefiner*>			valuesInLocalScope() const;
+	virtual List<ValueDefiner*>			valuesInLocalScope(int _i = UndefinedIndex) const;
 
 	List<Statement*>					statements() const { return cardinalChildrenOf<Statement>(); }
 	bool			 					isStatement(int _i) const { return childIs<Statement>(_i); }

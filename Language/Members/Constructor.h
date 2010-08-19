@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "Kind.h"
 #include "MemberLambda.h"
 
 #ifndef M_API_Members
@@ -31,9 +32,18 @@ namespace Martta
 
 class Class;
 
+class M_CLASS M_API_Members ConstructionHelper: public_super Concept
+{
+	MARTTA_PLACEHOLDER(Concept)
+
+public:
+	virtual String						code() const { return String::null; }
+};
+
 class M_CLASS M_API_Members Constructor: public_super MemberLambda
 {
 	MARTTA_PROPER(MemberLambda)
+	MARTTA_NAMED(Helper)
 
 public:
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
@@ -52,6 +62,7 @@ protected:
 	virtual bool						isInValidState() const;
 	virtual Type						returns() const;
 	virtual String						basicCode(FunctionCodeScope _ref) const;
+	virtual String						bodyCode() const;
 };
 
 }

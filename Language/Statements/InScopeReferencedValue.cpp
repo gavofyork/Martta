@@ -28,7 +28,7 @@ MARTTA_PROPER_CPP(InScopeReferencedValue);
 
 static ReferencedValueSet<InScopeReferencedValue> s_inScopeReferencedValueRegistrand;
 
-List<ValueDefiner*> InScopeReferencedValue::possibilities(Position const& _p)
+List<ValueDefiner*> InScopeReferencedValue::staticRefPossibilities(Position const& _p)
 {
 	return _p->ancestor<Declaration>()->valuesKnown();
 }
