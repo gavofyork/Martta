@@ -34,7 +34,7 @@ class M_CLASS M_API_Statements SubscriptOperation: public_super BinaryOperation
 	MARTTA_PROPER(BinaryOperation)
 
 public:
-	inline static bool					keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
+	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 
 private:
 	virtual String						defineHtml() const { return toHtml(child(FirstOperand)) + L"<^><span class=\"symbol\">[</span>" + toHtml(child(SecondOperand)) + L"<span class=\"symbol\">]</span>"; }

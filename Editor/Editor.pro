@@ -19,8 +19,7 @@ UI_DIR = build
 RCC_DIR = build
 MOC_DIR = build
 DEPENDS =
-QMAKE_LIBDIR += ../support \
-	$$PWD/../plugins
+QMAKE_LIBDIR += ../support ../plugins
 INCLUDEPATH *= ../support
 DEPENDPATH += .
 win32:DESTDIR = .\.
@@ -49,7 +48,7 @@ SUPPORT.files = $$SUPPORT_HEADERS \
 SUPPORT.path = Support
 win32: SUPPORT.files += ../support/support.dll ../support/support.lib
 #linux: SUPPORT.files += ../support/libsupport.so
-linux {
+linux:!contains(PWD, $$OUT_PWD) {
 	QMAKE_POST_LINK = true
 	for(a, SUPPORT.files):QMAKE_POST_LINK += && cp $$PWD/$${a} $$OUT_PWD/../support
 }

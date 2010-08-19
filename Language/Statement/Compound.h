@@ -59,4 +59,12 @@ protected:
 	virtual String						defineHtml() const;
 };
 
+class M_CLASS M_API_Statement SoftCompound: public_super Compound
+{
+	MARTTA_PROPER(Compound)
+
+protected:
+	virtual String						defineHtml() const;
+};
+
 }

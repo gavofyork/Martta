@@ -91,15 +91,6 @@ bool UnlessStatement::keyPressedOnPosition(Position const& _p, KeyEvent const* _
 	return simplePositionKeyPressHandler<UnlessStatement>(_p, _e, "!?");
 }
 
-/*String UnlessStatement::code() const
-{
-	String ret;
-	ret += "if (" + (isStatement(Condition) ? asStatement(Condition)->code() : "");
-	ret += ")\n" + (isStatement(AltBody) ? asStatement(AltBody)->codeAsStatement() : "{}");
-	ret += "else\n" + (isStatement(Body) ? asStatement(Body)->codeAsStatement() : "");
-	return ret;
-}*/
-
 void UnlessStatement::compose()
 {
 	IfStatement* t = new IfStatement;

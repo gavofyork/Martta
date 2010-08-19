@@ -36,6 +36,8 @@ using namespace MarttaSupport;
 #include "ArtificialCopyConstructor.h"
 #include "ArtificialAssignmentOperator.h"
 
+#include "Memberify.h"
+#include "FunctionType.h"
 #include "TextLabel.h"
 #include "AccessLabel.h"
 #include "Const.h"
@@ -323,6 +325,23 @@ bool Class::hasSingleConversionConstructor(TypeConcept const* _f) const
 					return false;
 			}
 	return gotOne;
+}
+
+bool Class::isCallable(Type* o_t, bool _isConst) const
+{
+	// TODO: Allow overriding and return a list.
+	foreach (MethodOperator* i, membersOf<MethodOperator>(_isConst, Public))
+		if (i->id() == Operator::Parentheses)
+		{
+			Type t = *(i->asKind<TypeNamer>()->type()->asType<Memberify>()->original());
+			if (t->isType<FunctionType>())
+			{
+				if (o_t) *o_t = t;
+				return true;
+			}
+		}
+	if (o_t) *o_t = Type();
+	return false;
 }
 
 bool Class::defineSimilarityTo(TypeConcept const* _t, TypeConcept::Castability _c) const

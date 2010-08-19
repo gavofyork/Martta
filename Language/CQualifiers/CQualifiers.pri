@@ -1,6 +1,5 @@
 DEPS += 
 OURDIRS = .
-HWD = $$PWD
-TWD = $$OUT_PWD
+TWD = $$PWD
 NO_SOURCES = 1
 include(../dep.pri)

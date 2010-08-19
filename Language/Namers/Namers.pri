@@ -1,6 +1,5 @@
 DEPS += Labels Declaration Types Statement CQualifiers
 OURDIRS = .
-HWD = $$PWD
-TWD = $$OUT_PWD
+TWD = $$PWD
 
 include(../dep.pri)

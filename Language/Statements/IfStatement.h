@@ -62,7 +62,6 @@ public:
 
 protected:
 	virtual void						compose();
-//	virtual String						code() const;
 	virtual String						defineHtml() const;
 };
 

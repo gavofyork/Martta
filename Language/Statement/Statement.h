@@ -35,10 +35,11 @@ namespace Martta
 class M_CLASS ValueDefiner;
 class M_CLASS Typed;
 
-class M_CLASS M_API_Statement Statement: public_super_interface TypedOwner, public_interface NameEntryPoint
+class M_CLASS M_API_Statement Statement: public_super_interface Concept, public_interface TypedOwner, public_interface NameEntryPoint
 {
-	MARTTA_PLACEHOLDER(TypedOwner)
-	MARTTA_ALSO_INHERITS(NameEntryPoint, 0)
+	MARTTA_PLACEHOLDER(Concept)
+	MARTTA_ALSO_INHERITS(TypedOwner, 0)
+	MARTTA_ALSO_INHERITS(NameEntryPoint, 1)
 
 public:
 	virtual String						code() const { return "(void)0;"; }
@@ -62,7 +63,7 @@ protected:
 	virtual void						appendDefinedUptoHere(int, List<ValueDefiner*>*) const;
 	virtual EditDelegateFace*			newDelegate(CodeScene* _s) { return NameEntryPoint::newDelegate<Statement>(_s); }
 	virtual bool						keyPressed(KeyEvent const* _e);
-	virtual bool						isChildInValidState(int _index) const { return Super::isChildInValidState(_index) && TypedOwner::isChildInValidState(_index) && !child(_index)->isPlaceholder(); }
+	virtual bool						isChildInValidState(int _index) const { return Super::isChildInValidState(_index) && !child(_index)->isPlaceholder(); }
 
 	virtual String						informationHtml() const;
 };

@@ -79,6 +79,7 @@ bool TypedOwner::isChildInValidState(int _i) const
 				return true;
 			else
 			{
+				child(_i)->debugTree();
 				mDebug() << self()->childAs<TypeNamer>(_i)->apparentType()->code() << " != " << i->code();
 			}
 	return false;

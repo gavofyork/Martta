@@ -32,17 +32,31 @@ namespace Martta
 MARTTA_PROPER_CPP(Invocation);
 MARTTA_NAMED_CPP(Invocation, Callee);
 
+Type Invocation::calleeType() const
+{
+	if (isTyped(Callee))
+	{
+		if (typeOf(Callee)->isType<FunctionType>())
+			return typeOf(Callee);
+		if (typeOf(Callee)->isType<ReferencedType>())
+			if (Type t = typeOf(Callee)->asType<ReferencedType>()->isCallable())
+				return t;
+	}
+	return Type();
+}
+
 Type Invocation::type() const
 {
-	if (isTyped(Callee) && typeOf(Callee)->isType<FunctionType>())
-		return typeOf(Callee)->asType<FunctionType>()->returnType();
+	if (Type t = calleeType())
+		return t->asType<FunctionType>()->returnType();
 	return Type();
-	// TODO: Handle objects with () operators.
 }
 
 String Invocation::code() const
 {
-	return isTyped(Callee) ? asTyped(Callee)->code() + callList(castEntities<Typed>(cardinalChildren())) : "";
+//	mDebug() << this << cardinalChildrenAs<Typed>().size() << callList(cardinalChildrenAs<Typed>());
+//	debugTree();
+	return isTyped(Callee) ? asTyped(Callee)->code() + callList(cardinalChildrenAs<Typed>()) : "";
 }
 
 String Invocation::callList(List<Typed*> _parameters) const
@@ -65,8 +79,8 @@ int Invocation::minRequired(int _i) const
 	if (_i == Callee)
 		return 1;
 	if (_i == Cardinals)
-		if (typeOf(Callee)->isType<FunctionType>())
-			return typeOf(Callee)->asType<FunctionType>()->minimumArgCount();
+		if (Type t = calleeType())
+			return t->asType<FunctionType>()->minimumArgCount();
 		else
 			return 0;
 	else
@@ -75,21 +89,19 @@ int Invocation::minRequired(int _i) const
 
 Kinds Invocation::allowedKinds(int _index) const
 {
-	if (_index == Callee)
+	Type t;
+	if (_index == Callee || (_index >= 0 && (t = calleeType()) && t->asType<FunctionType>()->hasArgumentAt(_index)))
 		return Kind::of<Typed>();
-	else if (_index >= 0 && typeOf(Callee)->isType<FunctionType>()
-		&& typeOf(Callee)->asType<FunctionType>()->hasArgumentAt(_index))
-		return Kind::of<Typed>();
-	else
-		return Super::allowedKinds(_index);
+	return Super::allowedKinds(_index);
 }
 
 Types Invocation::allowedTypes(int _index) const
 {
 	if (_index == Callee)
 		return Type(FunctionType(false, true));
-	else if (_index >= 0 && typeOf(Callee)->isType<FunctionType>() && typeOf(Callee)->asType<FunctionType>()->hasArgumentAt(_index))
-		return typeOf(Callee)->asType<FunctionType>()->argumentType(_index);
+	Type t;
+	if (_index >= 0 && (t = calleeType()) && t->asType<FunctionType>()->hasArgumentAt(_index))
+		return t->asType<FunctionType>()->argumentType(_index);
 	return Super::allowedTypes(_index);
 }
 
@@ -117,6 +129,8 @@ bool Invocation::keyPressed(KeyEvent const* _e)
 		_e->codeScene()->setCurrent(this);
 	else if (_e->text() == ")" && !_e->isFocused())
 		_e->codeScene()->setCurrent(this);
+	else if (_e->text() == "," && _e->focalIndex() >= 0 && _e->focalIndex() < cardinalChildCount() - 1)
+		_e->codeScene()->setCurrent(child(_e->focalIndex() + 1));
 	else if (_e->text() == "," && (_e->focalIndex() >= 0 || _e->focalIndex() == UndefinedIndex) && back().allowedKinds().size())
 	{
 		// Jump to next if we press a comma in the parameter list, before the last item.

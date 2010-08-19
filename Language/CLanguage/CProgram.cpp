@@ -50,13 +50,12 @@ String CProgram::includeCode() const
 
 void CProgram::initialiseNew()
 {
-	clearEntities();
+	clearChildren();
 #ifndef M_WIN
 	back().place(Concept::evaluate(String("CModule{TextLabel[text=project]}{MainFunction{TextLabel[text=main]}{BuiltinType[id=%1]}{Argument{BuiltinType[id=%1]}{TextLabel[text=argc]}}{Argument{Pointer{Pointer{BuiltinType[id=%2]}}}{TextLabel[text=argv]}}{Compound{ReturnStatement{IntegerLiteral[value=0][signed=true]}}}}{CDependency[libs=][includes=/usr/include/stdlib.h*/usr/include/stdio.h][name=Standard C]}").arg(Int).arg(Char)));
 #else
 	back().place(Concept::evaluate(String("CModule{TextLabel[text=project]}{MainFunction{TextLabel[text=main]}{BuiltinType[id=%1]}{Argument{BuiltinType[id=%1]}{TextLabel[text=argc]}}{Argument{Pointer{Pointer{BuiltinType[id=%2]}}}{TextLabel[text=argv]}}{Compound{ReturnStatement{IntegerLiteral[value=0][signed=true]}}}}{CDependency[libs=][includes=stdlib.h*stdio.h][name=Standard C]}").arg(Int).arg(Char)));
 #endif
-
 	rejigIncludes();
 }
 

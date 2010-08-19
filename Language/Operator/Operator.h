@@ -64,7 +64,8 @@ public:
 	bool								isPrefix() const { return isUnary() && !isPostfix(); }
 	bool								isConfusablePostfix() const { return (int)m_symbol > (int)LastPrefix && (int)m_symbol <= (int)LastConfusable; }
 	bool								isUnary() const { return (int)m_symbol <= (int)LastUnary; }
-	bool								isBinary() const { return (int)m_symbol > (int)LastUnary; }
+	bool								isBinary() const { return (int)m_symbol > (int)LastUnary && (int)m_symbol <= (int)LastBinary; }
+	bool								isEnary() const { return (int)m_symbol > (int)LastBinary; }
 	inline char const*					code() const;
 	inline Precedence					precedence() const;
 	inline Associativity				associativity() const;

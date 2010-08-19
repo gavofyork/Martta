@@ -59,6 +59,7 @@ public:
 	virtual bool						hasDefaultConstructor() const = 0;
 	virtual bool						hasSingleCastOperator(TypeConcept const* _t, bool _const) const;
 	virtual inline bool					hasSingleConversionConstructor(TypeConcept const*) const { return false; }
+	virtual inline bool					isCallable(Type* = 0, bool = false) const { return false; }
 	virtual bool						defineSimilarityTo(TypeConcept const* _t, TypeConcept::Castability _c) const;
 	virtual List<ValueDefiner*>			applicableMembers(Concept const* _s, bool _isConst) const;
 	virtual inline bool					canStandAlone() const { return true; }

@@ -1,6 +1,5 @@
 DEPS += Statement Types Labels Declaration Namers
 OURDIRS = . Support
-HWD = $$PWD
-TWD = $$OUT_PWD
+TWD = $$PWD
 
 include(../dep.pri)

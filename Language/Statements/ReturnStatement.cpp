@@ -37,14 +37,18 @@ static SimpleIdentifierSet<ReturnStatement> s_returnStatementSet(L"return");
 
 int ReturnStatement::minRequired(int _i) const
 {
+	if (!parent())
+		return 0;
+
 	if (!hasAncestor<LambdaNamer>())
 	{
 		mCritical() << "*** ERROR: Return statement without callable ancestor!";
+		debugTree();
 		return 0;
 	}
 
 	if (_i == Returned)
-		if (!ancestor<LambdaNamer>()->returns().isNull() && ancestor<LambdaNamer>()->returns() != Type(Void))
+		if (ancestor<LambdaNamer>()->returns().isNull() || ancestor<LambdaNamer>()->returns() != Type(Void))
 			return 1;
 		else
 			return 0;
@@ -80,10 +84,11 @@ Types ReturnStatement::allowedTypes(int _i) const
 			mCritical() << "Return statement without lambda ancestor!";
 			return Types();
 		}
-		if (!ancestor<LambdaNamer>()->returns().isNull() && ancestor<LambdaNamer>()->returns() != Type(Void))
-			return ancestor<LambdaNamer>()->returns();
-		else
+		if (ancestor<LambdaNamer>()->returns() == Type(Void))
 			return Types();
+		if (ancestor<LambdaNamer>()->returns().isNull())
+			return Type();
+		return ancestor<LambdaNamer>()->returns();
 	}
 	return Super::allowedTypes(_i);
 }

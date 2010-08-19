@@ -1,4 +1,4 @@
-DEPS += Statement
+DEPS += Class
 OURDIRS = .
 TWD = $$PWD
 

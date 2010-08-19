@@ -44,7 +44,8 @@ public:
 	virtual String						code() const { return "operator" + symbolCode(); }
 	inline String						symbolCode() const { return m_operator.code(); }
 	Operator::Symbol					symbol() const { return m_operator.symbol(); }
-	void								setSymbol(Operator::Symbol _s) { m_operator.setSymbol(_s); }
+	void								set(Operator _o) { m_operator = _o; changed(); }
+	void								setSymbol(Operator::Symbol _s) { m_operator.setSymbol(_s); changed(); }
 
 protected:
 	virtual String						defineHtml() const;

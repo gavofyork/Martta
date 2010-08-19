@@ -27,7 +27,7 @@ namespace Martta
 
 class _NAME_: public _SUPER_
 {
-	MARTTA_OBJECT(_SUPER_)
+	MARTTA_PROPER(_SUPER_)
 	
 protected:
 	virtual int							minRequired(int _i) const { return Super::minRequired(_i); }

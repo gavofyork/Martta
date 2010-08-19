@@ -40,6 +40,7 @@ public:
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 
 protected:
+	Type								calleeType() const;
 	virtual int							minRequired(int _i) const;
 	virtual Kinds						allowedKinds(int _index) const;
 	virtual Types						allowedTypes(int _index) const;

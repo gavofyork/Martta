@@ -30,6 +30,8 @@
 namespace Martta
 {
 
+class Member;
+
 class M_CLASS M_API_Class Class: public_super TopLevelType
 {
 	MARTTA_PROPER(TopLevelType)
@@ -64,6 +66,7 @@ protected:
 	virtual bool						hasDefaultConstructor() const;
 	virtual bool						hasSingleCastOperator(TypeConcept const* _t, bool _const) const;
 	virtual bool						hasSingleConversionConstructor(TypeConcept const* _f) const;
+	virtual inline bool					isCallable(Type* = 0, bool = false) const;
 	virtual bool						defineSimilarityTo(TypeConcept const* _t, TypeConcept::Castability _c) const;
 	virtual Types						assignableTypes() const;
 	virtual List<ValueDefiner*>			applicableMembers(Concept const* _s, bool _isConst) const;

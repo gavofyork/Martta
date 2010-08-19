@@ -31,6 +31,8 @@ void CullManager::doCulling()
 	while (m_cullList.size())
 		if (Concept* e = m_cullList.takeLast())
 		{
+//			mDebug() << "Culling" << e;
+//			e->debugTree();
 			e->cull();
 			checked++;
 		}

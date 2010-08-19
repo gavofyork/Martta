@@ -52,6 +52,8 @@ public:
 
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 
+	virtual inline Type					isCallable(bool _isConst = false) const { Type t; if (m_subject) m_subject->isCallable(&t, _isConst); return t; }
+
 protected:
 	virtual inline bool					hasDefaultConstructor() const { return m_subject ? m_subject->hasDefaultConstructor() : false; }
 	virtual inline Types				assignableTypes() const { return m_subject ? m_subject->assignableTypes() : Types(); }

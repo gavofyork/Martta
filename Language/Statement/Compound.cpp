@@ -28,6 +28,7 @@ namespace Martta
 
 MARTTA_PROPER_CPP(Compound);
 MARTTA_PROPER_CPP(HardCompound);
+MARTTA_PROPER_CPP(SoftCompound);
 
 String Compound::code() const
 {
@@ -114,6 +115,14 @@ String Compound::defineHtml() const
 String HardCompound::defineHtml() const
 {
 	return tagOf(L"minor symbol", L"{", L"div") + tagOf(L"block", statementsToHtml(statements()), L"div") + tagOf(L"minor symbol", L"}", L"div");
+}
+
+String SoftCompound::defineHtml() const
+{
+	if (statements().size() > 0)
+		return tagOf(L"minor symbol", L"{") + toHtml(cardinalChildren(), tagOf(L"minor symbol", "; ")) + tagOf(L"minor symbol", "}");
+	else
+		return L" " + tagOf(L"minor symbol", L"{}");
 }
 
 }

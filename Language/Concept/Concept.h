@@ -154,12 +154,12 @@ public:
 	inline Concept*						proper(int _i) const { int c = 0; foreach (Concept* i, m_cardinalChildren) if (c++ == _i) return i; AssertNR(false); return 0; }
 
 	virtual bool						usurpsChild(Concept const*) const { return false; }
-	bool								isUsurped() const { return m_parent->usurpsChild(this); }
+	bool								isUsurped() const { return m_parent && m_parent->usurpsChild(this); }
 
 	void								changed(int _aspects = AllAspects);
 
 	/// Clears all children. This does *not* notify anything of any familial changes.
-	void								clearEntities();
+	void								clearChildren();
 	/// Brute-force makes the children valid. Deletes invalids, and reprepares the list.
 	/// @returns true if any changes had to be made.
 	/// @note changed() called as appropriate.
@@ -255,7 +255,7 @@ public:
 
 	/**
 	 * Adopts a new child entity. Puts it in the best position according to firstFor(). Will replace any
-	 * entity is the best position happens to be named.
+	 * entity if the best position happens to be named.
 	 *
 	 * To check if the child has been inserted, compare the child's parent() after this call.
 	 */
@@ -564,7 +564,10 @@ bool Martta::Concept::simplePositionKeyPressHandler(Position const& _p, KeyEvent
 			// when pressed on _p which doesn't exist yet or is a placeholder (a), changes from x->([a,] b, c) to x->(N, b, c)
 			n->prepareChildren();
 			_p.place(n);
-			_e->codeScene()->navigateInto(n);
+			if (_ontoNew)
+				_e->codeScene()->navigateInto(n);
+			else
+				_e->codeScene()->setCurrent(n);
 		}
 		else
 			delete n;

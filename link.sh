@@ -32,7 +32,7 @@ else
 fi
 
 if [[ "x$3" == "x" ]]; then
-	support="../../support"
+	support="\$\$OUT_PWD/../../support"
 else
 	support="$3"
 fi
@@ -131,11 +131,16 @@ do
 	j=${i/\//\\\\}
 	mds="$mds copy $j \$\$replace(DESTDIR, \"/\", \"\\\\\")\\\\Data &&"
 done
+cps=""
+for i in $data
+do
+	cps="$cps && cp \"\$\$PWD/$i\" \"\$\$DESTDIR/Data\""
+done
 cat >> $dest/$name.pro << EOF
 INSTALL_DATA.files = $data
 INSTALL_DATA.path = Data
 INSTALLS += INSTALL_DATA
-!win32:DATA.commands = @echo "Copying data..." && mkdir -p "\$\$DESTDIR/Data" && cp \$\$INSTALL_DATA.files "\$\$DESTDIR/Data"
+!win32:DATA.commands = @echo "Copying data..." && mkdir -p "\$\$DESTDIR/Data" $cps
 win32:DATA.commands = @echo Copying data.. && md \$\$replace(DESTDIR, "/", "\\\\")\\\\Data\\\\TBD && $mds rd \$\$replace(DESTDIR, "/", "\\\\")\\\\Data\\\\TBD
 QMAKE_EXTRA_TARGETS += DATA
 PRE_TARGETDEPS += DATA
@@ -168,12 +173,12 @@ include(../global.pri)
 TEMPLATE = lib
 !win32:VERSION = 0.1.0
 BASE = \$\$PWD
-OBJECTS_DIR = \$\$BASE/build
+OBJECTS_DIR = \$\$OUT_PWD/build
 DEPENDPATH += $support
 INCLUDEPATH += $support
-QMAKE_LIBDIR += $support \$\$BASE/../plugins
+QMAKE_LIBDIR += $support \$\$OUT_PWD/../../plugins
 LIBS += -lsupport
-DESTDIR = \$\$BASE/../plugins
+DESTDIR = \$\$OUT_PWD/../../plugins
 EOF
 fi
 
@@ -203,11 +208,12 @@ for(a, DEPS): !contains(DONE, \$\${a}) {
 EOF
 fi
 
-prepare Operator "Operator Support/OperatorRegistrar" 
 prepare CQualifiers CQualifiers ""
 prepare CTypes CTypes ""
 
 prepare Concept "Support/Auxilliary Support/AuxilliaryFace Support/AuxilliaryRegistrar Support/ChangeMan Support/CodeScene Support/CompletionDelegate Support/CullManager Support/Dier Support/EditDelegateFace Support/EditDelegate Support/ConceptSupport Support/KeyEvent Support/Kind Support/Meta Support/Position Support/SafePointer Interfaces/ChildValidifier Interfaces/Dependee Interfaces/Depender Interfaces/Familial Interfaces/Composite Concept Support/SpecialKeys" 
+
+prepare Operator "Operator Support/OperatorRegistrar" Concept
 
 prepare WebView "Interfaces/WebViewable Interfaces/WebInformer Support/WebStylist Support/WebStylistRegistrar" "Concept"
 
@@ -241,6 +247,7 @@ prepare Members "Construction Destructor ConstructedVariable Constructor Convers
 
 prepare Class "Class Interfaces/Artificial ArtificialAssignmentOperator ArtificialCopyConstructor ArtificialDefaultConstructor Base VirtualBase Virtual VirtualMethod VirtualOverload VirtualPure MemberReferencedValue" "CStuff Types Members Statements"
 
+prepare Experimental "Lambda" "Class"
 
 exit
 

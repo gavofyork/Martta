@@ -27,11 +27,18 @@ MARTTA_PROPER_CPP(OperatorLabel);
 
 String OperatorLabel::defineHtml() const
 {
-	return L"<span class=\"keyword\">operator</span><span class=\"symbol\">" + symbolCode() + "</span>";
+	return mark() + tagOf(L"keyword", L"operator") + tagOf(L"symbol", symbolCode());
 }
 
 bool OperatorLabel::keyPressed(KeyEvent const* _e)
 {
+	Operator o = Operator(_e->text());
+	if (!o.isNull())
+	{
+		m_operator = o;
+		changed();
+		return true;
+	}
 	return Super::keyPressed(_e);
 }
 

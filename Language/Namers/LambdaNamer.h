@@ -53,6 +53,7 @@ public:
 
 	enum FunctionCodeScope { InsideScope = 0, OutsideScope = 1 };
 	/// @note non-virtual - specifically to avoid automatic mixins. You have to mix it in explicitly.
+	Types								allowedTypes(int _i) const { if (_i >= 0) return Type(); return Types(); }
 	String								interfaceCode() const { return basicCode(InsideScope) + ";\n"; }
 	String								implementationCode() const;
 	String								defineLambdaHtml(String const& _middle = String::null) const;
@@ -61,7 +62,7 @@ public:
 	String								callingCode(FunctionCodeScope _ref) const;
 
 	// From ValueDefiner. Do be careful though - if you've got a mixin situation where one side is pure virtual
-	// still, explicitly scope this side on the call or you'll crash.
+	// still, explicitly scope this side on the call or you'll just be calling yourself (and crash!).
 	// e.g. class M_API_Namers B: public_super Concept, public_interface TypeNamer { MARTTA_PROPER(Concept) MARTTA_ALSO_INHERITS(TypeNamer, 0) };
 	// class M_API_Namers X: public_super B, public_interface LambdaNamer { MARTTA_PROPER(B) MARTTA_ALSO_INHERITS(LambdaNamer, 0)
 	//     virtual Type type() const { return LambdaNamer::type().topWith<Const>(); };

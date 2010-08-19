@@ -40,12 +40,20 @@ public:
 	virtual int							argumentCount() const;
 	virtual Type						argumentType(int _i) const;
 
-protected:	
-	virtual int							minRequired(int _i) const { return _i == Cardinals ? isBinary() ? 1 : 0 : Super::minRequired(_i); }
+	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
+
+protected:
+	virtual String						defineNameHtml() const { return toHtml(child(Identity)); }
+	virtual String						name() const;
+	virtual String						codeName() const;
+	virtual int							minRequired(int _i) const { return _i == Identity ? 1 : _i == Cardinals ? isBinary() ? 1 : 0 : Super::minRequired(_i); }
 	virtual Kinds						allowedKinds(int _i) const;
+	virtual void						onDependencyChanged(int, Concept* _e) { if (_e->index() == Identity) validifyChildren(); }
 	
 private:
+	bool								isUnary() const { return id().isUnary(); }
 	bool								isBinary() const { return id().isBinary(); }
+	bool								isEnary() const { return id().isEnary(); }
 };
 
 }

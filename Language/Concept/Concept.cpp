@@ -100,7 +100,7 @@ List<int> Concept::knownNames() const
 Concept::~Concept()
 {
 	AssertNR(!m_parent);
-	clearEntities();
+	clearChildren();
 	AssertNR(!m_cardinalChildren.size());
 	AssertNR(!m_namedChildren.size());
 }
@@ -209,18 +209,18 @@ bool Concept::isValid() const
 
 	if (!isAllowed())
 	{
-//		mInfo() << this << "invalid because it's not allowed here by parent." << parent();
+		mInfo() << this << "invalid because it's not allowed here by parent." << parent();
 		return false;
 	}
 	if (!isInValidState())
 	{
-//		mInfo() << this << "invalid because it's in an invalid entity state.";
+		mInfo() << this << "invalid because it's in an invalid entity state.";
 		return false;
 	}
 	if (parent())
 		if (!parent()->isChildInValidState(index()))
 		{
-//			mInfo() << this << "invalid because its context considers it in an invalid state.";
+			mInfo() << this << "invalid because its context considers it in an invalid state.";
 			return false;
 		}
 	return true;
@@ -246,7 +246,7 @@ void Concept::checkForCullingLater()
 bool Concept::cull()
 {
 	Concept* c = parent();
-	if (c && !isCurrentOrAncestor() && isSuperfluous())
+	if (c && !isCurrentOrAncestor() && !isNecessary() && isSuperfluous())
 	{
 		deleteAndRefill();
 		return true;
@@ -263,7 +263,7 @@ void Concept::kill(Concept* _substitute)
 		rewirePointer(_substitute);
 	silentRemove();
 }
-void Concept::clearEntities()
+void Concept::clearChildren()
 {
 	List<Concept*> tbd;
 	while (m_cardinalChildren.size())
@@ -445,7 +445,7 @@ bool Concept::attemptAppend(KeyEvent const* _e)
 // Context/position changing.
 void Concept::silentMove(Position const& _newPosition)
 {
-	if (_newPosition == over())
+	if (_newPosition == over() || (!m_parent && !_newPosition.parent()))
 		return;
 
 	if (m_parent == _newPosition.parent())
@@ -503,6 +503,8 @@ void Concept::insertIntoBrood(int _index, Concept* _e)
 	{
 		_e->m_index = _index;
 		m_namedChildren.insertMulti(_index, _e);
+/*		if (m_namedChildren.count(_index) > 3)
+			Assert(false, "Strange");*/
 	}
 	else
 	{
@@ -652,10 +654,15 @@ Concept* Concept::prepareChildren()
 //		while (childCount(i) < minRequired(i))
 //			middle(i).spawnPreparedSilent()->parentAdded();
 	foreach (int i, AuxilliaryRegistrar::get()->names())
+	{
+//		mDebug() << this;
+//		mDebug() << i << minRequired(i) << childCount(i);
 		while (childCount(i) < minRequired(i))
 			middle(i).spawnPreparedSilent()->parentAdded();
+	}
 	for (int i = m_cardinalChildren.size(); i < minRequired(Cardinals); ++i)
 		back().spawnPreparedSilent()->parentAdded();
+
 	childrenInitialised();
 	return this;
 }

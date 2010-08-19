@@ -1,6 +1,5 @@
 DEPS += Concept
 OURDIRS = .
-HWD = $$PWD
-TWD = $$OUT_PWD
+TWD = $$PWD
 
 include(../dep.pri)

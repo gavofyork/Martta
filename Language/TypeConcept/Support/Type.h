@@ -81,6 +81,7 @@ public:
 	inline operator Types() const { return Types() << *this; }
 	inline Types	operator,(Type const& _q) const { return Types() << *this << _q; }
 
+	operator bool() const { return !isNull(); }
 	inline TypeConcept& operator*() const { return *m_top; }
 	inline TypeConcept* operator->() const { return m_top; }
 

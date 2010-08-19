@@ -138,6 +138,8 @@ String CModule::finalCode() const
 //	ret += Super::finalCode();
 	if (childIs<Function>(0))
 		ret += "int main(int argc, char** argv)\n{\n\treturn " + childAs<Function>(0)->reference() + "(argc, argv);\n}\n";
+
+	debugTree();
 	return ret;
 }
 

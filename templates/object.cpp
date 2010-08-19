@@ -23,7 +23,7 @@
 namespace Martta
 {
 
-MARTTA_OBJECT_CPP(_NAME_);
+MARTTA_PROPER_CPP(_NAME_);
 
 bool _NAME_::keyPressed(KeyEvent const* _e)
 {

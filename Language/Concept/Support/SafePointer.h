@@ -75,7 +75,7 @@ class M_API_Concept SafePointerTarget
 {
 	friend class SafePointerFace;
 
-protected:
+public:
 	void rewirePointer(SafePointerTarget* _sub)
 	{
 		if (_sub == this || !_sub)

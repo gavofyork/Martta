@@ -52,9 +52,24 @@ Kinds MethodOperator::allowedKinds(int _i) const
 {
 	if (_i == Identity)
 		return Kind::of<OperatorLabel>();
-	if (_i == 0 && isBinary())
+	if ((_i == 0 && isBinary()) || (_i >= 0 && isEnary()))
 		return Kind::of<Argument>();
 	return Super::allowedKinds(_i);
+}
+
+bool MethodOperator::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
+{
+	return simplePositionKeyPressHandler<MethodOperator>(_p, _e, "O");
+}
+
+String MethodOperator::name() const
+{
+	return String("_operator") + id().code();
+}
+
+String MethodOperator::codeName() const
+{
+	return String("operator") + id().code();
 }
 
 }
