@@ -36,7 +36,7 @@ Type Invocation::calleeType() const
 {
 	if (isTyped(Callee))
 	{
-		if (typeOf(Callee)->isType<FunctionType>())
+		if (typeOf(Callee)->isType<InvocableType>())
 			return typeOf(Callee);
 		if (typeOf(Callee)->isType<ReferencedType>())
 			if (Type t = typeOf(Callee)->asType<ReferencedType>()->isCallable())
@@ -48,7 +48,7 @@ Type Invocation::calleeType() const
 Type Invocation::type() const
 {
 	if (Type t = calleeType())
-		return t->asType<FunctionType>()->returnType();
+		return t->asType<InvocableType>()->returnType();
 	return Type();
 }
 
@@ -80,7 +80,7 @@ int Invocation::minRequired(int _i) const
 		return 1;
 	if (_i == Cardinals)
 		if (Type t = calleeType())
-			return t->asType<FunctionType>()->minimumArgCount();
+			return t->asType<InvocableType>()->minimumArgCount();
 		else
 			return 0;
 	else
@@ -90,7 +90,7 @@ int Invocation::minRequired(int _i) const
 Kinds Invocation::allowedKinds(int _index) const
 {
 	Type t;
-	if (_index == Callee || (_index >= 0 && (t = calleeType()) && t->asType<FunctionType>()->hasArgumentAt(_index)))
+	if (_index == Callee || (_index >= 0 && (t = calleeType()) && t->asType<InvocableType>()->hasArgumentAt(_index)))
 		return Kind::of<Typed>();
 	return Super::allowedKinds(_index);
 }
@@ -98,10 +98,10 @@ Kinds Invocation::allowedKinds(int _index) const
 Types Invocation::allowedTypes(int _index) const
 {
 	if (_index == Callee)
-		return Type(FunctionType(false, true));
+		return Type(InvocableType(false, true));
 	Type t;
-	if (_index >= 0 && (t = calleeType()) && t->asType<FunctionType>()->hasArgumentAt(_index))
-		return t->asType<FunctionType>()->argumentType(_index);
+	if (_index >= 0 && (t = calleeType()) && t->asType<InvocableType>()->hasArgumentAt(_index))
+		return t->asType<InvocableType>()->argumentType(_index);
 	return Super::allowedTypes(_index);
 }
 
@@ -149,7 +149,7 @@ bool Invocation::keyPressed(KeyEvent const* _e)
 bool Invocation::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
 	if (_p.exists() && !_p->isPlaceholder() && _p->isKind<Typed>() && _e->text() == "(" &&
-		_p->asKind<Typed>()->apparentType()->isType<FunctionType>() && !(_p->parentIs<Invocation>() && _p->index() == Callee) && !isTemporary(_p.concept()))
+		_p->asKind<Typed>()->apparentType()->isType<InvocableType>() && !(_p->parentIs<Invocation>() && _p->index() == Callee) && !isTemporary(_p.concept()))
 	{
 		Concept* n = new Invocation;
 		_p->insert(n, Callee);

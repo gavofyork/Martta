@@ -122,12 +122,12 @@ bool Lambda::keyPressed(KeyEvent const* _e)
 
 Type Lambda::type() const
 {
-	Type t = LambdaNamer::type();
-	if (t->isType<FunctionType>() && t->asType<FunctionType>()->returnType().isNull())
+	Type t = LambdaNamer::typeWith(LambdaType());
+	if (t->isType<LambdaType>() && t->asType<LambdaType>()->returnType().isNull())
 	{
 		List<ReturnStatement*> r = superChildrenOf<ReturnStatement>();
 		if (r.size() == 1 && r[0]->childIs<Typed>(ReturnStatement::Returned))
-			r[0]->childAs<Typed>(ReturnStatement::Returned)->bareType().insertSilentCopy(t->asType<FunctionType>()->middle(FunctionType::Returned));
+			r[0]->childAs<Typed>(ReturnStatement::Returned)->bareType().insertSilentCopy(t->asType<LambdaType>()->middle(LambdaType::Returned));
 	}
 	return t;
 }
@@ -162,7 +162,9 @@ void Lambda::compose()
 	MethodOperator* mop = new MethodOperator;
 	c->firstFor(mop->kind()).insertSilent(mop);
 	mop->middle(MethodOperator::Identity).insertSilent(new OperatorLabel(Operator::Parentheses));
-	type()->asType<FunctionType>()->returnType().insertSilentCopy(mop->middle(MethodOperator::Returned));
+	mDebug() << type()->code();
+	type()->debugTree();
+	type()->asType<LambdaType>()->returnType().insertSilentCopy(mop->middle(MethodOperator::Returned));
 	foreach (Argument* a, cardinalChildrenAs<Argument>())
 		a->silentMove(mop->back());
 	mop->prepareChildren();

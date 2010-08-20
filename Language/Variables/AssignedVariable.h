@@ -53,6 +53,7 @@ protected:
 	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); Identifiable::setProperties(_p); }
 	virtual bool						isInValidState() const { return Super::isInValidState() && VariableNamer::isInValidState(); }
 	virtual String						informationHtml() const { return Super::informationHtml(); }
+	virtual Type						actualType() const;
 
 	// From Statement via BareTyped
 	virtual String						code() const;

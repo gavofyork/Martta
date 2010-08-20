@@ -23,10 +23,12 @@
 namespace Martta
 {
 
+MARTTA_PROPER_CPP(InvocableType);
+MARTTA_NAMED_CPP(InvocableType, Returned);
+MARTTA_PROPER_CPP(LambdaType);
 MARTTA_PROPER_CPP(FunctionType);
-MARTTA_NAMED_CPP(FunctionType, Returned);
 
-bool FunctionType::defineSimilarityTo(TypeConcept const* _t, Castability _c) const
+bool InvocableType::defineSimilarityTo(TypeConcept const* _t, Castability _c) const
 {
 	if (_t->isKind<FunctionType>())
 	{
@@ -44,7 +46,7 @@ bool FunctionType::defineSimilarityTo(TypeConcept const* _t, Castability _c) con
 	return Super::defineSimilarityTo(_t, _c);
 }
 
-List<Declaration*> FunctionType::utilisedX() const
+List<Declaration*> InvocableType::utilisedX() const
 {
 	List<Declaration*> ret;
 	foreach (TypeConcept* i, childrenOf<TypeConcept>())
@@ -52,12 +54,12 @@ List<Declaration*> FunctionType::utilisedX() const
 	return ret;
 }
 
-Types FunctionType::assignableTypes() const
+Types InvocableType::assignableTypes() const
 {
 	return Type(*this);
 }
 
-String FunctionType::code(String const& _middle) const
+String InvocableType::code(String const& _middle) const
 {
 	if (m_wild)
 		return "#unknown-type#(" + _middle + ")(...)";

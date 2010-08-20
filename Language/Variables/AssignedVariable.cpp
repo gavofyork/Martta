@@ -42,10 +42,20 @@ Kinds AssignedVariable::allowedKinds(int _index) const
 	return Super::allowedKinds(_index);
 }
 
+Type AssignedVariable::actualType() const
+{
+	if (TypeConcept* t = self()->tryChild<TypeConcept>(OurType))
+		if (!t->isNull())
+			return *t;
+	if (Typed* t = tryChild<Typed>(AssignedValue))
+		return *t->bareType()->ignore<Reference>();
+	return Type();
+}
+
 Types AssignedVariable::allowedTypes(int _index) const
 {
 	if (_index == AssignedValue)
-		return Type(*actualType());
+		return actualType();
 	return Super::allowedTypes(_index);
 }
 

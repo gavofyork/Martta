@@ -28,11 +28,11 @@ namespace Martta
 MARTTA_NOTION_CPP(VariableNamer);
 MARTTA_NAMED_CPP(VariableNamer, OurType);
 
-TypeConcept* VariableNamer::actualType() const
+Type VariableNamer::actualType() const
 {
 	if (TypeConcept* t = self()->tryChild<TypeConcept>(OurType))
-		return t;
-	return TypeConcept::null;
+		return *t;
+	return Type();
 }
 
 String VariableNamer::basicCode() const
@@ -58,7 +58,7 @@ Type VariableNamer::type() const
 {
 	if (!actualType()->isNull())
 	{
-		Type ret(*actualType());
+		Type ret((actualType()));
 		if (!ret->isType<Reference>())
 			ret.topWith(Reference());
 		return ret;

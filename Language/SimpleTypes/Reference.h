@@ -42,7 +42,7 @@ private:
 	virtual List<ValueDefiner*>			applicableMembers(Concept const* _s = 0, bool _isConst = false) const { return original() ? original()->applicableMembers(_s, _isConst) : Super::applicableMembers(_s); }
 	virtual String						code(String const& _middle) const { return original()->code("&" + _middle); }
 	virtual bool						isType(Kind _typeKind) { return Concept::isKind(_typeKind) || original()->isType(_typeKind); }
-	virtual TypeConcept*					asType(Kind _typeKind) { if (Concept::isKind(_typeKind)) return this; AssertNR(original()->isType(_typeKind)); return original()->asType(_typeKind); }
+	virtual TypeConcept*				asType(Kind _typeKind) { if (Concept::isKind(_typeKind)) return this; AssertNR(original()->isType(_typeKind)); return original()->asType(_typeKind); }
 	virtual Rgb							idColour() const { return original() ? original()->idColour() : TypeConcept::null->idColour(); }
 	virtual TypeConcept* 				newClone() const { return new Reference; }
 	virtual bool						defineSimilarityFrom(TypeConcept const* _f, Castability _c) const;

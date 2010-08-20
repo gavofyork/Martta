@@ -40,12 +40,12 @@ class M_CLASS M_API_Variables VariableNamer: public_interface ValueDefiner, publ
 public:
 	MARTTA_NAMED(OurType)
 
-	virtual TypeConcept*				actualType() const;
+	virtual Type						actualType() const;
 	virtual String						summary() const { return basicCode(); }
 	String								basicCode() const;
 
 protected:
-	virtual Type						bareType() const { return *actualType(); }
+	virtual Type						bareType() const { return actualType(); }
 	virtual Type						type() const;
 	virtual inline String				defineLabelCode(String const& _text) const { return L"l_" + camelCase(_text); }	// Overridden in Field & Argument
 
