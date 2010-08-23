@@ -65,4 +65,12 @@ protected:
 	virtual Identifiable*				addressableContext() const { return 0; }
 };
 
+class M_CLASS M_API_Variables Declarable: public_super TypeConcept
+{
+	MARTTA_NOTION(Declarable)
+
+public:
+	virtual Type						declaredType(Type const&) const { return isNull() ? Type() : *this; }
+};
+
 }

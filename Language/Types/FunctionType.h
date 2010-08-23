@@ -32,7 +32,7 @@ namespace Martta
 
 class M_CLASS M_API_Types InvocableType: public_super PhysicalType
 {
-	MARTTA_PROPER(PhysicalType)
+	MARTTA_PLACEHOLDER(PhysicalType)
 
 public:
 	MARTTA_NAMED(Returned)
@@ -41,6 +41,7 @@ public:
 
 	void								setEllipsis(bool _on = true) { m_ellipsis = _on; }
 	virtual bool						ellipsis() const { return m_ellipsis; }
+	virtual bool						isWild() const { return m_wild; }
 	virtual bool						isUltimatelyNull() const { return m_wild; }
 	virtual Type						returnType() const { return m_wild ? Type() : *childAs<TypeConcept>(Returned); }
 	virtual Type						argumentType(int _i) const { return !m_wild && childIs<TypeConcept>(_i) ? *childAs<TypeConcept>(_i) : Type(); }
@@ -48,6 +49,7 @@ public:
 	virtual bool						hasArgumentAt(int _i) const { return m_wild || m_ellipsis || _i < cardinalChildCount(); }
 	virtual bool						isWellDefined() const { for (int i = 0; i < minimumArgCount(); ++i) if (!argumentType(i)->isWellDefined()) return false; return returnType()->isWellDefined(); }
 	virtual Rgb							idColour() const { return 0xbb77ff; }
+	virtual bool						canStandAlone() const;
 
 protected:
 	bool m_ellipsis;
@@ -59,7 +61,6 @@ private:
 	virtual Kinds						allowedKinds(int) const { return m_wild ? Kinds() : Kinds(Kind::of<TypeConcept>()); }
 	virtual String						code(String const& _middle) const;
 	virtual TypeConcept*				newClone() const { return new InvocableType(m_ellipsis, m_wild); }
-	virtual bool						canStandAlone() const { return false; }
 	virtual bool						defineSimilarityTo(TypeConcept const* _t, Castability _c) const;
 	virtual List<Declaration*>			utilisedX() const;
 	virtual void						setProperties(Hash<String, String> const& _ps) { Super::setProperties(_ps); m_ellipsis = _ps[L"ellipsis"].toBool(); m_wild = _ps[L"wild"].toBool(); }
@@ -73,6 +74,7 @@ public:
 	LambdaType(bool _ellipsis = false, bool _wild = false): InvocableType(_ellipsis, _wild) {}
 
 protected:
+	virtual String						code(String const& _middle) const;
 	virtual TypeConcept*				newClone() const { return new LambdaType(m_ellipsis, m_wild); }
 };
 
@@ -88,6 +90,7 @@ public:
 	FunctionType(bool _ellipsis = false, bool _wild = false): InvocableType(_ellipsis, _wild) {}
 
 protected:
+	virtual bool						canStandAlone() const { return false; }
 	virtual TypeConcept*				newClone() const { return new FunctionType(m_ellipsis, m_wild); }
 };
 

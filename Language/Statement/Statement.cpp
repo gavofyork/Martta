@@ -67,10 +67,10 @@ List<ValueDefiner*> ScopePreserver::valuesInLocalScope(int) const
 List<ValueDefiner*> Statement::valuesInLocalScope(int _i) const
 {
 	List<ValueDefiner*> ret;
-	if (_i != UndefinedIndex && _i > 0)
+	if (_i != UndefinedIndex)
 		appendDefinedUptoHere(_i, &ret);
 	if (parentIs<ScopePreserver>())
-		ret = parentAs<ScopePreserver>()->valuesInLocalScope(index());
+		ret += parentAs<ScopePreserver>()->valuesInLocalScope(index());
 	return ret;
 }
 

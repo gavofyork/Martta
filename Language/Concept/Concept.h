@@ -176,8 +176,8 @@ public:
 	virtual String						summary() const { return kind().name(); }
 
 	/**
-	 * Cull-check an object. If it is determined the object is superfluous (with the accoridng method), it will
-	 * be killed.
+	 * Cull-check an object. If it is determined the object is superfluous (with the according method), it will
+	 * be killed and either replaced with onDecay()'s node or whatever node is necessary to keep the model good.
 	 */
 	bool								cull();
 
@@ -323,8 +323,10 @@ public:
 	/// @returns true if this object isn't actually a proper language entity.
 	/// Overrides automatically handled in derivations by MARTTA_PROPER(_INTERFACE) macros. Do not reimplement.
 	virtual bool						isPlaceholder() const { return kind().isPlaceholder(); }
-	/// Checked after change; if true is returned, this may be deleted.
+	/// Checked after change; if true is returned, this may be deleted/replaced with onDecay().
 	virtual bool						isSuperfluous() const;
+	/// What to replace this node with should it become superfluous.
+	virtual Concept*					onDecay() const { return 0; }
 	bool								isFixed() const { return over().isFixed(); }
 	virtual bool						defineChildFixed(int) const { return false; }
 

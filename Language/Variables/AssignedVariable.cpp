@@ -20,6 +20,7 @@
 
 #include "TextLabel.h"
 #include "TypeConcept.h"
+#include "IdentifierSet.h"
 #include "Typed.h"
 #include "DefaultConstructedVariable.h"
 #include "WebStylist.h"
@@ -30,6 +31,7 @@ namespace Martta
 
 MARTTA_PROPER_CPP(AssignedVariable);
 MARTTA_NAMED_CPP(AssignedVariable, AssignedValue);
+MARTTA_NOTION_CPP(Declarable);
 
 Kinds AssignedVariable::allowedKinds(int _index) const
 {
@@ -45,10 +47,13 @@ Kinds AssignedVariable::allowedKinds(int _index) const
 Type AssignedVariable::actualType() const
 {
 	if (TypeConcept* t = self()->tryChild<TypeConcept>(OurType))
+	{
+		if (Declarable* d = t->tryKind<Declarable>())
+			if (Typed* t = tryChild<Typed>(AssignedValue))
+				return d->declaredType(*t->bareType());
 		if (!t->isNull())
 			return *t;
-	if (Typed* t = tryChild<Typed>(AssignedValue))
-		return *t->bareType()->ignore<Reference>();
+	}
 	return Type();
 }
 

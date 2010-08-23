@@ -22,6 +22,8 @@
 
 #include "Composite.h"
 #include "LambdaNamer.h"
+#include "AssignedVariable.h"
+#include "BuiltinType.h"
 #include "Typed.h"
 
 #ifndef M_API_Experimental
@@ -138,7 +140,7 @@ public:
 	}
 
 protected:
-	virtual String						defineHtml() const { return mark() + tagOf("minor symbol", "[") + toHtml(self()->cardinalChildren(), tagOf(L"minor symbol", L", ")) + tagOf(L"minor symbol", L"]"); }
+	virtual String						defineHtml() const { return tagOf("minor symbol", "[") + toHtml(self()->cardinalChildren(), tagOf(L"minor symbol", L", ")) + tagOf(L"minor symbol", L"]"); }
 	virtual int							minRequired(int) const { return 0; }
 	virtual Kinds						allowedKinds(int _i) const { return _i >= 0 ? Kind::of<ClosureEntry>() : Kinds(); }
 	virtual bool						keyPressed(KeyEvent const* _e)
@@ -174,6 +176,23 @@ protected:
 	virtual Types						allowedTypes(int _i) const { return LambdaNamer::allowedTypes(_i); }
 	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual void						compose();
+};
+
+class M_CLASS M_API_Experimental AutoType: public_super TypeConcept, public_super_interface Declarable
+{
+	MARTTA_INITIALISED_PROPER(TypeConcept)
+	MARTTA_ALSO_INHERITS(Declarable, 0)
+
+public:
+	static void							initialiseClass();
+	static void							finaliseClass();
+
+	virtual String						defineHtml() const { return mark() + tagOf("TypeConcept", typeHtml("auto")); }
+	virtual String						code(String const& _middle) const { return L"???" + _middle; }
+
+protected:
+	virtual TypeConcept*				newClone() const { return new AutoType; }
+	virtual Type						declaredType(Type const& _t) const;
 };
 
 }

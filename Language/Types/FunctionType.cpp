@@ -18,12 +18,14 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "IdentifierSet.h"
+#include "VariablePlacer.h"
 #include "FunctionType.h"
 
 namespace Martta
 {
 
-MARTTA_PROPER_CPP(InvocableType);
+MARTTA_PLACEHOLDER_CPP(InvocableType);
 MARTTA_NAMED_CPP(InvocableType, Returned);
 MARTTA_PROPER_CPP(LambdaType);
 MARTTA_PROPER_CPP(FunctionType);
@@ -59,6 +61,18 @@ Types InvocableType::assignableTypes() const
 	return Type(*this);
 }
 
+bool InvocableType::canStandAlone() const
+{
+	if (isWild())
+		return true;
+	if (!returnType()->canStandAlone())
+		return false;
+	foreach (TypeConcept* e, cardinalChildrenAs<TypeConcept>())
+		if (!e->asKind<TypeConcept>()->canStandAlone())
+			return false;
+	return true;
+}
+
 String InvocableType::code(String const& _middle) const
 {
 	if (m_wild)
@@ -74,6 +88,25 @@ String InvocableType::code(String const& _middle) const
 	if (m_ellipsis)
 		ret += (cardinalChildCount()) ? ", ..." : "...";
 	ret += ")";
+
+	return ret;
+}
+
+String LambdaType::code(String const& _middle) const
+{
+	if (m_wild)
+		return L"((...)->???" ")" + _middle;
+
+	String ret = L"((";
+	foreach (Concept* e, cardinalChildren())
+	{
+		if (ret.right(2) != L"((")
+			ret += L", ";
+		ret += e->asKind<TypeConcept>()->code();
+	}
+	if (m_ellipsis)
+		ret += (cardinalChildCount()) ? ", ..." : "...";
+	ret += L")->" + returnType()->code() + L")" + _middle;
 
 	return ret;
 }

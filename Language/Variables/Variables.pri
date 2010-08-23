@@ -1,4 +1,4 @@
-DEPS += Labels Statement SimpleTypes
+DEPS += Labels Statement SimpleTypes Declaration
 OURDIRS = . Interfaces Support
 TWD = $$PWD
 

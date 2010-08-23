@@ -34,10 +34,12 @@
 #include "Position.h"
 #include "Reference.h"
 #include "Const.h"
+#include "BuiltinType.h"
 #include "ReferencedValue.h"
 #include "LocalReferencedValue.h"
 #include "ArgumentReferencedValue.h"
 #include "MemberReferencedValue.h"
+#include "VariablePlacer.h"
 #include "Lambda.h"
 
 namespace Martta
@@ -104,7 +106,7 @@ Kinds Lambda::allowedKinds(int _i) const
 
 String Lambda::defineHtml() const
 {
-	return L"<^>" + toHtml(child(ClosureSet)) + defineArgListHtml() + (childCount(Returned) ? tagOf("symbol", " -> ") + defineReturnHtml() : "") + " " + toHtml(body());
+	return L"<^>" + toHtml(child(ClosureSet)) + defineArgListHtml() + (childCount(Returned) ? tagOf("symbol", " -> ") + defineReturnHtml() : "") + toHtml(body());
 }
 
 bool Lambda::keyPressed(KeyEvent const* _e)
@@ -112,6 +114,10 @@ bool Lambda::keyPressed(KeyEvent const* _e)
 	if (_e->text() == "[")
 	{
 		_e->codeScene()->navigateInto(childAs<Closure>(ClosureSet)->firstChild());
+	}
+	else if (_e->text() == "}")
+	{
+		_e->codeScene()->setCurrent(this);
 	}
 	else if (!(_e->text() == "(" && _e->isFocused()) && LambdaNamer::keyPressed(_e))
 	{}
@@ -128,6 +134,8 @@ Type Lambda::type() const
 		List<ReturnStatement*> r = superChildrenOf<ReturnStatement>();
 		if (r.size() == 1 && r[0]->childIs<Typed>(ReturnStatement::Returned))
 			r[0]->childAs<Typed>(ReturnStatement::Returned)->bareType().insertSilentCopy(t->asType<LambdaType>()->middle(LambdaType::Returned));
+		else if (!r.size())
+			t->asType<LambdaType>()->middle(LambdaType::Returned).insertSilent(new BuiltinType(Void));
 	}
 	return t;
 }
@@ -162,8 +170,6 @@ void Lambda::compose()
 	MethodOperator* mop = new MethodOperator;
 	c->firstFor(mop->kind()).insertSilent(mop);
 	mop->middle(MethodOperator::Identity).insertSilent(new OperatorLabel(Operator::Parentheses));
-	mDebug() << type()->code();
-	type()->debugTree();
 	type()->asType<LambdaType>()->returnType().insertSilentCopy(mop->middle(MethodOperator::Returned));
 	foreach (Argument* a, cardinalChildrenAs<Argument>())
 		a->silentMove(mop->back());
@@ -241,15 +247,50 @@ void Lambda::compose()
 	foreach (Concept* i, child(Body)->cardinalChildren())
 		i->silentMove(mop->body()->back());
 
-/*	foreach (Argument* a, cardinalChildrenAs<Argument>())
-	{
-			if (v->subject() == a)
-				v->set(f);
-	}*/
-
 	n->middle(ni).insertSilent(c);
 	replace(t);
 	n->debugTree();
 }
+
+MARTTA_PROPER_CPP(AutoType);
+
+void AutoType::initialiseClass()
+{
+	BuiltinType::registerExtra(L"auto", staticKind);
+}
+
+void AutoType::finaliseClass()
+{
+	BuiltinType::unregisterExtra(L"auto");
+}
+
+Type AutoType::declaredType(Type const& _t) const
+{
+	return *_t->ignore<Reference>();
+}
+
+class AutoTypeSet: public IdentifierSet
+{
+public:
+	AutoTypeSet(): m_ourNamed(L"auto") {}
+	virtual String						setId() const { return L"Martta::AutoType"; }
+	virtual List<Named*>				identifiableAt(Position const& _p)
+	{
+		if (canPlaceVariable(_p))
+			return List<Named*>() << &m_ourNamed;
+		return List<Named*>();
+	}
+	virtual void						acceptAt(Position const& _pos, Named*, CodeScene* _cs)
+	{
+		placeVariable(_pos, new AutoType, _cs);
+	}
+	virtual String						defineEditHtml(Named*, String const& _mid)
+	{
+		return AutoType::mark() + AutoType::tagOf("TypeConcept", AutoType().typeHtml(_mid));
+	}
+	SimpleNamed m_ourNamed;
+};
+
+static AutoTypeSet s_autoTypeSet;
 
 }

@@ -231,7 +231,7 @@ prepare Comment "Comment" "Statement"
 
 prepare SimpleTypes "Const Reference PhysicalType" "TypeConcept"
 
-prepare Variables "Interfaces/VariableNamer Support/VariablePlacer AssignedVariable DefaultConstructedVariable" "Labels Statement SimpleTypes"
+prepare Variables "Interfaces/VariableNamer Support/VariablePlacer AssignedVariable DefaultConstructedVariable" "Labels Statement SimpleTypes Declaration"
 
 prepare Types "Interfaces/TypeDefinition HashType ListType StringType ReferencedType Array BuiltinType BuiltinDeclaration BuiltinMethod BuiltinOperator MemberTemplateType Memberify AddressType Pointer UndefinedArray FunctionType Subscriptable Support/SubscriptableRegistrar" "TypeConcept Statement CTypes Operator Declaration Variables"
 

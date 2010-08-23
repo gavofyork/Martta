@@ -248,7 +248,7 @@ bool Concept::cull()
 	Concept* c = parent();
 	if (c && !isCurrentOrAncestor() && !isNecessary() && isSuperfluous())
 	{
-		deleteAndRefill();
+		deleteAndRefill(onDecay());
 		return true;
 	}
 	return false;

@@ -48,7 +48,7 @@ void Compound::appendDefinedUptoHere(int _i, List<ValueDefiner*>* _list) const
 
 bool Compound::keyPressed(KeyEvent const* _e)
 {
-	if (_e->text() == ReturnKey)
+	if (_e->text() == ReturnKey || (_e->text() == L" " && _e->focalIndex() != UndefinedIndex && _e->codeScene()->isCurrent(child(_e->focalIndex()))))
 	{
 		Position p = (_e->isFocused()) ?
 		(_e->isInserting() || _e->modifiers() & ShiftModifier) ?
@@ -122,7 +122,7 @@ String SoftCompound::defineHtml() const
 	if (statements().size() > 0)
 		return tagOf(L"minor symbol", L"{") + toHtml(cardinalChildren(), tagOf(L"minor symbol", "; ")) + tagOf(L"minor symbol", ";}");
 	else
-		return L" " + tagOf(L"minor symbol", L"{}");
+		return Compound::defineHtml();
 }
 
 }
