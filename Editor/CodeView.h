@@ -42,6 +42,7 @@ public:
 	virtual Concept*					subject() const { return &*m_subject; }
 	virtual void						setSubject(Concept* _subject);
 
+	void								setRouting(QWebView* _routing) { m_routing = _routing; }
 	QString								toHtml() const;
 	void								renderTo(QPaintDevice* _dev);
 
@@ -141,6 +142,8 @@ private:
 	bool								m_showInvalids;
 	List<SafePointer<Concept> >			m_invalidsToCheck;
 	List<SafePointer<Concept> >			m_invalids;
+
+	QWebView*							m_routing;
 };
 
 }

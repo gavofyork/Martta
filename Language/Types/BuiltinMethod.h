@@ -43,7 +43,7 @@ public:
 		T::s_members.append(s);
 		return s;
 	}
-	virtual String						name() const { return m_name; }
+	virtual String						nick() const { return m_name; }
 	virtual String						codeName() const { return m_name; }
 	virtual String						reference() const { return m_name; }
 	virtual String						key() const { return "@" + m_key + "@" + String::number(m_myId); }

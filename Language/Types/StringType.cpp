@@ -85,8 +85,8 @@ void StringType::initialiseClass()
 	Type scr = Type(s).topWith(Const()).topWith(Reference());
 	Type ccs = Type(Char).topWith(Const()).topWith(Pointer());
 	Type w = Type(Wchar);
-	Type ws = Type(Wchar).topWith(Pointer());
-	Type wcs = Type(Wchar).topWith(Const()).topWith(Pointer());
+	Type ws = Type(Wchar).toppedWith(Pointer());
+	Type wcs = Type(Wchar).toppedWith(Const()).topWith(Pointer());
 	Type c = Type(Char);
 	Type u = Type(Unsigned|Int);
 	Type b = Type(Bool);

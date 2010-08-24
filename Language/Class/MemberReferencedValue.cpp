@@ -82,6 +82,7 @@ List<ValueDefiner*> MemberReferencedValue::staticRefPossibilities(Position const
 				appMems = filterTypedsInv<ValueDefiner>(method, appMems);
 			else if (!_nonMethods)
 				appMems = filterTypeds<ValueDefiner>(method, appMems);
+			mDebug() << appMems.count();
 			ret << appMems;
 		}
 	return ret;

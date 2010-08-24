@@ -113,6 +113,8 @@ public:
 	/// Notifies us that the current key event should be recycled (i.e. handled again).
 	void						reinterpretCurrentKeyEvent() { m_reinterpretCurrentKeyEvent = true; }
 
+	String const&				lastKeyPress() const { return m_lastKeyPress; }
+
 	// Hack - should set the current entity but not issue an update and not call any
 	// focus change notifications etc. Used when leavingEditIntact since it is often called
 	// ultimately from another setCurrent(). Also used in CodeView when focus needs to be
@@ -121,6 +123,7 @@ public:
 
 	virtual bool				manageKeyPress(KeyEvent const&, Concept const*) { return false; }
 
+	void						handleNote(String const& _n) const { m_lastKeyPress += _n; }
 	virtual void				relayout(Concept* _e) = 0;
 protected:
 	// Handlers to be called pre- and post-current changing.
@@ -150,6 +153,8 @@ protected:
 private:
 	/// Cycles through possible insert states. Call when the Insert key has been pressed.
 	void						insertCycle();
+
+	mutable String				m_lastKeyPress;
 
 	mutable EditDelegateFace*	m_editDelegate;
 

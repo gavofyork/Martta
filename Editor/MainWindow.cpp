@@ -84,6 +84,7 @@ MainWindow::MainWindow(QWidget* _p, Qt::WindowFlags _f):
 	DataFinder::set(new RealDataFinder(m_pluginsPath));
 
 	setupUi(this);
+	codeView->setRouting(inputRouting);
 
 #ifdef Q_WS_MAC
 	setUnifiedTitleAndToolBarOnMac(true);

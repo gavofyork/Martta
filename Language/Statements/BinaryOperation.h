@@ -67,8 +67,11 @@ protected:
 		return simpleKeyPressedOnPositionHandler<T>(_p, _e, _o.code(), _o.precedence(), _o.associativity());
 	}
 
-	virtual String						operatorHtml() const { return L"<span class=\"symbol\">" + String(id().code()) + L"</span>"; }
+	virtual String						operatorHtml() const { return tagOf(L"symbol", id().code()); }
 	virtual String						defineHtml() const;
+
+	virtual bool						isSuperfluous() const { return left()->isPlaceholder() || right()->isPlaceholder(); }
+	virtual Concept*					onDecay() const { return left()->isPlaceholder() ? right()->isPlaceholder() ? 0 : right() : left(); }
 
 	virtual int							familyDependencies() const { return DependsOnBoth; }
 //	virtual void						onDependencySwitched(Concept* _e, Concept* _o) { if (_e == parent()) markDirty(); else Super::onDependencySwitched(_e, _o); }

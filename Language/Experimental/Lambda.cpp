@@ -142,7 +142,7 @@ Type Lambda::type() const
 
 bool Lambda::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
 {
-	if (simplePositionKeyPressHandler<Lambda>(_p, _e, "[", false))
+	if (simplePositionKeyPressHandler<Lambda>(_p, _e, "[", false, false))
 	{
 		_e->reinterpretLater();
 		return true;

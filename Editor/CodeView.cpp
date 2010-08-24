@@ -40,7 +40,8 @@ CodeView::CodeView(QWidget* _parent):
 	m_showDependencyInfo		(true),
 	m_showChanges				(false),
 	m_showOneChange				(false),
-	m_showInvalids				(true)
+	m_showInvalids				(true),
+	m_routing					(0)
 {
 	m_stylist->setCodeScene(this);
 	init();
@@ -556,6 +557,8 @@ bool CodeView::event(QEvent* _e)
 		if (e.text().length() > 0)
 		{
 			keyPressHandler(e);
+			if (m_routing)
+				m_routing->setHtml(qs(lastKeyPress()));
 			if (e.isAccepted())
 			{
 				_e->accept();

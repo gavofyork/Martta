@@ -173,11 +173,21 @@ Position CodeScene::nearestBracket(Position const& _p) const
 
 void CodeScene::keyPressHandler(KeyEvent& _e)
 {
+	if (!m_reinterpretCount)
+		m_lastKeyPress = L"<style>h4 { margin: 0} em { color: red }</style><div style=\"font-size: 8pt; font-family: 'Trebuchet MS' Arial\">";
+	else
+		handleNote(L"<h4>Reinterpreting...</h4><hr/>");
+
 	if (!subject() || !current())
+	{
+		handleNote(L"No subject/current: DONE<br/>");
 		return;
+	}
 
 	SafePointer<Concept> n = current();
 	Position currentPoint = n->over();
+
+	handleNote(L"'<b>" + _e.text() + L"</b>' to <b>" + *n + L"</b><br/>");
 
 	m_insertNext = false;
 
@@ -185,6 +195,7 @@ void CodeScene::keyPressHandler(KeyEvent& _e)
 
 	if (m_strobeFocus && !_e.text().isEmpty() && _e.text() != L" ")
 	{
+		handleNote(L"<h4>Strobe? \"<b>" + m_strobeText + _e.text() + "</b>\"</h4>");
 		List<Position> ob = m_bracketed;
 		m_bracketed = m_strobeBracketed;
 		m_activeStrobe = m_strobeCreation ? m_strobeCreation->over() : m_strobeFocus->over();
@@ -192,7 +203,9 @@ void CodeScene::keyPressHandler(KeyEvent& _e)
 		Concept::keyPressEventStarter(&e);
 		e.executeStrobe();
 		m_activeStrobe = Nowhere;
-		if (!e.isAccepted())
+		if (e.isAccepted())
+			handleNote(L"<em>YES</em><br/>");
+		else
 			m_bracketed = ob;
 	}
 //	else
@@ -202,21 +215,30 @@ void CodeScene::keyPressHandler(KeyEvent& _e)
 	if (!e.isAccepted())
 	{
 		// rejig for single key press.
+		handleNote("<h4>Simple?</h4>");
 		e = KeyEvent(_e.text(), _e.modifiers(), n, true, n->isPlaceholder(), UndefinedIndex, this);
 		Concept::keyPressEventStarter(&e);
 		if (e.isAccepted())
+		{
+			handleNote(L"<em>YES</em><br/>");
 			killStrobe();
+		}
 	}
 
 	bool allowStrobeInit = true;
 
 	// Navigation keys or the strobe kill key.
-	if (!e.isAccepted() && (keyPressedAsNavigation(e) || e.text() == L" "))
+	if (!e.isAccepted())
 	{
-		killStrobe();
-		// Navigation keys can never initialise a strobe.
-		allowStrobeInit = false;
-		e.accept();
+		handleNote("<h4>Nav?</h4>");
+		if (keyPressedAsNavigation(e) || e.text() == L" ")
+		{
+			killStrobe();
+			// Navigation keys can never initialise a strobe.
+			allowStrobeInit = false;
+			e.accept();
+			handleNote(L"<em>YES</em><br/>");
+		}
 	}
 
 	if (m_reinterpretCurrentKeyEvent)
@@ -235,7 +257,7 @@ void CodeScene::keyPressHandler(KeyEvent& _e)
 			{
 				mInfo() << &*current();
 				subject()->debugTree();
-				Assert(false, "Reinterpret key event in infinite recursion");
+				handleNote("<b><em>INFINITE RECURSION DETECTED. BAILING!</em></b><br/>");
 			}
 			m_reinterpretCount--;
 		}
@@ -243,6 +265,7 @@ void CodeScene::keyPressHandler(KeyEvent& _e)
 
 	if (!_e.text().isEmpty() && (wchar_t)_e.text()[0] > L' ' && allowStrobeInit)
 	{
+		handleNote("<h4>Initialising strobe...</h4>");
 		// Add to m_strobe.
 		if (!m_strobeFocus && currentPoint.exists() && n && n->parent() == currentPoint.concept())
 		{
@@ -283,6 +306,8 @@ void CodeScene::keyPressHandler(KeyEvent& _e)
 	}
 	if (e.isAccepted())
 		_e.accept();
+	if (!m_reinterpretCount)
+		m_lastKeyPress += L"</div>";
 }
 
 bool CodeScene::keyPressedAsNavigation(KeyEvent const& _e)

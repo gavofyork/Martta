@@ -353,6 +353,7 @@ void Concept::keyPressEventStarter(KeyEvent* _e, bool _abortive)
 	foreach (Concept* e, f->children())
 		if (f->usurpsChild(e))
 		{
+			_e->codeScene()->handleNote("Child-May-Usurp:<br/>");
 			_e->setFocus(e);
 			keyPressEventStarter(_e, true);
 			_e->setFocus(f);
@@ -362,6 +363,7 @@ void Concept::keyPressEventStarter(KeyEvent* _e, bool _abortive)
 
 	if (_e->codeScene()->isEditing(_e->focus()) && _e->codeScene()->editDelegate() && _e->codeScene()->editDelegate()->keyPressed(_e))
 	{
+		_e->codeScene()->handleNote("Edit.<br/>");
 		_e->accept();
 		if (_e->codeScene()->editDelegate())
 		{
@@ -375,18 +377,37 @@ void Concept::keyPressEventStarter(KeyEvent* _e, bool _abortive)
 		return;
 
 	SafePointer<Concept, true> fe = _e->focus();
-	_e->codeScene()->setEditing(0);
+	if (_e->codeScene()->editDelegate())
+	{
+		_e->codeScene()->handleNote("(Out-of-edit)<br/>");
+		_e->codeScene()->setEditing(0);
+	}
 	if (!fe)
 		fe = _e->codeScene()->current();
 
 	while (fe)
 	{
-		if ((fe && _e->codeScene()->manageKeyPress(*_e, fe)) || (fe && fe->keyPressed(_e)) || (fe && fe->attemptInsert(_e)))
+		_e->codeScene()->handleNote(L"Routing: <b>" + *fe + L"</b>:<br/>");
+		if (_e->codeScene()->manageKeyPress(*_e, fe))
 		{
+			_e->codeScene()->handleNote("Page-Internal.<br/>");
+			_e->accept();
+			return;
+		}
+		if (fe && fe->keyPressed(_e))
+		{
+			_e->codeScene()->handleNote("Standard.<br/>");
+			_e->accept();
+			return;
+		}
+		if (fe && fe->attemptInsert(_e))
+		{
+			_e->codeScene()->handleNote("Insert.<br/>");
 			_e->accept();
 			return;
 		}
 
+		_e->codeScene()->handleNote("To-parent...<br/>");
 		if (fe && fe->parent())
 		{
 			_e->setIsFocused(false);
@@ -397,7 +418,10 @@ void Concept::keyPressEventStarter(KeyEvent* _e, bool _abortive)
 			fe = 0;
 
 		if (_abortive)
+		{
+			_e->codeScene()->handleNote("Abortive.");
 			return;
+		}
 	}
 }
 

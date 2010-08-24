@@ -69,6 +69,8 @@ public:
 	static inline void					initialiseClass() {}
 	static inline void					finaliseClass() {}
 
+	operator String() const { return kind().name() + " (*" + String::number((long)this) + ")"; }
+
 	void								silentMove(Position const& _to);
 	inline void							silentRemove() { silentMove(Nowhere); }
 	void								move(Position const& _newPosition);
@@ -407,7 +409,7 @@ public:
 	inline static bool					isTemporary(Concept* _e) { SafePointer<Concept> p(_e); p->clearEditing(); return !p; }
 	static bool							isValidName(String const& _n);
 	template<class T>
-	inline static bool					simplePositionKeyPressHandler(Position const& _p, KeyEvent const* _e, String const& _t, bool _ontoNew = true);
+	inline static bool					simplePositionKeyPressHandler(Position const& _p, KeyEvent const* _e, String const& _t, bool _ontoNew = true, bool _allowShift = true);
 
 	void								debugTree() const;
 	void								debugTree(String const& _i) const;
@@ -541,7 +543,7 @@ void Martta::Concept::setDependency(T& _dependencyVariable, U const& _dependency
 }
 
 template<class T>
-bool Martta::Concept::simplePositionKeyPressHandler(Position const& _p, KeyEvent const* _e, String const& _t, bool _ontoNew)
+bool Martta::Concept::simplePositionKeyPressHandler(Position const& _p, KeyEvent const* _e, String const& _t, bool _ontoNew, bool _allowShift)
 {
 	if (_e->text() == _t && _p.allowedToBeKind<T>())
 	{
@@ -560,8 +562,9 @@ bool Martta::Concept::simplePositionKeyPressHandler(Position const& _p, KeyEvent
 				_e->codeScene()->navigateToNew(n);
 			else
 				_e->codeScene()->setCurrent(n);
+			return true;
 		}
-		else if (!_p.exists() || _p->isPlaceholder() || _p.index() >= 0)	// if it's not cardinal we'll end up pushing the new thing behind the current.
+		else if (!_p.exists() || _p->isPlaceholder() || (_p.index() >= 0 && _allowShift))	// if it's not cardinal we'll end up pushing the new thing behind the current.
 		{
 			// when pressed on _p which already exists, changes from x->(a->(d, e), b, c) to x->(N, a->(d, e), b, c)
 			// when pressed on _p which doesn't exist yet or is a placeholder (a), changes from x->([a,] b, c) to x->(N, b, c)
@@ -571,11 +574,9 @@ bool Martta::Concept::simplePositionKeyPressHandler(Position const& _p, KeyEvent
 				_e->codeScene()->navigateInto(n);
 			else
 				_e->codeScene()->setCurrent(n);
+			return true;
 		}
-		else
-			delete n;
+		delete n;
 	}
-	else
-		return false;
-	return true;
+	return false;
 }
