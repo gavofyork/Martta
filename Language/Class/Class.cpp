@@ -304,7 +304,7 @@ List<Member*> Class::members(bool _isConst, Access _access) const
 		else if (_access == Public && i->access() <= Public)
 			buf = i->classType()->members(_isConst, Public);
 		StringList tba;
-		foreach (Member* d, filterEntitiesInv<Constructor>(buf))
+		foreach (Member* d, filterConceptsInv<Constructor>(buf))
 			if (!names.contains(d->nick()))	// only for equivalent params?
 			{	tba << d->nick();
 				ret << d;

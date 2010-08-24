@@ -60,8 +60,8 @@ public:
 
 protected:
 	static String							toHtml(Concept const* _e, String const& _tag = L"");
-	static String							toHtml(List<Concept const*> const& _es, String const& _delimiter = L" ", String const& _tag = L"");
-	inline static String					toHtml(List<Concept*> const& _es, String const& _delimiter = L" ", String const& _tag = L"") { return toHtml(list_const_cast<Concept const*>(_es), _delimiter, _tag); }
+	static String							toHtml(List<Concept const*> const& _es, String const& _delimiter = L" ", String const& _tag = L"", bool _delimiterOnLast = false);
+	inline static String					toHtml(List<Concept*> const& _es, String const& _delimiter = L" ", String const& _tag = L"", bool _delimiterOnLast = false) { return toHtml(list_const_cast<Concept const*>(_es), _delimiter, _tag, _delimiterOnLast); }
 };
 
 #define MARTTA_REGISTER_CSS(ConceptClass, CSS) \

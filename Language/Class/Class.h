@@ -72,7 +72,7 @@ public:
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 
 	List<Member*>						members(bool _isConst = false, Access _access = Private) const;
-	template<class T> inline List<T*>	membersOf(bool _isConst = false, Access _access = Private) const { return filterEntities<T>(members(_isConst, _access)); }
+	template<class T> inline List<T*>	membersOf(bool _isConst = false, Access _access = Private) const { return filterConcepts<T>(members(_isConst, _access)); }
 
 	Access								baseAccess(Class* _c) const;
 

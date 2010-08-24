@@ -93,7 +93,8 @@ protected:
 	virtual int							minRequired(int _i) const { return _i == Variable ? 1 : 0; }
 	virtual Kinds						allowedKinds(int _i) const;
 	virtual String						preHtml() const { return L""; }
-	virtual String						defineHtml() const { return preHtml() + toHtml(child(Variable)); }
+	virtual String						defineHtml() const { return mark() + preHtml() + toHtml(child(Variable)); }
+	virtual bool						usurpsChild(Concept const* _c) const { return _c == child(Variable); }
 	virtual bool						isSuperfluous() const { return !childAs<ReferencedValue>(Variable)->subject(); }
 };
 
@@ -140,9 +141,11 @@ public:
 	}
 
 protected:
-	virtual String						defineHtml() const { return tagOf("minor symbol", "[") + toHtml(self()->cardinalChildren(), tagOf(L"minor symbol", L", ")) + tagOf(L"minor symbol", L"]"); }
+	virtual String						defineHtml() const { return tagOf("minor symbol", "[") + toHtml(list_cast<Concept*>(cardinalChildrenOf<ClosureDefault>()), tagOf(L"minor symbol", L", "), L"", true) + toHtml(filterConceptsInv<ClosureDefault>(cardinalChildren()), tagOf(L"minor symbol", L", ")) + tagOf(L"minor symbol", L"]"); }
 	virtual int							minRequired(int) const { return 0; }
 	virtual Kinds						allowedKinds(int _i) const { return _i >= 0 ? Kind::of<ClosureEntry>() : Kinds(); }
+	virtual int							familyDependencies() const { return DependsOnChildren; }
+	virtual void						onDependencySwitched(Concept* _e, Concept*) { if (_e->isKind<ClosureDefault>()) foreach (ClosureDefault* c, cardinalChildrenOf<ClosureDefault>()) if (c != _e) c->deleteAndRefill(); }
 	virtual bool						keyPressed(KeyEvent const* _e)
 	{
 		if (_e->text() == L"," && _e->focalIndex() >= 0)

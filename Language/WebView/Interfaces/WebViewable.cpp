@@ -76,17 +76,14 @@ String WebViewable::toHtml(Concept const* _e, String const& _tag)
 	return WebStylist::current()->toHtml(_e, _tag);
 }
 
-String WebViewable::toHtml(List<Concept const*> const& _es, String const& _delimiter, String const& _tag)
+String WebViewable::toHtml(List<Concept const*> const& _es, String const& _delimiter, String const& _tag, bool _delimiterOnLast)
 {
 	String ret;
-	bool first = true;
 	foreach (Concept const* e, _es)
 	{
-		if (first)
-			first = false;
-		else
-			ret += _delimiter;
 		ret += toHtml(e, _tag);
+		if (_delimiterOnLast || e != _es.last())
+			ret += _delimiter;
 	}
 	return ret;
 }

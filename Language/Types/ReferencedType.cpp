@@ -77,6 +77,8 @@ bool ReferencedType::keyPressed(KeyEvent const* _e)
 		if (_e->codeScene()->isEditing(this))
 			_e->reinterpretLater();
 	}
+	else if (_e->text() == L"@" && m_subject)
+		_e->codeScene()->navigateOnto(m_subject);
 	else
 		return Super::keyPressed(_e);
 	return true;

@@ -77,7 +77,7 @@ List<ValueDefiner*> MemberReferencedValue::staticRefPossibilities(Position const
 				appMems = t->asType<Memberify>()->scope()->applicableMembers(_p.concept(), t->asType<Memberify>()->isConst());
 			else if (Class* c = _p->ancestor<Class>())
 				appMems = concepts_cast<ValueDefiner>(c->membersOf<MemberValue>(_p->hasAncestor<MemberLambda>() ? _p->ancestor<MemberLambda>()->isConst() : false));
-			appMems = filterEntitiesInv<Artificial>(appMems);
+			appMems = filterConceptsInv<Artificial>(appMems);
 			if (!_methods)
 				appMems = filterTypedsInv<ValueDefiner>(method, appMems);
 			else if (!_nonMethods)

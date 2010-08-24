@@ -72,6 +72,11 @@ protected:
 	{
 		if (NameEntryPoint::keyPressed(_e))
 			return true;
+		if (_e->text() == L"@" && m_subject)
+		{
+			_e->codeScene()->navigateOnto(m_subject);
+			return true;
+		}
 		return Super::keyPressed(_e);
 	}
 

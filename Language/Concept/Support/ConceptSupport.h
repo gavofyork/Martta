@@ -54,7 +54,7 @@ template<class T, class F> inline List<T*> concepts_cast(List<F*> _f)
 	return ret;
 }
 
-template<class T, class F> inline List<T*> filterEntities(List<F*> _f)
+template<class T, class F> inline List<T*> filterConcepts(List<F*> _f)
 {
 	List<T*> ret;
 	foreach (F* i, _f)
@@ -63,7 +63,7 @@ template<class T, class F> inline List<T*> filterEntities(List<F*> _f)
 	return ret;
 }
 
-template<class T, class F> inline List<F*> filterEntitiesInv(List<F*> _f)
+template<class T, class F> inline List<F*> filterConceptsInv(List<F*> _f)
 {
 	List<F*> ret;
 	foreach (F* i, _f)
