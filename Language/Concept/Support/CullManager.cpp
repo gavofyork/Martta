@@ -27,16 +27,15 @@ CullManager* CullManager::s_this = 0;
 
 void CullManager::doCulling()
 {
+	mInfo() << m_cullList.size();
 	int checked = 0;
 	while (m_cullList.size())
 		if (Concept* e = m_cullList.takeLast())
 		{
-//			mDebug() << "Culling" << e;
-//			e->debugTree();
+			mDebug() << "Culling" << e;
 			e->cull();
 			checked++;
 		}
-	//	mDebug() << "Checked" << checked << "for culling.";
 }
 
 }

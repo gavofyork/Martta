@@ -257,7 +257,7 @@ void Lambda::compose()
 
 	n->middle(ni).insertSilent(c);
 	replace(t);
-	n->debugTree();
+//	n->debugTree();
 }
 
 MARTTA_PROPER_CPP(AutoType);

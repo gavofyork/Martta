@@ -314,9 +314,9 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 		if (!i.exists() || (i.concept() != c && !c->hasAncestor(i.concept())))
 			removeBracket(i);
 
-	TIME_STATEMENT("refresh")
+//	TIME_STATEMENT("refresh")
 	refresh();
-	TIME_STATEMENT("checkInvalids")
+//	TIME_STATEMENT("checkInvalids")
 	checkInvalids();
 	c = current();
 //	mInfo() << c;
@@ -342,7 +342,7 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 			p.drawRect(br);
 		}
 	}*/
-	TIME_STATEMENT("WVpaintEvent")
+//	TIME_STATEMENT("WVpaintEvent")
 		QWebView::paintEvent(_ev);
 
 	if (c)
@@ -530,6 +530,8 @@ void CodeView::relayout(Concept* _e)
 
 bool CodeView::keyPressedAsNavigation(KeyEvent const& _e)
 {
+	if (!m_oldCurrent)
+		m_oldCurrent = current();
 	if (_e.text() == UpKey)
 		page()->mainFrame()->evaluateJavaScript("goUp()");
 	else if (_e.text() == DownKey)
