@@ -47,7 +47,7 @@ protected:
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual String						defineHtml() const;
 	virtual bool						keyPressed(KeyEvent const* _e);
-	virtual void						onDependencyChanged(int _a, Concept* _e) { VariableNamer::onDependencyChanged(_a, _e); Super::onDependencyChanged(_a, _e); }
+	virtual void						onDependencyChanged(int _a, Concept* _e);
 	virtual void						onDependencySwitched(Concept*, Concept*);
 	virtual void						properties(Hash<String, String>& _p) const { Super::properties(_p); Identifiable::properties(_p); }
 	virtual void						setProperties(Hash<String, String> const& _p) { Super::setProperties(_p); Identifiable::setProperties(_p); }

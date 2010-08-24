@@ -176,6 +176,10 @@ protected:
 	virtual Types						allowedTypes(int _i) const { return LambdaNamer::allowedTypes(_i); }
 	virtual bool						keyPressed(KeyEvent const* _e);
 	virtual void						compose();
+	virtual int							familyDependencies() const { return DependsOnChildren; }
+	virtual void						onDependencyChanged(int, Concept*) { changed(Logically); }
+	virtual void						onDependencyRemoved(Concept*, int) { changed(Logically); }
+	virtual bool						isInValidState() const { return type().isWellDefined(); }
 };
 
 class M_CLASS M_API_Experimental AutoType: public_super TypeConcept, public_super_interface Declarable

@@ -44,9 +44,17 @@ Kinds AssignedVariable::allowedKinds(int _index) const
 	return Super::allowedKinds(_index);
 }
 
+void AssignedVariable::onDependencyChanged(int _a, Concept* _e)
+{
+	if (childIs<Declarable>(OurType) && _e == tryChild<Typed>(AssignedValue) && _a == Logically)
+		changed(Logically);
+	VariableNamer::onDependencyChanged(_a, _e);
+	Super::onDependencyChanged(_a, _e);
+}
+
 Type AssignedVariable::actualType() const
 {
-	if (TypeConcept* t = self()->tryChild<TypeConcept>(OurType))
+	if (TypeConcept* t = tryChild<TypeConcept>(OurType))
 	{
 		if (Declarable* d = t->tryKind<Declarable>())
 			if (Typed* t = tryChild<Typed>(AssignedValue))

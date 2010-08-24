@@ -106,7 +106,7 @@ Kinds Lambda::allowedKinds(int _i) const
 
 String Lambda::defineHtml() const
 {
-	return L"<^>" + toHtml(child(ClosureSet)) + defineArgListHtml() + (childCount(Returned) ? tagOf("symbol", " -> ") + defineReturnHtml() : "") + toHtml(body());
+	return L"<^>" + toHtml(child(ClosureSet)) + defineArgListHtml() + (childCount(Returned) ? tagOf("symbol", "&rarr;") + defineReturnHtml() + " " : "") + toHtml(body());
 }
 
 bool Lambda::keyPressed(KeyEvent const* _e)
