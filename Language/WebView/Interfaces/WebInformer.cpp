@@ -44,6 +44,7 @@ String WebInformer::basicInformationHtml(Concept const* _e)
 		p << "Allowed" << compileKinds(_e->parent()->allowedKinds(_e->index()));
 		if (_e->parent()->deniedKinds(_e->index()).count())
 			p << "Denied" << compileKinds(_e->parent()->deniedKinds(_e->index()));
+		p << "Info" << (String() + (_e->isPlaceholder() ? "Placeholder" : "Proper") + (_e->isInValidState() ? "Valid" : "Invalid") + (_e->isNecessary() ? "Necessary" : "") + (_e->isSuperfluous() ? "Superfluous" : ""));
 		ret += p;
 	}
 	List<int> an;

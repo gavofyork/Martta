@@ -61,6 +61,7 @@ public:
 	bool								keyPressed(KeyEvent const* _e);
 	/// Gives a parameter list of the call. This depends on argumentType/CodeName, ellipsis, reference and codeName.
 	String								callingCode(FunctionCodeScope _ref) const;
+	bool								navigateIntoParams(CodeScene* _s);
 
 	// From ValueDefiner. Do be careful though - if you've got a mixin situation where one side is pure virtual
 	// still, explicitly scope this side on the call or you'll just be calling yourself (and crash!).

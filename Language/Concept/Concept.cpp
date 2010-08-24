@@ -246,7 +246,7 @@ void Concept::checkForCullingLater()
 bool Concept::cull()
 {
 	Concept* c = parent();
-	if (c && !isCurrentOrAncestor() && !isNecessary() && isSuperfluous())
+	if (c && !isCurrentOrAncestor() && (!isNecessary() || c->allowedKinds(index()).commonBase() != kind()) && isSuperfluous())
 	{
 		deleteAndRefill(onDecay());
 		return true;

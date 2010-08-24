@@ -87,19 +87,29 @@ String LambdaNamer::defineLambdaHtml(String const& _middle) const
 		+ defineEnclosureHtml(L"body", defineBodyHtml()) + definePostHtml() + L"</div>";
 }
 
+bool LambdaNamer::navigateIntoParams(CodeScene* _s)
+{
+	if (!argumentCount())
+		if (back().allowedToBeKind<Argument>() && !back().isFixed())
+			back().spawnPrepared();
+		else
+			return false;
+	else{}
+	_s->navigateInto(argument(0));
+	return true;
+}
+
 bool LambdaNamer::keyPressed(KeyEvent const* _e)
 {
-	if (((_e->text() == L"(" && !argumentCount() /*&& (_e->focalIndex() == Identity || _e->isFocused())*/) || (_e->text() == L"," && _e->focalIndex() >= 0)) && self()->back().allowedToBeKind<Argument>() && !self()->back().isFixed())
+	if (_e->text() == L"," && _e->focalIndex() >= 0 && back().allowedToBeKind<Argument>() && !back().isFixed())
 	{
 		Argument* v = new Argument;
-		((_e->focalIndex() < 0 || _e->focalIndex() == UndefinedIndex) ? self()->back() : self()->middle(_e->focalIndex() + (_e->isInserting() ? 0 : 1))).place(v);
+		((_e->focalIndex() < 0 || _e->focalIndex() == UndefinedIndex) ? back() : middle(_e->focalIndex() + (_e->isInserting() ? 0 : 1))).place(v);
 		v->prepareChildren();
 		_e->codeScene()->navigateInto(v);
 	}
-	else if (_e->text() == "(" /*&& _e->focalIndex() == Identity*/ && argument(0))
-	{
-		_e->codeScene()->navigateInto(argument(0));
-	}
+	else if (_e->text() == "(" && navigateIntoParams(_e->codeScene()))
+	{}
 	else if (_e->text() == " " && _e->focalIndex() == Returned && self()->child(Identity))
 	{
 		_e->codeScene()->navigateOnto(self()->child(Identity));

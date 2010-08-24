@@ -121,6 +121,14 @@ bool Lambda::keyPressed(KeyEvent const* _e)
 	}
 	else if (!(_e->text() == "(" && _e->isFocused()) && LambdaNamer::keyPressed(_e))
 	{}
+	else if (_e->text() == "]" && navigateIntoParams(_e->codeScene()))
+	{}
+	else if (_e->text() == "->")
+	{
+		if (!childCount(Returned))
+			middle(Returned).spawnPrepared();
+		_e->codeScene()->navigateInto(child(Returned));
+	}
 	else
 		return Super::keyPressed(_e);
 	return true;

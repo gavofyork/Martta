@@ -152,9 +152,9 @@ public:
 	template<class T> List<T*>			selfAndAncestorsChildrenOf() const { List<T*> ret = childrenOf<T>(); return parent() ? ret + parent()->selfAndAncestorsChildrenOf<T>() : ret; }
 	template<class T> List<T*>			superChildrenOf() const { List<T*> ret; ret << childrenOf<T>(); foreach (Concept* e, children()) ret << e->superChildrenOf<T>(); return ret; }
 
-	inline int							properCount() const { int ret = 0; foreach (Concept* i, m_cardinalChildren) if (!i->isPlaceholder()) ret++; return ret; }
-	inline List<Concept*>				propers() const { List<Concept*> ret; foreach (Concept* i, m_cardinalChildren) if (!i->isPlaceholder()) ret += i; return ret; }
-	inline Concept*						proper(int _i) const { int c = 0; foreach (Concept* i, m_cardinalChildren) if (c++ == _i) return i; AssertNR(false); return 0; }
+	inline int							properCount() const { int ret = 0; foreach (Concept* i, m_cardinalChildren + m_namedChildren.values()) if (!i->isPlaceholder()) ret++; return ret; }
+	inline List<Concept*>				propers() const { List<Concept*> ret; foreach (Concept* i, m_cardinalChildren + m_namedChildren.values()) if (!i->isPlaceholder()) ret += i; return ret; }
+	inline Concept*						proper(int _i) const { foreach (Concept* i, m_cardinalChildren + m_namedChildren.values()) if (!i->isPlaceholder() && !_i--) return i; AssertNR(false); return 0; }
 
 	virtual bool						usurpsChild(Concept const*) const { return false; }
 	bool								isUsurped() const { return m_parent && m_parent->usurpsChild(this); }
