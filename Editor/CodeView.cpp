@@ -485,9 +485,6 @@ void CodeView::init()
 	QFile support(":/CodeView/Support.js");
 	support.open(QFile::ReadOnly);
 	page()->mainFrame()->evaluateJavaScript(support.readAll().data());
-	QPalette pal = palette();
-	pal.setBrush(QPalette::Base, Qt::transparent);
-	page()->setPalette(pal);
 	m_dirty.clear();
 	m_invalidsToCheck.clear();
 	List<Concept*> q;
@@ -532,17 +529,17 @@ bool CodeView::keyPressedAsNavigation(KeyEvent const& _e)
 {
 	if (!m_oldCurrent)
 		m_oldCurrent = current();
-	if (_e.text() == UpKey)
+	if (_e.text() == UpKey && !_e.modifiers())
 		page()->mainFrame()->evaluateJavaScript("goUp()");
-	else if (_e.text() == DownKey)
+	else if (_e.text() == DownKey && !_e.modifiers())
 		page()->mainFrame()->evaluateJavaScript("goDown()");
-	else if (_e.text() == LeftKey)
+	else if (_e.text() == LeftKey && !_e.modifiers())
 		page()->mainFrame()->evaluateJavaScript("goPrevious()");
-	else if (_e.text() == RightKey)
+	else if (_e.text() == RightKey && !_e.modifiers())
 		page()->mainFrame()->evaluateJavaScript("goNext()");
-	else if (_e.text() == PageUpKey)
+	else if (_e.text() == PageUpKey && !_e.modifiers())
 		page()->mainFrame()->evaluateJavaScript("goOut()");
-	else if (_e.text() == PageDownKey)
+	else if (_e.text() == PageDownKey && !_e.modifiers())
 		page()->mainFrame()->evaluateJavaScript("goIn()");
 	else
 		return CodeScene::keyPressedAsNavigation(_e);

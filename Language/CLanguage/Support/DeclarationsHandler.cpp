@@ -298,7 +298,7 @@ Concept* DeclarationsHandler::resolveType(QString const& _typeId, Concept** _td)
 	{
 		bool ellipsis = !m_functionTypes[_typeId]->m_argIds.isEmpty() && m_functionTypes[_typeId]->m_argIds.last().isEmpty();
 		Concept* r = resolveType(m_functionTypes[_typeId]->m_returnsId);
-		r = r->insert(Concept::evaluate(String(L"FunctionType[ellipsis=%1][wild=false]").arg(ellipsis)));
+		r = r->insert(Concept::evaluate(String(L"FunctionType[ellipsis=%1]").arg(ellipsis)));
 		foreach(QString i, m_functionTypes[_typeId]->m_argIds)
 			if (!i.isEmpty())
 				r->back().place(resolveType(i));

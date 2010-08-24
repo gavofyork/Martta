@@ -35,7 +35,7 @@ namespace Martta
 
 class Argument;
 class Compound;
-class InvocableType;
+class ContainedInvocableType;
 
 class M_CLASS M_API_Namers LambdaNamer: public_super_interface ValueDefiner, public_interface WebViewable, public_interface Labelled
 {
@@ -72,7 +72,7 @@ public:
 	//                                        ^^^^^^^^^^^^^
 	//                                    DO NOT LEAVE THIS OUT
 	virtual Type						type() const;
-	Type								typeWith(InvocableType const& _t) const;
+	Type								typeWith(ContainedInvocableType const& _t) const;
 
 	// WHAT YOU GIVE:
 
@@ -105,6 +105,8 @@ public:
 	virtual Type						returns() const;
 	virtual Type						argumentType(int _index) const;
 	virtual String						argumentCodeName(int _index) const;
+
+	bool								isWellDefined() const { for (int i = 0; i < argumentCount(); ++i) if (!argumentType(i)->isWellDefined()) return false; return returns()->isWellDefined(); }
 
 protected:
 	virtual ~LambdaNamer()				{}

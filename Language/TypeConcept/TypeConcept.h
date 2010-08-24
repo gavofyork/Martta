@@ -163,7 +163,7 @@ protected:
 
 	// Classes may opt to reimplement one or both of these.
 	// When determining the return type make sure you check the Castability _requirement first, before considering the
-	// types. This helps p[revent circular dependencies which will cause Martta to crash.
+	// types. This helps prevent circular dependencies which will cause Martta to crash.
 	virtual bool						defineSimilarityFrom(TypeConcept const* /*_from*/, Castability /*_requirement*/) const { return isNull(); }
 	virtual bool						defineSimilarityTo(TypeConcept const* /*_to*/, Castability _requirement) const { return _requirement == Unrelated; }
 

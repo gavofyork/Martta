@@ -34,6 +34,8 @@
 #include "CodeView.h"
 #include "MainWindow.h"
 
+#include "Composite.h"
+
 namespace Martta
 {
 
@@ -891,6 +893,17 @@ void MainWindow::updateProgramCode()
 {
 	if (Module* p = codeView->subject()->tryKind<Module>())
 		programCode->setPlainText(qs(p->finalCode()));
+
+	if (composedProgram->isVisible())
+	{
+		Concept* composed = Composite::composeTree(codeView->subject());
+		composedProgram->setHtml(QString("<!DOCTYPE HTML><html><head><style type=\"text/css\">%1</style></head><body onmousedown=\"procMouseDown(event)\">%2</body></html>").arg(qs(codeView->stylist()->css())).arg(qs(codeView->stylist()->toHtml(composed))));
+		composedProgram->page()->mainFrame()->addToJavaScriptWindowObject("CodeView", inputRouting);
+		QFile support(":/CodeView/Support.js");
+		support.open(QFile::ReadOnly);
+		composedProgram->page()->mainFrame()->evaluateJavaScript(support.readAll().data());
+		composed->killAndDelete();
+	}
 }
 
 bool hasSuperChild(Concept* _p, Concept* _e)

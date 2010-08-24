@@ -125,13 +125,12 @@ bool LambdaNamer::keyPressed(KeyEvent const* _e)
 
 Type LambdaNamer::type() const
 {
-	return typeWith(FunctionType());
+	return typeWith(FunctionType(ellipsis()));
 }
 
-Type LambdaNamer::typeWith(InvocableType const& _t) const
+Type LambdaNamer::typeWith(ContainedInvocableType const& _t) const
 {
 	Type ret((_t));
-	ret->asType<InvocableType>()->setEllipsis(ellipsis());
 	ret.place(returns(), FunctionType::Returned);
 	for (int i = 0; i < argumentCount(); i++)
 		ret.append(argumentType(i));

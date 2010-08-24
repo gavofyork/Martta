@@ -56,7 +56,7 @@ int TextLabel::familyDependencies() const
 	return parentIs<Labelled>() ? DependsOnParent : DependsOnNothing;
 }
 
-String TextLabel::namey() const
+String TextLabel::nick() const
 {
 	if (m_text.isEmpty() && isValid())
 		return String("ANON%1").arg((long)this);//return "foo";	// TODO: make it proper.
@@ -79,9 +79,9 @@ void TextLabel::onDependencyChanged(int _a, Concept* _e)
 
 String TextLabel::defineHtml() const
 {
-	if (namey().isEmpty())
+	if (nick().isEmpty())
 		return L"<^><span class=\"minor\">[ANONYMOUS]</span>";
-	return L"<^>" + String(L"<span class=\"TextLabel-%1\">").arg(isNamed() ? L"named" : L"unnamed") + tryParent<Labelled>()->labelHtml(namey()) + L"</span>";
+	return L"<^>" + String(L"<span class=\"TextLabel-%1\">").arg(isNamed() ? L"named" : L"unnamed") + tryParent<Labelled>()->labelHtml(nick()) + L"</span>";
 }
 
 String TextLabel::defineEditHtml(CodeScene* _cs) const

@@ -35,6 +35,7 @@ class M_CLASS M_API_Labels IdLabel: public_super Label
 	
 public:
 	virtual String						text() const { return String::null; }
+	virtual String						nick() const { return text(); }
 };
 
 }

@@ -68,7 +68,7 @@ Kinds MemberReferencedValue::ancestralDependencies() const
 List<ValueDefiner*> MemberReferencedValue::staticRefPossibilities(Position const& _p, bool _methods, bool _nonMethods)
 {
 	List<ValueDefiner*> ret;
-	Type method = Type(FunctionType(false, true)).topWith(Memberify()).topWith(Reference());
+	Type method = Type(WildInvocableType()).topWith(Memberify()).topWith(Reference());
 	if (TypedOwner* s = _p.parent()->tryKind<TypedOwner>())
 		foreach (Type t, s->allowedTypes(_p.index()))
 		{

@@ -35,63 +35,90 @@ class M_CLASS M_API_Types InvocableType: public_super PhysicalType
 	MARTTA_PLACEHOLDER(PhysicalType)
 
 public:
+	virtual bool						isUltimatelyNull() const { return true; }
+	virtual Type						returnType() const { return Type(); }
+	virtual Type						argumentType(int) const { return Type(); }
+	virtual int							minimumArgCount() const { return 0; }
+	virtual bool						hasArgumentAt(int) const { return false; }
+	virtual bool						isWellDefined() const { return false; }
+	virtual Rgb							idColour() const { return 0xbb77ff; }
+	virtual bool						canStandAlone() const { return false; }
+
+private:
+	virtual TypeConcept*				newClone() const { return new InvocableType; }
+};
+
+class M_CLASS M_API_Types WildInvocableType: public_super InvocableType
+{
+	MARTTA_PROPER(InvocableType)
+
+protected:
+	virtual bool						hasArgumentAt(int) const { return true; }
+	virtual bool						isWellDefined() const { return false; }
+	virtual bool						canStandAlone() const { return true; }
+	virtual String						code(String const& _middle) const;
+	virtual TypeConcept*				newClone() const { return new WildInvocableType; }
+	virtual bool						defineSimilarityFrom(TypeConcept const* _f, Castability _c) const;
+};
+
+class M_CLASS M_API_Types ContainedInvocableType: public_super InvocableType
+{
+	MARTTA_PLACEHOLDER(InvocableType)
+
+public:
 	MARTTA_NAMED(Returned)
 
-	InvocableType(bool _ellipsis = false, bool _wild = false): m_ellipsis(_ellipsis), m_wild(_wild) {}
+	ContainedInvocableType(bool _ellipsis = false): m_ellipsis(_ellipsis) {}
 
 	void								setEllipsis(bool _on = true) { m_ellipsis = _on; }
-	virtual bool						ellipsis() const { return m_ellipsis; }
-	virtual bool						isWild() const { return m_wild; }
-	virtual bool						isUltimatelyNull() const { return m_wild; }
-	virtual Type						returnType() const { return m_wild ? Type() : *childAs<TypeConcept>(Returned); }
-	virtual Type						argumentType(int _i) const { return !m_wild && childIs<TypeConcept>(_i) ? *childAs<TypeConcept>(_i) : Type(); }
-	virtual int							minimumArgCount() const { return m_wild ? 0 : cardinalChildCount(); }
-	virtual bool						hasArgumentAt(int _i) const { return m_wild || m_ellipsis || _i < cardinalChildCount(); }
+	virtual bool						isUltimatelyNull() const { return false; }
+	virtual Type						returnType() const { return *childAs<TypeConcept>(Returned); }
+	virtual Type						argumentType(int _i) const { return childIs<TypeConcept>(_i) ? *childAs<TypeConcept>(_i) : Type(); }
+	virtual int							minimumArgCount() const { return cardinalChildCount(); }
+	virtual bool						hasArgumentAt(int _i) const { return m_ellipsis || _i < cardinalChildCount(); }
 	virtual bool						isWellDefined() const { for (int i = 0; i < minimumArgCount(); ++i) if (!argumentType(i)->isWellDefined()) return false; return returnType()->isWellDefined(); }
-	virtual Rgb							idColour() const { return 0xbb77ff; }
 	virtual bool						canStandAlone() const;
 
 protected:
 	bool m_ellipsis;
-	bool m_wild;
 
 private:
 	virtual Types						assignableTypes() const;
-	virtual int							minRequired(int _i) const { return _i == Returned ? m_wild ? 0 : 1 : Super::minRequired(_i); }
-	virtual Kinds						allowedKinds(int) const { return m_wild ? Kinds() : Kinds(Kind::of<TypeConcept>()); }
+	virtual int							minRequired(int _i) const { return _i == Returned ? 1 : Super::minRequired(_i); }
+	virtual Kinds						allowedKinds(int) const { return Kinds(Kind::of<TypeConcept>()); }
 	virtual String						code(String const& _middle) const;
-	virtual TypeConcept*				newClone() const { return new InvocableType(m_ellipsis, m_wild); }
-	virtual bool						defineSimilarityTo(TypeConcept const* _t, Castability _c) const;
+	virtual TypeConcept*				newClone() const { return new ContainedInvocableType(m_ellipsis); }
 	virtual List<Declaration*>			utilisedX() const;
-	virtual void						setProperties(Hash<String, String> const& _ps) { Super::setProperties(_ps); m_ellipsis = _ps[L"ellipsis"].toBool(); m_wild = _ps[L"wild"].toBool(); }
+	virtual void						setProperties(Hash<String, String> const& _ps) { Super::setProperties(_ps); m_ellipsis = _ps[L"ellipsis"].toBool(); }
 };
 
-class M_CLASS M_API_Types LambdaType: public_super InvocableType
+class M_CLASS M_API_Types FunctorType: public_super ContainedInvocableType
 {
-	MARTTA_PROPER(InvocableType)
+	MARTTA_PROPER(ContainedInvocableType)
 
 public:
-	LambdaType(bool _ellipsis = false, bool _wild = false): InvocableType(_ellipsis, _wild) {}
+	FunctorType(): ContainedInvocableType(false) {}
 
 protected:
 	virtual String						code(String const& _middle) const;
-	virtual TypeConcept*				newClone() const { return new LambdaType(m_ellipsis, m_wild); }
+	virtual TypeConcept*				newClone() const { return new FunctorType; }
 };
 
 // Arguments children.
 // child(Returned) is return type.
 // child(n) is argument n
 // For ... functions, m_ellipsis is set.
-class M_CLASS M_API_Types FunctionType: public_super InvocableType
+class M_CLASS M_API_Types FunctionType: public_super ContainedInvocableType
 {
-	MARTTA_PROPER(InvocableType)
+	MARTTA_PROPER(ContainedInvocableType)
 
 public:
-	FunctionType(bool _ellipsis = false, bool _wild = false): InvocableType(_ellipsis, _wild) {}
+	FunctionType(bool _ellipsis = false): ContainedInvocableType(_ellipsis) {}
 
 protected:
 	virtual bool						canStandAlone() const { return false; }
-	virtual TypeConcept*				newClone() const { return new FunctionType(m_ellipsis, m_wild); }
+	virtual TypeConcept*				newClone() const { return new FunctionType(m_ellipsis); }
+	virtual bool						defineSimilarityTo(TypeConcept const* _t, Castability _c) const;
 };
 
 }

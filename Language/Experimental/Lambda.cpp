@@ -63,11 +63,12 @@ MARTTA_PROPER_CPP(ClosureExplicitValue);
 MARTTA_PROPER_CPP(Closure);
 MARTTA_PROPER_CPP(Lambda);
 MARTTA_NAMED_CPP(Lambda, ClosureSet);
+MARTTA_PROPER_CPP(LambdaType);
 
-class NC: SimpleIdentifierSet<ClosureExplicit>
+class ClosureExplicitSet: SimpleIdentifierSet<ClosureExplicit>
 {
 public:
-	NC(): SimpleIdentifierSet<ClosureExplicit>(L"NC"){}
+	ClosureExplicitSet(): SimpleIdentifierSet<ClosureExplicit>(L"ClosureExplicitSet"){}
 	virtual List<Named*>				identifiableAt(Position const& _p)
 	{
 		List<Named*> ret;
@@ -82,9 +83,7 @@ public:
 		return ret;
 	}
 	virtual void						acceptAt(Position const& _p, Named* _i, CodeScene* _cs) { _cs->setCurrent(_p.place(new ClosureExplicit(static_cast<Identifiable*>(_i)->asKind<ValueDefiner>()))); }
-};
-
-static NC s_closureExplicitSetRegistrand;
+} static s_closureExplicitSetRegistrand;
 
 int Lambda::minRequired(int _i) const
 {
@@ -134,18 +133,32 @@ bool Lambda::keyPressed(KeyEvent const* _e)
 	return true;
 }
 
+Type Lambda::returns() const
+{
+	if (Type t = LambdaNamer::returns())
+		return t;
+
+	List<ReturnStatement*> r = superChildrenOf<ReturnStatement>();
+	if (r.size() == 1 && r[0]->childIs<Typed>(ReturnStatement::Returned))
+		return r[0]->childAs<Typed>(ReturnStatement::Returned)->bareType();
+	else if (!r.size())
+		return BuiltinType(Void);
+	return Type();
+}
+
 Type Lambda::type() const
 {
-	Type t = LambdaNamer::typeWith(LambdaType());
-	if (t->isType<LambdaType>() && t->asType<LambdaType>()->returnType().isNull())
+/*	Type t = LambdaNamer::typeWith(FunctorType());
+	if (t->isType<FunctorType>() && t->asType<FunctorType>()->returnType().isNull())
 	{
 		List<ReturnStatement*> r = superChildrenOf<ReturnStatement>();
 		if (r.size() == 1 && r[0]->childIs<Typed>(ReturnStatement::Returned))
-			r[0]->childAs<Typed>(ReturnStatement::Returned)->bareType().insertSilentCopy(t->asType<LambdaType>()->middle(LambdaType::Returned));
+			r[0]->childAs<Typed>(ReturnStatement::Returned)->bareType().insertSilentCopy(t->asType<FunctorType>()->middle(FunctorType::Returned));
 		else if (!r.size())
-			t->asType<LambdaType>()->middle(LambdaType::Returned).insertSilent(new BuiltinType(Void));
+			t->asType<FunctorType>()->middle(FunctorType::Returned).insertSilent(new BuiltinType(Void));
 	}
-	return t;
+	return t;*/
+	return LambdaType(const_cast<Lambda*>(this));
 }
 
 bool Lambda::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)

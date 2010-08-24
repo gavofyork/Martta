@@ -171,6 +171,9 @@ class M_CLASS M_API_Experimental Lambda: public_super Typed, public_interface La
 public:
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 
+	virtual bool						isInValidState() const { return isWellDefined() && Super::isInValidState(); }
+	virtual Type						returns() const;
+
 protected:
 	virtual Type						type() const;
 	virtual String						defineHtml() const;
@@ -182,7 +185,30 @@ protected:
 	virtual int							familyDependencies() const { return DependsOnChildren; }
 	virtual void						onDependencyChanged(int, Concept*) { changed(Logically); }
 	virtual void						onDependencyRemoved(Concept*, int) { changed(Logically); }
-	virtual bool						isInValidState() const { return type().isWellDefined(); }
+};
+
+class M_CLASS M_API_Types LambdaType: public_super InvocableType
+{
+	MARTTA_PROPER(InvocableType)
+
+public:
+	LambdaType(Lambda* _l = 0): m_subject(0) { setDependency(m_subject, _l); }
+
+	virtual bool						isUltimatelyNull() const { return false; }
+	virtual Type						returnType() const { return m_subject ? m_subject->returns() : Super::returnType(); }
+	virtual Type						argumentType(int _i) const { return m_subject ? m_subject->argumentType(_i) : Super::argumentType(_i); }
+	virtual int							minimumArgCount() const { return m_subject ? m_subject->argumentCount() : Super::minimumArgCount(); }
+	virtual bool						hasArgumentAt(int _i) const { return m_subject ? _i < m_subject->argumentCount() : Super::hasArgumentAt(_i); }
+	virtual bool						isWellDefined() const { return m_subject && m_subject->isInValidState(); }
+	virtual bool						canStandAlone() const { return true; }
+
+private:
+//	virtual Types						assignableTypes() const;
+	virtual String						code(String const& _middle) const { return String(L"\u03BB(%1)").arg((long)&*m_subject) + _middle; }
+	virtual TypeConcept*				newClone() const { return new LambdaType(m_subject); }
+
+private:
+	ModelPtr<Lambda> m_subject;
 };
 
 class M_CLASS M_API_Experimental AutoType: public_super TypeConcept, public_super_interface Declarable

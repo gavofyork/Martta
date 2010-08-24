@@ -36,7 +36,7 @@ Identifiable::~Identifiable()
 String Identifiable::nick() const
 {
 	if (IdLabel* l = self()->tryChild<IdLabel>(Identity))
-		return l->text();
+		return l->nick();
 	return String::null;
 }
 

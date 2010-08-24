@@ -26,18 +26,25 @@ namespace Martta
 {
 
 MARTTA_PLACEHOLDER_CPP(InvocableType);
-MARTTA_NAMED_CPP(InvocableType, Returned);
-MARTTA_PROPER_CPP(LambdaType);
+MARTTA_PROPER_CPP(WildInvocableType);
+MARTTA_PLACEHOLDER_CPP(ContainedInvocableType);
+MARTTA_NAMED_CPP(ContainedInvocableType, Returned);
+MARTTA_PROPER_CPP(FunctorType);
 MARTTA_PROPER_CPP(FunctionType);
 
-bool InvocableType::defineSimilarityTo(TypeConcept const* _t, Castability _c) const
+bool WildInvocableType::defineSimilarityFrom(TypeConcept const* _f, Castability _c) const
+{
+	if (_f->isKind<InvocableType>())
+		return true;
+	return Super::defineSimilarityFrom(_f, _c);
+}
+
+bool FunctionType::defineSimilarityTo(TypeConcept const* _t, Castability _c) const
 {
 	if (_t->isKind<FunctionType>())
 	{
-		if (_t->asKind<FunctionType>()->m_wild)
-			return true;
 		FunctionType const* t = _t->asKind<FunctionType const>();
-		if (t->minimumArgCount() != minimumArgCount() || t->ellipsis() != ellipsis() || returnType() != t->returnType())
+		if (t->minimumArgCount() != minimumArgCount() || t->m_ellipsis != m_ellipsis || returnType() != t->returnType())
 			goto OUT;
 		for (int i = 0; i < t->minimumArgCount(); i++)
 			if (argumentType(i) != t->argumentType(i))
@@ -48,7 +55,7 @@ bool InvocableType::defineSimilarityTo(TypeConcept const* _t, Castability _c) co
 	return Super::defineSimilarityTo(_t, _c);
 }
 
-List<Declaration*> InvocableType::utilisedX() const
+List<Declaration*> ContainedInvocableType::utilisedX() const
 {
 	List<Declaration*> ret;
 	foreach (TypeConcept* i, childrenOf<TypeConcept>())
@@ -56,15 +63,13 @@ List<Declaration*> InvocableType::utilisedX() const
 	return ret;
 }
 
-Types InvocableType::assignableTypes() const
+Types ContainedInvocableType::assignableTypes() const
 {
 	return Type(*this);
 }
 
-bool InvocableType::canStandAlone() const
+bool ContainedInvocableType::canStandAlone() const
 {
-	if (isWild())
-		return true;
 	if (!returnType()->canStandAlone())
 		return false;
 	foreach (TypeConcept* e, cardinalChildrenAs<TypeConcept>())
@@ -73,11 +78,13 @@ bool InvocableType::canStandAlone() const
 	return true;
 }
 
-String InvocableType::code(String const& _middle) const
+String WildInvocableType::code(String const& _middle) const
 {
-	if (m_wild)
-		return "#unknown-type#(" + _middle + ")(...)";
+	return L"??" "?(" + _middle + ")(...)";
+}
 
+String ContainedInvocableType::code(String const& _middle) const
+{
 	String ret = returnType()->code() + "(" + _middle + ")(";
 	foreach (Concept* e, cardinalChildren())
 	{
@@ -92,11 +99,8 @@ String InvocableType::code(String const& _middle) const
 	return ret;
 }
 
-String LambdaType::code(String const& _middle) const
+String FunctorType::code(String const& _middle) const
 {
-	if (m_wild)
-		return L"((...)->???" ")" + _middle;
-
 	String ret = L"((";
 	foreach (Concept* e, cardinalChildren())
 	{

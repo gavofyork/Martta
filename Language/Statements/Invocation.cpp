@@ -98,7 +98,7 @@ Kinds Invocation::allowedKinds(int _index) const
 Types Invocation::allowedTypes(int _index) const
 {
 	if (_index == Callee)
-		return Type(InvocableType(false, true));
+		return Type(WildInvocableType());
 	Type t;
 	if (_index >= 0 && (t = calleeType()) && t->asType<InvocableType>()->hasArgumentAt(_index))
 		return t->asType<InvocableType>()->argumentType(_index);

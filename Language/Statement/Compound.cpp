@@ -57,10 +57,6 @@ bool Compound::keyPressed(KeyEvent const* _e)
 		middle(_e->focalIndex() + ((_e->isInserting() || _e->modifiers() & ShiftModifier) ? 0 : 1));
 		_e->codeScene()->setCurrent(p.place(new Statement));
 	}
-	else if (_e->text() == L"¬" && _e->focalIndex() != UndefinedIndex)
-	{
-		_e->codeScene()->setCurrent(child(_e->focalIndex()));
-	}
 	else if (_e->text() == L"J" && _e->focalIndex() != UndefinedIndex && _e->focalIndex() >= 0 && _e->focusIsPlaceholder()
 		&& child(_e->focalIndex() + 1) && _e->focus()->over().allowedToBeKind(child(_e->focalIndex() + 1)->kind()))
 	{
@@ -69,6 +65,14 @@ bool Compound::keyPressed(KeyEvent const* _e)
 	else if (_e->text() == L";" && _e->focalIndex() != UndefinedIndex)
 	{
 		_e->codeScene()->setCurrent(child(_e->focalIndex()));
+	}
+	else if (_e->text() == DownKey && _e->modifiers() == ControlModifier && !_e->isFocused() && _e->focus()->parent() == this && _e->focalIndex() >= 0 && _e->focalIndex() < cardinalChildCount() - 1)
+	{
+		_e->focus()->move(middle(_e->focalIndex() + 1));
+	}
+	else if (_e->text() == UpKey && _e->modifiers() == ControlModifier && !_e->isFocused() && _e->focus()->parent() == this && _e->focalIndex() > 0)
+	{
+		_e->focus()->move(middle(_e->focalIndex() - 1));
 	}
 	else if (_e->text() == "{")
 	{

@@ -32,7 +32,7 @@ String OperatorLabel::defineHtml() const
 
 bool OperatorLabel::keyPressed(KeyEvent const* _e)
 {
-	Operator o = Operator(_e->text());
+	Operator o = Operator(_e->text() == L")" ? L"()" : _e->text());
 	if (!o.isNull())
 	{
 		m_operator = o;

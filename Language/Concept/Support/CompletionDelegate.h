@@ -114,7 +114,7 @@ public:
 			cs->restoreCurrent();
 			return true;
 		}
-		else if (_e->text().length() == 1 && _e->text()[0].isLetter())
+		else if (_e->text().length() == 1 && _e->text()[0].isAlphaNumeric())
 			m_name += _e->text();
 		else if (_e->text() == TabKey)
 			if (m_completion.isEmpty())

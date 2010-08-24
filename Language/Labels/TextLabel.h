@@ -39,9 +39,9 @@ public:
 
 	// Queries the parent's isChildInValidState() to check if we're valid - if so and we're null it makes up a name. If not it just returns "".
 	// @note NEVER call them from the parent's isChildInValidState() function.
-	String								namey() const;
 	virtual String						code() const;
 	virtual String						text() const { return m_text; }
+	virtual String						nick() const;
 
 	// These tell the truth (i.e. independent of what parent thinks).
 	bool								isNamed() const { return !m_text.isEmpty(); }
