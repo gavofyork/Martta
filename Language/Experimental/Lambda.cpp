@@ -66,6 +66,11 @@ MARTTA_NAMED_CPP(Lambda, ClosureSet);
 MARTTA_PROPER_CPP(LambdaType);
 MARTTA_PROPER_CPP(CommentedOut);
 
+MARTTA_PROPER_CPP(TypeArgument);
+MARTTA_NAMED_CPP(TypeArgument, Default);
+MARTTA_PROPER_CPP(Template);
+MARTTA_NAMED_CPP(Template, Enclosure);
+
 class ClosureExplicitSet: SimpleIdentifierSet<ClosureExplicit>
 {
 public:
@@ -304,5 +309,23 @@ public:
 };
 
 static AutoTypeSet s_autoTypeSet;
+
+String Template::interfaceCode() const
+{
+	String ret = L"template<";
+	foreach (TypeArgument* ta, cardinalChildrenOf<TypeArgument>())
+	{
+		if (ta->index())
+			ret += L", ";
+		ret += ta->code();
+	}
+	ret += ">\n" + childAs<Declaration>(Enclosure)->interfaceCode();
+	return ret;
+}
+
+String Template::implementationCode() const
+{
+	return childAs<Declaration>(Enclosure)->implementationCode();// TODO: Prepend with template<>.
+}
 
 }

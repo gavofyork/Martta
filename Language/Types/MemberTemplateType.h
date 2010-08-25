@@ -43,7 +43,7 @@ public:
 	virtual bool						isWellDefined() const { return true; }
 	
 protected:
-	virtual TypeConcept*					newClone() const { return new MemberTemplateType(m_index); }
+	virtual TypeConcept*				newClone() const { return new MemberTemplateType(m_index); }
 	virtual bool						defineSimilarityFrom(TypeConcept const* _f, Castability _c) const;
 	virtual bool						defineEquivalenceFrom(TypeConcept const* _f) const;
 

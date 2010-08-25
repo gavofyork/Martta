@@ -39,7 +39,7 @@ Type Invocation::calleeType() const
 		if (typeOf(Callee)->isType<InvocableType>())
 			return typeOf(Callee);
 		if (typeOf(Callee)->isType<ReferencedType>())
-			if (Type t = typeOf(Callee)->asType<ReferencedType>()->isCallable())
+			if (Type t = typeOf(Callee)->asType<ReferencedType>()->asCallableType())
 				return t;
 	}
 	return Type();

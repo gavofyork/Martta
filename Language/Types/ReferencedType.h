@@ -52,7 +52,7 @@ public:
 
 	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 
-	virtual inline Type					isCallable(bool _isConst = false) const { Type t; if (m_subject) m_subject->isCallable(&t, _isConst); return t; }
+	inline Type							asCallableType(bool _isConst = false) const { Type t; if (m_subject) m_subject->isCallable(&t, _isConst); return t; }
 
 protected:
 	virtual inline bool					hasDefaultConstructor() const { return m_subject ? m_subject->hasDefaultConstructor() : false; }
@@ -60,6 +60,7 @@ protected:
 	virtual inline List<ValueDefiner*>	applicableMembers(Concept const* _s = 0, bool _isConst = false) const { return m_subject ? m_subject->applicableMembers(_s, _isConst) : List<ValueDefiner*>(); }
 	virtual inline bool					canStandAlone() const { return m_subject && m_subject->canStandAlone(); }
 	virtual inline bool					isCastableTo(TypeConcept const* _t, bool _const) { return m_subject && m_subject->hasSingleCastOperator(_t, _const); }
+	virtual inline bool					isCallable(Type* _t = 0, bool _c = false) const { return m_subject && m_subject->isCallable(_t, _c); }
 	virtual inline TypeConcept*			newClone() const { return new ReferencedType(m_subject); }
 
 	virtual inline bool					contentsEquivalentTo(TypeConcept const* _t) const { if (ReferencedType const* e = _t->tryKind<ReferencedType>()) return e->m_subject == m_subject; return false; }

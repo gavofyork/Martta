@@ -52,11 +52,11 @@ class M_CLASS M_API_Types TypeDefinition: public_interface Identifiable, public_
 	MARTTA_ALSO_INHERITS(Labelled, 0)
 
 public:
-	virtual String						code() const = 0;
+	virtual String						code() const { return String::null; }
 	virtual Rgb							idColour() const { return Rgb(0x444444); }
-	virtual Types						assignableTypes() const = 0;
-	virtual List<Declaration*>			utilisedInUse() const = 0;
-	virtual bool						hasDefaultConstructor() const = 0;
+	virtual Types						assignableTypes() const { return Types(); }
+	virtual List<Declaration*>			utilisedInUse() const { return List<Declaration*>(); }
+	virtual bool						hasDefaultConstructor() const { return false; }
 	virtual bool						hasSingleCastOperator(TypeConcept const* _t, bool _const) const;
 	virtual inline bool					hasSingleConversionConstructor(TypeConcept const*) const { return false; }
 	virtual inline bool					isCallable(Type* = 0, bool = false) const { return false; }

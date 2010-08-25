@@ -25,6 +25,9 @@
 #include "AssignedVariable.h"
 #include "BuiltinType.h"
 #include "Typed.h"
+#include "TopLevel.h"
+#include "TextLabel.h"
+#include "ReferencedType.h"
 
 #ifndef M_API_Experimental
 #define M_API_Experimental M_OUTAPI
@@ -240,6 +243,52 @@ public:
 	virtual Kinds						allowedKinds(int _i) const { return (_i >= 0) ? Kind::of<Statement>() : Kinds(); }
 	virtual String						code() const { return String::null; }
 	virtual String						defineHtml() const { return mark() + tagOf("Comment", tagOf(L"minor symbol", L"// ") + toHtml(cardinalChildren()), "div style=\"border: 0; padding: 4px;\""); }
+};
+
+class M_CLASS M_API_Experimental TypeArgument: public_super TypeDefinition, public_interface WebViewable
+{
+	MARTTA_PROPER(TypeDefinition)
+	MARTTA_ALSO_INHERITS(WebViewable, 0)
+
+public:
+	MARTTA_NAMED(Default)
+
+	// TYPE FORWARDING...
+	virtual Rgb							idColour() const { return defaultType()->idColour(); }
+	virtual Types						assignableTypes() const { return defaultType()->assignableTypes(); }
+	virtual List<Declaration*>			utilisedInUse() const { return defaultType()->utilised(); }
+	virtual bool						hasDefaultConstructor() const { return defaultType()->hasDefaultConstructor(); }
+	virtual bool						hasSingleCastOperator(TypeConcept const* _t, bool _const) const { return false; }	// TODO: FIX.
+	virtual bool						hasSingleConversionConstructor(TypeConcept const* _t) const { return false; }		// TODO: FIX.
+	virtual bool						isCallable(Type* _t = 0, bool _isConst = false) const { return defaultType()->isCallable(_t, _isConst); }
+	virtual bool						defineSimilarityTo(TypeConcept const* _t, TypeConcept::Castability _c) const { return defaultType()->defineSimilarityTo(_t, _c); }
+	virtual List<ValueDefiner*>			applicableMembers(Concept const* _s, bool _isConst) const { return defaultType()->applicableMembers(_s, _isConst); }
+	virtual bool						canStandAlone() const { return defaultType()->canStandAlone(); }
+
+	TypeConcept*						defaultType() const { return childAs<TypeConcept>(Default); }
+
+	virtual int							minRequired(int _i) const { return (_i == Identity || _i == Default) ? 1 : Super::minRequired(_i); }
+	virtual Kinds						allowedKinds(int _i) const { return (_i == Identity) ? Kind::of<TextLabel>() : (_i == Default) ? Kind::of<TypeConcept>() : Super::allowedKinds(_i); }
+//	virtual bool						usurpsChild(Concept const* _c) const { return _c == child(Identity); }
+	virtual String						code() const { return L"typename " + childAs<IdLabel>(Identity)->code(); }
+	virtual String						defineHtml() const { return mark() + tagOf(L"minor", L"typename ") + toHtml(child(Identity)) + L" = " + toHtml(child(Default)); }
+};
+
+class M_CLASS M_API_Experimental Template: public_super TopLevelType
+{
+	MARTTA_PROPER(TopLevelType)
+
+public:
+	MARTTA_NAMED(Enclosure)
+
+	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePositionKeyPressHandler<Template>(_p, _e, L"T"); }
+	virtual bool						isInValidState() const { return true; }
+	virtual int							minRequired(int _i) const { return (_i == Cardinals) ? 1 : (_i == Enclosure) ? 1 : Super::minRequired(_i); }
+	virtual Kinds						allowedKinds(int _i) const { return (_i >= 0) ? Kind::of<TypeArgument>() : (_i == Enclosure) ? Kind::of<TopLevelType>() : Super::allowedKinds(_i); }
+	virtual String						interfaceCode() const;
+	virtual String						implementationCode() const;
+	virtual String						defineHtml() const { return mark() + tagOf(L"minor", L"TEMPLATE<") + toHtml(cardinalChildren(), L",") + tagOf(L"minor", L">") + tagOf(L"", toHtml(child(Enclosure)), L"div"); }
+	virtual List<Declaration*>			utilised() const { return childAs<Declaration>(Enclosure)->utilised(); }
 };
 
 }

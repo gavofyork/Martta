@@ -50,6 +50,7 @@ class M_CLASS M_API_TypeConcept TypeConcept: public_super Concept, public_interf
 	friend class Type;
 	template<class T> friend struct TypeConstructor;
 	friend class ModifyingType;
+	friend class TypeDefinition;
 
 public:
 	static int							s_typeCount;
@@ -96,12 +97,20 @@ public:
 	// Note: Unrelated is a dummy requirement and will always return true;
 	// FairlyConvertible: float->int, int->float etc and
 	// BasicallyConvertible: long->int, signed char->unsigned short etc and
-	// VeryConvertible: ? and
-	// ConstPerfectConvertible: ?
+	// VeryConvertible: int->const int etc and
+	// ConstPerfectConvertible: int->int, const int->const int
 	bool								isSimilarTo(TypeConcept const* _to, Castability _requirement) const;
 	inline bool							isEquivalentTo(TypeConcept const* _t) const { return defineEquivalenceTo(_t) || _t->defineEquivalenceFrom(this); }
 	virtual bool						contentsEquivalentTo(TypeConcept const*) const { return true; }
 	virtual bool						canStandAlone() const { return true; }
+	virtual bool						isCallable(Type* = 0, bool = false) const { return false; }
+
+	// TODO: Make these protected again when we have a TypeForwarder notion (which will be a friend).
+	// Classes may opt to reimplement one or both of these.
+	// When determining the return type make sure you check the Castability _requirement first, before considering the
+	// types. This helps prevent circular dependencies which will cause Martta to crash.
+	virtual bool						defineSimilarityFrom(TypeConcept const* /*_from*/, Castability /*_requirement*/) const { return isNull(); }
+	virtual bool						defineSimilarityTo(TypeConcept const* /*_to*/, Castability _requirement) const { return _requirement == Unrelated; }
 
 	virtual bool						hasDefaultConstructor() const { return false; }
 	/// Types that assignment operator may take on right hand side, assuming left hand side is a reference to this type.
@@ -159,13 +168,6 @@ protected:
 
 	virtual bool						isSuperfluous() const { return parent()->allowedKinds(index()).commonBase() != kind() && isNull(); }
 	virtual bool						isInValidState() const { return isWellDefined(); }
-
-
-	// Classes may opt to reimplement one or both of these.
-	// When determining the return type make sure you check the Castability _requirement first, before considering the
-	// types. This helps prevent circular dependencies which will cause Martta to crash.
-	virtual bool						defineSimilarityFrom(TypeConcept const* /*_from*/, Castability /*_requirement*/) const { return isNull(); }
-	virtual bool						defineSimilarityTo(TypeConcept const* /*_to*/, Castability _requirement) const { return _requirement == Unrelated; }
 
 	virtual bool						defineEquivalenceFrom(TypeConcept const* /*_from*/) const { return false; }
 	virtual bool						defineEquivalenceTo(TypeConcept const* /*_to*/) const;

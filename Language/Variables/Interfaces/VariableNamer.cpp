@@ -37,7 +37,7 @@ Type VariableNamer::actualType() const
 
 String VariableNamer::basicCode() const
 {
-	if (IdLabel* i = self()->tryChild<IdLabel>(Identity))
+	if (IdLabel* i = tryChild<IdLabel>(Identity))
 		return actualType()->code(" " + i->code());
 	else
 		return String::null;

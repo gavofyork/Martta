@@ -21,6 +21,7 @@
 #pragma once
 
 #include "TypeDefinition.h"
+#include "NameEntryPoint.h"
 #include "TopLevel.h"
 
 #ifndef M_API_CStuff
@@ -30,12 +31,11 @@
 namespace Martta
 {
 
-class M_CLASS M_API_CStuff TopLevelType: public_super TopLevel, public_interface TypeDefinition
+class M_CLASS M_API_CStuff TopLevelType: public_super TopLevel, public_interface TypeDefinition, public_interface NameEntryPoint
 {
 	MARTTA_PLACEHOLDER(TopLevel)
 	MARTTA_ALSO_INHERITS(TypeDefinition, 0)
-
-public:
+	MARTTA_ALSO_INHERITS(NameEntryPoint, 1)
 
 protected:
 	// From SubAddressable
@@ -47,7 +47,8 @@ protected:
 	virtual bool						hasDefaultConstructor() const { return false; }
 	virtual Types						assignableTypes() const;
 	virtual List<Declaration*>			utilisedInUse() const { return List<Declaration*>() << const_cast<TopLevelType*>(this); }
-	virtual inline void					apresLoad() { TopLevel::apresLoad(); TypeDefinition::apresLoad(); }
+	virtual void						apresLoad() { TopLevel::apresLoad(); TypeDefinition::apresLoad(); }
+	virtual bool						keyPressed(KeyEvent const* _e) { return NameEntryPoint::keyPressed(_e) || Super::keyPressed(_e); }
 };
 
 }
