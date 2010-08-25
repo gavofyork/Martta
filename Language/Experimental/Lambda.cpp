@@ -64,6 +64,7 @@ MARTTA_PROPER_CPP(Closure);
 MARTTA_PROPER_CPP(Lambda);
 MARTTA_NAMED_CPP(Lambda, ClosureSet);
 MARTTA_PROPER_CPP(LambdaType);
+MARTTA_PROPER_CPP(CommentedOut);
 
 class ClosureExplicitSet: SimpleIdentifierSet<ClosureExplicit>
 {
@@ -148,16 +149,6 @@ Type Lambda::returns() const
 
 Type Lambda::type() const
 {
-/*	Type t = LambdaNamer::typeWith(FunctorType());
-	if (t->isType<FunctorType>() && t->asType<FunctorType>()->returnType().isNull())
-	{
-		List<ReturnStatement*> r = superChildrenOf<ReturnStatement>();
-		if (r.size() == 1 && r[0]->childIs<Typed>(ReturnStatement::Returned))
-			r[0]->childAs<Typed>(ReturnStatement::Returned)->bareType().insertSilentCopy(t->asType<FunctorType>()->middle(FunctorType::Returned));
-		else if (!r.size())
-			t->asType<FunctorType>()->middle(FunctorType::Returned).insertSilent(new BuiltinType(Void));
-	}
-	return t;*/
 	return LambdaType(const_cast<Lambda*>(this));
 }
 

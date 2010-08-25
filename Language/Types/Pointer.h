@@ -42,7 +42,7 @@ protected:
 	virtual String						code(String const& _middle) const { return original()->code("*" + _middle); }
 	virtual String						modifierHtml() const { return L"<span class=\"symbol\">*</span>"; }
 	virtual Rgb							idColour() const { return (original() ? original()->idColour() : TypeConcept::null->idColour()).interpolated(20); }
-	virtual TypeConcept*					newClone() const { return new Pointer; }
+	virtual TypeConcept*				newClone() const { return new Pointer; }
 	virtual List<Declaration*>			utilised() const { return List<Declaration*>(); }
 };
 

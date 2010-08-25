@@ -68,28 +68,20 @@ class M_CLASS M_API_Types ContainedInvocableType: public_super InvocableType
 public:
 	MARTTA_NAMED(Returned)
 
-	ContainedInvocableType(bool _ellipsis = false): m_ellipsis(_ellipsis) {}
-
-	void								setEllipsis(bool _on = true) { m_ellipsis = _on; }
 	virtual bool						isUltimatelyNull() const { return false; }
 	virtual Type						returnType() const { return *childAs<TypeConcept>(Returned); }
 	virtual Type						argumentType(int _i) const { return childIs<TypeConcept>(_i) ? *childAs<TypeConcept>(_i) : Type(); }
 	virtual int							minimumArgCount() const { return cardinalChildCount(); }
-	virtual bool						hasArgumentAt(int _i) const { return m_ellipsis || _i < cardinalChildCount(); }
+	virtual bool						hasArgumentAt(int _i) const { return _i < cardinalChildCount(); }
 	virtual bool						isWellDefined() const { for (int i = 0; i < minimumArgCount(); ++i) if (!argumentType(i)->isWellDefined()) return false; return returnType()->isWellDefined(); }
 	virtual bool						canStandAlone() const;
 
-protected:
-	bool m_ellipsis;
-
 private:
 	virtual Types						assignableTypes() const;
-	virtual int							minRequired(int _i) const { return _i == Returned ? 1 : Super::minRequired(_i); }
-	virtual Kinds						allowedKinds(int) const { return Kinds(Kind::of<TypeConcept>()); }
-	virtual String						code(String const& _middle) const;
-	virtual TypeConcept*				newClone() const { return new ContainedInvocableType(m_ellipsis); }
+	virtual int							minRequired(int _i) const { return (_i == Returned) ? 1 : Super::minRequired(_i); }
+	virtual Kinds						allowedKinds(int _i) const { return (_i == Returned) ? Kinds(Kind::of<TypeConcept>()) : Super::allowedKinds(_i); }
+	virtual TypeConcept*				newClone() const { return new ContainedInvocableType; }
 	virtual List<Declaration*>			utilisedX() const;
-	virtual void						setProperties(Hash<String, String> const& _ps) { Super::setProperties(_ps); m_ellipsis = _ps[L"ellipsis"].toBool(); }
 };
 
 class M_CLASS M_API_Types FunctorType: public_super ContainedInvocableType
@@ -97,9 +89,10 @@ class M_CLASS M_API_Types FunctorType: public_super ContainedInvocableType
 	MARTTA_PROPER(ContainedInvocableType)
 
 public:
-	FunctorType(): ContainedInvocableType(false) {}
+	static bool keyPressedOnPosition(Position const& _p, KeyEvent const* _e);
 
 protected:
+	virtual String						defineHtml() const;
 	virtual String						code(String const& _middle) const;
 	virtual TypeConcept*				newClone() const { return new FunctorType; }
 };
@@ -113,12 +106,19 @@ class M_CLASS M_API_Types FunctionType: public_super ContainedInvocableType
 	MARTTA_PROPER(ContainedInvocableType)
 
 public:
-	FunctionType(bool _ellipsis = false): ContainedInvocableType(_ellipsis) {}
+	FunctionType(bool _ellipsis = false): m_ellipsis(_ellipsis) {}
+
+	virtual bool						hasArgumentAt(int _i) const { return m_ellipsis || Super::hasArgumentAt(_i); }
 
 protected:
 	virtual bool						canStandAlone() const { return false; }
+	virtual String						code(String const& _middle) const;
 	virtual TypeConcept*				newClone() const { return new FunctionType(m_ellipsis); }
 	virtual bool						defineSimilarityTo(TypeConcept const* _t, Castability _c) const;
+	virtual void						setProperties(Hash<String, String> const& _ps) { Super::setProperties(_ps); m_ellipsis = _ps[L"ellipsis"].toBool(); }
+
+protected:
+	bool m_ellipsis;
 };
 
 }

@@ -228,4 +228,18 @@ protected:
 	virtual Type						declaredType(Type const& _t) const;
 };
 
+class M_CLASS M_API_Experimental CommentedOut: public_super Statement
+{
+	MARTTA_INITIALISED_PROPER(Statement)
+
+public:
+	static bool							keyPressedOnPosition(Position const& _p, KeyEvent const* _e) { return simplePositionKeyPressHandler<CommentedOut>(_p, _e, L"#"); }
+	virtual bool						requiresSemicolon() const { return false; }
+	virtual bool						isInValidState() const { return true; }
+	virtual bool						isSuperfluous() const { return !cardinalChildCount(); }
+	virtual Kinds						allowedKinds(int _i) const { return (_i >= 0) ? Kind::of<Statement>() : Kinds(); }
+	virtual String						code() const { return String::null; }
+	virtual String						defineHtml() const { return mark() + tagOf("Comment", tagOf(L"minor symbol", L"// ") + toHtml(cardinalChildren()), "div style=\"border: 0; padding: 4px;\""); }
+};
+
 }

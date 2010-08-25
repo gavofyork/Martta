@@ -83,7 +83,7 @@ String WildInvocableType::code(String const& _middle) const
 	return L"??" "?(" + _middle + ")(...)";
 }
 
-String ContainedInvocableType::code(String const& _middle) const
+String FunctionType::code(String const& _middle) const
 {
 	String ret = returnType()->code() + "(" + _middle + ")(";
 	foreach (Concept* e, cardinalChildren())
@@ -99,6 +99,16 @@ String ContainedInvocableType::code(String const& _middle) const
 	return ret;
 }
 
+bool FunctorType::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
+{
+	return simplePositionKeyPressHandler<FunctorType>(_p, _e, L"((", false);
+}
+
+String FunctorType::defineHtml() const
+{
+	return tagOf(L"minor symbol", L"((") + toHtml(cardinalChildren()) + tagOf(L"minor symbol", L")") + "<^>" + tagOf(L"symbol", L"&rarr;") + toHtml(child(Returned)) + tagOf(L"minor symbol", L")");
+}
+
 String FunctorType::code(String const& _middle) const
 {
 	String ret = L"((";
@@ -108,11 +118,34 @@ String FunctorType::code(String const& _middle) const
 			ret += L", ";
 		ret += e->asKind<TypeConcept>()->code();
 	}
-	if (m_ellipsis)
-		ret += (cardinalChildCount()) ? ", ..." : "...";
 	ret += L")->" + returnType()->code() + L")" + _middle;
 
 	return ret;
 }
+/*
+template<class R>
+class Functor
+{
+public:
+	class Executive
+	{
+	public:
+		virtual R execute() = 0;
+	};
 
+	Functor(Executive const& _e): m_data(new Executive(_e)) {}
+	Functor(Executive* _e): m_data(_e) {}
+	R operator()() { return m_data->execute(); }
+
+private:
+	SafePtr<Executive> m_data;
+};
+
+class OriginalFO: public Functor<int>::Executive
+{
+public:
+	int operator()() { return 1; }
+	virtual int execute() { return operator()(); }
+};
+*/
 }
