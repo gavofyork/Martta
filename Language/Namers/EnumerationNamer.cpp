@@ -35,7 +35,7 @@ String EnumerationNamer::interfaceCode() const
 	String ret;
 	ret += "enum " + codeName() + "\n";
 	ret += "{\n";
-	foreach (EnumValue* f, self()->cardinalChildrenOf<EnumValue>())
+	foreach (EnumValue* f, cardinalChildrenOf<EnumValue>())
 		ret += f->code() + ",\n";
 	if (ret.endsWith(",\n"))
 		ret.chop(2), ret += "\n";
@@ -47,7 +47,7 @@ void EnumerationNamer::updateStem()
 {
 	String oldStem = m_stem;
 	m_stem = String::null;
-	foreach (EnumValue* i, self()->cardinalChildrenOf<EnumValue>())
+	foreach (EnumValue* i, cardinalChildrenOf<EnumValue>())
 		if (m_stem.isEmpty())
 			m_stem = i->codeName();
 		else if (!i->codeName().isEmpty())
@@ -58,7 +58,7 @@ void EnumerationNamer::updateStem()
 				break;
 		}
 	if (oldStem != m_stem)
-		self()->changed();
+		changed();
 }
 
 bool EnumerationNamer::keyPressed(KeyEvent const* _e)
@@ -67,9 +67,9 @@ bool EnumerationNamer::keyPressed(KeyEvent const* _e)
 	{
 		Position p = (_e->focalIndex() == Identity) ?
 		(_e->isInserting() || _e->modifiers() & ShiftModifier) ?
-		self()->front() :
-		self()->back() :
-		self()->middle(_e->focalIndex() + ((_e->isInserting() || _e->modifiers() & ShiftModifier) ? 0 : 1));
+		front() :
+		back() :
+		middle(_e->focalIndex() + ((_e->isInserting() || _e->modifiers() & ShiftModifier) ? 0 : 1));
 		EnumValue* s = new EnumValue;
 		s->prepareChildren();
 		p.place(s);
@@ -77,16 +77,16 @@ bool EnumerationNamer::keyPressed(KeyEvent const* _e)
 	}
 	else if (_e->text() == L"¬" && _e->focalIndex() != UndefinedIndex)
 	{
-		_e->codeScene()->navigateOnto(self()->child(_e->focalIndex()));
+		_e->codeScene()->navigateOnto(child(_e->focalIndex()));
 	}
 	else if (_e->text() == "H")
 	{
-		_e->codeScene()->setCurrent(self());
+		_e->codeScene()->setCurrent(this);
 	}
 	else if (_e->text().length() == 1 && _e->text()[0].isLower() && !isNamed())
 	{
 		setNamed();
-		_e->codeScene()->setCurrent(self()->child(Identity));
+		_e->codeScene()->setCurrent(child(Identity));
 		_e->reinterpretLater();
 	}
 	else
@@ -99,16 +99,16 @@ String EnumerationNamer::defineEnumerationHtml() const
 	String ret;
 	String name;
 	if (isNamed())
-		name = Type(const_cast<TypeDefinition*>(asKind<TypeDefinition>()))->typeHtml(toHtml(self()->child(Identity), "span class=\"TypeConcept\""));
+		name = Type(const_cast<TypeDefinition*>(asKind<TypeDefinition>()))->typeHtml(toHtml(child(Identity), "span class=\"TypeConcept\""));
 	else if (!m_stem.isEmpty())
 		name = L"<span class=\"unreal\">[" + m_stem + L"...]</span>";
-	return L"<span class=\"keyword\">enum</span> " + name + L"<div class=\"minor symbol\">{</div><div class=\"block\">" + toHtml(self()->cardinalChildren(), L"", L"div") + L"</div><div class=\"minor symbol\">}</div>";
+	return L"<span class=\"keyword\">enum</span> " + name + L"<div class=\"minor symbol\">{</div><div class=\"block\">" + toHtml(cardinalChildren(), L"", L"div") + L"</div><div class=\"minor symbol\">}</div>";
 /*
 	else
 	{
 		ret += "ycode;'enum'" + name + ";s;yminor;' (";
-		int n = self()->cardinalChildCountOf<EnumValue>();
-		if (n > 1 || !self()->cardinalChildOf<EnumValue>()->codeName().isEmpty())
+		int n = cardinalChildCountOf<EnumValue>();
+		if (n > 1 || !cardinalChildOf<EnumValue>()->codeName().isEmpty())
 			ret += String::number(n) + " entr" + (n > 1 ? "ies" : "y");
 		if (ret.endsWith("("))
 			ret += "empty";
@@ -138,7 +138,7 @@ void EnumerationNamer::onDependencyChanged(int, Concept* _e)
 		if (!_e->asKind<TextLabel>()->isNamed())
 			setUnnamed();
 		else
-			self()->changed(Dependee::Logically);
+			changed(Dependee::Logically);
 	}
 	else
 		updateStem();
@@ -147,19 +147,19 @@ void EnumerationNamer::onDependencyChanged(int, Concept* _e)
 void EnumerationNamer::setUnnamed()
 {
 	if (isNamed())
-		self()->child(Identity)->killAndDelete();
-	self()->changed();
+		child(Identity)->killAndDelete();
+	changed();
 }
 
 void EnumerationNamer::setNamed()
 {
 	if (!isNamed())
-		self()->middle(Identity).place(new TextLabel);
+		middle(Identity).place(new TextLabel);
 }
 
 bool EnumerationNamer::isNamed() const
 {
-	return self()->child(Identity);
+	return child(Identity);
 }
 
 }

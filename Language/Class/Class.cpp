@@ -49,33 +49,30 @@ using namespace MarttaSupport;
 namespace Martta
 {
 
-	MARTTA_PROPER_CPP(InitialiserItem);
-	MARTTA_NAMED_CPP(InitialiserItem, TheField);
-	MARTTA_NAMED_CPP(InitialiserItem, Value);
+MARTTA_PROPER_CPP(InitialiserItem);
+MARTTA_NAMED_CPP(InitialiserItem, TheField);
+MARTTA_NAMED_CPP(InitialiserItem, Value);
 
-	Kinds InitialiserItem::allowedKinds(int _i) const
-	{
-		return _i == TheField ? Kind::of<FloatingMemberReferencedValue>() : _i == Value ? Kind::of<Typed>() : Super::allowedKinds(_i);
-	}
+Kinds InitialiserItem::allowedKinds(int _i) const
+{
+	return _i == TheField ? Kind::of<FloatingMemberReferencedValue>() : _i == Value ? Kind::of<Typed>() : Super::allowedKinds(_i);
+}
 
-	String InitialiserItem::code() const
-	{
-		return childAs<Primary>(TheField)->code() + L"(" + childAs<Primary>(Value)->code() + L")";
-	}
+String InitialiserItem::code() const
+{
+	return childAs<Primary>(TheField)->code() + L"(" + childAs<Primary>(Value)->code() + L")";
+}
 
-	MARTTA_PROPER_CPP(InitialiserList);
+MARTTA_PROPER_CPP(InitialiserList);
 
-	String InitialiserList::code() const
-	{
-		String ret = L":";
-		foreach (InitialiserItem* c, cardinalChildrenAs<InitialiserItem>())
-			ret += "\n\t" + c->code() + L",";
-		ret.chop(1);
-		return ret;
-	}
-
-
-
+String InitialiserList::code() const
+{
+	String ret = L":";
+	foreach (InitialiserItem* c, cardinalChildrenAs<InitialiserItem>())
+		ret += "\n\t" + c->code() + L",";
+	ret.chop(1);
+	return ret;
+}
 
 
 MARTTA_PROPER_CPP(Class);
@@ -244,9 +241,18 @@ Kinds Class::allowedKinds(int _i) const
 
 String Class::implementationCode() const
 {
+	return memberedImplementationCode(String::null);
+}
+
+String Class::memberedImplementationCode(String const& _preamble) const
+{
 	String ret;
 	foreach (Member* f, cardinalChildrenOf<Member>())
-		ret += f->implementationCode() + "\n";
+	{
+		String s = f->implementationCode().simplified();
+		if (!s.isEmpty())
+			ret += _preamble + f->implementationCode() + "\n";
+	}
 	if (ret.endsWith("\n\n"))
 		ret.chop(1);
 	return ret;

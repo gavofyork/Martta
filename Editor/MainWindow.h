@@ -140,7 +140,7 @@ private:
 
 	CodeView*				makeCodeView(QString const& _name = "Code View");
 
-	Concept*					importDom(QDomElement const& _el, Concept* _p, QStringList* _projectstoLoad = 0, QList<Module*>* _projects = 0);
+	Concept*				importDom(QDomElement const& _el, Concept* _p, QStringList* _projectstoLoad = 0, QList<Module*>* _projects = 0);
 	QDomElement				exportDom(QDomDocument& _doc, Concept const* _e, bool _dump = false) const;
 
 	// Serialises/deserialises the lot.

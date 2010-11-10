@@ -50,7 +50,7 @@ void Base::onDependencyChanged(int, Concept*)
 bool Base::isChildInValidState(int _i) const
 {
 	if (childIs<ReferencedType>(_i))
-		return Super::isChildInValidState(_i) && childAs<ReferencedType>(_i)->subject()->isKind<Class>() && childAs<ReferencedType>(_i)->subject()->self() != parent();
+		return Super::isChildInValidState(_i) && childAs<ReferencedType>(_i)->subject()->isKind<Class>() && childAs<ReferencedType>(_i)->subject() != parent();
 	return Super::isChildInValidState(_i);
 }
 

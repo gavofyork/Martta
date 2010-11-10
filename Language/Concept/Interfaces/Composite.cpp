@@ -38,6 +38,8 @@ Concept* copyTree(Concept const* _original, Position const& _position = Nowhere)
 	// XXX: This should fsck up now with a program involving printf.
 	// FIX: Call copyTree for the entire Program, not per-module and have a specialised copyTree() for in-model copying.
 
+	if (_original)
+	{
 	Concept* ret = _original->kind().spawn();
 	if (_position != Nowhere)
 		ret->silentMove(_position);
@@ -49,7 +51,10 @@ Concept* copyTree(Concept const* _original, Position const& _position = Nowhere)
 		ret->loadFinished();
 		_original->root()->apresLoad();	// TODO: replace a postCopy() const method that calls restorePtrs
 	}
+
 	return ret;
+}
+	return new Concept;
 }
 
 Concept* Composite::composeTree(Concept const* _original)

@@ -50,7 +50,7 @@ protected:
 	String								defineEnumerationHtml() const;
 	String								interfaceCode() const;
 	bool								keyPressed(KeyEvent const* _e);
-	List<ValueDefiner*>					valuesAdded() const { return self()->cardinalChildrenOf<ValueDefiner>(); }
+	List<ValueDefiner*>					valuesAdded() const { return cardinalChildrenOf<ValueDefiner>(); }
 
 	void								onDependencyAdded(Concept* _e);
 	void								onDependencyChanged(int, Concept* _e);

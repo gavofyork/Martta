@@ -30,7 +30,7 @@ MARTTA_NAMED_CPP(VariableNamer, OurType);
 
 Type VariableNamer::actualType() const
 {
-	if (TypeConcept* t = self()->tryChild<TypeConcept>(OurType))
+	if (TypeConcept* t = tryChild<TypeConcept>(OurType))
 		return *t;
 	return Type();
 }
@@ -45,9 +45,9 @@ String VariableNamer::basicCode() const
 
 bool VariableNamer::keyPressed(KeyEvent const* _e)
 {
-	if (_e->text() == L" " && _e->focalIndex() == OurType && !self()->child(OurType)->isPlaceholder())
+	if (_e->text() == L" " && _e->focalIndex() == OurType && !child(OurType)->isPlaceholder())
 	{
-		_e->codeScene()->navigateOnto(self()->child(Identity));
+		_e->codeScene()->navigateOnto(child(Identity));
 	}
 	else
 		return false;
@@ -69,7 +69,7 @@ Type VariableNamer::type() const
 
 String VariableNamer::defineVariableHtml() const
 {
-	return toHtml(self()->child(OurType)) + L" " + actualType()->typeHtml(toHtml(self()->child(Identity)));
+	return toHtml(child(OurType)) + L" " + actualType()->typeHtml(toHtml(child(Identity)));
 }
 
 }

@@ -50,6 +50,7 @@ public:
 	virtual Operator					id() const { return Operator(); }
 
 protected:
+	virtual Concept*					heir() const { return (properCount() == 1) ? proper(0) : 0; }
 	virtual bool						isSlidable(int) const { return false; }
 	virtual Concept*					lastOperand() const { return child(SecondOperand) ? child(SecondOperand) : child(FirstOperand); }	// QUICK optimise into overrides
 	virtual bool						doesChildNeedParenthesising(int _ch) const;

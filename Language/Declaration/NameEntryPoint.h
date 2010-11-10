@@ -47,7 +47,7 @@ public:
 protected:
 	bool								keyPressed(KeyEvent const*);
 
-	template<class T> EditDelegateFace*	newDelegate(CodeScene* _s) { return self()->isPlaceholder() ? new CompletionDelegate<T, Named*>(asKind<T>(), _s, false) : 0; }
+	template<class T> EditDelegateFace*	newDelegate(CodeScene* _s) { return isPlaceholder() ? new CompletionDelegate<T, Named*>(asKind<T>(), _s, false) : 0; }
 
 	virtual String						defineHtml() const { return L"<^>&empty;"; }
 	virtual String						defineEditHtml(CodeScene* _cs) const;

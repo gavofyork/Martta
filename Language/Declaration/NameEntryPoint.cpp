@@ -34,27 +34,27 @@ List<Named*> NameEntryPoint::possibilities() const
 {
 	List<Named*> ret;
 	foreach (IdentifierSet* i, IdentifierSetRegistrar::get()->allSets())
-		ret << i->identifiableAt(self()->over());
+		ret << i->identifiableAt(over());
 	return ret;
 }
 
 IdentifierSet* NameEntryPoint::ownerOf(Named* _n) const
 {
 	foreach (IdentifierSet* i, IdentifierSetRegistrar::get()->allSets())
-		if (i->identifiableAt(self()->over()).contains(_n))
+		if (i->identifiableAt(over()).contains(_n))
 			return i;
 	return 0;
 }
 
 String NameEntryPoint::defineEditHtml(CodeScene* _cs) const
 {
-	if (self()->isPlaceholder())
-		if (EditDelegateFace* d = _cs->editDelegate(self()))
+	if (isPlaceholder())
+		if (EditDelegateFace* d = _cs->editDelegate(this))
 		{
 			String ret = d->real() + tagOf(L"_ms_unreal", d->unreal());
 			if (Named* n = reinterpret_cast<Named*>(d->current()))
 				foreach (IdentifierSet* i, IdentifierSetRegistrar::get()->allSets())
-					if (i->identifiableAt(self()->over()).contains(n))
+					if (i->identifiableAt(over()).contains(n))
 						return i->defineEditHtml(n, ret) + tagOf(L"_ms_minor", d->comment());
 			return ret + tagOf(L"_ms_minor", d->comment());
 		}
@@ -65,10 +65,10 @@ void NameEntryPoint::committed(Named* _i, CodeScene* _cs)
 {
 	if (_i)
 		foreach (IdentifierSet* i, IdentifierSetRegistrar::get()->allSets())
-			if (i->identifiableAt(self()->over()).contains(_i))
+			if (i->identifiableAt(over()).contains(_i))
 			{
-				Position p = self()->over();
-				i->acceptAt(self()->over(), _i, _cs);	// TODO!!! Actually use...
+				Position p = over();
+				i->acceptAt(over(), _i, _cs);	// TODO!!! Actually use...
 				// NOTE: We may not exist at this point!
 				return;
 			}
@@ -76,10 +76,10 @@ void NameEntryPoint::committed(Named* _i, CodeScene* _cs)
 
 bool NameEntryPoint::keyPressed(KeyEvent const* _e)
 {
-	if (self()->isPlaceholder() && _e->text().length() == 1 && _e->text()[0].isLower())
+	if (isPlaceholder() && _e->text().length() == 1 && _e->text()[0].isLower())
 	{
-		_e->codeScene()->setEditing(self());
-		if (_e->codeScene()->isEditing(self()))
+		_e->codeScene()->setEditing(this);
+		if (_e->codeScene()->isEditing(this))
 			_e->reinterpretLater();
 		return true;
 	}

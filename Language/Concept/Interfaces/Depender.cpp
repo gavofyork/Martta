@@ -26,11 +26,11 @@ namespace Martta
 
 void Depender::onChildrenInitialised()
 {
-	foreach (Concept* e, self()->children())
+	foreach (Concept* e, concept()->children())
 		onDependencyAdded(e);
 }
 
-Concept* Depender::self()
+Concept* Depender::concept()
 {
 	return static_cast<Concept*>(this);
 }

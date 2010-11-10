@@ -20,6 +20,7 @@
 
 #include <auto_ptr.h>
 
+#include "msUnitTests.h"
 #include "Argument.h"
 #include "Compound.h"
 #include "FunctionType.h"
@@ -65,11 +66,6 @@ MARTTA_PROPER_CPP(Lambda);
 MARTTA_NAMED_CPP(Lambda, ClosureSet);
 MARTTA_PROPER_CPP(LambdaType);
 MARTTA_PROPER_CPP(CommentedOut);
-
-MARTTA_PROPER_CPP(TypeArgument);
-MARTTA_NAMED_CPP(TypeArgument, Default);
-MARTTA_PROPER_CPP(Template);
-MARTTA_NAMED_CPP(Template, Enclosure);
 
 class ClosureExplicitSet: SimpleIdentifierSet<ClosureExplicit>
 {
@@ -310,22 +306,141 @@ public:
 
 static AutoTypeSet s_autoTypeSet;
 
-String Template::interfaceCode() const
+MARTTA_PROPER_CPP(TypeArgument);
+MARTTA_NAMED_CPP(TypeArgument, Default);
+MARTTA_NOTION_CPP(Template);
+MARTTA_NAMED_CPP(Template, Parameters);
+MARTTA_NAMED_CPP(Template, Instantiations);
+MARTTA_PROPER_CPP(TemplateClass);
+
+String TemplateParameters::preamble() const
 {
-	String ret = L"template<";
+	String ret;
 	foreach (TypeArgument* ta, cardinalChildrenOf<TypeArgument>())
 	{
-		if (ta->index())
+		if (ret.length())
 			ret += L", ";
 		ret += ta->code();
 	}
-	ret += ">\n" + childAs<Declaration>(Enclosure)->interfaceCode();
+	return String(L"template<%1>\n").arg(ret);
+}
+
+String TemplateParameters::refPostamble() const
+{
+	String ret;
+	foreach (TypeArgument* ta, cardinalChildrenOf<TypeArgument>())
+	{
+		if (ret.length())
+			ret += L", ";
+		ret += ta->childAs<IdLabel>(TypeArgument::Identity)->code();
+	}
+	return String(L"<%1>").arg(ret);
+}
+
+Concept* copyTree(Concept const* _original, Position const& _position)
+{
+	// Hidden in this file because it won't work generally - if the _original has a ModelPtr in one of its
+	// nodes but doesn't have the accompanying Identifiable it won't know to tell the Identifiable to apresLoad()
+	// itself (i.e. call loadFinished()) after copying.
+	// XXX: This should fsck up now with a program involving printf.
+	// FIX: Call copyTree for the entire Program, not per-module and have a specialised copyTree() for in-model copying.
+
+	Concept* ret = _original->kind().spawn();
+	if (_position != Nowhere)
+		ret->silentMove(_position);
+	ret->copyProperties(_original);
+	foreach (Concept* c, _original->children())
+		copyTree(c, ret->middle(c->index()));
+	if (_position == Nowhere)
+	{
+		ret->loadFinished();
+		_original->root()->apresLoad();	// TODO: replace a postCopy() const method that calls restorePtrs
+	}
 	return ret;
 }
 
-String Template::implementationCode() const
+Concept*							Template::instantiation(List<Concept*> const& _params) const
 {
-	return childAs<Declaration>(Enclosure)->implementationCode();// TODO: Prepend with template<>.
+	List<Type> tp;
+	for (int i = 0; i < _params.size(); i++)
+		tp += Type(*_params[i]->tryKind<TypeConcept>());
+	if (!m_instantiations[tp])
+	{
+		Concept* ret = copyTree(this, Nowhere);
+		for (int i = 0; i < argumentCount(); i++)
+		{
+			if (i < _params.count())
+				if (TypeArgument* ta = argument(i))
+					ta->killAndDelete(copyTree(_params[i], Nowhere));
+			i++;
+		}
+		const_cast<Template*>(this)->middle(Instantiations).insertSilent(ret);
+		m_instantiations[tp] = ret;
+	}
+	return m_instantiations[tp];
+}
+
+MARTTA_PROPER_CPP(TemplateParameters);
+MARTTA_NOTION_CPP(TemplatedTypeDefinition);
+MARTTA_PROPER_CPP(TemplatedReferencedType);
+
+List<TemplatedTypeDefinition*>		TemplatedReferencedType::possibilities() const
+{
+	return selfAndAncestorsChildrenOf<TemplatedTypeDefinition>();
+}
+bool							TemplatedReferencedType::keyPressedOnPosition(Position const& _p, KeyEvent const* _e)
+{
+	if (_e->text() == L"<")
+		if (ReferencedType* rt = _p->tryKind<ReferencedType>())
+			if (TemplatedTypeDefinition* ttd = rt->get()->tryKind<TemplatedTypeDefinition>())
+			{
+				TemplatedReferencedType* trt = new TemplatedReferencedType(ttd);
+				rt->deleteAndRefill(trt);
+				trt->prepareChildren();
+				return true;
+			}
+	return false;
+}
+
+String								TemplatedReferencedType::templatePostamble() const
+{
+	String ret;
+	foreach (Concept* c, cardinalChildren())
+	{
+		if (!ret.isEmpty())
+			ret += L", ";
+		if (TypeConcept* t = c->tryKind<TypeConcept>())
+			ret += t->code();
+		else
+		{}// TODO: Add code for all possibilities.
+	}
+	return String(L"<%1>").arg(ret);
+}
+String						TemplatedReferencedType::defineHtml() const
+{
+	return Super::defineHtml() + String(L"<%1>").arg(toHtml(cardinalChildren(), L", "));
+}
+bool						TemplatedReferencedType::keyPressed(KeyEvent const* _e)
+{
+	return Super::keyPressed(_e);
+}
+String						TemplatedReferencedType::defineEditHtml(CodeScene* _cs) const
+{
+	return Super::defineEditHtml(_cs) + String(L"<%1>").arg(toHtml(cardinalChildren(), L", "));
+}
+EditDelegateFace*			TemplatedReferencedType::newDelegate(CodeScene* _s)
+{
+	return Super::newDelegate(_s);
+}
+
+MS_TEST(TemplateStuff)
+{
+	TemplateClass* tc = new TemplateClass;
+	tc->prepareChildren();
+	TypeArgument* ta = tc->child(TemplateClass::Parameters)->middle(0)->replace<TypeArgument>();
+	ta->middle(TypeArgument::Default).place(new BuiltinType(Int));
+	tc->debugTree();
+	return true;
 }
 
 }

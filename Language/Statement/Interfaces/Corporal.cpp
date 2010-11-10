@@ -30,15 +30,15 @@ MARTTA_NAMED_CPP(Corporal, Body);
 
 String Corporal::defineHtml(bool) const
 {
-	return toHtml(self()->child(Body));//, !_shrink || (self()->child(Body) && self()->child(Body)->cardinalChildCount()) ? L"span class=\"block\"" : L"span");
+	return toHtml(child(Body));//, !_shrink || (child(Body) && child(Body)->cardinalChildCount()) ? L"span class=\"block\"" : L"span");
 }
 
 bool Corporal::keyPressed(KeyEvent const* _e)
 {
 	if (_e->text() == ")" && _e->focalIndex() != Body)
-		_e->codeScene()->navigateOnto(self());
-	else if ((_e->text() == ")" || _e->text() == "{") && _e->focalIndex() != Body && self()->child(Body))
-		_e->codeScene()->navigateOnto(self()->child(Body));
+		_e->codeScene()->navigateOnto(this);
+	else if ((_e->text() == ")" || _e->text() == "{") && _e->focalIndex() != Body && child(Body))
+		_e->codeScene()->navigateOnto(child(Body));
 	else
 		return false;
 	return true;

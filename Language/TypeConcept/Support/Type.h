@@ -127,6 +127,8 @@ private:
 	TypeConcept* m_top;
 };
 
+m_inline uint hashOf(Type const& _t) { return _t->isNull() ? 0 : hashOf(_t->code()); }
+
 inline String compileTypes(Types const& _t)
 {
 	String ret;

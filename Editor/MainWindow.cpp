@@ -33,6 +33,7 @@
 #include "Timer.h"
 #include "CodeView.h"
 #include "MainWindow.h"
+#include "msUnitTests.h"
 
 #include "Composite.h"
 
@@ -252,6 +253,8 @@ void MainWindow::loadPlugins()
 	u.m_t = deps.size();
 	AuxilliaryRegistrar::get()->initialiseClasses<UpdateProgress>(&u);
 
+	UnitTests::go();
+
 	updateLanguage();
 	setEnabled(true);
 }
@@ -370,7 +373,7 @@ void MainWindow::on_actNew_triggered()
 	{
 		m_solution = solutions[0].spawnPrepared()->asKind<Program>();
 		m_solution->initialiseNew();
-		foreach (Module* p, m_solution->self()->superChildrenOf<Module>())
+		foreach (Module* p, m_solution->superChildrenOf<Module>())
 			m_projects.insert(p, QString::null);
 		updateProgramSupportPath();
 	}
@@ -591,7 +594,7 @@ bool MainWindow::saveProgram() const
 		return false;
 
 	QDomDocument doc("MarttaProgram");
-	doc.appendChild(exportDom(doc, m_solution->self()));
+	doc.appendChild(exportDom(doc, m_solution));
 	QFile f(m_filename);
 	if (!f.open(QFile::WriteOnly))
 		return false;
@@ -603,7 +606,7 @@ bool MainWindow::saveProgram() const
 bool MainWindow::saveModule(String const& _file, Module* _p) const
 {
 	QDomDocument doc("MarttaModule");
-	doc.appendChild(exportDom(doc, _p->self()));
+	doc.appendChild(exportDom(doc, _p));
 	QFile f(qs(_file));
 	if (!f.open(QFile::WriteOnly))
 		return false;
@@ -649,7 +652,7 @@ bool MainWindow::confirmLose()
 QString MainWindow::serialise() const
 {
 	QDomDocument doc("MarttaProgram");
-	doc.appendChild(exportDom(doc, m_solution->self(), true));
+	doc.appendChild(exportDom(doc, m_solution, true));
 	QString ret;
 	QTextStream fs(&ret);
 	doc.save(fs, 4);
@@ -736,7 +739,7 @@ QDomElement MainWindow::exportDom(QDomDocument& _doc, Concept const* _e, bool _d
 
 Concept* MainWindow::importDom(QDomElement const& _el, Concept* _p, QStringList* _unloadedModules, QList<Module*>* _projects)
 {
-	Concept* e = Concept::spawn(qs(_el.nodeName().replace(":", "::")));
+	SafePointer<Concept> e = Concept::spawn(qs(_el.nodeName().replace(":", "::")));
 	Assert(e, "Spawn doesn't know anything about this kind, yet it did when exported.");
 
 	if (e->isKind<Module>() && _projects)
@@ -751,7 +754,7 @@ Concept* MainWindow::importDom(QDomElement const& _el, Concept* _p, QStringList*
 			h.insert(qs(_el.attributes().item(i).nodeName()), qs(_el.attributes().item(i).nodeValue()));
 
 	if (_p)
-		e->move(_p->named(index));
+		e->silentMove(_p->named(index));
 
 	e->setProperties(h);
 	for (QDomNode i = _el.firstChild(); !i.isNull(); i = i.nextSibling())
@@ -821,10 +824,10 @@ void MainWindow::resetSubject()
 {
 	foreach (CodeView* cv, findChildren<CodeView*>())
 		if (projects().size())
-			cv->setSubject(projects()[0]->self());
+			cv->setSubject(projects()[0]);
 		else
 			cv->setSubject(0);
-	AssertNR(!codeView->current() || codeView->current()->root() == m_solution->self());
+	AssertNR(!codeView->current() || codeView->current()->root() == m_solution);
 	entityFocused(codeView->current());
 }
 
@@ -918,7 +921,7 @@ bool hasSuperChild(Concept* _p, Concept* _e)
 
 QString MainWindow::summary(Concept* _e)
 {
-	if (_e && hasSuperChild(m_solution->self(), _e))
+	if (_e && hasSuperChild(m_solution, _e))
 		return qs(_e->summary());
 	return "NULL";
 }

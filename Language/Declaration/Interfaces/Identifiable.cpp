@@ -35,14 +35,14 @@ Identifiable::~Identifiable()
 
 String Identifiable::nick() const
 {
-	if (IdLabel* l = self()->tryChild<IdLabel>(Identity))
+	if (IdLabel* l = tryChild<IdLabel>(Identity))
 		return l->nick();
 	return String::null;
 }
 
 String Identifiable::codeName() const
 {
-	if (IdLabel* l = self()->tryChild<IdLabel>(Identity))
+	if (IdLabel* l = tryChild<IdLabel>(Identity))
 		return l->code();
 	return String::null;
 }
@@ -50,19 +50,19 @@ String Identifiable::codeName() const
 String Identifiable::key() const
 {
 	Identifiable const* _registrar = 0;
-	int i = self()->ancestor<Identifiable>()->registerAnonymous(this, &_registrar);
+	int i = ancestor<Identifiable>()->registerAnonymous(this, &_registrar);
 	AssertNR(_registrar);
 	return _registrar->key() + "::" + String::number(i);
 }
 
 Identifiable* Identifiable::addressableContext() const
 {
-	return self()->parentIs<Identifiable>() ? self()->parentAs<Identifiable>() : 0;
+	return parentIs<Identifiable>() ? parentAs<Identifiable>() : 0;
 }
 
 Identifiable* Identifiable::lookupChild(String const& _key) const
 {
-	foreach (Identifiable* e, self()->cardinalChildrenOf<Identifiable>())
+	foreach (Identifiable* e, cardinalChildrenOf<Identifiable>())
 		if (e->identity() == _key)
 			return e;
 	return 0;
@@ -80,7 +80,7 @@ Identifiable* Identifiable::find(String const& _key) const
 			String s = k.section("::", 1, 1);
 			k = k.mid(s.size() + 2);
 			i = i->lookupChild(s);
-//			mDebug() << "Key" << s << "gives" << (i ? i->self() : 0);
+//			mDebug() << "Key" << s << "gives" << (i ? i : 0);
 		}
 		return const_cast<Identifiable*>(i);
 	}
@@ -89,27 +89,27 @@ Identifiable* Identifiable::find(String const& _key) const
 
 int Identifiable::registerAnonymous(Identifiable const* _e, Identifiable const** _registrar) const
 {
-	AssertNR(self()->ancestor<Identifiable>());
-	return self()->ancestor<Identifiable>()->registerAnonymous(_e, _registrar);
+	AssertNR(ancestor<Identifiable>());
+	return ancestor<Identifiable>()->registerAnonymous(_e, _registrar);
 }
 
 void Identifiable::registerAnonymous(Identifiable const* _e, int _k)
 {
-	AssertNR(self()->ancestor<Identifiable>());
-	self()->ancestor<Identifiable>()->registerAnonymous(_e, _k);
+	AssertNR(ancestor<Identifiable>());
+	ancestor<Identifiable>()->registerAnonymous(_e, _k);
 }
 
 void Identifiable::properties(Hash<String, String>& _p) const
 {
 	if (!addressableContext())
-		_p[L"identity"] = String::number(self()->ancestor<Identifiable>()->registerAnonymous(this));
+		_p[L"identity"] = String::number(ancestor<Identifiable>()->registerAnonymous(this));
 	_p[L"generalkey"] = key();
 }
 
 void Identifiable::setProperties(Hash<String, String> const& _p)
 {
 	if (_p.contains(L"identity"))
-		self()->ancestor<Identifiable>()->registerAnonymous(this, _p[L"identity"].toInt());
+		ancestor<Identifiable>()->registerAnonymous(this, _p[L"identity"].toInt());
 	ModelPtrRegistrar::get()->registerTemp(this, _p[L"generalkey"]);
 }
 

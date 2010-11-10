@@ -62,7 +62,7 @@ void CProgram::initialiseNew()
 void CProgram::initWithModules(List<Module*> const& _ps)
 {
 	foreach (Module* p, _ps)
-		p->self()->move(back());
+		p->move(back());
 
 	ChangeMan::get()->sleep();
 	GccXml::extractHeaders(qs(includeCode()), GccXml::declarationsHandler(this));
@@ -77,7 +77,7 @@ void CProgram::addModule(Module* _p)
 	archiveModel();
 	killIncludeds();
 
-	_p->self()->move(back());
+	_p->move(back());
 
 	GccXml::extractHeaders(qs(includeCode()), GccXml::declarationsHandler(this));
 //	ModelPtrRegistrar::get()->restorePtrs(this);
@@ -92,7 +92,7 @@ void CProgram::removeModule(Module* _p)
 	archiveModel();
 	killIncludeds();
 
-	_p->self()->killAndDeleteWithNotification();
+	_p->killAndDeleteWithNotification();
 
 	GccXml::extractHeaders(qs(includeCode()), GccXml::declarationsHandler(this));
 //	ModelPtrRegistrar::get()->restorePtrs(this);
@@ -123,10 +123,10 @@ void CProgram::apresLoad(Module* _p)
 {
 	List<SafePointer<Concept> > uplist;
 	if (_p)
-		uplist << _p->self();
+		uplist << _p;
 	else
 		foreach (Module* p, cardinalChildrenAs<Module>())
-			uplist << p->self();
+			uplist << p;
 	while (uplist.size())
 		if (Concept* e = uplist.takeLast())
 		{

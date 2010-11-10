@@ -64,9 +64,9 @@ void ChangeMan::oneFootInTheGrave(Dependee* _going, Dependee* _replacement)
 		if (i.value()->shouldBeNotified())
 		{
 			if (_replacement)
-				m_changeQueue << Entry(i.value(), DependencySwitched, _replacement->self(), _going->self());
+				m_changeQueue << Entry(i.value(), DependencySwitched, _replacement->concept(), _going->concept());
 			else
-				m_changeQueue << Entry(i.value(), DependencyRemoved, _going->self());
+				m_changeQueue << Entry(i.value(), DependencyRemoved, _going->concept());
 		}
 	}
 	processQueue();
@@ -83,10 +83,10 @@ bool ChangeMan::changed(Dependee* _changer, int _aspect)
 			return false;
 	m_changing.append(Changing(_changer, _aspect));
 
-	Concept* e = _changer->self();
+	Concept* e = _changer->concept();
 
 	foreach (ChangeListener* l, m_listeners)
-		l->onChanged(_changer->self(), _aspect);
+		l->onChanged(_changer->concept(), _aspect);
 
 	foreach (Depender* d, m_dependers.values(_changer))
 		if (d->shouldBeNotified())
@@ -98,7 +98,7 @@ bool ChangeMan::changed(Dependee* _changer, int _aspect)
 		if (d->shouldBeNotified() && d->familyDependencies() & Depender::DependsOnChildren)
 			m_changeQueue << Entry(d, _aspect, e);
 	List<Concept*> es;
-	es << _changer->self();
+	es << _changer->concept();
 	while (es.size())
 	{
 		Concept* de = es.takeLast();
@@ -197,7 +197,7 @@ void ChangeMan::childrenInitialised(Depender* _this)
 	if (_this->shouldBeNotified())
 	{
 		foreach (ChangeListener* l, m_listeners)
-			l->onChildrenInitialised(_this->self());
+			l->onChildrenInitialised(_this->concept());
 		if (_this->familyDependencies() & Depender::DependsOnChildren)
 			m_changeQueue << Entry(_this, ConceptChildrenInitialised);
 	}
@@ -207,19 +207,19 @@ void ChangeMan::childrenInitialised(Depender* _this)
 
 void ChangeMan::childAdded(Depender* _this, int _index)
 {
-	AssertNR(_this->self()->child(_index));
+	AssertNR(_this->concept()->child(_index));
 	if (m_asleep)
 		return;
 	if (_this->shouldBeNotified())
 	{
 		foreach (ChangeListener* l, m_listeners)
-			l->onChildAdded(_this->self(), _index);
+			l->onChildAdded(_this->concept(), _index);
 		if (_this->familyDependencies() & Depender::DependsOnChildren)
 		{
-			m_changeQueue << Entry(_this, DependencyAdded, _this->self()->child(_index));
+			m_changeQueue << Entry(_this, DependencyAdded, _this->concept()->child(_index));
 			if (_index >= 0)
-				for (int i = _index + 1; i < _this->self()->cardinalChildCount(); i++)
-					childMoved(_this, _this->self()->child(i), i - 1);
+				for (int i = _index + 1; i < _this->concept()->cardinalChildCount(); i++)
+					childMoved(_this, _this->concept()->child(i), i - 1);
 		}
 	}
 	processQueue();
@@ -229,15 +229,15 @@ void ChangeMan::childAdded(Depender* _this, int _index)
 void ChangeMan::childSwitched(Depender* _this, Concept* _ch, Concept* _old)
 {
 	AssertNR(_ch);
-	AssertNR(_ch->parent() == _this->self());
+	AssertNR(_ch->parent() == _this->concept());
 	AssertNR(_old);
-	AssertNR(_old->parent() != _this->self());
+	AssertNR(_old->parent() != _this->concept());
 	if (m_asleep)
 		return;
 	if (_this->shouldBeNotified())
 	{
 		foreach (ChangeListener* l, m_listeners)
-			l->onChildSwitched(_this->self(), _ch, _old);
+			l->onChildSwitched(_this->concept(), _ch, _old);
 		if (_this->familyDependencies() & Depender::DependsOnChildren)
 			m_changeQueue << Entry(_this, DependencySwitched, _ch, _old);
 	}
@@ -256,7 +256,7 @@ void ChangeMan::dependencySwitched(Depender* _this, Concept* _currentDependency,
 	if (_this->shouldBeNotified())
 	{
 		foreach (ChangeListener* l, m_listeners)
-			l->onDependencySwitched(_this->self(), _currentDependency, _exDependency);
+			l->onDependencySwitched(_this->concept(), _currentDependency, _exDependency);
 		m_changeQueue << Entry(_this, DependencySwitched, _currentDependency, _exDependency);
 	}
 	processQueue();
@@ -265,19 +265,19 @@ void ChangeMan::dependencySwitched(Depender* _this, Concept* _currentDependency,
 void ChangeMan::childRemoved(Depender* _this, Concept* _old, int _index)
 {
 	AssertNR(_old);
-	AssertNR(_old->parent() != _this->self());
+	AssertNR(_old->parent() != _this->concept());
 	if (m_asleep)
 		return;
 	if (_this->shouldBeNotified())
 	{
 		foreach (ChangeListener* l, m_listeners)
-			l->onChildRemoved(_this->self(), _old, _index);
+			l->onChildRemoved(_this->concept(), _old, _index);
 		if (_this->familyDependencies() & Depender::DependsOnChildren)
 		{
 			m_changeQueue << Entry(_this, DependencyRemoved, _old, 0, _index);
 			if (_index >= 0)
-				for (int i = _index; i < _this->self()->cardinalChildCount(); i++)
-					childMoved(_this, _this->self()->child(i), i + 1);
+				for (int i = _index; i < _this->concept()->cardinalChildCount(); i++)
+					childMoved(_this, _this->concept()->child(i), i + 1);
 		}
 	}
 	processQueue();
@@ -292,7 +292,7 @@ void ChangeMan::childMoved(Depender* _this, Concept* _ch, int _oI)
 	if (_this->shouldBeNotified())
 	{
 		foreach (ChangeListener* l, m_listeners)
-			l->onChildMoved(_this->self(), _ch, _oI);
+			l->onChildMoved(_this->concept(), _ch, _oI);
 		if (_this->familyDependencies() & Depender::TestOnOrder)
 			m_changeQueue << Entry(_this, ChildMoved, _ch, 0, _oI);
 	}
@@ -305,20 +305,20 @@ void ChangeMan::childMoved(Depender* _this, Concept* _ch, int _oI)
 
 void ChangeMan::parentAdded(Depender* _this)
 {
-	Concept* p = _this->self()->parent();
+	Concept* p = _this->concept()->parent();
 	AssertNR(p);
 	if (m_asleep)
 		return;
 	if (_this->shouldBeNotified())
 	{
 		foreach (ChangeListener* l, m_listeners)
-			l->onParentAdded(_this->self());
+			l->onParentAdded(_this->concept());
 		if (_this->familyDependencies() & Depender::DependsOnParent)
 			m_changeQueue << Entry(_this, DependencyAdded, p);
 	}
 
 	List<Concept*> es;
-	es << _this->self();
+	es << _this->concept();
 	while (es.size())
 	{
 		Concept* e = es.takeLast();
@@ -338,7 +338,7 @@ void ChangeMan::parentAdded(Depender* _this)
 
 void ChangeMan::parentSwitched(Depender* _this, Concept* _old)
 {
-	Concept* p = _this->self()->parent();
+	Concept* p = _this->concept()->parent();
 	AssertNR(_old);
 	AssertNR(p);
 	AssertNR(p != _old);
@@ -347,13 +347,13 @@ void ChangeMan::parentSwitched(Depender* _this, Concept* _old)
 	if (_this->shouldBeNotified())
 	{
 		foreach (ChangeListener* l, m_listeners)
-			l->onParentSwitched(_this->self(), _old);
+			l->onParentSwitched(_this->concept(), _old);
 		if (_this->familyDependencies() & Depender::DependsOnParent)
 			m_changeQueue << Entry(_this, DependencySwitched, p, _old);
 	}
 
 	List<Concept*> es;
-	es << _this->self();
+	es << _this->concept();
 	while (es.size())
 	{
 		Concept* e = es.takeLast();
@@ -392,19 +392,19 @@ void ChangeMan::parentSwitched(Depender* _this, Concept* _old)
 void ChangeMan::parentRemoved(Depender* _this, Concept* _old)
 {
 	AssertNR(_old);
-	AssertNR(!_this->self()->parent());
+	AssertNR(!_this->concept()->parent());
 	if (m_asleep)
 		return;
 	if (_this->shouldBeNotified())
 	{
 		foreach (ChangeListener* l, m_listeners)
-			l->onParentRemoved(_this->self(), _old);
+			l->onParentRemoved(_this->concept(), _old);
 		if (_this->familyDependencies() & Depender::DependsOnParent)
 			m_changeQueue << Entry(_this, DependencyRemoved, _old);
 	}
 
 	List<Concept*> es;
-	es << _this->self();
+	es << _this->concept();
 	while (es.size())
 	{
 		Concept* e = es.takeLast();

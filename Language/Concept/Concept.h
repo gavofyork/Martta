@@ -137,9 +137,6 @@ public:
 	int									ancestorIndex(Kind _k) const;
 	int									ancestorIndex(Concept const* _a) const;
 
-	Concept*							self() { return this; }
-	Concept const*						self() const { return this; }
-
 	template<class T> bool				hasSelfAncestor() const { return hasSelfAncestor(T::staticKind); }
 	bool								hasSelfAncestor(Kind _k) const;
 	bool								hasSelfAncestor(Concept const* _a) const;
@@ -156,6 +153,7 @@ public:
 	inline List<Concept*>				propers() const { List<Concept*> ret; foreach (Concept* i, m_cardinalChildren + m_namedChildren.values()) if (!i->isPlaceholder()) ret += i; return ret; }
 	inline Concept*						proper(int _i) const { foreach (Concept* i, m_cardinalChildren + m_namedChildren.values()) if (!i->isPlaceholder() && !_i--) return i; AssertNR(false); return 0; }
 
+	virtual Concept*					heir() const { return 0; }
 	virtual bool						usurpsChild(Concept const*) const { return false; }
 	bool								isUsurped() const { return m_parent && m_parent->usurpsChild(this); }
 

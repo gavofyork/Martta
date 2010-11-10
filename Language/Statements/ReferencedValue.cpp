@@ -53,7 +53,7 @@ String ReferencedValue::code() const
 
 void ReferencedValue::onDependencySwitched(Concept* _t, Concept* _old)
 {
-//	mDebug() << "Dependency switched" << _old << "->" << _t << " subject:" << (m_subject ? m_subject->self() : (Concept*)0);
+//	mDebug() << "Dependency switched" << _old << "->" << _t << " subject:" << (m_subject ? m_subject : (Concept*)0);
 	if (m_subject == _old->tryKind<ValueDefiner>())
 	{
 //		mDebug() << "Subject switched to" << _t << "from" << _old;

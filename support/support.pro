@@ -44,17 +44,18 @@ HEADERS += msSupport.h \
 	msTextStream.h \
 	msDebug.h \
 	msStringList.h \
-	msFlags.h
+	msFlags.h \
+    msUnitTests.h
 SOURCES += msSupport.cpp \
 	msString.cpp \
 	msRgb.cpp \
 	msTextStream.cpp \
 	msDebug.cpp \
 	msStringList.cpp \
-	msFlags.cpp
+	msFlags.cpp \
+    msUnitTests.cpp
 
 INSTALLS += target exheaders
 target.path = $${PREFIX}/share/martta/support
 exheaders.files = $${HEADERS}
 exheaders.path = $${PREFIX}/share/martta/support
-

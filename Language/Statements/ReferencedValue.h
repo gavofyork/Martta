@@ -61,7 +61,7 @@ protected:
 	virtual String						defineHtml() const;
 	virtual String						defineEditHtml(CodeScene* _cs) const;
 	virtual bool						isSuperfluous() const;
-	virtual void						apresLoad() { if (m_subject) addDependency(m_subject->self()); Super::apresLoad(); }
+	virtual void						apresLoad() { if (m_subject) addDependency(m_subject); Super::apresLoad(); }
 	virtual void						onDependencyChanged(int _a, Concept* _d) { if (_d->tryKind<ValueDefiner>() == m_subject) changed(_a); Super::onDependencyChanged(_a, _d); }
 	virtual void						onDependencySwitched(Concept* _t, Concept* _old);
 	virtual void						onDependencyRemoved(Concept* _old, int);

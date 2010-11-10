@@ -135,7 +135,7 @@ bool Invocation::keyPressed(KeyEvent const* _e)
 	{
 		// Jump to next if we press a comma in the parameter list, before the last item.
 		Typed* t = new Typed;
-		(_e->focalIndex() == UndefinedIndex ? self()->back() : self()->middle(_e->focalIndex() + (_e->isInserting() ? 0 : 1))).place(t);
+		(_e->focalIndex() == UndefinedIndex ? back() : middle(_e->focalIndex() + (_e->isInserting() ? 0 : 1))).place(t);
 		_e->codeScene()->setCurrent(t);
 	}
 	else if (_e->text() == "," && back().allowedKinds().size())

@@ -155,8 +155,11 @@ Concept* CodeView::current() const
 
 void CodeView::rememberCurrent()
 {
-	m_remembered = bounds(current()).topLeft() + QPoint(5, 5);
-	m_rememberedParent = current()->parent();
+	if (current())
+	{
+		m_remembered = bounds(current()).topLeft() + QPoint(5, 5);
+		m_rememberedParent = current()->parent();
+	}
 }
 
 void CodeView::restoreCurrent()
@@ -401,9 +404,9 @@ void CodeView::paintEvent(QPaintEvent* _ev)
 			p.setPen(QColor(0, 255, 0, 128));
 			foreach (Dependee* i, ChangeMan::get()->dependeesOf(c))
 			{
-				if (i && isInScene(i->self()))
+				if (i && isInScene(i->concept()))
 				{
-					QRect br = bounds(i->self());
+					QRect br = bounds(i->concept());
 					if (_ev->region().contains(br))
 						p.drawRect(br);
 				}

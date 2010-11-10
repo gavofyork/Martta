@@ -24,7 +24,7 @@
 namespace Martta
 {
 
-Concept* Dependee::self()
+Concept* Dependee::concept()
 {
 	return static_cast<Concept*>(this);
 }

@@ -38,7 +38,7 @@ class M_API_Concept Depender: public Familial
 	friend class ChangeMan;
 
 public:
-	Concept*							self();
+	Concept*							concept();
 
 protected:
 	Depender(): m_isAsleep(false) {}

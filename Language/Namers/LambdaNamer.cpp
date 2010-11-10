@@ -38,27 +38,27 @@ MARTTA_REGISTER_CSS(LambdaNamer, WebViewable::cssBorder(L".LambdaNamer-", Rgb(0x
 
 String LambdaNamer::defineReturnHtml() const
 {
-	return toHtml(self()->child(Returned)) + L" ";
+	return toHtml(child(Returned)) + L" ";
 }
 
 String LambdaNamer::defineNameHtml() const
 {
-	if (self()->child(Identity))
-		return FunctionType().typeHtml(toHtml(self()->child(Identity)));
+	if (child(Identity))
+		return FunctionType().typeHtml(toHtml(child(Identity)));
 	else
 		return L"NO_IDENTITY";
 }
 
 String LambdaNamer::defineArgListHtml() const
 {
-	return tagOf(L"minor symbol", L"(") + toHtml(self()->cardinalChildren(), tagOf(L"minor symbol", L", ")) + tagOf(L"minor symbol", L")");
+	return tagOf(L"minor symbol", L"(") + toHtml(cardinalChildren(), tagOf(L"minor symbol", L", ")) + tagOf(L"minor symbol", L")");
 }
 
 String LambdaNamer::defineBodyHtml() const
 {
 	if (!body())
 		return String::null;
-	return String(L"<div id=\"%1-body\" ondblclick=\"event.stopPropagation()\" style=\"display: none\">").arg((long)self()) + toHtml(body()) + L"</div>";
+	return String(L"<div id=\"%1-body\" ondblclick=\"event.stopPropagation()\" style=\"display: none\">").arg((long)static_cast<Concept const*>(this)) + toHtml(body()) + L"</div>";
 }
 
 String LambdaNamer::defineMidHtml(String const& _middle) const
@@ -71,7 +71,7 @@ String LambdaNamer::defineMidHtml(String const& _middle) const
 		else
 			info = " (empty)";
 	}
-	return _middle + tagOf(L"", tagOf(L"minor symbol", L";") + tagOf(L"_ms_minor", info), String(L"span id=\"%1-info\"").arg((long)self()));
+	return _middle + tagOf(L"", tagOf(L"minor symbol", L";") + tagOf(L"_ms_minor", info), String(L"span id=\"%1-info\"").arg((long)static_cast<Concept const*>(this)));
 }
 
 String LambdaNamer::defineEnclosureHtml(String const& _part, String const& _middle) const
@@ -81,7 +81,7 @@ String LambdaNamer::defineEnclosureHtml(String const& _part, String const& _midd
 
 String LambdaNamer::defineLambdaHtml(String const& _middle) const
 {
-	return String(L"<div onKeyPress=\"if (event=='{' ? set2('%1-info', '%1-body') : event=='}' ? set1('%1-info', '%1-body') : false) { CodeView.markDirty(%1); return true; } return false;\" onDblClick=\"toggle('%1-info', '%1-body'); CodeView.markDirty(%1); event.stopPropagation();\">").arg((long)self())
+	return String(L"<div onKeyPress=\"if (event=='{' ? set2('%1-info', '%1-body') : event=='}' ? set1('%1-info', '%1-body') : false) { CodeView.markDirty(%1); return true; } return false;\" onDblClick=\"toggle('%1-info', '%1-body'); CodeView.markDirty(%1); event.stopPropagation();\">").arg((long)static_cast<Concept const*>(this))
 		+ definePreHtml()
 		+ defineEnclosureHtml(L"head", defineReturnHtml() + defineNameHtml() + defineArgListHtml() + defineMidHtml(_middle))
 		+ defineEnclosureHtml(L"body", defineBodyHtml()) + definePostHtml() + L"</div>";
@@ -110,13 +110,13 @@ bool LambdaNamer::keyPressed(KeyEvent const* _e)
 	}
 	else if (_e->text() == "(" && navigateIntoParams(_e->codeScene()))
 	{}
-	else if (_e->text() == " " && _e->focalIndex() == Returned && self()->child(Identity))
+	else if (_e->text() == " " && _e->focalIndex() == Returned && child(Identity))
 	{
-		_e->codeScene()->navigateOnto(self()->child(Identity));
+		_e->codeScene()->navigateOnto(child(Identity));
 	}
 	else if (_e->text() == "{" && _e->focalIndex() != Body)
 	{
-		_e->codeScene()->navigateInto(self()->child(Body));
+		_e->codeScene()->navigateInto(child(Body));
 	}
 	else
 		return false;
@@ -169,24 +169,24 @@ String LambdaNamer::basicCode(FunctionCodeScope _ref) const
 
 Compound* LambdaNamer::body() const
 {
-	return self()->tryChild<Compound>(Body);
+	return tryChild<Compound>(Body);
 }
 
 int LambdaNamer::argumentCount() const
 {
-	return self()->cardinalChildCount();
+	return cardinalChildCount();
 }
 
 Argument* LambdaNamer::argument(int _index) const
 {
 	if (_index < argumentCount())
-		return self()->tryChild<Argument>(_index);
+		return tryChild<Argument>(_index);
 	return 0;
 }
 
 Type LambdaNamer::returns() const
 {
-	if (TypeConcept* t = self()->tryChild<TypeConcept>(Returned))
+	if (TypeConcept* t = tryChild<TypeConcept>(Returned))
 		return *t;
 	return Type();
 }

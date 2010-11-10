@@ -437,8 +437,8 @@ bool Concept::keyPressed(KeyEvent const* _e)
 	else if (_e->codeScene()->isCurrent(this) && _e->text() == DeleteKey && !isFixed())
 	{
 		_e->codeScene()->rememberCurrent();
-		if (properCount() == 1 && over().allowedToBeKind(proper(0)->kind()))
-			deleteAndRefill(proper(0));	// SEE ABOVE.
+		if (heir() && over().allowedToBeKind(heir()->kind()))
+			deleteAndRefill(heir());	// SEE ABOVE.
 		else
 			deleteAndRefill(0);	// SEE ABOVE.
 		_e->codeScene()->restoreCurrent();

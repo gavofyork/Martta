@@ -28,16 +28,16 @@ MARTTA_NOTION_CPP(TypeNamer)
 
 Types TypeNamer::ourAllowedTypes() const
 {
-	if (!self()->parentIs<TypedOwner>())
+	if (!parentIs<TypedOwner>())
 		return Types();
-	return self()->parentAs<TypedOwner>()->allowedTypes(self()->index());
+	return parentAs<TypedOwner>()->allowedTypes(index());
 }
 
 Types TypeNamer::ourDeniedTypes() const
 {
-	if (!self()->parentIs<TypedOwner>())
+	if (!parentIs<TypedOwner>())
 		return Types();
-	return self()->parentAs<TypedOwner>()->deniedTypes(self()->index());
+	return parentAs<TypedOwner>()->deniedTypes(index());
 }
 
 String TypeNamer::informationHtml() const

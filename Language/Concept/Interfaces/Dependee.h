@@ -36,7 +36,7 @@ class M_API_Concept Dependee: virtual public Dier
 public:
 	enum { Logically = 0x0001, Visually = 0x0002, UserAspect = Visually << 1, AllAspects = 0xffff };
 
-	Concept*							self();
+	Concept*							concept();
 
 protected:
 	virtual bool						shouldNotify() const { return !m_isUnchanging; }
